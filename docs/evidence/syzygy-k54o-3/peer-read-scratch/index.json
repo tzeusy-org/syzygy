@@ -1,0 +1,562 @@
+[
+  {
+    "originalPath": null,
+    "archivePath": "README.md",
+    "bytes": 2646,
+    "sha256": "adb46db336924cfabb304132a4a61f008bf8b17af05ac5c8c4bfe3176c4c05bf",
+    "subject": "generated from bound actual terminal evidence; packaging only"
+  },
+  {
+    "originalPath": null,
+    "archivePath": "external-source-snapshot-index.json",
+    "bytes": 5198,
+    "sha256": "c6848feb81b07f73029ee3e71bfae1597869d9a42144fd49981b485c965cde90",
+    "subject": "generated from bound actual terminal evidence; packaging only"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-bytes-scratch-c245-R2-source-review-bc8c01c7e58347349c1856062992cec0-RAW.md",
+    "archivePath": "payload/machine-peer-bytes-scratch-c245-R2-source-review-bc8c01c7e58347349c1856062992cec0-RAW.md",
+    "bytes": 7140,
+    "sha256": "64df0cba04350dffb0cc4d1f1aed3d41b47de0b90829e9c792b21e1c40089856",
+    "subject": "raw-review"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-bytes-scratch-c245-independent-source-review-20261126T135835Z-c03d19ab-RAW.md",
+    "archivePath": "payload/machine-peer-bytes-scratch-c245-independent-source-review-20261126T135835Z-c03d19ab-RAW.md",
+    "bytes": 9671,
+    "sha256": "0922b4575a189641e223974f28f0da1ea823041baae8e94fe4a98656f8fb2688",
+    "subject": "raw-review"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-bytes-scratch-preparation-c245-R2/PREPARATION.md",
+    "archivePath": "payload/machine-peer-bytes-scratch-preparation-c245-R2/PREPARATION.md",
+    "bytes": 346,
+    "sha256": "103bdd84d2c0d517f318c64b592f33171615a37f87fca16d6a6520f473d7c364",
+    "subject": "reviewed-source-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-bytes-scratch-preparation-c245-R2/bindings.json",
+    "archivePath": "payload/machine-peer-bytes-scratch-preparation-c245-R2/bindings.json",
+    "bytes": 1227,
+    "sha256": "17b40d016bf8c0f7cba7e4ce9f702ead95de8f9845f55d0069769d1d541b56ed",
+    "subject": "reviewed-source-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-bytes-scratch-preparation-c245-R2/candidate.patch",
+    "archivePath": "payload/machine-peer-bytes-scratch-preparation-c245-R2/candidate.patch.txt",
+    "bytes": 7229,
+    "sha256": "3da35c168f5a0fbaa1e6c6da940ec4b7e7bf843128e9f04e7593a5b1b3b63fd2",
+    "subject": "reviewed-source-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-bytes-scratch-preparation-c245-R2/candidate/packages/polaris-dossier/src/url-machine-peer.test.ts",
+    "archivePath": "payload/machine-peer-bytes-scratch-preparation-c245-R2/candidate/packages/polaris-dossier/src/url-machine-peer.test.ts.txt",
+    "bytes": 37825,
+    "sha256": "bc7bd1fc28709d48e779feec0da35b0b459f4e3486c8a3f2dbfdc5577f113960",
+    "subject": "reviewed-source-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-bytes-scratch-preparation-c245-R2/candidate/packages/polaris-dossier/src/url-machine-peer.ts",
+    "archivePath": "payload/machine-peer-bytes-scratch-preparation-c245-R2/candidate/packages/polaris-dossier/src/url-machine-peer.ts.txt",
+    "bytes": 39191,
+    "sha256": "031ced551de6c59d9227a0de4e584a2c5cf0b9db2e472540aaf1994019e682bd",
+    "subject": "reviewed-source-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-bytes-scratch-preparation-c245-R2/original/packages/polaris-dossier/src/url-machine-peer.test.ts",
+    "archivePath": "payload/machine-peer-bytes-scratch-preparation-c245-R2/original/packages/polaris-dossier/src/url-machine-peer.test.ts.txt",
+    "bytes": 35541,
+    "sha256": "599b15e9ec04e1ffed3ca63cf69f6e645064a3d43c9201e3265832a553f9da3e",
+    "subject": "reviewed-source-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-bytes-scratch-preparation-c245-R2/original/packages/polaris-dossier/src/url-machine-peer.ts",
+    "archivePath": "payload/machine-peer-bytes-scratch-preparation-c245-R2/original/packages/polaris-dossier/src/url-machine-peer.ts.txt",
+    "bytes": 38532,
+    "sha256": "9cc616fa96ca062b9a0a012c1a4df6f7f0659a770946d490f996934696644804",
+    "subject": "reviewed-source-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-bytes-scratch-preparation-c245/bindings.json",
+    "archivePath": "payload/machine-peer-bytes-scratch-preparation-c245/bindings.json",
+    "bytes": 1057,
+    "sha256": "9e8fc9b3af24a467b137d93be7bf22f8600aa9814ca7be40bf5659a85836ce57",
+    "subject": "historical-R1"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-bytes-scratch-preparation-c245/candidate.patch",
+    "archivePath": "payload/machine-peer-bytes-scratch-preparation-c245/candidate.patch.txt",
+    "bytes": 7175,
+    "sha256": "89bed1386853af53cd3090f99b732c5d7eb91efd5e104afc3aaaafcc96b6ebb6",
+    "subject": "historical-R1"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-bytes-scratch-preparation-c245/candidate/packages/polaris-dossier/src/url-machine-peer.test.ts",
+    "archivePath": "payload/machine-peer-bytes-scratch-preparation-c245/candidate/packages/polaris-dossier/src/url-machine-peer.test.ts.txt",
+    "bytes": 37772,
+    "sha256": "b93746c8539350a92daac2fcdf0ea38b5e31af1a621ada54e74bf845bb20f9a1",
+    "subject": "historical-R1"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245-R1-FRESH-REVIEW-RAW.md",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245-R1-FRESH-REVIEW-RAW.md",
+    "bytes": 6076,
+    "sha256": "47666bb5c28298d665701a67187119a4666062ba7b938450e405a34d35cef42a",
+    "subject": "raw-review"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245-execution-1/checkout.log",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245-execution-1/checkout.log",
+    "bytes": 89,
+    "sha256": "959ddf2942a90a005a1f250ea2f59211939c59676b6b318c22ce24d88c779b6e",
+    "subject": "diagnostic actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245-execution-1/clone.log",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245-execution-1/clone.log",
+    "bytes": 78,
+    "sha256": "9d7f17b3c59dd307ded941bd7a38294e8cd5b4e1982b121d83c9285f841cbe1e",
+    "subject": "diagnostic actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245-execution-1/npm-ci.log",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245-execution-1/npm-ci.log",
+    "bytes": 353,
+    "sha256": "7b63dbb888dd37797ba1647f2e9801f7ced11673c0d32f14c1ab0f3bacaa857c",
+    "subject": "diagnostic actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245-execution-1/samples.json",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245-execution-1/samples.json",
+    "bytes": 29650,
+    "sha256": "1f869b300e3142db413b6e352899f42c2eacf212c9b96d15d488f6a2fec261a8",
+    "subject": "diagnostic actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245-execution-1/terminal.json",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245-execution-1/terminal.json",
+    "bytes": 4851,
+    "sha256": "4c980ab7092133c2a45431462e519787c344e956922ff8e352e918d3113a779e",
+    "subject": "diagnostic actual terminal; evaluator completion preserved"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245-execution-1/vitest.json",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245-execution-1/vitest.json",
+    "bytes": 958,
+    "sha256": "b02dccd2b52eea30788c9c2c76c4b463ef73381883e8d6ef0f56550a91ad35ea",
+    "subject": "diagnostic actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245-execution-1/vitest.log",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245-execution-1/vitest.log",
+    "bytes": 125,
+    "sha256": "577b8d2bdc0193d3802f02cf29105d5fc6d6f4ad92d69dd9867bca4748ba117e",
+    "subject": "diagnostic actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245/PLAN.md",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245/PLAN.md",
+    "bytes": 4602,
+    "sha256": "18433549c5e5be59a5fe47f5d12f5409c46b91700415379dda29e96b1b0811e2",
+    "subject": "public-flow-diagnostic-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245/candidate-bindings.json",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245/candidate-bindings.json",
+    "bytes": 1057,
+    "sha256": "9e8fc9b3af24a467b137d93be7bf22f8600aa9814ca7be40bf5659a85836ce57",
+    "subject": "public-flow-diagnostic-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245/diagnostic-body.ts",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245/diagnostic-body.ts.txt",
+    "bytes": 4809,
+    "sha256": "33cd3167507e4e2521a6055e6a31ac6c7d29065fc79f2cebbb75ce3c9b5a6e23",
+    "subject": "public-flow-diagnostic-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245/fixture-adapted.ts",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245/fixture-adapted.ts.txt",
+    "bytes": 11284,
+    "sha256": "fbaddfdd22c358fd90d97607ff45541c0374111c4957bf4c8cb8b88d1f295da9",
+    "subject": "public-flow-diagnostic-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245/fixture-api.patch",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245/fixture-api.patch.txt",
+    "bytes": 5486,
+    "sha256": "a14423d3a5b16ba066df45649e107101881b79920f8badc3f2c77503a8e55a15",
+    "subject": "public-flow-diagnostic-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245/manifest.json",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245/manifest.json",
+    "bytes": 2851,
+    "sha256": "a8a82ab94daf6d35f2b3a3f87330d04b70ad92c4af49825d316c0812e16c4714",
+    "subject": "public-flow-diagnostic-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245/prepare.py",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245/prepare.py.txt",
+    "bytes": 3545,
+    "sha256": "efe2a2e7ed23a5c0b3e9e1edfd2d317b3488d73c47511523748fbfec88275753",
+    "subject": "public-flow-diagnostic-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245/run.py",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245/run.py.txt",
+    "bytes": 10767,
+    "sha256": "df901327d868ea45186bc55be277607f71597709f4fd6f7f93306e4466ea4048",
+    "subject": "public-flow-diagnostic-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245/support.py",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245/support.py.txt",
+    "bytes": 4309,
+    "sha256": "aa4d81b020023ec322beaada19ffb42592bbe3fc9c84f4a0903e99d3149c7f41",
+    "subject": "public-flow-diagnostic-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245/url-machine-peer.baseline-diagnostic.ts",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245/url-machine-peer.baseline-diagnostic.ts.txt",
+    "bytes": 38532,
+    "sha256": "9cc616fa96ca062b9a0a012c1a4df6f7f0659a770946d490f996934696644804",
+    "subject": "public-flow-diagnostic-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245/url-machine-peer.candidate-diagnostic.ts",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245/url-machine-peer.candidate-diagnostic.ts.txt",
+    "bytes": 39191,
+    "sha256": "031ced551de6c59d9227a0de4e584a2c5cf0b9db2e472540aaf1994019e682bd",
+    "subject": "public-flow-diagnostic-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-public-diagnostic-c245/url-machine-peer.diagnostic.test.ts",
+    "archivePath": "payload/machine-peer-public-diagnostic-c245/url-machine-peer.diagnostic.test.ts.txt",
+    "bytes": 16093,
+    "sha256": "dea94efe950e3bdc91e9fe61fa1c69feb88db5b4b96c8b89e817a7e8c7d3b9e0",
+    "subject": "public-flow-diagnostic-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-read-scratch-A259-proof-preparation/ADOPTION-ROW.template.md",
+    "archivePath": "payload/machine-peer-read-scratch-A259-proof-preparation/ADOPTION-ROW.template.md",
+    "bytes": 796,
+    "sha256": "a258da0ba059328f89ccdf02369dff63ce7301cf89fc8c9235aaf405cf78ec91",
+    "subject": "proof preparation; templates are historical pending drafts"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-read-scratch-A259-proof-preparation/README.template.md",
+    "archivePath": "payload/machine-peer-read-scratch-A259-proof-preparation/README.template.md",
+    "bytes": 2675,
+    "sha256": "0645efca9f36feae03a7b4486c9391fed3881a720935624562adc43a904e2437",
+    "subject": "proof preparation; templates are historical pending drafts"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-read-scratch-A259-proof-preparation/pack.py",
+    "archivePath": "payload/machine-peer-read-scratch-A259-proof-preparation/pack.py.txt",
+    "bytes": 12830,
+    "sha256": "bc6f8aa9dd7319131ed1026608e7e5d12a8f3bc077718f71daf4ed86e93b842b",
+    "subject": "proof preparation; templates are historical pending drafts"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-read-scratch-A259-proof-preparation/payload-plan.json",
+    "archivePath": "payload/machine-peer-read-scratch-A259-proof-preparation/payload-plan.json",
+    "bytes": 13610,
+    "sha256": "10ffdbef4a6e3c6bc6ee0b9f54e8275a8848787aa313a0b5699b78c8f3b7eed6",
+    "subject": "proof preparation; templates are historical pending drafts"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-controls-c245-assessment-1.json",
+    "archivePath": "payload/machine-peer-scratch-controls-c245-assessment-1.json",
+    "bytes": 2457,
+    "sha256": "004e220126ddaca1f05975456b0e63e6a763dcfdfc087eada370623bafb5ed2a",
+    "subject": "independent-actual-selected-regression-assessment"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-mutant-c245-execution-1/candidate-original.ts",
+    "archivePath": "payload/machine-peer-scratch-mutant-c245-execution-1/candidate-original.ts.txt",
+    "bytes": 39191,
+    "sha256": "031ced551de6c59d9227a0de4e584a2c5cf0b9db2e472540aaf1994019e682bd",
+    "subject": "borrow actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-mutant-c245-execution-1/mutant-binding.json",
+    "archivePath": "payload/machine-peer-scratch-mutant-c245-execution-1/mutant-binding.json",
+    "bytes": 3760,
+    "sha256": "b4f0ceb92105bd6cd8e6163a4690efaff9760e442bb16c6ca0ed101af09e192e",
+    "subject": "borrow actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-mutant-c245-execution-1/mutant.ts",
+    "archivePath": "payload/machine-peer-scratch-mutant-c245-execution-1/mutant.ts.txt",
+    "bytes": 39154,
+    "sha256": "b87e59a4637b5711d28be35c342223a4cfe06126d93bbbfcc4d55908d29315ed",
+    "subject": "borrow actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-mutant-c245-execution-1/terminal.json",
+    "archivePath": "payload/machine-peer-scratch-mutant-c245-execution-1/terminal.json",
+    "bytes": 3611,
+    "sha256": "7336a94d6c063f94d0b646955fdcf48b33f6fa732d964bdff7729368942ef17e",
+    "subject": "borrow actual terminal; evaluator completion preserved"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-mutant-c245-execution-1/vitest.json",
+    "archivePath": "payload/machine-peer-scratch-mutant-c245-execution-1/vitest.json",
+    "bytes": 9480,
+    "sha256": "bb7d6fae22f593604b4921ee1bcc74a9f1cbdfb6844077fed2190ae5033e9080",
+    "subject": "borrow actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-mutant-c245-execution-1/vitest.log",
+    "archivePath": "payload/machine-peer-scratch-mutant-c245-execution-1/vitest.log",
+    "bytes": 122,
+    "sha256": "46cba4a4e4aae7fbd5b2f74737ef99e5f2d2b4ec36208b1128704c7d110e0e70",
+    "subject": "borrow actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-mutant-c245-execution-2/candidate-original.ts",
+    "archivePath": "payload/machine-peer-scratch-mutant-c245-execution-2/candidate-original.ts.txt",
+    "bytes": 39191,
+    "sha256": "031ced551de6c59d9227a0de4e584a2c5cf0b9db2e472540aaf1994019e682bd",
+    "subject": "owned actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-mutant-c245-execution-2/mutant-binding.json",
+    "archivePath": "payload/machine-peer-scratch-mutant-c245-execution-2/mutant-binding.json",
+    "bytes": 3862,
+    "sha256": "59789df8512647708316862aebc184c957670373cc59e166453ee75f5675325c",
+    "subject": "owned actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-mutant-c245-execution-2/mutant.ts",
+    "archivePath": "payload/machine-peer-scratch-mutant-c245-execution-2/mutant.ts.txt",
+    "bytes": 39134,
+    "sha256": "025183bcaf71dff03b6ae8018ad38a35a6bf7a0f160e39d75605009ab7763886",
+    "subject": "owned actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-mutant-c245-execution-2/terminal.json",
+    "archivePath": "payload/machine-peer-scratch-mutant-c245-execution-2/terminal.json",
+    "bytes": 3605,
+    "sha256": "68298f986bf2f8c8f590948ff881e64c725e79e221f135064d57292f3b00a0aa",
+    "subject": "owned actual terminal; evaluator completion preserved"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-mutant-c245-execution-2/vitest.json",
+    "archivePath": "payload/machine-peer-scratch-mutant-c245-execution-2/vitest.json",
+    "bytes": 9480,
+    "sha256": "bfd827df85d1baac3b5dd92b99605b2e73788d75e138122f8c0e74b3929bc4cd",
+    "subject": "owned actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-mutant-c245-execution-2/vitest.log",
+    "archivePath": "payload/machine-peer-scratch-mutant-c245-execution-2/vitest.log",
+    "bytes": 122,
+    "sha256": "7e9dfd7bcb2c3d78b03ba0a4cba3b3e6736458ac9f5f1031879d9154408edc10",
+    "subject": "owned actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245-R2/README.md",
+    "archivePath": "payload/machine-peer-scratch-operators-c245-R2/README.md",
+    "bytes": 2845,
+    "sha256": "0ccec4724c51fbe604fea5ce9ba2113c2953a62cec2939fba9361af9815376be",
+    "subject": "validation-operator-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245-R2/borrow-exclusion-mutant.ts",
+    "archivePath": "payload/machine-peer-scratch-operators-c245-R2/borrow-exclusion-mutant.ts.txt",
+    "bytes": 39154,
+    "sha256": "b87e59a4637b5711d28be35c342223a4cfe06126d93bbbfcc4d55908d29315ed",
+    "subject": "validation-operator-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245-R2/candidate-bindings.json",
+    "archivePath": "payload/machine-peer-scratch-operators-c245-R2/candidate-bindings.json",
+    "bytes": 1227,
+    "sha256": "17b40d016bf8c0f7cba7e4ce9f702ead95de8f9845f55d0069769d1d541b56ed",
+    "subject": "validation-operator-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245-R2/expected-cases.json",
+    "archivePath": "payload/machine-peer-scratch-operators-c245-R2/expected-cases.json",
+    "bytes": 6784,
+    "sha256": "5ac05714ba72da365385dc59551f17ac1e1ed7bec9ab3c8efba4168155a1b85a",
+    "subject": "validation-operator-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245-R2/independent-enumeration.json",
+    "archivePath": "payload/machine-peer-scratch-operators-c245-R2/independent-enumeration.json",
+    "bytes": 2397,
+    "sha256": "7e57ab62e5da482a5dbfb944f3a72a67637792232a8547d9b635e1ab3e7bb56e",
+    "subject": "validation-operator-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245-R2/manifest.json",
+    "archivePath": "payload/machine-peer-scratch-operators-c245-R2/manifest.json",
+    "bytes": 4737,
+    "sha256": "6854e7deaf7c8ec46944708be17ffbd0e86c227d6a6f7ad64b468874f3181cfb",
+    "subject": "validation-operator-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245-R2/mutant.py",
+    "archivePath": "payload/machine-peer-scratch-operators-c245-R2/mutant.py.txt",
+    "bytes": 126,
+    "sha256": "a4b658ac5cdc2746502983b140fcdd9c9224707a51e77d23b1b68635148c13b0",
+    "subject": "validation-operator-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245-R2/mutants.json",
+    "archivePath": "payload/machine-peer-scratch-operators-c245-R2/mutants.json",
+    "bytes": 7837,
+    "sha256": "d6e245a01c8b1299c56c5a4dfb41127c10d6ebfbee3516b6093caa10de6bf91c",
+    "subject": "validation-operator-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245-R2/operator_common.py",
+    "archivePath": "payload/machine-peer-scratch-operators-c245-R2/operator_common.py.txt",
+    "bytes": 18209,
+    "sha256": "643df77136d349c111fdab1ad194376faeeabe1264be19fc6e5da0b3b3239d3c",
+    "subject": "validation-operator-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245-R2/owned-copy-mutant.ts",
+    "archivePath": "payload/machine-peer-scratch-operators-c245-R2/owned-copy-mutant.ts.txt",
+    "bytes": 39134,
+    "sha256": "025183bcaf71dff03b6ae8018ad38a35a6bf7a0f160e39d75605009ab7763886",
+    "subject": "validation-operator-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245-R2/owning.py",
+    "archivePath": "payload/machine-peer-scratch-operators-c245-R2/owning.py.txt",
+    "bytes": 126,
+    "sha256": "b7b896a56d76b84a85514653da306a1a22ed5b46d6b191ebceec38edb9c1ee6a",
+    "subject": "validation-operator-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245-R2/r1-expected-cases.json",
+    "archivePath": "payload/machine-peer-scratch-operators-c245-R2/r1-expected-cases.json",
+    "bytes": 6578,
+    "sha256": "44a283371b2639c73e114a56a37406e6b8716762c65e1b3f024058e3d188cdb3",
+    "subject": "validation-operator-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245-R2/r2-title-inheritance.json",
+    "archivePath": "payload/machine-peer-scratch-operators-c245-R2/r2-title-inheritance.json",
+    "bytes": 4726,
+    "sha256": "1be303381eb545db577fc7ae1c8d46380366c0abc4623a4ac51f94798cfdcafc",
+    "subject": "validation-operator-R2"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245/expected-cases.json",
+    "archivePath": "payload/machine-peer-scratch-operators-c245/expected-cases.json",
+    "bytes": 6578,
+    "sha256": "44a283371b2639c73e114a56a37406e6b8716762c65e1b3f024058e3d188cdb3",
+    "subject": "historical-R1-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245/manifest.json",
+    "archivePath": "payload/machine-peer-scratch-operators-c245/manifest.json",
+    "bytes": 4599,
+    "sha256": "26e322f217986a29a08ba3206846a583f26ce4763c81a62388a8851e6b80285a",
+    "subject": "historical-R1-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245/mutant.py",
+    "archivePath": "payload/machine-peer-scratch-operators-c245/mutant.py.txt",
+    "bytes": 126,
+    "sha256": "a4b658ac5cdc2746502983b140fcdd9c9224707a51e77d23b1b68635148c13b0",
+    "subject": "historical-R1-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245/mutants.json",
+    "archivePath": "payload/machine-peer-scratch-operators-c245/mutants.json",
+    "bytes": 7837,
+    "sha256": "0082baaaf63a622a390c58225ae728487d3e1fc8508231e301472608803a5490",
+    "subject": "historical-R1-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245/operator_common.py",
+    "archivePath": "payload/machine-peer-scratch-operators-c245/operator_common.py.txt",
+    "bytes": 17968,
+    "sha256": "a6ac3400927a38a7ed4799a2e3e5de25abc48cdf294cec14fed2832e42ec6406",
+    "subject": "historical-R1-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-operators-c245/owning.py",
+    "archivePath": "payload/machine-peer-scratch-operators-c245/owning.py.txt",
+    "bytes": 126,
+    "sha256": "b7b896a56d76b84a85514653da306a1a22ed5b46d6b191ebceec38edb9c1ee6a",
+    "subject": "historical-R1-operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-owning-c245-execution-1/terminal.json",
+    "archivePath": "payload/machine-peer-scratch-owning-c245-execution-1/terminal.json",
+    "bytes": 5640,
+    "sha256": "dca88164013b392c0d742f50b24676cb3b727ab99267f7747b8670ee9f2b2870",
+    "subject": "R1-historical-failure actual terminal; evaluator completion preserved"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-owning-c245-execution-1/typecheck.log",
+    "archivePath": "payload/machine-peer-scratch-owning-c245-execution-1/typecheck.log",
+    "bytes": 1061,
+    "sha256": "53e4a30e003657ef12439a3afbb7dbd23488d3d0741d43393f88ee1e846122fb",
+    "subject": "R1-historical-failure actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-owning-c245-execution-1/vitest.json",
+    "archivePath": "payload/machine-peer-scratch-owning-c245-execution-1/vitest.json",
+    "bytes": 9858,
+    "sha256": "c883288cb5559c950ceac4a02426e2e70ac68b17114225a9f7e7785266630cd7",
+    "subject": "R1-historical-failure actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-owning-c245-execution-1/vitest.log",
+    "archivePath": "payload/machine-peer-scratch-owning-c245-execution-1/vitest.log",
+    "bytes": 122,
+    "sha256": "68baee13610ee9426f8f5bfd25a3c003150410f58200aa56bdc160081552e155",
+    "subject": "R1-historical-failure actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-owning-c245-execution-2/terminal.json",
+    "archivePath": "payload/machine-peer-scratch-owning-c245-execution-2/terminal.json",
+    "bytes": 5545,
+    "sha256": "1045e181390973f15152d44ee55f32fb95b2fa2887cc06bf80d4a94c3396eda9",
+    "subject": "owning actual terminal; evaluator completion preserved"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-owning-c245-execution-2/typecheck.log",
+    "archivePath": "payload/machine-peer-scratch-owning-c245-execution-2/typecheck.log",
+    "bytes": 37,
+    "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+    "subject": "owning actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-owning-c245-execution-2/vitest.json",
+    "archivePath": "payload/machine-peer-scratch-owning-c245-execution-2/vitest.json",
+    "bytes": 9905,
+    "sha256": "fae3cb0d9e58d302429fd914b58472fa013b233ec21141a4d31dbbc785fcfcb2",
+    "subject": "owning actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/machine-peer-scratch-owning-c245-execution-2/vitest.log",
+    "archivePath": "payload/machine-peer-scratch-owning-c245-execution-2/vitest.log",
+    "bytes": 122,
+    "sha256": "f5841b07de7f10e4733f60deee4dfa6b6e3a92d0125bcf9aee8ef582001572fa",
+    "subject": "owning actual retained artifact"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-final-recovery-c245-cost-assessment-1/ASSESSMENT.md",
+    "archivePath": "payload/native-scratch-final-recovery-c245-cost-assessment-1/ASSESSMENT.md",
+    "bytes": 6417,
+    "sha256": "a2ee013d288d1f827a4cfe82afb82268d88a80e5db4c95d8004a5cd84f6c9f21",
+    "subject": "bounded-cost-assessment"
+  },
+  {
+    "originalPath": null,
+    "archivePath": "result-summary.json",
+    "bytes": 12582,
+    "sha256": "7f59c5646b665f7817138b386261d965c709a7020c0f9201ccef795ce0e7a535",
+    "subject": "generated from bound actual terminal evidence; packaging only"
+  }
+]

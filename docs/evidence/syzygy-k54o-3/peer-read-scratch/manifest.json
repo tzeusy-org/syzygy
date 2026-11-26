@@ -1,0 +1,31 @@
+{
+  "sourceCommit": "77b0df3ac9833bacac8f56e82c7b136d92d9d447",
+  "members": 80,
+  "externalSnapshots": 14,
+  "twoIdenticalBuilds": true,
+  "verification": "Python and GNU tar every member; independent sha256sum archive/index",
+  "files": [
+    {
+      "path": "payload.tar.gz",
+      "bytes": 212634,
+      "sha256": "6fb229b2c21da26e02b678588cca499ce936e928bda8e3e1a5ec1c174dff18c2"
+    },
+    {
+      "path": "index.json",
+      "bytes": 30001,
+      "sha256": "66021d2953d9b53d9007ed4d58cb6d737b90ef15487fa7f954bfda44e9bcdb56"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2646,
+      "sha256": "adb46db336924cfabb304132a4a61f008bf8b17af05ac5c8c4bfe3176c4c05bf"
+    },
+    {
+      "path": "A259-row.md",
+      "bytes": 1185,
+      "sha256": "c063ac09f23ffdb1886f71865e9f807e91215ac3dd9db472378910a42d742dfc"
+    }
+  ],
+  "adoptionStatus": "Proposed outside-only row; no primary governance/adoption edits performed",
+  "archiveIndexScope": "index.json covers exactly80 archive members; A259-row.md is an external proposed row bound by this manifest"
+}
