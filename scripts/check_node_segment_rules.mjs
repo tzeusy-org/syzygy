@@ -1,5 +1,5 @@
 // Pins the export-entry reader's segment rules (workspace-reach.testkit.ts, syzygy-bpyt.70) against the Node that runs it. The
-// node-ci workflow runs it under the job's own Node, which floats within 24.x (syzygy-bpyt.76, the PR 557 round-1 review's N4).
+// node-ci runs it under the job's own Node, pinned to the native build profile (syzygy-bpyt.76; the PR 557 round-1 review's N4).
 //
 //   node scripts/check_node_segment_rules.mjs
 //

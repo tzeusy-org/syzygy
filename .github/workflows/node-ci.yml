@@ -65,7 +65,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.6.0
           cache: npm
 
       # Fresh install from the lockfile — a drifted or missing lockfile
@@ -75,9 +75,10 @@ jobs:
 
       # The workspace entry reader (workspace-reach.testkit.ts) copies two
       # regexes from Node's exports resolver, and workspace-reach.test.ts's
-      # case rows record Node 24.6.0's outcome for each target, while
-      # node-version above floats within 24. This pins both against the
-      # job's own Node: exit 1 on a mismatch, exit 2 when this Node's
+      # case rows record Node 24.6.0's outcome for each target. The build
+      # admits that exact native runtime profile, so this job uses it too.
+      # This checks both against the job's own Node: exit 1 on a mismatch,
+      # exit 2 when this Node's
       # resolver source cannot be read (syzygy-bpyt.76). It imports the
       # testkit's source, so it needs no build.
       - name: Node segment rules (scripts/check_node_segment_rules.mjs)
@@ -229,7 +230,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.6.0
           cache: npm
 
       # The CAP1-REQ-061 system oracle and the Polaris dossier no-egress proof
