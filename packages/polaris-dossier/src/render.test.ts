@@ -1811,9 +1811,9 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
     if (!result.ok) throw new Error(result.refusal.reason);
     const index = readSite(result.report.site).get('index.html')!;
     const section = index.slice(index.indexOf('<section id="section-core-ideas"'));
-    // An operator-agent page gives its first diagram the first hue (syzygy-pdja.14).
-    expect(section.indexOf('<figure data-hue="1" data-visual-provenance="curated" id="figure-d-core">')).toBeGreaterThan(-1);
-    expect(section.indexOf('<figure data-hue="1" data-visual-provenance="curated" id="figure-d-core">')).toBeLessThan(section.indexOf('data-claim-id="p1"'));
+    // A figure carries no hue of its own: it takes its Pole's from the region around it (syzygy-5dhm.56).
+    expect(section.indexOf('<figure data-visual-provenance="curated" id="figure-d-core">')).toBeGreaterThan(-1);
+    expect(section.indexOf('<figure data-visual-provenance="curated" id="figure-d-core">')).toBeLessThan(section.indexOf('data-claim-id="p1"'));
   });
 
   it('puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria', () => {
@@ -2202,7 +2202,7 @@ describe('render: derived structure (version 2.3)', () => {
     const run = await prepared(doc, false);
     const { files, index } = await rendered(run);
     const authored = index.slice(index.lastIndexOf('<figure', index.indexOf('<figcaption id="diagram-title-0">zq-authored tree</figcaption>')), index.indexOf('</figure>', index.indexOf('zq-authored tree')));
-    expect(authored.startsWith('<figure data-hue="1" data-visual-provenance="curated" id="figure-d-tree">')).toBe(true);
+    expect(authored.startsWith('<figure data-visual-provenance="curated" id="figure-d-tree">')).toBe(true);
     expect([...authored.matchAll(/<g class="(?:node|edge) (\w+)/gu)].map((m) => m[1])).toEqual(['inferred', 'inferred', 'inferred']);
     expect(authored).not.toContain('Solid: observed');
     expect(authored).not.toContain('data-derived-id');
