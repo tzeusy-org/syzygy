@@ -1,0 +1,99 @@
+--- a/packages/polaris-dossier/src/url-session-audit-history.test.ts
++++ b/packages/polaris-dossier/src/url-session-audit-history.test.ts
+@@ -3,7 +3,7 @@
+ import path from 'node:path';
+ import { fileURLToPath } from 'node:url';
+ import { createHash } from 'node:crypto';
+-import { afterEach, describe, expect, it, vi } from 'vitest';
++import { afterEach, describe, expect, it, onTestFailed, vi } from 'vitest';
+ import { tempDir } from '@syzygy/test-kit';
+ import { sha256 } from '@syzygy/support';
+ import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
+@@ -19,8 +19,11 @@
+ afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); });
+ const canonical = (v: unknown): string => encodeCanonicalJson(v, { maxBytes: 65_536, maxNodes: 4096, maxDepth: 12 });
+ type ToolHistory = 'complete-tool' | 'count-without-continuation' | 'count-repeated' | 'count-with-usage' | 'count-wrong-origin' | 'different-consumed-receipt';
++type AuditProbeSummary = { readonly closed: boolean; readonly poisoned: boolean; readonly durableRecords: number;
++  readonly pendingAppends: number; readonly pendingFilesystemOperations: number; readonly pendingCallbacks: number };
++type AuditFixtureProbe = (stage: string, sample?: () => AuditProbeSummary) => void;
+ async function fixture(fault?: 'incomplete-send' | 'uncertain-send' | 'unknown-cleanup' | 'missing-usage' | 'missing-terminal' | 'unfinished-tool' | 'unsupported-kind',
+-  toolHistory?: ToolHistory, activeRoles: readonly typeof ROLES[number][] = ROLES) {
++  toolHistory?: ToolHistory, activeRoles: readonly typeof ROLES[number][] = ROLES, probe?: AuditFixtureProbe) {
+   const root = tempDir('url-audit-history-'), parent = path.join(root, 'protected'); fs.mkdirSync(parent, { mode: 0o700 });
+   const loaded = buildDossierScreen(fs.readFileSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..', DOSSIER_POLICY_PATH)), true, null, 'private');
+   if (!loaded.ok) throw new Error('owned policy unavailable');
+@@ -33,11 +36,14 @@
+   const fixed = { parent, name: 'host', binding, originPolicySha256: 'b'.repeat(64), project: 'project:own-fixture',
+     pin: 'c'.repeat(40), principal: 'own-operator', profiles, declaredClasses: ['project-documentation'] as const,
+     screen: loaded.screen, current: () => true };
++  probe?.('writer-create-start');
+   const writer = await createUrlSessionAudit(fixed); if (!writer.ok) throw new Error('owned writer unavailable');
++  probe?.('writer-created', writer.summary);
+   try {
+     expect(writer.closedHistory()).toBeNull();
+     for (const role of ROLES) {
+       if (!activeRoles.includes(role)) continue;
++      probe?.(`role-start:${role}`);
+       const scope = writer.scope(role);
+       await writer.append({ kind: 'launch-attempt', role, scope, payload: { event: 'session-launch-attempt', profileSha256: scope.profileSha256,
+         commandSha256: '3'.repeat(64), viewSha256: '4'.repeat(64), limits: URL_LAUNCH_LIMITS } });
+@@ -94,9 +100,12 @@
+         outcome: 'stopped', exitCode: null, signal: 'SIGTERM', viewTermination: 'view-exited', groupTermination: fault === 'unknown-cleanup' ? 'Unknown' : 'confirmed',
+         toolTermination: 'settled', pendingInvocations: 0, stdout: { bytes: 0, sha256: sha256('') }, stderr: { bytes: 0, sha256: sha256('') },
+         sampledStorageBytes: 0, peakProcesses: 1, aggregateEnforcement: 'sampled-stop-only', betweenSamples: 'Unknown' } });
++      probe?.(`role-end:${role}`);
+     }
+     // Expectations come from the genuine retained writer, not a reread of files.
++    probe?.('writer-close-start');
+     const closed = await writer.close(); expect(closed).toMatchObject({ closed: true, poisoned: false });
++    probe?.('writer-close-return');
+     const expected = writer.closedHistory();
+     if (expected === null) throw new Error('owned history unavailable');
+     expect(expected).toMatchObject({ durableRecords: closed.durableRecords, durableBytes: closed.durableBytes, tipSha256: closed.tipSha256 });
+@@ -105,7 +114,11 @@
+       limits: URL_SESSION_AUDIT_LIMITS, capture: 'host-callbacks-only', providerReceipts: 'Unknown', nativeSendCensus: 'Unknown' } });
+     const file = (role: typeof ROLES[number] = 'author') => path.join(parent, `host-${role}.jsonl`);
+     return { parent, file, expected, options: { parent, name: 'host', expected, current: () => true } };
+-  } finally { await writer.close(); }
++  } finally {
++    probe?.('writer-finally-close-start');
++    await writer.close();
++    probe?.('writer-finally-close-return');
++  }
+ }
+ 
+ describe('read-only protected audit history', () => {
+@@ -141,8 +154,31 @@
+ 
+   it.each(['count-without-continuation', 'count-repeated', 'count-with-usage', 'count-wrong-origin', 'different-consumed-receipt'] as const)
+   ('refuses a captured tool exchange with %s', async toolHistory => {
+-    const f = await fixture(undefined, toolHistory);
+-    expect(await verifyUrlSessionAuditHistory(f.options)).toBeNull();
++    const observed = toolHistory === 'count-wrong-origin' || toolHistory === 'different-consumed-receipt';
++    const began = performance.now();
++    let failed = false, sample: (() => AuditProbeSummary) | undefined;
++    const stages: { stage: string; elapsedMs: number; afterFailure: boolean }[] = [];
++    const probe: AuditFixtureProbe | undefined = observed ? (stage, nextSample) => {
++      if (nextSample !== undefined) sample = nextSample;
++      const event = { stage, elapsedMs: performance.now() - began, afterFailure: failed };
++      stages.push(event);
++      // Explicit allow-list: no audit payload, paths, identifiers or raw errors.
++      const summary = sample?.();
++      process.stderr.write(`audit-history-phase-diagnostic:${JSON.stringify({ variant: toolHistory, ...event,
++        ...(summary === undefined ? {} : { writer: { closed: summary.closed, poisoned: summary.poisoned,
++          durableRecords: summary.durableRecords, pendingAppends: summary.pendingAppends,
++          pendingFilesystemOperations: summary.pendingFilesystemOperations, pendingCallbacks: summary.pendingCallbacks } }),
++        ...(stage === 'test-failed' ? { stages: [...stages] } : {}) })}\n`);
++    } : undefined;
++    if (probe !== undefined) onTestFailed(() => { failed = true; probe('test-failed'); });
++    probe?.('fixture-start');
++    const f = await fixture(undefined, toolHistory, ROLES, probe);
++    probe?.('fixture-return');
++    probe?.('verifier-start');
++    const result = await verifyUrlSessionAuditHistory(f.options);
++    probe?.('verifier-return');
++    expect(result).toBeNull();
++    probe?.('assertion-complete');
+   });
+ 
+   it.each(['dropped', 'truncated', 'appended', 'relinked', 'symlink', 'hardlink', 'public-mode'] as const)('refuses %s physical bytes without repairing them', async fault => {

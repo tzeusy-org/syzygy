@@ -1,0 +1,76 @@
+{
+  "subject": "a99238103724db0e280c2185287b7afc1f42e1c5",
+  "scope": "Four files138cases with temporary audit stage timing; original limits/workers; not acceptance",
+  "commands": [
+    {
+      "argv": [
+        "/home/orca/.nvm/versions/node/v24.6.0/bin/node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "packages/polaris-dossier/src/url-session-audit-history.test.ts",
+        "--reporter=verbose",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/f3-native-admission-fixes/audit-phase-diagnostic-a992-execution-1/vitest.json"
+      ],
+      "returncode": 0,
+      "seconds": 74.63957971899072
+    }
+  ],
+  "errors": [],
+  "reaped": [
+    {
+      "pid": 1774796,
+      "status": 0
+    }
+  ],
+  "complete": true,
+  "expectedPerFileCases": {
+    "packages/polaris-dossier/src/url-machine-cold-history.test.ts": 29,
+    "packages/polaris-dossier/src/url-machine-peer-history.test.ts": 35,
+    "packages/polaris-dossier/src/url-run-machine-close.test.ts": 37,
+    "packages/polaris-dossier/src/url-session-audit-history.test.ts": 37
+  },
+  "privateScratch": "/home/orca/.tmp/history-unit-diagnostic-rfoejm0y",
+  "counts": {
+    "passed": 138
+  },
+  "reportedCounts": {
+    "numTotalTests": 138,
+    "numPassedTests": 138,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0
+  },
+  "testsPassed": true,
+  "noOwnedChildren": true,
+  "sourceUnchanged": true,
+  "privateScratchRemoved": true,
+  "artifacts": [
+    {
+      "file": "source-after.json",
+      "bytes": 3066385,
+      "sha256": "056e522ce6dcffe7910bd82bce773bc7055d6a1e16707c7a05c1e6efceee545b"
+    },
+    {
+      "file": "source-before.json",
+      "bytes": 3066385,
+      "sha256": "056e522ce6dcffe7910bd82bce773bc7055d6a1e16707c7a05c1e6efceee545b"
+    },
+    {
+      "file": "vitest.json",
+      "bytes": 45384,
+      "sha256": "2267c5e81de2cf88d26658243e986ba85317802c65e94f35718e529be5355fe0"
+    },
+    {
+      "file": "vitest.log",
+      "bytes": 35613,
+      "sha256": "8acc3d9019e7f77beca2baee031cbb1abbb0aac0683a9b45437c87039fbbf74f"
+    }
+  ]
+}

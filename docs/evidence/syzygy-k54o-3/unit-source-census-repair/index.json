@@ -1,0 +1,76 @@
+{
+  "subjectCommit": "a99238103724db0e280c2185287b7afc1f42e1c5",
+  "sourceFiles": [
+    {
+      "path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "sha256": "4cd37669e4a1cdf88667827ff1731622c56e9424c2eae96f029be4aae748b746"
+    },
+    {
+      "path": "packages/polaris-dossier/src/regression-hold-out.test.ts",
+      "sha256": "8f53ac546b6145ded981d2f32cb621089f2c1bf606a33ba0baf7374b314531ad"
+    }
+  ],
+  "retained": [
+    {
+      "path": "diagnostic-overlay.patch",
+      "bytes": 6772,
+      "sha256": "64a01a7b5503834b4c9f49ed1737080873fa0c8fb6a7b42d510250cd83e81e84"
+    },
+    {
+      "path": "diagnostic-phases.json",
+      "bytes": 13280,
+      "sha256": "728782c86e3aabc852f5e90b9b337ad29f1928425fb86d30ae76e43d256e77a9"
+    },
+    {
+      "path": "diagnostic-terminal.json",
+      "bytes": 2337,
+      "sha256": "3ad52475c39a93d7e39d46154fb0e8c9566eec4aa2d72b787ac71e372b7f8b69"
+    },
+    {
+      "path": "owning-terminal.json",
+      "bytes": 2268,
+      "sha256": "da2bd530a86ff1b695e404ac6bd9f84f456bf487e685013569ab395259c86eab"
+    },
+    {
+      "path": "owning-vitest.json",
+      "bytes": 8060,
+      "sha256": "0e043b4bdbbc0ebf73e2bdec0490d0a840cddf815ab0b1ee1b07c91ff07a69c0"
+    },
+    {
+      "path": "source-review-RAW.md",
+      "bytes": 8436,
+      "sha256": "1471bc7c8ba44e11b25f13644cda796bf5eaa6d61d4edcf4ef4099a15927cb1b"
+    },
+    {
+      "path": "unit-failures-assessment.json",
+      "bytes": 16514,
+      "sha256": "971e88ab1e18d2b7acca65c85b430786729515da0600b312281081149391b504"
+    }
+  ],
+  "externalOnly": [
+    {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/unit-census-repairs-5b352-run.py",
+      "bytes": 6779,
+      "sha256": "fe7ebeb0111e1486a1b5f18dedf9cbf108947b80b3eb4a14dea466f8d26a8780",
+      "futureAvailability": "Unknown"
+    },
+    {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/audit-phase-diagnostic-a992-run.py",
+      "bytes": 6291,
+      "sha256": "8308572cc8f693753c5a945ffd4e5c9649241af56b7f90d4f6e88bef5a48d863",
+      "futureAvailability": "Unknown"
+    },
+    {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/final-check-all-clean-clone-execution-5b352-1/check-all.log",
+      "bytes": 2168529,
+      "sha256": "8a92691b7eb8ef6a4b74e83960ae291883f77fe87cf2d536a22383210529c043",
+      "futureAvailability": "Unknown"
+    },
+    {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/history-unit-diagnostic-5b352-execution-1/terminal.json",
+      "bytes": 2343,
+      "sha256": "28963dae8d47b0fdcec21eb383db63e7cc7ddd274b9d16e5e8e3e7a986d6702c",
+      "futureAvailability": "Unknown"
+    }
+  ]
+}

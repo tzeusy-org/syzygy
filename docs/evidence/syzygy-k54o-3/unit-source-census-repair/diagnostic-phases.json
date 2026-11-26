@@ -1,0 +1,505 @@
+{
+  "scope": "Temporary stage overlay; full4files138passed; not uninstrumented full-suite acceptance",
+  "events": [
+    {
+      "variant": "count-wrong-origin",
+      "stage": "fixture-start",
+      "elapsedMs": 0.2891970000000583,
+      "afterFailure": false
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "writer-create-start",
+      "elapsedMs": 7.789848000000347,
+      "afterFailure": false
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "writer-created",
+      "elapsedMs": 219.42555399999947,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 4,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "role-start:author",
+      "elapsedMs": 220.05577699999958,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 4,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "role-end:author",
+      "elapsedMs": 1180.5858439999993,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 22,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "role-start:inventory",
+      "elapsedMs": 1181.019053,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 22,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "role-end:inventory",
+      "elapsedMs": 1296.4636850000006,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 24,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "role-start:fidelity",
+      "elapsedMs": 1296.8424319999995,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 24,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "role-end:fidelity",
+      "elapsedMs": 1362.807839000001,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 26,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "role-start:design",
+      "elapsedMs": 1363.3113709999998,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 26,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "role-end:design",
+      "elapsedMs": 1477.2018829999997,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "writer-close-start",
+      "elapsedMs": 1477.63364,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "writer-close-return",
+      "elapsedMs": 1478.8738759999997,
+      "afterFailure": false,
+      "writer": {
+        "closed": true,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "writer-finally-close-start",
+      "elapsedMs": 1479.6922649999997,
+      "afterFailure": false,
+      "writer": {
+        "closed": true,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "writer-finally-close-return",
+      "elapsedMs": 1480.2561920000007,
+      "afterFailure": false,
+      "writer": {
+        "closed": true,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "fixture-return",
+      "elapsedMs": 1480.5303999999996,
+      "afterFailure": false,
+      "writer": {
+        "closed": true,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "verifier-start",
+      "elapsedMs": 1480.805671,
+      "afterFailure": false,
+      "writer": {
+        "closed": true,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "verifier-return",
+      "elapsedMs": 1490.5855150000007,
+      "afterFailure": false,
+      "writer": {
+        "closed": true,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "count-wrong-origin",
+      "stage": "assertion-complete",
+      "elapsedMs": 1490.9134950000007,
+      "afterFailure": false,
+      "writer": {
+        "closed": true,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "fixture-start",
+      "elapsedMs": 0.017443000000639586,
+      "afterFailure": false
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "writer-create-start",
+      "elapsedMs": 5.786017000000356,
+      "afterFailure": false
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "writer-created",
+      "elapsedMs": 149.78773899999942,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 4,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "role-start:author",
+      "elapsedMs": 150.61273000000074,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 4,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "role-end:author",
+      "elapsedMs": 1072.8080289999998,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 22,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "role-start:inventory",
+      "elapsedMs": 1073.1920150000005,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 22,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "role-end:inventory",
+      "elapsedMs": 1122.9981480000006,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 24,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "role-start:fidelity",
+      "elapsedMs": 1123.3376609999996,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 24,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "role-end:fidelity",
+      "elapsedMs": 1257.3573269999997,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 26,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "role-start:design",
+      "elapsedMs": 1257.7703079999992,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 26,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "role-end:design",
+      "elapsedMs": 1358.818883,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "writer-close-start",
+      "elapsedMs": 1359.1665300000004,
+      "afterFailure": false,
+      "writer": {
+        "closed": false,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "writer-close-return",
+      "elapsedMs": 1360.3082510000004,
+      "afterFailure": false,
+      "writer": {
+        "closed": true,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "writer-finally-close-start",
+      "elapsedMs": 1360.9665260000002,
+      "afterFailure": false,
+      "writer": {
+        "closed": true,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "writer-finally-close-return",
+      "elapsedMs": 1361.4179199999999,
+      "afterFailure": false,
+      "writer": {
+        "closed": true,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "fixture-return",
+      "elapsedMs": 1361.6133399999999,
+      "afterFailure": false,
+      "writer": {
+        "closed": true,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "verifier-start",
+      "elapsedMs": 1361.9293679999992,
+      "afterFailure": false,
+      "writer": {
+        "closed": true,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "verifier-return",
+      "elapsedMs": 1371.7534350000005,
+      "afterFailure": false,
+      "writer": {
+        "closed": true,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    },
+    {
+      "variant": "different-consumed-receipt",
+      "stage": "assertion-complete",
+      "elapsedMs": 1372.0696630000002,
+      "afterFailure": false,
+      "writer": {
+        "closed": true,
+        "poisoned": false,
+        "durableRecords": 28,
+        "pendingAppends": 0,
+        "pendingFilesystemOperations": 0,
+        "pendingCallbacks": 0
+      }
+    }
+  ]
+}

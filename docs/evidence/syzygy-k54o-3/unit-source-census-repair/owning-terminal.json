@@ -1,0 +1,85 @@
+{
+  "subject": "5b3528500448c4bcf1578ad932d8c11595c282ab",
+  "scope": "Exact reviewed two unit census fixes; typecheck and all19 owning cases",
+  "commands": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "returncode": 0,
+      "seconds": 33.70678083202802
+    },
+    {
+      "argv": [
+        "/home/orca/.nvm/versions/node/v24.6.0/bin/node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "packages/polaris-dossier/src/regression-hold-out.test.ts",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/f3-native-admission-fixes/unit-census-repairs-5b352-execution-1/vitest.json"
+      ],
+      "returncode": 0,
+      "seconds": 14.097902234992944
+    }
+  ],
+  "errors": [],
+  "reaped": [
+    {
+      "pid": 1754309,
+      "status": 0
+    }
+  ],
+  "complete": true,
+  "expectedPerFileCases": {
+    "packages/polaris-generation-core/src/island-boundary.test.ts": 12,
+    "packages/polaris-dossier/src/regression-hold-out.test.ts": 7
+  },
+  "privateScratch": "/home/orca/.tmp/history-unit-diagnostic-qdl9yen6",
+  "counts": {
+    "passed": 19
+  },
+  "reportedCounts": {
+    "numTotalTests": 19,
+    "numPassedTests": 19,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0
+  },
+  "testsPassed": true,
+  "noOwnedChildren": true,
+  "sourceUnchanged": true,
+  "privateScratchRemoved": true,
+  "artifacts": [
+    {
+      "file": "source-after.json",
+      "bytes": 3066448,
+      "sha256": "f52972016d5d7fd7a2538d7057d29543c9d642df834b84cf722793a7382e0ca4"
+    },
+    {
+      "file": "source-before.json",
+      "bytes": 3066448,
+      "sha256": "f52972016d5d7fd7a2538d7057d29543c9d642df834b84cf722793a7382e0ca4"
+    },
+    {
+      "file": "typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "file": "vitest.json",
+      "bytes": 8060,
+      "sha256": "0e043b4bdbbc0ebf73e2bdec0490d0a840cddf815ab0b1ee1b07c91ff07a69c0"
+    },
+    {
+      "file": "vitest.log",
+      "bytes": 115,
+      "sha256": "057fe42f5b1f5c9798fad3fe8e3f80a1ab727dedd345be1c088ebe7870c6c0df"
+    }
+  ]
+}
