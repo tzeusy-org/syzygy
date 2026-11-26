@@ -27,6 +27,10 @@ import {
   type ChangeWindow,
   type TrajectoryChangeWindow,
   isTitleAdmitted,
+  closedItemLanding,
+  TRAJECTORY_COMMIT_JOINS_ID,
+  TRAJECTORY_LANDING_UNNAMED_ID,
+  type TrajectoryClosedLanding,
   type WorkItemFact,
   type WorkItemTitle,
 } from '@syzygy/three-surface-poc-core';
@@ -131,7 +135,7 @@ function closureNotice(rendered: readonly TrajectoryLaneItem[]): string {
   const unverified = closed.filter((item) => item.verification === 'unknown').length;
   return `<p class="closure-notice notice" data-parity-field="trajectory-closure-notice">
         <span data-parity-field="trajectory-closed-count">${closed.length}</span> of these items are closed in the tracker. Closed is the tracker's word, not a verification:
-        verification is Unknown for <span data-parity-field="trajectory-closed-unverified-count">${unverified}</span> of them, because no test or merge evidence is ingested for a work item; the <a href="#n-verification">verification notice</a> gives the reason and route.
+        verification is Unknown for <span data-parity-field="trajectory-closed-unverified-count">${unverified}</span> of them, because no test evidence is ingested for a work item, and a commit that names an item shows where it landed, not that it works; the <a href="#n-verification">verification notice</a> gives the reason and route.
       </p>`;
 }
 
@@ -141,6 +145,8 @@ const NOTICE_ELEMENT_ID = {
   [WORK_ITEM_GOVERNING_INTENT_REGION_ID]: 'n-intent',
   [WORK_ITEM_VERIFICATION_REGION_ID]: 'n-verification',
   [WORK_ITEMS_REGION_ID]: 'n-work-items',
+  [TRAJECTORY_COMMIT_JOINS_ID]: 'n-commit-joins',
+  [TRAJECTORY_LANDING_UNNAMED_ID]: 'n-landing-unnamed',
 } as const;
 
 type BoardDisclosureId = keyof typeof NOTICE_ELEMENT_ID;
@@ -262,6 +268,64 @@ function changedAnswer(model: PocModel, windows: readonly TrajectoryChangeWindow
   return `${head}${elsewhere}<p data-parity-field="answer-changed" data-change-window="${selected.window}">Between ${point('answer-changed-from', 'revision', selected.from)} and ${point('answer-changed-to', 'the observed revision', selected.to)}: <span data-parity-field="answer-changed-total">${selected.facts.length}</span> items changed state (${counts}). <span data-parity-field="answer-changed-updated-only">${selected.updatedWithoutStatusChange}</span> more were updated without a status change, and <span data-parity-field="answer-changed-outside-prefix">${selected.outsidePrefix}</span> changed rows are outside this tracker's prefix, counted only. Net change between the two revisions, from the tracker's history; not a rate or a verdict.</p>${list}`;
 }
 
+/** How many commits a card lists; the machine answer lists every one. */
+export const CARD_COMMIT_LIMIT = 3;
+
+const MERGED_LABEL = 'Merged (by naming convention, reduced fidelity)';
+
+/** RFC4-22: a join that cannot be established renders Unknown. */
+function noNamingCommitLabel(truncated: boolean, read: number): string {
+  return truncated ? `Landing: Unknown, no commit among the newest ${read} read names it` : 'Landing: Unknown, no commit names it';
+}
+
+/** POC-REQ-065 (syzygy-t3jk.26): the closed items' landings in the remains
+ * answer, never a bare "merged" and never a verdict word. */
+function closedLandingSentence(model: PocModel, landing: TrajectoryClosedLanding): string {
+  const closed = `<span data-parity-field="answer-remains-closed-landing-closed">${landing.closed}</span>`;
+  if (landing.state === 'unknown') {
+    return ` <span id="${NOTICE_ELEMENT_ID[TRAJECTORY_COMMIT_JOINS_ID]}">${closed} items are closed. ${answerDisclosure(model, 'answer-remains-closed-landing', landing.disclosure, 'Their landing')}</span>`;
+  }
+  const older = landing.historyTruncated
+    ? ` Only the newest <span data-parity-field="answer-remains-closed-landing-read">${landing.commitsRead}</span> commits were read; a commit in older history may name an item counted here as having none.`
+    : ` The observed revision's whole history was read (<span data-parity-field="answer-remains-closed-landing-read">${landing.commitsRead}</span> commits).`;
+  return ` Of ${closed} closed items, <span data-parity-field="answer-remains-closed-landing-merged">${landing.mergedByConvention}</span> are merged by naming convention: a commit reachable from the observed revision names each one, a reduced-fidelity join that shows where work landed, not that it satisfied its intent. <span data-parity-field="answer-remains-closed-landing-none">${landing.noNamingCommitRead}</span> are closed with no commit that names them, so where they landed is Unknown.${older}${unnamedDisclosure(model, landing.noNamingCommitRead)}`;
+}
+
+/** The one disclosure the Unknown landing of an unnamed closed item refers to. */
+function unnamedDisclosure(model: PocModel, count: number): string {
+  if (count === 0) return '';
+  return ` <span id="${NOTICE_ELEMENT_ID[TRAJECTORY_LANDING_UNNAMED_ID]}">${answerDisclosure(model, 'answer-remains-closed-landing-unnamed', TRAJECTORY_LANDING_UNNAMED_ID, 'Their landing')}</span>`;
+}
+
+/** POC-REQ-065: a card's commits and, for a closed item, its landing. */
+function itemCommits(model: PocModel, item: WorkItemFact): string {
+  const joins = model.commitJoins;
+  if (joins.kind !== 'observed') {
+    if (item.status !== 'closed') return '';
+    const unknown = unknownSubject(model, TRAJECTORY_COMMIT_JOINS_ID);
+    return cardMark('work-item-landing', TRAJECTORY_COMMIT_JOINS_ID, 'epistemic-unknown', unknown.closedReason, 'Landing: Unknown');
+  }
+  const landing = closedItemLanding(item, joins);
+  const commits = joins.items.find((entry) => entry.id === item.id)?.commits ?? [];
+  const label = landing === null ? '' : landing === 'merged-by-convention'
+    ? `<span class="wi-landing" data-parity-field="work-item-landing" data-landing="${landing}">${MERGED_LABEL}</span>`
+    : unnamedLandingMark(model, noNamingCommitLabel(joins.truncated, joins.read));
+  if (commits.length === 0) return label === '' ? '' : `<div class="wi-commits">${label}</div>`;
+  const listed = commits.slice(0, CARD_COMMIT_LIMIT)
+    .map((commit) => `<br><code data-parity-field="work-item-commit">${escapeHtml(commit.hash.slice(0, 12))}</code> ${escapeHtml(commit.at)}`)
+    .join('');
+  const more = commits.length > CARD_COMMIT_LIMIT
+    ? `<br><span data-parity-field="work-item-commits-unlisted">${commits.length - CARD_COMMIT_LIMIT}</span> more in the machine answer`
+    : '';
+  return `<div class="wi-commits">${label}<span><span data-parity-field="work-item-commit-count">${commits.length}</span> commits name it (naming convention), newest first:${listed}${more}</span></div>`;
+}
+
+function unnamedLandingMark(model: PocModel, label: string): string {
+  const notice = NOTICE_ELEMENT_ID[TRAJECTORY_LANDING_UNNAMED_ID];
+  const unknown = unknownSubject(model, TRAJECTORY_LANDING_UNNAMED_ID);
+  return `<span class="epistemic epistemic-unknown wi-landing" data-parity-field="work-item-landing" data-landing="no-naming-commit-read" data-unknown-ref="${TRAJECTORY_LANDING_UNNAMED_ID}" data-unknown-reason="${escapeHtml(unknown.closedReason)}">${escapeHtml(label)} <a class="mark-ref" href="#${notice}" aria-describedby="${notice}">reason and route</a></span>`;
+}
+
 function answerBody(model: PocModel, answer: TrajectoryAnswer, context: ChangedContext): string {
   if (answer.state === 'unknown' && answer.disclosure === WORK_ITEMS_REGION_ID) {
     const unknown = unknownSubject(model, WORK_ITEMS_REGION_ID);
@@ -273,7 +337,7 @@ function answerBody(model: PocModel, answer: TrajectoryAnswer, context: ChangedC
       const parts = (Object.keys(STATUS_TO_COLUMN) as WorkItemStatus[])
         .map((status) => `<span data-parity-field="answer-remains-${status}">${answer.byStatus[status]}</span> <code>${escapeHtml(status)}</code>`)
         .join(' · ');
-      return `<span data-parity-field="answer-remains-served">${answer.served}</span> served work items, by tracker status: ${parts}. Counted over every served item, not this board's selection. These are the tracker's items only, not checked against materialization records; approved intent that no proposal covers, and approved intent not yet materialized, are not enumerated here.`;
+      return `<span data-parity-field="answer-remains-served">${answer.served}</span> served work items, by tracker status: ${parts}. Counted over every served item, not this board's selection. These are the tracker's items only, not checked against materialization records; approved intent that no proposal covers, and approved intent not yet materialized, are not enumerated here.${closedLandingSentence(model, answer.closedLanding)}`;
     }
     case 'running': {
       if (!('claimed' in answer)) break;
@@ -507,6 +571,7 @@ function itemCard(
     ${itemFacts(item)}
     ${itemGoverningIntent(governedBy)}
     ${itemVerification()}
+    ${itemCommits(model, served)}
     ${workerChangeBadge(model, workerChange, testArtifactVerification, governingIntentId)}
   </li>`;
 }
@@ -543,6 +608,9 @@ const TRAJECTORY_STYLE = `
   .worker-change-note { font-size: .68rem; color: var(--muted); }
   .worker-change-label { font-family: var(--font-mono); font-size: .7rem; text-transform: uppercase; color: var(--cyan); }
   .wi-card-demonstrated { border-color: var(--cyan); }
+  .wi-commits { display: grid; gap: .15rem; font-size: .7rem; color: var(--muted); }
+  .wi-commits code { overflow-wrap: anywhere; }
+  .wi-landing { font-family: var(--font-mono); color: var(--ink); }
   .demo-badge { color: var(--cyan); font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .04em; }
   .demo-callout { max-width: 78ch; }
   .governing-intent-count, .titles-notice { max-width: 78ch; }

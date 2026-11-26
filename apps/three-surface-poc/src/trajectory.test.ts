@@ -944,7 +944,7 @@ describe('Trajectory closure wording (T1)', () => {
     expect(html.match(/data-parity-field="trajectory-closure-notice"/g)).toHaveLength(1);
     expect(html.indexOf('trajectory-closure-notice')).toBeLessThan(html.indexOf('<div class="board"'));
     expect(html).toContain(`data-parity-field="trajectory-closed-count">${closed.length}</span> of these items are closed in the tracker. Closed is the tracker's word, not a verification`);
-    expect(html).toContain(`data-parity-field="trajectory-closed-unverified-count">${unverified.length}</span> of them, because no test or merge evidence is ingested for a work item`);
+    expect(html).toContain(`data-parity-field="trajectory-closed-unverified-count">${unverified.length}</span> of them, because no test evidence is ingested for a work item, and a commit that names an item shows where it landed, not that it works`);
   });
 });
 
@@ -963,7 +963,8 @@ describe('Trajectory board-level Unknowns and card facts (T2)', () => {
   const ROUTE_COUNTS: readonly (readonly [string, number])[] = [
     ['Route: <span data-unknown-route="excluded-content" data-route-actor="owner" data-route-verb="decide" data-route-target="policy">Policy change by the owner, or accept the exclusion</span>.', 1],
     ['Route: <span data-unknown-route="source-uncaptured-or-unreachable" data-route-actor="operator" data-route-verb="repair" data-route-target="evaluation">Repair the observer/source; new snapshot</span>.', 4],
-    ['Route: <span data-unknown-route="missing-evidence" data-route-actor="operator" data-route-verb="capture" data-route-target="evaluation">Produce or capture evidence</span>.', 1],
+    // Verification, and the unnamed closed items' landing (POC-REQ-065).
+    ['Route: <span data-unknown-route="missing-evidence" data-route-actor="operator" data-route-verb="capture" data-route-target="evaluation">Produce or capture evidence</span>.', 2],
   ];
   const ROUTES = ROUTE_COUNTS.map(([literal]) => literal);
   const BASES = [
@@ -1064,7 +1065,11 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
     const served = await servedAnswer(model);
     const remains = served.trajectory.answers[0]!;
     // 201 current items cycle over six statuses (34, 34, 34, 33, 33, 33) and 51 are closed.
-    expect(remains).toEqual({ id: 'remains', state: 'observed', served: 252, byStatus: { open: 34, in_progress: 34, blocked: 34, deferred: 33, pinned: 33, hooked: 33, closed: 51 } });
+    expect(remains).toEqual({
+      id: 'remains', state: 'observed', served: 252, byStatus: { open: 34, in_progress: 34, blocked: 34, deferred: 33, pinned: 33, hooked: 33, closed: 51 },
+      // The fixture repository's one commit names no item (POC-REQ-065).
+      closedLanding: { state: 'observed', closed: 51, mergedByConvention: 0, noNamingCommitRead: 51, basis: 'naming-convention', fidelity: 'reduced-fidelity', commitsRead: 1, historyTruncated: false },
+    });
     const body = answerBody(html, 'remains');
     const counts = Object.fromEntries([...body.matchAll(/data-parity-field="answer-remains-([a-z_]+)">(\d+)</g)].map((m) => [m[1], Number(m[2])]));
     expect(counts).toEqual({ served: 252, open: 34, in_progress: 34, blocked: 34, deferred: 33, pinned: 33, hooked: 33, closed: 51 });
@@ -1157,7 +1162,7 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
     const html = renderTrajectoryPage(model);
     const served = await servedAnswer(model);
     const disclosed = [...answersRegion(html).matchAll(/data-unknown-disclosure="([^"]*)"/g)].map((m) => m[1]);
-    expect(disclosed).toEqual(['region:trajectory-changed', 'region:trajectory-cost', 'region:trajectory-orphaned-work']);
+    expect(disclosed).toEqual(['region:trajectory-landing-unnamed', 'region:trajectory-changed', 'region:trajectory-cost', 'region:trajectory-orphaned-work']);
     for (const id of disclosed) expect(served.unknownSubjects.some((subject) => subject.id === id), id).toBe(true);
   });
 
@@ -1991,8 +1996,10 @@ describe('Every Trajectory list names an item with its screened title (POC-REQ-0
   // item under two parents. This fixture gives every title the most bytes
   // escaping can make (500 `"`), every item two parents and three blockers,
   // and a full changed list. It measures that fan-in, not a bound: blockers
-  // per card are unbounded (syzygy-262m).
-  it('keeps a page of most-escaped titles with two parents and three blockers per item under 90% of the human response ceiling', async () => {
+  // per card are unbounded (syzygy-262m). Since syzygy-t3jk.26 every card
+  // also lists its three-commit cap and a remainder: 1,917,287 bytes at most
+  // (91.4%), 130 KB more than without commits.
+  it('keeps a page of most-escaped titles with two parents, three blockers and three commits per item under 95% of the human response ceiling', async () => {
     const worst = '"'.repeat(500);
     const ids = Array.from({ length: 260 }, (_, index) => `bu-w${String(index).padStart(3, '0')}`);
     const parents = ids.slice(0, 10);
@@ -2004,7 +2011,15 @@ describe('Every Trajectory list names an item with its screened title (POC-REQ-0
         blockEdge(id, ids[(index + 11) % 260]!), blockEdge(id, ids[(index + 12) % 260]!), blockEdge(id, ids[(index + 13) % 260]!),
       ]),
     ];
+    // syzygy-t3jk.26: four commits name every item, so every card lists
+    // its three-commit cap and a remainder (POC-REQ-065).
+    const repo = fixtureRepoWithGit(cleanups);
+    for (let index = 0; index < 4; index += 1) {
+      execFileSync('git', ['-C', repo.repoRoot, 'commit', '-q', '--allow-empty', '-m', ids.join(' ')]);
+    }
+    const head = execFileSync('git', ['-C', repo.repoRoot, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
     const page = buildFixtureModel(cleanups, {
+      fixtureRepo: { repoRoot: repo.repoRoot, revision: head },
       workItemRows: ids.map((id) => row(id, worst)),
       runDependencyQuery: () => JSON.stringify(dependencyRows),
       runHistoryQuery: historyOf(ids.map((id) => diffRow('added', null, id, null, 'open'))),
@@ -2016,7 +2031,200 @@ describe('Every Trajectory list names an item with its screened title (POC-REQ-0
       expect(response.status).toBe(200);
       sizes[query === '' ? 'default' : query] = Buffer.byteLength(response.body as string, 'utf8');
     }
-    process.stdout.write(`[T5 S2 worst list-title page bytes] ${JSON.stringify(sizes)}\n`);
-    expect(Math.max(...Object.values(sizes))).toBeLessThan(PWB_RESOURCE_LIMITS.maxHumanResponseBytes * 0.9);
+    process.stdout.write(`[T5 S2 + T10 S2 worst list-title page bytes] ${JSON.stringify(sizes)}\n`);
+    expect(page.commitJoins.kind === 'observed' && page.commitJoins.items.length).toBe(260);
+    expect(Math.max(...Object.values(sizes))).toBeLessThan(PWB_RESOURCE_LIMITS.maxHumanResponseBytes * 0.95);
+  });
+});
+
+// POC-REQ-064 (syzygy-t3jk.25): the observation joins served items to the
+// observed repository's commits by exact identifier tokens, read from the
+// observed revision in the same pass; the machine answer keeps no subject.
+describe('Commit joins in the observation (POC-REQ-064, syzygy-t3jk.25)', () => {
+  it('serves the commits that name a served item, read from a real repository at the observed revision', async () => {
+    const repo = fixtureRepoWithGit(cleanups);
+    const git = (...args: string[]) => execFileSync('git', ['-C', repo.repoRoot, ...args], { encoding: 'utf8' }).trim();
+    git('commit', '-q', '--allow-empty', '-m', 'Land the card [bu-open1] JOINMARKERone');
+    const named = git('rev-parse', 'HEAD');
+    git('commit', '-q', '--allow-empty', '-m', 'Unrelated chore JOINMARKERtwo');
+    const revision = git('rev-parse', 'HEAD');
+    // A commit after the observed revision is never read.
+    git('commit', '-q', '--allow-empty', '-m', 'Later work [bu-progress1] JOINMARKERthree');
+    const model = buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision } });
+    const route = pocRoutes(() => model).find((candidate) => candidate.path === '/api/poc')!;
+    const response = await route.handle({ request: { method: 'GET', path: '/api/poc', query: new URLSearchParams(), headers: {} } });
+    expect(response.status).toBe(200);
+    const body = response.body as string;
+    const joins = (JSON.parse(body) as PocModel).commitJoins;
+    if (joins.kind !== 'observed') throw new Error(`expected observed joins, got ${JSON.stringify(joins)}`);
+    expect([joins.revision, joins.read, joins.joined, joins.unjoined, joins.truncated]).toEqual([revision, 3, 1, 2, false]);
+    expect(joins.items).toHaveLength(1);
+    expect(joins.items[0]!.id).toBe('bu-open1');
+    expect(joins.items[0]!.commits.map((commit) => commit.hash)).toEqual([named]);
+    expect(body).not.toContain('JOINMARKER');
+    expect(body).not.toContain('Land the card');
+    expect(renderTrajectoryPage(model)).not.toContain('JOINMARKER');
+  });
+});
+
+// POC-REQ-065 (syzygy-t3jk.26): closed work that landed reads apart from
+// closed work with no landing, by the commit join (POC-REQ-064) alone.
+describe('Closed items by landing (POC-REQ-065, syzygy-t3jk.26)', () => {
+  const VERDICT = /\b(?:done|complete|completed|shipped|delivered)\b/i;
+
+  function namingRepo() {
+    const repo = fixtureRepoWithGit(cleanups);
+    const git = (...args: string[]) => execFileSync('git', ['-C', repo.repoRoot, ...args], { encoding: 'utf8' }).trim();
+    git('commit', '-q', '--allow-empty', '-m', 'Land the recent closure [bu-closed-recent] LANDMARKERone');
+    const closedHash = git('rev-parse', 'HEAD');
+    git('commit', '-q', '--allow-empty', '-m', 'Progress on bu-open1 LANDMARKERtwo');
+    const openHash = git('rev-parse', 'HEAD');
+    return { repo, git, closedHash, openHash, revision: openHash };
+  }
+
+  async function machine(model: PocModel): Promise<PocModel> {
+    const route = pocRoutes(() => model).find((candidate) => candidate.path === '/api/poc')!;
+    const response = await route.handle({ request: { method: 'GET', path: '/api/poc', query: new URLSearchParams(), headers: {} } });
+    return JSON.parse(response.body as string) as PocModel;
+  }
+
+  function card(html: string, id: string): string {
+    const start = html.indexOf(`data-work-item-id="${id}"`);
+    if (start === -1) throw new Error(`no card for ${id}`);
+    return html.slice(start, html.indexOf('</li>', start));
+  }
+
+  it('counts closed items merged by naming convention apart from closed items no commit names, on both channels', async () => {
+    const { repo, closedHash, revision } = namingRepo();
+    const model = buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision } });
+    const served = await machine(model);
+    const remains = served.trajectory.answers.find((answer) => answer.id === 'remains');
+    expect(remains && 'closedLanding' in remains ? remains.closedLanding : null).toEqual({
+      state: 'observed', closed: 2, mergedByConvention: 1, noNamingCommitRead: 1,
+      basis: 'naming-convention', fidelity: 'reduced-fidelity', commitsRead: 3, historyTruncated: false,
+    });
+    const html = trajectoryView(model, 'status=closed');
+    expect(html).toContain('data-parity-field="answer-remains-closed-landing-closed">2</span> closed items, <span data-parity-field="answer-remains-closed-landing-merged">1</span> are merged by naming convention');
+    expect(html).toContain('data-parity-field="answer-remains-closed-landing-none">1</span> are closed with no commit that names them, so where they landed is Unknown.');
+    expect(html).toContain('id="n-landing-unnamed"');
+    const subject = served.unknownSubjects.find((entry) => entry.id === 'region:trajectory-landing-unnamed');
+    expect([subject?.epistemic.closedReason, subject?.epistemic.reason]).toEqual(['missing-evidence', "1 closed items have no commit that names them, so where each landed is Unknown: no commit subject carries the item's identifier as an exact token, and the join is never fuzzy-matched (RFC4-22); the observed revision's whole history (3 commits) was read. A commit that names the item resolves it."]);
+    expect(html).toContain("The observed revision's whole history was read (<span data-parity-field=\"answer-remains-closed-landing-read\">3</span> commits).");
+    const merged = card(html, 'bu-closed-recent');
+    expect(merged).toContain('data-landing="merged-by-convention">Merged (by naming convention, reduced fidelity)</span>');
+    expect(merged).toContain(`<code data-parity-field="work-item-commit">${closedHash.slice(0, 12)}</code>`);
+    expect(merged).toContain('data-parity-field="work-item-commit-count">1</span> commits name it (naming convention), newest first:');
+    const unnamed = card(html, 'bu-closed-old');
+    expect(unnamed).toContain('class="epistemic epistemic-unknown wi-landing" data-parity-field="work-item-landing" data-landing="no-naming-commit-read" data-unknown-ref="region:trajectory-landing-unnamed" data-unknown-reason="missing-evidence">Landing: Unknown, no commit names it <a class="mark-ref" href="#n-landing-unnamed"');
+    expect(html).not.toContain('LANDMARKER');
+    expect(JSON.stringify(served)).not.toContain('LANDMARKER');
+  });
+
+  it('lists an open item\'s naming commits without a landing, and never a bare "merged" or a verdict word', async () => {
+    const { repo, openHash, revision } = namingRepo();
+    const model = buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision } });
+    const open = card(renderTrajectoryPage(model), 'bu-open1');
+    const html = trajectoryView(model, 'status=closed');
+    expect(open).toContain(`<code data-parity-field="work-item-commit">${openHash.slice(0, 12)}</code>`);
+    expect(open).not.toContain('data-parity-field="work-item-landing"');
+    const landings = [...html.matchAll(/data-parity-field="work-item-landing"[^>]*>([^<]*)</g)].map((match) => match[1]!);
+    expect(landings.length).toBeGreaterThan(0);
+    for (const text of landings) {
+      expect(text).not.toMatch(VERDICT);
+      if (/merged/i.test(text)) expect(text).toBe('Merged (by naming convention, reduced fidelity)');
+    }
+    const from = html.indexOf('answer-remains-closed-landing-closed');
+    const answer = html.slice(from, html.indexOf('</dd>', from)).replace(/<[^>]*>/g, '');
+    expect(answer).not.toMatch(VERDICT);
+    expect(answer.match(/merged/gi)).toEqual(['merged']);
+    expect(answer).toContain('merged by naming convention');
+  });
+
+  it('renders every card\'s landing as the machine answer\'s join and status give it', async () => {
+    const { repo, revision } = namingRepo();
+    const model = buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision } });
+    const served = await machine(model);
+    if (served.commitJoins.kind !== 'observed' || served.workItems.kind !== 'observed') throw new Error('expected observed');
+    const joined = new Set(served.commitJoins.items.map((entry) => entry.id));
+    const pages = [renderTrajectoryPage(model), trajectoryView(model, 'status=closed')];
+    const cards = pages.flatMap((html) => [...html.matchAll(/data-work-item-id="([^"]+)"/g)].map((match) => [html, match[1]!] as const));
+    expect(new Set(cards.map(([, id]) => id)).size).toBe(served.workItems.items.length);
+    for (const [html, id] of cards) {
+      const item = served.workItems.items.find((entry) => entry.id === id)!;
+      const expected = item.status !== 'closed' ? null : joined.has(id) ? 'merged-by-convention' : 'no-naming-commit-read';
+      const landing = /data-landing="([^"]+)"/.exec(card(html, id))?.[1] ?? null;
+      expect([id, landing]).toEqual([id, expected]);
+    }
+  });
+
+  it('says a closed item without a naming commit was checked only against the commits read when older history was not read', async () => {
+    const { repo, revision } = namingRepo();
+    const copy = JSON.parse(JSON.stringify(buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision } }))) as PocModel;
+    if (copy.commitJoins.kind !== 'observed') throw new Error('expected observed');
+    Object.assign(copy.commitJoins, { truncated: true, read: 5000 });
+    const remains = copy.trajectory.answers.find((answer) => answer.id === 'remains');
+    if (remains === undefined || !('closedLanding' in remains) || remains.closedLanding.state !== 'observed') throw new Error('expected observed');
+    Object.assign(remains.closedLanding, { historyTruncated: true, commitsRead: 5000 });
+    const html = trajectoryView(copy, 'status=closed');
+    expect(card(html, 'bu-closed-old')).toContain('data-landing="no-naming-commit-read" data-unknown-ref="region:trajectory-landing-unnamed" data-unknown-reason="missing-evidence">Landing: Unknown, no commit among the newest 5000 read names it <a');
+    expect(html).toContain('Only the newest <span data-parity-field="answer-remains-closed-landing-read">5000</span> commits were read; a commit in older history may name an item counted here as having none.');
+    expect(html).not.toContain("whole history was read");
+  });
+
+  it('lists at most three of an item\'s naming commits, newest first with their instants, and counts the rest', async () => {
+    const repo = fixtureRepoWithGit(cleanups);
+    const git = (env: Record<string, string>, ...args: string[]) => execFileSync('git', ['-C', repo.repoRoot, ...args], { encoding: 'utf8', env: { ...process.env, ...env } }).trim();
+    const hashes: string[] = [];
+    for (let index = 1; index <= 4; index += 1) {
+      git({ GIT_COMMITTER_DATE: `2026-11-2${index}T10:00:00Z` }, 'commit', '-q', '--allow-empty', '-m', `Step ${index} [bu-open1]`);
+      hashes.unshift(git({}, 'rev-parse', 'HEAD'));
+    }
+    const model = buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision: hashes[0]! } });
+    const open = card(renderTrajectoryPage(model), 'bu-open1');
+    const listed = [...open.matchAll(/<code data-parity-field="work-item-commit">([0-9a-f]+)<\/code> ([0-9TZ:-]+)/g)].map((match) => [match[1], match[2]]);
+    expect(listed).toEqual([
+      [hashes[0]!.slice(0, 12), '2026-11-24T10:00:00Z'],
+      [hashes[1]!.slice(0, 12), '2026-11-23T10:00:00Z'],
+      [hashes[2]!.slice(0, 12), '2026-11-22T10:00:00Z'],
+    ]);
+    expect(open).toContain('data-parity-field="work-item-commit-count">4</span> commits name it (naming convention), newest first:');
+    expect(open).toContain('<span data-parity-field="work-item-commits-unlisted">1</span> more in the machine answer');
+  });
+
+  it('is Unknown with its reason and route, never counted, when the history cannot be read', async () => {
+    const { repo, git, revision } = namingRepo();
+    // Remove the root commit's object: the history walk fails past the tip.
+    const root = git('rev-list', '--max-parents=0', 'HEAD');
+    rmSync(join(repo.repoRoot, '.git', 'objects', root.slice(0, 2), root.slice(2)));
+    const model = buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision } });
+    const served = await machine(model);
+    expect(served.commitJoins).toEqual({ kind: 'unknown', reason: 'commit-history-read-failed' });
+    const remains = served.trajectory.answers.find((answer) => answer.id === 'remains');
+    expect(remains && 'closedLanding' in remains ? remains.closedLanding : null).toEqual({ state: 'unknown', disclosure: 'region:trajectory-commit-joins', closed: 2 });
+    const subject = served.unknownSubjects.find((entry) => entry.id === 'region:trajectory-commit-joins');
+    expect(subject?.epistemic.reason).toContain("the observed repository's history could not be read (commit join commit-history-read-failed)");
+    const html = trajectoryView(model, 'status=closed');
+    expect(html).toContain('id="n-commit-joins"');
+    expect(html).toContain('data-parity-field="answer-remains-closed-landing"');
+    expect(html).not.toContain('answer-remains-closed-landing-merged');
+    const text = html.slice(html.indexOf('answer-remains-closed-landing-closed'), html.indexOf('</dd>', html.indexOf('answer-remains-closed-landing-closed'))).replace(/<[^>]*>/g, '');
+    expect(text).not.toMatch(VERDICT);
+    for (const said of text.match(/merged[^.]*/gi) ?? []) expect(said).toContain('naming convention');
+    // Every card on the default and closed views: closed ones marked and
+    // linked to a target on the same page, others unmarked.
+    for (const page of [renderTrajectoryPage(model), html]) {
+      expect(page).toContain('id="n-commit-joins"');
+      const ids = new Set([...page.matchAll(/data-work-item-id="([^"]+)"/g)].map((match) => match[1]!));
+      for (const id of ids) {
+        const body = card(page, id);
+        const status = served.workItems.kind === 'observed' ? served.workItems.items.find((entry) => entry.id === id)!.status : null;
+        if (status === 'closed') {
+          expect(body).toContain('data-unknown-ref="region:trajectory-commit-joins"');
+          expect(body).toContain('Landing: Unknown <a class="mark-ref" href="#n-commit-joins"');
+        } else {
+          expect(body).not.toContain('Landing');
+        }
+      }
+    }
   });
 });

@@ -2140,3 +2140,188 @@ warrants:
   topology: []
   parent_requirements: [POC-REQ-010, POC-REQ-014, POC-REQ-020]
 ```
+
+### Requirement: POC-REQ-064 — Work items join the observed repository's commits by exact identifier tokens
+
+Group: Work-item observation. Form: **state projection/query**.
+
+**Required behavior.** In the observation pass that reads the work items,
+the POC SHALL read the observed repository's history once, from the
+repository revision the observation pins and from no other ref, newest
+first and at most 5,000 commits, and SHALL join each served work item to
+the commits that name it by the naming convention (RFC4-22).
+
+- **Token rule.** A commit names an item when a token of its subject equals
+  the item's identifier exactly. A token is a maximal run of letters,
+  digits, `.`, `_` and `-`, with `.`, `_` and `-` trimmed from its ends. No
+  prefix, substring or case-folded match joins, and a token that equals no
+  served identifier joins nothing.
+- **What is kept.** Each commit's subject is read for its tokens and then
+  dropped: it is never stored, served, indexed or sent. The join keeps only
+  each commit's hash, its committer instant and the identifiers it names.
+  The author is never read.
+- **What is served.** The machine answer serves the join once per
+  observation: the revision read, the basis `naming-convention`, the
+  fidelity `reduced-fidelity` with cause `derived-from-convention`, the
+  bound, the commits read, whether older history went unread, the joined
+  and unjoined commit counts, and, for each served item some commit names,
+  its commits newest first, each as its hash and instant.
+- **Unknown.** The join is Unknown, with one closed reason and nothing
+  else, when the work items were not observed
+  (`work-items-unobserved`), the pinned revision is not a commit identifier
+  (`repository-revision-unavailable`), the history read fails
+  (`commit-history-read-failed`), or a returned row has an unexpected shape
+  or the newest row is not the pinned revision
+  (`commit-history-malformed`). A failed join is never served as an
+  observed zero, and a missing join is never fuzzy-matched.
+- **When.** The read runs inside the observation pass, which runs only on a
+  human-triggered observation or rebuild (the daemon starting, an operator
+  re-observing, and the rebuild after an operator materializes), never on a
+  merge event. It computes no reconciliation chain state.
+- **Absence.** A served item with no entry is not observed to have no
+  commits: no commit read names it, and when older history went unread it
+  may be named there. The join serves no per-item Unknown.
+
+- **Scope.** The history read; the token rule; the machine answer's
+  `commitJoins`.
+- **Case (fixture, counterexamples and sweep).** An independent checker
+  supplies histories whose subjects name served items in brackets, after a
+  branch path in a merge subject and before sentence punctuation; near
+  misses (a longer identifier, another case, a prefix, a substring, an
+  unserved identifier); one subject naming two items and one naming an item
+  twice; an empty subject; a history one commit longer than the bound; and
+  each malformed row and each failure. Each subject carries a distinctive
+  marker. A real repository adds a naming commit after the observed
+  revision.
+- **Observable**: the machine answer's `commitJoins`; the read's arguments.
+- **Oracle**: literal expected values typed by the checker: the joined items
+  with their hashes and instants, the counts, the bound and truncation, each
+  Unknown reason; no marker and no subject text in either channel; the read
+  names the pinned revision and the bound and never `--all`; a commit after
+  the observed revision joins nothing.
+- **Oracle independence**: the fixture rows, hashes, instants and expected
+  joins are literals the checker types, never derived from the module.
+- **Falsifier**: a join from a prefix, substring, case-folded or unserved
+  token; a subject, or any marker, in either channel; a read not pinned to
+  the observed revision or not bounded; a commit after the observed revision
+  joined; a failed or malformed read served as observed; or counts that
+  disagree with the joined commits.
+
+#### Scenario: Commits that name an item join it
+
+- **WHEN** the history from the observed revision holds a commit whose
+  subject names a served item in brackets, a merge whose subject names one
+  after its branch path, and a commit naming no served item
+- **THEN** the machine answer serves each named item with those commits'
+  hashes and instants, two joined and one unjoined, basis
+  `naming-convention` and fidelity `reduced-fidelity`, and no subject text
+
+#### Scenario: A history that cannot be read is Unknown
+
+- **WHEN** the history read fails, or returns a row of an unexpected shape
+- **THEN** the join is Unknown with `commit-history-read-failed` or
+  `commit-history-malformed`, never an observed zero
+
+```yaml
+warrants:
+  primary: VIS-3
+  doctrine: [VIS-2, VIS-3]
+  contracts: [RFC4-22, RFC8-21]
+  policies: []
+  decisions: []
+  topology: []
+  parent_requirements: [POC-REQ-010, POC-REQ-020]
+```
+
+### Requirement: POC-REQ-065 — Trajectory renders closed work that merged apart from closed work no commit names
+
+Group: Trajectory. Form: **state projection/query**.
+
+**Required behavior.** Trajectory SHALL read each served closed item's
+landing from the commit join (POC-REQ-064) and the item's status alone, on
+both channels.
+
+- **Landing.** A closed item that some commit read names is
+  `merged-by-convention`: a commit reachable from the observed revision
+  names it. A closed item no commit read names is `no-naming-commit-read`:
+  its join cannot be established, so where it landed is Unknown (RFC4-22:
+  "message tag absent ... renders Unknown"), counted and disclosed once,
+  reason `missing-evidence`, saying how much history was read. An item
+  that is not closed has no landing. While the join is Unknown,
+  every closed item's landing is Unknown, and none is counted as either.
+- **The answer.** The *what remains* answer (POC-REQ-044) SHALL carry
+  `closedLanding`, over every served closed item, never the rendered
+  selection: the closed count, the merged-by-convention and
+  no-naming-commit-read counts (summing to it), the basis
+  `naming-convention`, the fidelity `reduced-fidelity`, the commits read
+  and whether older history went unread; or Unknown with the closed count
+  and the commit-join disclosure, whose reason names the join's own closed
+  reason and whose route is rendered.
+- **Words.** The page SHALL say "merged by naming convention" with its
+  reduced fidelity, and that it shows where work landed, not that it
+  satisfied its intent; never a bare "merged", and no verdict word (done,
+  complete, shipped, delivered). When older history went unread, the
+  answer and every card without a naming commit SHALL say only the newest
+  commits read were checked.
+- **The card.** Each card SHALL show a closed item's landing, labelled
+  "Merged (by naming convention, reduced fidelity)"; or, in the Unknown
+  encoding linked to the unnamed-landing disclosure, "Landing: Unknown, no
+  commit names it" or, when history went unread, "Landing: Unknown, no
+  commit among the newest N read names it"; or, while the join is Unknown,
+  "Landing: Unknown" linked to the commit-join disclosure. For any item a
+  commit names, the card SHALL show the count of its naming commits and at
+  most three of them, newest first, each as its first twelve hash
+  characters and its committer instant, with the count of the rest the
+  machine answer lists. No subject is rendered.
+- **Unchanged.** Verification stays Unknown for every item, and the intent
+  answer is unchanged: a commit that names an item is neither verification
+  nor reconciliation.
+
+- **Scope.** `trajectory.answers` (`remains.closedLanding`); the
+  `unknownSubjects` entries `region:trajectory-commit-joins` and
+  `region:trajectory-landing-unnamed`; the card.
+- **Case (fixture, counterexamples and sweep).** A real repository whose
+  history from the observed revision names one closed and one open item;
+  a closed item no commit names; an item four commits name; the same model with the join marked
+  truncated; and a repository whose history walk fails. A sweep over every
+  served item's card on the default and closed views.
+- **Observable**: both channels' `closedLanding`; each card's landing and
+  commits.
+- **Oracle**: literal counts typed by the checker; each card's landing
+  equals the one derived from the machine answer's join and status; the
+  landing labels and the answer's words, with tags removed, hold no verdict
+  word and no "merged" without "naming convention"; the Unknown case
+  serves no count and marks every closed card.
+- **Oracle independence**: counts, labels, hashes and reasons are literals
+  or values read from the machine answer, never from the renderer.
+- **Falsifier**: a closed item counted merged with no naming commit, or
+  counted at all while the join is Unknown; a bare "merged" or a verdict
+  word; a landing on an item that is not closed; a truncated read stated
+  as the whole history; a subject on the page.
+
+#### Scenario: Closed items read merged by naming convention or closed with no naming commit
+
+- **WHEN** the history from the observed revision names one of two closed
+  items and nothing older went unread
+- **THEN** the remains answer counts one merged by naming convention and
+  one closed with no commit that names it, whose landing is Unknown with
+  its disclosure, on both channels, and each closed card carries its
+  label
+
+#### Scenario: Closed landings are Unknown when the history cannot be read
+
+- **WHEN** the commit join is Unknown
+- **THEN** the remains answer serves the closed count with the commit-join
+  disclosure, its reason and route, counts no landing, and every closed
+  card reads "Landing: Unknown"
+
+```yaml
+warrants:
+  primary: VIS-2
+  doctrine: [VIS-2, VIS-3]
+  contracts: [RFC4-22, RFC8-21]
+  policies: []
+  decisions: []
+  topology: []
+  parent_requirements: [POC-REQ-044, POC-REQ-064]
+```

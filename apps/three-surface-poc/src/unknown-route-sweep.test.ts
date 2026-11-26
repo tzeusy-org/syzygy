@@ -252,9 +252,13 @@ function model(name: string): PocModel {
 // admitted the titles notice is no Unknown, so plain and observed-shape go
 // 6 → 5 and their cards' title marks become text (references 10 → 7);
 // worker-change's one title is withheld and keeps both.
+// syzygy-t3jk.26 (POC-REQ-065): plain and observed-shape serve two closed
+// items no fixture commit names, so the remains answer discloses their
+// Unknown landing once: 5 → 6. Their default page renders no closed card,
+// so no reference is added. worker-change's count does not move.
 const DENOMINATORS: Readonly<Record<string, Readonly<Record<Surface, number>>>> = {
-  plain: { polaris: 21, trajectory: 5, orrery: 9 },
-  'observed-shape': { polaris: 13, trajectory: 5, orrery: 9 },
+  plain: { polaris: 21, trajectory: 6, orrery: 9 },
+  'observed-shape': { polaris: 13, trajectory: 6, orrery: 9 },
   unreachable: { polaris: 24, trajectory: 1, orrery: 10 },
   'unsupported-repository': { polaris: 22, trajectory: 2, orrery: 9 },
   'worker-change': { polaris: 19, trajectory: 7, orrery: 7 },
