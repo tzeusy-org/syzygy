@@ -23,6 +23,9 @@ vi.mock('node:fs', async original => {
   } };
 });
 const exec = promisify(execFile), environment = { PATH: '/usr/bin:/bin', LANG: 'C', GIT_CONFIG_NOSYSTEM: '1', GIT_CONFIG_GLOBAL: '/dev/null', GIT_OPTIONAL_LOCKS: '0', GIT_NO_LAZY_FETCH: '1' };
+// Only the two owned policy repositories below use this bounded setup helper.
+const localPolicyFixtureGit = (root: string) => (...args: string[]): string => execFileSync('/usr/bin/git', ['-C', root, ...args], {
+  env: environment, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 10_000 }).trim();
 const source = fileURLToPath(new URL('.', import.meta.url));
 const arguments_ = ['--no-replace-objects', '-C', source, 'cat-file', '--batch-command'];
 const scopes: PolicyGitScope[] = [];
@@ -358,8 +361,7 @@ describe('native policy Git ownership and transport', () => {
 
 it('keeps the actual policy phase trace, HEAD retry, ref short circuit and working-file checks', async () => {
   const root = tempDir('policy-phase-');
-  const run = (...args: string[]): string => execFileSync('/usr/bin/git', ['-C', root, ...args], {
-    env: environment, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 10_000 }).trim();
+  const run = localPolicyFixtureGit(root);
   run('init', '-q', '--template=', '--initial-branch=main');
   const baseBytes = Buffer.from('own base policy fixture'), originBytes = Buffer.from('own origin policy fixture');
   for (const [file, bytes] of [[DOSSIER_POLICY_PATH, baseBytes], [DOSSIER_URL_ORIGIN_POLICY_PATH, originBytes]] as const) {
@@ -409,8 +411,7 @@ it('keeps the actual policy phase trace, HEAD retry, ref short circuit and worki
 
 it('admits a real policy batch above the former prototype 64KiB stdin cap', async () => {
   const root = tempDir('policy-large-batch-');
-  const run = (...args: string[]): string => execFileSync('/usr/bin/git', ['-C', root, ...args], {
-    env: environment, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 10_000 }).trim();
+  const run = localPolicyFixtureGit(root);
   run('init', '-q', '--template=', '--initial-branch=main');
   const subjects: { path: string; sha256: string }[] = [];
   for (const file of [DOSSIER_POLICY_PATH, DOSSIER_URL_ORIGIN_POLICY_PATH, ...Array.from({ length: 512 }, (_, index) => `subjects/${index}-${'p'.repeat(145)}`)]) {

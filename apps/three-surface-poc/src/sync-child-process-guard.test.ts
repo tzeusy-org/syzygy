@@ -82,6 +82,11 @@ const NATIVE_SITES = new Map<string, ReadonlyMap<string, string>>([
   [DOSSIER + 'git-memory-worker.test.ts', new Map([
     ['1702fdda3cdc5377e9c82672bb2df8decda45b39d4cb2015844a8f8d0d6356ba', 'read one synthetic blob in the temporary worker repository'],
   ])],
+  [DOSSIER + 'policy-git-native.test.ts', new Map([
+    ['cb35dad81ce1458eda1ee58a87d64be2172e503893113e25983cb127599b1eb5', 'owned synthetic policy repository setup through one shared local helper, 10s'],
+    ['84ad04ed68fe278b18161c94c7db676053797d16164930a14f9b32b89c67f5b5', 'own compiled echo fixture with inert footer drift, fixed tiny stdin, 1s and 1KiB output'],
+    ['14d7482223ec082f7ae0ab761838474306394dce3f967338a67a24e71a79be59', 'independent local synthetic policy phase oracle with unchanged policy probe timeout and output bounds'],
+  ])],
   [DOSSIER + 'session-peer.test.ts', new Map([
     ['d5dea8e4382174a6f337c42849dc31649a3d82814b30e06ba72e8368a32329e2', 'make one FIFO in the malformed helper fixture'],
   ])],
@@ -110,7 +115,7 @@ const PEER_SOURCE = '9b297766e237b26b25947b054e32a52edbf65260662c26cc37937a825fb
 const PEER_CAPTURE = '008ddd0641401d72b40fe0524fc920588d8da678ed7f46c8fcc5035ac27ccef5';
 // The call's limits and image verifier are shared helpers/constants. Bind that
 // complete context as well as the one admitted call; another call still fails.
-const MACHINE_PEER_SOURCE = '8724db73c9203533510f1cdca9156672988e511fe792eef72ea549b0828dabcd';
+const MACHINE_PEER_SOURCE = 'a3549f4eba5aaca923d3c9a27b8a689facf24a2e30f929893c8b6d6010ce0ffd';
 const SELF = 'apps/three-surface-poc/src/sync-child-process-guard.test.ts';
 const SYNC_FUNCTIONS = ['execFileSync', 'execSync', 'spawnSync'];
 const MODULE_SPECIFIER = /(?:\bfrom|\bimport)\s*\(?\s*['"]([^'"]+)['"]/g;
