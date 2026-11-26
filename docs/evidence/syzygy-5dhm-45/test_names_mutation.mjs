@@ -56,6 +56,7 @@ const MUTANTS = [
   ['page-label-observed', 'page', PAGE, '`Evidence: label Inferred; declared in ${name.path}', '`Evidence: label Observed; declared in ${name.path}'],
   ['page-name-unescaped', 'page', PAGE, '${escape(`${what} ${name.name}, in ${name.path} at line ${name.line}.`)}', '${what} ${name.name}, in ${name.path} at line ${name.line}.'],
   ['page-unknown-member-drawn', 'page', PAGE, "if (member.state !== 'derived') {", 'if (false) {'],
+  ['page-floor-sentence-dropped', 'page', PAGE, "const floor = unknownTotal === 0 ? ''", "const floor = true ? ''"],
   ['site-page-without-record', 'page', SITE, 'const testNames = local?.derivedStructure !== undefined && local.testNames !== undefined ?', 'const testNames = local?.testNames !== undefined ?'],
 ];
 

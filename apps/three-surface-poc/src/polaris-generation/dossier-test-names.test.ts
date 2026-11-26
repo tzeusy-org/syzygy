@@ -67,6 +67,7 @@ describe('the test-names reference page (version 2.34)', () => {
     expect(page).not.toContain('renders <b>');
     expect(page).toContain('<li data-epistemic="unknown" data-unknown-reason="mapping-coverage-absent" data-test-names-path="tests/test_open.py" data-test-names-file-reason="unparsed, unterminated"><span class="not-established">Not established.</span> tests/test_open.py: which names it declares is Unknown (unparsed, unterminated).</li>');
     expect(page).toContain('pytest-test-name: 3 candidate files; 2 read for names, 1 Unknown with no names taken; 0 left out and not named, because a secret detector matches their path; 0 set apart as vendored or generated paths; 0 names left out by the value checks; 2 names.');
+    expect(page).toContain('<p class="test-names-floor" data-epistemic="unknown" data-unknown-reason="mapping-coverage-absent"><span class="not-established">Not established.</span> What 1 candidate file whose names are Unknown declares is counted in no row, so each count is of the files read and never a total: a unit with no row may hold tests.</p>');
     expect(page).toContain('never a claim that the test runs or passes');
     expect(page).toContain('Show the evidence view');
     expect(page).not.toContain('<script');

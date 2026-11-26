@@ -25,6 +25,13 @@ console.log(JSON.stringify({
     format: member.format,
     recognizers: member.recognizers.map(({ files: _files, ...rest }) => rest),
     unknownFiles: member.recognizers.flatMap((r) => r.files.filter((f) => f.epistemic === 'unknown').map((f) => ({ rule: r.rule, path: f.path, reason: f.unknownReason, parseFault: f.parseFault }))),
+    uncounted: {
+      basis: 'Unknown, never zero: no row of units counts a file not read for names',
+      unknownFiles: member.recognizers.reduce((n, r) => n + r.unknown, 0),
+      // Unknown files past the 250 listed per recognizer; here each is over-read-limit, since the 250 read are listed first.
+      filesNotListed: member.recognizers.reduce((n, r) => n + r.filesNotListed, 0),
+      withheldBySecretDetector: member.recognizers.flatMap((r) => r.files).filter((f) => f.unknownReason === 'secret-detector-match').length,
+    },
     units: member.units,
     unitsNotListed: member.unitsNotListed,
     namesListed: member.names.length,

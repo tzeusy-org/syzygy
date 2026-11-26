@@ -66,6 +66,11 @@ export function testNamesPage(member: LocalTestNames, revision: string): string 
     ? '<p>No test file was read for names, so no unit has a row.</p>'
     : `<div class="table-scroll"><table class="test-names-units"><caption>${escape(`Test names per unit, as counts of names each rule read: ${counted(member.units.length, 'unit', 'units')} with a test file read`)}${member.unitsNotListed === 0 ? '' : escape(`; ${counted(member.unitsNotListed, 'more unit', 'more units')} counted and not listed`)}</caption><thead>${head}</thead><tbody>${rows}</tbody></table></div>`;
 
+  // Version 2.34: the table counts only files read for names, so the Unknown files are named beside it as missing from every row,
+  // never as zero names.
+  const unknownTotal = member.recognizers.reduce((sum, r) => sum + r.unknown, 0);
+  const floor = unknownTotal === 0 ? ''
+    : `<p class="test-names-floor" data-epistemic="unknown" data-unknown-reason="mapping-coverage-absent"><span class="not-established">Not established.</span> ${escape(`What ${counted(unknownTotal, 'candidate file whose names are Unknown declares', 'candidate files whose names are Unknown declare')} is counted in no row, so each count is of the files read and never a total: a unit with no row may hold tests.`)}</p>`;
   const byUnit = new Map<string | null, LocalTestName[]>();
   for (const name of member.names) byUnit.set(name.unit, [...(byUnit.get(name.unit) ?? []), name]);
   const units = [...byUnit.keys()].sort((a, b) => (a === null ? -1 : b === null ? 1 : a < b ? -1 : a > b ? 1 : 0));
@@ -80,7 +85,7 @@ export function testNamesPage(member: LocalTestNames, revision: string): string 
     + (unknownNotListed === 0 ? '' : `<li>${escape(`${counted(unknownNotListed, 'more file whose names are Unknown is', 'more files whose names are Unknown are')} counted and not listed.`)}</li>`);
   const unknown = `<h2>Files whose names are Unknown</h2><ul class="test-names-unknown">${unknownItems === '' ? `<li>${member.recognizers.every(r => r.candidates === 0) ? 'No candidate file.' : 'Every candidate file not left out or set apart was read for names.'}</li>` : unknownItems}</ul>`;
 
-  return `${open}${note}${coverage}<h2>Per unit</h2>${table}${every}${unknown}</section>`;
+  return `${open}${note}${coverage}<h2>Per unit</h2>${table}${floor}${every}${unknown}</section>`;
 }
 
 /** `machine.json`'s `testNames` member: the page and the member as the render derived it. */

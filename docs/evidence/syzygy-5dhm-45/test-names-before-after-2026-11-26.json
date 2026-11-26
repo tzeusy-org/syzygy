@@ -296,6 +296,12 @@
         "parseFault": null
       }
     ],
+    "uncounted": {
+      "basis": "Unknown, never zero: no row of units counts a file not read for names",
+      "unknownFiles": 171,
+      "filesNotListed": 133,
+      "withheldBySecretDetector": 38
+    },
     "units": [
       {
         "unit": "apps",
