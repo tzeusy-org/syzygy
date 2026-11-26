@@ -298,6 +298,32 @@ describe('native policy Git ownership and transport', () => {
     // Retargeting a caller-owned record cannot retarget the private reference.
     caller.git.file = path.join(image.root, 'absent'); caller.git.sha256 = '0'.repeat(64);
     expect(scope.runSync(arguments_, request)).toEqual(Buffer.from('fresh image'));
+    // Reenter while the outer read's first chunk is filled but not yet checked.
+    // This short image's different footer makes an actively shared scratch fail.
+    const nestedImage = ownGitImage(47);
+    nestedImage.bytes.fill(0x72, nestedImage.bytes.length - 47);
+    fs.writeFileSync(nestedImage.file, nestedImage.bytes);
+    expect(nestedImage.bytes.length).toBeLessThan(1_048_576);
+    const nestedScope = createNativePolicyGitScope({ ...program, git: { file: nestedImage.file, sha256: sha256(nestedImage.bytes) } });
+    scopes.push(nestedScope);
+    const actualRead = fs.readSync;
+    let reentered = false, nestedOutput: Buffer | undefined, outerOutput: Buffer | undefined;
+    const read = vi.spyOn(fs, 'readSync').mockImplementation((fd, buffer, offsetOrOptions?: number | fs.ReadOptions,
+      length?: number, position?: fs.ReadPosition | null) => {
+      const size = typeof offsetOrOptions === 'number'
+        ? actualRead(fd, buffer, offsetOrOptions, length!, position ?? null)
+        : actualRead(fd, buffer, offsetOrOptions);
+      if (!reentered && size > 0 && offsetOrOptions === 0 && fs.readlinkSync(`/proc/self/fd/${fd}`) === image.file) {
+        reentered = true;
+        nestedOutput = nestedScope.runSync(arguments_, options('echo', Buffer.from('nested image')));
+      }
+      return size;
+    });
+    try { outerOutput = scope.runSync(arguments_, request); }
+    finally { read.mockRestore(); }
+    expect(reentered).toBe(true);
+    expect(nestedOutput).toEqual(Buffer.from('nested image'));
+    expect(outerOutput).toEqual(Buffer.from('fresh image'));
     fs.unlinkSync(witness);
     const changed = Buffer.from(image.bytes); changed[changed.length - 1] = 0x72;
     expect(changed.length - 1).toBeGreaterThan(1_048_576);

@@ -11,6 +11,8 @@ export interface PolicyGitProgram {
 interface NativeJob { readonly request: Buffer; readonly supervisorFd: number; readonly gitFd: number }
 interface Native { runSync(job: NativeJob): PolicyGitReceipt; runAsync(job: NativeJob): Omit<PendingPolicyGit, 'close'> }
 interface ImageReference { readonly file: string; readonly sha256: string; bytes: Buffer | undefined }
+// At most one idle buffer is retained; a current check removes it before any read.
+let availableReadScratch: Buffer | undefined;
 // A /proc fd name may be reused after close; dlopen caches such names.
 // Reuse only this exact already-loaded code digest, never reload another
 // image through a recycled descriptor pathname in the same process.
@@ -29,12 +31,16 @@ function hold(program: ImageReference): { fd: number; current(): boolean; close(
     let closed = false;
     const current = (): boolean => {
       if (closed) return false;
+      let borrowed: Buffer | undefined;
       try {
         if (!same(initial, fstatSync(fd, { bigint: true })) || !same(initial, lstatSync(program.file, { bigint: true }))) return false;
         const expected = program.bytes, length = Number(initial.size);
         if (!Number.isSafeInteger(length) || length < 0) return false;
         const captured = expected === undefined ? Buffer.alloc(length) : undefined;
-        const hash = captured === undefined ? undefined : createHash('sha256'), chunk = Buffer.alloc(1_048_576);
+        const hash = captured === undefined ? undefined : createHash('sha256');
+        const chunk = availableReadScratch ?? Buffer.alloc(1_048_576);
+        availableReadScratch = undefined;
+        borrowed = chunk;
         let offset = 0;
         for (;;) {
           const size = readSync(fd, chunk, 0, chunk.length, offset);
@@ -58,6 +64,9 @@ function hold(program: ImageReference): { fd: number; current(): boolean; close(
         if (captured !== undefined) program.bytes = captured;
         return true;
       } catch { return false; }
+      finally {
+        if (borrowed !== undefined && availableReadScratch === undefined) availableReadScratch = borrowed;
+      }
     };
     if (!current()) throw new Error('policy-git-image-digest');
     return { fd, current, close: () => {
