@@ -657,7 +657,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 567,
+      "scenarios": 569,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1274,7 +1274,9 @@
             "Unit answering all six kinds is not advised",
             "Nothing declared is Unknown",
             "Declarations in an earlier schema",
-            "Brief v21 teaches the six kinds"
+            "Brief v21 teaches the six kinds",
+            "Pole below the choice floor advised",
+            "Choice floor counts Inferred items once per Pole"
           ]
         },
         "REQ-polaris-generation-035": {
