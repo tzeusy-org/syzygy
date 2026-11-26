@@ -1,32 +1,64 @@
 {
   "subject": {
     "path": "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
-    "commit": "cfa986dff5ed6dafd21e3947bfc51fbea07d72e1",
-    "sha256": "b0346bb9e53cbf640c552407facd65688d3ea39e23649a316562122d27dfdfc2"
+    "commit": "58132c03d9ef54edd47d25bd014c54942f2b6667",
+    "sha256": "ed77d0be6e478f72c02279922d756cdef7ac7252cba478ca578126b306267d31"
   },
   "case": "fits every dossier page at 390 by 844 and shows both counted packet digests on Review",
   "date": "2026-11-26",
   "host": {
     "browser": "Google Chrome 120.0.6099.224 (local); hosted CI runs Chrome 157",
-    "note": "Every run relaxes the inline citation's leftRange from [260, 390] to [0, 390]: on this host's Chrome 120 the citation lays out at left 200.95, outside the hosted bound, so the case cannot reach its hover step here unrelaxed. The relaxation is identical in the baseline and in every mutant."
+    "note": "Every run, the baseline included, applies the relaxation stored on each mutant entry: the inline citation's leftRange [260, 390] becomes [0, 390]. On this host's Chrome 120 the citation lays out at left 200.95, outside the hosted bound, so the case cannot reach its hover step here unrelaxed."
   },
   "command": "npx vitest run --project e2e <path> -t 'fits every dossier page'",
   "diagnosis": [
     "[Observed] Before the fix, on this host, the case failed on every run (6 of 6): the old scrollIntoView({ behavior: 'instant' }) left scrollY at 0 then 2 after two frames under html{scroll-behavior:smooth}, so the sampled point lay off-screen.",
     "[Observed] An explicit window.scrollTo({ behavior: 'instant' }) moved the page at once; a smooth scrollTo took about 500 ms to settle.",
     "[Observed] Inside a sources run the citation is display:inline-block with line-height 0 (the '.sources a' rule), so its box is 0 px tall.",
-    "[Inferred] On hosted Chrome 157 the same in-flight scroll moved the link between sampling and the trusted move, matching the bead's replay; not reproduced on Chrome 157 here."
+    "[Unknown] Whether hosted Chrome 157 failed for the same in-flight scroll: the bead's Chrome 157 replay showed a scroll moving between sampling and the move, but this host has no Chrome 157. Hosted e2e attempts on the PR are the evidence for 157."
   ],
   "mutants": [
     {
+      "relaxation": {
+        "old": "leftRange: [260, 390] as const",
+        "new": "leftRange: [0, 390] as const"
+      },
       "id": "m0-baseline",
-      "mutation": "none: the committed case, left bound relaxed",
+      "mutation": "none: the committed case under the relaxation alone",
       "old": "const inline = 'document",
       "new": "const inline = 'document",
       "exit": 0,
       "first_failure": null
     },
     {
+      "relaxation": {
+        "old": "leftRange: [260, 390] as const",
+        "new": "leftRange: [0, 390] as const"
+      },
+      "id": "m9-recorder-always-trusted",
+      "mutation": "the recorder reports every move trusted",
+      "old": "trusted: event.isTrusted,",
+      "new": "trusted: true,",
+      "exit": 1,
+      "first_failure": "→ expected { Object (target, onLink, ...) } to match object { onLink: true, trusted: false }"
+    },
+    {
+      "relaxation": {
+        "old": "leftRange: [260, 390] as const",
+        "new": "leftRange: [0, 390] as const"
+      },
+      "id": "m10-hint-dropped-from-report",
+      "mutation": "a delivery miss no longer reports the hint state",
+      "old": "JSON.stringify({ sampled: sample, delivered: move, hint })",
+      "new": "JSON.stringify({ sampled: sample, delivered: move })",
+      "exit": 1,
+      "first_failure": "→ expected [Function] to throw error matching /^displaced hover delivery: \\{\"sample…/u but got 'displaced hover delivery: {\"sampled\":…'"
+    },
+    {
+      "relaxation": {
+        "old": "leftRange: [260, 390] as const",
+        "new": "leftRange: [0, 390] as const"
+      },
       "id": "m1-no-settle",
       "mutation": "the old scrollIntoView instead of an instant scrollTo",
       "old": "window.scrollTo({ left: 0, top: scrollY + (start.top + start.bottom) / 2 - innerHeight / 2, behavior: 'instant' });",
@@ -35,6 +67,10 @@
       "first_failure": "→ #block-local-reflow-inline a.cite settled hit point: expected { still: true, point: null, …(3) } to match object { still: true, point: { …(2) } }"
     },
     {
+      "relaxation": {
+        "old": "leftRange: [260, 390] as const",
+        "new": "leftRange: [0, 390] as const"
+      },
       "id": "m2-no-displacement",
       "mutation": "the control's displacement dropped",
       "old": "await page.evaluate(\"window.scrollBy({ top: 40, behavior: 'instant' })\");",
@@ -43,6 +79,10 @@
       "first_failure": "→ expected { Object (target, onLink, ...) } to match object { onLink: false, trusted: true, …(1) }"
     },
     {
+      "relaxation": {
+        "old": "leftRange: [260, 390] as const",
+        "new": "leftRange: [0, 390] as const"
+      },
       "id": "m4-no-stability-wait",
       "mutation": "no wait for two still frames",
       "old": "for (let n = 0; n < 120 && still < 2; n++) {",
@@ -51,6 +91,10 @@
       "first_failure": "→ #block-local-reflow-inline a.cite settled hit point: expected { still: false, …(4) } to match object { still: true, point: { …(2) } }"
     },
     {
+      "relaxation": {
+        "old": "leftRange: [260, 390] as const",
+        "new": "leftRange: [0, 390] as const"
+      },
       "id": "m5-wrong-target-accepted",
       "mutation": "delivery check ignores the target, scroll and box",
       "old": ".toMatchObject({ onLink: true, trusted: true, scrollY: sample.scrollY, box: sample.box });",
@@ -59,6 +103,10 @@
       "first_failure": "→ expected [Function] to throw an error"
     },
     {
+      "relaxation": {
+        "old": "leftRange: [260, 390] as const",
+        "new": "leftRange: [0, 390] as const"
+      },
       "id": "m6-no-scroll-check",
       "mutation": "delivery check ignores the scroll",
       "old": ".toMatchObject({ onLink: true, trusted: true, scrollY: sample.scrollY, box: sample.box });",
@@ -67,6 +115,10 @@
       "first_failure": "→ expected [Function] to throw an error"
     },
     {
+      "relaxation": {
+        "old": "leftRange: [260, 390] as const",
+        "new": "leftRange: [0, 390] as const"
+      },
       "id": "m7-no-box-check",
       "mutation": "delivery check ignores the box",
       "old": ".toMatchObject({ onLink: true, trusted: true, scrollY: sample.scrollY, box: sample.box });",
@@ -75,6 +127,10 @@
       "first_failure": "→ expected [Function] to throw an error"
     },
     {
+      "relaxation": {
+        "old": "leftRange: [260, 390] as const",
+        "new": "leftRange: [0, 390] as const"
+      },
       "id": "m8-untrusted-ok",
       "mutation": "delivery check ignores trust",
       "old": ".toMatchObject({ onLink: true, trusted: true, scrollY: sample.scrollY, box: sample.box });",
@@ -83,6 +139,10 @@
       "first_failure": "→ expected [Function] to throw an error"
     },
     {
+      "relaxation": {
+        "old": "leftRange: [260, 390] as const",
+        "new": "leftRange: [0, 390] as const"
+      },
       "id": "m3-box-centre",
       "mutation": "sample the box centre only (no glyph band)",
       "old": "for (const node of link.childNodes) {",
@@ -92,6 +152,7 @@
     }
   ],
   "survivors": {
-    "m3-box-centre": "Equivalent on this host: the box centre also hit the link once the page was settled. The glyph band is a sampling choice, not a predicate; kept because the box is zero pixels tall."
-  }
+    "m3-box-centre": "Equivalent on this host: the settled box centre also hit the link. Sampling the glyph band first is a margin, not a predicate."
+  },
+  "review": "R-JETR-HOVER-DELIVERY-1 (REVISE over a3acc4f14); F1, F2 and F4 repaired at 58132c03d, F3 by this record's relaxation fields."
 }
