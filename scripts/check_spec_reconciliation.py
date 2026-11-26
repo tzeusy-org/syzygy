@@ -6771,9 +6771,12 @@ def _run_scope():
     Entered by run() and by every caller that asks a predicate outside run()
     (a bare `check_outcomes`, which otherwise re-derives P115 about twenty
     times per call, syzygy-7rkx). Each entry starts empty and each exit
-    clears, so nothing carries from one scope to the next.
+    clears, so nothing carries from one scope to the next. Scopes do not
+    nest: an inner exit would clear the outer scope's memos, so entering
+    one inside another is refused.
     """
     global _SIGNED_MEMO, _RUN_MEMO
+    assert _SIGNED_MEMO is None and _RUN_MEMO is None, "_run_scope nested"
     _SIGNED_MEMO = {}
     _RUN_MEMO = {}
     import d10_supersession
@@ -12229,9 +12232,19 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         rows = ledger.read_text().splitlines(keepends=True)
         ledger.write_text("".join(line for line in rows
                                   if not is_edit_account_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line)))
-    # Every family below copies its own trees from these starts and reads
-    # them only, so each runs in its own fresh fork; their witnesses,
-    # failures and printed lines are merged in this order (syzygy-7rkx).
+    # The families below run side by side, each in its own fresh fork, and
+    # their witnesses, failures and printed lines are merged in this order
+    # (syzygy-7rkx). A family added here must keep three rules, or a
+    # verdict can depend on which families happen to run beside it:
+    # - it reads the starts (`base`, `figure_base`, `added`, `clean`) and
+    #   never writes them; it writes only trees it copied under `tmp`;
+    # - every tree it copies has a top-level name under `tmp` that no other
+    #   family or pooled case uses;
+    # - a global it patches is restored before it returns (a fork discards
+    #   it anyway, but `SELFTEST_WORKERS=1` runs the families in turn in
+    #   one process).
+    # Families share the CPU, so a family's own wall-clock bound must allow
+    # for the others (`_after_refusal_cases` gives its child 120 s).
     families = [
         lambda w, f: _entry_kind_cases(tmp, base, w, f),
         lambda w, f: declared_source_historical_cases(tmp, base, clean, w, f),
@@ -12332,18 +12345,62 @@ def _map_cases(count):
     return _fork_map(_run_case, count)
 
 
+def _selftest_timeout():
+    """Seconds one `_fork_map` may wait for all its results (default 3600).
+
+    A whole selftest takes a few minutes; the bound only turns a lost result
+    (a worker killed by the OOM killer or `os._exit`) into a failure instead
+    of a wait that never ends (syzygy-7rkx).
+    """
+    raw = os.environ.get("SELFTEST_TIMEOUT", "")
+    return int(raw) if raw.isdigit() and int(raw) > 0 else 3600
+
+
+class PoolTimeout(RuntimeError):
+    """A forked selftest map lost a result or overran `_selftest_timeout`."""
+
+
+def _guarded(function, index):
+    """`function(index)`, with a `BaseException` re-raised as RuntimeError.
+
+    `multiprocessing.pool.worker` forwards only `Exception`; a `SystemExit`
+    or `KeyboardInterrupt` would kill the worker and lose the result. As a
+    RuntimeError it reaches the parent and fails the run as before.
+    """
+    try:
+        return function(index)
+    except Exception:
+        raise
+    except BaseException as exc:
+        raise RuntimeError(f"task {index} raised {type(exc).__name__}: "
+                           f"{exc}") from None
+
+
 def _fork_map(function, count, fresh=False):
     """`function(i)` for each i, under a fork pool, in order.
 
     `fresh` gives every task its own fork of this process (one task per
-    worker), so nothing one task leaves behind reaches the next.
+    worker), so nothing one task leaves behind reaches the next. With one
+    worker (`SELFTEST_WORKERS=1`), or where `fork` is unavailable, the tasks
+    run in this process in order instead: `fresh` then isolates nothing, and
+    a task sees what earlier tasks left in module state, as before the pool.
+    Under fork, a task's `BaseException` fails the run and a lost result
+    raises `PoolTimeout` after `_selftest_timeout()` seconds.
     """
     workers = _selftest_workers()
     if workers == 1 or "fork" not in multiprocessing.get_all_start_methods():
         return [function(i) for i in range(count)]
     with multiprocessing.get_context("fork").Pool(
             workers, maxtasksperchild=1 if fresh else None) as pool:
-        return pool.map(function, range(count), chunksize=1)
+        pending = pool.map_async(functools.partial(_guarded, function),
+                                 range(count), chunksize=1)
+        try:
+            return pending.get(timeout=_selftest_timeout())
+        except multiprocessing.TimeoutError:
+            raise PoolTimeout(
+                f"{count} forked tasks gave no complete result within "
+                f"{_selftest_timeout()} s; a worker died or a task hung"
+                ) from None
 
 
 _FAMILY_STATE = None
@@ -12354,7 +12411,9 @@ def _run_families(families, witnesses, failures):
 
     A family's witnesses and failures are appended in list order, and what it
     printed is re-emitted at its place, so the record and the output are the
-    same as a serial run's (syzygy-7rkx).
+    same as a serial run's (syzygy-7rkx). A family that raises, `SystemExit`
+    included, keeps what it found and adds one failure naming it. Isolation
+    holds only under fork with more than one worker (`_fork_map`).
     """
     global _FAMILY_STATE
     _FAMILY_STATE = families
@@ -12370,9 +12429,27 @@ def _run_families(families, witnesses, failures):
 
 def _run_family(index):
     found, failed = [], []
+    family = _FAMILY_STATE[index]
     with contextlib.redirect_stdout(io.StringIO()) as printed:
-        _FAMILY_STATE[index](found, failed)
+        try:
+            family(found, failed)
+        except KeyboardInterrupt:
+            raise
+        except BaseException as exc:
+            failed.append(f"family {index} ({_family_name(family)}) raised "
+                          f"{type(exc).__name__}: {exc}")
     return found, failed, printed.getvalue()
+
+
+def _family_name(family):
+    """A family's case function name, for a failure line."""
+    inner = getattr(family, "func", family)
+    code = getattr(inner, "__code__", None)
+    if inner.__name__ == "<lambda>" and code is not None:
+        named = [n for n in code.co_names if n.endswith("_cases")]
+        if named:
+            return named[0]
+    return inner.__name__
 
 
 def _run_case(index):
@@ -12777,7 +12854,9 @@ except module.SignoffEntriesRefused as exc:
 def _after_refusal_cases(tmp, base, witnesses, failures):
     """Each `AFTER_REFUSAL_CASES` entry, sorted after a refused directory,
     must be named with its expected finding beside the directory's, in a
-    child given 30 seconds and 1 GiB of address space."""
+    child given 120 seconds and 1 GiB of address space. The bound is
+    generous because the child shares the CPU with the other families
+    (syzygy-7rkx); only a child that blocks ever reaches it."""
     for name, (setup, expected) in AFTER_REFUSAL_CASES.items():
         if "ptmx" in name and not Path("/dev/ptmx").exists():
             print(f"SKIPPED  {name}: no /dev/ptmx")
@@ -12791,7 +12870,7 @@ def _after_refusal_cases(tmp, base, witnesses, failures):
             child = subprocess.run(
                 [sys.executable, "-c", _COLLECT_CHILD,
                  str(Path(__file__).resolve()), str(tree)],
-                capture_output=True, text=True, timeout=30)
+                capture_output=True, text=True, timeout=120)
             if child.returncode != 0:
                 tail = (child.stderr.strip().splitlines() or [""])[-1]
                 got.append(f"collection exited {child.returncode}: {tail}")
