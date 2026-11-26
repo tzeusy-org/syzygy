@@ -143,6 +143,15 @@ describe('figure fit: sequence and swimlane (syzygy-3efd.30)', () => {
     expect(figureFit(contained([group('a', [group('a1', [group('a11')]), group('a2')]), group('b')]), siteLayout)).toEqual({ ...HEAD, examined: 1, entries: [] });
   });
 
+  it('with a layout that lays out anything: a containment with no nesting, a level-4 group or more than 40 groups is Unknown before layout', () => {
+    const anything: FigureLayout = () => 100;
+    const many = (prefix: string, n: number) => Array.from({ length: n }, (_, i) => group(`${prefix}${i}`));
+    expect(figureFit(contained([group('a', [group('b')])]), anything).entries).toEqual([]);
+    expect(figureFit(contained([group('a'), group('b')]), anything).entries).toEqual(unknownFit);
+    expect(figureFit(contained([group('a', [group('b', [group('c', [group('d')])])])]), anything).entries).toEqual(unknownFit);
+    expect(figureFit(contained([group('a', many('p', 8)), group('b', many('q', 8)), group('c', many('r', 8)), group('d', many('s', 8)), group('e', many('u', 4))]), anything).entries).toEqual(unknownFit);
+  });
+
   it('with the site\'s layout: a containment with no nesting, a level-4 group, more than 40 groups or another kind\'s member is Unknown', () => {
     const many = (prefix: string, n: number) => Array.from({ length: n }, (_, i) => group(`${prefix}${i}`));
     expect(figureFit(contained([group('a'), group('b')]), siteLayout).entries).toEqual(unknownFit);

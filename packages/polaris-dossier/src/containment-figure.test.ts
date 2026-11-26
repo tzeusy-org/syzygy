@@ -55,11 +55,13 @@ function pinnedTree(files: Record<string, string>, gitlinks: readonly string[] =
   return { origin, commit: git('rev-parse', 'HEAD') };
 }
 
-let A: Pinned;
+let A: Pinned, B: Pinned;
 let renderLocalDossier: DossierRenderer;
 beforeAll(async () => {
   renderLocalDossier = ((await import(RENDERER_MODULE)) as { renderLocalDossier: DossierRenderer }).renderLocalDossier;
   A = pinnedTree(TREE_A);
+  // TREE_A and a `.env`, a denied basename: a group citing only it renders as a withheld item.
+  B = pinnedTree({ ...TREE_A, '.env': 'X=1\n' });
 });
 
 const OK: GateState = { state: 'ok', record: 'FIXTURE-ACT' };
@@ -292,6 +294,32 @@ describe('containment: repair findings', () => {
     ] });
   });
 
+  it('decides no nesting of a containment with a figure-kind finding, and reads no unit of its stray nodes', async () => {
+    // The nesting would be challenged (no `missing` directory), and the stray node's unit would draw a unit-reference finding in a graph.
+    const strayed = { ...NESTED(tld('missing')), nodes: [node('stray', 'Stray', tld('a/b'))] };
+    expect(await findingsOf(A, draftOf([strayed]))).toEqual({ outcome: 'findings', findings: [
+      { kind: 'figure-kind', at: '$.diagrams[0].nodes', detail: 'the diagram "parts": a containment takes `groups`, not `nodes`' },
+    ] });
+  });
+
+  it('reports a group unit\'s text past 256 code units as one schema finding at the unit, and decides no nesting beside it', async () => {
+    // 200 code points, 400 code units: within the schema's code-point bound, past the unit rule's code-unit bound (version 2.19).
+    expect(await findingsOf(A, draftOf([NESTED(tld('\u{1F600}'.repeat(200)))]))).toEqual({ outcome: 'findings', findings: [
+      { kind: 'schema', at: '$.diagrams[0].groups[0].children[0].unit', detail: '`path` must be 1 to 256 code units; is 400' },
+    ] });
+  });
+
+  it('refuses at a render a draft whose check record was altered to passed, from its containment finding found again', async () => {
+    const deep = containment('parts', [group('d1', 'One', [group('d2', 'Two', [group('d3', 'Three', [group('d4', 'Four')])])])]);
+    const { run, result } = await checked(A, draftOf([deep]));
+    if (!result.ok || result.report.outcome !== 'findings') throw new Error('the fixture draft must have findings');
+    const file = path.join(run, 'checks', 'rev-0.json');
+    fs.writeFileSync(file, JSON.stringify({ ...JSON.parse(fs.readFileSync(file, 'utf8')), outcome: 'passed', findings: [] }));
+    const out = await renderRun(run, { sources: sources(A.commit), now: () => LATER, probe: neverProbe, loadScreen: async () => SCREEN, renderer: renderLocalDossier });
+    expect(out.ok ? null : { stage: out.refusal.stage, reasons: out.refusal.reasons }).toEqual({ stage: 'rederive',
+      reasons: ['containment-depth at $.diagrams[0].groups[0].children[0].children[0].children[0]'] });
+  });
+
   it('refuses a containment as the hero: a hero is a graph figure', async () => {
     const doc = draftOf([{ ...PARTS(), home: { kind: 'overview' } }]);
     doc['hero'] = { figure: 'parts' };
@@ -318,6 +346,25 @@ describe('containment: nestings read as contains arrows', () => {
   it('challenges a nesting of an absent top-level directory where coverage is complete, naming the child group and never its unit', async () => {
     expect(await findingsOf(A, draftOf([NESTED(tld('missing'))]))).toEqual({ outcome: 'findings', findings: [{ kind: 'relation-challenged', at: '$.diagrams[0].groups[0].children[0]',
       detail: 'parts: no contains fact joins the units of group src and the group it is drawn in, in what rule top-level-unit version 1 derived at the pinned revision; correct the nesting or its groups\' units' }] });
+  });
+
+  it('decides no nesting where the draft has a schema finding anywhere', async () => {
+    expect(await findingsOf(A, { ...draftOf([NESTED(tld('missing'))]), stray: true })).toEqual({ outcome: 'findings', findings: [
+      { kind: 'schema', at: '$.stray', detail: 'is not a field of this form' },
+    ] });
+  });
+
+  it('leaves a nesting whose parent group renders as a withheld item unknown, at check and at the render', async () => {
+    const held = (child: Record<string, unknown>): Doc => containment('parts', [group('root', 'Repository', [group('src', 'Source', [], child)], ROOT,
+      { citations: [{ id: 'c-root', path: '.env', startLine: 1, endLine: 1 }] })]);
+    // Not challenged, though no `missing` directory exists: the parent is no claim Syzygy can test.
+    expect(await findingsOf(B, draftOf([held(tld('missing'))]))).toEqual(PASSED);
+    // Not witnessed, though the tree has `src`.
+    const { files, machine } = await rendered(B, draftOf([held(tld('src'))]));
+    expect(machine['figureStructures'][0]['nestings']).toEqual([{ parent: 'root', child: 'src', witness: witness('unknown', 'edge-not-inferred') }]);
+    const fig = figureOf(files.get('index.html')!, 'parts');
+    expect(fig).toContain('data-unknown-reason="excluded-content"');
+    expect(fig).not.toContain('Witnessed by Syzygy');
   });
 
   it('decides a nesting of other unit kinds, or without units, unknown, and reports nothing for either', async () => {
@@ -348,6 +395,15 @@ describe('containment: earlier schemas keep their findings', () => {
       { kind: 'schema', at: '$.diagrams[0].edges', detail: 'is required' },
       { kind: 'field-version', at: '$.diagrams[0].kind', detail: 'parts: the kind `containment` needs draft schema polaris-dossier-local-draft-v11' },
       { kind: 'field-version', at: '$.diagrams[0].groups', detail: 'parts: `groups` needs draft schema polaris-dossier-local-draft-v11' },
+    ] });
+  });
+
+  it('reports a v13 containment by v13\'s schema findings, never field-version: v13 descends from v10 and is no earlier schema', async () => {
+    expect(await findingsOf(A, draftOf([PARTS()], 'polaris-dossier-local-draft-v13'))).toEqual({ outcome: 'findings', findings: [
+      { kind: 'schema', at: '$.diagrams[0].groups', detail: 'is not a field of this form' },
+      { kind: 'schema', at: '$.diagrams[0].kind', detail: 'must be one of flow, lifecycle, state-machine, boundary, dependency, placement, sequence, swimlane' },
+      { kind: 'schema', at: '$.diagrams[0].nodes', detail: 'is required' },
+      { kind: 'schema', at: '$.diagrams[0].edges', detail: 'is required' },
     ] });
   });
 

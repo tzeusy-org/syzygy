@@ -46,6 +46,13 @@ describe('containment layout', () => {
     expect(lines).toEqual([['abcdefghij', 'klmnopqrst uvwxyz'], ['abcdefghij', 'klmnopqrst… ?'], ['abcdefghij', 'klmnopqrst…']]);
     expect(svg).not.toMatch(/<path|<line|marker/u);
   });
+
+  it('fills a line to 19, 16 and 13 characters by level, no further', () => {
+    const label = 'abcd efgh ijkl mnop';
+    const svg = renderContainmentSvg([{ id: 'a', label, epistemic: 'inferred', children: [{ id: 'b', label, epistemic: 'inferred', children: [{ id: 'c', label, epistemic: 'inferred', children: [] }] }] }], 0, escape);
+    const lines = [...svg.matchAll(/<text [^>]*>(.*?)<\/text>/gu)].map(m => [...m[1]!.matchAll(/<tspan[^>]*>([^<]*)<\/tspan>/gu)].map(t => t[1]));
+    expect(lines).toEqual([['abcd efgh ijkl mnop'], ['abcd efgh ijkl', 'mnop'], ['abcd efgh', 'ijkl mnop']]);
+  });
 });
 
 describe('containment source', () => {
