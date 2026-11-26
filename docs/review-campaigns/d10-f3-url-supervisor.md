@@ -2,6 +2,11 @@
 
 ## Patterns
 
+- `F3-MAIN-50D9-COMPOSITION-BA9F5B6-RAW\.md`
+- `F3-QUESTION-KIND-BRIDGE-R[12]-RAW\.md`
+- `F3-RESUMED-FIXTURE-PAIRED-R3-RAW\.md`
+- `F3-SYNC-GUARD-121936-RAW\.md`
+- `syzygy-k54o-3/f3-host-pidfd-(r1-review|r2-review|r2-readme-addendum|r2-readme-r2-addendum)-RAW\.md`
 - `F3-MAIN-4B86-COMPOSITION-(DF318|E22D3)-RAW\.md`
 - `syzygy-k54o-3/f3-policy-git-microdiagnostic-r2-review-RAW\.md`
 - `F3-CI-NATIVE-NODE-PROFILE-CD78-RAW\.md`
