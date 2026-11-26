@@ -1692,8 +1692,13 @@ async function observeDesignRun(run: string, traceInference = false) {
         return timed(trace, () => currentScope.run(trace, call), value => value === true);
       };
       const observedPreflight = preflight === undefined ? undefined : {
-        prepare: () => tracePreflight('productPreparation', preflight.prepare),
-        current: () => tracePreflight('preparedProductCurrent', preflight.current),
+        forOperation: () => {
+          const prepared = preflight.forOperation();
+          return {
+            prepare: () => tracePreflight('productPreparation', prepared.prepare),
+            current: () => tracePreflight('preparedProductCurrent', prepared.current),
+          };
+        },
       };
       const invoke = () => mediatePeer(peer, operation, current => {
         const stamp = step.effect = { startedMs: clock() };

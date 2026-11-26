@@ -472,8 +472,11 @@ export async function readUrlMachinePeer(peer: UrlMachinePeer): Promise<UrlMachi
 }
 
 export interface UrlMachineEffectPreflight {
-  readonly prepare: () => Promise<boolean>;
-  readonly current: () => boolean;
+  /** One pair per mediation, retained across both bounded preparation passes. */
+  readonly forOperation: () => {
+    readonly prepare: () => Promise<boolean>;
+    readonly current: () => boolean;
+  };
 }
 
 /** Call separately before each delivery, tool effect, reply registration or
@@ -492,8 +495,18 @@ export async function mediateUrlMachinePeer<T>(peer: UrlMachinePeer, operation: 
     if (!context.allowedScopes.includes(operation)) return { ok: false };
     // The checked product may need one fresh reproduction. Finish that work
     // before opening the machine store's independently bounded effect lease.
-    if (preflight !== undefined && (!isOrderedDesignSessionProfile(options.profile)
-      || !(await preflight.prepare()) || check(state) >= context.deadline || !preflight.current())) return { ok: false };
+    if (preflight !== undefined) {
+      if (!isOrderedDesignSessionProfile(options.profile)) return { ok: false };
+      const prepared = preflight.forOperation();
+      if (!(await prepared.prepare())) return { ok: false };
+      if (check(state) >= context.deadline) return { ok: false };
+      if (!prepared.current()) {
+        // The moving horizon can cross the checked lease between preparation
+        // and this sample. Re-prepare once with the same operation allowance.
+        if (check(state) >= context.deadline || !(await prepared.prepare())
+          || check(state) >= context.deadline || !prepared.current()) return { ok: false };
+      }
+    }
     const completed = await options.store.exclusive(context.clientId, context.deadline, async lease => {
       try {
       const now = await current(state), snapshot = await lease.read();

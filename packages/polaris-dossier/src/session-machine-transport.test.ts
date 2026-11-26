@@ -31,7 +31,12 @@ vi.mock('./url-machine-peer.js', () => ({
     backend.mediations++;
     const current = () => { backend.guard?.(); return state.live && !backend.deny; };
     try {
-      if (!current() || (preflight !== undefined && (!(await preflight.prepare()) || !preflight.current()))) return { ok: false };
+      if (!current()) return { ok: false };
+      if (preflight !== undefined) {
+        const prepared = preflight.forOperation();
+        if (!(await prepared.prepare())) return { ok: false };
+        if (!prepared.current() && (!(await prepared.prepare()) || !prepared.current())) return { ok: false };
+      }
       const value = await effect(current);
       return state.live && !backend.deny ? { ok: true, value } : { ok: false };
     }
@@ -350,7 +355,7 @@ describe('verified-chunk session transport adapter', () => {
     expect(await c.output).toBe('');
   });
 
-  it('runs preparation outside the effect and refuses a disconnected socket before calling the effect', async () => {
+  it.each(['disconnect', 'deadline', 'second-deadline'] as const)('keeps the original transport bound during preparation (%s)', async scenario => {
     let opened!: (stream: Duplex) => void;
     const accepted = new Promise<Duplex>(resolve => { opened = resolve; });
     let socket!: Socket;
@@ -367,15 +372,24 @@ describe('verified-chunk session transport adapter', () => {
     const context = sessionMachineEffectContext(await accepted)!;
     const effect = vi.fn(() => assertSessionMachineEffectCurrent());
     const current = vi.fn(() => true);
+    const monotonic = performance.now.bind(performance);
+    let offset = 0, calls = 0;
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => monotonic() + offset);
     const prepare = vi.fn(async () => {
       expect(sessionMachineEffectCurrent()).toBeUndefined();
-      socket.destroy();
+      if (scenario === 'disconnect') socket.destroy();
+      else if (scenario === 'deadline' || ++calls === 2) offset = 1001;
       return true;
     });
-    expect(await context.mediate('inference-forward', effect, { prepare, current })).toEqual({ ok: false });
-    expect(prepare).toHaveBeenCalledTimes(1);
-    expect(current).not.toHaveBeenCalled();
-    expect(effect).not.toHaveBeenCalled();
+    current.mockImplementation(() => scenario !== 'second-deadline');
+    const forOperation = vi.fn(() => ({ prepare, current }));
+    try {
+      expect(await context.mediate('inference-forward', effect, { forOperation }), 'expired original transport must suppress effect').toEqual({ ok: false });
+      expect(forOperation).toHaveBeenCalledTimes(1);
+      expect(prepare).toHaveBeenCalledTimes(scenario === 'second-deadline' ? 2 : 1);
+      expect(current).toHaveBeenCalledTimes(scenario === 'second-deadline' ? 1 : 0);
+      expect(effect).not.toHaveBeenCalled();
+    } finally { clock.mockRestore(); }
   });
 
   it.each(['data', 'pending'] as const)('settles an in-flight native %s chunk before any protected effect after ingress stops', async kind => {
@@ -429,14 +443,14 @@ describe('verified-chunk session transport adapter', () => {
       const order: string[] = [];
       const ports: SessionRelayPorts = {
         current: () => true,
-        productPreflight: {
+        productPreflight: { forOperation: () => ({
           prepare: async () => {
             expect(sessionMachineEffectCurrent()).toBeUndefined();
             order.push('prepare');
             return scenario !== 'preflight-refused';
           },
           current: () => { order.push('preflight-current'); return true; },
-        },
+        }) },
         request: (bytes, context) => {
           assertSessionMachineEffectCurrent();
           order.push('request');

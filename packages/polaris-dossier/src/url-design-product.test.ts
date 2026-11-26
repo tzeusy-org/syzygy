@@ -4,7 +4,7 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { sha256 } from '@syzygy/support';
 import { generationSourcesForBody, type EvidenceAnchor } from '@syzygy/polaris-generation-core/live';
 import { buildDesignPacket } from './design-review.js';
-import { checkUrlOrderedProductCurrent, isUrlOrderedProductCurrentAfterEffectCheck } from './url-run-ordered-attempt.js';
+import { checkUrlOrderedProductCurrent, createUrlOrderedProductPreflight, isUrlOrderedProductCurrentAfterEffectCheck } from './url-run-ordered-attempt.js';
 import { buildDossierScreen, type DossierScreen } from './screen.js';
 import type { ProducedSiteInput, DossierRenderer } from './render.js';
 import { beginRunProductReads, type ProductReadEvidence, type RunProductReads } from './url-operation-products.js';
@@ -164,6 +164,73 @@ describe('active URL design product capability', () => {
       expect(assertCurrent).toHaveBeenCalledTimes(1);
       expect(refresh).toHaveBeenCalledTimes(scenario === 'short' ? 1 : 0);
     } finally { clock.mockRestore(); }
+  });
+
+  it('keeps one renewal allowance per preflight pair across a moving 85-second horizon', async () => {
+    for (const scenario of ['ample', 'gap', 'already-renewed', 'second-short', 'withdrawn', 'changed', 'retired', 'separate-pairs', 'joined'] as const) {
+      const f = fixture(145_000), initial = await validateUrlDesignProduct(f.input, f.options);
+      if (initial === null) throw new Error('own protected product unavailable');
+      let product = initial, deadline = f.reads.deadline, now = deadline - 85_060, live = true;
+      const clock = vi.spyOn(Date, 'now').mockImplementation(() => now);
+      let renewals = 0, joins = 0, proofChecks = 0, pending: Promise<boolean> | undefined;
+      const covers = () => {
+        const lease = urlDesignProductLeaseState(product);
+        return lease.state === 'open' && lease.deadline >= now + 85_000;
+      };
+      const preflight = createUrlOrderedProductPreflight({
+        prepare: async reserveRefresh => live && (covers() || checkUrlOrderedProductCurrent({ product,
+          assertCurrent: () => { proofChecks++; if (scenario === 'changed') throw new Error('own changed delivery'); assertUrlDesignProductInputsCurrent(product); },
+          effectHorizon: () => now + 85_000, reserveRefresh,
+          refresh: async () => {
+            if (pending !== undefined) { joins++; return pending; }
+            renewals++;
+            pending = (async () => {
+              const next = fixture(145_000), checked = await validateUrlDesignProduct(next.input, next.options);
+              if (checked === null) throw new Error('own replacement unavailable');
+              product = checked; deadline = next.reads.deadline;
+              return true;
+            })();
+            try { return await pending; } finally { pending = undefined; }
+          },
+        })),
+        current: () => live && covers(),
+      });
+      try {
+        const first = preflight.forOperation();
+        expect(deadline - now).toBe(85_060);
+        if (scenario === 'already-renewed') now = deadline - 84_986;
+        expect(await first.prepare()).toBe(true);
+        expect(first.current()).toBe(true);
+        if (scenario === 'ample') { expect(renewals).toBe(0); continue; }
+        now = deadline - 84_986;
+        expect(deadline - now).toBe(84_986);
+        expect(first.current()).toBe(false);
+        if (scenario === 'withdrawn') live = false;
+        if (scenario === 'retired') f.reads.close();
+        if (scenario === 'joined') {
+          const second = preflight.forOperation();
+          expect(await Promise.all([first.prepare(), second.prepare()])).toEqual([true, true]);
+          expect(renewals).toBe(1); expect(joins).toBe(1);
+          now = deadline - 84_986;
+          expect(await first.prepare()).toBe(false); expect(await second.prepare()).toBe(false);
+          expect(renewals).toBe(1); continue;
+        }
+        const prepared = await first.prepare();
+        const allowed = !['already-renewed', 'withdrawn', 'changed', 'retired'].includes(scenario);
+        expect(prepared, 'preflight preparation: ' + scenario).toBe(allowed);
+        if (scenario === 'second-short') now = deadline - 84_986;
+        expect(first.current()).toBe(allowed && scenario !== 'second-short');
+        expect(renewals).toBe(scenario === 'withdrawn' || scenario === 'changed' || scenario === 'retired' ? 0 : 1);
+        if (scenario === 'changed' || scenario === 'retired') expect(proofChecks).toBe(scenario === 'changed' ? 1 : 0);
+        if (scenario === 'separate-pairs') {
+          now = deadline - 84_986;
+          expect(await first.prepare()).toBe(false);
+          const second = preflight.forOperation();
+          expect(await second.prepare()).toBe(true); expect(second.current()).toBe(true);
+          expect(renewals).toBe(2);
+        }
+      } finally { clock.mockRestore(); }
+    }
   });
 
   it('refuses a delivery check failure while its genuine product lease remains open', async () => {

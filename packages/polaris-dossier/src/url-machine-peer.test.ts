@@ -15,7 +15,7 @@ import { launchRestrictedUrlSession, prepareRestrictedUrlSession, URL_CLI_PROGRA
 import { captureUrlMachinePeer, isUrlMachinePeerFor, prepareUrlMachineListener, prepareUrlMachineListenerAsync,
   closeUrlMachinePeer, mediateUrlMachinePeer, readUrlMachinePeer, waitForUrlMachinePeerPublication,
   urlMachinePeerCaptureMilliseconds,
-  type UrlMachinePeer, type UrlMachinePeerOptions } from './url-machine-peer.js';
+  type UrlMachineEffectPreflight, type UrlMachinePeer, type UrlMachinePeerOptions } from './url-machine-peer.js';
 import { initializeUrlMachineStore } from './url-machine-store.js';
 import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
 import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachineClientRecord } from './url-machine-instance.js';
@@ -64,7 +64,8 @@ beforeAll(async () => {
 
 async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live',
   chargeNativeCpuMicroseconds?: (capacity: number) => void, captureGuards?: Partial<Pick<UrlMachinePeerOptions, 'current' | 'effectCurrent' | 'readImageCurrent'>>,
-  captureTiming?: (options: UrlMachinePeerOptions) => Partial<Pick<UrlMachinePeerOptions, 'now' | 'current' | 'readImageCurrent' | 'effectCurrent' | 'audit'>>) {
+  captureTiming?: (options: UrlMachinePeerOptions) => Partial<Pick<UrlMachinePeerOptions, 'now' | 'current' | 'readImageCurrent' | 'effectCurrent' | 'audit'>>,
+  orderedPeer = false) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mp-'));
   cleanup.push(() => fs.rm(root, { recursive: true, force: true }));
   for (const name of ['support', 'home', 'work', 'broker', 'relay', 'hidden']) await fs.mkdir(path.join(root, name), { mode: 0o700 });
@@ -77,11 +78,17 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
   if (!store) throw new Error('owned store unavailable'); cleanup.push(() => store.close());
   const slot = await store.allocateClient(deadline); if (!slot) throw new Error('owned slot unavailable');
   const runId = `run-${id().slice(0, 32)}`;
-  const compiled = createSessionProfile({ binding: { run: runId, role: 'author', sourceBinding: id(), policy: id(), provider: 'anthropic', model: DEFAULT_SESSION_MODEL },
+  const role: 'design' | 'author' = orderedPeer ? 'design' : 'author';
+  const profileInput = { binding: { run: runId, role, sourceBinding: id(), policy: id(), provider: 'anthropic' as const, model: DEFAULT_SESSION_MODEL },
     sessionId: '12345678-1234-4234-8234-123456789012', systemPrompt: 'Use only the owned synthetic peer fixture.', initialPrompt: 'Owned peer test.',
-    utcDate: new Date(now).toISOString().slice(0, 10), kernelRelease: os.release() });
-  if (!compiled.ok) throw new Error('owned profile unavailable');
-  const profile = compiled.value.profile;
+    utcDate: new Date(now).toISOString().slice(0, 10), kernelRelease: os.release() };
+  const compiled = createSessionProfile(profileInput);
+  const peerCompiled = orderedPeer ? createOrderedDesignSessionProfile(profileInput) : compiled;
+  if (!compiled.ok || !peerCompiled.ok) throw new Error('owned profile unavailable');
+  // The synthetic transport uses the ordinary launcher. Only the captured peer
+  // and protected lifecycle select the nominal ordered profile; no ordered
+  // launcher/support admission claim is made by this verifier fixture.
+  const profile = peerCompiled.value.profile;
   const nodeExecutable = await fs.realpath(process.execPath), nodeSha256 = sha256(await fs.readFile(nodeExecutable));
   const bridge = Buffer.from(`import {spawn} from 'node:child_process';
     const child = spawn('/tool/node', ['/tool/support/session-mcp.js'], {stdio:'inherit'});
@@ -107,10 +114,10 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
   await new Promise<void>(resolve => loopback.listen(0, '127.0.0.1', resolve));
   cleanup.push(() => new Promise<void>(resolve => loopback.close(() => resolve())));
   const launchOptions: UrlSessionLaunchOptions = {
-    view: { role: 'author', cliExecutable: await fs.realpath(path.join(os.homedir(), '.local/share/claude/versions', URL_CLI_PROGRAM.version)),
+    view: { role, cliExecutable: await fs.realpath(path.join(os.homedir(), '.local/share/claude/versions', URL_CLI_PROGRAM.version)),
       nodeExecutable, supportDirectory: path.join(root, 'support'), homeDirectory: path.join(root, 'home'), workDirectory: path.join(root, 'work'),
       brokerSocketDirectory: path.join(root, 'broker'), relaySocketDirectory: path.join(root, 'relay'), protectedPaths: [path.join(root, 'hidden')] },
-    profile, expected: { nodeSha256, supportSha256: { 'session-bridge.js': sha256(bridge), 'session-mcp.js': sha256(mcp) } },
+    profile: compiled.value.profile, expected: { nodeSha256, supportSha256: { 'session-bridge.js': sha256(bridge), 'session-mcp.js': sha256(mcp) } },
     current: () => current, audit: () => {}, canaries: [hidden], hostLoopbackPort: (loopback.address() as AddressInfo).port,
     limits: { milliseconds: 60_000 },
   };
@@ -136,7 +143,7 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
   const launch = await launchRestrictedUrlSession({ preparation, host: { brokerSocket, relaySocket, close } });
   cleanup.push(() => launch.stop());
   const socket = await accepted;
-  const context: UrlMachineClientContext = { clientId: slot.clientId, policySha256: id(), sourcePin: 'a'.repeat(40), runId, role: 'author', kind: 'mcp-shim',
+  const context: UrlMachineClientContext = { clientId: slot.clientId, policySha256: id(), sourcePin: 'a'.repeat(40), runId, role, kind: 'mcp-shim',
     allowedScopes: ['artifact_read'], profileSha256: profile.digest, now, deadline };
   const binding = { parentBindingSha256: id(), controllerSha256: id() };
   const options: UrlMachinePeerOptions = { socket, listener: listener!, launch, profile, context, store, binding, programs,
@@ -147,7 +154,7 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
   const peer = await captureUrlMachinePeer({ ...options, ...captureTiming?.(options) });
   if (peer) cleanup.push(() => closeUrlMachinePeer(peer));
   const record = (credential: UrlMachinePeer): UrlMachineClientRecord => ({ format: 'polaris-dossier-local-machine-client/1', clientId: slot.clientId, issuanceId: id(),
-    policySha256: context.policySha256, revision: 1, projectId: 'project:syzygy', sourcePin: context.sourcePin, runId, role: 'author', kind: 'mcp-shim', scopes: ['artifact_read'],
+    policySha256: context.policySha256, revision: 1, projectId: 'project:syzygy', sourcePin: context.sourcePin, runId, role, kind: 'mcp-shim', scopes: ['artifact_read'],
     issuedAt: new Date(now - 1000).toISOString(), expiresAt: new Date(deadline).toISOString(), revokedAt: null,
     instances: [{ instanceId: id(), generation: 1, issuedAt: new Date(now - 1000).toISOString(), expiresAt: new Date(deadline).toISOString(),
       retiredAt: null, revokedAt: null, verifier: credential.verifier }] });
@@ -162,7 +169,7 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
     throw new Error('owned request did not arrive');
   };
   return { peer, socket, options, record, publish, read, launch, audited: () => audited, revokeParent: () => { current = false; },
-    failAudit: () => { failAudit = true; }, expireAudit: () => { expireDuringAudit = true; } };
+    failAudit: () => { failAudit = true; }, expireAudit: () => { expireDuringAudit = true; }, expireRun: () => { now = deadline; } };
 }
 
 describe('live URL machine peer binding', { timeout: 60_000 }, () => {
@@ -473,8 +480,8 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     expect(charges).toHaveLength(reserved + 5); expect(calls()).toHaveLength(invoked);
   });
 
-  it('captures a genuine isolated descendant and authorizes its scoped effect against actual protected lifecycle files', async () => {
-    const f = await fixture(); expect(f.peer).not.toBeNull();
+  it.each([false, true])('captures a genuine isolated descendant and authorizes its scoped effect against actual protected lifecycle files (ordered peer: %s)', async orderedPeer => {
+    const f = await fixture('live', undefined, undefined, undefined, orderedPeer); expect(f.peer).not.toBeNull();
     expect(isUrlMachinePeerFor(f.peer!, f.socket)).toBe(true);
     expect(isUrlMachinePeerFor({ verifier: f.peer!.verifier }, f.socket)).toBe(false);
     const record = f.record(f.peer!); expect((await f.publish(record)).ok).toBe(true);
@@ -521,10 +528,61 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
       expect(sawSmall).toBe(true); expect(sawLarge).toBe(true); expect(checkedOwnedReturn).toBe(true);
     } finally { filesystemBoundary.afterRead = undefined; equals.mockRestore(); }
     expect(f.audited()).toBe(1); expect(effects).toBe(1);
+    if (orderedPeer) {
+      const pairs: { prepares: number; currents: number }[] = [];
+      const preflight: UrlMachineEffectPreflight = { forOperation: () => {
+        const pair = { prepares: 0, currents: 0 }; pairs.push(pair);
+        return { prepare: async () => { pair.prepares++; return true; }, current: () => ++pair.currents === 2 };
+      } };
+      // Two distinct mediations each close the lost-horizon gap using their
+      // own pair; no callback is entered at the first failed fresh guard.
+      for (const expectedEffects of [2, 3]) {
+        expect(await mediateUrlMachinePeer(f.peer!, 'artifact_read', () => ++effects, preflight), 'ordered gap must reach exactly one protected effect')
+          .toEqual({ ok: true, value: expectedEffects });
+        expect(effects).toBe(expectedEffects); expect(f.audited()).toBe(expectedEffects);
+      }
+      expect(pairs, 'retry must retain one operation pair').toEqual([{ prepares: 2, currents: 2 }, { prepares: 2, currents: 2 }]);
+      for (const scenario of ['initial-false', 'second-current-false'] as const) {
+        let prepares = 0, currents = 0, factories = 0;
+        const result = await mediateUrlMachinePeer(f.peer!, 'artifact_read', () => ++effects, { forOperation: () => {
+          factories++;
+          return { prepare: async () => { prepares++; return scenario !== 'initial-false'; }, current: () => { currents++; return false; } };
+        } });
+        expect(result, 'failed fresh current must suppress effect').toEqual({ ok: false }); expect(factories).toBe(1);
+        expect(prepares, 'initial refusal must not reprepare').toBe(scenario === 'initial-false' ? 1 : 2);
+        expect(currents).toBe(scenario === 'initial-false' ? 0 : 2);
+        expect(effects).toBe(3); expect(f.audited()).toBe(3);
+      }
+    } else {
+      const forOperation = vi.fn(() => ({ prepare: async () => true, current: () => true }));
+      expect(await mediateUrlMachinePeer(f.peer!, 'artifact_read', () => ++effects, { forOperation })).toEqual({ ok: false });
+      expect(forOperation).not.toHaveBeenCalled(); expect(effects).toBe(1);
+    }
     const revoked = { ...record, revision: 2, revokedAt: new Date(f.options.now()).toISOString() };
     expect((await f.publish(revoked, { revision: 1, sha256: sha256(canonical(record)) })).ok).toBe(true);
     expect(await mediateUrlMachinePeer(f.peer!, 'artifact_read', () => ++effects)).toEqual({ ok: false });
-    expect(effects).toBe(1);
+    expect(effects).toBe(orderedPeer ? 3 : 1);
+  });
+
+  it.each(['throw', 'withdrawn', 'expired'] as const)('refuses before ordered preparation can regrant or enter an effect (%s)', async scenario => {
+    let live = true;
+    const f = await fixture('live', undefined, { effectCurrent: () => live }, undefined, true);
+    expect(f.peer).not.toBeNull(); if (!f.peer) return;
+    expect((await f.publish(f.record(f.peer))).ok).toBe(true);
+    expect(await f.read()).toEqual({ kind: 'data', bytes: Buffer.from('OWN_FRAME\n') });
+    let prepares = 0, currents = 0, effects = 0, factories = 0;
+    const result = await mediateUrlMachinePeer(f.peer, 'artifact_read', () => ++effects, { forOperation: () => {
+      factories++;
+      return { prepare: async () => {
+        prepares++;
+        if (scenario === 'throw') throw new Error('own failed preflight');
+        if (scenario === 'withdrawn') { live = false; f.revokeParent(); }
+        else f.expireRun();
+        return true;
+      }, current: () => { currents++; return false; } };
+    } });
+    expect(result).toEqual({ ok: false }); expect(factories).toBe(1); expect(prepares).toBe(1);
+    expect(currents).toBe(0); expect(effects).toBe(0); expect(f.audited()).toBe(0);
   });
 
   it('rejects copied launch objects and an unrelated same-UID socket carrying copied claims', async () => {

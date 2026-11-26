@@ -19,6 +19,7 @@ import { assertSessionMachineEffectCurrent, sessionMachineEffectCurrent } from '
 import type { OrderedDesignWorkEnforcement } from './url-ordered-design-work-budget.js';
 import { writeUrlLaunchHistory } from './url-launch-history.js';
 import type { UrlRolePlan } from './url-role-plan.js';
+import type { UrlMachineEffectPreflight } from './url-machine-peer.js';
 import { urlOrderedScreenProgram, type UrlRuntime } from './url-runtime.js';
 import type { createUrlRunMachine } from './url-run-machine.js';
 import type { UrlOrderedCpuReservation } from './url-run-cpu-budget.js';
@@ -88,6 +89,8 @@ export async function checkUrlOrderedProductCurrent(input: {
   readonly assertCurrent: () => void;
   readonly refresh: () => Promise<boolean>;
   readonly effectHorizon?: () => number;
+  /** Consume an operation-local allowance only when actually renewing/joining. */
+  readonly reserveRefresh?: () => boolean;
 }): Promise<boolean> {
   const lease = urlDesignProductLeaseState(input.product);
   if (lease.state === 'open') {
@@ -96,7 +99,25 @@ export async function checkUrlOrderedProductCurrent(input: {
       if (input.effectHorizon === undefined || lease.deadline >= input.effectHorizon()) return true;
     } catch (cause) { if (!isCheckedUrlDesignProductExpiry(input.product, cause)) return false; }
   } else if (lease.state !== 'expired') return false;
+  if (input.reserveRefresh !== undefined && !input.reserveRefresh()) return false;
   return input.refresh();
+}
+
+/** Each preflight sequence may renew or join once. Other currentness checks
+ * retain their existing expiry behavior and receive no new shared state. */
+export function createUrlOrderedProductPreflight(input: {
+  readonly prepare: (reserveRefresh: () => boolean) => Promise<boolean>;
+  readonly current: () => boolean;
+}): UrlMachineEffectPreflight {
+  return { forOperation: () => {
+    let reserved = false;
+    const reserveRefresh = (): boolean => {
+      if (reserved) return false;
+      reserved = true;
+      return true;
+    };
+    return { prepare: () => input.prepare(reserveRefresh), current: input.current };
+  } };
 }
 
 /** The machine effect check can outlast the shorter product lease. */
@@ -137,7 +158,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     assertProcessingCurrent();
     assertUrlDesignDeliveryViewCurrent(delivery!);
   };
-  const current = async (effectHorizon?: () => number): Promise<boolean> => {
+  const current = async (effectHorizon?: () => number, reserveRefresh?: () => boolean): Promise<boolean> => {
     // Resumed runtime authority includes synchronous Git and claim checks.
     // Let a pending census finish before starting that work.
     if (closed) return false;
@@ -157,6 +178,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       product: render!.product,
       assertCurrent,
       ...(effectHorizon === undefined ? {} : { effectHorizon }),
+      ...(reserveRefresh === undefined ? {} : { reserveRefresh }),
       refresh: async () => {
         const pending = renewing ??= (async () => {
           if (!processingCurrent()) return false;
@@ -191,10 +213,11 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     const lease = urlDesignProductLeaseState(render.product);
     return lease.state === 'open' && lease.deadline >= effectHorizon();
   };
-  const productPreflight = {
-    prepare: async () => productCoversEffect() || current(effectHorizon),
+  const productPreflight = createUrlOrderedProductPreflight({
+    prepare: async reserveRefresh => processingCurrent()
+      && (productCoversEffect() || current(effectHorizon, reserveRefresh)),
     current: () => processingCurrent() && productCoversEffect(),
-  };
+  });
   const consumeTerminal = async (): Promise<boolean> => {
     if (consumedTerminal) return true;
     if (staged === null || controller === undefined) return false;

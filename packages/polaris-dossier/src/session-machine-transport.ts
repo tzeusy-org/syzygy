@@ -183,8 +183,13 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
       const transportCurrent = () => !ended && !raw.destroyed && !stream.destroyed && performance.now() < deadline;
       if (!transportCurrent() || active.boundary !== null) return { ok: false };
       const checkedPreflight = preflight === undefined ? undefined : {
-        prepare: async () => transportCurrent() && await preflight.prepare(),
-        current: () => transportCurrent() && preflight.current() && transportCurrent(),
+        forOperation: () => {
+          const prepared = preflight.forOperation();
+          return {
+            prepare: async () => transportCurrent() && await prepared.prepare(),
+            current: () => transportCurrent() && prepared.current() && transportCurrent(),
+          };
+        },
       };
       return mediateUrlMachinePeer(selected, operation, async current => {
         // The peer checked currentness immediately before entering this callback.
