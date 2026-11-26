@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { generationAnchorId } from '@syzygy/polaris-generation-core';
 import { expect, it } from 'vitest';
-import { findBrowserExecutable, launchBrowser, type Browser } from '../cdp-browser.js';
+import { findBrowserExecutable, launchBrowser, type Browser, type BrowserPage } from '../cdp-browser.js';
 import { lineCitationInput, navigationInput, readingInput, splitLineCitationInput } from './dossier-reading.testkit.js';
 import { renderLocalDossier } from './dossier-site.js';
 
@@ -17,6 +17,95 @@ const INTERSECTIONS = `(() => {
   const nodes = [...document.querySelectorAll('g.node > rect')].map(box);
   return [...document.querySelectorAll('rect.edge-label')].map(box).filter(l => nodes.some(n => l.left < n.right && n.left < l.right && l.top < n.bottom && n.top < l.bottom)).length;
 })()`;
+
+/** Where a pointer can rest on a citation, sampled once the page has stopped moving (syzygy-jetr). */
+interface SettledHitPoint {
+  readonly still: boolean;
+  readonly point: { readonly x: number; readonly y: number } | null;
+  readonly left: number;
+  readonly scrollY: number;
+  readonly box: readonly number[];
+}
+/** What the page saw of the last pointer move: its target, whether the browser marked it trusted, and the scroll and the link's box
+ * at that moment. */
+interface DeliveredMove {
+  readonly target: string;
+  readonly onLink: boolean;
+  readonly trusted: boolean;
+  readonly x: number;
+  readonly y: number;
+  readonly scrollY: number;
+  readonly box: readonly number[];
+}
+/**
+ * Brings `link` (a page expression) to the middle of the view with an instant scroll, waits until the scroll position and the link's
+ * box hold still across two frames, then samples a point in its live hit band (syzygy-jetr). The pages set
+ * `html{scroll-behavior:smooth}`. Chrome 120 animated the old `scrollIntoView({ behavior: 'instant' })` under it (observed
+ * 2026-11-26), and a Chrome 157 replay showed a scroll moving between sampling and the trusted move, which then landed beside the
+ * link. An explicit instant `scrollTo` followed by two still frames is meant to leave no scroll in flight when the point is
+ * sampled [Inferred: a running smooth scroll moves the box every frame, so two equal frames mean none ran]. A citation inside a
+ * sources run is an inline-block with zero leading, so its box is zero pixels tall; its label's glyph boxes are tried first as
+ * a margin against a point on that edge, though on Chrome 120 the settled box centre also hit the link.
+ */
+const settledHitPoint = (link: string): string => `(async () => {
+  const link = ${link};
+  const frame = () => new Promise(resolve => requestAnimationFrame(() => resolve(undefined)));
+  const state = () => { const r = link.getBoundingClientRect(); return JSON.stringify([scrollX, scrollY, r.left, r.top, r.right, r.bottom]); };
+  const start = link.getBoundingClientRect();
+  window.scrollTo({ left: 0, top: scrollY + (start.top + start.bottom) / 2 - innerHeight / 2, behavior: 'instant' });
+  let previous = state(), still = 0;
+  for (let n = 0; n < 120 && still < 2; n++) {
+    await frame();
+    const now = state();
+    still = now === previous ? still + 1 : 0;
+    previous = now;
+  }
+  const inside = element => element !== null && link.contains(element) && element.closest('.cite-pop') === null;
+  const candidates = [];
+  for (const node of link.childNodes) {
+    if (node.nodeType !== Node.TEXT_NODE) continue;
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    candidates.push(...range.getClientRects());
+  }
+  candidates.push(...link.getClientRects());
+  const point = candidates.map(r => ({ x: Math.floor((r.left + r.right) / 2), y: Math.floor((r.top + r.bottom) / 2) }))
+    .find(p => p.x >= 0 && p.x < innerWidth && p.y >= 0 && p.y < innerHeight && inside(document.elementFromPoint(p.x, p.y)));
+  const box = link.getBoundingClientRect();
+  return { still: still >= 2, point: point ?? null, left: box.left, scrollY, box: [box.left, box.top, box.right, box.bottom] };
+})()`;
+/** Starts a record of the pointer moves the page sees, judged against `link`; one recorder at a time. */
+const recordMoves = (link: string): string => `(() => {
+  const link = ${link};
+  if (window.__citationMoves) document.removeEventListener('mousemove', window.__citationMoves.listener, true);
+  const moves = [];
+  const listener = event => {
+    const target = event.target, r = link.getBoundingClientRect();
+    moves.push({
+      target: target.tagName.toLowerCase() + (target.id ? '#' + target.id : '') + (typeof target.className === 'string' && target.className ? '.' + target.className.split(' ').join('.') : ''),
+      onLink: link.contains(target) && target.closest('.cite-pop') === null, trusted: event.isTrusted,
+      x: event.clientX, y: event.clientY, scrollY, box: [r.left, r.top, r.right, r.bottom],
+    });
+  };
+  window.__citationMoves = { listener, moves };
+  document.addEventListener('mousemove', listener, true);
+})()`;
+/** The last move the recorder saw, waiting for the one just sent to arrive; the move itself is never sent again. */
+async function deliveredMove(page: BrowserPage): Promise<DeliveredMove | null> {
+  for (let attempt = 0; attempt < 40; attempt++) {
+    const move = await page.evaluate<DeliveredMove | null>('(m => m.length === 0 ? null : m[m.length - 1])(window.__citationMoves.moves)');
+    if (move !== null) return move;
+    await new Promise(resolve => setTimeout(resolve, 25));
+  }
+  return null;
+}
+
+/** Fails unless the move reached the link, trusted, at the scroll and box it was sampled at; the message carries both records
+ * and the hint's state as read after the move. */
+function expectDeliveredOnLink(move: DeliveredMove | null, sample: SettledHitPoint, hint: unknown, label: string): void {
+  expect(move, `${label} hover delivery: ${JSON.stringify({ sampled: sample, delivered: move, hint })}`)
+    .toMatchObject({ onLink: true, trusted: true, scrollY: sample.scrollY, box: sample.box });
+}
 
 // syzygy-pdja.1: what the owner saw in a browser. Opened from disk, as a reader opens a dossier, with the pages' own CSP in force.
 it.skipIf(executable === undefined)('folds the navigation, keeps diagram labels clear of boxes and shows a glossary entry on focus, with no script', async () => {
@@ -417,23 +506,46 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
         });
         await page.evaluate(`${citation}.blur()`);
         expect(await page.evaluate(inspect)).toMatchObject({ hidden: true });
-        const target = await page.evaluate<{ x: number; y: number; left: number; hits: boolean }>(`(() => {
-          const link = ${citation};
-          link.scrollIntoView({ block: 'center', behavior: 'instant' });
-          const box = link.getBoundingClientRect();
-          const x = Math.round((box.left + box.right) / 2), y = Math.round((box.top + box.bottom) / 2);
-          return { x, y, left: box.left, hits: link.contains(document.elementFromPoint(x, y)) };
-        })()`);
-        expect(target.hits, `${selector} pointer hit`).toBe(true);
-        expect(target.left, selector).toBeGreaterThanOrEqual(leftRange[0]);
-        expect(target.left, selector).toBeLessThanOrEqual(leftRange[1]);
-        await page.mouseMove(target.x, target.y);
-        await expect.poll(() => page.evaluate(inspect), { message: `${selector} hover` }).toMatchObject({
+        // syzygy-jetr: one trusted move to a point sampled from settled geometry. A move that lands anywhere else fails with what
+        // was sampled, what the page saw and the hint's state; it is never sent again.
+        const sample = await page.evaluate<SettledHitPoint>(settledHitPoint(citation));
+        expect(sample, `${selector} settled hit point`).toMatchObject({ still: true, point: { x: expect.any(Number), y: expect.any(Number) } });
+        expect(sample.left, selector).toBeGreaterThanOrEqual(leftRange[0]);
+        expect(sample.left, selector).toBeLessThanOrEqual(leftRange[1]);
+        await page.evaluate(recordMoves(citation));
+        await page.mouseMove(sample.point!.x, sample.point!.y);
+        const move = await deliveredMove(page);
+        const hint = await page.evaluate(inspect);
+        expectDeliveredOnLink(move, sample, hint, selector);
+        // The same move, had the page scrolled five pixels or the link moved after sampling, is a miss (the bead's replay); so is
+        // an untrusted one.
+        expect(() => expectDeliveredOnLink({ ...move!, trusted: false }, sample, hint, selector)).toThrow(/hover delivery/u);
+        expect(() => expectDeliveredOnLink({ ...move!, scrollY: move!.scrollY + 5 }, sample, hint, selector)).toThrow(/hover delivery/u);
+        expect(() => expectDeliveredOnLink({ ...move!, box: move!.box.map(edge => edge - 5) }, sample, hint, selector)).toThrow(/hover delivery/u);
+        await expect.poll(() => page.evaluate(inspect), { message: `${selector} hover: ${JSON.stringify({ sampled: sample, delivered: move })}` }).toMatchObject({
           hidden: false, hovered: true, contents: `${codePath}, ${suffix}`, contained: true, fitsPage: true,
         });
         await page.mouseMove(0, 0);
         await expect.poll(() => page.evaluate(inspect)).toMatchObject({ hidden: true });
       }
+      // The delivery check's own control (syzygy-jetr): the page moves 40 pixels between sampling and the trusted move, past the
+      // label's glyph band, as the smooth scroll once did. The check must read it as a miss, with the moved scroll in its record,
+      // and the hint stays hidden.
+      const inline = 'document.querySelector("#block-local-reflow-inline a.cite")';
+      const displaced = await page.evaluate<SettledHitPoint>(settledHitPoint(inline));
+      expect(displaced).toMatchObject({ still: true, point: { x: expect.any(Number), y: expect.any(Number) } });
+      await page.evaluate(recordMoves(inline));
+      await page.evaluate("window.scrollBy({ top: 40, behavior: 'instant' })");
+      await page.mouseMove(displaced.point!.x, displaced.point!.y);
+      const missed = await deliveredMove(page);
+      expect(missed).toMatchObject({ onLink: false, trusted: true, scrollY: displaced.scrollY + 40 });
+      const missedHint = await page.evaluate(`(link => ({ display: getComputedStyle(link.querySelector('.cite-pop')).display, hovered: link.matches(':hover') }))(${inline})`);
+      expect(() => expectDeliveredOnLink(missed, displaced, missedHint, 'displaced'))
+        .toThrow(/^displaced hover delivery: \{"sampled":.*"delivered":.*"hint":\{"display":"none","hovered":false\}/u);
+      // The recorder reads trust from the event itself: a script-made move on the link records untrusted.
+      await page.evaluate(recordMoves(inline));
+      await page.evaluate(`${inline}.dispatchEvent(new MouseEvent('mousemove', { bubbles: true }))`);
+      expect(await deliveredMove(page)).toMatchObject({ onLink: true, trusted: false });
     } finally {
       await page.close();
     }
@@ -441,7 +553,7 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
     if (browser !== undefined) await browser.close();
     await rm(directory, { recursive: true, force: true });
   }
-});
+}, 60_000);
 
 it.skipIf(executable === undefined)('follows a ranged source citation and highlights only its line span with scripts removed', async () => {
   if (!executable) throw Error('Browser required');
