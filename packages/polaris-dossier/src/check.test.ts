@@ -2311,8 +2311,11 @@ describe('check: the worth-knowing mark (schema v13)', () => {
   });
   // Version 2.33 (syzygy-5dhm.43): the choice floor on check's report, from the understanding record, never in the check record.
   it('advises on its report a Pole with two choices or trade-offs on record, and none at three, writing neither into the check record', async () => {
-    const two = await findingsOf(drafted(V13, (d) => { poles(d); }));
+    const advised = await briefedRun();
+    writeDraft(advised, drafted(V13, (d) => { poles(d); }));
+    const two = report(await checkDraft(advised, {}, deps()));
     expect(two.outcome).toBe('passed');
+    expect(read(advised, 'checks/rev-0.json')).not.toContain('choiceFloor');
     expect(two.readerAdvice?.choiceFloor).toEqual([{ at: '$.poles[0]', onRecord: 2, detail: 'the Pole "Ideas" has 2 choices or trade-offs on record, fewer than 3: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s `choices` or `tradeOffs` citing a file its sections cite; never record one its source does not show' }]);
     const run = await briefedRun();
     writeDraft(run, drafted(V13, (d) => { poles(d); d.understanding.tradeOffs.push({ id: 'u-trade-2', label: 'inferred', statement: 'A cost.', scope: 'The server.', citations: [cite('u-trade-2-c')] }); }));

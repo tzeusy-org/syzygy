@@ -6,7 +6,7 @@
 
 ## Why a Pole's items are found by the files it cites
 
-[Inferred] The understanding record is one list for the whole draft and names no Pole. An item belongs to a Pole when it shares a cited file with the Pole's sections, files compared by path alone, the locality rule RS-17 already uses for an edge and its nodes. An item may count for two Poles that cite the same file, so the floor can under-advise a Pole that only borrows a shared file; it never advises a Pole for an item it cites. A draft with no Poles has no part to attribute to, so every item counts for it. Each section counts in the first Pole naming it, as the worth-knowing count does.
+[Inferred] The understanding record is one list for the whole draft and names no Pole. An item belongs to a Pole when one of its citations shares a file with a citation anywhere inside the Pole's sections or the deep dives whose `sectionId` names one of them, files compared by path alone, the locality rule RS-17 already uses for an edge and its nodes. A deep dive belongs to its section's Pole, as the reading surface already shows it. An item may count for two Poles that cite the same file, so the floor can under-advise a Pole that only borrows a shared file; it never advises a Pole for an item that cites a file the Pole's sections or their deep dives cite. Figures are not walked: a file only a diagram of the Pole cites does not attribute. A draft with no Poles has no part to attribute to, so every item counts for it. Each section counts in the first Pole naming it, as the worth-knowing count does.
 
 ## Why three, and why advice
 
@@ -15,3 +15,13 @@
 ## Why no brief change
 
 [Inferred] The bead's approach puts the floor in `reader-advice.ts` as advice only. Check's report already reaches the author on every check; the brief, draft schema and renderer are untouched, so the comprehension-regression rule of `CONTRIBUTING.md`, which applies to those three, is not engaged.
+
+## Review (R-CHOICE-FLOOR-1)
+
+[Observed] One fresh-context review, `docs/reviews/syzygy-5dhm-43/R-CHOICE-FLOOR-1-RAW.md`, recorded `REVISE` over commit `a3bb87f6` with one blocking finding (F1) and five non-blocking (F2 to F6). Each was repaired; none was overruled, and under D10 no confirmation round was run, so no review has read the repaired bytes.
+
+- F1, F2: row A-321 lists every non-merge commit of the change in full in its commit column, and its revert column reverts them newest first after the commit that adds the row.
+- F3: a test where only an item's second citation names the Pole's file.
+- F4: tests where only a nested child and only a steps item cite the attributing file.
+- F5: a deep dive now attributes to the Pole of its `sectionId`, in the code and in the requirement's paragraph, scenario and falsifier; the sentence above is narrowed to match.
+- F6: the advised run's check record is read too.

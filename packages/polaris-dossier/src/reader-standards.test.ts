@@ -255,6 +255,24 @@ describe('reader advice: the choice floor (version 2.33)', () => {
     ]);
   });
 
+  it('attributes by any citation of an item, by a citation at any depth of a section, and by the Pole\'s deep dives', () => {
+    const twoCites = { ...item('ch1', 'docs/x.md'), citations: [cite('docs/x.md'), cite('src/a.c')] };
+    const nested = { id: 'n', title: 'n', paragraphs: [{ ...claim('n-p', 'docs/y.md'), children: [claim('n-c', 'src/nested.c')] },
+      { kind: 'steps', id: 'st', items: [claim('st-1', 'src/steps.c'), claim('st-2', 'docs/y.md')] }] };
+    // Each of the three is needed: the second citation of ch1, the nested child citing src/nested.c, and the deep dive citing src/dive.c.
+    const draft = { ...doc([twoCites, item('ch2', 'src/nested.c')], [item('t1', 'src/dive.c')], [{ label: 'Core', sections: ['a', 'n'] }]),
+      deepDives: [{ id: 'dd', title: 'dd', sectionId: 'a', paragraphs: [claim('dd-p', 'src/dive.c')] }, { id: 'other', title: 'o', sectionId: 'b', paragraphs: [claim('o-p', 'src/other.c')] }] };
+    draft.sections = [...draft.sections, nested];
+    expect(readerAdvice(draft).choiceFloor).toEqual([]);
+    const TWO_CORE = 'the Pole "Core" has 2 choices or trade-offs on record, fewer than 3: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s `choices` or `tradeOffs` citing a file its sections cite; never record one its source does not show';
+    expect(readerAdvice({ ...draft, deepDives: [draft.deepDives[1]] }).choiceFloor).toEqual([{ at: '$.poles[0]', onRecord: 2, detail: TWO_CORE }]);
+    expect(readerAdvice({ ...draft, understanding: { choices: [item('ch1', 'docs/x.md'), item('ch2', 'src/nested.c')], tradeOffs: [item('t1', 'src/dive.c')] } }).choiceFloor)
+      .toEqual([{ at: '$.poles[0]', onRecord: 2, detail: TWO_CORE }]);
+    expect(readerAdvice({ ...draft, sections: draft.sections.slice(0, 3) }).choiceFloor).toEqual([{ at: '$.poles[0]', onRecord: 2, detail: TWO_CORE }]);
+    // A steps item is nested too.
+    expect(readerAdvice({ ...draft, understanding: { choices: [twoCites, item('ch3', 'src/steps.c')], tradeOffs: [item('t1', 'src/dive.c')] } }).choiceFloor).toEqual([]);
+  });
+
   it('counts every Inferred item for a draft with no Poles', () => {
     // An Unknown item is not on record even where nothing attributes it: a draft with no Poles counts the Inferred items alone.
     expect(readerAdvice(doc([item('ch1', 'x/1'), item('ch2', 'x/2'), item('u1', '', 'unknown')], [])).choiceFloor).toEqual([{ at: '$.sections', onRecord: 2,

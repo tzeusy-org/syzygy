@@ -65,7 +65,8 @@ function citedPathsIn(value: unknown, into: Set<string>): Set<string> {
 
 /** The choice floor (REQ-polaris-generation-034 version 2.33, rule `choice-floor` version 1). On record are the items of the understanding
  * record's `choices` and `tradeOffs` labelled Inferred. An item is on record for a Pole when a file it cites is a file some claim, element
- * or excerpt of the Pole's sections cites (each section counted in the first Pole naming it); for a draft with no Poles every such item is
+ * or excerpt of the Pole's sections, or of a deep dive whose `sectionId` is one of them, cites (each section counted in the first Pole
+ * naming it); for a draft with no Poles every such item is
  * on record for the draft. A Pole with fewer than `CHOICE_FLOOR` is one advisory. Undefined for a draft before v13. */
 export function choiceFloorAdvice(doc: Readonly<Record<string, unknown>>): readonly ChoiceFloorAdvisory[] | undefined {
   if (!hasWorthKnowingForm(doc['schemaVersion'])) return undefined;
@@ -78,7 +79,12 @@ export function choiceFloorAdvice(doc: Readonly<Record<string, unknown>>): reado
   const out: ChoiceFloorAdvisory[] = [];
   for (const group of poleGroups(doc, [...sections.keys()])) {
     const cited = new Set<string>();
-    if (group.pole !== undefined) for (const id of group.sections) citedPathsIn(sections.get(id), cited);
+    if (group.pole !== undefined) {
+      const counted = new Set(group.sections);
+      for (const id of group.sections) citedPathsIn(sections.get(id), cited);
+      // A deep dive belongs to the Pole of its section (version 2.33).
+      for (const dive of list(doc['deepDives'])) if (isRecord(dive) && counted.has(text(dive['sectionId']) ?? '')) citedPathsIn(dive, cited);
+    }
     const onRecord = group.pole === undefined ? items.length : items.filter((paths) => [...paths].some((path) => cited.has(path))).length;
     if (onRecord >= CHOICE_FLOOR) continue;
     out.push({ at: group.at, onRecord, detail: `${group.name} has ${onRecord} ${onRecord === 1 ? 'choice or trade-off' : 'choices or trade-offs'} on record, fewer than ${CHOICE_FLOOR}: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record's \`choices\` or \`tradeOffs\`${group.pole === undefined ? '' : ' citing a file its sections cite'}; never record one its source does not show` });

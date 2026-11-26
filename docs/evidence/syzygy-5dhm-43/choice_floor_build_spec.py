@@ -33,8 +33,8 @@ PARAGRAPH = (
     'the understanding record\'s `choices` and `tradeOffs` labelled Inferred; an item labelled Unknown is not. The groups are those of the '
     'worth-knowing count: each Pole, at `$.poles[<i>]`, with the sections it names, each section counted in the first Pole naming it; or, for '
     'a draft that declares no Poles, the whole draft, at `$.sections`. An item is on record for a Pole when a file one of its citations names '
-    'is a file named by some citation inside one of the Pole\'s counted sections, at any depth (a claim\'s `citations`, a code excerpt\'s '
-    '`citation`), files compared by path alone; for a draft with no Poles every item on record is on record for the draft, and an item may '
+    'is a file named by some citation inside one of the Pole\'s counted sections, or inside a deep dive whose `sectionId` names one of '
+    'them, at any depth (a claim\'s `citations`, a code excerpt\'s `citation`), files compared by path alone; for a draft with no Poles every item on record is on record for the draft, and an item may '
     'be on record for more than one Pole. A group with fewer than three items on record is one advisory, in the order of the groups, with '
     '`onRecord` that count and the detail "<name> has <n> choices or trade-offs on record, fewer than 3: where its source shows a decision '
     'this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s '
@@ -58,12 +58,13 @@ SCENARIOS = '''
 
 - **WHEN** a v13 draft records an Unknown choice and an Inferred choice citing a file no section cites, and declares a second Pole naming only a section the first Pole names
 - **THEN** neither of those choices is on record for any Pole, and the second Pole's advisory has `onRecord` 0
+- **AND** an item whose matching file is named only by its second citation, by a citation nested in a child or a list item of a section, or by a deep dive whose `sectionId` names one of the Pole's sections, is on record for that Pole
 - **AND** a draft with no Poles has one group, at `$.sections`, counting every Inferred choice and trade-off, and a draft of schema v12 or earlier has no `choiceFloor` member'''
 
 OBSERVABLE_ADD = ' For the choice floor, record check\'s `readerAdvice.choiceFloor` and the check record beside it.'
 ORACLE_ADD = ' For the choice floor, fix each group\'s count and detail as literals from the fixture\'s Poles, sections and understanding record, outside the advice code.'
 FALSIFIER_ADD = (' For the choice floor: a group with three items on record is advised, or one with two is not; an Unknown item, or one sharing no '
-                 'file with the Pole\'s sections, counts; a section counts in a second Pole; or the advice enters a check record, an outcome or '
+                 'file with the Pole\'s sections and their deep dives, counts; an item matched by a later citation, a nested citation or a deep dive of the Pole does not count; a section counts in a second Pole; or the advice enters a check record, an outcome or '
                  'an earlier schema\'s advice.')
 
 
