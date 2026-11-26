@@ -2,7 +2,7 @@
   "format": "paired-selftest/1",
   "bead": "syzygy-7rkx",
   "workers": 4,
-  "method": "paired_selftest.sh <commit> <before ref> <label>: a fresh `git clone --shared` checked out at <commit>; the selftest runs first with <before ref>'s scripts/check_spec_reconciliation.py written over the checkout (HEAD unchanged, so both witness records name the same commit), then with the commit's own file; SELFTEST_WORKERS=4, TMPDIR under ~/.tmp. The host is shared with other lanes; the load average at the end of each run is recorded beside its wall.",
+  "method": "paired_selftest.sh <commit> <before ref> <label>: a fresh `git clone --shared` checked out at <commit>; the selftest runs first with <before ref>'s scripts/check_spec_reconciliation.py written over the checkout (HEAD unchanged, so both witness records name the same commit), then with the commit's own file; SELFTEST_WORKERS=4, TMPDIR under ~/.tmp. The host is shared with other lanes; the load average at the end of each run is recorded beside its wall. Pairs p1, p2 and full ran the script's first form (`pair7.sh <commit> <before ref> <label>`, repository and work directory fixed in the script); pair merged ran its current form, `paired_selftest.sh <repository> <commit> <before ref> <work directory>`, which also compares stdout.",
   "pairs": {
     "p1": {
       "what": "proposal 1 alone: main's file against the per-run scope",
@@ -84,6 +84,39 @@
       "stdoutByteIdentical": true,
       "witnessCommit": "c9da8e56beae76aaf6554e50bb9e2dc63b568862",
       "witnessEntries": 778
+    },
+    "merged": {
+      "what": "the landing file after review R7RKX's repairs and the merge of origin/main (figplan_cases a family), against origin/main's file",
+      "commit": "6d3f8f2a1f1c98d0068c15fdc97bd9ec43a5558a",
+      "beforeRef": "4b86e4285",
+      "before": {
+        "exit": 0,
+        "wallSeconds": 1038.6,
+        "loadAverage": "14.33 10.56 9.41",
+        "fileSha256": "9dc870de1fbd73848e65ea9062e95267f87940a616e56d81aa2b96e52622a068",
+        "verdict": "SELFTEST PASS: clean scratch copy and its signed- and adopted-addition variants pass; 639 of 639 mutants killed by their expected predicate; 153 of 153 controls held (commit 6d3f8f2a1f1c)",
+        "witnessSha256": "04dafd5056e406bb801db468b17409ddf2d288d1297f6565410089e05687850d",
+        "stdoutSha256": "ecf6e5efac4e774c320baf1ef1a81c59778bb4287e746f54c3f6408abeddf61e"
+      },
+      "after": {
+        "exit": 0,
+        "wallSeconds": 378.0,
+        "loadAverage": "33.81 24.17 15.92",
+        "fileSha256": "5e812d6995ef2df5f0c323f4f680bc8c2e1666f01cbf627334b33a62888bc9ac",
+        "verdict": "SELFTEST PASS: clean scratch copy and its signed- and adopted-addition variants pass; 639 of 639 mutants killed by their expected predicate; 153 of 153 controls held (commit 6d3f8f2a1f1c)",
+        "witnessSha256": "04dafd5056e406bb801db468b17409ddf2d288d1297f6565410089e05687850d",
+        "stdoutSha256": "ecf6e5efac4e774c320baf1ef1a81c59778bb4287e746f54c3f6408abeddf61e"
+      },
+      "witnessByteIdentical": true,
+      "stdoutByteIdentical": true,
+      "witnessCommit": "6d3f8f2a1f1c98d0068c15fdc97bd9ec43a5558a",
+      "witnessEntries": 792
     }
-  }
+  },
+  "notes": [
+    "Pairs p1, p2 and full bind c9da8e56b and earlier, before the merge of origin/main and the R7RKX repairs; pair merged binds the landing file (6d3f8f2a1, file sha 5e812d69...), against origin/main 4b86e4285's file, which added figplan_cases (792 witness entries, 639 mutants and 153 controls).",
+    "Pair merged ran on a heavily shared host (load 14 at the end of before, 34 at the end of after), so its walls are one noisy sample each; the full pair (865 s to 230 s at load ~1-4) is the cleaner wall comparison.",
+    "The witness for pair merged is retained gzipped: witness-merged-6d3f8f2a1.json.gz (its gunzipped sha256 is the pair's after.witnessSha256). Earlier pairs keep digests only.",
+    "Rule-6 kills for this change are by scripts/test_reconciliation_pool.py alone (pool-mutation-2026-11-27.json, withSelftest false); the earlier scope-family-mutation-2026-11-26.json kills were by the synthetic harness alone."
+  ]
 }
