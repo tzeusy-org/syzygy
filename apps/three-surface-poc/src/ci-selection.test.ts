@@ -70,6 +70,7 @@ describe('the pull-request selection plan', () => {
       ['packages/t/src/other-walker.test.ts', "readdirSync(new URL('./', import.meta.url));"],
       ['apps/a/src/repo-guard.test.ts', "const ROOT = new URL('../../../', import.meta.url); execFileSync('git', ['ls-files']);"],
       ['apps/a/src/rooted-reader.test.ts', "readFileSync(new URL('../../../PROJECT-STATUS.md', import.meta.url));"],
+      ['packages/s/src/lister.ts', 'export const list = (dir: string) => readdirSync(dir);'],
     ]);
     const plan = planSelection([M('A', 'packages/s/src/clock.ts')], modules);
     expect(plan.documents[0]!.readers).toEqual(['apps/a/src/repo-guard.test.ts', 'packages/s/src/purity.test.ts']);
