@@ -1,5 +1,7 @@
 # TypeScript lexical import assessment
 
+> **Superseded 2026-11-27, never adopted.** Its reviewed semantics are carried into the stored, always-on candidate [`dossier-import-facts`](../dossier-import-facts/design.md) (design D2), which supersedes it. This package binds nothing and is kept as history; read it only for the reviews it records.
+
 **State:** Candidate for independent review. Adoption and implementation are pending.
 
 Dossier authors can currently see declared package dependencies and the authored `imports` relation without evidence that a particular source statement links two units. An explicit check assessment would expose that evidence when admitted TypeScript files and the pinned unit metadata support it. The result helps an author distinguish a lexical match, a same-unit import and an outcome that remains Unknown.
