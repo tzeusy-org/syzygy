@@ -16,7 +16,7 @@ import { RUN_LAYOUT } from './state-directory.js';
 import { readRawReadDisclosure, recordRawReadHandoff } from './raw-read-disclosure.js';
 import { createCredentialProbe, credentialListFromEnv } from './credential-probe.js';
 import { runPolarisCli, runUrlSupervisorLoop, type SupervisorState } from './polaris.js';
-import { openUrlSupervisorStop, readUrlSupervisorState, writeUrlSupervisorState } from './url-supervisor-state.js';
+import { openUrlSupervisorStop, readUrlSupervisorState, requestUrlSupervisorStop, writeUrlSupervisorState } from './url-supervisor-state.js';
 import { loadSessionCredential } from './session-credential.js';
 import * as runSessions from './url-run-sessions.js';
 import * as sessionControl from './session-control.js';
@@ -222,7 +222,14 @@ function scripted(role: string, calls: readonly (ScriptCall | (() => ScriptCall 
 let runtime: UrlRuntime;
 const cleanup: (() => Promise<unknown>)[] = [];
 let nativeCleanupTiming: { afterEachStartedMs?: number; failureStopStartedMs?: number } | undefined;
-afterAll(async () => { if (process.env['SYZYGY_COMPOSED_RETAIN'] === undefined) await fs.rm(recoveryHost.root, { recursive: true, force: true }); });
+// Keep outer disposal behind the same real joins even if afterEach times out.
+const resumedFixtureJoins = new Set<() => Promise<void>>();
+afterAll(async () => {
+  const joined = await Promise.allSettled([...resumedFixtureJoins].map(join => join()));
+  const failures = joined.flatMap(result => result.status === 'rejected' ? [result.reason] : []);
+  if (failures.length !== 0) throw new AggregateError(failures, 'owned resumed fixture cleanup failed; recovery root retained');
+  if (process.env['SYZYGY_COMPOSED_RETAIN'] === undefined) await fs.rm(recoveryHost.root, { recursive: true, force: true });
+});
 afterEach(async () => {
   const cleanupTiming = nativeCleanupTiming;
   nativeCleanupTiming = undefined;
@@ -3022,6 +3029,47 @@ describe('composed URL run with actual role processes', () => {
     // works toward either Design cut. Stop still owns child termination.
     if (stoppingCut) releaseProvider.get('author')!();
     author.allow();
+    const resumedControllers: UrlRunSessions[] = [];
+    let cleanupRequested = false, resumedGeneration: SupervisorState | undefined;
+    let resumedCli: Promise<number> | undefined, resumedStartup: Promise<UrlRunSessions> | undefined;
+    let resumedStop: ReturnType<UrlRunSessions['stop']> | undefined, fixtureJoin: Promise<void> | undefined;
+    const ownershipErrors: unknown[] = [];
+    let settleScenario!: () => void;
+    const scenarioSettled = new Promise<void>(resolve => { settleScenario = resolve; });
+    const stopResumed = (controller: UrlRunSessions) => resumedStop ??= Promise.resolve().then(() => controller.stop());
+    const requestResumedStop = () => {
+      if (resumedGeneration === undefined) return;
+      try { requestUrlSupervisorStop(stateRoot, resumedGeneration); }
+      catch (error) {
+        // A closed offer is acceptable only for our own persisted terminal generation.
+        const terminal = readUrlSupervisorState(stateRoot, f.runId);
+        if (terminal?.run === resumedGeneration.run && terminal.runId === resumedGeneration.runId
+          && terminal.declarationSha256 === resumedGeneration.declarationSha256
+          && terminal.stopGeneration === resumedGeneration.stopGeneration
+          && (terminal.stopped !== undefined || terminal.done !== undefined)) return;
+        throw error;
+      }
+    };
+    const joinResumedFixture = (): Promise<void> => fixtureJoin ??= (async () => {
+      cleanupRequested = true;
+      const collect = async (pending: Promise<unknown> | undefined) => {
+        try { await pending; } catch (error) { ownershipErrors.push(error); }
+      };
+      try { requestResumedStop(); } catch (error) { ownershipErrors.push(error); }
+      // Start an acquired runtime's stop before joining startup or CLI work.
+      const acquired = resumedControllers[0];
+      if (acquired !== undefined) stopResumed(acquired);
+      await Promise.all([
+        collect(resumedStartup?.then(controller => stopResumed(controller))),
+        collect(resumedStop), collect(resumedCli), scenarioSettled,
+      ]);
+      if (ownershipErrors.length !== 0) throw new AggregateError(ownershipErrors, 'owned resumed fixture joins failed');
+    })();
+    if (resumeAfterStop) {
+      // Registered before any resumed invocation; reverse cleanup reaches this
+      // before policy Git, initial controller, stop offer and fixture removal.
+      cleanup.push(joinResumedFixture); resumedFixtureJoins.add(joinResumedFixture);
+    }
     try {
       eligiblePhase = 'author';
       const authorPassed = () => {
@@ -3282,16 +3330,30 @@ describe('composed URL run with actual role processes', () => {
           if (cut) designRound = 2;
           vi.stubEnv('CLAUDE_CODE_OAUTH_TOKEN', undefined);
           vi.stubEnv('ANTHROPIC_API_KEY', 'OWN_SYNTHETIC_COMPOSED_CREDENTIAL');
-          const resumedControllers: UrlRunSessions[] = [];
           let initialProductSample: { beforeLaunch: boolean; accepted: boolean; checks: number; exactClaim: boolean } | undefined;
           const startResumed = runSessions.startUrlRunSessions;
           vi.spyOn(runSessions, 'startUrlRunSessions').mockImplementationOnce(async (...args) => {
+            // Production has just saved this generation and opened its stop offer.
+            // Pin it before the first startup await; never target the historical cut.
+            const published = readUrlSupervisorState(stateRoot, f.runId);
+            if (published === null || published.run !== f.run || published.runId !== f.runId
+              || published.declarationSha256 !== state.declarationSha256 || published.stopGeneration === undefined
+              || published.stopGeneration === state.stopGeneration || published.stopped !== undefined || published.done !== undefined)
+              throw new Error('owned resumed supervisor generation unavailable');
+            resumedGeneration = published;
+            if (cleanupRequested) {
+              try { requestResumedStop(); } catch (error) { ownershipErrors.push(error); throw error; }
+              throw new Error('owned resumed fixture cleanup requested before startup');
+            }
             const options = args[0], onFailure = options.onFailure;
-            const runtime = await observeBootstrap('start-sessions', () => startResumed({ ...options, onFailure: reason => {
+            resumedStartup = observeBootstrap('start-sessions', () => startResumed({ ...options, onFailure: reason => {
               firstRuntimeFailure ??= { reason, atMs: performance.now() };
               return onFailure(reason);
             } }), () => true);
+            const runtime = await resumedStartup;
+            // Acquire ownership before sample diagnostics can yield or throw.
             resumedControllers.push(runtime);
+            if (cleanupRequested) { await stopResumed(runtime); return runtime; }
             const beforeLaunch = runtime.summary().roles.every(role => role.pid === 'Unknown');
             const checkClaim = vi.spyOn(recovery, 'isClaimedStoppedUrlRun');
             try {
@@ -3343,7 +3405,9 @@ describe('composed URL run with actual role processes', () => {
             () => resumeChecks.push({ phase: 'resumed-render', outcome: 'rejected', elapsedMs: performance.now() - began }));
             return result;
           });
-          const exit = await runPolarisCli(['--supervise', '--resume', f.run, '--state-root', stateRoot], f.ports);
+          if (cleanupRequested) throw new Error('owned resumed fixture cleanup requested before CLI');
+          resumedCli = runPolarisCli(['--supervise', '--resume', f.run, '--state-root', stateRoot], f.ports);
+          const exit = await resumedCli;
           eligiblePhase = 'verify-resumed-result';
           if (exit !== 0) {
             const summary = resumedControllers[0]?.summary();
@@ -3498,6 +3562,6 @@ describe('composed URL run with actual role processes', () => {
         eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
         producerReports: f.producerReports(),
         reads: f.productReadReports(), relayObservations, receipts }));
-    }
+    } finally { settleScenario(); }
   }, scenario === 'eligible-stop-resume' ? 900_000 : scenario === 'stop-resume' ? 600_000 : 360_000);
 });
