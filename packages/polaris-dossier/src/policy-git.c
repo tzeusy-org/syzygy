@@ -14,6 +14,7 @@
 #include <string.h>
 #include <sys/resource.h>
 #include <sys/stat.h>
+#include <sys/syscall.h>
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
@@ -111,7 +112,7 @@ static void expired_without_child(struct job *job) {
     .reason = POLICY_GIT_TIMEOUT, .tree_complete = 1, .status = UINT64_MAX};
 }
 static void pump(struct job *job) {
-  int request[2] = {-1,-1}, response[2] = {-1,-1}, final[2] = {-1,-1}, control[2] = {-1,-1}, nullfd = -1;
+  int request[2] = {-1,-1}, response[2] = {-1,-1}, final[2] = {-1,-1}, control[2] = {-1,-1}, nullfd = -1, exitfd = -1;
   pid_t child = -1; bool actions_ready = false, attributes_ready = false;
   posix_spawn_file_actions_t actions; posix_spawnattr_t attributes;
   sigset_t blocked, previous, pending, defaults, empty;
@@ -159,20 +160,28 @@ static void pump(struct job *job) {
     : posix_spawn(&child, "/proc/self/fd/6", &actions, &attributes, argv, environment);
   for (int i = 0; i < 7; i++) close(lifted[i]);
   if (spawned) { child = -1; job->failed = 1; goto done; }
+  /* Acquire the owned, still-unreaped supervisor before the first wait4.
+   * This fd only wakes poll; wait4 remains the sole exit/usage authority.
+   * If unavailable, refuse the call and ask the supervisor to drain normally. */
+#ifdef SYS_pidfd_open
+  exitfd = (int)syscall(SYS_pidfd_open, child, 0);
+#endif
+  if (exitfd < 0) job->failed = 1;
   shut(&request[0]); shut(&response[1]); shut(&final[1]); shut(&control[0]); shut(&nullfd);
   if (nonblock(request[1]) || nonblock(response[0]) || nonblock(final[0])) job->failed = 1;
   while (!job->waited || response[0] >= 0 || final[0] >= 0) {
     if (!job->waited) {
       pid_t waited = wait4(child, &job->helper_status, WNOHANG, &job->usage);
-      if (waited == child) job->waited = 1;
+      if (waited == child) { job->waited = 1; shut(&exitfd); }
       else if (waited < 0 && errno != EINTR) { job->failed = 1; break; }
     }
     if (job->waited && response[0] < 0 && final[0] < 0) break;
     double now = milliseconds();
     if (now < 0 || now >= job->deadline + 2500) job->failed = 1;
     if (job->failed) { shut(&control[1]); shut(&request[1]); }
-    struct pollfd watched[] = {{request[1], POLLOUT, 0}, {response[0], POLLIN, 0}, {final[0], POLLIN, 0}};
-    if (poll(watched, 3, 2) < 0 && errno != EINTR) job->failed = 1;
+    struct pollfd watched[] = {{request[1], POLLOUT, 0}, {response[0], POLLIN, 0}, {final[0], POLLIN, 0}, {exitfd, POLLIN, 0}};
+    if (poll(watched, 4, 2) < 0 && errno != EINTR) job->failed = 1;
+    if (watched[3].revents & (POLLERR | POLLNVAL)) job->failed = 1;
     if (request[1] >= 0 && watched[0].revents) {
       size_t remaining = job->request_size - sent; if (remaining > SSIZE_MAX) remaining = SSIZE_MAX;
       ssize_t count = write(request[1], job->request + sent, remaining);
@@ -186,6 +195,7 @@ static void pump(struct job *job) {
      * An uninterruptible kernel task can delay this join, as with execFile. */
   }
 done:
+  shut(&exitfd);
   shut(&request[0]); shut(&request[1]); shut(&response[0]); shut(&response[1]); shut(&final[0]); shut(&final[1]); shut(&control[0]); shut(&control[1]); shut(&nullfd);
   if (attributes_ready) posix_spawnattr_destroy(&attributes);
   if (actions_ready) posix_spawn_file_actions_destroy(&actions);

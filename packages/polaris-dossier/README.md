@@ -11,6 +11,14 @@ socket's kernel peer numbers. Those numbers alone establish neither a client's
 authorization nor its process lifetime or revocation state. Building these
 artifacts does not activate a URL run.
 
+The native policy-Git transport also requires Linux `pidfd_open` support at
+runtime. It opens a pidfd for its owned supervisor to wake the host poll when
+that process exits; `wait4` remains the source of exit status and CPU usage.
+If the pidfd cannot be opened, the operation fails closed, requests the owned
+supervisor’s drain and reap path, and waits for it; CPU usage stays unavailable.
+An uninterruptible kernel task can delay that join. The pidfd is closed after
+reaping and on cleanup.
+
 ## Entry points
 
 The package barrel (`.`, `src/index.ts`) exports exactly two values, the command-line drivers the daemon dispatches to:

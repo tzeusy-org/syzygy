@@ -74,6 +74,14 @@ beforeAll(async () => {
 });
 describe('native policy Git ownership and transport', () => {
   it('preserves complete large stdin and independently permits each output stream at maxBuffer', async () => {
+    const pidfds = (): string[] => fs.readdirSync('/proc/self/fd').filter(name => {
+      try { return fs.readlinkSync(`/proc/self/fd/${name}`) === 'anon_inode:[pidfd]'; }
+      catch (error) {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') return false;
+        throw error;
+      }
+    }).sort();
+    const initialPidfds = pidfds();
     for (const async of [false, true]) {
       const scope = open(), input = Buffer.alloc(131_073, 0x51);
       const request = { ...options('echo', input), maxBuffer: input.length };
@@ -82,6 +90,7 @@ describe('native policy Git ownership and transport', () => {
       const separate = async ? await scope.runAsync(arguments_, options('separate')) : scope.runSync(arguments_, options('separate'));
       expect(separate).toEqual(Buffer.alloc(1024, 'o'));
       expect(scope.childCpuMicroseconds()).toBeGreaterThan(0);
+      expect(pidfds()).toEqual(initialPidfds);
     }
   });
   it('matches independent argv/environment/stdin expectations and detects each changed field', async () => {
@@ -94,6 +103,86 @@ describe('native policy Git ownership and transport', () => {
       await expect(call(arguments_, { ...own, env: { ...own.env, LANG: 'changed' } })).rejects.toThrow('policy-git-failed');
       await expect(call(arguments_, { ...own, input: Buffer.from('exact own reques') })).rejects.toThrow('policy-git-failed');
       expect(scope.healthy()).toBe(true);
+    }
+  });
+  it('refuses unavailable supervisor pidfds, drains owned children and keeps CPU usage unknown', async () => {
+    const root = tempDir('policy-pidfd-unavailable-'), wrapper = path.join(root, 'unavailable.c');
+    fs.writeFileSync(wrapper, String.raw`#define _GNU_SOURCE
+#include <errno.h>
+#include <fcntl.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/syscall.h>
+#include <unistd.h>
+long __wrap_syscall(long number, ...) {
+  if (number != SYS_pidfd_open) { errno = EINVAL; return -1; }
+  va_list arguments; va_start(arguments, number);
+  int child = va_arg(arguments, int); va_end(arguments);
+  const char *witness = getenv("POLICY_PIDFD_WITNESS");
+  int fd = witness ? open(witness, O_WRONLY | O_APPEND | O_CREAT | O_CLOEXEC, 0600) : -1;
+  if (fd >= 0) {
+    char value[32]; int length = snprintf(value, sizeof(value), "%d\n", child);
+    if (length > 0 && (size_t)length < sizeof(value)) {
+      ssize_t written = write(fd, value, (size_t)length);
+      if (written != length) _exit(80);
+    }
+    close(fd);
+  }
+  errno = ENOSYS; return -1;
+}
+`);
+    const unavailableFile = path.join(root, 'unavailable.node');
+    const include = path.resolve(path.dirname(process.execPath), '../include/node');
+    await exec('/usr/bin/cc', ['-std=c11', '-Wall', '-Wextra', '-Werror', '-O2', '-shared', '-fPIC', '-pthread', '-I', include,
+      path.join(source, 'policy-git.c'), wrapper, '-Wl,--wrap=syscall', '-o', unavailableFile],
+    { env: environment, timeout: 10_000, killSignal: 'SIGKILL', maxBuffer: 65_536 });
+    const unavailable: PolicyGitProgram = { ...program,
+      addon: { file: unavailableFile, sha256: sha256(fs.readFileSync(unavailableFile)) } };
+    const entry = path.join(root, 'pidfd.mjs'), witness = path.join(root, 'supervisors');
+    const script = `import { createNativePolicyGitScope } from ${JSON.stringify(path.join(source, 'policy-git-native.ts'))};
+      const program=JSON.parse(process.argv[2]), root=process.argv[3], observations=[];
+      const args=['--no-replace-objects','-C',root,'cat-file','--batch-command'];
+      const options={env:{PATH:'/usr/bin:/bin',LANG:'C',GIT_CONFIG_NOSYSTEM:'1',GIT_CONFIG_GLOBAL:'/dev/null',GIT_OPTIONAL_LOCKS:'0',GIT_NO_LAZY_FETCH:'1',POLICY_FIXTURE_MODE:'echo'},maxBuffer:1024,timeout:1000,input:Buffer.from('owned pidfd probe')};
+      for(const async of [false,true]) {
+        const scope=createNativePolicyGitScope(program);
+        let failure='', output='', cpuFailure='', cpu=null, nextFailure='';
+        try { output=(async?await scope.runAsync(args,options):scope.runSync(args,options)).toString(); }
+        catch(error) { failure=error.message; }
+        const healthy=scope.healthy();
+        try { cpu=scope.childCpuMicroseconds(); } catch(error) { cpuFailure=error.message; }
+        if(failure) { try { scope.runSync(args,options); } catch(error) { nextFailure=error.message; } }
+        const closed=await scope.close();
+        observations.push({async,failure,output,healthy,cpu,cpuFailure,nextFailure,closed});
+      }
+      process.stdout.write(JSON.stringify(observations));`;
+    await build({ stdin: { contents: script, resolveDir: source }, bundle: true, platform: 'node', format: 'esm',
+      conditions: ['source'], outfile: entry, logLevel: 'silent' });
+    for (const [name, selected] of [['baseline', program], ['unavailable', unavailable]] as const) {
+      const { stdout } = await exec(process.execPath, [entry, JSON.stringify(selected), root], {
+        env: { PATH: '/usr/bin:/bin', LANG: 'C', POLICY_PIDFD_WITNESS: witness },
+        timeout: 10_000, killSignal: 'SIGKILL', maxBuffer: 4096 });
+      const observations = JSON.parse(stdout) as { async: boolean; failure: string; output: string; healthy: boolean;
+        cpu: number | null; cpuFailure: string; nextFailure: string; closed: boolean }[];
+      expect(observations).toHaveLength(2);
+      for (const [index, observation] of observations.entries()) {
+        expect(observation.async).toBe(index === 1);
+        if (name === 'baseline') {
+          expect(observation).toMatchObject({ failure: '', output: 'owned pidfd probe', healthy: true,
+            cpuFailure: '', nextFailure: '', closed: true });
+          expect(observation.cpu).toBeGreaterThan(0);
+        } else {
+          expect(observation).toMatchObject({ failure: 'policy-git-usage-unavailable', output: '', healthy: false,
+            cpu: null, cpuFailure: 'policy-git-usage-unavailable', nextFailure: 'policy-git-unavailable', closed: false });
+        }
+      }
+      if (name === 'baseline') expect(fs.existsSync(witness)).toBe(false);
+    }
+    const supervisors = fs.readFileSync(witness, 'ascii').trim().split('\n').map(Number);
+    expect(supervisors).toHaveLength(2);
+    for (const pid of supervisors) {
+      expect(Number.isSafeInteger(pid) && pid > 0).toBe(true);
+      expect(fs.existsSync(`/proc/${pid}`)).toBe(false);
     }
   });
   it('charges failed exits, signals and either stream overflow without poisoning complete usage', async () => {
