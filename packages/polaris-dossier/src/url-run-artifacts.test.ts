@@ -784,6 +784,8 @@ describe('trusted URL artifact producer bridge', () => {
         expect(stored.figureFit.entries).toEqual([expect.objectContaining({ diagram: 'own-flow', viewportPx: 390, laidOutPx: 648 })]);
         expect(stored).not.toHaveProperty('mechanismAdvice');
         expect(stored).not.toHaveProperty('inventoryCoverageAdvice');
+        expect(stored).not.toHaveProperty('questionKindAdvice');
+        expect(result.report.questionKindAdvice).toMatchObject({ state: 'unknown' });
         // An unknown check with no mechanism entries would leave these counts
         // unchanged; the bridge must still reject the unrecognized population.
         f.write('checks/rev-999.json', b({ ...stored, revision: 999, figureFit: { ...stored.figureFit, entries: [] } }));
@@ -796,6 +798,10 @@ describe('trusted URL artifact producer bridge', () => {
         const advice = result.report.readerAdvice!;
         expect(advice.worthKnowing).toEqual([{ at: '$.sections', marked: 0, detail: expect.any(String) }]);
         const mutants = [
+          ...[null, {}, { state: 'unknown', why: 'owned reason', note: 'owned note', extra: true },
+            { state: 'unknown', why: 1, note: 'owned note' },
+            { ...result.report.questionKindAdvice, label: 'Observed' }]
+            .map(questionKindAdvice => ({ ...result.report, questionKindAdvice })),
           ...[null, {}, [{ at: '$.sections', marked: -1, detail: 'own malformed advice' }],
             [{ at: '$.sections', marked: 0.5, detail: 'own malformed advice' }],
             [{ at: '$.sections', marked: '0', detail: 'own malformed advice' }],

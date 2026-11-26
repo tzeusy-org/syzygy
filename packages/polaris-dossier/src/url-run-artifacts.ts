@@ -5,7 +5,7 @@ import { URL_ARTIFACT_LIMITS, selectors, knownRecord, FROZEN_DRAFT_PATH, AUTHOR_
 export { URL_ARTIFACT_LIMITS, verifyUrlFrozenProductHistory } from './url-frozen-product-history.js';
 export type { UrlProductSelector, UrlFrozenProductHistory } from './url-frozen-product-history.js';
 import * as fs from 'node:fs';
-import { urlStructureRecordShape, urlReadingLedgerShape, urlReadingDifferenceShape, urlManifestFactsShape } from './url-check-product-shape.js';
+import { urlStructureRecordShape, urlReadingLedgerShape, urlReadingDifferenceShape, urlManifestFactsShape, urlQuestionKindAdviceShape } from './url-check-product-shape.js';
 import type { ManifestFacts } from './manifest-facts.js';
 import type { FigureFit } from './figure-fit.js';
 import { COVERAGE_RULE, comparedInventoryCoverageAdvice } from './inventory-coverage.js';
@@ -514,7 +514,8 @@ function create(given: UrlRunArtifactsOptions) {
       ...(report ? reportFields : {}) };
     const optional = { ...(command === 'check' ? { figureFit, readingLedger: urlReadingLedgerShape, manifestFacts: urlManifestFactsShape } : {}),
       ...(report && command === 'check' ? { structureRecord: urlStructureRecordShape, readingDifference: urlReadingDifferenceShape,
-        inventoryCoverageAdvice: coverageAdvice, mechanismAdvice: shape({ file: nullable(lit('run-advice.json')), thisRevision: integer, inRun: integer }) } : {}),
+        inventoryCoverageAdvice: coverageAdvice, questionKindAdvice: urlQuestionKindAdviceShape,
+        mechanismAdvice: shape({ file: nullable(lit('run-advice.json')), thisRevision: integer, inRun: integer }) } : {}),
       ...(report ? { screenCensus: census, readerAdvice: advice, reviewReach: reach, reviewVisibility: visibility } : {}) };
     return shape(fields, optional)(v)
       && record(v)['format'] === (command === 'check' ? 'polaris-dossier-check/1' : 'polaris-dossier-inventory-check/1')
@@ -548,7 +549,7 @@ function create(given: UrlRunArtifactsOptions) {
     if (!checkShape(document, 'check', true) || !integer(document['revision']) || document['checkFile'] !== path.join(run, `checks/rev-${document['revision']}.json`)) refuse();
     const stored = read(run, `checks/rev-${document['revision']}.json`), doc = json(stored);
     if (!checkShape(doc, 'check', false)) refuse();
-    const base = { ...document }; for (const k of ['command', 'run', 'checkFile', 'disclosures', 'screenCensus', 'readerAdvice', 'reviewReach', 'reviewVisibility', 'structureRecord', 'readingDifference', 'mechanismAdvice', 'inventoryCoverageAdvice']) delete base[k];
+    const base = { ...document }; for (const k of ['command', 'run', 'checkFile', 'disclosures', 'screenCensus', 'readerAdvice', 'reviewReach', 'reviewVisibility', 'structureRecord', 'readingDifference', 'mechanismAdvice', 'inventoryCoverageAdvice', 'questionKindAdvice']) delete base[k];
     const projected = { ...doc };
     if (document['mechanismAdvice'] !== undefined) {
       // The report alone drops mechanism advice; its receipt still binds the

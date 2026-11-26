@@ -1,6 +1,8 @@
 import { isRecord } from '@syzygy/support';
 import { MANIFEST_FACTS_FORMAT } from './manifest-facts.js';
 import { FACT_MEMBERS, type FactKind } from './manifest-model.js';
+import { QUESTION_KINDS } from './draft-schema.js';
+import { QUESTION_KIND_RULE, MAJOR_UNIT_RULE, MAJOR_UNIT_LIMIT, MAJOR_UNIT_SHARE } from './question-kinds.js';
 
 type Predicate = (value: unknown) => boolean;
 const text: Predicate = value => typeof value === 'string' && Buffer.byteLength(value) <= 1_048_576;
@@ -16,6 +18,17 @@ const object = (fields: Readonly<Record<string, Predicate>>): Predicate => value
 const strings = list(text);
 const listed = { listed: strings, notListed: count };
 const counted = object({ rule: text, files: count, ...listed });
+
+const questionKind = one(...QUESTION_KINDS);
+/** Report-only author declarations. Shape admission does not attest their truth. */
+export const urlQuestionKindAdviceShape: Predicate = value => object({ state: one('unknown'), why: text, note: text })(value)
+  || object({ state: one('compared'), rule: object({ id: one(QUESTION_KIND_RULE.id), version: one(QUESTION_KIND_RULE.version) }),
+    majorUnits: object({ rule: object({ id: one(MAJOR_UNIT_RULE.id), version: one(MAJOR_UNIT_RULE.version) }),
+      share: one(`1/${MAJOR_UNIT_SHARE}`), limit: one(MAJOR_UNIT_LIMIT), unitsNotListed: count }),
+    kinds: value => Array.isArray(value) && value.length === QUESTION_KINDS.length && value.every((kind, index) => kind === QUESTION_KINDS[index]),
+    units: list(object({ unit: text, files: count, answered: object(Object.fromEntries(QUESTION_KINDS.map(kind => [kind, count]))), missing: list(questionKind) })),
+    declarations: object({ rows: count, counted: count, unmatched: strings, duplicated: strings, unnamed: count }),
+    label: one('Inferred'), basis: text, note: text })(value);
 
 /** Closed projections of the actual check producer's optional members. These
  * validate shape only; the bridge separately captures the actual producer and
