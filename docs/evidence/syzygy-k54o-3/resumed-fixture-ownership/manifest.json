@@ -1,0 +1,30 @@
+{
+  "sourceCommit": "e7ce9f93bce96dc2569aec7ed61fcc952b3ff480",
+  "members": 29,
+  "externalEntries": 4,
+  "twoIdenticalBuilds": true,
+  "verification": "Every member Python+GNU tar; all external output files Python+sha256sum",
+  "adoptionStatus": "proposed outside-only row; no primary/governance edits",
+  "files": [
+    {
+      "path": "payload.tar.gz",
+      "bytes": 147904,
+      "sha256": "0985c3ed1321295dc7036eb85fe493c15ae716cfbb833a895e9621df0721948a"
+    },
+    {
+      "path": "index.json",
+      "bytes": 11564,
+      "sha256": "0d49f4a13b84ae2ed3c9db4f0f695eecd007674d60407e28f41039ef95e1d4af"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3485,
+      "sha256": "ab6eafcccb13213bd7dbc7d2e0c367d217cff23d9ee8bafcb13578e56b6d0ff6"
+    },
+    {
+      "path": "A260-row.md",
+      "bytes": 1012,
+      "sha256": "9becde991714a7a9e4485aaa4208294aeb235264b21a3997ce903bfa705a1942"
+    }
+  ]
+}

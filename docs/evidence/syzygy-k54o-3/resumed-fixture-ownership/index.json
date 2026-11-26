@@ -1,0 +1,205 @@
+[
+  {
+    "originalPath": null,
+    "archivePath": "README.md",
+    "bytes": 3485,
+    "sha256": "ab6eafcccb13213bd7dbc7d2e0c367d217cff23d9ee8bafcb13578e56b6d0ff6",
+    "subject": "scoped observed facts, inference and unknown limits"
+  },
+  {
+    "originalPath": null,
+    "archivePath": "external-evidence-index.json",
+    "bytes": 1615,
+    "sha256": "56e7071c99f93b04a06da3a4e62512769a512258155be12c317ac37ac346916e",
+    "subject": "exact external omitted-source indexes; no future availability claim"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/package-resumed-fixture-A260.py",
+    "archivePath": "payload/package-resumed-fixture-A260.py.txt",
+    "bytes": 15818,
+    "sha256": "35fea20686b7431d8e055d375a3c5f82e9ef961edd45e12b6e9ee30167062a29",
+    "subject": "inert packager; syntax inspected, no product execution"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-observer-r2-execution-1/terminal.json",
+    "archivePath": "payload/resumed-fixture-observer-r2-execution-1/terminal.json",
+    "bytes": 3432,
+    "sha256": "d91ca4836c611d774eba64cfe52e04835d84e237cef8eb6934c313487658c484",
+    "subject": "actual c10acd plus c88 uncommitted-source TC/observer terminal, same test bytes now committed e7ce"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-observer-r2-execution-1/typecheck.log",
+    "archivePath": "payload/resumed-fixture-observer-r2-execution-1/typecheck.log",
+    "bytes": 37,
+    "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+    "subject": "actual TC/observer logs and structured result"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-observer-r2-execution-1/vitest.json",
+    "archivePath": "payload/resumed-fixture-observer-r2-execution-1/vitest.json",
+    "bytes": 3199,
+    "sha256": "ccb9cd420fa07ec112adce90af1045be5fde72c314b16fcc5401f8bebdc97cd2",
+    "subject": "actual TC/observer logs and structured result"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-observer-r2-execution-1/vitest.log",
+    "archivePath": "payload/resumed-fixture-observer-r2-execution-1/vitest.log",
+    "bytes": 117,
+    "sha256": "410a0f34c3133d446fe0c3b202a27545e5e2c0931eb5290741bc0c60c081ab0a",
+    "subject": "actual TC/observer logs and structured result"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-design-c245-20261126-1.md",
+    "archivePath": "payload/resumed-fixture-ownership-design-c245-20261126-1.md",
+    "bytes": 8789,
+    "sha256": "2508f618746f007f835b906a6fa2d4cb81c70e058d0c09423d11a639ad5f9780",
+    "subject": "design rationale; no runtime verification"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-fault-plan-r1-c245-20261126-1-review-RAW.md",
+    "archivePath": "payload/resumed-fixture-ownership-fault-plan-r1-c245-20261126-1-review-RAW.md",
+    "bytes": 11820,
+    "sha256": "8062e94a14073f6bd5a03f717fe3006bd0054abdce07ab97cf81b223e2244b38",
+    "subject": "REVISE proposed R1 control only; not adopted source or execution"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-fault-plan-r1-c245-20261126-1/PLAN.md",
+    "archivePath": "payload/resumed-fixture-ownership-fault-plan-r1-c245-20261126-1/PLAN.md",
+    "bytes": 8077,
+    "sha256": "7b8c430af5de35ae41806d4c902d30ac1fd6f167100aa3ae3871b5b3f44a1fe4",
+    "subject": "REVISE R1 proposed control only; not adopted/executed"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-fault-plan-r1-c245-20261126-1/bindings.json",
+    "archivePath": "payload/resumed-fixture-ownership-fault-plan-r1-c245-20261126-1/bindings.json",
+    "bytes": 1499,
+    "sha256": "b6f7181653b7ec515d30e1ff30f1741af724315ad205a1bee51b828c0ea4ae02",
+    "subject": "REVISE R1 proposed control only; not adopted/executed"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-fault-plan-r1-c245-20261126-1/candidate-control.patch",
+    "archivePath": "payload/resumed-fixture-ownership-fault-plan-r1-c245-20261126-1/candidate-control.patch.txt",
+    "bytes": 6447,
+    "sha256": "db3189579f69ecc2be49ec2ef611335196c3ad0612f8128103b180c74816bf9f",
+    "subject": "REVISE R1 proposed control only; not adopted/executed"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-fault-plan-r1-c245-20261126-1/manifest.json",
+    "archivePath": "payload/resumed-fixture-ownership-fault-plan-r1-c245-20261126-1/manifest.json",
+    "bytes": 1835,
+    "sha256": "da71231988cda5c564332f23dfb199a251577947c70fb1f1f5c64bb3f3e80d76",
+    "subject": "REVISE R1 proposed control bindings only"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-fault-plan-r1-c245-20261126-1/original-control.patch",
+    "archivePath": "payload/resumed-fixture-ownership-fault-plan-r1-c245-20261126-1/original-control.patch.txt",
+    "bytes": 5895,
+    "sha256": "c83c7ec35d145c27e21d8e7c21a85a60c4c62c7c2baf0561e8b907597f22d06d",
+    "subject": "REVISE R1 proposed control only; not adopted/executed"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-fault-plan-r1-c245-20261126-1/restore_overlay.py",
+    "archivePath": "payload/resumed-fixture-ownership-fault-plan-r1-c245-20261126-1/restore_overlay.py.txt",
+    "bytes": 3336,
+    "sha256": "738dc05bd031d89cf2e1b549e9d9348e46b67788cd4eb1dd7ed318c04a993e8d",
+    "subject": "REVISE R1 proposed control only; not adopted/executed"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-preparation-c245-20261126-1/FREEZE.json",
+    "archivePath": "payload/resumed-fixture-ownership-preparation-c245-20261126-1/FREEZE.json",
+    "bytes": 830,
+    "sha256": "b565592ca9fa231160336f86c9771f24d12cce4a9c8871fd4beca1618201a039",
+    "subject": "reviewed preparation exact payload bindings"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-preparation-c245-20261126-1/PREPARATION.md",
+    "archivePath": "payload/resumed-fixture-ownership-preparation-c245-20261126-1/PREPARATION.md",
+    "bytes": 8108,
+    "sha256": "62fd6309d836dc875aac93ae632984649a586211a94ce2135f1cd11af2e28fea",
+    "subject": "reviewed test-only candidate preparation; historical preparation status"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-preparation-c245-20261126-1/bindings.json",
+    "archivePath": "payload/resumed-fixture-ownership-preparation-c245-20261126-1/bindings.json",
+    "bytes": 2994,
+    "sha256": "1843fa990e706a510ea6315d8513b48a0dfe21a74a9a511676c7fe865b4a63b1",
+    "subject": "reviewed test-only candidate preparation; historical preparation status"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-preparation-c245-20261126-1/candidate.patch",
+    "archivePath": "payload/resumed-fixture-ownership-preparation-c245-20261126-1/candidate.patch.txt",
+    "bytes": 8240,
+    "sha256": "d6ad652ac53ca425bd989df00e099b10acdf41a8713c7e4ef2f0bbc665e8d407",
+    "subject": "reviewed test-only candidate preparation; historical preparation status"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-preparation-c245-20261126-1/candidate/packages/polaris-dossier/src/url-run-composed.test.ts",
+    "archivePath": "payload/resumed-fixture-ownership-preparation-c245-20261126-1/candidate/packages/polaris-dossier/src/url-run-composed.test.ts.txt",
+    "bytes": 238307,
+    "sha256": "c88fc172ccfcd094e50b7f1e2d1118496745725b8d8e2411bef80b11e8777567",
+    "subject": "reviewed test-only candidate preparation; historical preparation status"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-preparation-c245-20261126-1/original/packages/polaris-dossier/src/url-run-composed.test.ts",
+    "archivePath": "payload/resumed-fixture-ownership-preparation-c245-20261126-1/original/packages/polaris-dossier/src/url-run-composed.test.ts.txt",
+    "bytes": 234075,
+    "sha256": "bf6c2da5785db51ef61cbbd6fc58ac592fd03fd8031336bb69e5f83a4d1e1e82",
+    "subject": "reviewed test-only candidate preparation; historical preparation status"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-review-r1-c245-20261126-1-RAW.md",
+    "archivePath": "payload/resumed-fixture-ownership-review-r1-c245-20261126-1-RAW.md",
+    "bytes": 8488,
+    "sha256": "f9b15c528a809a4b85f0a2d7898844239c6d7b8fdd52fe4a5674f538da9f8653",
+    "subject": "PASS source-only review"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-review-r1-c245-20261126-1-static.json",
+    "archivePath": "payload/resumed-fixture-ownership-review-r1-c245-20261126-1-static.json",
+    "bytes": 5087,
+    "sha256": "af04f6fa86b068e24b195b6ac44818f3543e307b06c034d819d8497fca4583fd",
+    "subject": "source-only review static observations"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-validation-r2-c245-20261126-1/README.md",
+    "archivePath": "payload/resumed-fixture-ownership-validation-r2-c245-20261126-1/README.md",
+    "bytes": 2206,
+    "sha256": "ba5f21d02a12f0817740ce9aee5351cf5de6bd2492611131b04cf1458a57d3d6",
+    "subject": "actual observer/typecheck validation operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-validation-r2-c245-20261126-1/expected-cases.json",
+    "archivePath": "payload/resumed-fixture-ownership-validation-r2-c245-20261126-1/expected-cases.json",
+    "bytes": 1464,
+    "sha256": "f4ffc2e17fe0fbea7dc85b913a6a5386c20244298f67736b50807060e307fadf",
+    "subject": "actual observer/typecheck validation operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-validation-r2-c245-20261126-1/manifest.json",
+    "archivePath": "payload/resumed-fixture-ownership-validation-r2-c245-20261126-1/manifest.json",
+    "bytes": 1389,
+    "sha256": "9dfd8401e2a96f9f6db337501bde31b4cbecd4d364c78e1e8a70da9407c722d5",
+    "subject": "actual observer/typecheck operator manifest"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-validation-r2-c245-20261126-1/operator_common.py",
+    "archivePath": "payload/resumed-fixture-ownership-validation-r2-c245-20261126-1/operator_common.py.txt",
+    "bytes": 14076,
+    "sha256": "152d1786b0a20ebaacc23ec8f78b1113347c597884bd36f0e0476f270c30e384",
+    "subject": "actual observer/typecheck validation operator"
+  },
+  {
+    "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-validation-r2-c245-20261126-1/owning.py",
+    "archivePath": "payload/resumed-fixture-ownership-validation-r2-c245-20261126-1/owning.py.txt",
+    "bytes": 118,
+    "sha256": "4480afefdc501ae97f93b6c0142f2ee365066474fcdeac703d75da9c46c43571",
+    "subject": "actual observer/typecheck validation operator"
+  },
+  {
+    "originalPath": null,
+    "archivePath": "source-and-result-bindings.json",
+    "bytes": 5528,
+    "sha256": "bf5c955725847a445214ba96e48574a43ac83533a848180ce05c17b831ef0369",
+    "subject": "source/result bindings; no runtime cleanup verification"
+  }
+]
