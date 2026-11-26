@@ -260,9 +260,10 @@ describe('reader advice: the choice floor (version 2.33)', () => {
     const nested = { id: 'n', title: 'n', paragraphs: [{ ...claim('n-p', 'docs/y.md'), children: [claim('n-c', 'src/nested.c')] },
       { kind: 'steps', id: 'st', items: [claim('st-1', 'src/steps.c'), claim('st-2', 'docs/y.md')] }] };
     // Each of the three is needed: the second citation of ch1, the nested child citing src/nested.c, and the deep dive citing src/dive.c.
-    const draft = { ...doc([twoCites, item('ch2', 'src/nested.c')], [item('t1', 'src/dive.c')], [{ label: 'Core', sections: ['a', 'n'] }]),
+    const base = doc([twoCites, item('ch2', 'src/nested.c')], [item('t1', 'src/dive.c')], [{ label: 'Core', sections: ['a', 'n'] }]);
+    const sections: unknown[] = [...base.sections, nested];
+    const draft = { ...base, sections,
       deepDives: [{ id: 'dd', title: 'dd', sectionId: 'a', paragraphs: [claim('dd-p', 'src/dive.c')] }, { id: 'other', title: 'o', sectionId: 'b', paragraphs: [claim('o-p', 'src/other.c')] }] };
-    draft.sections = [...draft.sections, nested];
     expect(readerAdvice(draft).choiceFloor).toEqual([]);
     const TWO_CORE = 'the Pole "Core" has 2 choices or trade-offs on record, fewer than 3: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s `choices` or `tradeOffs` citing a file its sections cite; never record one its source does not show';
     expect(readerAdvice({ ...draft, deepDives: [draft.deepDives[1]] }).choiceFloor).toEqual([{ at: '$.poles[0]', onRecord: 2, detail: TWO_CORE }]);
