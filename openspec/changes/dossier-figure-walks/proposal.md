@@ -12,19 +12,20 @@
 
 [Observed] One MODIFIED requirement, REQ-polaris-generation-034 ("Agent brief and mechanically checked draft"), complete text in `proposed/polaris-generation/spec.md`:
 
-- Draft schema `polaris-dossier-local-draft-vSS`: schema v14 plus an optional `walk` on a section or deep dive, `{"figure", "steps": [{"element", "block"}, ...]}`:
-  - the figure is a graph-kind diagram homed in that place, walked by no other walk;
-  - 2 to 12 steps; each names an element the figure draws (for a view, an element of its expansion), each element once;
-  - each step's block is one of the place's own paragraphs (or a subsection's), never inside a presentation element, and carries a citation;
+- Draft schema `polaris-dossier-local-draft-vSS`: schema v14 plus an optional `walk` on a section or deep dive, at most one per place, `{"figure", "steps": [{"element", "block"}, ...]}`:
+  - the figure is a graph-kind diagram homed in that place, so no figure is walked twice;
+  - 2 to 12 steps; each names one element the figure draws (for a view, an element of its expansion), each element once;
+  - each step's block is one of the place's own paragraphs (or a subsection's), never inside a presentation element or a subsection's answer, and carries a citation, which may be withheld at render;
   - a walk is presentation: no claim, label or citation of its own, and it enters no count, ledger, `machine.json` or fidelity entry.
-- Findings (repair findings): `walk` for a malformed walk, a figure homed elsewhere, of a non-graph kind or walked twice, an element not drawn or named twice, a block that is not the place's paragraph or cites nothing; `unresolved-reference` for a figure that names nothing; `field-version` for `walk` in schema v14 and earlier.
-- Render, with no script and only where the figure renders as a drawing:
+- Findings (repair findings): `walk` for a malformed walk, a figure homed elsewhere or of a non-graph kind, an element not drawn or named twice, a block that is not the place's paragraph or cites nothing; `unresolved-reference` for a figure that names nothing; `field-version` for `walk` in schema v14 and earlier.
+- Render, with no script and only where the figure renders as a drawing that is not 1048 px wide:
   - the drawing, byte for byte, is wrapped with an HTML layer of one box per node at the layout's coordinates;
   - a step's box carries a fragment id and a numbered badge, and the stylesheet outlines the box that is the page's `:target`;
-  - each box whose node has a cited, linked source carries a link to where its first citation's link lands, the cited lines of the source page;
-  - an ordered list after the drawing links each step to its box and to its paragraph, which carries a fragment id: the figure's walk in words.
+  - each box whose element is not withheld and has a linked citation carries a link, named "<label>: cited lines", to where its first citation's link lands, the cited lines of the source page; for an element a later view shares with an earlier one (2.24), the link is the first figure's citation link, re-addressed from this page;
+  - an ordered list after the drawing links each step to its box and to its paragraph by the `block-<id>` fragment the paragraph already carries: an ordered reading of the figure in words;
+  - every id the walk adds is unique on its page, and no paragraph or drawing byte changes.
 - Brief `polaris-dossier-brief-vBB`: brief v22 plus one paragraph offering the walk.
-- In the predecessor text, the brief-version list and the accepted-schema list are extended. Nine scenarios are added and the four Form lines are extended.
+- In the predecessor text, the brief-version list and the accepted-schema list are extended. Twelve scenarios are added and the four Form lines are extended.
 
 [Observed] Every other sentence and scenario of REQ-034 is carried unchanged.
 
@@ -33,6 +34,9 @@
 [Inferred] This change leaves out:
 - hover and focus highlighting, and links on edge labels (syzygy-3efd.34);
 - excerpts beside a step, and walks through code (syzygy-3efd.33);
+- a step naming several elements: the bead's "elements of a figure" is narrowed to one element per step, since one box takes one number and one highlight; several steps may name one paragraph instead;
+- more than one walk in a place;
+- walks over a drawing 1048 px wide, the one width 2.2 lets shrink;
 - walks through the overview's figures, or through sequence, swimlane, containment and the other non-graph kinds (`design.md` D3);
 - any change to the SVG or to the inertness check: the layer is HTML beside it;
 - any script in a rendered page, and any change to the provider mode or its golden;

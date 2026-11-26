@@ -889,7 +889,7 @@ WALK_TAG = "polaris-dossier-figure-walks-v2.NN"
 WALK_STATUS_PREFIX = f"[Figure walks amendment 2.NN]({WALK_HOME})"
 WALK_REPLACES = (POLARIS_ID + "034",)
 WALK_SUBJECTS = {
-    WALK_SPEC: "43351085eb605afa3ef9ded77490656b0389a0a16f604d2fc8b3cc75467b30a7",
+    WALK_SPEC: "751807232cddbe0980c77173aa6d9dac026c4b2ca74cfb47ac2ef1b0d501cc63",
 }
 WALK_BOUND_PARTS = len(WALK_SUBJECTS)
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
@@ -11483,10 +11483,10 @@ def walk_cases(tmp, base, witnesses, failures):
     after, after_findings = census(tree)
     effective = after["POLARIS"]
     held = (walk_binding(tree) == (original, [], []) and not after_findings
-            and len(effective[requirement]["scenarios"]) == 241
+            and len(effective[requirement]["scenarios"]) == 244
             and set(prior) == set(effective)
             and all(prior[other] == body for other, body in effective.items() if other != requirement))
-    record("adopted", AGENT_ADOPTIONS, "<no row>", row, "only 034 moves from 232 to 241 scenarios",
+    record("adopted", AGENT_ADOPTIONS, "<no row>", row, "only 034 moves from 232 to 244 scenarios",
            after_findings, held, baseline=True)
 
     for name, old, new, detail in (

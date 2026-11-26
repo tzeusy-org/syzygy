@@ -242,10 +242,10 @@ sub('def covhold_cases(tmp, base, witnesses, failures):\n', '''def walk_cases(tm
     after, after_findings = census(tree)
     effective = after["POLARIS"]
     held = (walk_binding(tree) == (original, [], []) and not after_findings
-            and len(effective[requirement]["scenarios"]) == 241
+            and len(effective[requirement]["scenarios"]) == 244
             and set(prior) == set(effective)
             and all(prior[other] == body for other, body in effective.items() if other != requirement))
-    record("adopted", AGENT_ADOPTIONS, "<no row>", row, "only 034 moves from 232 to 241 scenarios",
+    record("adopted", AGENT_ADOPTIONS, "<no row>", row, "only 034 moves from 232 to 244 scenarios",
            after_findings, held, baseline=True)
 
     for name, old, new, detail in (

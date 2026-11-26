@@ -33,20 +33,23 @@ print(f'predecessor requirement lines {len(ob)}; carried byte for byte and in or
 scen = lambda lines: [line for line in lines if line.startswith('#### Scenario:')]
 os_, ns = scen(ob), scen(nb)
 print(f'scenarios predecessor {len(os_)}; new {len(ns)}; predecessor scenarios surviving by title {sum(1 for s in os_ if s in ns)}; added {[s[14:] for s in ns if s not in os_]}')
-# Each predecessor scenario's whole block survives byte for byte?
+# Each predecessor scenario's whole block survives byte for byte? Blocks are kept as a list, not keyed by title: two predecessor
+# scenarios share the title "Earlier schema keeps its bytes", and a dict keyed by title counted them once (231 of 232).
 def blocks(lines):
-    out, cur = {}, None
+    out, cur = [], None
     for line in lines:
         if line.startswith('#### Scenario:') or line.startswith('Form:') or line.startswith('### '):
-            cur = line if line.startswith('#### Scenario:') else None
-            if cur:
-                out[cur] = []
+            cur = None
+            if line.startswith('#### Scenario:'):
+                cur = (line, [])
+                out.append(cur)
             continue
         if cur:
-            out[cur].append(line)
+            cur[1].append(line)
     return out
 ob_b, nb_b = blocks(ob), blocks(nb)
-print(f'predecessor scenario blocks byte-identical in new text {sum(1 for k, v in ob_b.items() if nb_b.get(k) == v)} of {len(ob_b)}')
+print(f'predecessor scenario blocks byte-identical, in order, as the first blocks of the new text '
+      f'{sum(1 for k, blk in enumerate(ob_b) if k < len(nb_b) and nb_b[k] == blk)} of {len(ob_b)}')
 for i, j in changed:
     a, b = ob[i].split(' '), nb[j].split(' ')
     w = difflib.SequenceMatcher(a=a, b=b, autojunk=False)

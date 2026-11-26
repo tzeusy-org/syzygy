@@ -87,7 +87,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Effect on bytes
 
-[Inferred] As `design.md` D7 states: a draft of schema v14 or earlier keeps every finding and byte but for a `field-version` finding at a walk; a schema-vSS draft without a walk renders as the same draft in schema v14. A walk moves only the page that draws its figure (a wrapper, an HTML layer, a list, paragraph ids and the walk style rules), that page's measures in the size report and the rendered-design packet. The drawing's bytes, `machine.json`, every check record, the reading ledger and every provider-mode byte are unchanged.
+[Inferred] As `design.md` D7 states: a draft of schema v14 or earlier keeps every finding and byte but for a `field-version` finding at a walk; a schema-vSS draft without a walk renders as the same draft in schema v14. A walk moves only the page that draws its figure (a wrapper, an HTML layer, a list and the walk style rules), that page's measures in the size report and the rendered-design packet. No paragraph's bytes, the drawing's bytes, `machine.json`, every check record, the reading ledger and every provider-mode byte move.
 '''
 (W / 'openspec/changes/dossier-figure-walks/SEMANTIC-DELTA.md').write_text(out, encoding='utf-8')
 print('changed', len(changed), 'kept', kept, 'paras', len(added_paras), 'scenarios', len(scen))
