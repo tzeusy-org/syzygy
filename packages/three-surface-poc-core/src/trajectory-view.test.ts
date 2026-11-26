@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { parseTrajectoryView, projectTrajectory, projectTrajectoryView, type TrajectoryProjection } from './trajectory-projection.js';
-import { governingIntentUnknown, workItemTitlesWithheld, type WorkItemFact, type WorkItemsObserved } from './work-items.js';
+import { governingIntentUnknown, countWorkItemTitles, type WorkItemFact, type WorkItemsObserved } from './work-items.js';
 
 // POC-REQ-042 (syzygy-t3jk.18). Expected values are literals or the test's
 // own formula over the fixture, never the module under test.
@@ -20,6 +20,7 @@ function fixture(): WorkItemsObserved {
     updatedAt: '2026-08-01T00:00:00Z',
     closedAt: i % 7 === 6 ? '2026-08-02T00:00:00Z' : null,
     governedBy: i % 3 === 0 ? OBSERVED_GOVERNED : governingIntentUnknown(),
+    title: { text: 'fixture title' },
   }));
   return {
     kind: 'observed',
@@ -28,7 +29,7 @@ function fixture(): WorkItemsObserved {
     capturedAt: '2026-08-30T00:00:00Z',
     items: [...items].reverse(),
     governedByUnknownCount: items.filter((_, i) => i % 3 !== 0).length,
-    titles: workItemTitlesWithheld(),
+    titles: countWorkItemTitles(items),
   };
 }
 

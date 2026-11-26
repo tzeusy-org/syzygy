@@ -310,9 +310,8 @@ export const WORK_ITEM_VERIFICATION_REGION_ID = 'region:work-item-verification' 
  * item's own value is its served `governedBy`. */
 export const WORK_ITEM_GOVERNING_INTENT_REGION_ID = GOVERNING_INTENT_REGION_ID;
 
-/** SEC-5: the one disclosure every rendered card's withheld title, and the
- * board's notice, render under. One id, since one policy gap withholds
- * every title. */
+/** POC-REQ-063: the one disclosure every rendered card's withheld title,
+ * and the board's notice, render under, present while any title is withheld. */
 export const WORK_ITEM_TITLES_REGION_ID = 'region:work-item-titles' as const;
 
 export function workerChangeVerificationId(beadId: string): string {
@@ -356,9 +355,11 @@ function deriveUnknownSubjects(input: UnknownSubjectInputs): readonly PocUnknown
       // (`workItems.items[].governedBy`, `trajectory.rendered[].verification`).
       add(WORK_ITEM_VERIFICATION_REGION_ID, WORK_ITEM_VERIFICATION_BASIS, 'missing-evidence');
       add(WORK_ITEM_GOVERNING_INTENT_REGION_ID, GOVERNING_INTENT_UNKNOWN_BASIS, 'source-uncaptured-or-unreachable');
-      // SEC-5: the machine twin of the board's withheld-title disclosure is
-      // the observation's own `titles` with its basis sentence.
-      subjects.push({ id: WORK_ITEM_TITLES_REGION_ID, epistemic: workItemTitlesDisclosure(input.workItems.titles) });
+      // POC-REQ-063: while any title is withheld, the machine twin of the
+      // board's withheld-title disclosure is the observation's own `titles`
+      // with its counted basis sentence.
+      const titles = workItemTitlesDisclosure(input.workItems.titles);
+      if (titles !== null) subjects.push({ id: WORK_ITEM_TITLES_REGION_ID, epistemic: titles });
       // POC-REQ-044 (syzygy-t3jk.16): the five answers' Unknown parts.
       const changed = input.trajectory.answers.find((answer) => answer.id === 'changed');
       if (changed !== undefined && 'windows' in changed && changed.windows.some((window) => window.kind === 'unknown')) {

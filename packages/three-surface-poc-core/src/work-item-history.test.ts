@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { observeWorkItemChanges, type ChangeWindowObservation } from './work-item-history.js';
-import { workItemTitlesWithheld, type WorkItemsObserved } from './work-items.js';
+import { countWorkItemTitles, type WorkItemsObserved } from './work-items.js';
 
 // syzygy-t3jk.21. Expected values are literals, never the module under test.
 
@@ -17,7 +17,7 @@ function workItems(overrides: Partial<WorkItemsObserved> = {}): WorkItemsObserve
     capturedAt: '2026-08-31T12:00:00Z',
     items: [],
     governedByUnknownCount: 0,
-    titles: workItemTitlesWithheld(),
+    titles: countWorkItemTitles([]),
     ...overrides,
   };
 }

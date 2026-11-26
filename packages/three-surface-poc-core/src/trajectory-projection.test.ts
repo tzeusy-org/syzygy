@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { projectTrajectory, projectTrajectoryView, STATUS_TO_COLUMN, type TrajectoryProjection } from './trajectory-projection.js';
-import { governingIntentUnknown, workItemTitlesWithheld, type WorkItemsObserved } from './work-items.js';
+import { governingIntentUnknown, type WorkItemsObserved } from './work-items.js';
 
 function itemsFixture(): WorkItemsObserved {
   return {
@@ -10,13 +10,13 @@ function itemsFixture(): WorkItemsObserved {
     provenance: { kind: 'dolt-revision', source: 'Beads Dolt database (bu)', revision: 'rev-1' },
     capturedAt: '2026-08-30T00:00:00Z',
     items: [
-      { id: 'bu-1', status: 'open', issueType: 'task', priority: 1, createdAt: '2026-08-01T00:00:00Z', updatedAt: '2026-08-02T00:00:00Z', closedAt: null, governedBy: governingIntentUnknown() },
-      { id: 'bu-2', status: 'in_progress', issueType: 'task', priority: 1, createdAt: '2026-08-03T00:00:00Z', updatedAt: '2026-08-04T00:00:00Z', closedAt: null, governedBy: governingIntentUnknown() },
-      { id: 'bu-3', status: 'closed', issueType: 'task', priority: 1, createdAt: '2026-08-05T00:00:00Z', updatedAt: '2026-08-06T00:00:00Z', closedAt: '2026-08-06T00:00:00Z', governedBy: governingIntentUnknown() },
-      { id: 'bu-4', status: 'closed', issueType: 'task', priority: 1, createdAt: '2026-07-01T00:00:00Z', updatedAt: '2026-07-02T00:00:00Z', closedAt: '2026-07-02T00:00:00Z', governedBy: governingIntentUnknown() },
+      { id: 'bu-1', status: 'open', issueType: 'task', priority: 1, createdAt: '2026-08-01T00:00:00Z', updatedAt: '2026-08-02T00:00:00Z', closedAt: null, governedBy: governingIntentUnknown(), title: { text: 'fixture title' } },
+      { id: 'bu-2', status: 'in_progress', issueType: 'task', priority: 1, createdAt: '2026-08-03T00:00:00Z', updatedAt: '2026-08-04T00:00:00Z', closedAt: null, governedBy: governingIntentUnknown(), title: { text: 'fixture title' } },
+      { id: 'bu-3', status: 'closed', issueType: 'task', priority: 1, createdAt: '2026-08-05T00:00:00Z', updatedAt: '2026-08-06T00:00:00Z', closedAt: '2026-08-06T00:00:00Z', governedBy: governingIntentUnknown(), title: { text: 'fixture title' } },
+      { id: 'bu-4', status: 'closed', issueType: 'task', priority: 1, createdAt: '2026-07-01T00:00:00Z', updatedAt: '2026-07-02T00:00:00Z', closedAt: '2026-07-02T00:00:00Z', governedBy: governingIntentUnknown(), title: { text: 'fixture title' } },
     ],
     governedByUnknownCount: 4,
-    titles: workItemTitlesWithheld(),
+    titles: { policyId: 'work-item-title', policyVersion: '1.0.0', admitted: 4, withheld: 0, withheldByReason: { 'secret-matched': 0, 'active-content': 0, unclassifiable: 0 } },
   };
 }
 
