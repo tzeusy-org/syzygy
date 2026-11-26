@@ -142,7 +142,7 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC4-26 | Capability/entity↔code mappings are declared-only, inferred mappings excluded | covered — Orrery's declared-mappings-only design is exactly class (i) with class (ii) excluded, matching the scope's "no inferred mappings or edges" | POC-REQ-050, POC-REQ-052 |
 | RFC4-27 | Unmapped/absence claim requires an executed coverage record with reconciling counts, never silent absence | covered — "unmapped code a visible Unknown region with reconciling counts" is this clause's coverage-record duty applied to Orrery | POC-REQ-051 |
 | RFC5-16 | (a) Observation-capture ingest screening for Butlers repo structure | covered — POC-REQ-002's "never indexed contents" sentinel sweep structurally avoids most of the screening concern for code bodies, but doesn't test the secret-detection-policy mechanism itself | POC-REQ-002 (partial) |
-| RFC5-16 | (b) Beads/Dolt work-item ingest screening | **Unknown** — POC-REQ-010/013 test provenance and Unknown-on-failure, not secret screening of ingested work-item text | — |
+| RFC5-16 | (b) Beads/Dolt work-item ingest screening | covered — Amendment row (titles, syzygy-t3jk.23): the one free-text column read, `title`, is screened under the declared work-item-title policy before it enters the model, fail-closed; every other free-text column stays unread | POC-REQ-063 |
 | RFC6-13 | Machine endpoint answers from the same fact set surfaces render; no endpoint-only or UI-only facts | covered — POC's `/api/poc` + client/no-script parity is exactly SDR-27's bidirectional obligation this clause states | POC-REQ-020, POC-REQ-022 |
 | RFC6-14 | Machine answer never silently omits or folds Unknown/epistemic state into a total | covered — Fold: full RFC2-25 tier / secondary-annotation / sibling-surface-state / challenge-pending limbs dropped — POC carries no such vocabulary | POC-REQ-020, POC-REQ-042, POC-REQ-051 |
 | RFC6-14 | Every entity and relationship in the machine answer carries exactly one epistemic record: its label, its tier where it carries one, and its primary Unknown reason verbatim from the RFC 0002 vocabulary | covered — Amendment row (vocabulary and record shape); POC-REQ-060's denominator is every element of the machine answer's entity and relationship lists, not the records that exist | POC-REQ-060 |
@@ -230,6 +230,7 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC8-22 | An invalid local representation is an explicit bounded failure, never a silently skipped join, guessed value or smaller successful answer | covered — Amendment row (observation-local governedBy wire value); no governing-intent link or source-to-claim join is admitted | POC-REQ-014 |
 | RFC8-23 | Equal Unknown values stay separate countable/filterable work-item claims; sharing neither clears Unknown nor invents warrants | covered — Amendment row (observation-local governedBy wire value); existing unresolved orphaned-work and other limbs remain Unknown | POC-REQ-014 |
 | RFC2-24 | Each of Trajectory's five answers, or part of one, that is Unknown carries one closed reason and its route, with a machine twin under its id | covered — Amendment row (five answers, syzygy-t3jk.16) | POC-REQ-044 |
+| RFC2-24 | Withheld work-item titles render once as Unknown `excluded-content` with its route and the withheld count, with a machine twin; each withheld card refers to it | covered — Amendment row (titles, syzygy-t3jk.23) | POC-REQ-063 |
 | RFC2-19(a) | Merged-but-unreconciled work renders "reconciliation evidence absent / Unknown" as a fact of the render, counted in its own right and routed to running a reconciliation evaluation, never stamped with or counted among RFC2-24 reasons | covered — Amendment row (five answers); the oracle reads the chain count and its statement and finds no RFC2-24 reason on it. Moved from Part B2 | POC-REQ-044 |
 | RFC2-19(a) | That rendering carries the member's durable identity, its merge fact and the intent revision | **Unknown** — Amendment row (five answers); the answer gives a count and one statement, naming no member, commit or revision | — |
 | RFC8-28 | The merged, not yet evaluated chain state renders as its own counted answer, never sharing a rendering with another state | covered — Amendment row (five answers); the count of materialized work on the default branch, with its own wording. Moved from Part B2 | POC-REQ-044 |
@@ -252,8 +253,8 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC8-17 | Derivations of `pr-wait`, `external` and `decision` blocked causes | **Unknown** — Amendment row (eligibility); those input families remain unread | — |
 
 Part A totals `[Observed, computed by the sweep in "Verifying this
-table"]`: **178 consequence rows over 88 clauses — 127 covered,
-51 Unknown.**
+table"]`: **179 consequence rows over 88 clauses — 129 covered,
+50 Unknown.**
 
 **Amendment disclosure — the RFC1-26 closure row (ruling P-75 Q3).**
 The signed RFC1-26 row whose consequence reads "Relations outside the closed

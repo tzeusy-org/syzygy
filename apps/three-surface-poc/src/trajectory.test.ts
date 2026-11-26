@@ -264,39 +264,94 @@ describe('Trajectory', () => {
     expect(recent).toContain('data-parity-field="trajectory-excluded-count">2</span> items are outside this selection');
   });
 
-  // SEC-5 (owner answer 2026-10-20, syzygy-jytt): a card is named by its
-  // identifier and says its title is withheld; the board says why, once,
-  // and the machine twin carries the same reason and route. Literals typed
-  // here; the fixture rows carry titles (`fixture item <id>`) to prove none
-  // is served.
-  it('names every card by its identifier and discloses its withheld title (SEC-5)', () => {
+  // POC-REQ-063 (syzygy-t3jk.23): a card shows its title when the title
+  // policy admits it, escaped; a withheld title is a mark naming its reason
+  // that refers to the board's one disclosure, and the board states the
+  // policy and counts once. Literals typed here.
+  it('shows each admitted title on its card and states the title policy once (POC-REQ-063)', async () => {
     const model = buildFixtureModel(cleanups);
     const html = renderTrajectoryPage(model);
     if (model.trajectory.kind !== 'observed') throw new Error('unreachable');
-    const route = 'Route: <span data-unknown-route="excluded-content" data-route-actor="owner" data-route-verb="decide" data-route-target="policy">Policy change by the owner, or accept the exclusion</span>.';
     const ids = model.trajectory.rendered.map((item) => item.id);
     expect(ids).toEqual(['bu-blocked1', 'bu-open1', 'bu-progress1']);
     for (const id of ids) {
       const card = cardBody(html, id);
       expect(card).toContain(`<a class="wi-title" href="#workitem-${id}" data-parity-field="work-item-id">${id}</a>`);
-      const marks = card.split('data-parity-field="work-item-title"').length - 1;
-      expect(marks, id).toBe(1);
-      // syzygy-t3jk.15: the card's mark refers to the board's one disclosure
-      // and carries no route of its own.
-      expect(card).toContain('<span class="epistemic epistemic-unknown" data-parity-field="work-item-title" data-unknown-ref="region:work-item-titles" data-unknown-reason="excluded-content">Title: withheld (SEC-5) <a class="mark-ref" href="#n-titles" aria-describedby="n-titles">reason and route</a></span>');
-      expect(card).not.toContain(route);
+      expect(card).toContain(`<bdi class="wi-name" data-parity-field="work-item-title">fixture item ${id}</bdi>`);
+      expect(card.split('data-parity-field="work-item-title"').length - 1, id).toBe(1);
     }
+    const notice = /<p class="titles-notice notice" id="n-titles" data-parity-field="work-item-titles">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
+    expect(notice.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()).toBe(
+      'Titles: shown for 5 of 5 observed work items, each screened by the title policy work-item-title 1.0.0 (its secret detectors and its scan for markup and scripts).',
+    );
+    expect(html).not.toContain('data-unknown-disclosure="region:work-item-titles"');
+    expect(model.unknownSubjects.some((subject) => subject.id === 'region:work-item-titles')).toBe(false);
+    const served = await servedAnswer(model);
+    if (served.workItems.kind !== 'observed') throw new Error('unreachable');
+    expect(served.workItems.items.map((item) => [item.id, item.title]).sort(([a], [b]) => String(a).localeCompare(String(b)))).toEqual([
+      ['bu-blocked1', { text: 'fixture item bu-blocked1' }],
+      ['bu-closed-old', { text: 'fixture item bu-closed-old' }],
+      ['bu-closed-recent', { text: 'fixture item bu-closed-recent' }],
+      ['bu-open1', { text: 'fixture item bu-open1' }],
+      ['bu-progress1', { text: 'fixture item bu-progress1' }],
+    ]);
+  });
+
+  it('withholds a screened-out title on both channels, escapes an admitted one, and routes the withheld count once (POC-REQ-063)', async () => {
+    const at = '2026-08-01T00:00:00Z';
+    const rows = [
+      { ...fixtureWorkItemRow('bu-a1', 'open', at, at, null), title: 'Tom & Jerry say "hi" it\'s fine' },
+      { ...fixtureWorkItemRow('bu-a2', 'open', at, at, null), title: 'Set password: qz5hunter2qz5' },
+      { ...fixtureWorkItemRow('bu-a3', 'open', at, at, null), title: 'Fix <script>qz6x</script>' },
+      { ...fixtureWorkItemRow('bu-a4', 'open', at, at, null), title: null },
+    ];
+    const model = buildFixtureModel(cleanups, { workItemRows: rows });
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    const body = JSON.stringify(served);
+    for (const text of ['qz5hunter2qz5', 'qz6x', 'password:']) {
+      expect(html).not.toContain(text);
+      expect(body).not.toContain(text);
+    }
+    expect(cardBody(html, 'bu-a1')).toContain('<bdi class="wi-name" data-parity-field="work-item-title">Tom &amp; Jerry say &quot;hi&quot; it&#39;s fine</bdi>');
+    const mark = (reason: string) => `<span class="epistemic epistemic-unknown" data-parity-field="work-item-title" data-unknown-ref="region:work-item-titles" data-unknown-reason="excluded-content">Title: withheld (${reason}) <a class="mark-ref" href="#n-titles" aria-describedby="n-titles">reason and route</a></span>`;
+    expect(cardBody(html, 'bu-a2')).toContain(mark('secret-matched'));
+    expect(cardBody(html, 'bu-a3')).toContain(mark('active-content'));
+    expect(cardBody(html, 'bu-a4')).toContain(mark('unclassifiable'));
+    const route = 'Route: <span data-unknown-route="excluded-content" data-route-actor="owner" data-route-verb="decide" data-route-target="policy">Policy change by the owner, or accept the exclusion</span>.';
     expect(html.split(route).length - 1).toBe(1);
-    const notice = /<p class="titles-withheld notice" id="n-titles" data-parity-field="work-item-titles-withheld" data-unknown-disclosure="region:work-item-titles" data-unknown-reason="excluded-content">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
-    const words = notice.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-    expect(words).toBe('Titles: Unknown for 5 of 5 observed work items (every one). Work-item titles are withheld under SEC-5: a title is free text, the only declared secret-classification policy covers declared-project-shape-text and none covers work-item titles, so the observation never reads them. Each item is named by its identifier. Reason: excluded-content. Route: Policy change by the owner, or accept the exclusion.');
-    expect(html).not.toContain('fixture item');
-    expect(model.unknownSubjects.find((subject) => subject.id === 'region:work-item-titles')?.epistemic).toEqual({
-      label: 'Unknown',
-      reason: 'Work-item titles are withheld under SEC-5: a title is free text, the only declared secret-classification policy covers declared-project-shape-text and none covers work-item titles, so the observation never reads them. Each item is named by its identifier.',
-      closedReason: 'excluded-content',
-      resolutionRoutes: [{ reason: 'excluded-content', route: 'Policy change by the owner, or accept the exclusion', actor: 'owner', verb: 'decide', target: 'policy' }],
-    });
+    const notice = /<p class="titles-notice notice" id="n-titles" data-parity-field="work-item-titles" data-unknown-disclosure="region:work-item-titles" data-unknown-reason="excluded-content">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
+    expect(notice.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()).toBe(
+      'Titles: shown for 1 of 4 observed work items, screened by the title policy work-item-title 1.0.0; Unknown for 3. 3 of 4 work-item titles are withheld under the work-item-title policy 1.0.0 (1 secret-matched, 1 active-content, 1 unclassifiable): a title that matches a secret detector, carries active content the scan finds or cannot be screened is never served, and its item is named by its identifier. Reason: excluded-content. Route: Policy change by the owner, or accept the exclusion.',
+    );
+    if (served.workItems.kind !== 'observed') throw new Error('unreachable');
+    expect(served.workItems.items.map((item) => item.title)).toEqual([
+      { text: 'Tom & Jerry say "hi" it\'s fine' },
+      { withheld: 'secret-matched', redactionClass: 'excluded-artifact', digest: '1576ee2d4319dfec7a0f0e4f70e853b614c98adaf66a809bf982be892603ba7a' },
+      { withheld: 'active-content', redactionClass: 'excluded-artifact', digest: 'a5e1254256353bed59d20ae465f60420abef8288e26896c2f2141c665e53109a' },
+      { withheld: 'unclassifiable', redactionClass: 'unclassifiable-excluded', digest: null },
+    ]);
+    expect(served.unknownSubjects.find((subject) => subject.id === 'region:work-item-titles')?.epistemic.closedReason).toBe('excluded-content');
+  });
+
+  // POC-REQ-063: the largest title page. A full page of cards whose titles
+  // are the longest admitted (500 code units) and escape to the most bytes
+  // (each `"` becomes `&quot;`) stays under 60% of the human ceiling
+  // (1,190,306 of 2,097,152 bytes when written, 57%; 500 `"` escape to 3,000
+  // bytes, the most any admitted title can); a typical title adds
+  // a fraction of that.
+  it('keeps a full page of longest, most-escaped titles under 60% of the human response ceiling (POC-REQ-063)', () => {
+    const at = '2026-08-01T00:00:00Z';
+    const title = '"'.repeat(500);
+    const rows = Array.from({ length: 260 }, (_, i) => ({ ...fixtureWorkItemRow(`bu-long-${String(i).padStart(3, '0')}`, 'open', at, at, null), title }));
+    const model = buildFixtureModel(cleanups, { workItemRows: rows });
+    if (model.workItems.kind !== 'observed') throw new Error('unreachable');
+    expect(model.workItems.titles.admitted).toBe(260);
+    const html = renderTrajectoryPage(model);
+    const bytes = Buffer.byteLength(html, 'utf8');
+    console.info(`POC-REQ-063 largest title page: ${bytes} bytes of ${PWB_RESOURCE_LIMITS.maxHumanResponseBytes}`);
+    expect(html.split('&quot;'.repeat(500)).length - 1).toBe(250);
+    expect(bytes).toBeLessThan(PWB_RESOURCE_LIMITS.maxHumanResponseBytes * 0.6);
   });
 
   it('never renders closure/activity as verification satisfaction (POC-REQ-043)', () => {
@@ -912,13 +967,15 @@ describe('Trajectory board-level Unknowns and card facts (T2)', () => {
   ];
   const ROUTES = ROUTE_COUNTS.map(([literal]) => literal);
   const BASES = [
-    'Work-item titles are withheld under SEC-5',
+    '7 of 252 work-item titles are withheld under the work-item-title policy 1.0.0 (7 unclassifiable)',
     'Activity is not verification: no test evidence has been ingested for any work item.',
     'No governing intent was captured for any work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.',
   ];
 
   it('states each route and basis sentence once on the 252-row board, never on a card', () => {
-    const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
+    // Every 40th row's title is absent, so the withheld-title disclosure renders (POC-REQ-063).
+    const rows = closureRows().map((row, i) => (i % 40 === 0 ? { ...row, title: null } : row));
+    const model = buildFixtureModel(cleanups, { workItemRows: rows });
     const html = renderTrajectoryPage(model);
     if (model.trajectory.kind !== 'observed') throw new Error('unreachable');
     const cards = [...html.matchAll(/<li class="wi-card[^"]*"[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]!);
@@ -1540,9 +1597,9 @@ describe('Trajectory grouped by parent (T4 S2, syzygy-t3jk.20)', () => {
 
   it('names each parent with its recorded status, what it sits under, and never a verdict about it', () => {
     const html = grouped(model());
-    expect(html).toContain('Parent <a data-group-parent="bu-epic" href="/trajectory?page=1#workitem-bu-epic">bu-epic</a>, tracker status <code data-group-parent-status>closed</code>');
+    expect(html).toContain('Parent <span class="wi-ref" data-title-of="bu-epic"><a data-group-parent="bu-epic" href="/trajectory?page=1#workitem-bu-epic">bu-epic</a> <bdi class="wi-ref-name" data-parity-field="work-item-ref-title">fixture item bu-epic</bdi></span>, tracker status <code data-group-parent-status>closed</code>');
     expect(html).toContain('The parent is closed in the tracker and its items keep their own statuses');
-    expect(html).toContain('The parent sits under <a data-group-under="bu-epic" href="/trajectory?group=parent&amp;page=1#group-p-bu-epic">bu-epic</a>.');
+    expect(html).toContain('The parent sits under <span class="wi-ref" data-title-of="bu-epic"><a data-group-under="bu-epic" href="/trajectory?group=parent&amp;page=1#group-p-bu-epic">bu-epic</a> <bdi class="wi-ref-name" data-parity-field="work-item-ref-title">fixture item bu-epic</bdi></span>.');
     const outline = /<section class="outline"[\s\S]*?<\/section>/.exec(html)?.[0] ?? '';
     // The population: every group region's own text (heading, counts and notes), outside its cards.
     const regions = [...outline.matchAll(/<li class="outline-group"[\s\S]*?<ol class="wi-list">/g)].map((match) => match[0]);
@@ -1553,8 +1610,8 @@ describe('Trajectory grouped by parent (T4 S2, syzygy-t3jk.20)', () => {
   it('states a parent-child cycle once, in its first member\'s group, and points to it from the other', () => {
     const html = grouped(model());
     expect(html.match(/data-group-cycle="/g)).toHaveLength(1);
-    expect(html).toContain('<span data-group-cycle="bu-cy1 bu-cy2">Parent-child cycle among <code>bu-cy1</code>, <code>bu-cy2</code>: stated here once and not followed further.</span>');
-    expect(html).toContain('<span data-group-cycle-ref="bu-cy1">The parent is in a parent-child cycle, stated under <a href="/trajectory?group=parent&amp;page=1#group-p-bu-cy1">bu-cy1</a>.</span>');
+    expect(html).toContain('<span data-group-cycle="bu-cy1 bu-cy2">Parent-child cycle among <span class="wi-ref" data-title-of="bu-cy1"><code>bu-cy1</code> <bdi class="wi-ref-name" data-parity-field="work-item-ref-title">fixture item bu-cy1</bdi></span>, <span class="wi-ref" data-title-of="bu-cy2"><code>bu-cy2</code> <bdi class="wi-ref-name" data-parity-field="work-item-ref-title">fixture item bu-cy2</bdi></span>: stated here once and not followed further.</span>');
+    expect(html).toContain('<span data-group-cycle-ref="bu-cy1">The parent is in a parent-child cycle, stated under <span class="wi-ref" data-title-of="bu-cy1"><a href="/trajectory?group=parent&amp;page=1#group-p-bu-cy1">bu-cy1</a> <bdi class="wi-ref-name" data-parity-field="work-item-ref-title">fixture item bu-cy1</bdi></span>.</span>');
   });
 
   it('marks a group split across pages, with its counts, on the page', () => {
@@ -1666,7 +1723,7 @@ describe('Trajectory answers what changed between two named revisions (T6 S1, sy
     expect(body).toContain('<span data-parity-field="answer-changed-updated-only">1</span> more were updated without a status change, and <span data-parity-field="answer-changed-outside-prefix">2</span> changed rows are outside');
     expect([...body.matchAll(/data-change-id="([^"]+)"/g)].map((match) => match[1])).toEqual(['bu-closed-recent', 'bu-gone', 'bu-open1']);
     // A served item links to its card; a removed one is named, never linked.
-    expect(body).toContain('<li data-change-kind="closed" data-change-id="bu-closed-recent"><a href="/trajectory?page=1#workitem-bu-closed-recent"><code>bu-closed-recent</code></a> closed (<code>open</code> → <code>closed</code>)</li>');
+    expect(body).toContain('<li data-change-kind="closed" data-change-id="bu-closed-recent"><span class="wi-ref" data-title-of="bu-closed-recent"><a href="/trajectory?page=1#workitem-bu-closed-recent"><code>bu-closed-recent</code></a> <bdi class="wi-ref-name" data-parity-field="work-item-ref-title">fixture item bu-closed-recent</bdi></span> closed (<code>open</code> → <code>closed</code>)</li>');
     expect(body).toContain('<li data-change-kind="removed" data-change-id="bu-gone"><code>bu-gone</code> removed (<code>blocked</code> → —)</li>');
     expect(body).not.toMatch(/\b(velocity|per day|progress|done|productivity)\b|%/i);
   });
@@ -1798,5 +1855,168 @@ describe('Trajectory answers what changed between two named revisions (T6 S1, sy
     expect(bytes).toHaveLength(18);
     expect(largest).toBeLessThan(PWB_RESOURCE_LIMITS.maxHumanResponseBytes / 2);
     console.info(`Trajectory change fixture served ${bytes.length} pages, largest ${largest} UTF-8 bytes`);
+  });
+});
+
+// POC-REQ-063 (syzygy-t3jk.24): every Trajectory list that names a served
+// item names it with its title as the policy served it, through one helper.
+describe('Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24)', () => {
+  const instant = '2026-08-29T12:00:00Z';
+  const revision = FIXTURE_DOLT_REVISION;
+  const SECRET = 'password=LISTMARKERsecret1';
+  const ACTIVE = '<script>LISTMARKERactive2</script>';
+  // The 60th code unit is the high half of U+1F600, so the clip ends at 59.
+  const PAIR = `${'L'.repeat(59)}\u{1F600} LISTTAILpair3`;
+  const LONG = `&${'M'.repeat(59)}LISTTAILlong4`;
+  const MARKERS = ['LISTMARKERsecret1', 'LISTMARKERactive2', 'LISTTAILpair3', 'LISTTAILlong4'];
+  const row = (id: string, title: unknown) => ({ ...fixtureWorkItemRow(id, 'open', instant, instant, null), title });
+  const rows = [
+    row('bu-epic', 'Epic & "plan" \'one\''), row('bu-mid', SECRET), row('bu-twin', PAIR),
+    row('bu-blocked', 'Blocked one'), row('bu-act', ACTIVE), row('bu-long', LONG), row('bu-none', null),
+  ];
+  const parentEdge = (child: string, parent: string) =>
+    ({ issue_id: child, depends_on_issue_id: parent, type: 'parent-child', has_external: 0, has_wisp: 0, revision: null });
+  const blockEdge = (blocked: string, blocker: string) =>
+    ({ issue_id: blocked, depends_on_issue_id: blocker, type: 'blocks', has_external: 0, has_wisp: 0, revision: null });
+  const edges = [
+    { revision, issue_id: null, depends_on_issue_id: null, type: null, has_external: null, has_wisp: null },
+    parentEdge('bu-mid', 'bu-epic'), parentEdge('bu-twin', 'bu-epic'), parentEdge('bu-twin', 'bu-mid'),
+    blockEdge('bu-blocked', 'bu-act'), blockEdge('bu-blocked', 'bu-long'), blockEdge('bu-blocked', 'bu-none'), blockEdge('bu-blocked', 'bu-twin'),
+  ];
+  const diffRow = (diff_type: string, from_id: string | null, to_id: string | null, from_status: string | null, to_status: string | null) =>
+    ({ w: 'day', diff_type, from_id, to_id, from_status, to_status, n: null });
+  const tallies = (w: string) => ['outside-prefix', 'merges', 'inverted'].map((diff_type) =>
+    ({ w, diff_type, from_id: null, to_id: null, from_status: null, to_status: null, n: 0 }));
+  const historyOf = (day: readonly Record<string, unknown>[]) => (sql: string): string => sql.includes('dolt_diff(')
+    ? JSON.stringify([...day, ...tallies('day'), ...tallies('week')])
+    : JSON.stringify([{
+      revision, revision_at: '2026-08-30T11:58:00.000Z',
+      day_from: 'a'.repeat(32), day_at: '2026-08-29T10:00:00.000Z', week_from: 'b'.repeat(32), week_at: '2026-08-23T10:00:00.000Z',
+    }]);
+  const DAY = [
+    diffRow('added', null, 'bu-mid', null, 'open'), diffRow('added', null, 'bu-twin', null, 'open'),
+    diffRow('added', null, 'bu-epic', null, 'open'), diffRow('removed', 'bu-gone', null, 'open', null),
+  ];
+  const model = () => buildFixtureModel(cleanups, {
+    workItemRows: rows, runDependencyQuery: () => JSON.stringify(edges), runHistoryQuery: historyOf(DAY),
+  });
+  const machine = async (page: PocModel): Promise<string> => {
+    const route = pocRoutes(() => page).find((candidate) => candidate.path === '/api/poc')!;
+    const response = await route.handle({ request: { method: 'GET', path: '/api/poc', query: new URLSearchParams(), headers: {} } });
+    expect(response.status).toBe(200);
+    return response.body as string;
+  };
+  // Each list reference: the item it names and what its title part renders.
+  const REF = /data-title-of="([^"]+)">(?:(?!data-title-of=)[\s\S])*?(?:<bdi class="wi-ref-name" data-parity-field="work-item-ref-title"( data-title-clipped="60")?>([^<]*)<\/bdi>(…?)|data-parity-field="work-item-ref-title" data-unknown-ref="region:work-item-titles" data-unknown-reason="excluded-content">Title: withheld \(([a-z-]+)\) <a class="mark-ref" href="#n-titles")/g;
+  const refs = (html: string) => [...html.matchAll(REF)].map((match) => ({
+    id: match[1], shown: match[3] === undefined ? `withheld ${match[5]}` : `${match[3]}${match[4]}`, clipped: match[2] !== undefined,
+  }));
+  // Typed by hand: the escaped admitted text (clipped where long) or the reason.
+  const EXPECTED: Record<string, { shown: string; clipped: boolean }> = {
+    'bu-epic': { shown: 'Epic &amp; &quot;plan&quot; &#39;one&#39;', clipped: false },
+    'bu-mid': { shown: 'withheld secret-matched', clipped: false },
+    'bu-twin': { shown: `${'L'.repeat(59)}…`, clipped: true },
+    'bu-blocked': { shown: 'Blocked one', clipped: false },
+    'bu-act': { shown: 'withheld active-content', clipped: false },
+    'bu-long': { shown: `&amp;${'M'.repeat(59)}…`, clipped: true },
+    'bu-none': { shown: 'withheld unclassifiable', clipped: false },
+  };
+  const pages = (page: PocModel) => [renderTrajectoryPage(page), trajectoryView(page, 'group=parent')];
+
+  it('names every served item each list mentions with its title as served, on the default and grouped pages', () => {
+    const [plain, grouped] = pages(model());
+    // The default page is the grouped outline: the changed list (bu-epic,
+    // bu-mid, bu-twin; bu-gone is removed), the two parent headings, what
+    // bu-mid sits under, then the blocked card's four blockers.
+    const order = ['bu-epic', 'bu-mid', 'bu-twin', 'bu-epic', 'bu-mid', 'bu-epic', 'bu-act', 'bu-long', 'bu-none', 'bu-twin'];
+    expect(refs(plain!).map((ref) => ref.id)).toEqual(order);
+    expect(refs(grouped!).map((ref) => ref.id)).toEqual(order);
+    for (const html of [plain!, grouped!]) {
+      for (const ref of refs(html)) expect({ shown: ref.shown, clipped: ref.clipped }).toEqual(EXPECTED[ref.id!]);
+      // No list names a served item by its identifier alone.
+      for (const attribute of ['data-blocker-id', 'data-group-parent', 'data-group-under']) {
+        const named = [...html.matchAll(new RegExp(`<a ${attribute}="([^"]+)"`, 'g'))].map((match) => match[1]);
+        const titled = [...html.matchAll(new RegExp(`data-title-of="([^"]+)"><a ${attribute}="\\1"`, 'g'))].map((match) => match[1]);
+        expect(titled).toEqual(named);
+      }
+    }
+    expect(grouped).toContain('Parent <span class="wi-ref" data-title-of="bu-epic"><a data-group-parent="bu-epic"');
+    expect(grouped).toContain('The parent sits under <span class="wi-ref" data-title-of="bu-epic"><a data-group-under="bu-epic"');
+  });
+
+  it('names a removed item in the changed list by its identifier alone', () => {
+    const [plain] = pages(model());
+    expect(answerBody(plain!, 'changed')).toContain('<li data-change-kind="removed" data-change-id="bu-gone"><code>bu-gone</code> removed (<code>open</code> → —)</li>');
+    expect(plain).not.toContain('data-title-of="bu-gone"');
+  });
+
+  it('serves the same titles in the machine answer, and no withheld text on either channel', async () => {
+    const page = model();
+    const body = await machine(page);
+    const served = JSON.parse(body) as PocModel;
+    if (served.workItems.kind !== 'observed') throw new Error('expected observed work items');
+    const titles = Object.fromEntries(served.workItems.items.map((item) => [item.id, item.title]));
+    expect(titles['bu-epic']).toEqual({ text: 'Epic & "plan" \'one\'' });
+    expect(titles['bu-twin']).toEqual({ text: PAIR });
+    expect(titles['bu-long']).toEqual({ text: LONG });
+    expect(titles['bu-blocked']).toEqual({ text: 'Blocked one' });
+    expect([titles['bu-mid'], titles['bu-act'], titles['bu-none']].map((title) => title && 'withheld' in title ? title.withheld : null))
+      .toEqual(['secret-matched', 'active-content', 'unclassifiable']);
+    for (const marker of MARKERS.slice(0, 2)) expect(body).not.toContain(marker);
+    for (const html of pages(page)) {
+      for (const marker of MARKERS.slice(0, 2)) expect(html).not.toContain(marker);
+    }
+  });
+
+  it('clips a long title in a list at 60 code units, never inside a surrogate pair, and shows it whole on its card', () => {
+    for (const html of pages(model())) {
+      expect(cardBody(html, 'bu-twin')).toContain(`<bdi class="wi-name" data-parity-field="work-item-title">${PAIR}</bdi>`);
+      expect(cardBody(html, 'bu-long')).toContain(`<bdi class="wi-name" data-parity-field="work-item-title">&amp;${LONG.slice(1)}</bdi>`);
+      // The tails appear only on the cards, never in a list.
+      expect(html.split('LISTTAILpair3').length - 1).toBe(html.split('data-work-item-id="bu-twin"').length - 1);
+      expect(html.split('LISTTAILlong4').length - 1).toBe(html.split('data-work-item-id="bu-long"').length - 1);
+      expect(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/.test(html)).toBe(false);
+    }
+  });
+
+  it('states a withheld title in a list as its Unknown, referring to the one titles disclosure', () => {
+    const [plain] = pages(model());
+    const blockers = cardBody(plain!, 'bu-blocked');
+    expect(blockers).toContain('<span class="wi-ref" data-title-of="bu-act"><a data-blocker-id="bu-act"');
+    expect(blockers).toContain('Title: withheld (active-content) <a class="mark-ref" href="#n-titles" aria-describedby="n-titles">reason and route</a>');
+    expect(plain).toContain('<span data-parity-field="titles-unknown-count">3</span>');
+  });
+
+  // Review note 6 of R-T5S1-TITLES-1: a grouped page repeats the card of an
+  // item under two parents. This fixture gives every title the most bytes
+  // escaping can make (500 `"`), every item two parents and three blockers,
+  // and a full changed list. It measures that fan-in, not a bound: blockers
+  // per card are unbounded (syzygy-262m).
+  it('keeps a page of most-escaped titles with two parents and three blockers per item under 90% of the human response ceiling', async () => {
+    const worst = '"'.repeat(500);
+    const ids = Array.from({ length: 260 }, (_, index) => `bu-w${String(index).padStart(3, '0')}`);
+    const parents = ids.slice(0, 10);
+    const children = ids.slice(10);
+    const dependencyRows = [
+      { revision, issue_id: null, depends_on_issue_id: null, type: null, has_external: null, has_wisp: null },
+      ...children.flatMap((id, index) => [
+        parentEdge(id, parents[index % 10]!), parentEdge(id, parents[(index + 1) % 10]!),
+        blockEdge(id, ids[(index + 11) % 260]!), blockEdge(id, ids[(index + 12) % 260]!), blockEdge(id, ids[(index + 13) % 260]!),
+      ]),
+    ];
+    const page = buildFixtureModel(cleanups, {
+      workItemRows: ids.map((id) => row(id, worst)),
+      runDependencyQuery: () => JSON.stringify(dependencyRows),
+      runHistoryQuery: historyOf(ids.map((id) => diffRow('added', null, id, null, 'open'))),
+    });
+    const sizes: Record<string, number> = {};
+    for (const query of ['', 'group=parent', 'group=parent&page=2', 'page=1', 'page=2']) {
+      const route = pocRoutes(() => page).find((candidate) => candidate.path === TRAJECTORY_HUMAN_PATH && candidate.method === 'GET')!;
+      const response = await route.handle({ request: { method: 'GET', path: TRAJECTORY_HUMAN_PATH, query: new URLSearchParams(query), headers: { host: '127.0.0.1:7478' } } });
+      expect(response.status).toBe(200);
+      sizes[query === '' ? 'default' : query] = Buffer.byteLength(response.body as string, 'utf8');
+    }
+    process.stdout.write(`[T5 S2 worst list-title page bytes] ${JSON.stringify(sizes)}\n`);
+    expect(Math.max(...Object.values(sizes))).toBeLessThan(PWB_RESOURCE_LIMITS.maxHumanResponseBytes * 0.9);
   });
 });

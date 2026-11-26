@@ -10,7 +10,7 @@ import { BUTLERS_POC_SEEDS } from './poc-seeds.js';
 const WORK_ITEM_REVISION = 'adpe9hi1llmdh05mr8aja5kagtu36eli';
 const WORK_ITEM_WITNESS = {
   revision: WORK_ITEM_REVISION, id: null, status: null, issue_type: null, priority: null,
-  created_at: null, updated_at: null, closed_at: null,
+  created_at: null, updated_at: null, closed_at: null, title: null,
 };
 
 function git(root: string, args: readonly string[]): string {

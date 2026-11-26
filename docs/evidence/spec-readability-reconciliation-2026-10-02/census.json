@@ -275,8 +275,8 @@
       }
     },
     "POC": {
-      "requirements": 29,
-      "scenarios": 54,
+      "requirements": 30,
+      "scenarios": 57,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -475,6 +475,14 @@
             "Unsettled edge metadata is counted without disclosing input strings",
             "Planned, blocked without cause, and statuses outside derived eligibility",
             "Blocker reaches its card across pages"
+          ]
+        },
+        "POC-REQ-063": {
+          "name": "Work-item titles render under the declared, screened title policy",
+          "scenarios": [
+            "Clean titles are shown",
+            "A title that fails screening is withheld",
+            "Every list names an item with its title"
           ]
         }
       }

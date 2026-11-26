@@ -1,0 +1,316 @@
+{
+  "record": "rule-6 mutants for the verify-text page (syzygy-5dhm.24)",
+  "commit": "f2f967f0c0f7639e7098fbc1bd1067d65936d61b",
+  "files": [
+    "packages/polaris-dossier/src/verify-text-page.ts",
+    "packages/polaris-dossier/src/verify-text.ts"
+  ],
+  "tests": [
+    "packages/polaris-dossier/src/verify-text-page.test.ts",
+    "packages/polaris-dossier/src/verify-text.test.ts"
+  ],
+  "command": "npx vitest run packages/polaris-dossier/src/verify-text-page.test.ts packages/polaris-dossier/src/verify-text.test.ts",
+  "mutants": [
+    {
+      "mutant": "escape-amp",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "'&': '&amp;'",
+      "new": "'&': '&'",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > marks each claim in place, escaped, with its number and outcome 9ms"
+      ]
+    },
+    {
+      "mutant": "escape-lt",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "'<': '&lt;'",
+      "new": "'<': '<'",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > marks each claim in place, escaped, with its number and outcome 13ms",
+        "\u00d7 the checked text as an HTML page > writes a hostile text as text 46ms"
+      ]
+    },
+    {
+      "mutant": "escape-quote",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "'\"': '&quot;'",
+      "new": "'\"': '\"'",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > marks each claim in place, escaped, with its number and outcome 10ms",
+        "\u00d7 the checked text as an HTML page > writes a hostile text as text 14ms"
+      ]
+    },
+    {
+      "mutant": "escape-apos",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "\"'\": '&#39;'",
+      "new": "\"'\": \"'\"",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > writes a hostile text as text 27ms"
+      ]
+    },
+    {
+      "mutant": "csp-dropped",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "`${CSP_META}<title>",
+      "new": "`<title>",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > carries the closed no-script policy and no script, handler or remote load 27ms",
+        "\u00d7 the checked text as an HTML page > writes a hostile text as text 8ms"
+      ]
+    },
+    {
+      "mutant": "csp-allows-script",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "content=\"default-src 'none'; style-src",
+      "new": "content=\"default-src 'none'; script-src 'unsafe-inline'; style-src",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > carries the closed no-script policy and no script, handler or remote load 32ms",
+        "\u00d7 the checked text as an HTML page > writes a hostile text as text 6ms"
+      ]
+    },
+    {
+      "mutant": "remote-style-load",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "  '*{box-sizing:border-box}",
+      "new": "  '@import url(https://example.invalid/a.css);*{box-sizing:border-box}",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > carries the closed no-script policy and no script, handler or remote load 81ms"
+      ]
+    },
+    {
+      "mutant": "product-name-in-title",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "<title>Checked text</title>",
+      "new": "<title>Polaris: Checked text</title>",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > is a neutral shell: the pinned revision, no file name, no product name, no navigation 85ms"
+      ]
+    },
+    {
+      "mutant": "file-name-shown",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "Checked against the pinned revision <code>${escape(heading.pinned)}</code>.",
+      "new": "Checked against the pinned revision <code>${escape(heading.pinned)}</code>; text answer.md.",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > is a neutral shell: the pinned revision, no file name, no product name, no navigation 40ms"
+      ]
+    },
+    {
+      "mutant": "pinned-dropped",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "<code>${escape(heading.pinned)}</code>",
+      "new": "<code></code>",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > is a neutral shell: the pinned revision, no file name, no product name, no navigation 47ms"
+      ]
+    },
+    {
+      "mutant": "claim-outcome-fixed",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "data-outcome=\"${opening.outcome}\">",
+      "new": "data-outcome=\"unanchored\">",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > marks each claim in place, escaped, with its number and outcome 23ms",
+        "\u00d7 the page over a checked text > renders the checker's outcomes, the same as the annotated copy 23ms"
+      ]
+    },
+    {
+      "mutant": "claim-span-never-opened",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "const open = opening === undefined ? ''",
+      "new": "const open = true ? ''",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > marks each claim in place, escaped, with its number and outcome 20ms",
+        "\u00d7 the page over a checked text > renders the checker's outcomes, the same as the annotated copy 22ms"
+      ]
+    },
+    {
+      "mutant": "mark-dropped",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": " <span class=\"mark\">[C${closing.index}: ${closing.outcome}]</span></span>",
+      "new": "</span>",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > marks each claim in place, escaped, with its number and outcome 37ms"
+      ]
+    },
+    {
+      "mutant": "mark-at-first-line",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "const closing = endOf.get(i + 1);",
+      "new": "const closing = startOf.get(i + 1);",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > marks each claim in place, escaped, with its number and outcome 11ms"
+      ]
+    },
+    {
+      "mutant": "withheld-name-words-dropped",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "reference.named === null ? escape(WITHHELD_BY_NAME)",
+      "new": "reference.named === null ? ''",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > lists each claim's results, linking to the claim, and names no path screening withholds by name 46ms"
+      ]
+    },
+    {
+      "mutant": "resolved-path-dropped",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "reference.named.resolved === undefined ? ''",
+      "new": "true ? ''",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > lists each claim's results, linking to the claim, and names no path screening withholds by name 44ms"
+      ]
+    },
+    {
+      "mutant": "tally-outcome-dropped",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "[...CLAIM_OUTCOMES.map(",
+      "new": "[...CLAIM_OUTCOMES.slice(1).map(",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > closes with the tally, the unanchored count, and the item counts 172ms"
+      ]
+    },
+    {
+      "mutant": "tally-total-wrong",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "['total', verified.claims.length]",
+      "new": "['total', verified.tally.unanchored]",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > closes with the tally, the unanchored count, and the item counts 91ms"
+      ]
+    },
+    {
+      "mutant": "unanchored-count-wrong",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "name no file: ${verified.tally.unanchored}.",
+      "new": "name no file: ${verified.claims.length}.",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > closes with the tally, the unanchored count, and the item counts 54ms"
+      ]
+    },
+    {
+      "mutant": "item-counts-dropped",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "${references}${quotations}",
+      "new": "",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > closes with the tally, the unanchored count, and the item counts 30ms"
+      ]
+    },
+    {
+      "mutant": "result-link-broken",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "<a href=\"#claim-${result.index}\">",
+      "new": "<a href=\"#claim\">",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > is a neutral shell: the pinned revision, no file name, no product name, no navigation 5ms",
+        "\u00d7 the checked text as an HTML page > lists each claim's results, linking to the claim, and names no path screening withholds by name 35ms"
+      ]
+    },
+    {
+      "mutant": "quotation-results-dropped",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "...result.quotations.map((state, q) => `<li>quotation ${q + 1}: ${state}</li>`),",
+      "new": "",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > lists each claim's results, linking to the claim, and names no path screening withholds by name 45ms"
+      ]
+    },
+    {
+      "mutant": "unchecked-words-dropped",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "...(result.uncheckedQuotations > 0 ? [`<li>${escape(uncheckedWords(result.uncheckedQuotations))}</li>`] : []),",
+      "new": "",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > lists each claim's results, linking to the claim, and names no path screening withholds by name 38ms"
+      ]
+    },
+    {
+      "mutant": "empty-results-never-said",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "results.length === 0 ?",
+      "new": "results.length < 0 ?",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > says so when no claim names a file or quotes 24ms"
+      ]
+    },
+    {
+      "mutant": "disclosures-dropped",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "${VERIFY_TEXT_DISCLOSURES.map((line) => `<li>${escape(line)}</li>`).join('')}",
+      "new": "",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > states what the checker measures, never whether an unquoted claim is true 32ms"
+      ]
+    },
+    {
+      "mutant": "text-unescaped",
+      "file": "packages/polaris-dossier/src/verify-text-page.ts",
+      "old": "${open}${escape(line)}${close}",
+      "new": "${open}${line}${close}",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > marks each claim in place, escaped, with its number and outcome 14ms",
+        "\u00d7 the checked text as an HTML page > writes a hostile text as text 25ms"
+      ]
+    },
+    {
+      "mutant": "claim-results-unfiltered",
+      "file": "packages/polaris-dossier/src/verify-text.ts",
+      "old": ".filter((claim) => claim.references.length > 0 || claim.uncheckedQuotations > 0)",
+      "new": ".filter(() => true)",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > says so when no claim names a file or quotes 33ms"
+      ]
+    },
+    {
+      "mutant": "claim-results-resolved-always",
+      "file": "packages/polaris-dossier/src/verify-text.ts",
+      "old": "reference.path !== null && reference.path !== reference.written ? { written: reference.written, resolved: reference.path }",
+      "new": "reference.path !== null ? { written: reference.written, resolved: reference.path }",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the checked text as an HTML page > lists each claim's results, linking to the claim, and names no path screening withholds by name 37ms"
+      ]
+    },
+    {
+      "mutant": "split-lines-lf-only",
+      "file": "packages/polaris-dossier/src/verify-text.ts",
+      "old": "const parts = markdown.split(/(\\r\\n|\\r|\\n)/u);",
+      "new": "const parts = markdown.split(/(\\n)/u);",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the annotated copy > keeps each line terminator of the text, CRLF included 8ms"
+      ]
+    }
+  ],
+  "killed": 29,
+  "total": 29,
+  "treeCleanAfter": true
+}
