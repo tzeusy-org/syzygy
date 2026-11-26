@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Generate SEMANTIC-DELTA.md for version 2.NN (figure plan) from the bytes of the predecessor and the new text. Usage: delta.py <worktree>."""
+"""Generate SEMANTIC-DELTA.md for version 2.33 (figure plan) from the bytes of the predecessor and the new text. Usage: delta.py <worktree>."""
 import difflib
 import hashlib
 import pathlib
 import sys
 
 W = pathlib.Path(sys.argv[1])
-PRED = 'openspec/changes/dossier-system-model/proposed/polaris-generation/spec.md'
+PRED = 'openspec/changes/dossier-question-kind-floor/proposed/polaris-generation/spec.md'
 NEW = 'openspec/changes/dossier-figure-plan/proposed/polaris-generation/spec.md'
 pb, nb_ = (W / PRED).read_bytes(), (W / NEW).read_bytes()
 old, new = pb.decode('utf-8').split('\n'), nb_.decode('utf-8').split('\n')
@@ -51,7 +51,7 @@ prev = next(nb[k] for k in range(para_at - 1, -1, -1) if nb[k].strip())
 lead_words = ' '.join(prev.split(' ')[:14])
 sha = lambda b: hashlib.sha256(b).hexdigest()
 
-out = f'''# Version 2.NN semantic delta
+out = f'''# Version 2.33 semantic delta
 
 [Inferred] Candidate agent-decided amendment under VIS-4. No adoption is claimed; this file states exactly what changes so the change is reviewable as one delta (`NORMATIVE-CHANGE-WORKFLOW.md`). Every quoted text and count below was extracted from the bytes by script (a line diff of the requirement block and a word diff of each changed line), not transcribed: `docs/evidence/syzygy-3efd-40/figure_plan_delta.py` writes this file.
 
@@ -61,7 +61,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `{PRED}` (dossier system model version 2.24, row A-64, tag `polaris-dossier-system-model-v2.24`; sha256 `{sha(pb)}`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces that text, composed after version 2.24, the effective REQ-034 on `main` at this writing. The system model of syzygy-3efd.37, drafted in parallel over 2.23, was adopted first as 2.24, so this version recomposes over it and takes schema v13 and brief v19 (`design.md` D1). The version label 2.NN is a placeholder, chosen at adoption. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.24's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `{PRED}` (dossier question-kind floor version 2.32, row A-315, tag `polaris-dossier-question-kind-floor-v2.32`; sha256 `{sha(pb)}`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces that text, composed after version 2.32, the effective REQ-034 on `main` at this writing. It was drafted over 2.22, rebuilt over 2.23 and 2.24, and rebuilt a last time over 2.32 when 2.26, 2.29 and 2.32 landed first (`design.md` D1). Schema v13 (2.26) descends from v10, not from v11 or v12, so schema v14 joins the two lines and brief v22 joins briefs v17 and v18 to brief v21. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.32's, byte for byte.
 
 ## Carried unchanged
 
@@ -69,7 +69,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Amended in place
 
-[Observed] The title and preamble (file head, not requirement text) name version 2.NN. In the requirement, each changed line, with the displaced words and the words that replace them:
+[Observed] The title and preamble (file head, not requirement text) name version 2.33. In the requirement, each changed line, with the displaced words and the words that replace them:
 
 {chr(10).join(amend)}
 
@@ -87,7 +87,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Effect on bytes
 
-[Inferred] As `design.md` D7 states: no rendered byte moves. A schema-v13 draft renders as the same draft would as v12 without `figurePlan`; what is new is check's findings on the plan and the report-only `figureAdvice` member. A draft of schema v12 or earlier keeps every finding and byte but for a `field-version` finding at `$.figurePlan`, and no provider-mode byte changes.
+[Inferred] As `design.md` D7 states: no rendered byte moves. A schema-v14 draft renders as the same draft would without `figurePlan`, under the rules for schemas v12 and v13; what is new is check's findings on the plan, the report-only `figureAdvice` member, and that one draft may now carry both the system model and the worth-knowing mark. A draft of schema v13 or earlier keeps every finding and byte but for a `field-version` finding at `$.figurePlan`, and no provider-mode byte changes.
 '''
 (W / 'openspec/changes/dossier-figure-plan/SEMANTIC-DELTA.md').write_text(out, encoding='utf-8')
 print('changed', len(changed), 'kept', kept, 'paras', len(added_paras), 'scenarios', len(scen))

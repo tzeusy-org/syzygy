@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the version 2.NN MODIFIED REQ-polaris-generation-034 (figure plan) from the version 2.24 bytes by anchored edits (syzygy-3efd.40).
+"""Build the version 2.33 MODIFIED REQ-polaris-generation-034 (figure plan) from the version 2.32 bytes by anchored edits (syzygy-3efd.40).
 
 Every edit asserts its anchor occurs exactly once. Usage: figure_plan_build_spec.py <worktree> <out>.
 """
@@ -8,11 +8,11 @@ import sys
 
 W = pathlib.Path(sys.argv[1])
 out = pathlib.Path(sys.argv[2])
-src = (W / 'openspec/changes/dossier-system-model/proposed/polaris-generation/spec.md').read_text(encoding='utf-8')
+src = (W / 'openspec/changes/dossier-question-kind-floor/proposed/polaris-generation/spec.md').read_text(encoding='utf-8')
 text = src
 
 # The successor's numbers, kept symbolic so a rebuild over a later predecessor is a change of these constants and the anchors alone.
-NUMS = {'<S>': '13', '<PS>': '12', '<B>': '19', '<PB>': '18', '<PV>': '2.24'}
+NUMS = {'<S>': '14', '<PS>': '13', '<B>': '22', '<PB>': '21', '<PV>': '2.32'}
 
 
 def sym(s):
@@ -33,37 +33,43 @@ def replace(old, new):
 
 
 lines = text.split('\n')
-assert lines[0].startswith('# Dossier system model'), lines[0]
-assert lines[2].startswith('Candidate version 2.24;'), lines[2][:40]
+assert lines[0].startswith('# Dossier question-kind floor'), lines[0]
+assert lines[2].startswith('Candidate version 2.32.'), lines[2][:40]
 lines[0] = '# Dossier figure plan: the pictures planned before the prose, and advice on figures that carry too little'
 lines[2] = ("Candidate version 2.NN; binds nothing until its agent adoption row in AGENT-ADOPTIONS.md and its version tag. One MODIFIED "
-            "requirement, REQ-polaris-generation-034, whose complete text below replaces the effective text that system model version "
-            "<PV> gave it. Draft schema v<S> carries a required figure plan: for the overview, each section and each deep dive, the one "
+            "requirement, REQ-polaris-generation-034, whose complete text below replaces the effective text that question-kind floor "
+            "version <PV> gave it. Draft schema v<S> joins the two schemas that descend from v10, the containment kind and system model "
+            "of v11 and v12 and the worth-knowing mark and question kinds of v13, and carries a required figure plan: for the overview, each section and each deep dive, the one "
             "question a picture answers better than text, the figure kind it needs and the diagram that answers it, or why that place has "
             "no figure. Check refuses a plan that does not name every place once or whose figure is not the one drawn there, and advises, "
             "gating nothing, on a figure that is a chain of three or fewer, one that draws nothing another figure does not, and one that "
-            "draws a part of the system beside a part within it without a contains arrow or a nesting between them. The plan renders nowhere, and brief v<B> asks for it. "
+            "draws a part of the system beside a part within it without a contains arrow or a nesting between them. The plan renders nowhere. "
+            "Brief v<B> is brief v<PB> with the containment and system-model paragraphs of briefs v17 and v18 and one paragraph asking for the plan. "
             "Every other sentence and scenario of the predecessor is carried unchanged; the exact changes are in SEMANTIC-DELTA.md. "
             "Unmentioned effective requirements are unchanged.")
 text = '\n'.join(lines[:2] + [sym(lines[2])] + lines[3:])
 
 # The brief-version list, the schema each brief issues and the schemas accepted (the v5 paragraph).
-replace('from version 2.23 as `polaris-dossier-brief-v17` and from version 2.24 as `polaris-dossier-brief-v18`, each with the same '
-        'readability guidance,',
-        'from version 2.23 as `polaris-dossier-brief-v17`, from version 2.24 as `polaris-dossier-brief-v18` and from version 2.NN as '
+replace('from version 2.24 as `polaris-dossier-brief-v18` from version 2.26 as `polaris-dossier-brief-v19`, and from version 2.29 as '
+        '`polaris-dossier-brief-v20`, each with the same readability guidance,',
+        'from version 2.24 as `polaris-dossier-brief-v18`, from version 2.26 as `polaris-dossier-brief-v19`, from version 2.29 as '
+        '`polaris-dossier-brief-v20`, from version 2.32 as `polaris-dossier-brief-v21` and from version 2.NN as '
         '`polaris-dossier-brief-v<B>`, each with the same readability guidance,')
-replace('brief v17 issues schema v11 and brief v18 issues schema v12 (below), and a draft in v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 or '
-        'v12 is accepted.',
-        'brief v17 issues schema v11, brief v18 issues schema v12 and brief v<B> issues schema v<S> (below), and a draft in v2, v3, v4, v5, '
-        'v6, v7, v8, v9, v10, v11, v12 or v<S> is accepted.')
+replace('brief v18 issues schema v12 and briefs v19 and v20 issue schema v13 (below), and a draft in v2, v3, v4, v5, v6, v7, v8, v9, '
+        'v10, v11, v12 or v13 is accepted.',
+        'brief v18 issues schema v12, briefs v19, v20 and v21 issue schema v13 and brief v<B> issues schema v<S> (below), and a draft in '
+        'v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 or v<S> is accepted.')
 
-# The figure-plan paragraphs, after the system model's earlier-schema paragraph (version 2.24).
-ANCHOR = ('The provider mode is unaffected: the provider stages\' closed draft schema gains no member, and the rendered bytes the '
-          'provider golden pins do not change.')
+# The figure-plan paragraphs, after the brief v21 paragraph (version 2.32).
+ANCHOR = ('which stay out of every authoring text (the comprehension-regression rule of `CONTRIBUTING.md`).')
 KINDS = ('`flow`, `lifecycle`, `state-machine`, `boundary`, `dependency`, `placement`, `sequence`, `swimlane` and `containment`')
 PARAGRAPHS = [
     # P1: the schema.
-    "A draft in schema `polaris-dossier-local-draft-v<S>` (version 2.NN) is a schema-v<PS> draft in every respect but one: it SHALL carry a "
+    "A draft in schema `polaris-dossier-local-draft-v<S>` (version 2.NN) joins the two schemas that descend from schema v10. It is a "
+    "schema-v12 draft in every respect, with the containment kind of version 2.23 and the model and views of version 2.24, that MAY also "
+    "carry every member a schema-v13 draft may carry, the worth-knowing mark of version 2.26 (`worthKnowing` on a claim block and "
+    "`worthKnowingNone` on a Pole) and the `questionKinds` of version 2.32, each where and as a v13 draft may and under every rule this "
+    "requirement states for it there, and it SHALL carry one member more, a "
     "top-level member `figurePlan`, the authoring session's figure plan, written before the prose: for each place a figure can be homed, "
     "the one question a picture there answers better than text and the kind of figure it needs, or why that place has none. The places "
     "are the overview, each section and each deep dive of the draft, each written as a v5 `home` names it: `{\"kind\": \"overview\"}`, "
@@ -82,7 +88,13 @@ PARAGRAPHS = [
     "renders it; `machine.json`, `dossier.json`, `derived-structure.json` and the size report carry none of it; and it enters no claim "
     "count, claim list, fidelity entry or reading ledger. Whether a planned question is the right one, and whether an omission's reason "
     "holds, are the authoring session's judgement and the rendered-design review's, never a check. Every rule this requirement and "
-    "REQ-polaris-generation-035 state for a schema-v<PS> draft holds for a schema-v<S> draft.",
+    "REQ-polaris-generation-035 state for a schema-v12 draft holds for a schema-v<S> draft, and so does every rule they state for a "
+    "schema-v13 draft's worth-knowing mark, its findings, its advice and its callout, and for `questionKinds` and its advice: wherever "
+    "such a rule names schema v13 alone, as the worth-knowing advice, the callout and the question-kind advice do, it SHALL read "
+    "schema v13 or v<S>. The v<S> schema document admits `worthKnowing`, `worthKnowingNone` and `questionKinds` where and as the v13 "
+    "document does, and the containment kind, `model` and `view` where and as the v12 document does. A plan entry's `question` is the "
+    "authoring session's own words and none of the six question kinds of version 2.32: rule `question-kind-floor` reads no plan entry "
+    "and counts no diagram, a diagram being no claim block it counts, and a `figurePlan` entry is never a `questionKinds` object.",
     # P2: the findings.
     "For a v<S> draft Syzygy SHALL report these repair findings, each of kind `figure-plan` unless another kind is named, with the "
     "literal detail given. At `$.figurePlan` where the member is absent, with the detail `` a v<S> draft plans its figures: one "
@@ -176,7 +188,9 @@ PARAGRAPHS = [
     "about the figures.",
     # P4: the brief.
     "Brief v<B> SHALL issue schema v<S>; it is brief v<PB> changed only in its version line, its draft-schema line, which names schema v<S> "
-    "and that schema's digest, and one paragraph placed immediately after the system-model paragraph brief v<PB> carries, which reads: "
+    "and that schema's digest, and three paragraphs: immediately after the hero paragraph brief v<PB> carries, the containment paragraph "
+    "brief v17 carries, word for word; immediately after that, the system-model paragraph brief v18 carries, word for word; and "
+    "immediately after that, one paragraph which reads: "
     "\"Plan the figures before you write the prose, in `figurePlan`: one entry for the overview, each section and each deep dive, its "
     "`home` written as a diagram's `home` is. For each place, write the one question a picture there answers better than text in "
     "`question`, the figure kind it needs in `kind`, and the diagram that answers it in `figure`, homed there and of that kind; for a "
@@ -185,16 +199,19 @@ PARAGRAPHS = [
     "instead. The plan is not published. A draft whose plan misses a place, names one twice or names a figure that is not the one drawn "
     "there is refused; check only advises where a figure is a chain of three or fewer, draws nothing another figure does not, or draws "
     "a part beside a part of it, by `unit` or `parent`, without showing that one holds the other.\" Every statement above of what "
-    "brief v<PB> carries, equals or differs by holds of brief v<B> apart from those three differences.",
+    "brief v<PB> carries, equals or differs by holds of brief v<B> apart from those five differences. The success report and the brief "
+    "record SHALL name brief v<B>.",
     # P5: earlier schemas, the rendered bytes, the provider.
     "A draft in schema v<PS> or earlier SHALL be checked and rendered exactly as version <PV> checks and renders it, the same findings and "
     "the same bytes of every page, of `machine.json` and of every record check writes, and its check's report carries no "
     "`figureAdvice`, except that a `field-version` finding at `$.figurePlan`, with the detail `` `figurePlan` needs draft schema "
     "polaris-dossier-local-draft-v<S> ``, stands in place of the `schema` finding at that path for a draft that carries `figurePlan`; "
     "wherever this requirement says that a draft of an earlier schema is checked or rendered exactly as an earlier version checks or "
-    "renders it, that exception holds too. The plan and the advice move no rendered byte: a v<S> draft's pages, `machine.json`, "
-    "`dossier.json` and size report are those the same draft gives as a v<PS> draft without `figurePlan`, apart from any byte that names "
-    "the draft's schema or digest, and its reading ledger is that draft's. The provider mode is unaffected: the provider stages' closed "
+    "renders it, that exception holds too. A v13 draft that carries a containment diagram, a `model` or a `view` keeps the `schema` "
+    "finding version 2.26 gives it there: only schema v<S> joins them to the worth-knowing mark. The plan and the advice move no "
+    "rendered byte: Syzygy SHALL render a v<S> draft's pages, `machine.json`, `dossier.json` and size report exactly as it renders, under "
+    "the rules this requirement states for schemas v12 and v13, the same draft without `figurePlan`, apart from any byte that names the "
+    "draft's schema or digest, and its reading ledger is that draft's. The provider mode is unaffected: the provider stages' closed "
     "draft schema gains no `figurePlan`, and the rendered bytes the provider golden pins do not change. The migration of version 2.24 "
     "is unchanged and yields a schema-v<PS> draft; no migration yields a v<S> draft, a figure plan being the authoring session's to "
     "write.",
@@ -202,7 +219,7 @@ PARAGRAPHS = [
 replace(ANCHOR, ANCHOR + '\n\n' + '\n\n'.join(PARAGRAPHS))
 
 # Scenarios, after version 2.23's last scenario and before the Form block that follows it.
-LAST = '#### Scenario: Brief v18 states the system model'
+LAST = '#### Scenario: Brief v21 teaches the six kinds'
 once(LAST)
 head, tail = text.split(LAST, 1)
 form_at = tail.index('\nForm: event-response.\n')
@@ -211,7 +228,7 @@ SCENARIOS = r'''
 
 - **WHEN** a schema-v<S> draft with one section `write-path` and one deep dive `replication` carries a `figurePlan` of three entries: `{"home": {"kind": "overview"}, "question": "What are the main parts and what surrounds them?", "kind": "boundary", "figure": "system"}`, where `system` is a `boundary` diagram homed on the overview; a planned figure for `{"kind": "section", "target": "write-path"}` of kind `sequence` naming a `sequence` diagram homed in that section; and `{"home": {"kind": "deep-dive", "target": "replication"}, "omitted": "Two steps read better as one sentence."}`
 - **THEN** check reports no `figure-plan`, `unresolved-reference` or `schema` finding for the plan, and the draft proceeds to review
-- **AND** no page, `machine.json`, `dossier.json` or size report carries the text of a `question` or an `omitted`, and every page's bytes equal those of the same draft as schema v<PS> without `figurePlan`, apart from any byte that names the draft's schema or digest
+- **AND** no page, `machine.json`, `dossier.json` or size report carries the text of a `question` or an `omitted`, and every page's bytes equal those Syzygy renders for the same draft without `figurePlan`, apart from any byte that names the draft's schema or digest
 
 #### Scenario: Draft without a figure plan refused
 
@@ -267,10 +284,16 @@ SCENARIOS = r'''
 - **THEN** check passes, the draft proceeds to review, and the advisories are on the report's `figureAdvice` alone: the check record, `run-advice.json`, the reading ledger, the reading difference and every page carry and count none of them
 - **AND** the report of a check of a v<S> draft with a `schema` finding, of a v<PS> draft and of an inventory carries no `figureAdvice` member
 
+#### Scenario: Schema v<S> joins the system model to the worth-knowing mark
+
+- **WHEN** a schema-v<S> draft carries a `model`, a graph diagram and a containment diagram each drawn from a `view`, a section's own paragraph labelled Inferred with one citation and `worthKnowing: true`, a `questionKinds` object naming that paragraph with the kind `mechanism`, and a well-formed `figurePlan` planning both diagrams
+- **THEN** check reports no `schema`, `field-version` or `worth-knowing` finding, its report carries `figureAdvice`, the `worthKnowing` member of `readerAdvice` and `questionKindAdvice`, each view renders as its expansion, and the marked paragraph renders in the page's worth-knowing callout where it is lifted
+- **AND** `questionKindAdvice` counts that paragraph and no diagram or plan entry; the same members in a schema-v13 draft give `schema` findings at the `model` and the views and a `field-version` finding at `$.figurePlan`; and in a schema-v12 draft they give the `field-version` findings at `worthKnowing`, at `$.questionKinds` and at `$.figurePlan`
+
 #### Scenario: Brief v<B> asks for the figure plan
 
 - **WHEN** a run is briefed under this version
-- **THEN** the brief is `polaris-dossier-brief-v<B>`, issuing schema `polaris-dossier-local-draft-v<S>`, and equals brief v<PB> for the same run except its version line, its draft-schema line and the one figure-plan paragraph placed immediately after the system-model paragraph
+- **THEN** the brief is `polaris-dossier-brief-v<B>`, issuing schema `polaris-dossier-local-draft-v<S>`, and equals brief v<PB> for the same run except its version line, its draft-schema line, brief v17's containment paragraph placed immediately after the hero paragraph, brief v18's system-model paragraph immediately after that, and the one figure-plan paragraph immediately after that, and the success report and the brief record name brief v<B>
 '''
 text = head + LAST + tail[:form_at] + '\n' + sym(SCENARIOS).strip('\n') + '\n' + tail[form_at:]
 
@@ -280,28 +303,34 @@ def extend(end, addition):
     replace(end, end[:-1] + addition)
 
 
-extend("and drafts of schema v11 and earlier with and without `model` and `view`.",
+extend("then separately remove only the instruction or restore only the v19 version.",
        "; and, for version 2.NN, schema-v<S> drafts with complete, incomplete, repeated and malformed figure plans, planned figures named, "
        "unresolved, misplaced and of the wrong kind, and omitted places; figures on each side of each advice rule's boundary (a third "
        "and a fourth node, a third edge among three nodes, a third and a fourth step, a second and a third message, a third and a fourth "
        "group; equal, contained, extended and reversed keys and another family; a unit enclosing another with and without a `contains` "
        "arrow, a chain of them or a nesting, a directory that is only a prefix of a path, and an element beside its model parent or "
        "grandparent in a graph view and a containment view); views sharing elements; entries with an unresolved or non-string "
-       "`target`; the same drafts with their draft layer withheld; and drafts of schema v<PS> and earlier with and without `figurePlan`.")
-extend("and the migrated draft and its rendered figures beside the original's.",
+       "`target`; the same drafts with their draft layer withheld; schema-v<S> drafts joining views, a containment, the worth-knowing mark "
+       "and `questionKinds`; and drafts of schema v<PS> and earlier with and without `figurePlan`, `model` and `view`.")
+extend("the check record and step log beside it, and the issued brief v21.",
        "; for version 2.NN, the plan findings with their paths, details and order, the report's `figureAdvice` member, the check record, "
        "`run-advice.json` and reading ledger beside it, the brief v<B> figure-plan paragraph, and the rendered bytes of a v<S> draft beside "
-       "the same draft as v<PS>.")
-extend("figure-fit member and `machine.json` figure entries compared byte for byte with those its original renders.",
+       "the same draft without `figurePlan`, and a v<S> draft's `worthKnowing` advice, callout and `questionKindAdvice` beside the same "
+       "members' in a v13 draft.")
+extend("outside the advice code.",
        "; for version 2.NN, each fixture's expected plan findings and advisories written as literals before check runs, each label key "
-       "computed by hand from each view's expansion, and a v<S> draft's pages compared byte for byte with the same draft rendered as v<PS>.")
-extend("or a provider-mode page, changes a byte other than the `field-version` findings in place of `schema` findings.",
+       "computed by hand from each view's expansion, and a v<S> draft's pages compared byte for byte with the same draft rendered "
+       "without `figurePlan`.")
+extend("or the brief's paragraph names a regression question.",
        "; for version 2.NN, a v<S> draft without a plan, with a place unplanned or planned twice, or with a planned figure that is "
        "missing, homed elsewhere or of another kind proceeds to review; a plan entry's text reaches a page or a published file; an "
        "advisory is a finding, changes an outcome or a record, or is counted by the reading ledger or `run-advice.json`; an advisory "
        "fires on a fixture outside its rule or is missing from one inside it; or a draft of schema v<PS> or earlier changes any finding "
-       "but the `field-version` one at `$.figurePlan`, or any byte.")
+       "but the `field-version` one at `$.figurePlan`, or any byte; a v<S> draft loses the worth-knowing mark, its callout or its advice, "
+       "or the question-kind advice; or the question-kind floor counts a diagram or a plan entry.")
 
+assert '2.NN' not in src and '2.33' not in src
+text = text.replace('2.NN', '2.33')
 out.parent.mkdir(parents=True, exist_ok=True)
 out.write_text(text, encoding='utf-8')
 print('ok', len(src.split('\n')), len(text.split('\n')))
