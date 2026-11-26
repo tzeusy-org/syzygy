@@ -2302,8 +2302,14 @@ describe('check: the worth-knowing mark (schema v13)', () => {
     expect(v13.map(({ kind, at }) => `${kind} ${at}`)).toEqual(['quotation-count $.sections[0].paragraphs[0].quotations', 'path-absent $.sections[0].paragraphs[1].citations[0].path']);
   });
 
-  it('refuses a draft naming v11 or v12, numbers other changes hold and this code does not implement, as an unknown version, never as v10 or v13', async () => {
-    for (const version of ['polaris-dossier-local-draft-v11', 'polaris-dossier-local-draft-v12']) {
+  it('reads a v11 draft (version 2.23) as a known version, before the mark: field-version at the mark, no version finding', async () => {
+    const result = await findingsOf(drafted('polaris-dossier-local-draft-v11', (d) => { d.hero = HERO_OMITTED; d.sections[0].paragraphs[0].worthKnowing = true; }));
+    expect(result.outcome).toBe('findings');
+    expect(listed(result).map(({ kind, at }) => `${kind} ${at}`)).toEqual(['field-version $.sections[0].paragraphs[0].worthKnowing']);
+  });
+
+  it('refuses a draft naming v12, a number another change holds and this code does not implement, as an unknown version, never as v10 or v13', async () => {
+    for (const version of ['polaris-dossier-local-draft-v12']) {
       const result = await findingsOf(drafted(version, (d) => { d.hero = HERO_OMITTED; d.sections[0].paragraphs[0].worthKnowing = true; }));
       expect(result.outcome, version).toBe('findings');
       expect(listed(result).filter(({ at }) => at === '$.schemaVersion'), version).toEqual([{ kind: 'schema', at: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13' }]);
