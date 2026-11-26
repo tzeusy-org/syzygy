@@ -275,8 +275,8 @@
       }
     },
     "POC": {
-      "requirements": 31,
-      "scenarios": 59,
+      "requirements": 32,
+      "scenarios": 61,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -490,6 +490,13 @@
           "scenarios": [
             "Commits that name an item join it",
             "A history that cannot be read is Unknown"
+          ]
+        },
+        "POC-REQ-065": {
+          "name": "Trajectory renders closed work that merged apart from closed work no commit names",
+          "scenarios": [
+            "Closed items read merged by naming convention or closed with no naming commit",
+            "Closed landings are Unknown when the history cannot be read"
           ]
         }
       }
