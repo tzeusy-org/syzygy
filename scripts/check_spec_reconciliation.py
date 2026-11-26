@@ -7263,6 +7263,10 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     qkind_retired = qkind_disposition(tree, qkind_rows_now)
     qkind_records = 2 if qkind_retired else int(bool(qkind_rows_now))
     qkind_subjects = QKIND_BOUND_PARTS if qkind_rows_now and not qkind_retired else 0
+    choice_rows_now = choice_rows(tree)
+    choice_retired = choice_disposition(tree, choice_rows_now)
+    choice_records = 2 if choice_retired else int(bool(choice_rows_now))
+    choice_subjects = CHOICE_BOUND_PARTS if choice_rows_now and not choice_retired else 0
     edit_rows = edit_account_rows(tree)
     edit_retired = edit_account_disposition(tree, edit_rows)
     edit_records = 2 if edit_retired else int(bool(edit_rows))
@@ -7291,8 +7295,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records - step_records - qkind_records
-            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects - step_subjects - qkind_subjects
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records - step_records - qkind_records - choice_records
+            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects - step_subjects - qkind_subjects - choice_subjects
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
             - (DERIVED_BOUND_PARTS if had_derived else 0)

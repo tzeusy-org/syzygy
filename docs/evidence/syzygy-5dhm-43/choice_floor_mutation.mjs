@@ -35,6 +35,10 @@ const MUTANTS = [
   ['nested-citations-ignored', ADVICE, '    else citedPathsIn(member, into);', ''],
   ['singular-dropped', ADVICE, "${onRecord === 1 ? 'choice or trade-off' : 'choices or trade-offs'}", 'choices or trade-offs'],
   ['no-pole-clause-kept', ADVICE, "${group.pole === undefined ? '' : ' citing a file its sections cite'}", ' citing a file its sections cite'],
+  ['deep-dive-ignored', ADVICE, "for (const dive of list(doc['deepDives'])) if (isRecord(dive) && counted.has(text(dive['sectionId']) ?? '')) citedPathsIn(dive, cited);", ''],
+  ['deep-dive-any-pole', ADVICE, "if (isRecord(dive) && counted.has(text(dive['sectionId']) ?? '')) citedPathsIn(dive, cited);", 'if (isRecord(dive)) citedPathsIn(dive, cited);'],
+  ['first-citation-only', ADVICE, "citedPathsIn(entry['citations'] === undefined ? [] : { citations: entry['citations'] }, new Set())", "citedPathsIn({ citations: list(entry['citations']).slice(0, 1) }, new Set())"],
+  ['nesting-ignored', ADVICE, '    else citedPathsIn(member, into);', "    else if (key !== 'children' && key !== 'items' && key !== 'rows') citedPathsIn(member, into);"],
   ['wiring-dropped', ADVICE, '    ...(choiceFloor === undefined ? {} : { choiceFloor }) };', '    };'],
 ].filter(([id]) => only === null || only.has(id));
 
