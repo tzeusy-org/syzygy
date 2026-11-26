@@ -38,7 +38,9 @@ export interface CommitJoinsObserved {
   readonly joined: number;
   /** Commits read whose subject names no served item. */
   readonly unjoined: number;
-  /** Served items that at least one read commit names, by ascending id. */
+  /** Served items that at least one read commit names, by ascending id. A
+   * served item absent here is not observed to have no commits: no read
+   * commit names it, and when `truncated` older history may. */
   readonly items: readonly ItemCommits[];
 }
 
@@ -129,8 +131,9 @@ export function observeCommitJoins(input: ObserveCommitJoinsInput): CommitJoinsR
       byItem.set(id, list);
     }
   }
-  if (read > 0 && lines[0] !== undefined && !lines[0].startsWith(input.revision)) {
-    // The newest commit of a read from the revision is the revision itself.
+  if (lines[0] === undefined || !lines[0].startsWith(`${input.revision}${FIELD_SEP}`)) {
+    // A read from a commit always returns that commit first; an empty read
+    // or any other first row is malformed, never an observed zero.
     return { kind: 'unknown', reason: 'commit-history-malformed' };
   }
   return {

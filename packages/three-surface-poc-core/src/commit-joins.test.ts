@@ -98,6 +98,9 @@ describe('commit joins (POC-REQ-064, syzygy-t3jk.25)', () => {
       ['commit-history-malformed', { repoRoot: '/f', revision: REVISION, workItems: ITEMS, runGit: run([line('not-a-hash', '2026-11-26T00:00:00Z', '[bu-a1]')]) }],
       ['commit-history-malformed', { repoRoot: '/f', revision: REVISION, workItems: ITEMS, runGit: run([line(REVISION, 'yesterday', '[bu-a1]')]) }],
       ['commit-history-malformed', { repoRoot: '/f', revision: REVISION, workItems: ITEMS, runGit: run([line(H2, '2026-11-26T00:00:00Z', '[bu-a1]')]) }],
+      // A malformed hash after a good first row, and an empty read.
+      ['commit-history-malformed', { repoRoot: '/f', revision: REVISION, workItems: ITEMS, runGit: run([line(REVISION, '2026-11-26T00:00:00Z', '[bu-a1]'), line('not-a-hash', '2026-11-25T00:00:00Z', '[bu-a1]')]) }],
+      ['commit-history-malformed', { repoRoot: '/f', revision: REVISION, workItems: ITEMS, runGit: () => '' }],
     ];
     for (const [reason, input] of cases) expect(observeCommitJoins(input)).toEqual({ kind: 'unknown', reason });
   });

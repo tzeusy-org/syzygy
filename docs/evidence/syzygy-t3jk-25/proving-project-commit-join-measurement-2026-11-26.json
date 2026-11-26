@@ -14,8 +14,15 @@
   },
   "rule": {
     "implementation": "packages/three-surface-poc-core/src/commit-joins.ts",
-    "sha256": "3c7839b0d32459b02cb8fd36309ca052a39e9fc73dce775470dbd3dcc4b5c275",
-    "method": "a Python replica of subjectTokens and the bound (git log --max-count=5001 --format=%H%x1f%cI%x1f%s <revision> --); subjects were read in memory and dropped, never written"
+    "sha256": "9f6fd61d2a39dda5adcbd7d5b5387a0349af462a8de09d2f1cd75267b49d70d6",
+    "method": "observeCommitJoins itself (the module at the digest above, run once through tsx with its default git runner over the identifier set), cross-checked by an independent Python replica of the token rule and the bound; both gave the result below. Subjects were read in memory and dropped, never written.",
+    "moduleRunResult": {
+      "read": 5000,
+      "truncated": true,
+      "joined": 3804,
+      "unjoined": 1196,
+      "itemsJoined": 3532
+    }
   },
   "result": {
     "read": 5000,

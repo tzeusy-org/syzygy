@@ -1,0 +1,194 @@
+{
+  "schemaVersion": 1,
+  "record": "rule-6 mutation run over the commit join (POC-REQ-064), syzygy-t3jk.25",
+  "commit": "1eafbd3c2e1ea9fb9a76c15afce13122c4320629",
+  "subjects": [
+    {
+      "path": "packages/three-surface-poc-core/src/commit-joins.ts",
+      "sha256": "3c7839b0d32459b02cb8fd36309ca052a39e9fc73dce775470dbd3dcc4b5c275"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model-slices.ts",
+      "sha256": "cc43855c3a602b7582a23537248d6d3742d5f1362856943704453234363c2e01"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/commit-joins.test.ts",
+      "sha256": "2a2984cd37efbf935012af250a521d19425080fef1ed13e404b8843120c1c684"
+    },
+    {
+      "path": "apps/three-surface-poc/src/trajectory.test.ts",
+      "sha256": "06982f302faae24a8101ef409b68de44d2af6ae1087eae93122e6af33b07eab3"
+    }
+  ],
+  "method": "For each mutant: replace the exact `old` fragment (which must occur once) with `new` in `file` at `commit`, run `npx vitest run` over `tests`, restore the file. A mutant is killed when the run exits non-zero with at least one FAIL line.",
+  "tests": [
+    "packages/three-surface-poc-core/src/commit-joins.test.ts",
+    "apps/three-surface-poc/src/trajectory.test.ts"
+  ],
+  "totals": {
+    "mutants": 14,
+    "killed": 14
+  },
+  "mutants": [
+    {
+      "id": "prefix-token-joins",
+      "file": "packages/three-surface-poc-core/src/commit-joins.ts",
+      "old": "subjectTokens(line.slice(second + 1)).filter((token) => served.has(token))",
+      "new": "subjectTokens(line.slice(second + 1)).flatMap((token) => [...served].filter((id) => token.startsWith(id)))",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > commit joins (POC-REQ-064, syzygy-t3jk.25) > joins each served item to the commits whose subject names it exactly, and keeps no subject"
+      ]
+    },
+    {
+      "id": "case-folded-token-joins",
+      "file": "packages/three-surface-poc-core/src/commit-joins.ts",
+      "old": "subjectTokens(line.slice(second + 1)).filter((token) => served.has(token))",
+      "new": "subjectTokens(line.slice(second + 1)).flatMap((token) => [...served].filter((id) => id.toLowerCase() === token.toLowerCase()))",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > commit joins (POC-REQ-064, syzygy-t3jk.25) > joins each served item to the commits whose subject names it exactly, and keeps no subject"
+      ]
+    },
+    {
+      "id": "punctuation-not-trimmed",
+      "file": "packages/three-surface-poc-core/src/commit-joins.ts",
+      "old": "const token = run.replace(/^[._-]+|[._-]+$/g, '');",
+      "new": "const token = run;",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > subject tokens (POC-REQ-064) > splits on non-identifier characters and trims sentence punctuation, nothing more"
+      ]
+    },
+    {
+      "id": "split-on-whitespace-only",
+      "file": "packages/three-surface-poc-core/src/commit-joins.ts",
+      "old": "subject.split(/[^A-Za-z0-9._-]+/)",
+      "new": "subject.split(/\\s+/)",
+      "killed": true,
+      "failingTests": 4,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > subject tokens (POC-REQ-064) > splits on non-identifier characters and trims sentence punctuation, nothing more",
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > commit joins (POC-REQ-064, syzygy-t3jk.25) > joins each served item to the commits whose subject names it exactly, and keeps no subject",
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > commit joins (POC-REQ-064, syzygy-t3jk.25) > reads at most the bound and says when older history was not read"
+      ]
+    },
+    {
+      "id": "reads-all-refs",
+      "file": "packages/three-surface-poc-core/src/commit-joins.ts",
+      "old": "input.revision, '--',",
+      "new": "'--all', '--',",
+      "killed": true,
+      "failingTests": 2,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > commit joins (POC-REQ-064, syzygy-t3jk.25) > joins each served item to the commits whose subject names it exactly, and keeps no subject",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Commit joins in the observation (POC-REQ-064, syzygy-t3jk.25) > serves the commits that name a served item, read from a real repository at the observed revision"
+      ]
+    },
+    {
+      "id": "bound-dropped",
+      "file": "packages/three-surface-poc-core/src/commit-joins.ts",
+      "old": "for (const line of lines.slice(0, COMMIT_HISTORY_BOUND)) {",
+      "new": "for (const line of lines) {",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > commit joins (POC-REQ-064, syzygy-t3jk.25) > reads at most the bound and says when older history was not read"
+      ]
+    },
+    {
+      "id": "truncation-hidden",
+      "file": "packages/three-surface-poc-core/src/commit-joins.ts",
+      "old": "const truncated = lines.length > COMMIT_HISTORY_BOUND;",
+      "new": "const truncated = false;",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > commit joins (POC-REQ-064, syzygy-t3jk.25) > reads at most the bound and says when older history was not read"
+      ]
+    },
+    {
+      "id": "read-failure-served-as-zero",
+      "file": "packages/three-surface-poc-core/src/commit-joins.ts",
+      "old": "    return { kind: 'unknown', reason: 'commit-history-read-failed' };",
+      "new": "    raw = '';",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > commit joins (POC-REQ-064, syzygy-t3jk.25) > is Unknown, with its closed reason, whenever the join cannot be read at the observed revision"
+      ]
+    },
+    {
+      "id": "malformed-row-accepted",
+      "file": "packages/three-surface-poc-core/src/commit-joins.ts",
+      "old": "    if (!REVISION.test(hash) || !INSTANT.test(at)) return { kind: 'unknown', reason: 'commit-history-malformed' };\n",
+      "new": "",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > commit joins (POC-REQ-064, syzygy-t3jk.25) > is Unknown, with its closed reason, whenever the join cannot be read at the observed revision"
+      ]
+    },
+    {
+      "id": "newest-row-unchecked",
+      "file": "packages/three-surface-poc-core/src/commit-joins.ts",
+      "old": "if (read > 0 && lines[0] !== undefined && !lines[0].startsWith(input.revision)) {",
+      "new": "if (false) {",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > commit joins (POC-REQ-064, syzygy-t3jk.25) > is Unknown, with its closed reason, whenever the join cannot be read at the observed revision"
+      ]
+    },
+    {
+      "id": "revision-unchecked",
+      "file": "packages/three-surface-poc-core/src/commit-joins.ts",
+      "old": "  if (!REVISION.test(input.revision)) return { kind: 'unknown', reason: 'repository-revision-unavailable' };\n",
+      "new": "",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > commit joins (POC-REQ-064, syzygy-t3jk.25) > is Unknown, with its closed reason, whenever the join cannot be read at the observed revision"
+      ]
+    },
+    {
+      "id": "subject-kept",
+      "file": "packages/three-surface-poc-core/src/commit-joins.ts",
+      "old": "      list.push({ hash, at });",
+      "new": "      list.push({ hash, at, subject: line.slice(second + 1) } as CommitJoin);",
+      "killed": true,
+      "failingTests": 2,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > commit joins (POC-REQ-064, syzygy-t3jk.25) > joins each served item to the commits whose subject names it exactly, and keeps no subject",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Commit joins in the observation (POC-REQ-064, syzygy-t3jk.25) > serves the commits that name a served item, read from a real repository at the observed revision"
+      ]
+    },
+    {
+      "id": "unjoined-miscounted",
+      "file": "packages/three-surface-poc-core/src/commit-joins.ts",
+      "old": "    unjoined: read - joined,",
+      "new": "    unjoined: read,",
+      "killed": true,
+      "failingTests": 3,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > commit joins (POC-REQ-064, syzygy-t3jk.25) > joins each served item to the commits whose subject names it exactly, and keeps no subject",
+        "FAIL  |unit| packages/three-surface-poc-core/src/commit-joins.test.ts > commit joins (POC-REQ-064, syzygy-t3jk.25) > reads at most the bound and says when older history was not read",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Commit joins in the observation (POC-REQ-064, syzygy-t3jk.25) > serves the commits that name a served item, read from a real repository at the observed revision"
+      ]
+    },
+    {
+      "id": "model-drops-join",
+      "file": "packages/three-surface-poc-core/src/model-slices.ts",
+      "old": "    commitJoins,\n    materialization,",
+      "new": "    commitJoins: { kind: 'unknown', reason: 'commit-history-read-failed' } as const,\n    materialization,",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Commit joins in the observation (POC-REQ-064, syzygy-t3jk.25) > serves the commits that name a served item, read from a real repository at the observed revision"
+      ]
+    }
+  ]
+}

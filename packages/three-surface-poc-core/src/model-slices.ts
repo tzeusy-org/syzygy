@@ -196,8 +196,9 @@ export function buildTrajectorySlice(input: BuildPocModelInput, seed: SeedObserv
     capturedAt,
     ...(input.runWorkItemQuery === undefined ? {} : { runQuery: input.runWorkItemQuery }),
   });
-  // POC-REQ-064: read inside this observation pass, which runs only when
-  // the daemon starts or an operator re-observes (RFC2-19), never on a merge.
+  // POC-REQ-064: read inside this observation pass, which runs only on a
+  // human-triggered observation or rebuild (daemon start, operator
+  // re-observe, the rebuild after an operator materialize), never on a merge.
   const commitJoins = observeCommitJoins({
     repoRoot: seed.repoRoot,
     revision: input.repositoryRevision,

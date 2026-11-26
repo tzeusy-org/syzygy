@@ -2174,9 +2174,13 @@ the commits that name it by the naming convention (RFC4-22).
   or the newest row is not the pinned revision
   (`commit-history-malformed`). A failed join is never served as an
   observed zero, and a missing join is never fuzzy-matched.
-- **When.** The read runs inside the observation pass, which runs when the
-  daemon starts or an operator re-observes (RFC2-19), never on a merge
-  event. It computes no reconciliation chain state (RFC2-18).
+- **When.** The read runs inside the observation pass, which runs only on a
+  human-triggered observation or rebuild (the daemon starting, an operator
+  re-observing, and the rebuild after an operator materializes), never on a
+  merge event. It computes no reconciliation chain state.
+- **Absence.** A served item with no entry is not observed to have no
+  commits: no commit read names it, and when older history went unread it
+  may be named there. The join serves no per-item Unknown.
 
 - **Scope.** The history read; the token rule; the machine answer's
   `commitJoins`.
@@ -2222,7 +2226,7 @@ the commits that name it by the naming convention (RFC4-22).
 warrants:
   primary: VIS-3
   doctrine: [VIS-2, VIS-3]
-  contracts: [RFC4-22, RFC8-21, RFC2-19]
+  contracts: [RFC4-22, RFC8-21]
   policies: []
   decisions: []
   topology: []
