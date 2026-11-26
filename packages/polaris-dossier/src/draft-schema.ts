@@ -83,6 +83,18 @@ export const WORTH_KNOWING_DESCRIPTION = 'Set true on a cited Inferred block, on
 /** The description of a v13 Pole's `worthKnowingNone`. */
 export const WORTH_KNOWING_NONE_DESCRIPTION = 'Optional. Why no block of this Pole\'s sections carries the worth-knowing mark: no fact you found in them meets the test. Syzygy renders that none was found and never renders this reason; the fidelity reviewer reads it.';
 
+/** The six kinds of newcomer question (REQ-polaris-generation-034 version 2.32, syzygy-5dhm.135), in the comprehension key's order and
+ * spelling: what the project is for, how its parts fit, how it works, why it is built this way, where to change something, and what it
+ * does not do or how it fails. */
+export const QUESTION_KINDS = Object.freeze(['purpose', 'structure', 'mechanism', 'rationale', 'change', 'limits'] as const);
+export type QuestionKind = (typeof QUESTION_KINDS)[number];
+/** The v13 draft's top-level declaration of which question kinds its blocks answer (version 2.32). Inert, like `inventoryOmissions`: it
+ * is optional, never rendered, and nothing but check's advice reads it, so it adds no schema version. */
+export const QUESTION_KINDS_FIELD = 'questionKinds';
+/** At most this many declaration rows. */
+export const QUESTION_KINDS_ROWS = 2000;
+export const QUESTION_KINDS_DESCRIPTION = 'Optional. Each row names, in `blockId`, the `id` of one claim block labelled Inferred, and lists in `kinds` the kinds of newcomer question that block answers: `purpose` (what the project is for), `structure` (how its parts fit), `mechanism` (how it works), `rationale` (why it is built this way), `change` (where to change something) or `limits` (what it does not do and how it fails). `syzygy dossier check` advises, for the whole repository and each major top-level directory, the kinds no block answers. The rows are your own report: they are never rendered and claim nothing about the project.';
+
 /** Choose the v10 form without interpreting unchecked input or accepting extra members. */
 export function heroOf(doc: Readonly<Record<string, unknown>>): { readonly form: 'figure' | 'omitted'; readonly value: unknown } | undefined {
   const hero = doc['hero'];
@@ -384,7 +396,9 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
     // Task routes (the index-and-task-routes change): reader tasks, each a short label phrased as the reader's task and a route of cited steps. In a draft
     // before v5 the member is a field-version finding (check-derive's structure).
     [TASK_ROUTE_FIELD]: list(ref('taskRoute'), TASK_ROUTE_MIN, TASK_ROUTE_MAX),
-  }, ['poles', 'whySection', 'inventoryOmissions', TASK_ROUTE_FIELD]) };
+    // The question-kind declarations (version 2.32): a v13 member, inert; in an earlier draft a field-version finding (check-derive).
+    ...(worthKnowing === 'taken' ? { [QUESTION_KINDS_FIELD]: { ...list(object({ blockId: handle, kinds: { ...list(choice(QUESTION_KINDS), 1, QUESTION_KINDS.length), uniqueItems: true } }), 0, QUESTION_KINDS_ROWS), description: QUESTION_KINDS_DESCRIPTION } } : {}),
+  }, ['poles', 'whySection', 'inventoryOmissions', TASK_ROUTE_FIELD, QUESTION_KINDS_FIELD]) };
 }
 
 /** The schema as the JSON Schema document written to `draft.schema.json`. The internal form already uses JSON Schema's keywords. */

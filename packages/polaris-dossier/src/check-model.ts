@@ -17,6 +17,7 @@ import type { FigureFit, FigureLayout } from './figure-fit.js';
 import type { ReadingDifference, ReadingLedger } from './reading-ledger.js';
 import type { ManifestFacts } from './manifest-facts.js';
 import type { InventoryCoverageAdvice, InventoryOfRecordReader } from './inventory-coverage.js';
+import type { QuestionKindAdvice } from './question-kinds.js';
 
 /** The check's record formats, finding and result types, and the small shared readers; split out of `check.ts` unchanged. */
 
@@ -229,6 +230,9 @@ export interface CheckReportMembers {
   /** The entries of the inventory of record that no block of the draft covers (`inventory-coverage.ts`, syzygy-5dhm.28); on the report,
    * never the record, and never a finding. */
   readonly inventoryCoverageAdvice?: InventoryCoverageAdvice;
+  /** The kinds of newcomer question no declared block answers per major unit (`question-kinds.ts`, syzygy-5dhm.135, version 2.32); on
+   * the report, never the record, and never a finding. */
+  readonly questionKindAdvice?: QuestionKindAdvice;
 }
 
 /** `file` is null where the run file could not be written, `inRun` then the count this check computed for it. */
