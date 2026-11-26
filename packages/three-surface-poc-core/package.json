@@ -9,6 +9,12 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./screening": {
+      "source": "./src/screening.ts",
+      "types": "./dist/screening.d.ts",
+      "import": "./dist/screening.js",
+      "default": "./dist/screening.js"
     }
   },
   "dependencies": {

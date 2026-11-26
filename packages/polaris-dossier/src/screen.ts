@@ -1,6 +1,6 @@
 import { DOSSIER_POLICY_PATH, isEarlierPolicy, readCommittedPolicy, restartExplanation, type PolicyBinding } from './policy-snapshot.js';
 import { classDecision, codeContentExempt, compileEveryOffsetMatcher, deniedDirectory, documentationExempt, readCodeContentExemption, readConfigurationDetectors, readGovernanceTextRule, readProjectDocumentationExemption, readProjectDocumentationRule, readScopeDetectors, readSecondStage, readSecretRedaction, readSourceVisibility, redactBody, redactionFor, type ClassDecision, type PlacementSubject, type SourceVisibility, type PublicSourceContentClass, type RedactionDetector } from '@syzygy/polaris-generation-core/live';
-import { compileDetectors, deniedPathReason, detectSecrets, scanActiveContent, type DeniedPathRules, type SecretDetector } from '@syzygy/three-surface-poc-core';
+import { compileDetectors, deniedPathReason, detectSecrets, scanActiveContent, type DeniedPathRules, type SecretDetector } from '@syzygy/three-surface-poc-core/screening';
 import { isRecord, sha256 } from '@syzygy/support';
 
 /** Classification and screening of every blob Syzygy reads for a check (REQ-polaris-generation-033: "every object SHALL be classified
