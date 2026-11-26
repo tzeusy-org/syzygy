@@ -6,14 +6,16 @@ export {
   GOVERNING_INTENT_UNKNOWN_BASIS,
   governingIntentUnknown,
   observeWorkItems,
+  countWorkItemTitles,
   workItemTitlesDisclosure,
-  workItemTitlesWithheld,
   type GoverningIntentUnknown,
+  type WorkItemTitlesScreened,
   type WorkItemFact,
   type WorkItemsObserved,
   type WorkItemsResult,
   type WorkItemStatus,
 } from './work-items.js';
+export * from './work-item-titles.js';
 export * from './worker-change-observation.js';
 export * from './orrery-projection.js';
 export * from './trajectory-projection.js';

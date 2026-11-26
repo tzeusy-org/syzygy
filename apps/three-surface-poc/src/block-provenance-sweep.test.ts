@@ -209,7 +209,6 @@ describe('POC-REQ-010: the work-item observation states its provenance once', ()
   it('a sampled item matches the database read', () => {
     const { answer } = servedAnswer();
     expect(rowsOf(answer, 'workItems').find((item) => item.id === 'bu-open1')).toEqual({
-      // SEC-5 (syzygy-jytt): the read row's title is never served.
       id: 'bu-open1',
       status: 'open',
       issueType: 'task',
@@ -223,6 +222,8 @@ describe('POC-REQ-010: the work-item observation states its provenance once', ()
         closedReason: 'source-uncaptured-or-unreachable',
         resolutionRoutes: [{ reason: 'source-uncaptured-or-unreachable', route: 'Repair the observer/source; new snapshot', actor: 'operator', verb: 'repair', target: 'evaluation' }],
       },
+      // POC-REQ-063 (syzygy-t3jk.23): the read row's title, admitted by the title policy.
+      title: { text: 'fixture item bu-open1' },
     });
   });
 

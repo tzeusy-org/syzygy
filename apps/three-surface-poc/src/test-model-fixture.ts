@@ -108,7 +108,7 @@ export function fixtureWorkItemRow(
 export const FIXTURE_DOLT_REVISION = '1234567890abcdefghijklmnopqrstuv';
 
 function workItemRevisionWitness(revision: string): Record<string, unknown> {
-  return { revision, id: null, status: null, issue_type: null, priority: null, created_at: null, updated_at: null, closed_at: null };
+  return { revision, id: null, status: null, issue_type: null, priority: null, created_at: null, updated_at: null, closed_at: null, title: null };
 }
 
 export function fixtureWorkItemQuery(
