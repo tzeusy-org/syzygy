@@ -330,6 +330,15 @@ eligibility reason remains visible when a separate edge is unresolved.
 
    When work items are not observed, all five still render, each Unknown.
 
+   The machine answer also joins each served work item to the observed
+   repository's commits that name it (`commitJoins`, POC-REQ-064,
+   `syzygy-t3jk.25`): one bounded `git log` (5,000 commits) from the
+   observed revision, keeping a commit when a subject token equals an item
+   identifier exactly. Only each commit's hash and instant are kept, never
+   its subject; the join is labelled `naming-convention`,
+   `reduced-fidelity`, and is Unknown with its reason when the history
+   cannot be read. The page does not render it yet.
+
    The board then shows two separately honest fields for a work item, not
    one:
    - the worker-change observer's state, saying only what git showed on the

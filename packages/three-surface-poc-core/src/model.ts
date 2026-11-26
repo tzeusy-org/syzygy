@@ -1,3 +1,4 @@
+import type { CommitJoinsResult } from './commit-joins.js';
 import type { CodeStructureResult } from './code-structure.js';
 import { GOVERNING_INTENT_UNKNOWN_BASIS, workItemTitlesDisclosure, type WorkItemsResult } from './work-items.js';
 import type { WorkerChangeResult } from './worker-change-observation.js';
@@ -174,6 +175,9 @@ export interface PocModel {
   readonly surfaces: readonly PocSurface[];
   readonly codeStructure: CodeStructureResult;
   readonly workItems: WorkItemsResult;
+  /** POC-REQ-064 (syzygy-t3jk.25): the observed repository's commits that
+   * name each served item, by the naming convention; no subject is kept. */
+  readonly commitJoins: CommitJoinsResult;
   readonly workerChange: WorkerChangeResult;
   readonly testArtifactVerification: TestArtifactVerificationResult;
   readonly orrery: OrreryProjection;
@@ -431,6 +435,7 @@ export function buildPocModel(input: BuildPocModelInput): PocModel {
     relationships: graph.relationships,
     codeStructure: orrery.codeStructure,
     workItems: trajectory.workItems,
+    commitJoins: trajectory.commitJoins,
     workerChange: trajectory.workerChange,
     testArtifactVerification: trajectory.testArtifactVerification,
     orrery: orrery.orrery,

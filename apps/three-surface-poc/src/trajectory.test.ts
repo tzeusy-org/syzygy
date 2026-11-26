@@ -2020,3 +2020,33 @@ describe('Every Trajectory list names an item with its screened title (POC-REQ-0
     expect(Math.max(...Object.values(sizes))).toBeLessThan(PWB_RESOURCE_LIMITS.maxHumanResponseBytes * 0.9);
   });
 });
+
+// POC-REQ-064 (syzygy-t3jk.25): the observation joins served items to the
+// observed repository's commits by exact identifier tokens, read from the
+// observed revision in the same pass; the machine answer keeps no subject.
+describe('Commit joins in the observation (POC-REQ-064, syzygy-t3jk.25)', () => {
+  it('serves the commits that name a served item, read from a real repository at the observed revision', async () => {
+    const repo = fixtureRepoWithGit(cleanups);
+    const git = (...args: string[]) => execFileSync('git', ['-C', repo.repoRoot, ...args], { encoding: 'utf8' }).trim();
+    git('commit', '-q', '--allow-empty', '-m', 'Land the card [bu-open1] JOINMARKERone');
+    const named = git('rev-parse', 'HEAD');
+    git('commit', '-q', '--allow-empty', '-m', 'Unrelated chore JOINMARKERtwo');
+    const revision = git('rev-parse', 'HEAD');
+    // A commit after the observed revision is never read.
+    git('commit', '-q', '--allow-empty', '-m', 'Later work [bu-progress1] JOINMARKERthree');
+    const model = buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision } });
+    const route = pocRoutes(() => model).find((candidate) => candidate.path === '/api/poc')!;
+    const response = await route.handle({ request: { method: 'GET', path: '/api/poc', query: new URLSearchParams(), headers: {} } });
+    expect(response.status).toBe(200);
+    const body = response.body as string;
+    const joins = (JSON.parse(body) as PocModel).commitJoins;
+    if (joins.kind !== 'observed') throw new Error(`expected observed joins, got ${JSON.stringify(joins)}`);
+    expect([joins.revision, joins.read, joins.joined, joins.unjoined, joins.truncated]).toEqual([revision, 3, 1, 2, false]);
+    expect(joins.items).toHaveLength(1);
+    expect(joins.items[0]!.id).toBe('bu-open1');
+    expect(joins.items[0]!.commits.map((commit) => commit.hash)).toEqual([named]);
+    expect(body).not.toContain('JOINMARKER');
+    expect(body).not.toContain('Land the card');
+    expect(renderTrajectoryPage(model)).not.toContain('JOINMARKER');
+  });
+});

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "record": "POC-REQ-064 token rule measured over the proving project history (syzygy-t3jk.25)",
+  "measuredOn": {
+    "repository": "Butlers (the proving project)",
+    "revision": "74d81c49e0739bd37216cb693c63347b8193f2af",
+    "revisionCommittedAt": "2026-11-25T16:39:21Z"
+  },
+  "identifierSet": {
+    "from": "the Butlers tracker's JSONL export, read 2026-11-26",
+    "sha256": "e2ba253fedea736d575aa23ec67fc78a2772efe4435d18021b22fd0f8beaf84f",
+    "identifiers": 10517,
+    "caveat": "[Inferred] the export may differ from the tracker at its observed Dolt revision; the POC joins against the served items instead"
+  },
+  "rule": {
+    "implementation": "packages/three-surface-poc-core/src/commit-joins.ts",
+    "sha256": "3c7839b0d32459b02cb8fd36309ca052a39e9fc73dce775470dbd3dcc4b5c275",
+    "method": "a Python replica of subjectTokens and the bound (git log --max-count=5001 --format=%H%x1f%cI%x1f%s <revision> --); subjects were read in memory and dropped, never written"
+  },
+  "result": {
+    "read": 5000,
+    "truncated": true,
+    "joined": 3804,
+    "unjoined": 1196,
+    "itemsJoined": 3532,
+    "lastSevenDaysByCommitterDate": {
+      "read": 213,
+      "joined": 76
+    }
+  },
+  "reading": "[Observed] 3,804 of the 5,000 newest commits (76%) name a tracker identifier by the token rule; [Unknown] whether each such commit did the work it names: the join is naming-convention, reduced-fidelity (RFC4-22)."
+}
