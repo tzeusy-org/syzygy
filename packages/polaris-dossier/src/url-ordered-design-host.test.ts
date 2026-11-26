@@ -660,8 +660,10 @@ describe('native authenticated ordered host', { timeout: 180_000 }, () => {
     expect(failure.beganCpuMicroseconds, 'F3-ORDERED-FIRST-REFUSAL/original-cpu-baseline').toBe(result.f.reservedCpu());
     expect(failure.expiresAt, 'F3-ORDERED-FIRST-REFUSAL/original-wall-baseline').toBe(Math.min(result.f.deadline, failure.beganWallMilliseconds + 30_000));
     const early = ['invalid-cpu', 'regressing-cpu', 'invalid-remaining-cpu', 'negative-remaining-cpu', 'private-check-rejection'].includes(scenario);
+    // The ledger captured Date.now before this spy; its monotonic closure
+    // still resolves performance.now dynamically. Count only intercepted reads.
     expect(result.releaseProbe, 'F3-ORDERED-FIRST-REFUSAL/sample-counts').toMatchObject({ cpuReads: scenario === 'ledger-refused' ? 2 : 1, remainingReads: 1,
-      authorityReads: 0, wallReads: early ? 0 : scenario === 'ledger-refused' ? 2 : 1,
+      authorityReads: 0, wallReads: early ? 0 : 1,
       monotonicReads: early || scenario === 'wall-deadline' ? 0 : scenario === 'ledger-refused' ? 2 : 1 });
     if (scenario === 'private-check-rejection') {
       expect(failure, 'F3-ORDERED-FIRST-REFUSAL/private-check-samples-unknown').toMatchObject({
