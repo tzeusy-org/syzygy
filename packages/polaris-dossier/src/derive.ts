@@ -104,10 +104,16 @@ export const secretOrUnder = (segments: readonly string[], isSecretPath: (path: 
  * recognizers (version 2.7) set apart too. */
 export function setApartPath(path: string): boolean {
   const segments = path.split('/');
+  return vendoredOrGeneratedPath(path) || isTest(segments, segments[segments.length - 1]!);
+}
+
+/** Whether rule `vendored-path` v1 or `generated-path` v1 names a path: what the test-name recognizers (version 2.34) set apart, since every
+ * file they read is a test path. */
+export function vendoredOrGeneratedPath(path: string): boolean {
+  const segments = path.split('/');
   const basename = segments[segments.length - 1]!;
   return outermostUnder(segments, VENDORED_PATH.segments) !== undefined || outermostUnder(segments, GENERATED_PATH.segments) !== undefined
-    || (GENERATED_PATH.basenames as readonly string[]).includes(basename) || GENERATED_PATH.suffixes.some((suffix) => basename.endsWith(suffix))
-    || isTest(segments, basename);
+    || (GENERATED_PATH.basenames as readonly string[]).includes(basename) || GENERATED_PATH.suffixes.some((suffix) => basename.endsWith(suffix));
 }
 
 export function deriveStructure(entries: readonly Pick<TreeEntry, 'path' | 'mode'>[], isSecretPath: (path: string) => boolean): StructureRecord {

@@ -9,6 +9,7 @@ import {
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { READABLE_SPACING, layoutDiagram, layoutSequence, layoutSwimlane, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg } from './diagram-layout.js';
+import { TEST_NAMES_LEGEND, TEST_NAMES_PAGE, testNamesMachine, testNamesPage } from './dossier-test-names.js';
 import { FINDING_CSS, FIND_BY_TASK_PAGE, NAME_INDEX_PAGE, NO_TASK_ROUTES, TASK_ROUTES_WITHHELD, buildNameIndex, glossaryDisplayName, glossaryNameForms, indexLinkCount, renderNameIndex, type IndexTarget, type IndexedBlock } from './dossier-finding.js';
 import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureList, regionMarkup } from './dossier-render-local.js';
 import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as escape } from './draft-preview.js';
@@ -872,6 +873,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const standaloneDives = poleSpec === undefined ? diveLinks : [];
   // Both the sidebar and the page turns use this order, including the maps only when the site renders them.
   const maps = local?.derivedStructure !== undefined && local.manifestFacts !== undefined ? { derived: local.derivedStructure, manifests: local.manifestFacts } : undefined;
+  // Version 2.34: the test-names reference page, after the maps, only where the render derived the member and holds a derived record.
+  const testNames = local?.derivedStructure !== undefined && local.testNames !== undefined ? { derived: local.derivedStructure, member: local.testNames } : undefined;
+  const referenceLinks = testNames === undefined ? [] : [TEST_NAMES_PAGE];
   const findingLinks = local === undefined ? [] : [{ path: FIND_BY_TASK_PAGE, title: 'Find by task' }, { path: NAME_INDEX_PAGE, title: 'Index' }];
   const readingGroups = [
     ...[overview, ...findingLinks].map(link => ({ title: link.title, link, dives: [], hue: null })),
@@ -881,7 +885,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       dives: diveLinks.filter(dive => pole.sections.includes(dive.sectionId)),
       hue: pole.hue,
     })),
-    ...[contentsLink, ...standaloneDives, glossaryLink, sourceIndexLink, ...(maps === undefined ? [] : COMPUTED_MAPS)]
+    ...[contentsLink, ...standaloneDives, glossaryLink, sourceIndexLink, ...(maps === undefined ? [] : COMPUTED_MAPS), ...referenceLinks]
       .map(link => ({ title: link.title, link, dives: [], hue: null })),
   ];
   // How the dossier was made stays apart from its subject. The appendix is the last page of the reading order.
@@ -938,6 +942,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // A page citing a redacted file says once what the mark on its citations means (RFC7-34: a visual encoding is legended).
   const legended = (path: string, main: string): string => narrative(path) ? `${READING_LEGEND}${main}`
     : MAP_PATHS.has(path) ? `${MAP_READING_LEGEND}${main}`
+    : testNames !== undefined && path === TEST_NAMES_PAGE.path ? `${TEST_NAMES_LEGEND}${main}`
     : local !== undefined && main.includes('class="redaction-mark"')
     ? `${main}<p class="redaction-legend"><span aria-hidden="true">†N</span> on a citation: N lines of that file are withheld by screening. Its source page marks where.</p>` : main;
   const deferredSourceLeaves = new Map<string, () => string>();
@@ -1132,7 +1137,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
 
   // --- contents
   const contents = `<ol>${local === undefined ? '' : `<li><a href="${FIND_BY_TASK_PAGE}">Find by task</a></li><li><a href="${NAME_INDEX_PAGE}">Index</a></li>`}${(withheld ? [] : draft.sections).map(section => `<li><a href="${escape(sectionHref('contents.html', section.id))}">${escape(section.title)}</a>${draft.deepDives.some(dive => dive.sectionId === section.id && deepPaths.has(dive.id))
-    ? `<ol>${draft.deepDives.filter(dive => dive.sectionId === section.id && deepPaths.has(dive.id)).map(dive => `<li><a href="${escape(href('contents.html', deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}<li><a href="glossary.html">Glossary</a></li><li><a href="sources/index.html">Sources</a></li>${maps === undefined ? '' : COMPUTED_MAPS.map(m => `<li><a href="${m.path}">${m.title}</a></li>`).join('')}${local === undefined ? `${reportItems('contents.html')}</ol>` : `</ol><h2 id="about-this-run">${ABOUT_THIS_RUN}</h2><p>How this dossier was made, apart from what it says about the project.</p><ol>${reportItems('contents.html')}</ol>`}`;
+    ? `<ol>${draft.deepDives.filter(dive => dive.sectionId === section.id && deepPaths.has(dive.id)).map(dive => `<li><a href="${escape(href('contents.html', deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}<li><a href="glossary.html">Glossary</a></li><li><a href="sources/index.html">Sources</a></li>${maps === undefined ? '' : COMPUTED_MAPS.map(m => `<li><a href="${m.path}">${m.title}</a></li>`).join('')}${referenceLinks.map(link => `<li><a href="${link.path}">${link.title}</a></li>`).join('')}${local === undefined ? `${reportItems('contents.html')}</ol>` : `</ol><h2 id="about-this-run">${ABOUT_THIS_RUN}</h2><p>How this dossier was made, apart from what it says about the project.</p><ol>${reportItems('contents.html')}</ol>`}`;
   add('contents.html', 1, 'Contents', `<section id="contents"><h1>Contents</h1>${contents}</section>`);
 
   // --- glossary: inventory terms, each an Inferred claim; for an operator-agent run, the understanding record's terminology
@@ -1258,6 +1263,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     mapFigures = { directories: drawn.directories.figures, units: drawn.units.figures, ci: drawn.ci.figures, infrastructure: drawn.infrastructure.figures };
   }
 
+  // --- the test-names reference page (version 2.34), after the maps.
+  if (testNames !== undefined) add(TEST_NAMES_PAGE.path, 1, TEST_NAMES_PAGE.title, testNamesPage(testNames.member, testNames.derived.revision));
+
   // --- the operator-agent run's own pages: understanding, discovery, clarifications, executions, review
   for (const localPage of localPages) {
     const groups = localPage.groups.map(group => `<section id="${escape(group.id)}" data-reading-level="1" data-topics=""><h2>${escape(group.heading)}</h2><p class="group-note">${escape(group.note)}</p>${group.items.length === 0 ? `<p>${escape(group.empty)}</p>` : `<ul class="local-items">${group.items.map(entry => item(localPage.path, 'li', entry)).join('')}</ul>`}</section>`).join('');
@@ -1324,6 +1332,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       ...(hero === undefined ? {} : { hero: { form: hero.form, diagram: !withheld && hero.form === 'figure' ? hero.diagram : null, rendered: heroRendered } }),
       ...(local.derivedStructure === undefined ? {} : { derivedStructure: derivedMachine(local.derivedStructure) }),
       ...(maps === undefined || mapFigures === undefined ? {} : { computedMaps: computedMapsMachine(maps.derived, maps.manifests, mapFigures) }),
+      ...(testNames === undefined ? {} : { testNames: testNamesMachine(testNames.member) }),
       // Present only for a render holding a sequence or swimlane figure (version 2.5), so every other machine view keeps its bytes.
       ...(figureStructures.length === 0 ? {} : { figureStructures: [...figureStructures].sort((a, b) => a.index - b.index).map(({ entry }) => entry) }),
       // Present only for a schema-v9 draft (version 2.19): each graph edge as drawn, with its relation and witness state. A witnessed edge is

@@ -97,5 +97,30 @@ export const TERRAFORM_CONFIGURATION = { id: 'terraform-configuration', version:
 export const MAKEFILE = { id: 'makefile', version: 1 } as const;
 export const CMAKE_LISTS = { id: 'cmake-lists', version: 1 } as const;
 
+/** The test-name recognizers (REQ-polaris-generation-034 version 2.34, syzygy-5dhm.45), each version 1: the names one admitted test file
+ * declares, read lexically by `test-names-*.ts` with its comments and string interiors blanked first, so a name inside a comment or a
+ * string is never one. They read bodies, so they are outside `DERIVE_RULES`, as the manifest recognizers are. A change to a path rule or to
+ * what a recognizer matches is a new version. */
+export const PYTEST_TEST_NAME = {
+  id: 'pytest-test-name', version: 1,
+  /** A candidate: a basename `test_*.py` or `*_test.py`. */
+  prefixes: ['test_'], suffixes: ['_test.py'], extension: '.py',
+} as const;
+export const JS_TEST_CALL = {
+  id: 'js-test-call', version: 1,
+  /** A candidate: a basename whose stem before its extension ends `.test` or `.spec`, or any file of these extensions under `__tests__`. */
+  extensions: ['.js', '.jsx', '.mjs', '.cjs', '.ts', '.tsx', '.mts', '.cts'], stemSuffixes: ['.test', '.spec'], segments: ['__tests__'],
+  /** The calls read: a suite and a test, each optionally followed by one of the listed modifiers. */
+  suites: ['describe', 'fdescribe', 'xdescribe', 'context', 'suite'], tests: ['it', 'test', 'fit', 'xit', 'specify'],
+  modifiers: ['only', 'skip', 'todo', 'concurrent', 'fails', 'sequential'],
+} as const;
+export const GO_TEST_FUNCTION = { id: 'go-test-function', version: 1, suffixes: ['_test.go'] } as const;
+export const JUNIT_TEST_METHOD = {
+  id: 'junit-test-method', version: 1,
+  /** A candidate: a `.java` basename whose stem starts `Test` or ends `Test` or `Tests`. */
+  extension: '.java', stemPrefixes: ['Test'], stemSuffixes: ['Test', 'Tests'],
+  annotations: ['Test', 'ParameterizedTest', 'RepeatedTest', 'TestFactory', 'TestTemplate'],
+} as const;
+
 export const DERIVE_RULES: readonly DeriveRuleId[] = [VENDORED_PATH, GENERATED_PATH, LANGUAGE_BY_EXTENSION, DOCS_TREE, TESTS_PATH, MANIFEST_NAMES, TOP_LEVEL_UNIT, SERVER_ENTRY]
   .map(({ id, version }) => ({ id, version }));

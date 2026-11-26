@@ -20,6 +20,7 @@ import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
+import { deriveTestNames, testNamesUnknown, type TestNames } from './test-names.js';
 import { errno, latestInventorySession, logStep, openRun, promptRecordName, readRecord, type OpenedRun } from './inventory.js';
 import { briefStandardsOf, buildDesignPacket, standardsInput } from './design-review.js';
 import { derivedStructureAt, readCurrencyPolicy, secretPathOf, type CurrencyPolicy } from './derived-record.js';
@@ -209,7 +210,9 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   // Version 2.19 (syzygy-3efd.28): a v9 draft's edges, each decided again by rule `relation-witness` from the facts this render derives itself.
   const edgeRelations = hasRelationForm(doc['schemaVersion'])
     ? edgeRelationsAt({ doc, derivedStructure, manifestFacts, screen, withheld: input.local.withheldElements ?? new Map(), listTree: () => reader.listTree() }) : undefined;
-  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }) } };
+  // Version 2.34 (syzygy-5dhm.45): the declared test names, derived here the same way, for the test-names reference page.
+  const testNames = await renderTestNames(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
+  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }) } };
 
   const renderer = deps.renderer;
   const draw = (local: LocalRenderInput): ReadonlyMap<string, string> | string => {
@@ -338,6 +341,21 @@ export async function renderManifestFacts(clonePath: string, pinned: string, dep
   }
   const manifestReader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(clonePath, '.git'), revision: pinned, maxObjectBytes: MANIFEST_BLOB_LIMIT });
   return deriveManifestFacts({ entries, screen, consented, read: async (manifestPath) => (await manifestReader.readBlobs([manifestPath]))[0]! });
+}
+
+/** The render's own test-names member (version 2.34): as `renderManifestFacts`, each test file read alone through its own pinned reader
+ * whose object bound is `MANIFEST_BLOB_LIMIT`; `unknown` where the tree cannot be listed. */
+export async function renderTestNames(clonePath: string, pinned: string, deps: Pick<RenderDeps, 'openReader'>, screen: DossierScreen,
+  consented: readonly string[] | null, reader: { readonly listTree: () => Promise<readonly TreeEntry[]> }): Promise<TestNames> {
+  let entries: readonly TreeEntry[];
+  try {
+    entries = await reader.listTree();
+  } catch (cause) {
+    if (!(cause instanceof GitObjectReadRefusal)) throw cause;
+    return testNamesUnknown(cause.reason);
+  }
+  const testReader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(clonePath, '.git'), revision: pinned, maxObjectBytes: MANIFEST_BLOB_LIMIT });
+  return deriveTestNames({ entries, screen, consented, read: async (testPath) => (await testReader.readBlobs([testPath]))[0]! });
 }
 
 /** Write the site into a new numbered directory under `site/`, through a staging directory renamed into place only when every file is
