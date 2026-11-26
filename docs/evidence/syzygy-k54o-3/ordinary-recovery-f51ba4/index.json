@@ -1,0 +1,255 @@
+{
+  "subject": "f51ba4da628e2979d33bce310383c97f3dcf3e7e",
+  "tree": "23978ddb54473b95516ca18a3a260273834362ca",
+  "scope": "Original build and uninstrumented selected recovery; complete operator, failed assertion, not F3 acceptance",
+  "caseMilliseconds": 458725.86811399995,
+  "counts": {
+    "numTotalTests": 7,
+    "numPassedTests": 0,
+    "numFailedTests": 1,
+    "numPendingTests": 6,
+    "success": false
+  },
+  "terminalSha256": "cb83a05e05a21dd4fc3029ad5fa89bf77752add84418782c47c39ed8466a9209",
+  "members": [
+    {
+      "path": "actual/build.log",
+      "bytes": 349,
+      "sha256": "76f7a19f422c174c03744f80bd3b23bd943328fb1c2e5deb9cc13d40005cc856"
+    },
+    {
+      "path": "actual/progress.json",
+      "bytes": 2404,
+      "sha256": "964696b170537f156394a0cee769c34fde74ccf8b58e1f40a26af95fc4c5dcf8"
+    },
+    {
+      "path": "actual/recovery.log",
+      "bytes": 983532,
+      "sha256": "494a9b4330f3a95808ed8fd84ef17eb7eb3d93ef1bc4b3c6fbcbd3a5bc61a41b"
+    },
+    {
+      "path": "actual/runtime-after-test.json",
+      "bytes": 186610,
+      "sha256": "8a470231b480cd4c8037a250a8d458104dc4c7b8d6e10e68b4f3c31a373edf6d"
+    },
+    {
+      "path": "actual/runtime-before-test.json",
+      "bytes": 186610,
+      "sha256": "8a470231b480cd4c8037a250a8d458104dc4c7b8d6e10e68b4f3c31a373edf6d"
+    },
+    {
+      "path": "actual/runtime-final.json",
+      "bytes": 186610,
+      "sha256": "8a470231b480cd4c8037a250a8d458104dc4c7b8d6e10e68b4f3c31a373edf6d"
+    },
+    {
+      "path": "actual/terminal.json",
+      "bytes": 313237,
+      "sha256": "cb83a05e05a21dd4fc3029ad5fa89bf77752add84418782c47c39ed8466a9209"
+    },
+    {
+      "path": "actual/vitest.json",
+      "bytes": 310298,
+      "sha256": "b78d823a515a0897ff999d72d1ff34437fc0ed18db682e9df04c4b68d4d26f46"
+    },
+    {
+      "path": "execution-GO.json",
+      "bytes": 790,
+      "sha256": "db234623a1dbd9a2c2886043fdb013b5b72cc7c25635e25444b0f77475141cf5"
+    },
+    {
+      "path": "operators/R1/README.md",
+      "bytes": 3972,
+      "sha256": "0194b9f958f6baf602c5d67e81f89f8e99499a3a4f22b63eb8071dfbeb941caf"
+    },
+    {
+      "path": "operators/R1/SHA256SUMS",
+      "bytes": 656,
+      "sha256": "5472b2b9b4d1b64920f6165a3c159943d74340b607c4d16687d0c2d869890bd6"
+    },
+    {
+      "path": "operators/R1/bindings.json",
+      "bytes": 288912,
+      "sha256": "a81dd55c577ce0d5146ff41f9038b61826b8df05aef28e438e03299ed1d2b9c4"
+    },
+    {
+      "path": "operators/R1/command.sh",
+      "bytes": 333,
+      "sha256": "af942e7364d15df2255777e5c3690f13c480edcbc9360de5fa579b1aab6bf674"
+    },
+    {
+      "path": "operators/R1/inert-check.py",
+      "bytes": 4332,
+      "sha256": "9fe9f31e55693b52fca23c0ce31295da1b674b42438f906cfc3f858ed5e50083"
+    },
+    {
+      "path": "operators/R1/inert-results.json",
+      "bytes": 957,
+      "sha256": "e4b93422ffb962d6926af4eeea5d27894e0047036c8fd65cadc74b08bbbe6765"
+    },
+    {
+      "path": "operators/R1/preparation-checks.json",
+      "bytes": 765,
+      "sha256": "c92bc872a0d416e0ed5cb969b6ef9d7b222b9ee3d7cd685ec8510632c41a6982"
+    },
+    {
+      "path": "operators/R1/run.py",
+      "bytes": 13400,
+      "sha256": "4ce6202f1a721d61e57d8f470b6f504d6483de38943d402d3ab20afa87e10445"
+    },
+    {
+      "path": "operators/R1/subject-change-receipt.json",
+      "bytes": 1341,
+      "sha256": "240011eb28c67881213a92099986958130dac821ed84b963a1e72b7cb745f7af"
+    },
+    {
+      "path": "operators/R2/README.md",
+      "bytes": 5266,
+      "sha256": "05bc9e59326d66c608895d2ff24585e591996466f7e8c3beba7e4556849b793b"
+    },
+    {
+      "path": "operators/R2/SHA256SUMS",
+      "bytes": 924,
+      "sha256": "c24d15dd0d0a639d2e94ac49e8ae82c912f4a9cc19193475db7a4aac8e57f658"
+    },
+    {
+      "path": "operators/R2/bindings.json",
+      "bytes": 650287,
+      "sha256": "f4274ab022b362e9fac534b713842199b1b7f614cb7aed690a1d7d2a1fc2eca9"
+    },
+    {
+      "path": "operators/R2/command.sh",
+      "bytes": 333,
+      "sha256": "52acc085dc9a68e140e7aca5c1cf28b4918ae12ed7d484b10f75b51b8d4d5159"
+    },
+    {
+      "path": "operators/R2/inert-check.py",
+      "bytes": 9428,
+      "sha256": "7ae5b23012ed78d750455da1638cf2f09aca4cb91c544c415500964382179b21"
+    },
+    {
+      "path": "operators/R2/inert-results.json",
+      "bytes": 2721,
+      "sha256": "2402200f4b18a71fc09fceae7931191bd8a99bdaa87f33de4e2ca420f497c0e9"
+    },
+    {
+      "path": "operators/R2/installed-tree-preparation.json",
+      "bytes": 1123,
+      "sha256": "887120d70e248de5d51eab217dc75db8af6818044df34ecee8b0f1d54914ebe2"
+    },
+    {
+      "path": "operators/R2/operator-R1-to-R2.patch",
+      "bytes": 18699,
+      "sha256": "9f21162e452aeb429701adbb77f0ea705d22467115e0974edc0c4e951c9760fe"
+    },
+    {
+      "path": "operators/R2/preparation-checks.json",
+      "bytes": 926,
+      "sha256": "03a65f47d65039c7fc890ee3603e73f08197f35d9f1dba65c0b1bce3d3446816"
+    },
+    {
+      "path": "operators/R2/revision.json",
+      "bytes": 977,
+      "sha256": "7a31fa8c5d7ec59145823822dd41c74a9bf3dd09be6a08aacc53010a6591b8c5"
+    },
+    {
+      "path": "operators/R2/run.py",
+      "bytes": 17059,
+      "sha256": "d6e8232ec5a21b1a632d16e1435a9195b4b39f7341dfad8cfc12ddab826e8e24"
+    },
+    {
+      "path": "operators/R2/subject-change-receipt.json",
+      "bytes": 1341,
+      "sha256": "240011eb28c67881213a92099986958130dac821ed84b963a1e72b7cb745f7af"
+    },
+    {
+      "path": "operators/R3/README.md",
+      "bytes": 6190,
+      "sha256": "9218a4651334c79179546bf9d59ae3956f46a6a7b0d5818333d13a927afa38c1"
+    },
+    {
+      "path": "operators/R3/SHA256SUMS",
+      "bytes": 1108,
+      "sha256": "1ef085941dd614d501e28bff27706761afc9b736d772292dbb913a7d5005aa04"
+    },
+    {
+      "path": "operators/R3/bindings.json",
+      "bytes": 1305223,
+      "sha256": "5b35805b343039a59a55649d1f483d106402b421295cc209d41d595d990370c0"
+    },
+    {
+      "path": "operators/R3/command.sh",
+      "bytes": 333,
+      "sha256": "55947a35c6630e91d568d1a6f59fd88d82eed3ff61235b8eaee4a7f5d016a8a0"
+    },
+    {
+      "path": "operators/R3/global-npm-preparation.json",
+      "bytes": 640,
+      "sha256": "b61913c78bfa2a0ffac3c8464bd342655a142350664188acd32d5e7a882bcbb3"
+    },
+    {
+      "path": "operators/R3/inert-check.py",
+      "bytes": 10420,
+      "sha256": "9c3ea4f9aaf691075ef6a0888588f91e883159219fca7274f530588a42c94572"
+    },
+    {
+      "path": "operators/R3/inert-results.json",
+      "bytes": 3021,
+      "sha256": "b2e8d79b43fd8ecc6a3ad49e50b6d8a35bc33b1c662ab215271699e9ffc2b5fa"
+    },
+    {
+      "path": "operators/R3/installed-tree-preparation.json",
+      "bytes": 1123,
+      "sha256": "887120d70e248de5d51eab217dc75db8af6818044df34ecee8b0f1d54914ebe2"
+    },
+    {
+      "path": "operators/R3/operator-R1-to-R2.patch",
+      "bytes": 18699,
+      "sha256": "9f21162e452aeb429701adbb77f0ea705d22467115e0974edc0c4e951c9760fe"
+    },
+    {
+      "path": "operators/R3/operator-R2-to-R3.patch",
+      "bytes": 2492,
+      "sha256": "5b7e8296c016f06ce82fd66b2de8acbb2dc9faa22a96f16f34bec2b42d673b3c"
+    },
+    {
+      "path": "operators/R3/preparation-checks.json",
+      "bytes": 1027,
+      "sha256": "5f28964578c11fff5d29dbfe5abe72785fb516da7a7e079d559dadf93c10487e"
+    },
+    {
+      "path": "operators/R3/revision.json",
+      "bytes": 971,
+      "sha256": "d559049fae5f1a5242e3a336f00ead6959f769a375219193b73bf319945e3dad"
+    },
+    {
+      "path": "operators/R3/run.py",
+      "bytes": 17284,
+      "sha256": "bd6880ed48bad043778c72d2c46bdb1dcaab7c42609bb755bea119674e452f87"
+    },
+    {
+      "path": "operators/R3/subject-change-receipt.json",
+      "bytes": 1341,
+      "sha256": "240011eb28c67881213a92099986958130dac821ed84b963a1e72b7cb745f7af"
+    },
+    {
+      "path": "reviews/f3-ordinary-recovery-f51-R1-operator-review-RAW.md",
+      "bytes": 6261,
+      "sha256": "e9bfb6fb94e12f1719125ca18428a2efa07d690a3f29c3ffc1bdfc249027fb92"
+    },
+    {
+      "path": "reviews/f3-ordinary-recovery-f51-R2-operator-review-RAW.md",
+      "bytes": 5777,
+      "sha256": "39c2ad43750317f22b43a10e23a650e11e802a7decca2f0dbd5778a27ff16953"
+    },
+    {
+      "path": "reviews/f3-ordinary-recovery-f51-R3-operator-review-RAW.md",
+      "bytes": 4292,
+      "sha256": "7681ea2bc484360543c86e9b7584722fafc56fb91fee417f25ed4b1a4e16d195"
+    }
+  ],
+  "memberCount": 47,
+  "archiveBytes": 842705,
+  "archiveSha256": "4f51763750e0919c08df51a3eb0c54c2d219c10b98670c35888bba2cad3d475a",
+  "allMembersReadbackVerified": true
+}

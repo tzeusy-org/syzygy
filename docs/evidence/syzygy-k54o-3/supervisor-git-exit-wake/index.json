@@ -1,0 +1,1385 @@
+{
+  "subject": "f51ba4da628e2979d33bce310383c97f3dcf3e7e",
+  "scope": "Scoped native fix: actual19/19/typecheck and5assertionkills; original recovery/full gate Unknown; incomplete operators retained",
+  "members": 275,
+  "archiveBytes": 3426776,
+  "archiveSha256": "d994e033357fd28361b85c3be9110fe6fab43bc967ea719ace17f107f8ff323a",
+  "rows": [
+    {
+      "path": "actual/micro-complete/checkout.log",
+      "bytes": 81,
+      "sha256": "3409203772a8d5d3298bb963a628b7cfe1945012a8315917893b07baeb6964c2"
+    },
+    {
+      "path": "actual/micro-complete/clone.log",
+      "bytes": 140,
+      "sha256": "77d258747ea45543b08641e5aab620146c123cff0485180eb0ae1ee5ecb24b27"
+    },
+    {
+      "path": "actual/micro-complete/commands.json",
+      "bytes": 4383,
+      "sha256": "c6ebb8ef36bdbf57ec144079f4570570b1166cf4a701e2566c3f580fa06f82da"
+    },
+    {
+      "path": "actual/micro-complete/diagnostic-focused.log",
+      "bytes": 33634,
+      "sha256": "5b0da9f5a47453337a41de0b13ca16b5b744f081a2e5911c8d00ff1cf22f6de1"
+    },
+    {
+      "path": "actual/micro-complete/diagnostic-vitest.json",
+      "bytes": 6982,
+      "sha256": "4cc6fcc98d5189c35dbca2f8ec9d1e4cbf74ca8def7073e82afadac3c27be3d7"
+    },
+    {
+      "path": "actual/micro-complete/esbuild-postinstall.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "actual/micro-complete/install.log",
+      "bytes": 26,
+      "sha256": "cde4b333b0ffb7e00c902a82cb88b929806847a8160731227c9ecb24ed868161"
+    },
+    {
+      "path": "actual/micro-complete/metrics.json",
+      "bytes": 38637,
+      "sha256": "035718475235f52b9a2f3e82437ffb92a604b07b5231be06da0a179cd372ef29"
+    },
+    {
+      "path": "actual/micro-complete/node-version.log",
+      "bytes": 8,
+      "sha256": "6f04c633350579b737efe7ea4c4c02ffd9f9081ca024378e28970231550211d4"
+    },
+    {
+      "path": "actual/micro-complete/original-focused.log",
+      "bytes": 4114,
+      "sha256": "ae8c11cfc3fcb994f9967ab68a2fc5df7c462b76734398a7acf496b5020a529d"
+    },
+    {
+      "path": "actual/micro-complete/original-vitest.json",
+      "bytes": 6983,
+      "sha256": "3811839e2b93e8c655387d75153dbc3a14cdedec40bd4585ea4aae6147939363"
+    },
+    {
+      "path": "actual/micro-complete/result.json",
+      "bytes": 5826,
+      "sha256": "1d6018433771d99392b02fd5be2ffb1dcc084bf0aa4ec3271e40d05fa4fa9c86"
+    },
+    {
+      "path": "actual/micro-complete/summary.json",
+      "bytes": 589,
+      "sha256": "58c1fb41d0a640d208de8b8d7905a11b03ce4f4ca447c5a2418247e8ffb65741"
+    },
+    {
+      "path": "actual/micro-complete/terminal.json",
+      "bytes": 2538,
+      "sha256": "49283caee2049e8f9af57900a4e7f1bea0b8db3e114f516b065da45cac28a18b"
+    },
+    {
+      "path": "actual/micro-incomplete/checkout.log",
+      "bytes": 81,
+      "sha256": "3409203772a8d5d3298bb963a628b7cfe1945012a8315917893b07baeb6964c2"
+    },
+    {
+      "path": "actual/micro-incomplete/clone.log",
+      "bytes": 140,
+      "sha256": "446b51403058f4beb56123f68fd666c25df69f67d08414ec06b2fd259027da66"
+    },
+    {
+      "path": "actual/micro-incomplete/commands.json",
+      "bytes": 2159,
+      "sha256": "346aaa7942732706b592a9859f71842f6cca1680385118a92954a2f5b380a76a"
+    },
+    {
+      "path": "actual/micro-incomplete/incomplete.json",
+      "bytes": 2524,
+      "sha256": "5601a6eeef9437034fd97d66aa5af03d93cd40b65808d0cd07fd0d22480603f4"
+    },
+    {
+      "path": "actual/micro-incomplete/install.log",
+      "bytes": 26,
+      "sha256": "cde4b333b0ffb7e00c902a82cb88b929806847a8160731227c9ecb24ed868161"
+    },
+    {
+      "path": "actual/micro-incomplete/node-version.log",
+      "bytes": 8,
+      "sha256": "6f04c633350579b737efe7ea4c4c02ffd9f9081ca024378e28970231550211d4"
+    },
+    {
+      "path": "actual/micro-incomplete/terminal.json",
+      "bytes": 1449,
+      "sha256": "1cf695507165146716413a528351730af1ac7676ade119facd87097861ea0fc5"
+    },
+    {
+      "path": "actual/owning-continuation/commands.json",
+      "bytes": 9923,
+      "sha256": "e0a5aeb1e9865980e7a73e9afb05d33aa1fe481cabb78fa0edccb10547b55dbe"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-ignore-acquisition-failure-assessment.json",
+      "bytes": 1650,
+      "sha256": "78ec53e9d609a63f5d40c53642b1cec3838e7fbc05389c9b7f1dd96653f433cf"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-ignore-acquisition-failure-observed-counts.json",
+      "bytes": 1719,
+      "sha256": "c5172f12177f5c62d06dab8cf33f8a7cce6c67108a01f63128269f1f58bcbe1a"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-ignore-acquisition-failure.json",
+      "bytes": 8136,
+      "sha256": "c65ae1a14f96588c9fda4e8177d968799435fcb2ada5239359e0f969916b148d"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-ignore-acquisition-failure.log",
+      "bytes": 5630,
+      "sha256": "deb61c4540baa318ab585165272a5e9fbac5d9bc784da17aef4b4bce776dddba"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-ignore-poll-error-assessment.json",
+      "bytes": 1053,
+      "sha256": "ffa9db29796493e8258e4c4cbbc0c1827e773d568e60f4d2164200e0bb5e06fc"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-ignore-poll-error-observed-counts.json",
+      "bytes": 1122,
+      "sha256": "b9b88d1eb19de8dd20c7e373b6fbdff2b787ca12ba83ec29d95c0511e559366c"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-ignore-poll-error.json",
+      "bytes": 7583,
+      "sha256": "6f02bd3724cbff6f2c0b270f28109ac41a36a9cd2ecb2173405ee635d835c5ba"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-ignore-poll-error.log",
+      "bytes": 5161,
+      "sha256": "cf32cf8de64957f71b1544d5a8694296e2d56674bf2a31369e2a116e098b020f"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-keep-exited-wake-fd-assessment.json",
+      "bytes": 1057,
+      "sha256": "395358f36754703fc8df5482700811654fca82f63bc0725998c740140d406332"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-keep-exited-wake-fd-observed-counts.json",
+      "bytes": 1126,
+      "sha256": "503ce158e4f37d1fbe50f3848f274cda929163c75280f4288c1120eb2dc879c0"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-keep-exited-wake-fd.json",
+      "bytes": 7586,
+      "sha256": "7fe8e040adf378242aa3f3b18db7a8869606d815db17948e7cdb6f0d1b8caac4"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-keep-exited-wake-fd.log",
+      "bytes": 5206,
+      "sha256": "9ccc54aece015d066d8e8bded79ff6bfe9a2a580d997b1c73bd1fb459eb34528"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-leak-common-close-assessment.json",
+      "bytes": 1051,
+      "sha256": "2ccf16a14b58c08a0df8fb4f6bfe70e3f7137a3a9d633625854a5d4ae8bc0dbc"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-leak-common-close-observed-counts.json",
+      "bytes": 1120,
+      "sha256": "cbf791abf45c2119475c61e6dd75f99005efef7f3777668b2fc59ab2496f54ae"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-leak-common-close.json",
+      "bytes": 7582,
+      "sha256": "248ff13465d55de1a495af58c4083cb93ae61ea8567831da9c9841f9345ea3a0"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-leak-common-close.log",
+      "bytes": 5148,
+      "sha256": "68f3d23bfe0ac84dfc2ed8b6f072c14fb47107e0f751997969404d6db8c3db01"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-predecessor-assessment.json",
+      "bytes": 1558,
+      "sha256": "829ae8409a9803458d4871dd538bf683fb90b37bbc136219f306508101c3fe70"
+    },
+    {
+      "path": "actual/owning-continuation/mutant-predecessor-observed-counts.json",
+      "bytes": 1627,
+      "sha256": "d910ad6a9a63c2b0247be4050a3a448f6d3752b4a5cca049de812ea6075f9592"
+    },
+    {
+      "path": "actual/owning-continuation/owning-assessment.json",
+      "bytes": 421,
+      "sha256": "01115e186783b96022fdef609156adafaa32d9cf3eee2e2b5f3f10a4eb17f74c"
+    },
+    {
+      "path": "actual/owning-continuation/owning-observed-counts.json",
+      "bytes": 489,
+      "sha256": "c203abb51d88eebcb8600c09b45a19d0afc0e0e0582b40889eda67959fb9cae8"
+    },
+    {
+      "path": "actual/owning-continuation/progress.json",
+      "bytes": 15191,
+      "sha256": "9cc4bd31480bca054016ddf222bc2ec77a57f567037e4126c9dfb0f8e5d76550"
+    },
+    {
+      "path": "actual/owning-continuation/runtime-after.json",
+      "bytes": 2577,
+      "sha256": "740c7aafbc1fd3b5d32dac6d0ea7a6c4d1066c8775ec9c1838131049e0da5174"
+    },
+    {
+      "path": "actual/owning-continuation/runtime-before.json",
+      "bytes": 2577,
+      "sha256": "740c7aafbc1fd3b5d32dac6d0ea7a6c4d1066c8775ec9c1838131049e0da5174"
+    },
+    {
+      "path": "actual/owning-continuation/source-after.json",
+      "bytes": 3106960,
+      "sha256": "8c138e2d3eac8460c8e35f7c22e79ace222181ca8231b6eb1abfb8cbda2c1647"
+    },
+    {
+      "path": "actual/owning-continuation/source-before.json",
+      "bytes": 3106960,
+      "sha256": "8c138e2d3eac8460c8e35f7c22e79ace222181ca8231b6eb1abfb8cbda2c1647"
+    },
+    {
+      "path": "actual/owning-continuation/subject.json",
+      "bytes": 915,
+      "sha256": "30d5cb386cb20f1b1f9615280fadddd5b3512025e12339c6a6c9503d1aa1074e"
+    },
+    {
+      "path": "actual/owning-continuation/terminal.json",
+      "bytes": 30435,
+      "sha256": "66d3d3a48d12355d92772c3d1054dc60a94b0e311fb22b67e51f86abde8236f9"
+    },
+    {
+      "path": "actual/owning-incomplete/commands.json",
+      "bytes": 5860,
+      "sha256": "a122d915623b6656a3139a87384d73dbc50662f680838aa80a3a9d43d0c0e410"
+    },
+    {
+      "path": "actual/owning-incomplete/mutant-predecessor-observed-counts.json",
+      "bytes": 1487,
+      "sha256": "9102ab99d1ed4689880da19b00d1faa607c74bc69b9350a694052f8a82381aa0"
+    },
+    {
+      "path": "actual/owning-incomplete/mutant-predecessor.json",
+      "bytes": 8060,
+      "sha256": "3a15ca675a893aa28803a76cd705fc356a9f07697923db66eea495eeaa762b8a"
+    },
+    {
+      "path": "actual/owning-incomplete/mutant-predecessor.log",
+      "bytes": 5615,
+      "sha256": "1934da81fa1a44ab85459e43ff0753f8c1b7fe44107ccad721e71edee651207d"
+    },
+    {
+      "path": "actual/owning-incomplete/owning-assessment.json",
+      "bytes": 281,
+      "sha256": "dfa797161771de695cc9212aec22c43e60038ce1ae2c2a0549003101c6bc431e"
+    },
+    {
+      "path": "actual/owning-incomplete/owning-observed-counts.json",
+      "bytes": 349,
+      "sha256": "395babfccb62d13fdd8e27e292f69f51ee292a3dae4d1558643b7584e63a6e06"
+    },
+    {
+      "path": "actual/owning-incomplete/owning.json",
+      "bytes": 7784,
+      "sha256": "eba163e9f72c6475df3e62d24e2e0ba4c395f2007a91ac68880912b3830db209"
+    },
+    {
+      "path": "actual/owning-incomplete/owning.log",
+      "bytes": 4329,
+      "sha256": "21fb6f96615cf54ff4d099833d4a71266c87f3ecb2282341ed654b898367bd65"
+    },
+    {
+      "path": "actual/owning-incomplete/progress.json",
+      "bytes": 28531,
+      "sha256": "6a7a09312691d9408b06a5c5104b263498dda4b094bd4bbc66a55c96b20cdc5f"
+    },
+    {
+      "path": "actual/owning-incomplete/runtime-after.json",
+      "bytes": 2577,
+      "sha256": "740c7aafbc1fd3b5d32dac6d0ea7a6c4d1066c8775ec9c1838131049e0da5174"
+    },
+    {
+      "path": "actual/owning-incomplete/runtime-before.json",
+      "bytes": 2577,
+      "sha256": "740c7aafbc1fd3b5d32dac6d0ea7a6c4d1066c8775ec9c1838131049e0da5174"
+    },
+    {
+      "path": "actual/owning-incomplete/source-after.json",
+      "bytes": 3106960,
+      "sha256": "8c138e2d3eac8460c8e35f7c22e79ace222181ca8231b6eb1abfb8cbda2c1647"
+    },
+    {
+      "path": "actual/owning-incomplete/source-before.json",
+      "bytes": 3106960,
+      "sha256": "8c138e2d3eac8460c8e35f7c22e79ace222181ca8231b6eb1abfb8cbda2c1647"
+    },
+    {
+      "path": "actual/owning-incomplete/subject.json",
+      "bytes": 915,
+      "sha256": "d187ae08245ebebf16c373929d70c29cb142ff63f97a4cdb80f8207ecf191022"
+    },
+    {
+      "path": "actual/owning-incomplete/terminal.json",
+      "bytes": 59643,
+      "sha256": "90c77683478a370d165405e6de6c5520deecc8d7e70c61eceb4ee9868a07df34"
+    },
+    {
+      "path": "actual/owning-incomplete/typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/README.md",
+      "bytes": 5089,
+      "sha256": "f3b16ae3bfde4d27587fd81c43d997202b737b559fa046d4fca13265498c762b"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/SHA256SUMS",
+      "bytes": 2638,
+      "sha256": "121bb1b6d4cbf2250bebdaf83d92fd552e228e72a7619eab4d1e4e7585f642b0"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/command.sh",
+      "bytes": 180,
+      "sha256": "630758614e0dad1785a40d8ad248cfc77253b2016f014402d7b8e766bf4a4e77"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/diagnostic.patch",
+      "bytes": 19130,
+      "sha256": "517df84b8426d8b5adf7f1b631e403f2488f5bccd3f1dde8723b52888b5401bd"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/focus-binding.json",
+      "bytes": 688,
+      "sha256": "34021d4ba2c15984d1f89f652592a79121c83a161ca0b2fc44dba4e45ce27f8a"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/manifest.json",
+      "bytes": 4008,
+      "sha256": "b05751c4334f32651954511a0a37e35294a0cb715a1d1efdbdb7e940b0450f3a"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/original/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "bytes": 37253,
+      "sha256": "f5e494f17f9dfbaf71dbe55058700d2f33fc7020b2b6521c08651d13f0fcd27d"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/original/packages/polaris-dossier/src/policy-git-native.ts",
+      "bytes": 11991,
+      "sha256": "b899ceba35cce3c6561a3e7bae7d8b97d5a05865468ce49dc5f37ccede9c2971"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/original/packages/polaris-dossier/src/policy-git-protocol.h",
+      "bytes": 1236,
+      "sha256": "7581b1b969c752427e08360ea34b4439c3d393a053a0fda18727ce019d337c95"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/original/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "bytes": 13042,
+      "sha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/original/packages/polaris-dossier/src/policy-git.c",
+      "bytes": 17950,
+      "sha256": "47ca11e2648d14e9114edd2e6932e783057261a7a4c8c847d1a981895152ff19"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/original/packages/polaris-dossier/src/policy-git.ts",
+      "bytes": 6757,
+      "sha256": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/original/packages/polaris-dossier/src/policy-snapshot.ts",
+      "bytes": 15887,
+      "sha256": "d70ac5f8487edb1a13758ed321714db19c1247de040971d148981f752e9279ef"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/original/packages/polaris-dossier/src/url-parent-adoption.ts",
+      "bytes": 16441,
+      "sha256": "65fa616855825a68b23a741ea0dd10ce9eed122d8ae21064d3ac1b61e41ce7df"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/overlay/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "bytes": 37848,
+      "sha256": "dd48ed9402f13a02dbcc31e7416380696b60a2972a7ebd1f39093737f9e6c367"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/overlay/packages/polaris-dossier/src/policy-git-native.ts",
+      "bytes": 14719,
+      "sha256": "0661efa1365f406c6a6a9b5ce52bec9c5d5206f125b3c41943f1917fa7a6d777"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/overlay/packages/polaris-dossier/src/policy-git-protocol.h",
+      "bytes": 1628,
+      "sha256": "9d58b0eb2720905940ea013b5d35bfa677c1cf3900b4718ae795e38c5e7933cf"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/overlay/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "bytes": 14845,
+      "sha256": "3bb083f4f4902b65bb0698d55171f09358f80b9cacb5b050275f1ab203b2a4a1"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/overlay/packages/polaris-dossier/src/policy-git.c",
+      "bytes": 20864,
+      "sha256": "2c965d4d95223b42e6c1751308bd9f08cf1f16b46d736c214e9983fe22a53d0c"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/overlay/packages/polaris-dossier/src/policy-git.ts",
+      "bytes": 6757,
+      "sha256": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/overlay/packages/polaris-dossier/src/policy-snapshot.ts",
+      "bytes": 15887,
+      "sha256": "d70ac5f8487edb1a13758ed321714db19c1247de040971d148981f752e9279ef"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/overlay/packages/polaris-dossier/src/url-parent-adoption.ts",
+      "bytes": 16441,
+      "sha256": "65fa616855825a68b23a741ea0dd10ce9eed122d8ae21064d3ac1b61e41ce7df"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/preparation-checks.json",
+      "bytes": 464,
+      "sha256": "7d4cac56a139a2bf188b255ac101e3ca4ade7a6dee363b87f29068bcaddd1da7"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/run-isolated.py",
+      "bytes": 18326,
+      "sha256": "987a2809e57095ad02dced51adc8379821830a9fd1d542b99ab48b56e88117be"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R1/tool-bindings.json",
+      "bytes": 152793,
+      "sha256": "8256b4281952d76ee85decd0ac2b45ae4e555a96cdfe14e366d01473f0916a3e"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/R1-diagnosis.json",
+      "bytes": 2454,
+      "sha256": "527f63402e9c6bd1e57300ef042f930636ae09d6404cd4360d6cbd5d9ca35b9b"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/README.md",
+      "bytes": 7512,
+      "sha256": "3a1647a904f33845c845c6718e0e51cd1826a25f0152cbf3f3b6ea52d3e5d52e"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/SHA256SUMS",
+      "bytes": 3172,
+      "sha256": "c3af248754992c29a4346510dbf21575ef8ec524df71d605036a458e5b239344"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/command.sh",
+      "bytes": 180,
+      "sha256": "72a2dfeb2f5fa4ceda6ee632958e54cdc833138af7f53c3fa720f6fc42d81169"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/diagnostic.patch",
+      "bytes": 19130,
+      "sha256": "517df84b8426d8b5adf7f1b631e403f2488f5bccd3f1dde8723b52888b5401bd"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/esbuild-install.js",
+      "bytes": 11773,
+      "sha256": "612294e278914443bdcf81cb17f54afec34dbdd2ebd999a6ee187912320cc315"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/focus-binding.json",
+      "bytes": 688,
+      "sha256": "34021d4ba2c15984d1f89f652592a79121c83a161ca0b2fc44dba4e45ce27f8a"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/inert-preinstall-check.py",
+      "bytes": 2869,
+      "sha256": "293b926aeffb90eeac3c62d90b1723779c9a5c327d1a18c517e47f991222ec0f"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/inert-preinstall-results.json",
+      "bytes": 660,
+      "sha256": "f31f420b0fbea134638daa28b9a0fcdbf39809dd753548fd25235d5cd2ff2fb0"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/manifest.json",
+      "bytes": 6091,
+      "sha256": "29de0c6d565565366764bf5cba80b4179294687f8b3ff5b66249e9d1bd175196"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/operator-R1-to-R2.patch",
+      "bytes": 3342,
+      "sha256": "dcac2eec8893e78a9fc00c249c0e599dc512d770adc324583ca1f6719fb3bac9"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/original/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "bytes": 37253,
+      "sha256": "f5e494f17f9dfbaf71dbe55058700d2f33fc7020b2b6521c08651d13f0fcd27d"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/original/packages/polaris-dossier/src/policy-git-native.ts",
+      "bytes": 11991,
+      "sha256": "b899ceba35cce3c6561a3e7bae7d8b97d5a05865468ce49dc5f37ccede9c2971"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/original/packages/polaris-dossier/src/policy-git-protocol.h",
+      "bytes": 1236,
+      "sha256": "7581b1b969c752427e08360ea34b4439c3d393a053a0fda18727ce019d337c95"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/original/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "bytes": 13042,
+      "sha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/original/packages/polaris-dossier/src/policy-git.c",
+      "bytes": 17950,
+      "sha256": "47ca11e2648d14e9114edd2e6932e783057261a7a4c8c847d1a981895152ff19"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/original/packages/polaris-dossier/src/policy-git.ts",
+      "bytes": 6757,
+      "sha256": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/original/packages/polaris-dossier/src/policy-snapshot.ts",
+      "bytes": 15887,
+      "sha256": "d70ac5f8487edb1a13758ed321714db19c1247de040971d148981f752e9279ef"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/original/packages/polaris-dossier/src/url-parent-adoption.ts",
+      "bytes": 16441,
+      "sha256": "65fa616855825a68b23a741ea0dd10ce9eed122d8ae21064d3ac1b61e41ce7df"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/overlay/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "bytes": 37848,
+      "sha256": "dd48ed9402f13a02dbcc31e7416380696b60a2972a7ebd1f39093737f9e6c367"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/overlay/packages/polaris-dossier/src/policy-git-native.ts",
+      "bytes": 14719,
+      "sha256": "0661efa1365f406c6a6a9b5ce52bec9c5d5206f125b3c41943f1917fa7a6d777"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/overlay/packages/polaris-dossier/src/policy-git-protocol.h",
+      "bytes": 1628,
+      "sha256": "9d58b0eb2720905940ea013b5d35bfa677c1cf3900b4718ae795e38c5e7933cf"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/overlay/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "bytes": 14845,
+      "sha256": "3bb083f4f4902b65bb0698d55171f09358f80b9cacb5b050275f1ab203b2a4a1"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/overlay/packages/polaris-dossier/src/policy-git.c",
+      "bytes": 20864,
+      "sha256": "2c965d4d95223b42e6c1751308bd9f08cf1f16b46d736c214e9983fe22a53d0c"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/overlay/packages/polaris-dossier/src/policy-git.ts",
+      "bytes": 6757,
+      "sha256": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/overlay/packages/polaris-dossier/src/policy-snapshot.ts",
+      "bytes": 15887,
+      "sha256": "d70ac5f8487edb1a13758ed321714db19c1247de040971d148981f752e9279ef"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/overlay/packages/polaris-dossier/src/url-parent-adoption.ts",
+      "bytes": 16441,
+      "sha256": "65fa616855825a68b23a741ea0dd10ce9eed122d8ae21064d3ac1b61e41ce7df"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/preparation-checks.json",
+      "bytes": 464,
+      "sha256": "7d4cac56a139a2bf188b255ac101e3ca4ade7a6dee363b87f29068bcaddd1da7"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/revision-checks.json",
+      "bytes": 1398,
+      "sha256": "a3a9561b2adbb7d0f394d7ce57fa02bab1c5652f044e97c3099a875d57a454f2"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/run-isolated.py",
+      "bytes": 18771,
+      "sha256": "a95c94d2abd1ae57a080d6e195af409bfd3e350739eb81c716fd9155694ccf4a"
+    },
+    {
+      "path": "packets/policy-git-supervisor-idle-microdiagnostic-1ef234-R2/tool-bindings.json",
+      "bytes": 152793,
+      "sha256": "8256b4281952d76ee85decd0ac2b45ae4e555a96cdfe14e366d01473f0916a3e"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/README.md",
+      "bytes": 6807,
+      "sha256": "2abc5cdb3e1c168d82424fdd6251418cbeb9dfdd99ce87be685ab702a9f90ae8"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/SHA256SUMS",
+      "bytes": 1743,
+      "sha256": "4a47aee83cefea0dacc35f10a4ca8da73711dddf528fa1c591896233829a4fb6"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/candidate.patch",
+      "bytes": 13971,
+      "sha256": "ad1ca683097f292535887a293a6ae98e29c8db9c27b4f612b2084f8b8788f393"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/candidate/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "bytes": 46455,
+      "sha256": "7929993288ef9d80da4e7926a9000bb2769fe4d8f603001ee854e5a438b7c3c4"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/candidate/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "bytes": 13715,
+      "sha256": "99f8c178fa06fa49edf5c90a34d1966d307fe21a0db09cdb110a9ba1736bbeac"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/manifest.json",
+      "bytes": 3197,
+      "sha256": "5e7599fe1c30d489ed2c14bffc8dc6bcc7d1b1f4a765db909bf1ef81a360a639"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/mutants/ignore-acquisition-failure.c",
+      "bytes": 13685,
+      "sha256": "089e1bf42c77a8e6236d085b10eae06bbdcdb0e7d42a41a95ab2850730fe67b2"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/mutants/ignore-poll-error.c",
+      "bytes": 13700,
+      "sha256": "a3113b5e8b906094f5ae465c5614a135271643002a6de3ead14eb09890a27b2f"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/mutants/keep-exited-wake-fd.c",
+      "bytes": 13717,
+      "sha256": "4c3b629fe48cc7644082b8f23c4e6ccf105af4b7a4d434c78868766d5aac81a5"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/mutants/leak-common-close.c",
+      "bytes": 13739,
+      "sha256": "7b94913c25c0a64732c67b73e04b709ab1e6e434cd72090e138b6f898a546a0b"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/mutants/predecessor.c",
+      "bytes": 13042,
+      "sha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/mutations.json",
+      "bytes": 30177,
+      "sha256": "fa87334fc18300b8ebd9d1b1d21e4f67fcdda848dac9cf4be7074da6c11869ff"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/original/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "bytes": 37253,
+      "sha256": "f5e494f17f9dfbaf71dbe55058700d2f33fc7020b2b6521c08651d13f0fcd27d"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/original/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "bytes": 13042,
+      "sha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/patch-check.json",
+      "bytes": 349,
+      "sha256": "0c274f8725362a5600f773b54ad4f3d4ed9a4daa6d875910e034e9a2a1498228"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/restoration-contract.json",
+      "bytes": 2103,
+      "sha256": "24fa5413cf9cd4867cb46e944c1120d414fdf6fabcccc7aa5c3f0aad394f031c"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/source-bindings.json",
+      "bytes": 2996,
+      "sha256": "4e0f90cae1383f646da6ca5e17b59bf6dae1977fb8339a22e8b9f9939ed6e439"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/static-check.mjs",
+      "bytes": 4393,
+      "sha256": "81699f31eccd785b01918e75d5943c2f53749bdb0edf0fbf21a6030dc7c90be5"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R1/static-results.json",
+      "bytes": 1253,
+      "sha256": "b22f79fa232f3e41569f50da64a2bfbb3d22eb4df2a2742c1320a7f19be7daea"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/R1-README.md",
+      "bytes": 6807,
+      "sha256": "2abc5cdb3e1c168d82424fdd6251418cbeb9dfdd99ce87be685ab702a9f90ae8"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/R1-manifest.json",
+      "bytes": 3197,
+      "sha256": "5e7599fe1c30d489ed2c14bffc8dc6bcc7d1b1f4a765db909bf1ef81a360a639"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/README.md",
+      "bytes": 2597,
+      "sha256": "348986c27d3d7c6c3c4ceee6a3376ac902d5506625bab89ae527fbff4c741603"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/SHA256SUMS",
+      "bytes": 2395,
+      "sha256": "73622c0c143c940698a22c5978980ad49f7cab1251277ce4f9d09ace904c4da4"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/candidate.patch",
+      "bytes": 15219,
+      "sha256": "fdaddb5dc32f6feecd2fdb7c9bcd07fa8b7fd52a7ea369f084dc7d3ef2fca8a7"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/candidate/packages/polaris-dossier/README.md",
+      "bytes": 8020,
+      "sha256": "92638842b039d164a7428aeaf7a8a6a4c3d9e552bf7a266f010a4142d8f5e713"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/candidate/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "bytes": 46455,
+      "sha256": "7929993288ef9d80da4e7926a9000bb2769fe4d8f603001ee854e5a438b7c3c4"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/candidate/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "bytes": 13715,
+      "sha256": "99f8c178fa06fa49edf5c90a34d1966d307fe21a0db09cdb110a9ba1736bbeac"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/documentation-static.json",
+      "bytes": 1641,
+      "sha256": "207e958ee6c179ea4659d5e519a67655212163b5d6b13378c661935dbc8dedef"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/documentation.patch",
+      "bytes": 1015,
+      "sha256": "b7753f4091f35c2c67b8dbc12c5197ecdcb416f4daaa3b1577d0f19029d53f3e"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/manifest.json",
+      "bytes": 4469,
+      "sha256": "77961bfe5c930d8350dbddeb15dfbb8c9d24e3168a80584cd3e079ced91275ec"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/mutants/ignore-acquisition-failure.c",
+      "bytes": 13685,
+      "sha256": "089e1bf42c77a8e6236d085b10eae06bbdcdb0e7d42a41a95ab2850730fe67b2"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/mutants/ignore-poll-error.c",
+      "bytes": 13700,
+      "sha256": "a3113b5e8b906094f5ae465c5614a135271643002a6de3ead14eb09890a27b2f"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/mutants/keep-exited-wake-fd.c",
+      "bytes": 13717,
+      "sha256": "4c3b629fe48cc7644082b8f23c4e6ccf105af4b7a4d434c78868766d5aac81a5"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/mutants/leak-common-close.c",
+      "bytes": 13739,
+      "sha256": "7b94913c25c0a64732c67b73e04b709ab1e6e434cd72090e138b6f898a546a0b"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/mutants/predecessor.c",
+      "bytes": 13042,
+      "sha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/mutations.json",
+      "bytes": 30177,
+      "sha256": "fa87334fc18300b8ebd9d1b1d21e4f67fcdda848dac9cf4be7074da6c11869ff"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/original/packages/polaris-dossier/README.md",
+      "bytes": 7325,
+      "sha256": "54fc42cd856cd176c4cfd1fcfa517ad793717ab383cc1b8cc8f1149a35ac60ff"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/original/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "bytes": 37253,
+      "sha256": "f5e494f17f9dfbaf71dbe55058700d2f33fc7020b2b6521c08651d13f0fcd27d"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/original/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "bytes": 13042,
+      "sha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/patch-check.json",
+      "bytes": 779,
+      "sha256": "f11d861570d6848832d054fbb0e537cc0a6d7f2b6a81e5cbc9c46316acc118e7"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/predecessor-binding.json",
+      "bytes": 1024,
+      "sha256": "641f75a8a56f4931f96e08b2fa1cfb87f16b29614efae6cf304ace127d4930a1"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/restoration-contract.json",
+      "bytes": 2323,
+      "sha256": "453c351c2819d0c9c8e7196a3910eb3332bbd0d26c562d6f90366cc05e94a4eb"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/source-bindings.json",
+      "bytes": 3612,
+      "sha256": "c5f3266748f47e20a38ff93bfe3757a6d40792d9f0b281c42001520768077978"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/static-check.mjs",
+      "bytes": 4393,
+      "sha256": "81699f31eccd785b01918e75d5943c2f53749bdb0edf0fbf21a6030dc7c90be5"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-1ef-R2/static-results.json",
+      "bytes": 1253,
+      "sha256": "b22f79fa232f3e41569f50da64a2bfbb3d22eb4df2a2742c1320a7f19be7daea"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/README.md",
+      "bytes": 3867,
+      "sha256": "8b27c0cb8da7c8ea28d1f56ad00d850c868bfdf69003c4472fe00235197060ca"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/SHA256SUMS",
+      "bytes": 1743,
+      "sha256": "9bd215f004724c69e6422f0deb94ebe5f5632f64d1f80df3370ba482c80032ea"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/candidate-supervisor.c",
+      "bytes": 13715,
+      "sha256": "99f8c178fa06fa49edf5c90a34d1966d307fe21a0db09cdb110a9ba1736bbeac"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/command.sh",
+      "bytes": 284,
+      "sha256": "b232a51151aa558ab98c4c27cd50fd0d9628bd7e8c2a00dd2b25d3e1791782b2"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/expected-cases.json",
+      "bytes": 6699,
+      "sha256": "3b05e9957d68b0d09b821daf1bbd7dbc54dfa5c01d95642b425cee5ef993d701"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/helper-provenance.json",
+      "bytes": 3796,
+      "sha256": "e7a4255bfc70940655069c02219aba7ac969ee8f53804e4beef26621aa878d58"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/inert-atomic-checks.py",
+      "bytes": 2802,
+      "sha256": "8b27032cb732759a5fe163fe98a7baf81ff55aec4ababe2d8a679b28a475de71"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/inert-atomic-results.json",
+      "bytes": 471,
+      "sha256": "c81b2c5166143a00b5554c6f33b8aa2195457000f7bf6fa7bf48d331ae4f832c"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/manifest.json",
+      "bytes": 4900,
+      "sha256": "d6bedd97bca22a2d84b720b28876270d647b621ebe7f4cb8fd7050bc23045f8c"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/mutants/ignore-acquisition-failure.c",
+      "bytes": 13685,
+      "sha256": "089e1bf42c77a8e6236d085b10eae06bbdcdb0e7d42a41a95ab2850730fe67b2"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/mutants/ignore-poll-error.c",
+      "bytes": 13700,
+      "sha256": "a3113b5e8b906094f5ae465c5614a135271643002a6de3ead14eb09890a27b2f"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/mutants/keep-exited-wake-fd.c",
+      "bytes": 13717,
+      "sha256": "4c3b629fe48cc7644082b8f23c4e6ccf105af4b7a4d434c78868766d5aac81a5"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/mutants/leak-common-close.c",
+      "bytes": 13739,
+      "sha256": "7b94913c25c0a64732c67b73e04b709ab1e6e434cd72090e138b6f898a546a0b"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/mutants/predecessor.c",
+      "bytes": 13042,
+      "sha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/mutations.json",
+      "bytes": 30177,
+      "sha256": "fa87334fc18300b8ebd9d1b1d21e4f67fcdda848dac9cf4be7074da6c11869ff"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/prepare-cases.mjs",
+      "bytes": 1487,
+      "sha256": "6ae35ab6631c41be055169f96631fbf61488780936096c49ae7202858a6c1534"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/run.py",
+      "bytes": 23364,
+      "sha256": "cf6ea5aa8d429d4962c18a2dd5e78b30b598366a4d819938d2ff4f7fa5f38bd4"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/selective-fixtures-plan.json",
+      "bytes": 846,
+      "sha256": "aa12d9d8e8c34789c53628e768dc29706eaef5ceedbaf71c9e596900e31ae37d"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/source-bindings.json",
+      "bytes": 3612,
+      "sha256": "c5f3266748f47e20a38ff93bfe3757a6d40792d9f0b281c42001520768077978"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/static-checks.json",
+      "bytes": 579,
+      "sha256": "c8b4516cf06a140dcb48e5deea4a27462a7b031a3bad45e40cdade819bc39c6d"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R1/tool-bindings.json",
+      "bytes": 152793,
+      "sha256": "8256b4281952d76ee85decd0ac2b45ae4e555a96cdfe14e366d01473f0916a3e"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/README.md",
+      "bytes": 4390,
+      "sha256": "b2f307498e0b87d253f38069e55da7b021f4a319fe281d8f2e0b89b2a043135e"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/SHA256SUMS",
+      "bytes": 2012,
+      "sha256": "8da316b0dfbd795557924dd81d4f642d140eff4040e248ae9f24410fe98e1914"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/candidate-supervisor.c",
+      "bytes": 13715,
+      "sha256": "99f8c178fa06fa49edf5c90a34d1966d307fe21a0db09cdb110a9ba1736bbeac"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/child-exec.py",
+      "bytes": 279,
+      "sha256": "bcb972dcb8d0a4653320a08c18e7e1fcdc4a57122f47bbb29a2e23e495dbebb4"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/command.sh",
+      "bytes": 284,
+      "sha256": "0128a9217354343a42bf99b233400f7471632bd60a19d105ea71ac57df4ec5fa"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/expected-cases.json",
+      "bytes": 6699,
+      "sha256": "3b05e9957d68b0d09b821daf1bbd7dbc54dfa5c01d95642b425cee5ef993d701"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/helper-provenance.json",
+      "bytes": 3796,
+      "sha256": "e7a4255bfc70940655069c02219aba7ac969ee8f53804e4beef26621aa878d58"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/inert-atomic-checks.py",
+      "bytes": 2802,
+      "sha256": "8b27032cb732759a5fe163fe98a7baf81ff55aec4ababe2d8a679b28a475de71"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/inert-atomic-results.json",
+      "bytes": 471,
+      "sha256": "36badc24c4c615539a9f7abb0538b884a7c4f6867ad109e084e030aec72fa8c9"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/inert-child-mask-checks.py",
+      "bytes": 2183,
+      "sha256": "5f51d4737625583db788287224031694d2cfa487f6acd0e0e213bac97e212960"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/inert-child-mask-results.json",
+      "bytes": 1479,
+      "sha256": "a59a945e78c0175b745508bf47c293c93661cc719858bb7d7252c5c10bfb430e"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/manifest.json",
+      "bytes": 5709,
+      "sha256": "924f68fb15ddf7534f08d2a4ebd76fe9abc518025c9a81eec6d2d258f652db8e"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/mutants/ignore-acquisition-failure.c",
+      "bytes": 13685,
+      "sha256": "089e1bf42c77a8e6236d085b10eae06bbdcdb0e7d42a41a95ab2850730fe67b2"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/mutants/ignore-poll-error.c",
+      "bytes": 13700,
+      "sha256": "a3113b5e8b906094f5ae465c5614a135271643002a6de3ead14eb09890a27b2f"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/mutants/keep-exited-wake-fd.c",
+      "bytes": 13717,
+      "sha256": "4c3b629fe48cc7644082b8f23c4e6ccf105af4b7a4d434c78868766d5aac81a5"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/mutants/leak-common-close.c",
+      "bytes": 13739,
+      "sha256": "7b94913c25c0a64732c67b73e04b709ab1e6e434cd72090e138b6f898a546a0b"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/mutants/predecessor.c",
+      "bytes": 13042,
+      "sha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/mutations.json",
+      "bytes": 30177,
+      "sha256": "fa87334fc18300b8ebd9d1b1d21e4f67fcdda848dac9cf4be7074da6c11869ff"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/prepare-cases.mjs",
+      "bytes": 1487,
+      "sha256": "6ae35ab6631c41be055169f96631fbf61488780936096c49ae7202858a6c1534"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/run.py",
+      "bytes": 23772,
+      "sha256": "a74f0924f117d2108dd9af6b84faf8bde91dabacd533d1929baae2a80dc7a9aa"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/selective-fixtures-plan.json",
+      "bytes": 846,
+      "sha256": "aa12d9d8e8c34789c53628e768dc29706eaef5ceedbaf71c9e596900e31ae37d"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/source-bindings.json",
+      "bytes": 3612,
+      "sha256": "c5f3266748f47e20a38ff93bfe3757a6d40792d9f0b281c42001520768077978"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/static-checks.json",
+      "bytes": 856,
+      "sha256": "9dbbc8a67bd89940986e9c4d1c70f542f2f28fd47ee5984596a79baa20d82a3b"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R2/tool-bindings.json",
+      "bytes": 152845,
+      "sha256": "0be5d29235348501012a34595e01bb9bf59e6b2e738413fe9ed26edc7110cbae"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/README.md",
+      "bytes": 5012,
+      "sha256": "e545d23407b3f55401dac40c00a988c20e204af0cc97593e9fbc7a92b4c2c3ac"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/SHA256SUMS",
+      "bytes": 2110,
+      "sha256": "cea4f871afac6ca547ea66be0334d4329621c1ca33320df5f06dcc83e1de69de"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/actual-source-stat-receipt.json",
+      "bytes": 1491,
+      "sha256": "b9e7230552194a5009df8749ba96c7a3f62b1e96bc43b73a198ee8b5007e366d"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/candidate-supervisor.c",
+      "bytes": 13715,
+      "sha256": "99f8c178fa06fa49edf5c90a34d1966d307fe21a0db09cdb110a9ba1736bbeac"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/child-exec.py",
+      "bytes": 279,
+      "sha256": "bcb972dcb8d0a4653320a08c18e7e1fcdc4a57122f47bbb29a2e23e495dbebb4"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/command.sh",
+      "bytes": 284,
+      "sha256": "4693c570f25533ae4ae91c8b7e8d4c0e0581b760269337ded60c337f22eabc58"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/expected-cases.json",
+      "bytes": 6699,
+      "sha256": "3b05e9957d68b0d09b821daf1bbd7dbc54dfa5c01d95642b425cee5ef993d701"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/helper-provenance.json",
+      "bytes": 3796,
+      "sha256": "e7a4255bfc70940655069c02219aba7ac969ee8f53804e4beef26621aa878d58"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/inert-atomic-checks.py",
+      "bytes": 2802,
+      "sha256": "8b27032cb732759a5fe163fe98a7baf81ff55aec4ababe2d8a679b28a475de71"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/inert-atomic-results.json",
+      "bytes": 471,
+      "sha256": "36badc24c4c615539a9f7abb0538b884a7c4f6867ad109e084e030aec72fa8c9"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/inert-child-mask-checks.py",
+      "bytes": 2183,
+      "sha256": "5f51d4737625583db788287224031694d2cfa487f6acd0e0e213bac97e212960"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/inert-child-mask-results.json",
+      "bytes": 1479,
+      "sha256": "a59a945e78c0175b745508bf47c293c93661cc719858bb7d7252c5c10bfb430e"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/manifest.json",
+      "bytes": 5865,
+      "sha256": "ce0084c55802d3b2a839f641181819e2cb37a22695fa7a4017bb7a491a5563f6"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/mutants/ignore-acquisition-failure.c",
+      "bytes": 13685,
+      "sha256": "089e1bf42c77a8e6236d085b10eae06bbdcdb0e7d42a41a95ab2850730fe67b2"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/mutants/ignore-poll-error.c",
+      "bytes": 13700,
+      "sha256": "a3113b5e8b906094f5ae465c5614a135271643002a6de3ead14eb09890a27b2f"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/mutants/keep-exited-wake-fd.c",
+      "bytes": 13717,
+      "sha256": "4c3b629fe48cc7644082b8f23c4e6ccf105af4b7a4d434c78868766d5aac81a5"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/mutants/leak-common-close.c",
+      "bytes": 13739,
+      "sha256": "7b94913c25c0a64732c67b73e04b709ab1e6e434cd72090e138b6f898a546a0b"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/mutants/predecessor.c",
+      "bytes": 13042,
+      "sha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/mutations.json",
+      "bytes": 30177,
+      "sha256": "fa87334fc18300b8ebd9d1b1d21e4f67fcdda848dac9cf4be7074da6c11869ff"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/prepare-cases.mjs",
+      "bytes": 1487,
+      "sha256": "6ae35ab6631c41be055169f96631fbf61488780936096c49ae7202858a6c1534"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/run.py",
+      "bytes": 23772,
+      "sha256": "a74f0924f117d2108dd9af6b84faf8bde91dabacd533d1929baae2a80dc7a9aa"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/selective-fixtures-plan.json",
+      "bytes": 846,
+      "sha256": "aa12d9d8e8c34789c53628e768dc29706eaef5ceedbaf71c9e596900e31ae37d"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/source-bindings.json",
+      "bytes": 3612,
+      "sha256": "c5f3266748f47e20a38ff93bfe3757a6d40792d9f0b281c42001520768077978"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/static-checks.json",
+      "bytes": 856,
+      "sha256": "9dbbc8a67bd89940986e9c4d1c70f542f2f28fd47ee5984596a79baa20d82a3b"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R3/tool-bindings.json",
+      "bytes": 152845,
+      "sha256": "0be5d29235348501012a34595e01bb9bf59e6b2e738413fe9ed26edc7110cbae"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/README.md",
+      "bytes": 3601,
+      "sha256": "3b7675e740960610aa17720463a2ef4d9e28deaabd0095c2a6e1493c7411d9b5"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/SHA256SUMS",
+      "bytes": 2496,
+      "sha256": "5ed21642ac09d811bb76a3ab5e8b3f5f11f5b4922f0a1969979e5a53f3119515"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/actual-source-stat-receipt.json",
+      "bytes": 1491,
+      "sha256": "b9e7230552194a5009df8749ba96c7a3f62b1e96bc43b73a198ee8b5007e366d"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/candidate-supervisor.c",
+      "bytes": 13715,
+      "sha256": "99f8c178fa06fa49edf5c90a34d1966d307fe21a0db09cdb110a9ba1736bbeac"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/child-exec.py",
+      "bytes": 279,
+      "sha256": "bcb972dcb8d0a4653320a08c18e7e1fcdc4a57122f47bbb29a2e23e495dbebb4"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/command.sh",
+      "bytes": 284,
+      "sha256": "998e6d3710f328a4edfc0a783c995414a9f297813f5d9436af36c362b3d7be52"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/continuation-static-checks.json",
+      "bytes": 728,
+      "sha256": "672e4990f6b591fd353771d9ffb86a2fca1eaef36e30d318ef24a2fa3fd8be58"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/expected-cases.json",
+      "bytes": 6699,
+      "sha256": "3b05e9957d68b0d09b821daf1bbd7dbc54dfa5c01d95642b425cee5ef993d701"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/helper-provenance.json",
+      "bytes": 3796,
+      "sha256": "e7a4255bfc70940655069c02219aba7ac969ee8f53804e4beef26621aa878d58"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/inert-atomic-checks.py",
+      "bytes": 2802,
+      "sha256": "8b27032cb732759a5fe163fe98a7baf81ff55aec4ababe2d8a679b28a475de71"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/inert-atomic-results.json",
+      "bytes": 471,
+      "sha256": "36badc24c4c615539a9f7abb0538b884a7c4f6867ad109e084e030aec72fa8c9"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/inert-child-mask-checks.py",
+      "bytes": 2183,
+      "sha256": "5f51d4737625583db788287224031694d2cfa487f6acd0e0e213bac97e212960"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/inert-child-mask-results.json",
+      "bytes": 1479,
+      "sha256": "a59a945e78c0175b745508bf47c293c93661cc719858bb7d7252c5c10bfb430e"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/inert-classifier-checks.py",
+      "bytes": 2403,
+      "sha256": "68180f2845153e55cc043251cb710eb209acb538b9eba947edc48a3b93717aa9"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/inert-classifier-results.json",
+      "bytes": 1654,
+      "sha256": "5bd5d06639501e8457f66ede51c53a9ca80db0e7fee2a8aa66ca70ef2e24a1d8"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/manifest.json",
+      "bytes": 9815,
+      "sha256": "43256f1ad69cd52201b92aac3473f3e12d8fa433f2db0d7156556bfba751ad09"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/mutants/ignore-acquisition-failure.c",
+      "bytes": 13685,
+      "sha256": "089e1bf42c77a8e6236d085b10eae06bbdcdb0e7d42a41a95ab2850730fe67b2"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/mutants/ignore-poll-error.c",
+      "bytes": 13700,
+      "sha256": "a3113b5e8b906094f5ae465c5614a135271643002a6de3ead14eb09890a27b2f"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/mutants/keep-exited-wake-fd.c",
+      "bytes": 13717,
+      "sha256": "4c3b629fe48cc7644082b8f23c4e6ccf105af4b7a4d434c78868766d5aac81a5"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/mutants/leak-common-close.c",
+      "bytes": 13739,
+      "sha256": "7b94913c25c0a64732c67b73e04b709ab1e6e434cd72090e138b6f898a546a0b"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/mutants/predecessor.c",
+      "bytes": 13042,
+      "sha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/mutations.json",
+      "bytes": 30177,
+      "sha256": "fa87334fc18300b8ebd9d1b1d21e4f67fcdda848dac9cf4be7074da6c11869ff"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/prepare-cases.mjs",
+      "bytes": 1487,
+      "sha256": "6ae35ab6631c41be055169f96631fbf61488780936096c49ae7202858a6c1534"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/prior-root-reclassification.json",
+      "bytes": 2356,
+      "sha256": "12103760d211441e6b9de5853c2c2bda81f345382635a78bad561e5714cae6b5"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/run.py",
+      "bytes": 27164,
+      "sha256": "408c751f202412ffd6ee1c783f7e9e02052f9cc789f1e850007e2d0622c84818"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/selective-fixtures-plan.json",
+      "bytes": 846,
+      "sha256": "aa12d9d8e8c34789c53628e768dc29706eaef5ceedbaf71c9e596900e31ae37d"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/source-bindings.json",
+      "bytes": 3612,
+      "sha256": "c5f3266748f47e20a38ff93bfe3757a6d40792d9f0b281c42001520768077978"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/static-checks.json",
+      "bytes": 856,
+      "sha256": "9dbbc8a67bd89940986e9c4d1c70f542f2f28fd47ee5984596a79baa20d82a3b"
+    },
+    {
+      "path": "packets/policy-git-supervisor-pidfd-owning-1ef-R4/tool-bindings.json",
+      "bytes": 152845,
+      "sha256": "0be5d29235348501012a34595e01bb9bf59e6b2e738413fe9ed26edc7110cbae"
+    },
+    {
+      "path": "reviews/f3-supervisor-idle-microdiagnostic-1ef-R1-review-RAW.md",
+      "bytes": 5580,
+      "sha256": "9774d545f14656d40be690f8ee6dd08eb9ac61e7ffecd203f1440447680e4f70"
+    },
+    {
+      "path": "reviews/f3-supervisor-idle-microdiagnostic-1ef-R2-review-RAW.md",
+      "bytes": 5147,
+      "sha256": "0ccc610f9169a5fc1e10ae51859fe8d85c7d7b67dbaa5d5272c2d7e72d570de5"
+    },
+    {
+      "path": "reviews/f3-supervisor-pidfd-1ef-R1-review-RAW.md",
+      "bytes": 7357,
+      "sha256": "a16ab3968b2f7b0ead8fb812b2f1dcd007f459f3b4cdc7c4ebba7db29cefb28a"
+    },
+    {
+      "path": "reviews/f3-supervisor-pidfd-1ef-R2-documentation-review-RAW.md",
+      "bytes": 3484,
+      "sha256": "2222af38c89ee7d90f06f63a18e57857318dcd3544b63243d369eaf8a7d18bd3"
+    },
+    {
+      "path": "reviews/f3-supervisor-pidfd-owning-1ef-R2-review-RAW.md",
+      "bytes": 7353,
+      "sha256": "c4b92fca2608aa1cff90d87f65a1b847d9ba2aca1059e177349e60f637edd180"
+    },
+    {
+      "path": "reviews/f3-supervisor-pidfd-owning-1ef-R3-review-RAW.md",
+      "bytes": 4703,
+      "sha256": "70a84513f026657ca062a1dc77d97f09d0bafa7632f1893161b3a4fefbba2d1a"
+    },
+    {
+      "path": "reviews/f3-supervisor-pidfd-owning-1ef-R4-review-RAW.md",
+      "bytes": 7038,
+      "sha256": "336558d607296867ef3b5153eb83654d24a2fb00e021167989af593b4be0913e"
+    },
+    {
+      "path": "root/actual-source-binding.json",
+      "bytes": 1444,
+      "sha256": "9b736e5ee322c5fd4c2e31c938286be2d72651bce1f6c88e276b6201c53f3462"
+    },
+    {
+      "path": "root/supervisor-pidfd-code-commit.json",
+      "bytes": 849,
+      "sha256": "c2fdd178fc2c00d0bab904934141798726d3a13385f3fc38c43afc4d2c1da3f7"
+    },
+    {
+      "path": "root/supervisor-pidfd-owning-predecessor-root-reclassification.json",
+      "bytes": 2356,
+      "sha256": "12103760d211441e6b9de5853c2c2bda81f345382635a78bad561e5714cae6b5"
+    }
+  ],
+  "readbackAllMembersMatched": true
+}

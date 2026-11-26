@@ -1,0 +1,21 @@
+PASS
+
+Bounded source-only re-review of /home/orca/.tmp/f3-native-admission-fixes/ordinary-recovery-f51ba4-R3, limited to the remaining R2 global npm closure finding and regressions introduced by that repair.
+
+[Observed] Subject f51ba4da628e2979d33bce310383c97f3dcf3e7e; tree 23978ddb54473b95516ca18a3a260273834362ca. SHA256SUMS seal 1ef085941dd614d501e28bff27706761afc9b736d772292dbb913a7d5005aa04; run.py SHA-256 bd6880ed48bad043778c72d2c46bdb1dcaab7c42609bb755bea119674e452f87; bindings.json SHA-256 5b35805b343039a59a55649d1f483d106402b421295cc209d41d595d990370c0.
+
+[Observed] Read the R3 source, bindings, narrow actual R2-to-R3 runner/control diffs, revision, preparation and retained inert results. All thirteen payload hashes match using Python hashlib and separately sha256sum -c; the manifest has thirteen payload rows and the directory thirteen non-manifest payload files. No operator, inert fixture, product, native helper, compiler, build, expensive suite or genuine case was executed during this review. No primary source or predecessor packet was written. Governing references remain VIS-2, VIS-4, SEC-3, trust-and-evidence.md and the engineering-bar already loaded for the previous reviews.
+
+Disposition of remaining R2 finding
+
+[Inferred] Addressed. installed_tree(config, global_npm=True) uses the explicit global npm root /home/orca/.nvm/versions/node/v24.6.0/lib/node_modules/npm. It uses the same deadline-aware traversal as the accepted local census, does not follow symlinks, compares the entire declared directory/file/link population including mode and owner/group metadata, and hashes immutable regular files using hashlib and batched sha256sum. The global branch has no mutable-file exception. tools() invokes this census before the local tree/file bindings, so both preflight and final source/tools verification cover npm implementation and bundled dependencies.
+
+[Observed] globalNpmTree contains 2797 distinct rows: 550 directories and 2247 regular files totaling 11,779,414 bytes; no symlink row or mutable exception is declared. It explicitly includes bin/npm-cli.js, lib/cli.js, lib/cli/entry.js and lib/cli/validate-engines.js. The retained global-npm-preparation record reports independently enumerated population methods and dual-hash preparation of the actual root. The inert source extracts the exact census helper, first admits a separate private global npm fixture, then changes lib/cli.js and requires refusal. The retained results record that refusal among 21 passed controls. I read these records and controls; I did not rerun them.
+
+Regression scope
+
+[Observed] The actual runner diff is confined to adding the global npm branch/root/population selection in installed_tree(), suppressing the local-only cache requirement for that branch, and invoking it from tools(). Existing binding keys are unchanged except operatorSha256; globalNpmRoot and globalNpmTree are the only added keys. The subject-change receipt bytes are unchanged. The previously accepted local tree/cache behavior, shared 900-second active and 60-second cleanup cooperative budgets, 30-second-capped metadata calls, independent cleanup attempts, entry-mask behavior, forced-child evidence retention, selected-passed requirement and aggregate/status consistency code are unchanged. Original build and selected genuine-case argv remain unchanged; command.sh selects this successor runner at the same bound subject and fresh output path.
+
+[Inferred] No blocking finding remains within the requested R2 repair/regression scope. The complete local dependency tree and now complete global npm package census address the concrete installed JavaScript tool imports identified in R1/R2. The accepted cooperative OS-I/O caveat remains appropriate; this PASS does not assert an impossible absolute wall-time guarantee or introduce a new watchdog architecture.
+
+[Unknown] Native performance, actual cleanup behavior during product execution, and the original genuine-case result. PASS applies only to the sealed operator source within this bounded review scope. It is not a genuine-case/native PASS, a product execution result, or owner-class execution authorization. An actual run must still satisfy its original case, exact runtime bindings, terminal completeness and acceptance predicates.

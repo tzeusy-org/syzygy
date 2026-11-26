@@ -1,0 +1,34 @@
+{
+  "subject": "f51ba4da628e2979d33bce310383c97f3dcf3e7e",
+  "parent": "1ef23447df5c69fb1418f5c226bf6abd925e15ff",
+  "treeEntriesEach": 12598,
+  "changedEntries": [
+    "packages/polaris-dossier/README.md",
+    "packages/polaris-dossier/src/policy-git-native.test.ts",
+    "packages/polaris-dossier/src/policy-git-supervisor.c"
+  ],
+  "twoGitMethodsAgree": true,
+  "reviewedAndTestedCandidatesMatchCommit": [
+    {
+      "path": "packages/polaris-dossier/src/policy-git-supervisor.c",
+      "bytes": 13715,
+      "sha256": "99f8c178fa06fa49edf5c90a34d1966d307fe21a0db09cdb110a9ba1736bbeac",
+      "beforeTreeEntry": "100644 blob 60894f05df7a095ed380d09ef68e7b5f44707c66",
+      "afterTreeEntry": "100644 blob bb1ba6f70d0d76d88e6d96a2fbd47bba2560da9d"
+    },
+    {
+      "path": "packages/polaris-dossier/src/policy-git-native.test.ts",
+      "bytes": 46455,
+      "sha256": "7929993288ef9d80da4e7926a9000bb2769fe4d8f603001ee854e5a438b7c3c4",
+      "beforeTreeEntry": "100644 blob dc12d061892d193739b1c6a713c67cf1a6796f36",
+      "afterTreeEntry": "100644 blob b65975a8f627d816ae7f6c743c46d62ccd3882ae"
+    },
+    {
+      "path": "packages/polaris-dossier/README.md",
+      "bytes": 8020,
+      "sha256": "92638842b039d164a7428aeaf7a8a6a4c3d9e552bf7a266f010a4142d8f5e713",
+      "beforeTreeEntry": "100644 blob fcb5b656f7a7097b6a02e2634e0c2f65c409b3ad",
+      "afterTreeEntry": "100644 blob 3cc831b590511e105651b088d23017e2f3f70714"
+    }
+  ]
+}
