@@ -734,6 +734,7 @@ python3 scripts/build_polaris_dependency_unions.py --check   # both Polaris depe
 python3 scripts/build_polaris_dependency_unions.py --selftest
 python3 scripts/check_spec_reconciliation.py --check   # five readability outcomes terminal and binding; populations by two methods; routes and generated rows
 python3 scripts/check_spec_reconciliation.py --selftest
+python3 scripts/test_reconciliation_pool.py   # the selftest's family pool and per-run scope: order, failures, exits, dead workers, fresh forks
 python3 scripts/build_three_surface_poc_spec_dependencies.py --check
 python3 scripts/build_directive_register.py --check     # every identifier -> its definition site
 python3 scripts/build_directive_register.py --selftest
@@ -765,7 +766,7 @@ python3 scripts/dossier_pilot_runs.py --selftest   # page classes and one mutati
 python3 scripts/test_dossier_pilot.py   # the pilot harness tests, literal expectations; needs node and git for the screened-tree cases
 ```
 
-The one hundred and thirty-eight checks above are the same one hundred and thirty-eight the hosted workflow runs
+The one hundred and thirty-nine checks above are the same one hundred and thirty-nine the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.
