@@ -2031,7 +2031,8 @@ secret policy and the active-content scan every observed body passes.
   Markdown code-context rule: markup inside a backtick code span is inert to
   it, so such a title is admitted. An admitted title is served as the
   item's `title.text` and rendered escaped, in a bidirectionally isolated
-  element, on the item's card, wherever the card renders.
+  element, on the item's card, wherever the card renders, and in every
+  Trajectory list that names the item (Lists, below).
 - **Withholding.** Any other title is withheld, fail-closed (RFC5-16). The
   item serves the RFC5-17 hash-not-body record instead: the reason
   (`secret-matched`, `active-content` or `unclassifiable`), the redaction
@@ -2047,13 +2048,27 @@ secret policy and the active-content scan every observed body passes.
   RFC2-24 route, and each card with a withheld title carries a mark naming its
   reason that refers to that one disclosure. When every title is admitted no
   title Unknown exists and the board states the policy and the admitted count.
+- **Lists.** Every Trajectory list that names a served work item names it
+  by its identifier followed by its title as served, through one rendering
+  helper the card's title also uses: the grouped outline's parent headings,
+  what a parent sits under, a parent-child cycle's members and the group it
+  is stated under, a card's blockers, and the what-changed list. A list
+  shows an admitted title escaped in a bidirectionally isolated element,
+  clipped to its first 60 UTF-16 code units (59 when the 60th is the first
+  half of a surrogate pair) and followed by a visible ellipsis when longer;
+  the card and the machine answer keep the whole title. A list shows a
+  withheld title as a mark with the card's label, naming its reason and
+  referring to the one withheld-title disclosure. An item not served at the observed revision
+  (a removed item in the what-changed list) stays named by its identifier
+  alone. The ready set is the cards themselves and adds no list.
 - **Boundaries.** No title is sent to a model provider. No other free-text
   column of a work item is read. No detector or scan is loosened. A title is
   never parsed for an identifier: POC-REQ-014's governing intent is unchanged.
 
 - **Scope.** The work-item statement's selected columns; every served item's
-  `title`; the observation's `titles`; every Trajectory card; the titles
-  notice; the machine answer.
+  `title`; the observation's `titles`; every Trajectory card; every
+  Trajectory list that names a work item; the titles notice; the machine
+  answer.
 - **Case (fixture, counterexamples and sweep).** An independent checker
   supplies, at one revision, items whose titles are: clean text with
   characters HTML escapes; a match for each of the four detectors; an HTML
@@ -2065,13 +2080,15 @@ secret policy and the active-content scan every observed body passes.
   Each withheld title carries a distinctive marker. The checker sweeps both
   channels' bytes for every marker, every card's title, and the board's
   notice.
-- **Observable**: the admitted titles on the cards and in the machine
-  answer; the withheld records; the observation's counts; the notice; the
+- **Observable**: the admitted titles on the cards, in each list and in
+  the machine answer; the withheld records; the observation's counts; the notice; the
   statement's selected columns.
 - **Oracle**: literal expected values typed by the checker: the selected
   columns are exactly POC-REQ-010's revision witness and seven item columns
   and `title`; each
-  admitted title equals its fixture text and renders escaped; each withheld
+  admitted title equals its fixture text and renders escaped; each list
+  reference's title equals its fixture text, clipped where longer than 60
+  code units, or its withheld mark; each withheld
   record equals its literal reason, class and digest; the counts equal the
   fixture's; no marker occurs in either channel; with every title admitted
   no title Unknown subject exists.
@@ -2081,7 +2098,9 @@ secret policy and the active-content scan every observed body passes.
   with the declaration file.
 - **Falsifier**: a withheld title's text, or any marker, in either channel; a
   title admitted that a detector matches or the scan flags; an admitted title
-  rendered unescaped; a withheld title without its reason, class or digest;
+  rendered unescaped; a list naming a served item without its title, a list
+  title longer than 60 code units or a clip that splits a surrogate pair; a
+  withheld title without its reason, class or digest;
   counts that disagree with the served items; a second free-text column in
   the statement; or a title Unknown while every title is admitted.
 
@@ -2100,6 +2119,16 @@ secret policy and the active-content scan every observed body passes.
   its reason, redaction class and digest (null for the absent one); each card
   marks its reason; and the board states 3 withheld once, with
   `excluded-content` and its route
+
+#### Scenario: Every list names an item with its title
+
+- **WHEN** a card's blockers, the outline's parents and the what-changed list
+  name served items, one title is longer than 60 code units and one blocker's
+  title is withheld
+- **THEN** each list shows each item's identifier with its escaped title,
+  the long one clipped at 60 code units with an ellipsis and whole on its
+  card, the withheld one as its reason's mark, and a removed item by its
+  identifier alone
 
 ```yaml
 warrants:
