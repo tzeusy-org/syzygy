@@ -7,7 +7,7 @@
 - [Observed] syzygy-3efd.85, found by lane s40 while implementing syzygy-3efd.37: the 2.24 text promises that, for every schema-v10 or v11 draft check passes, the migrated draft's figures and `machine.json` figure entries are byte-identical to the original's. Its own rules break that promise for one case.
   - Version 2.19 (the relation-witness order) makes a v9 to v11 graph edge `unknown` (`edge-not-inferred`) only when the edge itself renders as a withheld item. An edge whose end node is withheld can still be witnessed and render Observed.
   - Version 2.24 makes every relationship either of whose elements renders as a withheld item `unknown` (`edge-not-inferred`).
-  - So a passing v11 draft with a witnessed edge to a withheld node migrates to an Unknown relationship: its figure, its `machine.json` edge and the witness reason differ, and the parity claim is false for it.
+  - So a passing v11 draft with a witnessed edge to a withheld node migrates to a relationship whose witness state is `unknown` (`edge-not-inferred`), drawn with the draft's marking instead of Observed: its figure, its `machine.json` entry and the witness reason differ, and the parity claim is false for it.
 - [Inferred] The 2.24 rule is the right one: a relationship to an element the reader cannot see should not render as Observed. So the claim narrows, and the rule stays.
 
 ## What changes

@@ -1,6 +1,6 @@
 # dossier-migration-parity
 
-[Inferred] Candidate version 2.NN (placeholder label until adoption) of the dossier specification line: one MODIFIED REQ-polaris-generation-034 for bead syzygy-3efd.85. It narrows the byte-parity claim of the version 2.24 migration from schema v10 and v11 to schema v12. A graph edge that is not itself withheld, one of whose end nodes renders as a withheld item, may render Observed under version 2.19 but migrates to an Unknown relationship under version 2.24. The figure that draws such an edge, its `machine.json` entry, the figure-fit member and the reading ledger are taken out of the parity; the 2.24 rule is kept. No schema, brief, finding or rendered byte changes.
+[Inferred] Candidate version 2.NN (placeholder label until adoption) of the dossier specification line: one MODIFIED REQ-polaris-generation-034 for bead syzygy-3efd.85. It narrows the byte-parity claim of the version 2.24 migration from schema v10 and v11 to schema v12. A graph edge that is not itself withheld, one of whose end nodes renders as a withheld item, may render Observed under version 2.19 but migrates under version 2.24 to a relationship whose witness state is `unknown` (`edge-not-inferred`), drawn with the draft's marking. The figure that draws such an edge, its `machine.json` entry, the figure-fit member and the reading ledger are taken out of the parity; the 2.24 rule is kept. No schema, brief, finding or rendered byte changes.
 
 | File | What it holds |
 |---|---|

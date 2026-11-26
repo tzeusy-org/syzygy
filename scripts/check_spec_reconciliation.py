@@ -903,7 +903,7 @@ MIGPAR_TAG = "polaris-dossier-migration-parity-v2.NN"
 MIGPAR_STATUS_PREFIX = f"[Migration parity amendment 2.NN]({MIGPAR_HOME})"
 MIGPAR_REPLACES = (POLARIS_ID + "034",)
 MIGPAR_SUBJECTS = {
-    MIGPAR_SPEC: "8223d8d136f7bd30620438153f9d7602e1348ea373f6c8edf06135350c3d76b6",
+    MIGPAR_SPEC: "17c98ddf50ddae77e88bbd983a21bd5fa526508e056d9a5f34474a43b0e40b46",
 }
 MIGPAR_BOUND_PARTS = len(MIGPAR_SUBJECTS)
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
@@ -3483,7 +3483,7 @@ def migpar_disposition(root, rows):
 
 
 def migpar_binding(root):
-    """Apply the migration parity only over the effective v2.34 figure-plan REQ-034."""
+    """Apply the migration parity only over the effective v2.34 derived-base REQ-034."""
     return _reviewed_version_binding(
         root, migpar_rows(root), migpar_disposition,
         version_tag=MIGPAR_TAG, subjects_map=MIGPAR_SUBJECTS, spec=MIGPAR_SPEC,
