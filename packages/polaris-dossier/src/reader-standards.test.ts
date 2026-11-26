@@ -269,6 +269,9 @@ describe('reader advice: the choice floor (version 2.33)', () => {
     expect(readerAdvice({ ...draft, understanding: { choices: [item('ch1', 'docs/x.md'), item('ch2', 'src/nested.c')], tradeOffs: [item('t1', 'src/dive.c')] } }).choiceFloor)
       .toEqual([{ at: '$.poles[0]', onRecord: 2, detail: TWO_CORE }]);
     expect(readerAdvice({ ...draft, sections: draft.sections.slice(0, 3) }).choiceFloor).toEqual([{ at: '$.poles[0]', onRecord: 2, detail: TWO_CORE }]);
+    // A deep dive of a section outside the Pole attributes nothing to it.
+    expect(readerAdvice({ ...draft, understanding: { choices: [twoCites, item('ch2', 'src/nested.c')], tradeOffs: [item('t9', 'src/other.c')] } }).choiceFloor)
+      .toEqual([{ at: '$.poles[0]', onRecord: 2, detail: TWO_CORE }]);
     // A steps item is nested too.
     expect(readerAdvice({ ...draft, understanding: { choices: [twoCites, item('ch3', 'src/steps.c')], tradeOffs: [item('t1', 'src/dive.c')] } }).choiceFloor).toEqual([]);
   });
