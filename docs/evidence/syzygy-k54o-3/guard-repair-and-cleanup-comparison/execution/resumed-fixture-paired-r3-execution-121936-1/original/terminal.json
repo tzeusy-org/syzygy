@@ -1,0 +1,49 @@
+{
+  "kind": "original",
+  "errors": [],
+  "complete": true,
+  "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+  "checkout": "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/original-checkout",
+  "controlDirectory": "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/original-control",
+  "sourceParentIdentity": {
+    "dev": 2066,
+    "ino": 6865878,
+    "uid": 996
+  },
+  "overlayInstallGuarded": true,
+  "overlaySha256": "74f2e606dd55c9dc64e10cbf79c3f4fa40993540067ff29155011f17a34f76b3",
+  "restorationSha256": "bf6c2da5785db51ef61cbbd6fc58ac592fd03fd8031336bb69e5f83a4d1e1e82",
+  "overlayTypecheckPassed": true,
+  "retainedOrderingFacts": {
+    "fixtureCloseEnteredBeforeBodyFinally": true,
+    "hasBodyFinally": true,
+    "hasFixtureCloseEntry": true,
+    "parentCaptureId": "d8ba181926794831b52cf8788bbc5e00eeff813d20606b5d",
+    "comparisonMayStillBeInconclusive": true
+  },
+  "diagnostic": {
+    "nativeTestOutcome": "FAILED_INTENTIONAL_DIAGNOSTIC",
+    "total": 7,
+    "failed": 1,
+    "passed": 0,
+    "selectionSkipped": 6,
+    "orderingAssessment": "observed-original-race",
+    "errorCorrelation": {
+      "allowedOriginalCleanupError": null,
+      "matchedSerializedOccurrences": 0,
+      "selectedBodyErrorCount": 1,
+      "allOtherErrorsRejected": true
+    },
+    "genuineAcceptance": false,
+    "actualHookTimeoutTested": false
+  },
+  "checksPassed": true,
+  "noOwnedChildren": true,
+  "ownedFixtureIdentity": {
+    "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+    "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+    "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806"
+  },
+  "sourceSnapshotUnchanged": true,
+  "overlayRestored": true
+}

@@ -1,0 +1,55 @@
+{
+  "arm": "candidate",
+  "nonce": "0c89a3d0783908b3f837b68fecea885b509207f6b44a2b02",
+  "captureId": "64fc35bb2b60550c8925a971c42526ca61f6f8a35b8dbbce",
+  "pendingSha256": "31186e8edd2dc4b95fe4c874a4dbc80aa89428194bbd7942ee96c0ddb8d4dccb",
+  "pending": {
+    "event": "catch-pending",
+    "nonce": "0c89a3d0783908b3f837b68fecea885b509207f6b44a2b02",
+    "arm": "candidate",
+    "pid": 2184971,
+    "atMs": 266258.577871,
+    "bodySettled": false,
+    "cliSettled": true,
+    "runtimeSettled": true,
+    "fixtureRoot": "/home/orca/.tmp/url-composed-s3C9Ui",
+    "hidden": "/home/orca/.tmp/url-composed-host-2184971-1795707961740/acquisitions/attempt-6SR0U1",
+    "recoveryRoot": "/home/orca/.tmp/url-composed-host-2184971-1795707961740",
+    "deadlineEpochMs": 1795708231973,
+    "maxPauseMs": 5000
+  },
+  "pendingObservedMonotonic": 514338.248007596,
+  "independentLstat": {
+    "phase": "catch-blocked-before-parent-release",
+    "observedEpoch": 1795708226.988299,
+    "observedMonotonic": 514338.248012846,
+    "paths": {
+      "fixtureRoot": {
+        "exists": true,
+        "dev": 2066,
+        "ino": 6475928,
+        "uid": 996,
+        "mode": 448
+      },
+      "hidden": {
+        "exists": true,
+        "dev": 2066,
+        "ino": 7134185,
+        "uid": 996,
+        "mode": 448
+      },
+      "recoveryRoot": {
+        "exists": true,
+        "dev": 2066,
+        "ino": 6475927,
+        "uid": 996,
+        "mode": 448
+      }
+    }
+  },
+  "capturedEpoch": 1795708226.9885314,
+  "releaseWrittenEpoch": 1795708227.0169005,
+  "releaseWrittenMonotonic": 514338.276617567,
+  "releaseCompletedBeforeEpochDeadline": true,
+  "parentMonotonicElapsedMs": 28.609970991965383
+}

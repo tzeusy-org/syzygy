@@ -1,0 +1,114 @@
+{
+  "subject": "12193649b4269a7d86fad68c26cd63bbd82452e7",
+  "scope": "Exact reviewed process-guard pin/admissions and local fixture helper; typecheck and all28 integration owning cases",
+  "commands": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "returncode": 0,
+      "seconds": 33.5094516989775
+    },
+    {
+      "argv": [
+        "/home/orca/.nvm/versions/node/v24.6.0/bin/node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "integration",
+        "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+        "packages/polaris-dossier/src/policy-git-native.test.ts",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/f3-native-admission-fixes/sync-guard-repairs-121936-execution-1/vitest.json"
+      ],
+      "returncode": 0,
+      "seconds": 27.47015231102705
+    }
+  ],
+  "errors": [],
+  "reaped": [
+    {
+      "pid": 2273237,
+      "status": 0
+    },
+    {
+      "pid": 2273307,
+      "status": 0
+    },
+    {
+      "pid": 2273349,
+      "status": 0
+    },
+    {
+      "pid": 2273472,
+      "status": 0
+    },
+    {
+      "pid": 2273528,
+      "status": 0
+    },
+    {
+      "pid": 2273622,
+      "status": 0
+    },
+    {
+      "pid": 2272763,
+      "status": 0
+    },
+    {
+      "pid": 2271388,
+      "status": 0
+    }
+  ],
+  "complete": true,
+  "expectedPerFileCases": {
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts": 11,
+    "packages/polaris-dossier/src/policy-git-native.test.ts": 17
+  },
+  "privateScratch": "/home/orca/.tmp/history-unit-diagnostic-ylhteghs",
+  "counts": {
+    "passed": 28
+  },
+  "reportedCounts": {
+    "numTotalTests": 28,
+    "numPassedTests": 28,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0
+  },
+  "testsPassed": true,
+  "noOwnedChildren": true,
+  "sourceUnchanged": true,
+  "privateScratchRemoved": true,
+  "artifacts": [
+    {
+      "file": "source-after.json",
+      "bytes": 3068702,
+      "sha256": "d8ac3d0a3403b2ca0e7337d6fe315c8753eb27f3d757cd98833d4ccfdb2e2573"
+    },
+    {
+      "file": "source-before.json",
+      "bytes": 3068702,
+      "sha256": "d8ac3d0a3403b2ca0e7337d6fe315c8753eb27f3d757cd98833d4ccfdb2e2573"
+    },
+    {
+      "file": "typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "file": "vitest.json",
+      "bytes": 11660,
+      "sha256": "c3492a100188ba050ae56690ab8aea1ae88fcc507208e349d55cd103f2ca7172"
+    },
+    {
+      "file": "vitest.log",
+      "bytes": 1638,
+      "sha256": "5383a01622c548249f44a9fb53494698ea37d9d0951456c559c8810d7f0ff398"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+# Fresh source-only review
+
+Verdict: PASS — source-only acceptance criteria.
+
+[Inferred] No finding requiring revision was identified in the two proposed source files. This verdict covers this frozen preparation only. It does not establish a runtime test result, integration/e2e acceptance, a release gate, or permission to lift the primary execution freeze.
+
+## Subject and evidence binding
+
+[Observed] Reviewed preparation-manifest.json at /home/orca/.tmp/f3-native-admission-fixes/sync-guard-repair-preparation-121936/, SHA-256 48e30a51505e4bd81422bfc140f3838387bcb790eee24f7b7e319f8a78b5dd4a. Subject commit 12193649b4269a7d86fad68c26cd63bbd82452e7; tree 612735a06238ed3c346f1b94682e247188267b37. Primary /home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w had that HEAD/tree and no tracked drift when inspected.
+
+[Observed] An independent file enumeration found the manifest plus its 20 listed payloads: 21 files. Each payload size and SHA-256 matches its manifest row. The two before/ snapshots and seven bindings/ snapshots each match both primary worktree bytes and their subject-commit Git blobs. An independently generated unified diff exactly reconstructs candidate.patch from its two before/candidate pairs.
+
+[Observed] Proposed guard SHA-256 9a7ed43c2ae052e8ce64ba96a7cb5ca30946d13b491d17557b572463e5da1f52; proposed policy test SHA-256 d30c5ac7706f304ba85f7312b1e0ef615cc8c91f53add507077dead59982fb6c.
+
+## Acceptance criteria
+
+[Observed] Exact inverse byte reconstruction recovers each original file after removing only the three new map entries, reversing MACHINE_PEER_SOURCE, and reversing the two-wrapper extraction. SHORT_COMMANDS, EXEMPT, original NATIVE_SITES entries, matcher predicates, import-closure logic, used-fingerprint consumption, and missing-entry checks therefore retain their original bytes. No broad command exemption or weakened refusal predicate is introduced.
+
+[Observed] Independent TypeScript parser/printer analysis found the candidate policy test's three direct synchronous calls exactly equal to the three new registrations, each occurring once: cb35dad81ce1458eda1ee58a87d64be2172e503893113e25983cb127599b1eb5; 84ad04ed68fe278b18161c94c7db676053797d16164930a14f9b32b89c67f5b5; 14d7482223ec082f7ae0ab761838474306394dce3f967338a67a24e71a79be59. The two former cb35dad8 wrappers are identical; the shared arrow helper closes over the supplied root independently at each of its two uses. Existing calls, arguments, trimming, timeout and stdio remain intact.
+
+[Inferred] These admissions are justified by current finite owned-fixture uses. Setup Git receives only the two fresh synthetic repository roots and literal setup/commit/ref/reset/rev-parse operations. Initialization disables templates; no remote is configured. The larger fixture creates 514 single-byte files from finite paths. Its unchanged 10,000ms timeout and Node default output bound remain; there is no newly asserted hard CPU bound. The direct modified-image invocation executes the first-party C echo fixture with no arguments, fixed tiny stdin, echo-only environment mode, 1,000ms timeout and 1,024-byte maxBuffer. The bound C echo branch reads finite stdin, emits it, and creates no child. The original-mode oracle receives the own two-file root with subjects: []; currentPolicyProbe generates local ref/cat-file requests with finite input, unchanged 10,000ms timeout, and maxBuffer 4096 + sum(file bytes + 128). The large batch uses the native scope rather than this synchronous oracle. These are current source-context arguments, not a claim that fingerprints bind future changes to surrounding helpers.
+
+[Observed] The refreshed whole-peer printer digest is a3549f4eba5aaca923d3c9a27b8a689facf24a2e30f929893c8b6d6010ce0ffd, matching the current complete source. The admitted spawn call remains a91baeff25ce94e5c56a9306b460dd766124f95c695fd8cc626019e67953e87f. Source inspection retains pinned-image verification, descriptor 4, fixed modes, pre-exec 2,000,000-microsecond capacity reservation, --cpu=1:1, 1,000ms timeout, SIGKILL and 65,536 + 512 output bytes. History shows the old 8724db73 pin matches 0e14c3439's predecessor: the refresh covers that commit's fresh time sampling after effect/image guards and 77b0df3ac's owned scratch-buffer change. Neither changes the admitted call or its limits. An exploratory static assertion assuming 77b0df3ac alone separated the old and current digests failed; the two source deltas explain it. This was not a candidate test run or gate attempt.
+
+[Observed] The original explicit native-owner census remains 13 modules / 30 exact entries, each matching one source call. This is an explicit-map census, not a transitive-import census. Tier source lists policy-git-native.test.ts and url-machine-peer.test.ts in integration; no tier source is changed.
+
+[Observed] Independent AST comparison preserves the ordered 11 guard case titles and 17 policy case titles, and preserves each file's ordered expectation-subtree sequence (156 and 200 entries, including nested expect chains; these are not unique assertion counts). A separate literal line count confirms the 11/17 populations. Candidate parser diagnostics are empty. Byte reconstruction independently preserves test assertions, caps, CPU accounting checks, and the original/native independent oracle implementation and trace comparison. Net test-case change: 0.
+
+[Inferred] Copied calls remain unregistered in another module; argument/options mutations change the admitted call fingerprint; duplicates remain refused after one use by the unchanged used Set. Changed complete peer context still invalidates its whole-source pin. The original changed/copied/duplicate native-call tests, digest/cap/timeout/CPU mutations, rebinding controls and generated-fixture controls retain their bytes. These are source consequences and preserved test definitions, not new executed mutation results.
+
+## Governing policy and limits
+
+[Observed] Governing references read: current sync-child-process-guard.test.ts and adopted testing-and-verification.md. CC-TEST-5 requires: “Suites that feed alignment/convergence claims declare their scope and coverage”; this review declares its two-file preparation scope above. CC-TEST-2 states: “a worker's own report is never one” (a gate artifact). CC-TEST-1 requires: “A defect fix includes a test that fails on the pre-fix behavior and passes on the fixed behavior”; the preserved guard is the relevant reproducer, but this review does not claim its execution outcome.
+
+[Unknown] Runtime result, targeted guard/native execution outcome, dynamic mutation results and complete native/integration/e2e closure remain unestablished. Later authorized execution must retain its own evidence. No Syzygy module, guard, test, build, native fixture or repository checker was executed. Static analysis loaded only TypeScript's parser/printer and standard libraries; Git commands only read source/metadata. No service communication or primary write was performed. The preparation itself was not modified.

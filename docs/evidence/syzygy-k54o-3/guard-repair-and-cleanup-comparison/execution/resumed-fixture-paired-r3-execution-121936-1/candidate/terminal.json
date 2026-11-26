@@ -1,0 +1,49 @@
+{
+  "kind": "candidate",
+  "errors": [],
+  "complete": true,
+  "nonce": "0c89a3d0783908b3f837b68fecea885b509207f6b44a2b02",
+  "checkout": "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/candidate-checkout",
+  "controlDirectory": "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/candidate-control",
+  "sourceParentIdentity": {
+    "dev": 2066,
+    "ino": 7513939,
+    "uid": 996
+  },
+  "overlayInstallGuarded": true,
+  "overlaySha256": "6603684d49bb0ed8aefddfc161a748e4593f00d7a9b426cb4693812862d5cf48",
+  "restorationSha256": "c88fc172ccfcd094e50b7f1e2d1118496745725b8d8e2411bef80b11e8777567",
+  "overlayTypecheckPassed": true,
+  "retainedOrderingFacts": {
+    "fixtureCloseEnteredBeforeBodyFinally": false,
+    "hasBodyFinally": true,
+    "hasFixtureCloseEntry": true,
+    "parentCaptureId": "64fc35bb2b60550c8925a971c42526ca61f6f8a35b8dbbce",
+    "comparisonMayStillBeInconclusive": true
+  },
+  "diagnostic": {
+    "nativeTestOutcome": "FAILED_INTENTIONAL_DIAGNOSTIC",
+    "total": 7,
+    "failed": 1,
+    "passed": 0,
+    "selectionSkipped": 6,
+    "orderingAssessment": "observed-candidate-join-before-disposal",
+    "errorCorrelation": {
+      "allowedOriginalCleanupError": null,
+      "matchedSerializedOccurrences": 0,
+      "selectedBodyErrorCount": 1,
+      "allOtherErrorsRejected": true
+    },
+    "genuineAcceptance": false,
+    "actualHookTimeoutTested": false
+  },
+  "checksPassed": true,
+  "noOwnedChildren": true,
+  "ownedFixtureIdentity": {
+    "fixtureRoot": "/home/orca/.tmp/url-composed-s3C9Ui",
+    "hidden": "/home/orca/.tmp/url-composed-host-2184971-1795707961740/acquisitions/attempt-6SR0U1",
+    "recoveryRoot": "/home/orca/.tmp/url-composed-host-2184971-1795707961740"
+  },
+  "sourceSnapshotUnchanged": true,
+  "overlayRestored": true
+}

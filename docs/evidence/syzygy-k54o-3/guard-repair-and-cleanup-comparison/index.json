@@ -1,0 +1,125 @@
+{
+  "subjectCommit": "6684c270c65d399249204e153e395d8e5dd39ab3",
+  "parentCommit": "12193649b4269a7d86fad68c26cd63bbd82452e7",
+  "sourceFiles": [
+    {
+      "path": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+      "sha256": "9a7ed43c2ae052e8ce64ba96a7cb5ca30946d13b491d17557b572463e5da1f52"
+    },
+    {
+      "path": "packages/polaris-dossier/src/policy-git-native.test.ts",
+      "sha256": "d30c5ac7706f304ba85f7312b1e0ef615cc8c91f53add507077dead59982fb6c"
+    }
+  ],
+  "archiveMembers": 43,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 3222,
+      "sha256": "e0dc28f3cb59407e6aa5ec1cd978f4e93a1dc103f2e5f7a2ef8f641e082632b2"
+    },
+    {
+      "path": "candidate.patch",
+      "bytes": 4051,
+      "sha256": "ffe0b525e53a12c187488e52797f800597b30de190c7aa5ab0d7e6f1af371adc"
+    },
+    {
+      "path": "execution/final-check-all-clean-clone-execution-121936-2/terminal.json",
+      "bytes": 145565,
+      "sha256": "990aed841c46cbd3c2399f98d7d2539fb7b829069508dea7e886bf17924fe6cb"
+    },
+    {
+      "path": "execution/full-121936-integration-failures-assessment-1.json",
+      "bytes": 35281,
+      "sha256": "4dcd19a8a9261ed75e1cd4a262ec7c668b001411277465c52f928cc8a89c4a45"
+    },
+    {
+      "path": "execution/resumed-fixture-paired-r3-execution-121936-1/candidate/child-events.jsonl",
+      "bytes": 5772,
+      "sha256": "ae16a198f8b56d86c62ca6528a28ebb9b14a185b723bd158a51dcb467bce5268"
+    },
+    {
+      "path": "execution/resumed-fixture-paired-r3-execution-121936-1/candidate/parent-catch-capture-final.json",
+      "bytes": 1684,
+      "sha256": "d0a81e3b92a17b62e6e3cc65efdec4de7885e8f8674b1008adcc3bf67fcb3a99"
+    },
+    {
+      "path": "execution/resumed-fixture-paired-r3-execution-121936-1/candidate/parent-observations.json",
+      "bytes": 12504,
+      "sha256": "f354f09b0c63779d2b7fc685cbe9aa26c09378de49bfb471772b70905f47aa3a"
+    },
+    {
+      "path": "execution/resumed-fixture-paired-r3-execution-121936-1/candidate/terminal.json",
+      "bytes": 1771,
+      "sha256": "c4b1830b68d3d5d5081fbc819b2b86ddbc83471c63b03d5a50343bb0cf3e7d28"
+    },
+    {
+      "path": "execution/resumed-fixture-paired-r3-execution-121936-1/original/child-events.jsonl",
+      "bytes": 5773,
+      "sha256": "f4b0df29b6ba6c96691c4a342323ccb6bc496b29040d285fdd96a1ad8eee4df4"
+    },
+    {
+      "path": "execution/resumed-fixture-paired-r3-execution-121936-1/original/parent-catch-capture-final.json",
+      "bytes": 1512,
+      "sha256": "d279b42ea81922fe00b947c85223e34fee00077c191d2b16dcdb4e677f44276d"
+    },
+    {
+      "path": "execution/resumed-fixture-paired-r3-execution-121936-1/original/parent-observations.json",
+      "bytes": 12131,
+      "sha256": "fc79001b6450e3309c84b3c9a682db294fd2c4ec209997d0e9efa926eb3fd867"
+    },
+    {
+      "path": "execution/resumed-fixture-paired-r3-execution-121936-1/original/terminal.json",
+      "bytes": 1750,
+      "sha256": "65195018cbc258566e81087d1d55ba3f110f87f9ba51b64889a1e12921c35d87"
+    },
+    {
+      "path": "execution/resumed-fixture-paired-r3-execution-121936-1/terminal.json",
+      "bytes": 18955,
+      "sha256": "04d658dae5ae1a9a848a9fd2fa4ddbd68be73401492540c2d991987619f22a75"
+    },
+    {
+      "path": "execution/sync-guard-repairs-121936-execution-1/terminal.json",
+      "bytes": 2715,
+      "sha256": "7a2124c0a9acd4316129dbdaa8772c4e71cb9a25e512f3666d92c192d989af8a"
+    },
+    {
+      "path": "execution/sync-guard-repairs-121936-execution-1/typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "execution/sync-guard-repairs-121936-execution-1/vitest.json",
+      "bytes": 11660,
+      "sha256": "c3492a100188ba050ae56690ab8aea1ae88fcc507208e349d55cd103f2ca7172"
+    },
+    {
+      "path": "execution/sync-guard-repairs-121936-execution-1/vitest.log",
+      "bytes": 1638,
+      "sha256": "5383a01622c548249f44a9fb53494698ea37d9d0951456c559c8810d7f0ff398"
+    },
+    {
+      "path": "focused-validation.py",
+      "bytes": 6886,
+      "sha256": "ebf7852a155229d5b098a642799d01f0ac59ba3c600dcb63b031607fcadd1648"
+    },
+    {
+      "path": "frozen-preparations.tar.gz",
+      "bytes": 279830,
+      "sha256": "5054ea108bd2434acaf2f5271f5e45a4492ffdf118fed5970bd55ccb56db3a2b"
+    }
+  ],
+  "fullGate": "FAIL, actual exit1; no acceptance from parser or fault diagnostic",
+  "rawReviews": [
+    {
+      "path": "docs/reviews/F3-SYNC-GUARD-121936-RAW.md",
+      "bytes": 7038,
+      "sha256": "c05dc36912ba651e6b0c5a3bd8c89de8eb9abf8237c3fcdfbd574232b7755f94"
+    },
+    {
+      "path": "docs/reviews/F3-RESUMED-FIXTURE-PAIRED-R3-RAW.md",
+      "bytes": 18669,
+      "sha256": "d4ea8b724e4a2aa37ffef0159dc6bc4e4ed933a5c57e6c9700badde5688ddaea"
+    }
+  ]
+}

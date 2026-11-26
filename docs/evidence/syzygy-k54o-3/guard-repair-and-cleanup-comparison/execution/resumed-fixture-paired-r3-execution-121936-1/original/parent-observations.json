@@ -1,0 +1,377 @@
+{
+  "identity": {
+    "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+    "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+    "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806"
+  },
+  "pid": 2136197,
+  "capture": {
+    "arm": "original",
+    "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+    "captureId": "d8ba181926794831b52cf8788bbc5e00eeff813d20606b5d",
+    "pendingSha256": "da0264c98b4ffedfa5cee7c20a5b5e378094245faf99ec63ba4d35fc85ad1f49",
+    "pending": {
+      "event": "catch-pending",
+      "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+      "arm": "original",
+      "pid": 2136197,
+      "atMs": 298181.806268,
+      "bodySettled": false,
+      "cliSettled": true,
+      "runtimeSettled": true,
+      "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+      "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+      "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806",
+      "deadlineEpochMs": 1795707791875,
+      "maxPauseMs": 5000
+    },
+    "pendingObservedMonotonic": 513898.201134696,
+    "independentLstat": {
+      "phase": "catch-blocked-before-parent-release",
+      "observedEpoch": 1795707786.9414277,
+      "observedMonotonic": 513898.201141499,
+      "paths": {
+        "fixtureRoot": {
+          "exists": false
+        },
+        "hidden": {
+          "exists": false
+        },
+        "recoveryRoot": {
+          "exists": true,
+          "dev": 2066,
+          "ino": 2673143,
+          "uid": 996,
+          "mode": 448
+        }
+      }
+    },
+    "capturedEpoch": 1795707786.9416547,
+    "releaseWrittenEpoch": 1795707786.9884486,
+    "releaseWrittenMonotonic": 513898.248164996,
+    "releaseCompletedBeforeEpochDeadline": true,
+    "parentMonotonicElapsedMs": 47.03029996016994
+  },
+  "events": [
+    {
+      "event": "runtime-acquired",
+      "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+      "arm": "original",
+      "pid": 2136197,
+      "atMs": 297806.093944,
+      "bodySettled": false,
+      "cliSettled": false,
+      "runtimeSettled": false,
+      "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+      "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+      "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806",
+      "current": true
+    },
+    {
+      "event": "fixture-close-enter",
+      "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+      "arm": "original",
+      "pid": 2136197,
+      "atMs": 297833.834959,
+      "bodySettled": false,
+      "cliSettled": false,
+      "runtimeSettled": false,
+      "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+      "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+      "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806",
+      "current": true
+    },
+    {
+      "event": "fixture-close-return",
+      "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+      "arm": "original",
+      "pid": 2136197,
+      "atMs": 297883.915637,
+      "bodySettled": false,
+      "cliSettled": false,
+      "runtimeSettled": false,
+      "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+      "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+      "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806",
+      "current": false,
+      "fixturePresent": false
+    },
+    {
+      "event": "cleanup-fulfilled",
+      "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+      "arm": "original",
+      "pid": 2136197,
+      "atMs": 297893.851903,
+      "bodySettled": false,
+      "cliSettled": false,
+      "runtimeSettled": false,
+      "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+      "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+      "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806"
+    },
+    {
+      "event": "runtime-probe",
+      "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+      "arm": "original",
+      "pid": 2136197,
+      "atMs": 298033.75795,
+      "bodySettled": false,
+      "cliSettled": false,
+      "runtimeSettled": false,
+      "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+      "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+      "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806",
+      "current": false,
+      "fixturePresent": false
+    },
+    {
+      "event": "runtime-stop-settled",
+      "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+      "arm": "original",
+      "pid": 2136197,
+      "atMs": 298073.133361,
+      "bodySettled": false,
+      "cliSettled": false,
+      "runtimeSettled": true,
+      "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+      "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+      "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806"
+    },
+    {
+      "event": "cli-settled",
+      "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+      "arm": "original",
+      "pid": 2136197,
+      "atMs": 298158.379026,
+      "bodySettled": false,
+      "cliSettled": true,
+      "runtimeSettled": true,
+      "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+      "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+      "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806"
+    },
+    {
+      "event": "body-catch-enter",
+      "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+      "arm": "original",
+      "pid": 2136197,
+      "atMs": 298173.375936,
+      "bodySettled": false,
+      "cliSettled": true,
+      "runtimeSettled": true,
+      "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+      "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+      "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806",
+      "current": false
+    },
+    {
+      "event": "parent-released",
+      "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+      "arm": "original",
+      "pid": 2136197,
+      "atMs": 298307.158175,
+      "bodySettled": false,
+      "cliSettled": true,
+      "runtimeSettled": true,
+      "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+      "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+      "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806",
+      "elapsedMs": 125.24269500002265,
+      "maxPauseMs": 5000,
+      "captureId": "d8ba181926794831b52cf8788bbc5e00eeff813d20606b5d"
+    },
+    {
+      "event": "body-catch-probe",
+      "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+      "arm": "original",
+      "pid": 2136197,
+      "atMs": 298379.218609,
+      "bodySettled": false,
+      "cliSettled": true,
+      "runtimeSettled": true,
+      "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+      "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+      "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806",
+      "parentHandshake": "released",
+      "current": false,
+      "fixturePresent": false
+    },
+    {
+      "event": "body-finally",
+      "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+      "arm": "original",
+      "pid": 2136197,
+      "atMs": 298403.980488,
+      "bodySettled": true,
+      "cliSettled": true,
+      "runtimeSettled": true,
+      "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+      "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+      "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806"
+    },
+    {
+      "event": "root-delete-enter",
+      "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+      "arm": "original",
+      "pid": 2136197,
+      "atMs": 298496.836821,
+      "bodySettled": true,
+      "cliSettled": true,
+      "runtimeSettled": true,
+      "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+      "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+      "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806"
+    },
+    {
+      "event": "root-delete-return",
+      "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+      "arm": "original",
+      "pid": 2136197,
+      "atMs": 298542.395701,
+      "bodySettled": true,
+      "cliSettled": true,
+      "runtimeSettled": true,
+      "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+      "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+      "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806"
+    }
+  ],
+  "lstatSamples": [
+    {
+      "phase": "after-runtime-acquired",
+      "observedEpoch": 1795707786.5267267,
+      "observedMonotonic": 513897.786441621,
+      "paths": {
+        "fixtureRoot": {
+          "exists": true,
+          "dev": 2066,
+          "ino": 2673144,
+          "uid": 996,
+          "mode": 448
+        },
+        "hidden": {
+          "exists": true,
+          "dev": 2066,
+          "ino": 6475254,
+          "uid": 996,
+          "mode": 448
+        },
+        "recoveryRoot": {
+          "exists": true,
+          "dev": 2066,
+          "ino": 2673143,
+          "uid": 996,
+          "mode": 448
+        }
+      }
+    },
+    {
+      "phase": "after-fixture-close-return",
+      "observedEpoch": 1795707786.5884295,
+      "observedMonotonic": 513897.848144441,
+      "paths": {
+        "fixtureRoot": {
+          "exists": false
+        },
+        "hidden": {
+          "exists": false
+        },
+        "recoveryRoot": {
+          "exists": true,
+          "dev": 2066,
+          "ino": 2673143,
+          "uid": 996,
+          "mode": 448
+        }
+      }
+    },
+    {
+      "phase": "after-cleanup-fulfilled",
+      "observedEpoch": 1795707786.5885186,
+      "observedMonotonic": 513897.848232283,
+      "paths": {
+        "fixtureRoot": {
+          "exists": false
+        },
+        "hidden": {
+          "exists": false
+        },
+        "recoveryRoot": {
+          "exists": true,
+          "dev": 2066,
+          "ino": 2673143,
+          "uid": 996,
+          "mode": 448
+        }
+      }
+    },
+    {
+      "phase": "catch-blocked-before-parent-release",
+      "observedEpoch": 1795707786.9414277,
+      "observedMonotonic": 513898.201141499,
+      "paths": {
+        "fixtureRoot": {
+          "exists": false
+        },
+        "hidden": {
+          "exists": false
+        },
+        "recoveryRoot": {
+          "exists": true,
+          "dev": 2066,
+          "ino": 2673143,
+          "uid": 996,
+          "mode": 448
+        }
+      }
+    },
+    {
+      "phase": "after-root-delete-return",
+      "observedEpoch": 1795707787.254997,
+      "observedMonotonic": 513898.514711893,
+      "paths": {
+        "fixtureRoot": {
+          "exists": false
+        },
+        "hidden": {
+          "exists": false
+        },
+        "recoveryRoot": {
+          "exists": false
+        }
+      }
+    },
+    {
+      "phase": "terminal-after-owned-descendant-drain",
+      "observedEpoch": 1795707788.534889,
+      "observedMonotonic": 513899.794603609,
+      "paths": {
+        "fixtureRoot": {
+          "exists": false
+        },
+        "hidden": {
+          "exists": false
+        },
+        "recoveryRoot": {
+          "exists": false
+        }
+      }
+    },
+    {
+      "phase": "terminal-after-owned-descendant-drain",
+      "observedEpoch": 1795707788.868132,
+      "observedMonotonic": 513900.127846386,
+      "paths": {
+        "fixtureRoot": {
+          "exists": false
+        },
+        "hidden": {
+          "exists": false
+        },
+        "recoveryRoot": {
+          "exists": false
+        }
+      }
+    }
+  ]
+}

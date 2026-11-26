@@ -1,0 +1,655 @@
+{
+  "mode": "paired-intentional-diagnostic",
+  "primaryHead": "12193649b4269a7d86fad68c26cd63bbd82452e7",
+  "cloneHead": "c10acd305863a653593c23a1e0ad4d22448a2762",
+  "commands": [
+    {
+      "label": "original-clone",
+      "argv": [
+        "git",
+        "clone",
+        "--no-hardlinks",
+        "--no-checkout",
+        "--quiet",
+        "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w",
+        "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/original-checkout"
+      ],
+      "cwd": "/home/orca/.tmp/f3-native-admission-fixes",
+      "operatorWatchdogSeconds": 120,
+      "watchdogMeans": "failure-and-owned-descendant-drain-only",
+      "returncode": 0,
+      "seconds": 13.557410057983361
+    },
+    {
+      "label": "original-checkout",
+      "argv": [
+        "git",
+        "-C",
+        "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/original-checkout",
+        "checkout",
+        "--detach",
+        "--quiet",
+        "c10acd305863a653593c23a1e0ad4d22448a2762"
+      ],
+      "cwd": "/home/orca/.tmp/f3-native-admission-fixes",
+      "operatorWatchdogSeconds": 60,
+      "watchdogMeans": "failure-and-owned-descendant-drain-only",
+      "returncode": 0,
+      "seconds": 9.718750145053491
+    },
+    {
+      "label": "original-npm-ci",
+      "argv": [
+        "npm",
+        "ci"
+      ],
+      "cwd": "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/original-checkout",
+      "operatorWatchdogSeconds": 600,
+      "watchdogMeans": "failure-and-owned-descendant-drain-only",
+      "returncode": 0,
+      "seconds": 4.427790129964706
+    },
+    {
+      "label": "original-overlay-typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/original-checkout",
+      "operatorWatchdogSeconds": 300,
+      "watchdogMeans": "failure-and-owned-descendant-drain-only",
+      "returncode": 0,
+      "seconds": 37.2675249830354
+    },
+    {
+      "label": "original-native-diagnostic",
+      "argv": [
+        "/home/orca/.nvm/versions/node/v24.6.0/bin/node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-run-composed.test.ts",
+        "--testNamePattern",
+        "^composed\\ URL\\ run\\ with\\ actual\\ role\\ processes\\ runs\\ the\\ genuine\\ production\\ pipeline\\ to\\ stop\\-resume$",
+        "--reporter=verbose",
+        "--reporter=json",
+        "--reporter",
+        "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-paired-operators-r3-c245-20261126-1/all-errors-reporter.mjs",
+        "--outputFile",
+        "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-paired-r3-execution-121936-1/original/vitest.json"
+      ],
+      "cwd": "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/original-checkout",
+      "operatorWatchdogSeconds": 900,
+      "watchdogMeans": "failure-and-owned-descendant-drain-only",
+      "returncode": 1,
+      "seconds": 302.75673396897037
+    },
+    {
+      "label": "candidate-clone",
+      "argv": [
+        "git",
+        "clone",
+        "--no-hardlinks",
+        "--no-checkout",
+        "--quiet",
+        "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w",
+        "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/candidate-checkout"
+      ],
+      "cwd": "/home/orca/.tmp/f3-native-admission-fixes",
+      "operatorWatchdogSeconds": 120,
+      "watchdogMeans": "failure-and-owned-descendant-drain-only",
+      "returncode": 0,
+      "seconds": 13.239376256009564
+    },
+    {
+      "label": "candidate-checkout",
+      "argv": [
+        "git",
+        "-C",
+        "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/candidate-checkout",
+        "checkout",
+        "--detach",
+        "--quiet",
+        "c10acd305863a653593c23a1e0ad4d22448a2762"
+      ],
+      "cwd": "/home/orca/.tmp/f3-native-admission-fixes",
+      "operatorWatchdogSeconds": 60,
+      "watchdogMeans": "failure-and-owned-descendant-drain-only",
+      "returncode": 0,
+      "seconds": 7.817904525029007
+    },
+    {
+      "label": "candidate-npm-ci",
+      "argv": [
+        "npm",
+        "ci"
+      ],
+      "cwd": "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/candidate-checkout",
+      "operatorWatchdogSeconds": 600,
+      "watchdogMeans": "failure-and-owned-descendant-drain-only",
+      "returncode": 0,
+      "seconds": 19.11286629398819
+    },
+    {
+      "label": "candidate-overlay-typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/candidate-checkout",
+      "operatorWatchdogSeconds": 300,
+      "watchdogMeans": "failure-and-owned-descendant-drain-only",
+      "returncode": 0,
+      "seconds": 29.414968773024157
+    },
+    {
+      "label": "candidate-native-diagnostic",
+      "argv": [
+        "/home/orca/.nvm/versions/node/v24.6.0/bin/node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-run-composed.test.ts",
+        "--testNamePattern",
+        "^composed\\ URL\\ run\\ with\\ actual\\ role\\ processes\\ runs\\ the\\ genuine\\ production\\ pipeline\\ to\\ stop\\-resume$",
+        "--reporter=verbose",
+        "--reporter=json",
+        "--reporter",
+        "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-ownership-paired-operators-r3-c245-20261126-1/all-errors-reporter.mjs",
+        "--outputFile",
+        "/home/orca/.tmp/f3-native-admission-fixes/resumed-fixture-paired-r3-execution-121936-1/candidate/vitest.json"
+      ],
+      "cwd": "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/candidate-checkout",
+      "operatorWatchdogSeconds": 900,
+      "watchdogMeans": "failure-and-owned-descendant-drain-only",
+      "returncode": 1,
+      "seconds": 268.6771701950347
+    }
+  ],
+  "arms": [
+    {
+      "kind": "original",
+      "errors": [],
+      "complete": true,
+      "nonce": "0b4cec57ddf10630f16ffb5481e28a05073e14c857ed3f16",
+      "checkout": "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/original-checkout",
+      "controlDirectory": "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/original-control",
+      "sourceParentIdentity": {
+        "dev": 2066,
+        "ino": 6865878,
+        "uid": 996
+      },
+      "overlayInstallGuarded": true,
+      "overlaySha256": "74f2e606dd55c9dc64e10cbf79c3f4fa40993540067ff29155011f17a34f76b3",
+      "restorationSha256": "bf6c2da5785db51ef61cbbd6fc58ac592fd03fd8031336bb69e5f83a4d1e1e82",
+      "overlayTypecheckPassed": true,
+      "retainedOrderingFacts": {
+        "fixtureCloseEnteredBeforeBodyFinally": true,
+        "hasBodyFinally": true,
+        "hasFixtureCloseEntry": true,
+        "parentCaptureId": "d8ba181926794831b52cf8788bbc5e00eeff813d20606b5d",
+        "comparisonMayStillBeInconclusive": true
+      },
+      "diagnostic": {
+        "nativeTestOutcome": "FAILED_INTENTIONAL_DIAGNOSTIC",
+        "total": 7,
+        "failed": 1,
+        "passed": 0,
+        "selectionSkipped": 6,
+        "orderingAssessment": "observed-original-race",
+        "errorCorrelation": {
+          "allowedOriginalCleanupError": null,
+          "matchedSerializedOccurrences": 0,
+          "selectedBodyErrorCount": 1,
+          "allOtherErrorsRejected": true
+        },
+        "genuineAcceptance": false,
+        "actualHookTimeoutTested": false
+      },
+      "checksPassed": true,
+      "noOwnedChildren": true,
+      "ownedFixtureIdentity": {
+        "fixtureRoot": "/home/orca/.tmp/url-composed-zQjZfy",
+        "hidden": "/home/orca/.tmp/url-composed-host-2136197-1795707489806/acquisitions/attempt-wGVZDH",
+        "recoveryRoot": "/home/orca/.tmp/url-composed-host-2136197-1795707489806"
+      },
+      "sourceSnapshotUnchanged": true,
+      "overlayRestored": true
+    },
+    {
+      "kind": "candidate",
+      "errors": [],
+      "complete": true,
+      "nonce": "0c89a3d0783908b3f837b68fecea885b509207f6b44a2b02",
+      "checkout": "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/candidate-checkout",
+      "controlDirectory": "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of/candidate-control",
+      "sourceParentIdentity": {
+        "dev": 2066,
+        "ino": 7513939,
+        "uid": 996
+      },
+      "overlayInstallGuarded": true,
+      "overlaySha256": "6603684d49bb0ed8aefddfc161a748e4593f00d7a9b426cb4693812862d5cf48",
+      "restorationSha256": "c88fc172ccfcd094e50b7f1e2d1118496745725b8d8e2411bef80b11e8777567",
+      "overlayTypecheckPassed": true,
+      "retainedOrderingFacts": {
+        "fixtureCloseEnteredBeforeBodyFinally": false,
+        "hasBodyFinally": true,
+        "hasFixtureCloseEntry": true,
+        "parentCaptureId": "64fc35bb2b60550c8925a971c42526ca61f6f8a35b8dbbce",
+        "comparisonMayStillBeInconclusive": true
+      },
+      "diagnostic": {
+        "nativeTestOutcome": "FAILED_INTENTIONAL_DIAGNOSTIC",
+        "total": 7,
+        "failed": 1,
+        "passed": 0,
+        "selectionSkipped": 6,
+        "orderingAssessment": "observed-candidate-join-before-disposal",
+        "errorCorrelation": {
+          "allowedOriginalCleanupError": null,
+          "matchedSerializedOccurrences": 0,
+          "selectedBodyErrorCount": 1,
+          "allOtherErrorsRejected": true
+        },
+        "genuineAcceptance": false,
+        "actualHookTimeoutTested": false
+      },
+      "checksPassed": true,
+      "noOwnedChildren": true,
+      "ownedFixtureIdentity": {
+        "fixtureRoot": "/home/orca/.tmp/url-composed-s3C9Ui",
+        "hidden": "/home/orca/.tmp/url-composed-host-2184971-1795707961740/acquisitions/attempt-6SR0U1",
+        "recoveryRoot": "/home/orca/.tmp/url-composed-host-2184971-1795707961740"
+      },
+      "sourceSnapshotUnchanged": true,
+      "overlayRestored": true
+    }
+  ],
+  "reaped": [
+    {
+      "pid": 2137775,
+      "status": 0
+    },
+    {
+      "pid": 2138981,
+      "status": 0
+    },
+    {
+      "pid": 2139029,
+      "status": 0
+    },
+    {
+      "pid": 2139035,
+      "status": 0
+    },
+    {
+      "pid": 2139042,
+      "status": 0
+    },
+    {
+      "pid": 2139427,
+      "status": 0
+    },
+    {
+      "pid": 2139877,
+      "status": 0
+    },
+    {
+      "pid": 2140368,
+      "status": 0
+    },
+    {
+      "pid": 2141481,
+      "status": 0
+    },
+    {
+      "pid": 2142352,
+      "status": 0
+    },
+    {
+      "pid": 2143789,
+      "status": 0
+    },
+    {
+      "pid": 2145325,
+      "status": 0
+    },
+    {
+      "pid": 2154971,
+      "status": 0
+    },
+    {
+      "pid": 2143360,
+      "status": 9
+    },
+    {
+      "pid": 2144801,
+      "status": 9
+    },
+    {
+      "pid": 2146019,
+      "status": 9
+    },
+    {
+      "pid": 2156063,
+      "status": 9
+    },
+    {
+      "pid": 2158335,
+      "status": 0
+    },
+    {
+      "pid": 2158813,
+      "status": 0
+    },
+    {
+      "pid": 2159069,
+      "status": 0
+    },
+    {
+      "pid": 2159806,
+      "status": 0
+    },
+    {
+      "pid": 2136074,
+      "status": 0
+    },
+    {
+      "pid": 2186194,
+      "status": 0
+    },
+    {
+      "pid": 2187132,
+      "status": 0
+    },
+    {
+      "pid": 2187192,
+      "status": 0
+    },
+    {
+      "pid": 2187285,
+      "status": 0
+    },
+    {
+      "pid": 2187292,
+      "status": 0
+    },
+    {
+      "pid": 2187728,
+      "status": 0
+    },
+    {
+      "pid": 2188883,
+      "status": 0
+    },
+    {
+      "pid": 2189795,
+      "status": 0
+    },
+    {
+      "pid": 2190429,
+      "status": 0
+    },
+    {
+      "pid": 2191591,
+      "status": 0
+    },
+    {
+      "pid": 2193449,
+      "status": 0
+    },
+    {
+      "pid": 2194825,
+      "status": 0
+    },
+    {
+      "pid": 2203972,
+      "status": 0
+    },
+    {
+      "pid": 2193050,
+      "status": 9
+    },
+    {
+      "pid": 2204193,
+      "status": 9
+    },
+    {
+      "pid": 2195703,
+      "status": 9
+    },
+    {
+      "pid": 2194517,
+      "status": 9
+    },
+    {
+      "pid": 2205616,
+      "status": 0
+    },
+    {
+      "pid": 2205792,
+      "status": 0
+    },
+    {
+      "pid": 2205978,
+      "status": 0
+    },
+    {
+      "pid": 2206084,
+      "status": 0
+    },
+    {
+      "pid": 2184888,
+      "status": 0
+    }
+  ],
+  "errors": [],
+  "complete": true,
+  "genuineAcceptance": false,
+  "actualHookTimeoutTested": false,
+  "manifestSha256": "b7fd196c136399577d85c17c76ab28673168bfb37029ea93ebec977d719c14a8",
+  "subreaper": true,
+  "privateScratch": "/home/orca/.tmp/resumed-fixture-paired-r3-fxkun7of",
+  "comparisonObserved": true,
+  "noOwnedChildren": true,
+  "primarySourceSnapshotUnchanged": true,
+  "privateScratchRetained": true,
+  "retentionReason": "intentional-failure evidence and disposable clones retained for review; no owned directory deletion performed by runner",
+  "artifacts": [
+    {
+      "file": "candidate/all-errors.json",
+      "bytes": 309935,
+      "sha256": "b3e94e7e04720896fc5405a5ebb09374f24f9215898be8514fa1c4e6af579195"
+    },
+    {
+      "file": "candidate/child-catch-state.json",
+      "bytes": 529,
+      "sha256": "5f434fbb96e7e2917d078ed15c34ae15b437496e9d4e770c55eb03e90925690f"
+    },
+    {
+      "file": "candidate/child-events.jsonl",
+      "bytes": 5772,
+      "sha256": "ae16a198f8b56d86c62ca6528a28ebb9b14a185b723bd158a51dcb467bce5268"
+    },
+    {
+      "file": "candidate/child-release.json",
+      "bytes": 387,
+      "sha256": "4a742fb76f541394c4a77dc240494e7dfe3c76b1fb05d11a07a0d54d9392b746"
+    },
+    {
+      "file": "candidate/clone-c10-before.json",
+      "bytes": 3065342,
+      "sha256": "f7076a63a16f09ad3d7cf8c4a621a885b423d210343b458adb247337f9fcdb10"
+    },
+    {
+      "file": "candidate/clone-overlay-after.json",
+      "bytes": 3065404,
+      "sha256": "cd490c4956df241187503cbb8fc5cbfec40ef0324e888c181345d0a55efe4240"
+    },
+    {
+      "file": "candidate/clone-overlay-before.json",
+      "bytes": 3065404,
+      "sha256": "cd490c4956df241187503cbb8fc5cbfec40ef0324e888c181345d0a55efe4240"
+    },
+    {
+      "file": "candidate/clone-restored.json",
+      "bytes": 3065404,
+      "sha256": "3eb05db7c5e8db1fc594b7bfd0e49375117203f6cfc4b9f571fe8d848973bf1c"
+    },
+    {
+      "file": "candidate/parent-catch-capture-final.json",
+      "bytes": 1684,
+      "sha256": "d0a81e3b92a17b62e6e3cc65efdec4de7885e8f8674b1008adcc3bf67fcb3a99"
+    },
+    {
+      "file": "candidate/parent-catch-capture.json",
+      "bytes": 1495,
+      "sha256": "a01b54fed01a04d4586afc0842f305f4d818a872e7b7a3b35b207ced89b37604"
+    },
+    {
+      "file": "candidate/parent-observations.json",
+      "bytes": 12504,
+      "sha256": "f354f09b0c63779d2b7fc685cbe9aa26c09378de49bfb471772b70905f47aa3a"
+    },
+    {
+      "file": "candidate/terminal.json",
+      "bytes": 1771,
+      "sha256": "c4b1830b68d3d5d5081fbc819b2b86ddbc83471c63b03d5a50343bb0cf3e7d28"
+    },
+    {
+      "file": "candidate/vitest.json",
+      "bytes": 156270,
+      "sha256": "0bbd5bca7bc5d725c1c42f82b3f522d83928861068ad153a4ecbfad1814af28e"
+    },
+    {
+      "file": "candidate/vitest.log",
+      "bytes": 389134,
+      "sha256": "f5bd9b270762a18b4277d326b60f053e2dda4d823661ede099cd96f43ad94da1"
+    },
+    {
+      "file": "candidate-checkout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "candidate-clone.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "candidate-npm-ci.log",
+      "bytes": 354,
+      "sha256": "aef2a0a1aa1638b191d970a3221ad74d7b24dd8054ecdebef991c4d50f6a428a"
+    },
+    {
+      "file": "candidate-overlay-typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "file": "original/all-errors.json",
+      "bytes": 309898,
+      "sha256": "ebb15b373c7090e5ccd24d2b07c88f8a25c2b80e53e1d6247bf76b8ddecdfd7d"
+    },
+    {
+      "file": "original/child-catch-state.json",
+      "bytes": 529,
+      "sha256": "021cc6d78bcbbfe202932232d544ddcb6cc50c8623d469f2ae3bda683f425e44"
+    },
+    {
+      "file": "original/child-events.jsonl",
+      "bytes": 5773,
+      "sha256": "f4b0df29b6ba6c96691c4a342323ccb6bc496b29040d285fdd96a1ad8eee4df4"
+    },
+    {
+      "file": "original/child-release.json",
+      "bytes": 386,
+      "sha256": "c656ffbffa8a748a4a6acebf50b02a6a8d26151ecbaaebb94e0cbe07ab543a6d"
+    },
+    {
+      "file": "original/clone-c10-before.json",
+      "bytes": 3065342,
+      "sha256": "f7076a63a16f09ad3d7cf8c4a621a885b423d210343b458adb247337f9fcdb10"
+    },
+    {
+      "file": "original/clone-overlay-after.json",
+      "bytes": 3065404,
+      "sha256": "f23464e92277c9a3ff3e85cf3be723520d133201e68091564e71d4400c45b9e0"
+    },
+    {
+      "file": "original/clone-overlay-before.json",
+      "bytes": 3065404,
+      "sha256": "f23464e92277c9a3ff3e85cf3be723520d133201e68091564e71d4400c45b9e0"
+    },
+    {
+      "file": "original/clone-restored.json",
+      "bytes": 3065342,
+      "sha256": "f7076a63a16f09ad3d7cf8c4a621a885b423d210343b458adb247337f9fcdb10"
+    },
+    {
+      "file": "original/parent-catch-capture-final.json",
+      "bytes": 1512,
+      "sha256": "d279b42ea81922fe00b947c85223e34fee00077c191d2b16dcdb4e677f44276d"
+    },
+    {
+      "file": "original/parent-catch-capture.json",
+      "bytes": 1324,
+      "sha256": "05375f5f429fd503d516a93b01040ee7d5b9f3453306cdea900cad0f9f949fe7"
+    },
+    {
+      "file": "original/parent-observations.json",
+      "bytes": 12131,
+      "sha256": "fc79001b6450e3309c84b3c9a682db294fd2c4ec209997d0e9efa926eb3fd867"
+    },
+    {
+      "file": "original/terminal.json",
+      "bytes": 1750,
+      "sha256": "65195018cbc258566e81087d1d55ba3f110f87f9ba51b64889a1e12921c35d87"
+    },
+    {
+      "file": "original/vitest.json",
+      "bytes": 156253,
+      "sha256": "f614fb4e05a47f4c9a467f21b11789d1dbd80d0a88761959251b3f9ec8374ff1"
+    },
+    {
+      "file": "original/vitest.log",
+      "bytes": 389090,
+      "sha256": "a8f7e40f73394a0a3ce7dc1cd2ffa64908914d1ce2afd568fc1d64e9e8127742"
+    },
+    {
+      "file": "original-checkout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "original-clone.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "original-npm-ci.log",
+      "bytes": 353,
+      "sha256": "7b63dbb888dd37797ba1647f2e9801f7ced11673c0d32f14c1ab0f3bacaa857c"
+    },
+    {
+      "file": "original-overlay-typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "file": "primary-after.json",
+      "bytes": 3068571,
+      "sha256": "40be3b490ad907bd7703668724ceb59500b3c7e79337b6f0c00f5a5702f332d4"
+    },
+    {
+      "file": "primary-before.json",
+      "bytes": 3068571,
+      "sha256": "40be3b490ad907bd7703668724ceb59500b3c7e79337b6f0c00f5a5702f332d4"
+    }
+  ]
+}

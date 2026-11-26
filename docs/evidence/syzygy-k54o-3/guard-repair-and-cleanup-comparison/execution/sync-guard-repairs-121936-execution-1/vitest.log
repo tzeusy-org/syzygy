@@ -1,0 +1,20 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w
+
+ ✓ |integration| apps/three-surface-poc/src/sync-child-process-guard.test.ts (11 tests) 14002ms
+   ✓ suite child processes and the vitest worker RPC > runs only short local tools synchronously in a suite test file or any module it imports  13434ms
+   ✓ suite child processes and the vitest worker RPC > refuses changed, copied or duplicated native calls and changes to the generated child fixture  306ms
+ ✓ |integration| packages/polaris-dossier/src/policy-git-native.test.ts (17 tests) 20097ms
+   ✓ native policy Git ownership and transport > samples timeout/control while stderr stays busy and reaps the complete writer population  315ms
+   ✓ native policy Git ownership and transport > waits and reaps a detached adopted child after direct Git exit and closed pipes  358ms
+   ✓ native policy Git ownership and transport > refuses expiry during actual host/Git preparation before either executable starts  1978ms
+   ✓ native policy Git ownership and transport > settles queued work without JS callbacks and never dispatches after its admission deadline  2349ms
+   ✓ keeps the actual policy phase trace, HEAD retry, ref short circuit and working-file checks  2582ms
+   ✓ admits a real policy batch above the former prototype 64KiB stdin cap  661ms
+
+ Test Files  2 passed (2)
+      Tests  28 passed (28)
+   Start at  00:01:03
+   Duration  23.05s (transform 1.11s, setup 31ms, collect 2.06s, tests 34.10s, environment 1ms, prepare 887ms)
+
+JSON report written to /home/orca/.tmp/f3-native-admission-fixes/sync-guard-repairs-121936-execution-1/vitest.json
