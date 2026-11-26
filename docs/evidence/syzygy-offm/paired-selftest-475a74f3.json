@@ -1,0 +1,90 @@
+{
+  "format": "paired-selftest/1",
+  "commit": "475a74f352d392bf5932d36641947b46b952ef49",
+  "subject": {
+    "scripts/signed_trace_cache.py": "416c65f79c9bdd7cf0d281ed597b2b6994ecd905b1b9c2edcda3b2824b0c164a"
+  },
+  "method": "One fresh `git clone --shared` checked out at the commit; `python3 scripts/check_spec_reconciliation.py --selftest --witnesses <file>` run twice back to back with SELFTEST_WORKERS=4 and TMPDIR under ~/.tmp: first with SIGNED_TRACE_CACHE=off (stock), then armed with SIGNED_TRACE_STATS set. Wall time by `date` around each run. The host was shared with other lanes' work, so the walls carry load noise of unmeasured size [Observed: load average 3.5-5.0 during the stock run, 1.2-3.6 near the end of the cached run].",
+  "wallSeconds": {
+    "stock": 944.7,
+    "cached": 863.2
+  },
+  "exit": {
+    "stock": 0,
+    "cached": 0
+  },
+  "verdict": {
+    "stock": "SELFTEST PASS: clean scratch copy and its signed- and adopted-addition variants pass; 632 of 632 mutants killed by their expected predicate; 146 of 146 controls held (commit 475a74f352d3)",
+    "cached": "SELFTEST PASS: clean scratch copy and its signed- and adopted-addition variants pass; 632 of 632 mutants killed by their expected predicate; 146 of 146 controls held (commit 475a74f352d3)"
+  },
+  "witnessSha256": {
+    "stock": "63349b249272fef30e4dff328fa16757d5c6fcf66b8c3b77ef48a05c781f01f2",
+    "cached": "63349b249272fef30e4dff328fa16757d5c6fcf66b8c3b77ef48a05c781f01f2"
+  },
+  "witnessByteIdentical": true,
+  "cachedRun": {
+    "primes": [
+      {
+        "root": "base",
+        "usable": true,
+        "observations": {
+          "env": 1,
+          "git": 664,
+          "list": 18,
+          "lstat": 154,
+          "oids": 1,
+          "read": 142,
+          "stat": 195
+        },
+        "reasons": []
+      },
+      {
+        "root": "with-signed-addition",
+        "usable": true,
+        "observations": {
+          "env": 1,
+          "git": 664,
+          "list": 18,
+          "lstat": 154,
+          "oids": 1,
+          "read": 142,
+          "stat": 195
+        },
+        "reasons": []
+      },
+      {
+        "root": "with-adopted-addition",
+        "usable": true,
+        "observations": {
+          "env": 1,
+          "git": 664,
+          "list": 18,
+          "lstat": 154,
+          "oids": 1,
+          "read": 142,
+          "stat": 195
+        },
+        "reasons": []
+      }
+    ],
+    "lookups": {
+      "hit": 52,
+      "miss": 73,
+      "sampled-hit": 14
+    },
+    "lookupSecondsTotal": {
+      "hit": 9.9,
+      "miss": 131.0,
+      "sampled-hit": 35.1
+    },
+    "missesByFirstDifferingKindAgainstBase": {
+      "read": 15,
+      "lstat": 26,
+      "list": 24,
+      "stat": 2,
+      "modules": 6
+    },
+    "sampledHitMismatches": 0
+  },
+  "finding": "[Observed] is_signed is reached by 139 lookups per selftest, not once per case: 52 plain hits answered in 9.9 s in all, against roughly 2.4 s for each stock call; the bead's estimate that is_signed was ~350 of the wall seconds [Inferred, unverified] does not hold at this commit."
+}

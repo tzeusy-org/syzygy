@@ -1,0 +1,81 @@
+{
+  "format": "harness-run/1",
+  "commit": "475a74f352d392bf5932d36641947b46b952ef49",
+  "subject": {
+    "scripts/signed_trace_cache.py": "416c65f79c9bdd7cf0d281ed597b2b6994ecd905b1b9c2edcda3b2824b0c164a",
+    "docs/evidence/syzygy-offm/trace_cache_harness.py": "bbd06eabe9161ef4bc53e5de768684fcf1662a693bda2e79961cc3c5f18fa913"
+  },
+  "command": "TMPDIR=<scratch> python3 docs/evidence/syzygy-offm/trace_cache_harness.py . --json <out>",
+  "results": [
+    {
+      "id": "audit",
+      "held": true,
+      "detail": "unhooked events 0, unusable reasons [], traced answer True vs stock True, observations {'list': 18, 'lstat': 158, 'read': 142, 'stat': 195, 'git': 664, 'env': 1, 'oids': 1}, traced in 7.57s"
+    },
+    {
+      "id": "copy-hits",
+      "held": true,
+      "detail": "matches True in 0.212s; stock answer True"
+    },
+    {
+      "id": "stat-symlink",
+      "held": true,
+      "detail": ".syzygy/governance/contracts/candidates/governance-simplification-d10/D10-LOG-ROW.txt -> symlink to identical bytes: differing observation kinds ['lstat']; stock answer ('value', False)"
+    },
+    {
+      "id": "listing-extra",
+      "held": true,
+      "detail": "extra file in .syzygy/governance/contracts/candidates/governance-simplification-d10/proposed: differing observation kinds ['list']; stock answer ('value', False)"
+    },
+    {
+      "id": "git-objects",
+      "held": true,
+      "detail": "traced over a shared clone (True, unusable []); over an empty repository the differing observation kinds are ['git', 'oids']; stock answer ('value', False)"
+    },
+    {
+      "id": "detects-direct-stat",
+      "held": true,
+      "detail": "unhooked: ['C call stat from /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-offm/docs/evidence/syzygy-offm/trace_cache_harness.py:<lambda>']"
+    },
+    {
+      "id": "detects-clock",
+      "held": true,
+      "detail": "unusable: ['clock read (time)']"
+    },
+    {
+      "id": "detects-random",
+      "held": true,
+      "detail": "unusable: ['random read (random)']"
+    },
+    {
+      "id": "detects-non-git-subprocess",
+      "held": true,
+      "detail": "unusable: [\"non-git subprocess ['true']\"]"
+    },
+    {
+      "id": "detects-write-outside",
+      "held": true,
+      "detail": "unusable: [\"write outside the trace's temporary directories: @R/b\"]"
+    },
+    {
+      "id": "detects-direntry-stat",
+      "held": true,
+      "detail": "unhooked: ['DirEntry.stat from /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-offm/docs/evidence/syzygy-offm/trace_cache_harness.py:<lambda>', 'DirEntry.stat from /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-offm/docs/evidence/syzygy-offm/trace_cache_harness.py:<lambda>']"
+    },
+    {
+      "id": "detects-symlink",
+      "held": true,
+      "detail": "unusable: ['unhooked: os.symlink']"
+    },
+    {
+      "id": "detects-env-as-input",
+      "held": true,
+      "detail": "observations [('env', 'environ')]"
+    },
+    {
+      "id": "detects-module-global",
+      "held": true,
+      "detail": "patched matches False, restored matches True"
+    }
+  ]
+}

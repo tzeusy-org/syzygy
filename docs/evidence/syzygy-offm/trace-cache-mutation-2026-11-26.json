@@ -1,0 +1,88 @@
+{
+ "format": "mutation-run/1",
+ "ranAt": "2026-11-26T13:56:02.108533+00:00",
+ "commit": "475a74f352d392bf5932d36641947b46b952ef49",
+ "subject": {
+  "scripts/signed_trace_cache.py": "416c65f79c9bdd7cf0d281ed597b2b6994ecd905b1b9c2edcda3b2824b0c164a"
+ },
+ "method": "Rule-6 run over the trace-keyed `is_signed` cache (syzygy-offm).\n\nUsage: python3 trace_cache_mutation.py <checkout root> <out.json> [--selftest]\n\nEach mutant replaces fragments that each occur exactly once in\nscripts/signed_trace_cache.py, runs trace_cache_harness.py (and, with\n--selftest, `check_spec_reconciliation.py --selftest`, SELFTEST_WORKERS from\nthe environment), and restores the file in `finally`. A mutant is killed when\nthe harness exits 1 (or the selftest exits non-zero); the record keeps each\nmutant's fragments, the harness's FAILED lines and verdict, and the commit and\nsubject digest it ran at. The unmutated baseline runs first and must pass.",
+ "withSelftest": false,
+ "baseline": {
+  "harnessExit": 0,
+  "harnessFailed": [],
+  "harnessVerdict": "HARNESS PASS: 14 of 14 controls held",
+  "harnessSeconds": 24
+ },
+ "mutants": [
+  {
+   "id": "drop-stat",
+   "what": "stat and lstat observations are not recorded",
+   "fragments": [
+    {
+     "old": "    def record(self, kind, key, value):\n",
+     "new": "    def record(self, kind, key, value):\n        if kind in (\"stat\", \"lstat\"):\n            return\n"
+    }
+   ],
+   "harnessExit": 1,
+   "harnessFailed": [
+    "FAILED stat-symlink: .syzygy/governance/contracts/candidates/governance-simplification-d10/D10-LOG-ROW.txt -> symlink to identical bytes: differing observation kinds []; stock answer ('value', False)"
+   ],
+   "harnessVerdict": "HARNESS FAIL: 13 of 14 controls held; failed ['stat-symlink']",
+   "harnessSeconds": 24,
+   "outcome": "killed"
+  },
+  {
+   "id": "drop-listing",
+   "what": "listing observations are not recorded",
+   "fragments": [
+    {
+     "old": "    def record(self, kind, key, value):\n",
+     "new": "    def record(self, kind, key, value):\n        if kind == \"list\":\n            return\n"
+    }
+   ],
+   "harnessExit": 1,
+   "harnessFailed": [
+    "FAILED listing-extra: extra file in .syzygy/governance/contracts/candidates/governance-simplification-d10/proposed: differing observation kinds []; stock answer ('value', False)"
+   ],
+   "harnessVerdict": "HARNESS FAIL: 13 of 14 controls held; failed ['listing-extra']",
+   "harnessSeconds": 24,
+   "outcome": "killed"
+  },
+  {
+   "id": "drop-git",
+   "what": "git and object-existence observations are not recorded",
+   "fragments": [
+    {
+     "old": "    def record(self, kind, key, value):\n",
+     "new": "    def record(self, kind, key, value):\n        if kind in (\"git\", \"oids\"):\n            return\n"
+    }
+   ],
+   "harnessExit": 1,
+   "harnessFailed": [
+    "FAILED git-objects: traced over a shared clone (True, unusable []); over an empty repository the differing observation kinds are []; stock answer ('value', False)"
+   ],
+   "harnessVerdict": "HARNESS FAIL: 13 of 14 controls held; failed ['git-objects']",
+   "harnessSeconds": 23,
+   "outcome": "killed"
+  },
+  {
+   "id": "bytes-only",
+   "what": "a lookup compares only the bytes read",
+   "fragments": [
+    {
+     "old": "    for key, value in entry.obs.items():\n        if _evaluate(key, root, memo) != value:",
+     "new": "    for key, value in entry.obs.items():\n        if key[0] != \"read\":\n            continue\n        if _evaluate(key, root, memo) != value:"
+    }
+   ],
+   "harnessExit": 1,
+   "harnessFailed": [
+    "FAILED stat-symlink: .syzygy/governance/contracts/candidates/governance-simplification-d10/D10-LOG-ROW.txt -> symlink to identical bytes: differing observation kinds ['lstat']; stock answer ('value', False)",
+    "FAILED listing-extra: extra file in .syzygy/governance/contracts/candidates/governance-simplification-d10/proposed: differing observation kinds ['list']; stock answer ('value', False)",
+    "FAILED git-objects: traced over a shared clone (True, unusable []); over an empty repository the differing observation kinds are ['git', 'oids']; stock answer ('value', False)"
+   ],
+   "harnessVerdict": "HARNESS FAIL: 11 of 14 controls held; failed ['stat-symlink', 'listing-extra', 'git-objects']",
+   "harnessSeconds": 25,
+   "outcome": "killed"
+  }
+ ]
+}
