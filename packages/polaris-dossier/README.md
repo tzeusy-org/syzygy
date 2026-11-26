@@ -19,6 +19,16 @@ supervisor’s drain and reap path, and waits for it; CPU usage stays unavailabl
 An uninterruptible kernel task can delay that join. The pidfd is closed after
 reaping and on cleanup.
 
+The supervisor also opens a pidfd for its owned direct Git child to wake its
+own poll; `waitpid` remains the source of exit status and tree completion.
+It closes this additional pidfd immediately after positively reaping the direct
+child, even while adopted descendants remain, and on cleanup. The existing
+2 ms fallback polling and bounded TERM/KILL/reap drain are unchanged. Failure
+to open this Git pidfd refuses the call and starts the owned drain. A missing
+host-supervisor pidfd leaves CPU usage unavailable as described above; a
+missing direct-Git pidfd can still have known CPU usage when the bounded drain,
+receipt and outer `wait4` all complete. Incomplete usage remains unavailable.
+
 ## Entry points
 
 The package barrel (`.`, `src/index.ts`) exports exactly two values, the command-line drivers the daemon dispatches to:

@@ -185,6 +185,140 @@ long __wrap_syscall(long number, ...) {
       expect(fs.existsSync(`/proc/${pid}`)).toBe(false);
     }
   });
+  // These link wrappers observe the supervisor's actual syscall/poll/reap/close
+  // boundaries. They never substitute the receipt or the outer wait4 charge.
+  const supervisorPidfdProbe = async (mode: 'unavailable' | 'wake' | 'invalid') => {
+    const root = tempDir(`policy-git-pidfd-${mode}-`), witness = path.join(root, 'events');
+    const wrapper = path.join(root, 'probe.c'), file = path.join(root, 'supervisor'), orphan = path.join(root, 'orphan');
+    fs.writeFileSync(wrapper, String.raw`#define _GNU_SOURCE
+#include "policy-git-protocol.h"
+#include <errno.h>
+#include <fcntl.h>
+#include <poll.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <sys/syscall.h>
+#include <sys/wait.h>
+#include <unistd.h>
+long __real_syscall(long number, ...);
+int __real_poll(struct pollfd *, nfds_t, int);
+pid_t __real_waitpid(pid_t, int *, int);
+int __real_close(int);
+ssize_t __real_write(int, const void *, size_t);
+static int owned_pid = -1, owned_fd = -1, live, deferred, first_poll, reaped, post_reap;
+static void note(const char *event, long value) {
+  int fd = open(POLICY_GIT_PIDFD_WITNESS, O_WRONLY | O_APPEND | O_CREAT | O_CLOEXEC, 0600);
+  if (fd < 0) _exit(80);
+  char bytes[96]; int length = snprintf(bytes, sizeof(bytes), "%s:%ld\n", event, value);
+  if (length <= 0 || (size_t)length >= sizeof(bytes) || __real_write(fd, bytes, (size_t)length) != length) _exit(81);
+  if (__real_close(fd)) _exit(82);
+}
+long __wrap_syscall(long number, ...) {
+  va_list args; va_start(args, number);
+  if (number == SYS_pidfd_open) {
+    int child = va_arg(args, int), flags = va_arg(args, int); va_end(args);
+    owned_pid = child; note("git", child);
+#ifdef POLICY_GIT_PIDFD_UNAVAILABLE
+    (void)flags; errno = ENOSYS; return -1;
+#else
+    long result = __real_syscall(number, child, flags);
+    if (result >= 0) { owned_fd = (int)result; live = 1; note("acquired", owned_fd); }
+    return result;
+#endif
+  }
+  if (number == SYS_close_range) {
+    unsigned first = va_arg(args, unsigned), last = va_arg(args, unsigned);
+    int flags = va_arg(args, int); va_end(args);
+    return __real_syscall(number, first, last, flags);
+  }
+  va_end(args); errno = EINVAL; return -1;
+}
+pid_t __wrap_waitpid(pid_t pid, int *status, int flags) {
+  // Keep exactly one owned zombie available for the production poll turn.
+  // Later reap/cleanup calls run the real waiter, including in mutant controls.
+  if (pid == -1 && (flags & WNOHANG) && live && !deferred && !first_poll) {
+    deferred = 1; return 0;
+  }
+  pid_t result = __real_waitpid(pid, status, flags);
+  if (result == owned_pid) { reaped = 1; note("git-reaped", result); }
+  return result;
+}
+int __wrap_poll(struct pollfd *fds, nfds_t count, int timeout) {
+  if (count == 5 && reaped && !post_reap) {
+    post_reap = 1; note("post-reap-slot", fds[4].fd); note("post-reap-live", live);
+  }
+  int observed = count == 5 && live && fds[4].fd == owned_fd;
+  if (observed && !first_poll) {
+    first_poll = 1; note("poll-slot", fds[4].fd); note("poll-timeout", timeout);
+    // This test-only wait arranges an exited, unreaped direct child. There is
+    // no speed assertion: the production poll must then observe that pidfd.
+    struct pollfd only = {owned_fd, POLLIN, 0};
+    int ready = __real_poll(&only, 1, 1000);
+    note("exit-readable", ready > 0 && (only.revents & POLLIN) != 0);
+    // The existing orphan fixture's direct parent can exit before its child
+    // writes its PID. Wait only for that own fixture handshake before faulting.
+    for (unsigned tries = 0; tries < 1000 && access(POLICY_GIT_PIDFD_ORPHAN, F_OK); tries++) usleep(1000);
+    note("orphan-ready", access(POLICY_GIT_PIDFD_ORPHAN, F_OK) == 0);
+  }
+  int result = __real_poll(fds, count, timeout);
+  if (observed) {
+    note("production-readable", result > 0 && (fds[4].revents & POLLIN) != 0);
+#ifdef POLICY_GIT_PIDFD_INVALID
+    fds[4].revents |= POLLNVAL; note("injected-invalid", 1);
+    if (result < 1) result = 1;
+#endif
+  }
+  return result;
+}
+int __wrap_close(int fd) {
+  int result = __real_close(fd);
+  if (live && fd == owned_fd) { live = 0; note("closed", result); }
+  return result;
+}
+ssize_t __wrap_write(int fd, const void *bytes, size_t size) {
+  if (fd == 3 && size == sizeof(struct policy_git_receipt)) {
+    const struct policy_git_receipt *receipt = bytes;
+    note("reason", (long)receipt->reason); note("tree-complete", (long)receipt->tree_complete);
+  }
+  return __real_write(fd, bytes, size);
+}
+__attribute__((destructor)) static void final_descriptor(void) { note("exit-live", live); }
+`);
+    const flags = mode === 'unavailable' ? ['-DPOLICY_GIT_PIDFD_UNAVAILABLE']
+      : mode === 'invalid' ? ['-DPOLICY_GIT_PIDFD_INVALID'] : [];
+    await exec('/usr/bin/cc', ['-std=c11', '-Wall', '-Wextra', '-Werror', '-O2', '-I', source,
+      `-DPOLICY_GIT_PIDFD_WITNESS=${JSON.stringify(witness)}`, `-DPOLICY_GIT_PIDFD_ORPHAN=${JSON.stringify(orphan)}`, ...flags,
+      path.join(source, 'policy-git-supervisor.c'), wrapper,
+      '-Wl,--wrap=syscall', '-Wl,--wrap=poll', '-Wl,--wrap=waitpid', '-Wl,--wrap=close', '-Wl,--wrap=write', '-o', file],
+    { env: environment, timeout: 10_000, killSignal: 'SIGKILL', maxBuffer: 65_536 });
+    const events = () => fs.readFileSync(witness, 'ascii').trim().split('\n').map(row => {
+      const [event, value] = row.split(':'); return { event: event!, value: Number(value) };
+    });
+    return { root, witness, events, selected: { ...program, supervisor: { file, sha256: sha256(fs.readFileSync(file)) } } };
+  };
+  it('refuses unavailable Git pidfds with complete drained usage instead of poisoning host accounting', async () => {
+    const probe = await supervisorPidfdProbe('unavailable');
+    for (const async of [false, true]) {
+      const scope = createNativePolicyGitScope(probe.selected); scopes.push(scope);
+      const request = options('echo', Buffer.from('own Git pidfd refusal'));
+      const pending = async ? scope.runAsync(arguments_, request) : Promise.resolve().then(() => scope.runSync(arguments_, request));
+      await expect(pending).rejects.toThrow('policy-git-failed');
+      expect(scope.healthy()).toBe(true);
+      expect(scope.childCpuMicroseconds()).toBeGreaterThan(0);
+      expect(await scope.close()).toBe(true);
+    }
+    const events = probe.events(), pids = events.filter(row => row.event === 'git').map(row => row.value);
+    expect(pids).toHaveLength(2);
+    expect(events.filter(row => row.event === 'acquired')).toHaveLength(0);
+    expect(events.filter(row => row.event === 'reason').map(row => row.value)).toEqual([2, 2]); // POLICY_GIT_PIPE
+    expect(events.filter(row => row.event === 'tree-complete').map(row => row.value)).toEqual([1, 1]);
+    expect(events.filter(row => row.event === 'exit-live').map(row => row.value)).toEqual([0, 0]);
+    for (const pid of pids) {
+      expect(Number.isSafeInteger(pid) && pid > 0).toBe(true);
+      expect(events.filter(row => row.event === 'git-reaped' && row.value === pid)).toHaveLength(1);
+      expect(fs.existsSync(`/proc/${pid}`)).toBe(false);
+    }
+  });
   it('charges failed exits, signals and either stream overflow without poisoning complete usage', async () => {
     for (const mode of ['exit', 'signal', 'overflow', 'stderr-overflow']) {
       const scope = open();
@@ -260,6 +394,42 @@ long __wrap_syscall(long number, ...) {
     expect(() => process.kill(pid, 0)).toThrow();
     expect(scope.healthy()).toBe(true);
     expect(scope.childCpuMicroseconds()).toBeGreaterThan(0);
+    for (const mode of ['wake', 'invalid'] as const) {
+      const probe = await supervisorPidfdProbe(mode), pidFile = path.join(probe.root, 'orphan');
+      const scope = createNativePolicyGitScope(probe.selected); scopes.push(scope);
+      const request = { ...options('orphan'), timeout: 500,
+        env: { ...options('orphan').env, POLICY_FIXTURE_PID: pidFile } };
+      await expect(scope.runAsync(arguments_, request)).rejects.toThrow('policy-git-failed');
+      expect(scope.healthy()).toBe(true);
+      expect(scope.childCpuMicroseconds()).toBeGreaterThan(0);
+      expect(await scope.close()).toBe(true);
+      const events = probe.events(), values = (event: string) => events.filter(row => row.event === event).map(row => row.value);
+      expect(values('git')).toHaveLength(1);
+      const git = values('git')[0]!;
+      expect(Number.isSafeInteger(git) && git > 0).toBe(true);
+      expect(values('acquired')).toHaveLength(1);
+      expect(values('poll-slot')).toEqual(values('acquired'));
+      expect(values('poll-timeout')).toEqual([2]);
+      expect(values('exit-readable')).toEqual([1]);
+      expect(values('orphan-ready')).toEqual([1]);
+      expect(values('production-readable')[0]).toBe(1);
+      expect(values('git-reaped')).toEqual([git]);
+      expect(values('closed')).toEqual([0]);
+      expect(values('tree-complete')).toEqual([1]);
+      expect(values('exit-live')).toEqual([0]);
+      expect(values('reason')).toEqual([mode === 'wake' ? 5 : 2]); // TIMEOUT / PIPE
+      if (mode === 'wake') {
+        expect(values('post-reap-slot')).toEqual([-1]);
+        expect(values('post-reap-live')).toEqual([0]);
+        const closed = events.findIndex(row => row.event === 'closed');
+        expect(closed).toBeLessThan(events.findIndex(row => row.event === 'post-reap-slot'));
+        expect(values('injected-invalid')).toEqual([]);
+      } else expect(values('injected-invalid')[0]).toBe(1);
+      const orphan = Number(fs.readFileSync(pidFile, 'ascii').trim());
+      expect(Number.isSafeInteger(orphan) && orphan > 0).toBe(true);
+      expect(fs.existsSync(`/proc/${git}`)).toBe(false);
+      expect(fs.existsSync(`/proc/${orphan}`)).toBe(false);
+    }
   });
   it('refuses expiry during actual host/Git preparation before either executable starts', async () => {
     const root = tempDir('policy-preparation-'), entry = path.join(root, 'preparation.mjs');

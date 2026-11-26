@@ -153,7 +153,7 @@ int main(int argc, char **argv) {
   struct policy_git_request request;
   char **arguments = NULL, **environment = NULL;
   unsigned char *input = NULL; struct output output = {0};
-  int in[2] = {-1,-1}, out[2] = {-1,-1}, err[2] = {-1,-1}, nullfd = -1;
+  int in[2] = {-1,-1}, out[2] = {-1,-1}, err[2] = {-1,-1}, nullfd = -1, git_exitfd = -1;
   pid_t git = -1; int status = 0; bool waited = false, complete = false;
   size_t input_size = 0, cap = 0, sent = 0, stderr_size = 0, stdout_size = 0;
   double began = milliseconds(), deadline = began + 10000;
@@ -194,18 +194,28 @@ int main(int argc, char **argv) {
     execve("/proc/self/fd/9", arguments, environment); _exit(127);
   }
   if (git < 0) goto finish;
+  /* Acquire the owned, still-unreaped Git child before the first waitpid.
+   * This fd only wakes poll; reap remains the exit/tree authority. */
+#ifdef SYS_pidfd_open
+  git_exitfd = (int)syscall(SYS_pidfd_open, git, 0);
+#endif
+  if (git_exitfd < 0) { receipt.reason = POLICY_GIT_PIPE; goto cleanup; }
   shut(&in[0]); shut(&out[1]); shut(&err[1]); shut(&nullfd); close(5);
   if (nonblock(out[0]) || nonblock(err[0]) || (in[1] >= 0 && nonblock(in[1]))) { receipt.reason = POLICY_GIT_PIPE; goto cleanup; }
   if (!input_size) shut(&in[1]);
   receipt.reason = POLICY_GIT_OK;
   while (!complete || out[0] >= 0 || err[0] >= 0) {
     complete = reap(git, &status, &waited);
+    /* An adopted child may outlive Git after closing its output pipes.
+     * Retire the exited Git wake fd now; its permanent readiness must not spin. */
+    if (waited) shut(&git_exitfd);
     if (complete && out[0] < 0 && err[0] < 0) break;
     double now = milliseconds();
     if (cancelled()) { receipt.reason = POLICY_GIT_CANCELLED; break; }
     if (now < 0 || now >= deadline) { receipt.reason = POLICY_GIT_TIMEOUT; break; }
-    struct pollfd watched[] = {{out[0], POLLIN, 0}, {err[0], POLLIN, 0}, {in[1], POLLOUT, 0}, {4, POLLIN, 0}};
-    if (poll(watched, 4, 2) < 0 && errno != EINTR) { receipt.reason = POLICY_GIT_PIPE; break; }
+    struct pollfd watched[] = {{out[0], POLLIN, 0}, {err[0], POLLIN, 0}, {in[1], POLLOUT, 0}, {4, POLLIN, 0}, {git_exitfd, POLLIN, 0}};
+    if (poll(watched, 5, 2) < 0 && errno != EINTR) { receipt.reason = POLICY_GIT_PIPE; break; }
+    if (watched[4].revents & (POLLERR | POLLNVAL)) { receipt.reason = POLICY_GIT_PIPE; break; }
     int failure = out[0] >= 0 ? drain(&out[0], &output, &stdout_size, cap) : 0;
     if (!failure && err[0] >= 0) failure = drain(&err[0], NULL, &stderr_size, cap);
     if (failure) { receipt.reason = (uint64_t)failure; break; }
@@ -217,6 +227,7 @@ int main(int argc, char **argv) {
     }
   }
 cleanup:
+  shut(&git_exitfd);
   shut(&in[1]); shut(&out[0]); shut(&err[0]);
   if (!complete) complete = terminate_tree(git, &status, &waited);
   if (!complete || !waited) receipt.reason = POLICY_GIT_WAIT;
@@ -225,6 +236,7 @@ cleanup:
     else if (!WIFEXITED(status) || WEXITSTATUS(status)) receipt.reason = POLICY_GIT_EXIT;
   }
 finish:
+  shut(&git_exitfd);
   shut(&in[0]); shut(&in[1]); shut(&out[0]); shut(&out[1]); shut(&err[0]); shut(&err[1]); shut(&nullfd);
   if (git < 0) complete = reap(git, &status, &waited);
   receipt.tree_complete = complete && (git < 0 || waited);
