@@ -11,11 +11,12 @@ import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
 import { applyHeroFindings, relationDecisions } from './check-derive.js';
 import { applyContainmentFindings, groupsOf } from './containment.js';
+import { expandModel, localModelOf, modelFindings } from './system-model.js';
 import { secretOrUnder } from './derive.js';
 import { BLOB_MODES } from './git-object-reader.js';
 import { witnessAtRender, witnessWords, type RelationType } from './relation-witness.js';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialFindings, credentialStepCheck, storedBriefArm, type CredentialBreachFinding, type CredentialStepResult } from './credential-probe.js';
-import { CONTAINMENT_KIND, UNDERSTANDING_ITEMS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, hasContainmentForm, hasFigureKindForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm, hasWithheldHeroIdentity, hasWorthKnowingForm, heroOf } from './draft-schema.js';
+import { CONTAINMENT_KIND, UNDERSTANDING_ITEMS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, hasContainmentForm, hasFigureKindForm, hasModelForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm, hasWithheldHeroIdentity, hasWorthKnowingForm, heroOf } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
@@ -189,6 +190,8 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const findings = [...derived.findings];
   applyHeroFindings(doc, findings);
   applyContainmentFindings(doc, findings);
+  // A v12 draft's model and view findings (version 2.24), as check reports them without the tree.
+  if (hasModelForm(doc['schemaVersion'])) findings.push(...modelFindings(doc, new Set(findings.filter((finding) => finding.kind === 'schema').map((finding) => finding.at)), undefined));
   if (findings.length > 0) {
     return refuse('rederive', `draft revision ${draftRev.revision} passed its check, but checking it again at this render from the objects read now finds ${findings.length} finding(s); the stored result is not trusted, so nothing is rendered`,
       { reasons: findings.map((finding) => `${finding.kind} at ${finding.at}`) });
@@ -196,7 +199,9 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
 
   const review = await reviewOfRecord(opened, deps);
 
-  const input = buildLocalInput({ opened, doc, derived, review, screen, credential, algorithm: reader.algorithm });
+  // A v12 draft's figures are drawn from its views' expansion (version 2.24): each view as the schema-v11 diagram it stands for.
+  const figureDoc = hasModelForm(doc['schemaVersion']) ? { ...expandModel(doc).doc, schemaVersion: doc['schemaVersion'] } : doc;
+  const input = buildLocalInput({ opened, doc: figureDoc, derived, review, screen, credential, algorithm: reader.algorithm });
   if (!input.ok) return refuse(input.stage, input.reason);
   // The derived structure (REQ-polaris-generation-034 version 2.3): the record check kept for this draft revision, compared with the facts
   // re-derived now from the tree this reader lists, under the currency policy committed at the Syzygy checkout. No draft member reaches it.
@@ -210,8 +215,9 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const manifestFacts = await renderManifestFacts(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
   // Version 2.19 (syzygy-3efd.28): a v9 draft's edges, each decided again by rule `relation-witness` from the facts this render derives itself.
   const edgeRelations = hasRelationForm(doc['schemaVersion'])
-    ? edgeRelationsAt({ doc, derivedStructure, manifestFacts, screen, withheld: input.local.withheldElements ?? new Map(), listTree: () => reader.listTree() }) : undefined;
-  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }) } };
+    ? edgeRelationsAt({ doc: figureDoc, derivedStructure, manifestFacts, screen, withheld: input.local.withheldElements ?? new Map(), listTree: () => reader.listTree() }) : undefined;
+  const model = hasModelForm(doc['schemaVersion']) ? localModelOf(doc) : undefined;
+  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }), ...(model === undefined ? {} : { model }) } };
 
   const renderer = deps.renderer;
   const draw = (local: LocalRenderInput): ReadonlyMap<string, string> | string => {
@@ -306,7 +312,9 @@ export async function edgeRelationsAt(inputs: {
   // An edge is asserted where it is labelled Inferred and is no withheld item. `withheld` is the render's `withheldElements`, whose graph
   // edges are keyed by bare id and entered by `isWithheldItem` (review-reach.ts), the predicate check's `isWithheldElement` applies, over
   // the same frozen revision: one notion of a withheld edge in both.
-  const decisions = relationDecisions(doc, (edge) => edge['epistemic'] === 'inferred' && !withheld.has(text(edge['id']) ?? ''),
+  // A v12 view's relationship either of whose elements renders as a withheld item is unasserted too (version 2.24), as check reads it.
+  const endHeld = (id: unknown): boolean => hasModelForm(doc['schemaVersion']) && withheld.has(text(id) ?? '');
+  const decisions = relationDecisions(doc, (edge) => edge['epistemic'] === 'inferred' && !withheld.has(text(edge['id']) ?? '') && !endHeld(edge['from']) && !endHeld(edge['to']),
     blobs === undefined ? undefined : { hidden, isBlob: (repositoryPath) => blobs.has(repositoryPath) }, {
       structure: derived.state !== 'derived' ? { state: 'unknown' }
         : { state: 'derived', facts: derived.facts, secretPathsLeftOut: derived.tree.secretPathsLeftOut, submodules: derived.tree.submodules, unitsNotListed: derived.tree.unitsNotListed },

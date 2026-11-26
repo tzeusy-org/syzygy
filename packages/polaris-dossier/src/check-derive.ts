@@ -2,8 +2,9 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { checkShape, ref, handle, leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText, type Schema } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { CONTAINMENT_BOUNDS, CONTAINMENT_KIND, figureMembersOf, hasContainmentForm, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, RELATION_FIELD, UNIT_FIELD, hasRelationForm, hasHeroForm, heroOf, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, QUESTION_KINDS_FIELD, hasWorthKnowingForm, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
+import { CONTAINMENT_BOUNDS, CONTAINMENT_KIND, figureMembersOf, hasContainmentForm, hasModelForm, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, RELATION_FIELD, UNIT_FIELD, hasRelationForm, hasHeroForm, heroOf, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, QUESTION_KINDS_FIELD, hasWorthKnowingForm, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
 import { isEntryPoint } from './derive.js';
+import { expandModel, modelFieldVersionFindings, modelFieldVersionPaths, modelIndex } from './system-model.js';
 import { containmentName, containmentDiagrams, containmentFieldVersionFindings, containmentFieldVersionPaths, containmentStructuralFindings, groupName, groupsOf } from './containment.js';
 import { UNIT_FAULT_WORDS, UNIT_TEXT_LIMIT, decideWitness, unitFault, unitOf, type EdgeEnd, type RelationType, type UnitFault, type UnitTree, type WitnessDecision, type WitnessInputs } from './relation-witness.js';
 import { BLOB_MODES, type PinnedObjectReader, type TreeEntry } from './git-object-reader.js';
@@ -454,11 +455,14 @@ function figureStructure(doc: Readonly<Record<string, unknown>>, add: (finding: 
       }
     });
     for (const finding of containmentFieldVersionFindings(doc)) add(finding);
+    for (const finding of modelFieldVersionFindings(doc)) add(finding);
     return;
   }
   for (const { member: _member, ...finding } of figureKindFindings(doc)) add(finding);
   // A containment kind or `groups` in a v7 to v10 draft (version 2.23): field-version, after that version's figure-kind findings.
   for (const finding of containmentFieldVersionFindings(doc)) add(finding);
+  // `model` or a diagram's `view` in a v11 or earlier draft (version 2.24): likewise.
+  for (const finding of modelFieldVersionFindings(doc)) add(finding);
   const idsOf = (values: unknown): Set<string> => new Set(list(values).flatMap((entry) => (isRecord(entry) && text(entry['id']) !== undefined ? [text(entry['id'])!] : [])));
   list(doc['diagrams']).forEach((diagram, i) => {
     if (!isRecord(diagram)) return;
@@ -589,7 +593,7 @@ function relationFieldVersionPaths(doc: Readonly<Record<string, unknown>>): stri
 }
 
 /** A schema fault at or below a graph node's `unit`: the unit's own path, as group 1. */
-const UNIT_FAULT_PATH = /^(\$\.diagrams\[\d+\]\.(?:nodes\[\d+\]|groups\[\d+\](?:\.children\[\d+\])*)\.unit)(?:\..*|\[.*)?$/u;
+const UNIT_FAULT_PATH = /^((?:\$\.diagrams\[\d+\]\.(?:nodes\[\d+\]|groups\[\d+\](?:\.children\[\d+\])*)|\$\.model\.elements\[\d+\])\.unit)(?:\..*|\[.*)?$/u;
 
 /** Relation types (REQ-polaris-generation-034 version 2.19). In an earlier draft: `field-version` at a graph edge's `relation` and a graph
  * node's `unit`, in place of the schema finding at that path. In a v9 draft: a `schema` finding at a unit's directory name, name, job key
@@ -615,6 +619,8 @@ function relationStructure(doc: Readonly<Record<string, unknown>>, add: (finding
   graphElements(doc, (member, element, at) => { if (member === 'nodes') bounded(element, at); });
   // A v11 containment's groups take a node's unit rules (version 2.23), at every level.
   for (const { diagram, i } of containmentDiagrams(doc)) for (const { group, at } of groupsOf(diagram, i)) bounded(group, at);
+  // A v12 model's elements take a node's unit rules (version 2.24).
+  if (hasModelForm(doc['schemaVersion'])) for (const { element, at } of modelIndex(doc).elements) bounded(element, at);
 }
 
 /** A node or edge as a finding names it (version 2.19): by its identity, or by its path where it has none. */
@@ -788,6 +794,8 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
   const v10 = localDraftSchema({ ...parameters, hero: 'required' }, 'home', 'required', 'taken', 'taken', 'taken', 'absent');
   // v11 is v10 with the containment kind and its recursive group (version 2.23).
   const v11 = localDraftSchema({ ...parameters, hero: 'required' }, 'home', 'required', 'taken', 'taken', 'taken', 'absent', 'taken');
+  // v12 is v11 with the system model and its views (version 2.24).
+  const v12 = localDraftSchema({ ...parameters, hero: 'required' }, 'home', 'required', 'taken', 'taken', 'taken', 'absent', 'taken', 'taken');
   const v9 = localDraftSchema(parameters, 'home', 'required', 'taken', 'taken', 'taken', 'absent');
   const v8 = localDraftSchema(parameters, 'home', 'required', 'taken', 'taken', 'absent', 'absent');
   const v7 = localDraftSchema(parameters, 'home', 'required', 'taken', 'absent', 'absent', 'absent');
@@ -820,6 +828,8 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
       for (const at of questionKindsFieldVersionPaths(doc)) subsectionPaths.add(at);
       // A containment kind or `groups` in a v10 or earlier draft: likewise (version 2.23).
       for (const at of containmentFieldVersionPaths(doc)) subsectionPaths.add(at);
+      // `model` or a diagram's `view` in a v11 or earlier draft: likewise (version 2.24).
+      for (const at of modelFieldVersionPaths(doc)) subsectionPaths.add(at);
       const fieldVersioned = (path: string): boolean => subsectionPaths.has(path) || relationPaths.has(path)
         || (hasHeroForm(version) && (path === '$.hero' || path === '$.hero.figure'));
       if (hasFigureKindForm(version)) {
@@ -850,7 +860,7 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
           unitsReported.add(unit);
           return [{ path: unit, detail: unitFormsDetail }];
         });
-        const schema = hasWorthKnowingForm(version) ? current : hasContainmentForm(version) ? v11 : hasHeroForm(version) ? v10 : hasRelationForm(version) ? v9 : version === LOCAL_DRAFT_SCHEMA_VERSION_V8 ? v8 : v7;
+        const schema = hasWorthKnowingForm(version) ? current : hasModelForm(version) ? v12 : hasContainmentForm(version) ? v11 : hasHeroForm(version) ? v10 : hasRelationForm(version) ? v9 : version === LOCAL_DRAFT_SCHEMA_VERSION_V8 ? v8 : v7;
         return { schema, reported: { test: (path) => standing.has(path) || fieldVersioned(path) }, replaced };
       }
       const fieldVersion = new Set(figureFieldVersionPaths(doc));
@@ -858,7 +868,8 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
       return { schema, reported: { test: (path) => fieldVersion.has(path) || fieldVersioned(path) || (also !== null && also.test(path)) } };
     },
     maxQuestions,
-    structural: (doc, add) => { draftStructure(doc, add, poleLimit); thesisStructure(doc, add); figureStructure(doc, add); subsectionStructure(doc, add); relationStructure(doc, add); worthKnowingStructure(doc, add); },
+    // A v12 draft's diagram references and produced dispositions are read from its views' expansion (version 2.24), each path moved back.
+    structural: (doc, add) => { if (hasModelForm(doc['schemaVersion'])) { const { doc: expanded, move } = expandModel(doc); draftStructure(expanded, (finding) => add({ ...finding, at: move(finding.at) }), poleLimit); } else draftStructure(doc, add, poleLimit); thesisStructure(doc, add); figureStructure(doc, add); subsectionStructure(doc, add); relationStructure(doc, add); worthKnowingStructure(doc, add); },
     blocks: collectBlocks,
     account: { key: 'discovery', parts: ['selected', 'excluded', 'unresolved', 'deferred'] },
   };
