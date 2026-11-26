@@ -1,11 +1,11 @@
-# Design — views over a derived base (version 2.NN)
+# Design — views over a derived base (version 2.34)
 
-[Inferred] Version 2.NN of REQ-polaris-generation-034, for syzygy-3efd.38. It is drafted on `agent/syzygy-3efd.38`, over the version 2.24 text (`dossier-system-model`, row A-64, tag `polaris-dossier-system-model-v2.24`). The code of versions 2.16 to 2.24 has not all landed, so every code site named in D10 must be re-located on the base the implementation starts from.
+[Inferred] Version 2.34 of REQ-polaris-generation-034, for syzygy-3efd.38. It was drafted and reviewed on `agent/syzygy-3efd.38` over the version 2.24 text (system model), then rebuilt over the version 2.33 text (`dossier-figure-plan`, row A-65, tag `polaris-dossier-figure-plan-v2.33`), as D1 and D12 state. The code of versions 2.16 to 2.33 has not all landed, so every code site named in D10 must be re-located on the base the implementation starts from.
 
 ## D1. The version label
 
-- [Observed] syzygy-3efd.40 (figure plan, advisories) is rebuilding over 2.24 in parallel. It also plans schema v13 and brief v19.
-- [Inferred] So this change uses the placeholder 2.NN, schema v13 and brief v19 until adoption. Whichever of the two adopts second renumbers its label, schema and brief, and rebuilds over the first, as the lead directed.
+- [Observed] This change was drafted as 2.NN with schema v13 and brief v19 over 2.24 while syzygy-3efd.40 (figure plan) was drafted in parallel. Main then took worth-knowing 2.26, brief terminology 2.29 and question-kind floor 2.32 (schema v13, brief v21), and the figure plan adopted as 2.33 (row A-65, schema v14, brief v22).
+- [Inferred] So, as the lead directed, this change adopts second: it is rebuilt over 2.33 as version 2.34, draft schema v15 (schema v14 plus `base`) and brief v23. The rebuild changed no rule of the reviewed text beyond the composition stated in D12.
 
 ## D2. What the base is grounded in
 
@@ -69,24 +69,24 @@
 
 ## D9. Rendered bytes that move
 
-[Inferred] Only a schema-v13 view with a `base` moves:
+[Inferred] Only a schema-v15 view with a `base` moves:
 - its figure (base elements, chip, hidden items, note);
 - its `machine.json` figure entry (`base`, `provenance`);
 - the findings and the check record;
-- the brief (v19).
+- the brief (v23).
 
-Drafts of schema v12 and earlier keep every byte, apart from `field-version` in place of `schema` for `base` or a base end. A v13 view without `base` renders as in v12. The map pages, `computedMaps` and the provider golden do not change.
+Drafts of schema v14 and earlier keep every byte and their `figureAdvice`, apart from `field-version` in place of `schema` for `base` or a base end in a v12 or v14 draft. A v15 view without `base` renders as in v14. The map pages, `computedMaps` and the provider golden do not change.
 
 ## D10. What the code change must do
 
-- [Inferred] Schema v13 in `packages/polaris-dossier/src/draft-schema.ts`, with the `base` member, base ends and the six findings, as literal-case tests of each scenario.
+- [Inferred] Schema v15 in `packages/polaris-dossier/src/draft-schema.ts`, with the `base` member, base ends and the six findings, as literal-case tests of each scenario.
 - [Inferred] Resolve base paths in check against the derived-structure record and `manifestFacts` check already derives.
 - [Inferred] Expansion and rendering in `apps/three-surface-poc/src/polaris-generation/`:
   - reuse the map renderers' element labels, marks and identities, never a copy;
   - the double border, its legend entry and the display-name line;
   - the chip, the hidden items, the tally sentence and the note;
   - `machine.json`'s `base` and `provenance`.
-- [Inferred] Byte tests: every map page with and without a base view, every stored draft re-rendered, the provider golden unchanged. Brief v19, and a recorded rule-6 mutation run.
+- [Inferred] Byte tests: every map page with and without a base view, every stored draft re-rendered, the provider golden unchanged. The figure advice skipping base views. Brief v23, and a recorded rule-6 mutation run.
 
 ## D11. Residuals
 
@@ -95,9 +95,18 @@ Drafts of schema v12 and earlier keep every byte, apart from `field-version` in 
 - [Inferred] Display names are keyed by view; whether a dossier-wide alias is wanted is a question for the system map (syzygy-ea4w.3).
 - [Inferred] Views from a base are one level, as 2.24's are. Levels and zoom are syzygy-3efd.39.
 
+## D12. Composition with the figure plan (2.33)
+
+- [Observed] Version 2.33 makes schema v14 the join of v12 (containment, model, views) and v13 (worth-knowing, question kinds), requires a `figurePlan` naming, per place, the diagram that answers its question, and adds figure advice (`figure-information-floor`, `figure-duplicate`, `figure-mixed-levels`), "a computation over the draft's bytes alone that reads no blob, layout, record or fact", reading each graph or containment as its view's expansion.
+- [Inferred] Schema. v15 is v14 plus `base` and base ends. Every v14 rule holds for v15, and every rule that names v14 (or v13 or v14) alone reads v15 too, so the plan, the advice, the worth-knowing mark and the question kinds apply to v15 drafts unchanged. `field-version` is reported for `base` in v12 and v14 drafts, the two schemas that carry views. A v13 draft carries no view, so it takes 2.33's findings only.
+- [Inferred] Plan. A base view is a graph or containment diagram with an identity, a home and a kind, so a plan entry names it as any diagram. The base changes neither its home nor its kind, so 2.33's plan check needs no change.
+- [Inferred] Advice. The advice reads the draft's bytes alone, and a base view's boxes come from a computed map. Reading the view as its draft part alone would misjudge it, for example calling a figure of 12 directories "a chain of three or fewer". Reading its base would make the advice read a fact, which 2.33 rules out. So no rule reads a base view: `examined` does not count it, no rule advises on it, and `figure-duplicate` compares no figure with it. Whether such a figure carries enough stays the rendered-design review's judgement, as 2.33 already says for every figure. Scenario "Figure advice reads no base view".
+- [Inferred] Brief. v23 is v22 plus the derived-base paragraph, placed after v22's figure-plan paragraph, the last of the three paragraphs v22 added.
+- [Inferred] Placement. The new paragraphs follow 2.33's last paragraph, before the task-routes paragraph, as each version's block follows its predecessor's. Scenarios: 232 to 250.
+
 ## Review
 
-[Observed] One fresh-context review, R-DERIVED-BASE-VIEWS-SPEC-1, read the spec at 7760aede (sha256 `a203e6b7…8448`). Verdict REVISE, 8 blocking findings and 4 notes. The raw is retained verbatim at `docs/reviews/syzygy-3efd-38/R-DERIVED-BASE-VIEWS-SPEC-1-RAW.md`. Every finding is repaired; none is declined. No review has read the repaired bytes.
+[Observed] One fresh-context review, R-DERIVED-BASE-VIEWS-SPEC-1, read the spec over 2.24 at 7760aede (sha256 `a203e6b7…8448`). Verdict REVISE, 8 blocking findings and 4 notes. The raw is retained verbatim at `docs/reviews/syzygy-3efd-38/R-DERIVED-BASE-VIEWS-SPEC-1-RAW.md`. Every finding is repaired; none is declined. No review has read the repaired bytes, nor the rebuild over 2.33 (D12).
 
 | # | Finding | Disposition |
 |---|---|---|
@@ -112,4 +121,4 @@ Drafts of schema v12 and earlier keep every byte, apart from `field-version` in 
 | 9 | Smaller ambiguities (note) | Repaired: the directory label keeps the map's `(<count> files)`; the tally counts the draft alone and a second sentence counts the computed boxes and arrows; the hidden-item noun has its own rule; "established at the render" is defined, a stale record included, and `<words>` is the exact span; an all-white-space reason and a `restReason` without `select` are `schema` findings; the cited-arrow scenario rules out a dependency fact; a v11 draft takes no new finding; D8's anchor-once rule is dropped in favour of per-view keying. |
 | 10 | Authority (note) | No change needed. The review found the exception within RFC7-28 and not crossing VIS-2; findings 5 and 6 were the gaps, and are repaired. |
 | 11 | CG-1b (note) | No change needed. The new scenarios also write fixture paths inside JSON code spans; `check_governance.py` reports 0 FAIL. |
-| 12 | Carried text and bookkeeping (note) | Re-derived for the repaired bytes: 1433 of 1442 lines carried, 9 amended, 7 paragraphs and 17 scenarios inserted (207 to 224); `SEMANTIC-DELTA.md` regenerated; `VBASE_SUBJECTS` and `vbase_cases` re-pinned. |
+| 12 | Carried text and bookkeeping (note) | Re-derived for the repaired bytes over 2.24 (adc32401, before the rebuild of D12): 1433 of 1442 lines carried, 9 amended, 7 paragraphs and 17 scenarios inserted (207 to 224); `SEMANTIC-DELTA.md` regenerated; `VBASE_SUBJECTS` and `vbase_cases` re-pinned. |
