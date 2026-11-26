@@ -240,6 +240,7 @@ export function buildTrajectorySlice(input: BuildPocModelInput, seed: SeedObserv
       recentClosedWindow: RECENT_CLOSED_WINDOW,
       dependencies,
       changes,
+      commitJoins,
       reconciliationChain: { materializedBeadId: materialization.beadId, workerChange },
     }),
     dispatch: dispatch === null ? null : deepFreeze(dispatch),
