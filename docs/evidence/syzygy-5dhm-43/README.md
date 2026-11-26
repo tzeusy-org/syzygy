@@ -11,5 +11,8 @@ Evidence for check's advice on a Pole with fewer than three choices or trade-off
   record stores every mutant's `old` and `new` fragment, the commit and the subject digest.
   - `choice-floor-mutation-2026-11-26.json`: 14 mutants, 13 killed; the survivor (any label counted) got a test.
   - `choice-floor-mutation-survivor-2026-11-26.json`: that mutant re-run over the added test, killed.
+  - `choice-floor-mutation-repairs-2026-11-26.json`: four mutants for the R-CHOICE-FLOOR-1 repairs (deep dives ignored, a deep dive of
+    any Pole counted, the first citation only, nesting ignored), three killed; the survivor got a test.
+  - `choice-floor-mutation-repairs-survivor-2026-11-26.json`: that mutant re-run, killed.
 - [Observed] The comprehension-regression rule of `CONTRIBUTING.md` applies to the brief, the draft schema and the renderers; this
   change touches none of them, and no rendered byte changes.

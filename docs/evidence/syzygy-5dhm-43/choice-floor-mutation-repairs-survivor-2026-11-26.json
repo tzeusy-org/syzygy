@@ -1,0 +1,47 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-26T14:52:14.002Z",
+  "commit": "ab5b3ff538154a51952b7e17913c4ef11a20481f",
+  "subject": {
+    "packages/polaris-dossier/src/reader-advice.ts": "5d2f5917d4f0e6f81b4ed109848ceb5e315277f651ba953d40471e68ef4d3fdb"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --testTimeout=120000 --reporter=json --outputFile=<scratch>/mutation-<id>.json; for a Python or JSON source, python3 <each listed command> (a non-zero exit is a failure)",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 900 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/reader-advice.ts": [
+      "packages/polaris-dossier/src/reader-standards.test.ts",
+      "packages/polaris-dossier/src/check.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "exitCode": 0,
+      "tests": 402,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "deep-dive-any-pole",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "if (isRecord(dive) && counted.has(text(dive['sectionId']) ?? '')) citedPathsIn(dive, cited);",
+      "new": "if (isRecord(dive)) citedPathsIn(dive, cited);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 402,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) attributes by any citation of an item, by a citation at any depth of a section, and by the Pole's deep dives"
+      ],
+      "seconds": 69
+    }
+  ],
+  "equivalent": [],
+  "summary": {
+    "mutants": 1,
+    "killed": 1,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 0
+  }
+}
