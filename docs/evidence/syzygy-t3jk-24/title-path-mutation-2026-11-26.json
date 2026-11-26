@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 1,
+  "record": "rule-6 mutation run over the work-item title path (POC-REQ-063), syzygy-t3jk.24",
+  "commit": "491dbf91519a20e87bd69ff7b79a6199095c1c4b",
+  "subjects": [
+    {
+      "path": "apps/three-surface-poc/src/trajectory.ts",
+      "sha256": "825cfbaf1ebe2c1f98d633ca9e67c334c5f2b7789a35ad0f491eea363a87939a"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-item-titles.ts",
+      "sha256": "d5c434ac0b9c7e5961206560eeb02a6917848326945a485d580d20d22b873ce8"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-items.test.ts",
+      "sha256": "4f4ffcad3b876525f957fd694dae9cbcb75f71c4681647588f1f725171c0ad71"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/work-item-titles.test.ts",
+      "sha256": "17d7028948b256eecc485df989e1c1fe42599a32d541f7edace2df2d81bd1baa"
+    },
+    {
+      "path": "apps/three-surface-poc/src/trajectory.test.ts",
+      "sha256": "7b3f87943ce626028509e2d2d295310e1a03e6ce3cc08f77e4a6a4755c20a3a7"
+    },
+    {
+      "path": "apps/three-surface-poc/src/unknown-route-sweep.test.ts",
+      "sha256": "eb5896642b2870e12af2f4557f3af2ad778c09b4ccd49ba58d4f577e28754b98"
+    }
+  ],
+  "method": "For each mutant: replace the exact `old` fragment (which must occur once) with `new` in `file` at `commit`, run `npx vitest run` over `tests`, restore the file. A mutant is killed when the run exits non-zero with at least one FAIL line.",
+  "tests": [
+    "packages/three-surface-poc-core/src/work-items.test.ts",
+    "packages/three-surface-poc-core/src/work-item-titles.test.ts",
+    "apps/three-surface-poc/src/trajectory.test.ts",
+    "apps/three-surface-poc/src/unknown-route-sweep.test.ts"
+  ],
+  "totals": {
+    "mutants": 14,
+    "killed": 14
+  },
+  "mutants": [
+    {
+      "id": "detector-match-admitted",
+      "file": "packages/three-surface-poc-core/src/work-item-titles.ts",
+      "old": "if (detectSecrets(detectors, raw) !== undefined) return withhold('secret-matched');",
+      "new": "",
+      "killed": true,
+      "failingTests": 8,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/work-item-titles.test.ts > the work-item-title policy > withholds on each detector, the active-content scan and every unscreenable input",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Trajectory > withholds a screened-out title on both channels, escapes an admitted one, and routes the withheld count once (POC-REQ-063)",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24) > names every served item each list mentions with its title as served, on the default and grouped pages"
+      ]
+    },
+    {
+      "id": "scan-finding-admitted",
+      "file": "packages/three-surface-poc-core/src/work-item-titles.ts",
+      "old": "if (scanActiveContent(raw).length > 0) return withhold('active-content');",
+      "new": "",
+      "killed": true,
+      "failingTests": 7,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/work-item-titles.test.ts > the work-item-title policy > withholds on each detector, the active-content scan and every unscreenable input",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Trajectory > withholds a screened-out title on both channels, escapes an admitted one, and routes the withheld count once (POC-REQ-063)",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24) > names every served item each list mentions with its title as served, on the default and grouped pages"
+      ]
+    },
+    {
+      "id": "unclassifiable-gate-dropped",
+      "file": "packages/three-surface-poc-core/src/work-item-titles.ts",
+      "old": "if (typeof raw !== 'string' || raw.length === 0 || raw.length > WORK_ITEM_TITLE_POLICY.maxLength || UNCLASSIFIABLE_TEXT.test(raw)) {",
+      "new": "if (typeof raw !== 'string') {",
+      "killed": true,
+      "failingTests": 2,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/work-item-titles.test.ts > the work-item-title policy > withholds on each detector, the active-content scan and every unscreenable input",
+        "FAIL  |integration| packages/three-surface-poc-core/src/work-items.test.ts > work-items observer > POC-REQ-063: work-item titles under the declared, screened title policy (syzygy-t3jk.23) > withholds a title it cannot screen: absent, not text, empty, over 500, multi-line, a control or a lone surrogate"
+      ]
+    },
+    {
+      "id": "control-and-surrogate-admitted",
+      "file": "packages/three-surface-poc-core/src/work-item-titles.ts",
+      "old": "|| UNCLASSIFIABLE_TEXT.test(raw)) {",
+      "new": ") {",
+      "killed": true,
+      "failingTests": 2,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/work-item-titles.test.ts > the work-item-title policy > withholds on each detector, the active-content scan and every unscreenable input",
+        "FAIL  |integration| packages/three-surface-poc-core/src/work-items.test.ts > work-items observer > POC-REQ-063: work-item titles under the declared, screened title policy (syzygy-t3jk.23) > withholds a title it cannot screen: absent, not text, empty, over 500, multi-line, a control or a lone surrogate"
+      ]
+    },
+    {
+      "id": "length-bound-dropped",
+      "file": "packages/three-surface-poc-core/src/work-item-titles.ts",
+      "old": "raw.length > WORK_ITEM_TITLE_POLICY.maxLength || ",
+      "new": "",
+      "killed": true,
+      "failingTests": 2,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/work-item-titles.test.ts > the work-item-title policy > withholds on each detector, the active-content scan and every unscreenable input",
+        "FAIL  |integration| packages/three-surface-poc-core/src/work-items.test.ts > work-items observer > POC-REQ-063: work-item titles under the declared, screened title policy (syzygy-t3jk.23) > withholds a title it cannot screen: absent, not text, empty, over 500, multi-line, a control or a lone surrogate"
+      ]
+    },
+    {
+      "id": "admitted-title-unescaped",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "data-parity-field=\"${field}\">${escapeHtml(title.text)}</bdi>",
+      "new": "data-parity-field=\"${field}\">${title.text}</bdi>",
+      "killed": true,
+      "failingTests": 4,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Trajectory > withholds a screened-out title on both channels, escapes an admitted one, and routes the withheld count once (POC-REQ-063)",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Trajectory > keeps a full page of longest, most-escaped titles under 60% of the human response ceiling (POC-REQ-063)",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24) > names every served item each list mentions with its title as served, on the default and grouped pages"
+      ]
+    },
+    {
+      "id": "clipped-title-unescaped",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "${escapeHtml(clipped)}</bdi>…",
+      "new": "${clipped}</bdi>…",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24) > names every served item each list mentions with its title as served, on the default and grouped pages"
+      ]
+    },
+    {
+      "id": "withheld-list-title-unmarked",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "  return cardMark(field, WORK_ITEM_TITLES_REGION_ID, epistemicClassName(unknown.label), unknown.closedReason, `Title: withheld (${title.withheld})`);",
+      "new": "  return '';",
+      "killed": true,
+      "failingTests": 5,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Trajectory > withholds a screened-out title on both channels, escapes an admitted one, and routes the withheld count once (POC-REQ-063)",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Trajectory board-level Unknowns and card facts (T2) > states each route and basis sentence once on the 252-row board, never on a card",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24) > names every served item each list mentions with its title as served, on the default and grouped pages"
+      ]
+    },
+    {
+      "id": "helper-names-by-identifier-only",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "  if (item === undefined) return idHtml;\n",
+      "new": "  if (item !== null) return idHtml;\n",
+      "killed": true,
+      "failingTests": 5,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Trajectory grouped by parent (T4 S2, syzygy-t3jk.20) > names each parent with its recorded status, what it sits under, and never a verdict about it",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Trajectory grouped by parent (T4 S2, syzygy-t3jk.20) > states a parent-child cycle once, in its first member's group, and points to it from the other",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Trajectory answers what changed between two named revisions (T6 S1, syzygy-t3jk.21) > states the day window by default: both revisions, counts per kind, and each changed item"
+      ]
+    },
+    {
+      "id": "blockers-bypass-helper",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "      itemName(model, id, `<a data-blocker-id=\"${escapeHtml(id)}\" href=\"${viewHref(mountPrefix, { page })}#${encodeURIComponent(`workitem-${id}`)}\">${escapeHtml(id)}</a>`),",
+      "new": "      `<a data-blocker-id=\"${escapeHtml(id)}\" href=\"${viewHref(mountPrefix, { page })}#${encodeURIComponent(`workitem-${id}`)}\">${escapeHtml(id)}</a>`,",
+      "killed": true,
+      "failingTests": 2,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24) > names every served item each list mentions with its title as served, on the default and grouped pages",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24) > states a withheld title in a list as its Unknown, referring to the one titles disclosure"
+      ]
+    },
+    {
+      "id": "changed-list-bypasses-helper",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "${itemName(model, fact.id, id)} ${fact.kind}",
+      "new": "${id} ${fact.kind}",
+      "killed": true,
+      "failingTests": 2,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Trajectory answers what changed between two named revisions (T6 S1, syzygy-t3jk.21) > states the day window by default: both revisions, counts per kind, and each changed item",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24) > names every served item each list mentions with its title as served, on the default and grouped pages"
+      ]
+    },
+    {
+      "id": "parent-heading-bypasses-helper",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "Parent ${itemName(model, key.id, `<a data-group-parent=\"${escapeHtml(key.id)}\" href=\"${card}\">${escapeHtml(key.id)}</a>`)},",
+      "new": "Parent <a data-group-parent=\"${escapeHtml(key.id)}\" href=\"${card}\">${escapeHtml(key.id)}</a>,",
+      "killed": true,
+      "failingTests": 2,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Trajectory grouped by parent (T4 S2, syzygy-t3jk.20) > names each parent with its recorded status, what it sits under, and never a verdict about it",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24) > names every served item each list mentions with its title as served, on the default and grouped pages"
+      ]
+    },
+    {
+      "id": "list-clip-dropped",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "const clipped = list ? clipTitle(title.text) : null;",
+      "new": "const clipped = list ? null : null;",
+      "killed": true,
+      "failingTests": 3,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24) > names every served item each list mentions with its title as served, on the default and grouped pages",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24) > clips a long title in a list at 60 code units, never inside a surrogate pair, and shows it whole on its card",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24) > keeps the worst grouped and default pages, titles everywhere, under the human response ceiling"
+      ]
+    },
+    {
+      "id": "clip-splits-surrogate-pair",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "? LIST_TITLE_LIMIT - 1 : LIST_TITLE_LIMIT",
+      "new": "? LIST_TITLE_LIMIT : LIST_TITLE_LIMIT",
+      "killed": true,
+      "failingTests": 2,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24) > names every served item each list mentions with its title as served, on the default and grouped pages",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24) > clips a long title in a list at 60 code units, never inside a surrogate pair, and shows it whole on its card"
+      ]
+    }
+  ]
+}

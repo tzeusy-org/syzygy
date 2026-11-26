@@ -276,7 +276,7 @@
     },
     "POC": {
       "requirements": 30,
-      "scenarios": 56,
+      "scenarios": 57,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -481,7 +481,8 @@
           "name": "Work-item titles render under the declared, screened title policy",
           "scenarios": [
             "Clean titles are shown",
-            "A title that fails screening is withheld"
+            "A title that fails screening is withheld",
+            "Every list names an item with its title"
           ]
         }
       }

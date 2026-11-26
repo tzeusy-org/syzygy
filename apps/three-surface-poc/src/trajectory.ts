@@ -250,7 +250,7 @@ function changedAnswer(model: PocModel, windows: readonly TrajectoryChangeWindow
       ? `<code>${escapeHtml(fact.id)}</code>`
       : `<a href="${viewHref(context.mountPrefix, { page })}#${escapeHtml(encodeURIComponent(`workitem-${fact.id}`))}"><code>${escapeHtml(fact.id)}</code></a>`;
     const statuses = `${fact.from === null ? '—' : `<code>${escapeHtml(fact.from)}</code>`} → ${fact.to === null ? '—' : `<code>${escapeHtml(fact.to)}</code>`}`;
-    return `<li data-change-kind="${fact.kind}" data-change-id="${escapeHtml(fact.id)}">${id} ${fact.kind} (${statuses})</li>`;
+    return `<li data-change-kind="${fact.kind}" data-change-id="${escapeHtml(fact.id)}">${itemName(model, fact.id, id)} ${fact.kind} (${statuses})</li>`;
   }).join('');
   const remainder = selected.facts.length - Math.min(selected.facts.length, CHANGED_LIST_LIMIT);
   const list = selected.facts.length === 0
@@ -362,7 +362,7 @@ function eligibilityRegion(eligibility: TrajectoryEligibility): string {
   </section>`;
 }
 
-function itemEligibility(eligibility: TrajectoryItemEligibility | undefined, mountPrefix: string): string {
+function itemEligibility(model: PocModel, eligibility: TrajectoryItemEligibility | undefined, mountPrefix: string): string {
   if (eligibility === undefined) return '';
   const reasons = eligibility.reasons.map((reason) =>
     `<span data-eligibility-reason="${reason}">${ELIGIBILITY_REASONS[reason]}</span>`,
@@ -372,7 +372,7 @@ function itemEligibility(eligibility: TrajectoryItemEligibility | undefined, mou
     `<span data-blocked-cause="${block.causes[0] ?? 'unknown'}">Cause ${block.causes[0] ?? 'Unknown'}.</span>`;
   const blockers = block === undefined || block.blockers.length === 0 ? '' :
     `<div>Blockers ${block.blockers.map(({ id, page }) =>
-      `<a data-blocker-id="${escapeHtml(id)}" href="${viewHref(mountPrefix, { page })}#${encodeURIComponent(`workitem-${id}`)}">${escapeHtml(id)}</a>`,
+      itemName(model, id, `<a data-blocker-id="${escapeHtml(id)}" href="${viewHref(mountPrefix, { page })}#${encodeURIComponent(`workitem-${id}`)}">${escapeHtml(id)}</a>`),
     ).join(', ')}</div>`;
   return `<div class="wi-facts"><span data-trajectory-eligibility="${eligibility.state}">Eligibility ${eligibility.state}.</span> ${reasons} ${cause}${blockers}</div>`;
 }
@@ -400,14 +400,59 @@ function governingIntentRegion(model: PocModel, rendered: readonly TrajectoryLan
       <label class="narrow-label" for="narrow-governing-intent-unknown">Show only items whose governing intent is Unknown</label>`;
 }
 
-/** POC-REQ-063: the card's title as the policy served it. An admitted title
- * is the item's own text, escaped; a withheld one is a mark naming its
- * reason and referring to the one withheld-title disclosure. */
-function itemTitle(model: PocModel, title: WorkItemTitle): string {
-  // <bdi>: a title's own bidirectional controls cannot reorder the card.
-  if (isTitleAdmitted(title)) return `<bdi class="wi-name" data-parity-field="work-item-title">${escapeHtml(title.text)}</bdi>`;
+/** POC-REQ-063: how many UTF-16 code units of a title a list shows. The
+ * card shows the whole title; a list names many items, so its title is
+ * clipped to cap each reference's cost. A card's blockers have no count
+ * bound, so this caps a page's bytes per blocker, not the page
+ * (syzygy-262m). */
+export const LIST_TITLE_LIMIT = 60;
+
+/** A title cut to `LIST_TITLE_LIMIT` code units, never inside a surrogate
+ * pair, or null when it already fits. */
+function clipTitle(text: string): string | null {
+  if (text.length <= LIST_TITLE_LIMIT) return null;
+  const end = /[\uD800-\uDBFF]/.test(text[LIST_TITLE_LIMIT - 1]!) ? LIST_TITLE_LIMIT - 1 : LIST_TITLE_LIMIT;
+  return text.slice(0, end);
+}
+
+/** POC-REQ-063: the one place a work item's title becomes HTML, for its
+ * card and for every list that names it. An admitted title is the item's
+ * own text, escaped, in a <bdi> so its bidirectional controls cannot reorder
+ * the page; a withheld one is a mark naming its reason and referring to the
+ * one withheld-title disclosure. `list` clips the text (see clipTitle). */
+function titleHtml(model: PocModel, title: WorkItemTitle, field: string, className: string, list: boolean): string {
+  if (isTitleAdmitted(title)) {
+    const clipped = list ? clipTitle(title.text) : null;
+    return clipped === null
+      ? `<bdi class="${className}" data-parity-field="${field}">${escapeHtml(title.text)}</bdi>`
+      : `<bdi class="${className}" data-parity-field="${field}" data-title-clipped="${LIST_TITLE_LIMIT}">${escapeHtml(clipped)}</bdi>…`;
+  }
   const unknown = unknownSubject(model, WORK_ITEM_TITLES_REGION_ID);
-  return cardMark('work-item-title', WORK_ITEM_TITLES_REGION_ID, epistemicClassName(unknown.label), unknown.closedReason, `Title: withheld (${title.withheld})`);
+  return cardMark(field, WORK_ITEM_TITLES_REGION_ID, epistemicClassName(unknown.label), unknown.closedReason, `Title: withheld (${title.withheld})`);
+}
+
+/** POC-REQ-063: the card's title, whole. */
+function itemTitle(model: PocModel, title: WorkItemTitle): string {
+  return titleHtml(model, title, 'work-item-title', 'wi-name', false);
+}
+
+const SERVED_BY_ID = new WeakMap<object, ReadonlyMap<string, WorkItemFact>>();
+
+/** POC-REQ-063 (syzygy-t3jk.24): an item's display name in a list: its
+ * identifier as the list renders it (`idHtml`), then, for a served item, its
+ * title as the policy served it. Every list that names a work item calls
+ * this, so no list reads a title any other way. An item not served (a
+ * removed item in the changed list) stays named by its identifier. */
+function itemName(model: PocModel, id: string, idHtml: string): string {
+  if (model.workItems.kind !== 'observed') return idHtml;
+  let served = SERVED_BY_ID.get(model.workItems);
+  if (served === undefined) {
+    served = new Map(model.workItems.items.map((item) => [item.id, item]));
+    SERVED_BY_ID.set(model.workItems, served);
+  }
+  const item = served.get(id);
+  if (item === undefined) return idHtml;
+  return `<span class="wi-ref" data-title-of="${escapeHtml(id)}">${idHtml} ${titleHtml(model, item.title, 'work-item-ref-title', 'wi-ref-name', true)}</span>`;
 }
 
 /** POC-REQ-063: the board's one statement about titles: the policy, the
@@ -458,7 +503,7 @@ function itemCard(
     <a class="wi-title" href="#workitem-${escapeHtml(item.id)}" data-parity-field="work-item-id">${escapeHtml(item.id)}</a>
     ${itemTitle(model, served.title)}
     <span class="wi-status" data-parity-field="work-item-status">${escapeHtml(item.status)}</span>
-    ${itemEligibility(eligibility, mountPrefix)}
+    ${itemEligibility(model, eligibility, mountPrefix)}
     ${itemFacts(item)}
     ${itemGoverningIntent(governedBy)}
     ${itemVerification()}
@@ -502,6 +547,7 @@ const TRAJECTORY_STYLE = `
   .demo-callout { max-width: 78ch; }
   .governing-intent-count, .titles-notice { max-width: 78ch; }
   .wi-name { display: block; font-size: .82rem; overflow-wrap: anywhere; unicode-bidi: isolate; }
+  .wi-ref-name { overflow-wrap: anywhere; unicode-bidi: isolate; }
   .narrow-label { font-family: var(--font-mono); font-size: .78rem; margin-left: .3rem; }
   .narrow-toggle:focus-visible + .narrow-label { outline: 2px solid var(--cyan); outline-offset: 2px; }
   .narrow-toggle:checked ~ .board .wi-card:not([data-governed-by="Unknown"]),
@@ -580,13 +626,13 @@ function fragment(id: string): string {
 /** syzygy-t3jk.20: what a group's heading says. A parent is named with its
  * tracker status as recorded and never judged from its children; the four
  * classes say why their items sit under no named parent. */
-function groupHeading(group: TrajectoryGroupSlice, view: TrajectoryNarrowing['view'], mountPrefix: string): string {
+function groupHeading(model: PocModel, group: TrajectoryGroupSlice, view: TrajectoryNarrowing['view'], mountPrefix: string): string {
   const key = group.key;
   switch (key.kind) {
     case 'parent': {
       const parent = group.parent!;
       const card = `${viewHref(mountPrefix, { page: parent.cardPage })}#${encodeURIComponent(`workitem-${key.id}`)}`;
-      return `Parent <a data-group-parent="${escapeHtml(key.id)}" href="${card}">${escapeHtml(key.id)}</a>, tracker status <code data-group-parent-status>${escapeHtml(parent.status)}</code>`;
+      return `Parent ${itemName(model, key.id, `<a data-group-parent="${escapeHtml(key.id)}" href="${card}">${escapeHtml(key.id)}</a>`)}, tracker status <code data-group-parent-status>${escapeHtml(parent.status)}</code>`;
     }
     case 'parent-outside-tracker':
       return 'Parent outside this tracker';
@@ -605,7 +651,7 @@ const GROUP_NOTE = {
   'no-parent': 'No parent-child row names a parent for these items.',
 } as const;
 
-function groupRegion(group: TrajectoryGroupSlice, view: NonNullable<TrajectoryNarrowing['view']>, mountPrefix: string, cards: string): string {
+function groupRegion(model: PocModel, group: TrajectoryGroupSlice, view: NonNullable<TrajectoryNarrowing['view']>, mountPrefix: string, cards: string): string {
   const pageLink = (page: number, text: string, rel: string): string =>
     `<a data-group-continues="${rel}" href="${viewHref(mountPrefix, { ...view, page })}${fragment(group.anchor)}">${text} ${page}</a>`;
   const notes: string[] = [];
@@ -613,17 +659,17 @@ function groupRegion(group: TrajectoryGroupSlice, view: NonNullable<TrajectoryNa
   if (parent !== undefined) {
     if (parent.status === 'closed') notes.push('The parent is closed in the tracker and its items keep their own statuses; neither is read as the other\'s completion.');
     if (parent.under.length > 0) {
-      notes.push(`The parent sits under ${parent.under.map(({ id, groupPage, cardPage }) => groupPage === null
+      notes.push(`The parent sits under ${parent.under.map(({ id, groupPage, cardPage }) => itemName(model, id, groupPage === null
         ? `<a data-group-under="${escapeHtml(id)}" href="${viewHref(mountPrefix, { page: cardPage })}#${encodeURIComponent(`workitem-${id}`)}">${escapeHtml(id)}</a>`
-        : `<a data-group-under="${escapeHtml(id)}" href="${viewHref(mountPrefix, { ...view, page: groupPage })}${fragment(groupAnchor({ kind: 'parent', id }))}">${escapeHtml(id)}</a>`).join(', ')}.`);
+        : `<a data-group-under="${escapeHtml(id)}" href="${viewHref(mountPrefix, { ...view, page: groupPage })}${fragment(groupAnchor({ kind: 'parent', id }))}">${escapeHtml(id)}</a>`)).join(', ')}.`);
     }
     const cycle = parent.cycle;
     if (cycle !== null && 'members' in cycle) {
-      notes.push(`<span data-group-cycle="${escapeHtml(cycle.members.join(' '))}">Parent-child cycle among ${cycle.members.map((id) => `<code>${escapeHtml(id)}</code>`).join(', ')}: stated here once and not followed further.</span>`);
+      notes.push(`<span data-group-cycle="${escapeHtml(cycle.members.join(' '))}">Parent-child cycle among ${cycle.members.map((id) => itemName(model, id, `<code>${escapeHtml(id)}</code>`)).join(', ')}: stated here once and not followed further.</span>`);
     } else if (cycle !== null) {
       const anchor = groupAnchor({ kind: 'parent', id: cycle.statedUnder });
       const href = cycle.page === null ? fragment(anchor) : `${viewHref(mountPrefix, { ...view, page: cycle.page })}${fragment(anchor)}`;
-      notes.push(`<span data-group-cycle-ref="${escapeHtml(cycle.statedUnder)}">The parent is in a parent-child cycle, stated under <a href="${href}">${escapeHtml(cycle.statedUnder)}</a>.</span>`);
+      notes.push(`<span data-group-cycle-ref="${escapeHtml(cycle.statedUnder)}">The parent is in a parent-child cycle, stated under ${itemName(model, cycle.statedUnder, `<a href="${href}">${escapeHtml(cycle.statedUnder)}</a>`)}.</span>`);
     }
   } else if (group.key.kind === 'parent-unknown') {
     notes.push(`<span data-group-reason="${group.key.reason}">The dependency rows were not read. ${ELIGIBILITY_REASONS[group.key.reason]}</span>`);
@@ -635,7 +681,7 @@ function groupRegion(group: TrajectoryGroupSlice, view: NonNullable<TrajectoryNa
     group.continuesOnPage === null ? '' : `Continues on ${pageLink(group.continuesOnPage, 'page', 'next')}.`,
   ].filter((part) => part !== '').join(' ');
   return `<li class="outline-group" data-group="${escapeHtml(group.anchor)}">
-      <h3 id="${escapeHtml(group.anchor)}">${groupHeading(group, view, mountPrefix)}</h3>
+      <h3 id="${escapeHtml(group.anchor)}">${groupHeading(model, group, view, mountPrefix)}</h3>
       <p><span data-group-total>${group.total}</span> items in this group, <span data-group-on-page>${group.onPage.length}</span> on this page.${continuity === '' ? '' : ` ${continuity}`}</p>
       ${notes.map((note) => `<p>${note}</p>`).join('')}
       <ol class="wi-list">${cards}</ol>
@@ -643,11 +689,11 @@ function groupRegion(group: TrajectoryGroupSlice, view: NonNullable<TrajectoryNa
 }
 
 /** syzygy-t3jk.20: the grouped view's page, one region per group. */
-function outlineRegion(grouping: TrajectoryGrouping, view: TrajectoryNarrowing['view'], mountPrefix: string,
+function outlineRegion(model: PocModel, grouping: TrajectoryGrouping, view: TrajectoryNarrowing['view'], mountPrefix: string,
   card: (item: TrajectoryLaneItem, anchor: boolean) => string, rendered: readonly TrajectoryLaneItem[]): string {
   const byId = new Map(rendered.map((item) => [item.id, item]));
   const anchored = new Set<string>();
-  const groups = grouping.groups.map((group) => groupRegion(group, view, mountPrefix, group.onPage.map((id) => {
+  const groups = grouping.groups.map((group) => groupRegion(model, group, view, mountPrefix, group.onPage.map((id) => {
     const item = byId.get(id);
     if (item === undefined) throw new Error(`grouped work item ${id} is not rendered`);
     const anchor = !anchored.has(id);
@@ -723,7 +769,7 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
     const layout = grouping === undefined ? 'in tracker status columns' : 'grouped by parent';
     lede = `Five answers over the full observed work-item population, then selected work items ${layout}. Times come from recorded instants.`;
     const board = grouping !== undefined
-      ? outlineRegion(grouping, view, mountPrefix, card, trajectory.rendered)
+      ? outlineRegion(model, grouping, view, mountPrefix, card, trajectory.rendered)
       : statusBoard(trajectory.rendered, card);
 
     const demonstratedCallout =

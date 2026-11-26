@@ -347,7 +347,12 @@ eligibility reason remains visible when a separate edge is unresolved.
      when the work-item-title policy admits it (POC-REQ-063: the secret
      detectors and the active-content scan, unchanged); a withheld title is
      never served, and the board's titles notice states the policy, the
-     admitted count and, when any are withheld, how many and why. Each mark
+     admitted count and, when any are withheld, how many and why. Every
+     list that names a served item (the outline's parent headings, what a
+     parent sits under, a parent-child cycle's notes, a card's blockers,
+     the what-changed list) shows its identifier with the same screened
+     title, clipped to 60 UTF-16 code units (59 before a surrogate pair)
+     with an ellipsis; the card keeps the whole title. Each mark
      keeps the Unknown encoding and its reason and
      links to the board notice that states that Unknown once, with its
      count, reason and route; the verification notice gives served, inside
