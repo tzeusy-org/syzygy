@@ -256,7 +256,8 @@ describe('reader advice: the choice floor (version 2.33)', () => {
   });
 
   it('counts every Inferred item for a draft with no Poles', () => {
-    expect(readerAdvice(doc([item('ch1', 'x/1'), item('ch2', 'x/2')], [])).choiceFloor).toEqual([{ at: '$.sections', onRecord: 2,
+    // An Unknown item is not on record even where nothing attributes it: a draft with no Poles counts the Inferred items alone.
+    expect(readerAdvice(doc([item('ch1', 'x/1'), item('ch2', 'x/2'), item('u1', '', 'unknown')], [])).choiceFloor).toEqual([{ at: '$.sections', onRecord: 2,
       detail: 'the draft has 2 choices or trade-offs on record, fewer than 3: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s `choices` or `tradeOffs`; never record one its source does not show' }]);
     expect(readerAdvice(doc([item('ch1', 'x/1'), item('ch2', 'x/2')], [item('t1', 'x/3')])).choiceFloor).toEqual([]);
   });
