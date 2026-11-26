@@ -6640,7 +6640,10 @@ def reference_signed(root):
         return poc_reference().is_signed(root)
     key = str(Path(root).resolve())
     if key not in _SIGNED_MEMO:
-        _SIGNED_MEMO[key] = poc_reference().is_signed(root)
+        # Across cases, a selftest answers from a clean root's trace when every
+        # input that call observed is unchanged (syzygy-offm); unarmed, stock.
+        import signed_trace_cache
+        _SIGNED_MEMO[key] = signed_trace_cache.signed(root, poc_reference().is_signed)
     return _SIGNED_MEMO[key]
 
 
@@ -11969,10 +11972,17 @@ def selftest(witness_path=None):
                 print("SELFTEST FAIL: the scratch copy with an adopted addition "
                       "does not pass")
                 return 1
+            # Trace each clean root's P115 answer once, outside run(), so the
+            # cases look it up instead of re-deriving it (syzygy-offm).
+            import signed_trace_cache
+            signed_trace_cache.prime((base, added, adopted),
+                                     poc_reference().is_signed)
             return _selftest_cases(tmp, commit, witnesses, failures, witness_path,
                                    base, clean, added, with_addition, adopted,
                                    with_adopted)
         finally:
+            import signed_trace_cache
+            signed_trace_cache.disarm()
             del ADOPTED_ADDITIONS[ADOPTED]
             globals()["adopted_binding"] = binding_of
 
