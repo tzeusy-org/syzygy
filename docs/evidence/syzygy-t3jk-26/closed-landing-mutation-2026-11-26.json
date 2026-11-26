@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "record": "rule-6 mutation run over closed landings (POC-REQ-065), syzygy-t3jk.26",
+  "commit": "8b7549c3132b916cf574c2d922312b7d649c071c",
+  "subjects": [
+    {
+      "path": "apps/three-surface-poc/src/trajectory.ts",
+      "sha256": "03ed39dedfefa72f8c6b6ef239b7d1ffa8aa034c602a64dd17f3addcf9d55174"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/model.ts",
+      "sha256": "19c341e3698f568cf8598f5e4a29776848d17728d223f9361029a1d78dadbd33"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+      "sha256": "880d1933a48f4dff2f3eeb007791d41f0c57c496eb03adbf36a7c54fa7260c2c"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/trajectory-projection.test.ts",
+      "sha256": "20eeed0f7f01a13765c647ef570ee023c6328bdc88ec3570179fbf6d67d1c1c2"
+    },
+    {
+      "path": "apps/three-surface-poc/src/trajectory.test.ts",
+      "sha256": "1f38e09682a94ac86da17c6a819de5ea6f6276aab0583e2c54e04b2a55455714"
+    }
+  ],
+  "method": "For each mutant: replace the exact `old` fragment (which must occur once) with `new` in `file` at `commit`, run `npx vitest run` over `tests`, restore the file. A mutant is killed when the run exits non-zero with at least one FAIL line.",
+  "tests": [
+    "packages/three-surface-poc-core/src/trajectory-projection.test.ts",
+    "apps/three-surface-poc/src/trajectory.test.ts"
+  ],
+  "totals": {
+    "mutants": 13,
+    "killed": 13
+  },
+  "mutants": [
+    {
+      "id": "open-item-gets-landing",
+      "file": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+      "old": "if (item.status !== 'closed' || joins.kind !== 'observed') return null;",
+      "new": "if (joins.kind !== 'observed') return null;",
+      "killed": true,
+      "failingTests": 3,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/trajectory-projection.test.ts > closed landings (POC-REQ-065) > derives each item's landing from the join and its status alone",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > lists an open item's naming commits without a landing, and never a bare \"merged\" or a verdict word",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > renders every card's landing as the machine answer's join and status give it"
+      ]
+    },
+    {
+      "id": "every-closed-merged",
+      "file": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+      "old": "return joins.items.some((entry) => entry.id === item.id) ? 'merged-by-convention' : 'no-naming-commit-read';",
+      "new": "return 'merged-by-convention';",
+      "killed": true,
+      "failingTests": 4,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/trajectory-projection.test.ts > closed landings (POC-REQ-065) > derives each item's landing from the join and its status alone",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > counts closed items merged by naming convention apart from closed items no commit names, on both channels",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > renders every card's landing as the machine answer's join and status give it"
+      ]
+    },
+    {
+      "id": "count-over-all-items",
+      "file": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+      "old": "const merged = closed.filter((item) => joined.has(item.id)).length;",
+      "new": "const merged = items.filter((item) => joined.has(item.id)).length;",
+      "killed": true,
+      "failingTests": 2,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/trajectory-projection.test.ts > closed landings (POC-REQ-065) > counts the closed items merged by convention and those no read commit names, over every served item",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > counts closed items merged by naming convention apart from closed items no commit names, on both channels"
+      ]
+    },
+    {
+      "id": "unknown-join-counted-zero",
+      "file": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+      "old": "  if (joins === undefined || joins.kind !== 'observed') {\n    return { state: 'unknown', disclosure: TRAJECTORY_COMMIT_JOINS_ID, closed: closed.length };\n  }\n",
+      "new": "  if (joins === undefined || joins.kind !== 'observed') {\n    return { state: 'observed', closed: closed.length, mergedByConvention: 0, noNamingCommitRead: closed.length, basis: 'naming-convention', fidelity: 'reduced-fidelity', commitsRead: 0, historyTruncated: false };\n  }\n",
+      "killed": true,
+      "failingTests": 3,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/trajectory-projection.test.ts > Trajectory projection > answers the five questions over every served item, not the rendered selection (POC-REQ-044)",
+        "FAIL  |unit| packages/three-surface-poc-core/src/trajectory-projection.test.ts > closed landings (POC-REQ-065) > counts the closed items merged by convention and those no read commit names, over every served item",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > is Unknown with its reason and route, never counted, when the history cannot be read"
+      ]
+    },
+    {
+      "id": "truncation-dropped",
+      "file": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+      "old": "    historyTruncated: joins.truncated,",
+      "new": "    historyTruncated: false,",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |unit| packages/three-surface-poc-core/src/trajectory-projection.test.ts > closed landings (POC-REQ-065) > counts the closed items merged by convention and those no read commit names, over every served item"
+      ]
+    },
+    {
+      "id": "bare-merged-label",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "const MERGED_LABEL = 'Merged (by naming convention, reduced fidelity)';",
+      "new": "const MERGED_LABEL = 'Merged';",
+      "killed": true,
+      "failingTests": 2,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > counts closed items merged by naming convention apart from closed items no commit names, on both channels",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > lists an open item's naming commits without a landing, and never a bare \"merged\" or a verdict word"
+      ]
+    },
+    {
+      "id": "truncated-card-wording",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "  return truncated ? `Closed, no commit names it in the newest ${read} read` : 'Closed, no commit names it';",
+      "new": "  return 'Closed, no commit names it';",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > says a closed item without a naming commit was checked only against the commits read when older history was not read"
+      ]
+    },
+    {
+      "id": "truncated-answer-wording",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "  const older = landing.historyTruncated",
+      "new": "  const older = false",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > says a closed item without a naming commit was checked only against the commits read when older history was not read"
+      ]
+    },
+    {
+      "id": "unknown-card-unmarked",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "    return cardMark('work-item-landing', TRAJECTORY_COMMIT_JOINS_ID, 'epistemic-unknown', unknown.closedReason, 'Landing: Unknown');",
+      "new": "    return unknown.closedReason === '' ? '' : '';",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > is Unknown with its reason and route, never counted, when the history cannot be read"
+      ]
+    },
+    {
+      "id": "card-commits-dropped",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "    ${itemCommits(model, served)}\n",
+      "new": "",
+      "killed": true,
+      "failingTests": 5,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > counts closed items merged by naming convention apart from closed items no commit names, on both channels",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > lists an open item's naming commits without a landing, and never a bare \"merged\" or a verdict word",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > renders every card's landing as the machine answer's join and status give it"
+      ]
+    },
+    {
+      "id": "answer-sentence-dropped",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "not enumerated here.${closedLandingSentence(model, answer.closedLanding)}`;",
+      "new": "not enumerated here.`;",
+      "killed": true,
+      "failingTests": 4,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > counts closed items merged by naming convention apart from closed items no commit names, on both channels",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > lists an open item's naming commits without a landing, and never a bare \"merged\" or a verdict word",
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > says a closed item without a naming commit was checked only against the commits read when older history was not read"
+      ]
+    },
+    {
+      "id": "subject-dropped",
+      "file": "packages/three-surface-poc-core/src/model.ts",
+      "old": "        add(TRAJECTORY_COMMIT_JOINS_ID, commitJoinsBasis(input.commitJoins), 'source-uncaptured-or-unreachable');",
+      "new": "        void commitJoinsBasis;",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > is Unknown with its reason and route, never counted, when the history cannot be read"
+      ]
+    },
+    {
+      "id": "verdict-word",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "a reduced-fidelity join that shows where work landed, not that it satisfied its intent.",
+      "new": "a reduced-fidelity join; this work is done.",
+      "killed": true,
+      "failingTests": 1,
+      "firstFailing": [
+        "FAIL  |integration| apps/three-surface-poc/src/trajectory.test.ts > Closed items by landing (POC-REQ-065, syzygy-t3jk.26) > lists an open item's naming commits without a landing, and never a bare \"merged\" or a verdict word"
+      ]
+    }
+  ]
+}

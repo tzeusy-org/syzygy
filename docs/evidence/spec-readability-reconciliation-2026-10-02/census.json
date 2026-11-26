@@ -275,8 +275,8 @@
       }
     },
     "POC": {
-      "requirements": 29,
-      "scenarios": 54,
+      "requirements": 32,
+      "scenarios": 61,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -476,6 +476,28 @@
             "Planned, blocked without cause, and statuses outside derived eligibility",
             "Blocker reaches its card across pages"
           ]
+        },
+        "POC-REQ-063": {
+          "name": "Work-item titles render under the declared, screened title policy",
+          "scenarios": [
+            "Clean titles are shown",
+            "A title that fails screening is withheld",
+            "Every list names an item with its title"
+          ]
+        },
+        "POC-REQ-064": {
+          "name": "Work items join the observed repository's commits by exact identifier tokens",
+          "scenarios": [
+            "Commits that name an item join it",
+            "A history that cannot be read is Unknown"
+          ]
+        },
+        "POC-REQ-065": {
+          "name": "Trajectory renders closed work that merged apart from closed work no commit names",
+          "scenarios": [
+            "Closed items read merged by naming convention or closed with no naming commit",
+            "Closed landings are Unknown when the history cannot be read"
+          ]
         }
       }
     },
@@ -635,7 +657,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 562,
+      "scenarios": 567,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1247,7 +1269,12 @@
             "Count advice without a quota",
             "A pre-v13 draft keeps its bytes",
             "Brief v19 and inventory brief v4 ask for the facts",
-            "Brief v20 teaches reader-spelled terminology IDs"
+            "Brief v20 teaches reader-spelled terminology IDs",
+            "Unit with no change block advised",
+            "Unit answering all six kinds is not advised",
+            "Nothing declared is Unknown",
+            "Declarations in an earlier schema",
+            "Brief v21 teaches the six kinds"
           ]
         },
         "REQ-polaris-generation-035": {

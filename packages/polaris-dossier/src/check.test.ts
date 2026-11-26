@@ -2311,3 +2311,60 @@ describe('check: the worth-knowing mark (schema v13)', () => {
     }
   });
 });
+
+// REQ-polaris-generation-034 version 2.32 (syzygy-5dhm.135): the per-kind floor on check's report. Expected values are literals written
+// from the specification. The fixture tree's major units are the whole repository, `src` and `docs`; the introduction and `p1` cite
+// `src/kestrel.c` and `p2` cites `docs/notes.txt`.
+describe('check: question-kind advice per major unit (version 2.32)', () => {
+  const HERO_OMITTED = { omitted: { id: 'hero-reason', label: 'inferred', basis: 'source', text: 'The project describes one runtime process.', citations: [cite('c-hero-reason')], quotations: [] } };
+  const drafted = (version: string, change: (d: Draft) => void) => mutate((d) => { d.schemaVersion = version; d.thesisBasis = 'stated'; d.hero = HERO_OMITTED; change(d); });
+  const checked = async (draft: Draft) => {
+    const run = await briefedRun();
+    writeDraft(run, draft);
+    return { run, result: report(await checkDraft(run, {}, deps())) };
+  };
+  const ROWS = [
+    { blockId: 'intro', kinds: ['purpose'] },
+    { blockId: 'p1', kinds: ['structure', 'mechanism'] },
+    { blockId: 'p2', kinds: ['rationale', 'limits'] },
+  ];
+
+  it('lists, per major unit, the kinds no declared block answers, sets no outcome and stays out of the check record', async () => {
+    const { run, result } = await checked(drafted('polaris-dossier-local-draft-v13', (d) => { d.questionKinds = ROWS; }));
+    expect([result.outcome, result.findings]).toEqual(['passed', []]);
+    expect(result.questionKindAdvice).toMatchObject({ state: 'compared', rule: { id: 'question-kind-floor', version: 1 }, label: 'Inferred',
+      declarations: { rows: 3, counted: 3, unmatched: [], duplicated: [] } });
+    const units = (result.questionKindAdvice as { readonly units: readonly { readonly unit: string; readonly missing: readonly string[] }[] }).units.map(({ unit, missing }) => ({ unit, missing }));
+    expect(units).toEqual([
+      { unit: '.', missing: ['change'] },
+      { unit: 'src', missing: ['rationale', 'change', 'limits'] },
+      { unit: 'docs', missing: ['purpose', 'structure', 'mechanism', 'change'] },
+    ]);
+    for (const file of ['checks/rev-0.json', 'steps.jsonl']) expect(read(run, file)).not.toContain('questionKindAdvice');
+  });
+
+  it('is Unknown for a v13 draft that declares nothing', async () => {
+    const { result } = await checked(drafted('polaris-dossier-local-draft-v13', () => {}));
+    expect(result.outcome).toBe('passed');
+    expect(result.questionKindAdvice).toMatchObject({ state: 'unknown', why: 'the draft declares no question kind in `questionKinds`, so which kinds its blocks answer is not known' });
+  });
+
+  it('reports the member in a v10 draft as field-version in place of the schema finding, and the advice Unknown', async () => {
+    const { result } = await checked(drafted('polaris-dossier-local-draft-v10', (d) => { d.questionKinds = ROWS; }));
+    expect(result.findings.map(({ kind, at, detail }) => ({ kind, at, detail }))).toEqual([
+      { kind: 'field-version', at: '$.questionKinds', detail: '`questionKinds` needs draft schema polaris-dossier-local-draft-v13' }]);
+    expect(result.questionKindAdvice).toMatchObject({ state: 'unknown' });
+  });
+
+  it('names on the report no declared identifier the bound policy\'s detectors match, and counts it', async () => {
+    const TOKEN = `${['gh', 'p_'].join('')}${'k'.repeat(36)}`;
+    const { result } = await checked(drafted('polaris-dossier-local-draft-v13', (d) => { d.questionKinds = [...ROWS, { blockId: TOKEN, kinds: ['change'] }, { blockId: 'plain-ghost', kinds: ['change'] }]; }));
+    expect(result.questionKindAdvice).toMatchObject({ declarations: { rows: 5, counted: 3, unmatched: ['plain-ghost'], duplicated: [], unnamed: 1 } });
+    expect(JSON.stringify(result.questionKindAdvice)).not.toContain(TOKEN);
+  });
+
+  it('reports a malformed row in a v13 draft as a schema finding', async () => {
+    const { result } = await checked(drafted('polaris-dossier-local-draft-v13', (d) => { d.questionKinds = [{ blockId: 'p1', kinds: ['change', 'change'] }, { blockId: 'p2', kinds: ['why'] }]; }));
+    expect(result.findings.map(({ kind, at }) => `${kind} ${at}`)).toEqual(['schema $.questionKinds[0].kinds', 'schema $.questionKinds[1].kinds[0]']);
+  });
+});

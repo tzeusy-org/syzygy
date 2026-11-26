@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { parseTrajectoryView, projectTrajectory, projectTrajectoryView } from './trajectory-projection.js';
 import { observeWorkItemDependencies } from './work-item-dependencies.js';
-import { governingIntentUnknown, workItemTitlesWithheld, type WorkItemFact, type WorkItemsObserved, type WorkItemStatus } from './work-items.js';
+import { governingIntentUnknown, countWorkItemTitles, type WorkItemFact, type WorkItemsObserved, type WorkItemStatus } from './work-items.js';
 
 // syzygy-t3jk.20 (POC-REQ-042 amended): the grouped view and the outline.
 // Expected values are literals or the test's own formula over the fixture,
@@ -20,6 +20,7 @@ function item(id: string, status: WorkItemStatus): WorkItemFact {
     updatedAt: '2026-08-01T00:00:00Z',
     closedAt: status === 'closed' ? '2026-08-02T00:00:00Z' : null,
     governedBy: governingIntentUnknown(),
+    title: { text: 'fixture title' },
   };
 }
 
@@ -31,7 +32,7 @@ function observed(items: readonly WorkItemFact[]): WorkItemsObserved {
     capturedAt: '2026-08-30T00:00:00Z',
     items,
     governedByUnknownCount: items.length,
-    titles: workItemTitlesWithheld(),
+    titles: countWorkItemTitles(items),
   };
 }
 

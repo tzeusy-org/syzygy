@@ -2,7 +2,7 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { checkShape, ref, handle, leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText, type Schema } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, RELATION_FIELD, UNIT_FIELD, hasRelationForm, hasHeroForm, heroOf, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, hasWorthKnowingForm, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
+import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, RELATION_FIELD, UNIT_FIELD, hasRelationForm, hasHeroForm, heroOf, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, QUESTION_KINDS_FIELD, hasWorthKnowingForm, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
 import { isEntryPoint } from './derive.js';
 import { UNIT_FAULT_WORDS, UNIT_TEXT_LIMIT, decideWitness, unitFault, unitOf, type EdgeEnd, type RelationType, type UnitFault, type UnitTree, type WitnessDecision, type WitnessInputs } from './relation-witness.js';
 import { BLOB_MODES, type PinnedObjectReader, type TreeEntry } from './git-object-reader.js';
@@ -704,6 +704,11 @@ function worthKnowingFieldVersionPaths(doc: Readonly<Record<string, unknown>>): 
   return out;
 }
 
+/** The question-kind declarations in a draft of schema v10 or earlier: a field-version finding at `$.questionKinds` (version 2.32). */
+function questionKindsFieldVersionPaths(doc: Readonly<Record<string, unknown>>): string[] {
+  return !hasWorthKnowingForm(doc['schemaVersion']) && Object.hasOwn(doc, QUESTION_KINDS_FIELD) ? [`$.${QUESTION_KINDS_FIELD}`] : [];
+}
+
 /** Where a v13 block may carry the worth-knowing mark: one of a section's own paragraphs, never a child, an element's claim, a subsection,
  * a deep dive, the introduction or a route step. */
 const WORTH_KNOWING_PLACE = /^\$\.sections\[\d+\]\.paragraphs\[\d+\]$/u;
@@ -717,6 +722,7 @@ function worthKnowingStructure(doc: Readonly<Record<string, unknown>>, add: (fin
     const member = at.endsWith(WORTH_KNOWING_NONE_FIELD) ? WORTH_KNOWING_NONE_FIELD : WORTH_KNOWING_FIELD;
     add({ kind: 'field-version', at, detail: `\`${member}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
   }
+  for (const at of questionKindsFieldVersionPaths(doc)) add({ kind: 'field-version', at, detail: `\`${QUESTION_KINDS_FIELD}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
   if (!hasWorthKnowingForm(doc['schemaVersion'])) return;
   walk(doc, '$', (value, at) => {
     if (value[WORTH_KNOWING_FIELD] !== true || value['label'] !== 'inferred') return;
@@ -763,6 +769,8 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
       const relationPaths = new Set(relationFieldVersionPaths(doc));
       // The worth-knowing mark and a Pole's `worthKnowingNone` in a v10 or earlier draft: likewise (version 2.26).
       for (const at of worthKnowingFieldVersionPaths(doc)) subsectionPaths.add(at);
+      // The question-kind declarations in a v10 or earlier draft: likewise (version 2.32).
+      for (const at of questionKindsFieldVersionPaths(doc)) subsectionPaths.add(at);
       const fieldVersioned = (path: string): boolean => subsectionPaths.has(path) || relationPaths.has(path)
         || (hasHeroForm(version) && (path === '$.hero' || path === '$.hero.figure'));
       if (hasFigureKindForm(version)) {

@@ -1,0 +1,93 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-25T16:01:32.583Z",
+  "commit": "dcb731947e00fe7aa6eda9f63953f570fdae1027",
+  "subject": {
+    "packages/polaris-dossier/src/check.ts": "f4d58e370e7e9b40626d8360eba2935009560f5d189e4e30a92cb6e83c4f48ee",
+    "packages/polaris-dossier/src/question-kinds.ts": "c1b5df9334b11e1bfdc3ecf5bef73b9f87d3de2229de84397a939a461599ebd8"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --testTimeout=120000 --reporter=json --outputFile=<scratch>/mutation-<id>.json; for a Python or JSON source, python3 <each listed command> (a non-zero exit is a failure)",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 900 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/question-kinds.ts": [
+      "packages/polaris-dossier/src/question-kinds.test.ts",
+      "packages/polaris-dossier/src/check.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/check.test.ts"
+    ],
+    "packages/polaris-dossier/src/draft-schema.ts": [
+      "packages/polaris-dossier/src/check.test.ts",
+      "packages/polaris-dossier/src/question-kinds.test.ts"
+    ],
+    "packages/polaris-dossier/src/check.ts": [
+      "packages/polaris-dossier/src/check.test.ts"
+    ],
+    "packages/polaris-dossier/src/brief.ts": [
+      "packages/polaris-dossier/src/brief.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "packages/polaris-dossier/src/check.ts",
+      "exitCode": 0,
+      "tests": 307,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "exitCode": 0,
+      "tests": 317,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "rows-empty-id-kept",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "if (blockId === undefined || blockId === '' || kinds.length === 0) continue;",
+      "new": "if (blockId === undefined || kinds.length === 0) continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 317,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit counts a row with an empty identifier as no row, and a block whose id repeats once"
+      ],
+      "seconds": 48
+    },
+    {
+      "id": "blocks-counted-twice",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "if (blockId === undefined || kinds === undefined || counted.has(blockId)) continue;",
+      "new": "if (blockId === undefined || kinds === undefined) continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 317,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit counts a row with an empty identifier as no row, and a block whose id repeats once"
+      ],
+      "seconds": 72
+    },
+    {
+      "id": "wiring-no-detector",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "questionKindAdvice(doc, treeFacts, secretPathOf(screen))",
+      "new": "questionKindAdvice(doc, treeFacts, () => false)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 307,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: question-kind advice per major unit (version 2.32) names on the report no declared identifier the bound policy's detectors match, and counts it"
+      ],
+      "seconds": 92
+    }
+  ],
+  "equivalent": [],
+  "summary": {
+    "mutants": 3,
+    "killed": 3,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 0
+  }
+}

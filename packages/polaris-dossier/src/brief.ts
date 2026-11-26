@@ -44,7 +44,9 @@ import { issuedBriefStatement } from './launch-statements.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-/** v20 (syzygy-fnry.18 AC4): brief v19 with terminology ID instructions in the understanding record.
+/** v21 (REQ-polaris-generation-034 version 2.32, syzygy-5dhm.135): brief v20 with the one question-kinds paragraph
+ * (`QUESTION_KINDS_PARAGRAPH`) immediately after the worth-knowing paragraph, and this line changed. The draft schema stays v13.
+ * v20 (syzygy-fnry.18 AC4): brief v19 with terminology ID instructions in the understanding record.
  * v19 (REQ-polaris-generation-034 version 2.26, syzygy-5dhm.41): brief v16 with draft schema v13 and the one worth-knowing paragraph
  * (`WORTH_KNOWING_PARAGRAPH`) immediately after the Poles paragraph, and this line changed. v17 and v18 are the numbers adopted version
  * 2.23 and the open version 2.24 give their briefs; neither is implemented here.
@@ -54,8 +56,12 @@ import { issuedBriefStatement } from './launch-statements.js';
  * (`SUBSECTIONS_PARAGRAPH`) immediately after the figure-kinds paragraph, and this line changed. v13 (the index-and-task-routes change): brief v12 with the task-routes section (`TASK_ROUTES_RULE`) added after the Poles and this line
  * changed, and nothing else. v12 (REQ-polaris-generation-034 version 2.5): brief v11 with draft schema v7 and the one figure-kinds paragraph
  * (`FIGURE_KINDS_PARAGRAPH`) immediately after the thesis-basis paragraph. v11 (version 2.4) added schema v6 and `THESIS_BASIS_PARAGRAPH`. */
-export const BRIEF_VERSION = 'polaris-dossier-brief-v20';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v21';
 const HERO_PARAGRAPH = 'Name the dossier\'s hero in `hero`: `{"figure": "<diagram id>"}` for one diagram whose `home` is `{"kind": "overview"}` and whose `kind` is `flow`, `lifecycle`, `state-machine`, `boundary`, `dependency` or `placement`, showing the project\'s main parts and what surrounds them. Syzygy draws it first on the overview, after the introduction and any open questions. Where no such figure would be true, write `{"omitted": <block>}` instead, one inferred or unknown block saying why; the overview shows that reason where the figure would stand. A draft that does neither is refused.';
+
+/** The paragraph brief v21 adds immediately after the worth-knowing paragraph, in the requirement's words (version 2.32). It carries no
+ * project content and none of the comprehension key's questions. */
+export const QUESTION_KINDS_PARAGRAPH = 'A newcomer asks six kinds of question about each major part of a project: `purpose` (what it is for), `structure` (how its parts fit), `mechanism` (how it works), `rationale` (why it is built this way), `change` (where to change something) and `limits` (what it does not do and how it fails). In `questionKinds`, list each Inferred claim block that answers one: `{"blockId": "<the block\'s id>", "kinds": [...]}`, naming only the kinds it answers. Check counts these rows for the whole repository and for each top-level directory holding at least one twentieth of the files, a block counting for each such directory it cites a file inside, and advises the kinds no block answers there. It is advice, never a finding: write a block for a missing kind where the part has something to say, and never declare a kind a block does not answer. The rows are never rendered.';
 
 /** The paragraph brief v19 adds immediately after the Poles paragraph, in the requirement's words (version 2.26). It carries no project
  * content. */
@@ -209,6 +215,8 @@ export function renderBrief(input: BriefInput): string {
     `Divide the sections into Poles in \`poles\`: at most ${poleLimitOf(declared)}, this run's Pole limit, each a short label (under the rules for an element's short label) and the sections it holds, every section in exactly one. Choose the Poles from what the repository holds, each holding a substantial share of its documentation; never fill a fixed template, such as a server and a client, where the repository says little about one of them. Name in \`whySection\` the section that answers why the project exists. Syzygy renders a landing page holding the title, that section and a map of the Poles, then one page per Pole; the why section's own Pole links back to the landing page rather than repeating it, and a Pole holding only that section has no page of its own. A Pole is a page boundary and carries no claim. A draft with no \`poles\` keeps its sections on one page.`,
     '',
     WORTH_KNOWING_PARAGRAPH,
+    '',
+    QUESTION_KINDS_PARAGRAPH,
     '',
     '## Task routes',
     '',

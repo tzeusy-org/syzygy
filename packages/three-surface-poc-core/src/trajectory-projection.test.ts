@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { projectTrajectory, projectTrajectoryView, STATUS_TO_COLUMN, type TrajectoryProjection } from './trajectory-projection.js';
-import { governingIntentUnknown, workItemTitlesWithheld, type WorkItemsObserved } from './work-items.js';
+import { closedItemLanding, projectTrajectory, projectTrajectoryView, STATUS_TO_COLUMN, type TrajectoryProjection } from './trajectory-projection.js';
+import { governingIntentUnknown, type WorkItemsObserved } from './work-items.js';
 
 function itemsFixture(): WorkItemsObserved {
   return {
@@ -10,13 +10,13 @@ function itemsFixture(): WorkItemsObserved {
     provenance: { kind: 'dolt-revision', source: 'Beads Dolt database (bu)', revision: 'rev-1' },
     capturedAt: '2026-08-30T00:00:00Z',
     items: [
-      { id: 'bu-1', status: 'open', issueType: 'task', priority: 1, createdAt: '2026-08-01T00:00:00Z', updatedAt: '2026-08-02T00:00:00Z', closedAt: null, governedBy: governingIntentUnknown() },
-      { id: 'bu-2', status: 'in_progress', issueType: 'task', priority: 1, createdAt: '2026-08-03T00:00:00Z', updatedAt: '2026-08-04T00:00:00Z', closedAt: null, governedBy: governingIntentUnknown() },
-      { id: 'bu-3', status: 'closed', issueType: 'task', priority: 1, createdAt: '2026-08-05T00:00:00Z', updatedAt: '2026-08-06T00:00:00Z', closedAt: '2026-08-06T00:00:00Z', governedBy: governingIntentUnknown() },
-      { id: 'bu-4', status: 'closed', issueType: 'task', priority: 1, createdAt: '2026-07-01T00:00:00Z', updatedAt: '2026-07-02T00:00:00Z', closedAt: '2026-07-02T00:00:00Z', governedBy: governingIntentUnknown() },
+      { id: 'bu-1', status: 'open', issueType: 'task', priority: 1, createdAt: '2026-08-01T00:00:00Z', updatedAt: '2026-08-02T00:00:00Z', closedAt: null, governedBy: governingIntentUnknown(), title: { text: 'fixture title' } },
+      { id: 'bu-2', status: 'in_progress', issueType: 'task', priority: 1, createdAt: '2026-08-03T00:00:00Z', updatedAt: '2026-08-04T00:00:00Z', closedAt: null, governedBy: governingIntentUnknown(), title: { text: 'fixture title' } },
+      { id: 'bu-3', status: 'closed', issueType: 'task', priority: 1, createdAt: '2026-08-05T00:00:00Z', updatedAt: '2026-08-06T00:00:00Z', closedAt: '2026-08-06T00:00:00Z', governedBy: governingIntentUnknown(), title: { text: 'fixture title' } },
+      { id: 'bu-4', status: 'closed', issueType: 'task', priority: 1, createdAt: '2026-07-01T00:00:00Z', updatedAt: '2026-07-02T00:00:00Z', closedAt: '2026-07-02T00:00:00Z', governedBy: governingIntentUnknown(), title: { text: 'fixture title' } },
     ],
     governedByUnknownCount: 4,
-    titles: workItemTitlesWithheld(),
+    titles: { policyId: 'work-item-title', policyVersion: '1.0.0', admitted: 4, withheld: 0, withheldByReason: { 'secret-matched': 0, 'active-content': 0, unclassifiable: 0 } },
   };
 }
 
@@ -94,7 +94,7 @@ describe('Trajectory projection', () => {
     if (projection.kind !== 'observed') throw new Error('unreachable');
     expect(projection.renderedCount).toBe(2);
     expect(projection.answers).toEqual([
-      { id: 'remains', state: 'observed', served: 4, byStatus: { open: 1, in_progress: 1, blocked: 0, deferred: 0, pinned: 0, hooked: 0, closed: 2 } },
+      { id: 'remains', state: 'observed', served: 4, byStatus: { open: 1, in_progress: 1, blocked: 0, deferred: 0, pinned: 0, hooked: 0, closed: 2 }, closedLanding: { state: 'unknown', disclosure: 'region:trajectory-commit-joins', closed: 2 } },
       { id: 'running', state: 'observed', claimed: 1, served: 4, liveness: 'activity-undetermined' },
       // syzygy-t3jk.21: no history supplied reads as not read, each window Unknown.
       { id: 'changed', state: 'observed', windows: [
@@ -206,5 +206,36 @@ describe('Trajectory projection', () => {
     } finally {
       vi.unstubAllEnvs();
     }
+  });
+});
+
+// POC-REQ-065 (syzygy-t3jk.26): closed items' landings from the commit join.
+describe('closed landings (POC-REQ-065)', () => {
+  const H = 'a'.repeat(40);
+  const items = [
+    { id: 'bu-1', status: 'closed' }, { id: 'bu-2', status: 'closed' }, { id: 'bu-3', status: 'open' },
+  ] as const;
+  const joins = (truncated: boolean) => ({
+    kind: 'observed', revision: H, basis: 'naming-convention', fidelity: 'reduced-fidelity', cause: 'derived-from-convention',
+    bound: 5000, read: 7, truncated, joined: 2, unjoined: 5,
+    items: [{ id: 'bu-1', commits: [{ hash: H, at: '2026-11-26T00:00:00Z' }] }, { id: 'bu-3', commits: [{ hash: H, at: '2026-11-26T00:00:00Z' }] }],
+  }) as const;
+
+  it('derives each item\'s landing from the join and its status alone', () => {
+    expect(items.map((item) => closedItemLanding(item, joins(false)))).toEqual(['merged-by-convention', 'no-naming-commit-read', null]);
+    expect(items.map((item) => closedItemLanding(item, { kind: 'unknown', reason: 'commit-history-read-failed' }))).toEqual([null, null, null]);
+  });
+
+  it('counts the closed items merged by convention and those no read commit names, over every served item', () => {
+    // itemsFixture: bu-3 and bu-4 closed; the join names bu-1 (open) and bu-3.
+    const named = (truncated: boolean) => ({ ...joins(truncated), items: [{ id: 'bu-1', commits: [] }, { id: 'bu-3', commits: [] }] });
+    const remains = (truncated: boolean) => {
+      const projection = projectTrajectory(itemsFixture(), { nonClosedLimit: 10, recentClosedWindow: 1, commitJoins: named(truncated) });
+      return projection.answers.find((answer) => answer.id === 'remains');
+    };
+    expect(remains(false)).toMatchObject({ closedLanding: { state: 'observed', closed: 2, mergedByConvention: 1, noNamingCommitRead: 1, basis: 'naming-convention', fidelity: 'reduced-fidelity', commitsRead: 7, historyTruncated: false } });
+    expect(remains(true)).toMatchObject({ closedLanding: { historyTruncated: true } });
+    const unknown = projectTrajectory(itemsFixture(), { nonClosedLimit: 10, recentClosedWindow: 1, commitJoins: { kind: 'unknown', reason: 'commit-history-malformed' } });
+    expect(unknown.answers.find((answer) => answer.id === 'remains')).toMatchObject({ closedLanding: { state: 'unknown', disclosure: 'region:trajectory-commit-joins', closed: 2 } });
   });
 });

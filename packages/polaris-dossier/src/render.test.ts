@@ -2214,9 +2214,9 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
     if (!result.ok) throw new Error(result.refusal.reason);
     const index = readSite(result.report.site).get('index.html')!;
     const section = index.slice(index.indexOf('<section id="section-core-ideas"'));
-    // An operator-agent page gives its first diagram the first hue (syzygy-pdja.14).
-    expect(section.indexOf('<figure data-hue="1" data-visual-provenance="curated" id="figure-d-core">')).toBeGreaterThan(-1);
-    expect(section.indexOf('<figure data-hue="1" data-visual-provenance="curated" id="figure-d-core">')).toBeLessThan(section.indexOf('data-claim-id="p1"'));
+    // A figure carries no hue of its own: it takes its Pole's from the region around it (syzygy-5dhm.56).
+    expect(section.indexOf('<figure data-visual-provenance="curated" id="figure-d-core">')).toBeGreaterThan(-1);
+    expect(section.indexOf('<figure data-visual-provenance="curated" id="figure-d-core">')).toBeLessThan(section.indexOf('data-claim-id="p1"'));
   });
 
   it('puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria', () => {
@@ -2605,7 +2605,7 @@ describe('render: derived structure (version 2.3)', () => {
     const run = await prepared(doc, false);
     const { files, index } = await rendered(run);
     const authored = index.slice(index.lastIndexOf('<figure', index.indexOf('<figcaption id="diagram-title-0">zq-authored tree</figcaption>')), index.indexOf('</figure>', index.indexOf('zq-authored tree')));
-    expect(authored.startsWith('<figure data-hue="1" data-visual-provenance="curated" id="figure-d-tree">')).toBe(true);
+    expect(authored.startsWith('<figure data-visual-provenance="curated" id="figure-d-tree">')).toBe(true);
     expect([...authored.matchAll(/<g class="(?:node|edge) (\w+)/gu)].map((m) => m[1])).toEqual(['inferred', 'inferred', 'inferred']);
     expect(authored).not.toContain('Solid: observed');
     expect(authored).not.toContain('data-derived-id');
@@ -3395,6 +3395,22 @@ describe('render: the worth-knowing callout (schema v13)', () => {
   const OPEN = '<aside class="callout callout-important worth-knowing" id="worth-knowing" aria-label="Worth knowing"><p class="callout-title"><span class="callout-tone">Worth knowing</span> What a newcomer would not guess</p><div class="worth-knowing-item"><p ';
   const FROM = (href: string) => `<p class="worth-knowing-from">In <a href="${href}">Core ideas</a></p></div></aside>`;
   const NONE = '<aside class="callout callout-note worth-knowing" id="worth-knowing" data-worth-knowing="none" aria-label="Worth knowing"><p class="callout-title"><span class="callout-tone">Worth knowing</span> None found</p><p>The authoring session reports that no fact in this part meets the test of what a newcomer would not guess (Inferred, self-reported).</p></aside>';
+
+  // REQ-polaris-generation-034 version 2.32 (syzygy-5dhm.135): `questionKinds` is never rendered, so a v13 draft carrying it renders, page
+  // for page, as the same draft without it but for the digests of the draft's own bytes (the frozen revision and the packet built on it).
+  it('renders a v13 draft carrying questionKinds as the same draft without it, but for the draft\'s digests', async () => {
+    const plain = await rendered(versioned(V13, true, true));
+    const declared = versioned(V13, true, true);
+    declared['questionKinds'] = [{ blockId: 'p1', kinds: ['change', 'limits'] }, { blockId: 'QKIND-NEVER-RENDERED', kinds: ['purpose'] }];
+    const files = await rendered(declared);
+    expect([...files.keys()]).toEqual([...plain.keys()]);
+    for (const [file, page] of files) {
+      expect(page, file).not.toContain('QKIND-NEVER-RENDERED');
+      expect(page, file).not.toContain('questionKinds');
+      const digestless = (text: string): string => text.replace(/[0-9a-f]{64}/gu, '<sha256>').replace(/[0-9a-f]{8}(?: [0-9a-f]{8}){7}/gu, '<sha256>');
+      expect(digestless(page), file).toBe(digestless(plain.get(file)!));
+    }
+  });
 
   it('draws a Pole\'s marked block once, in a callout before its sections, linked to its section, and says none was found on a Pole that says why', async () => {
     const files = await rendered(versioned(V13, true, true));

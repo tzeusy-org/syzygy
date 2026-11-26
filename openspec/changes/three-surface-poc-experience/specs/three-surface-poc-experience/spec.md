@@ -664,8 +664,8 @@ warranted, green or complete state.
 #### Scenario: A title names a requirement
 
 - **WHEN** the tracker holds an item whose title reads "Implement
-  POC-REQ-010" (the POC withholds titles, SEC-5, so the title is never read
-  into the model)
+  POC-REQ-010" (served as its title under POC-REQ-063, never parsed for
+  an identifier)
 - **THEN** that item's `governedBy` is the same Unknown, and nothing served
   for it names POC-REQ-010 as its governing intent
 
@@ -1302,8 +1302,8 @@ equal values (`trajectory.answers`). Today:
   through the same read-only runner as the work items, by two statements
   naming only commit hash and date (`dolt_log`), commit hash and parent
   index (`dolt_commit_ancestors`), and item id, status and diff type
-  (`dolt_diff` over `issues`). SEC-5 excludes titles, messages, committers
-  and other free text. For an observed window the answer SHALL
+  (`dolt_diff` over `issues`). The history read selects no title, message,
+  committer or other free text. For an observed window the answer SHALL
   state both revisions with their recorded instants and count each changed
   item, ascending id, as exactly one of: added (a row the window start did
   not hold), closed (a status other than `closed` became `closed`),
@@ -1936,11 +1936,11 @@ warrants:
 
 Group: Trajectory. Form: **state projection/query**.
 
-**Required behavior.** The POC SHALL observe the work items' dependency metadata at the exact Dolt revision of its work-item observation and use that same evaluation to derive Trajectory eligibility. The work-item statement SHALL read from the same committed revision it identifies, including when the selected work-item set is empty. It retains the seven existing observation columns. With no valid observed work-item revision, the POC SHALL skip the dependency statement. One read-only statement SHALL bind `dependencies AS OF` to the captured revision and restrict the dependent `issue_id` to the observed bead prefix. Its dependency data columns SHALL be `issue_id`, `depends_on_issue_id`, `type`, and only null-presence booleans for `depends_on_external` and `depends_on_wisp_id`.
+**Required behavior.** The POC SHALL observe the work items' dependency metadata at the exact Dolt revision of its work-item observation and use that same evaluation to derive Trajectory eligibility. The work-item statement SHALL read from the same committed revision it identifies, including when the selected work-item set is empty. It retains the observation columns of POC-REQ-010's statement, the seven non-free-text columns and, since POC-REQ-063, `title`. With no valid observed work-item revision, the POC SHALL skip the dependency statement. One read-only statement SHALL bind `dependencies AS OF` to the captured revision and restrict the dependent `issue_id` to the observed bead prefix. Its dependency data columns SHALL be `issue_id`, `depends_on_issue_id`, `type`, and only null-presence booleans for `depends_on_external` and `depends_on_wisp_id`.
 
 The dependency statement SHALL return exactly one distinguishable revision witness from Dolt resolving the same immutable revision as the table read, including when there are no dependency rows. The reader SHALL verify the witness before accepting the data. A request value echoed by the caller, a missing, extra or invalid witness, a mismatched revision, an unreadable response or an unexpected result shape makes the dependency observation unavailable. A valid witness with no edge rows makes the dependency set observed empty. The work-item observation and its substrate statuses retain their own epistemic states and their one served provenance record under POC-REQ-010.
 
-The dependent is `issue_id` and the target is `depends_on_issue_id`. The closed recognized edge types are `blocks`, `parent-child`, `discovered-from`, `related`, `relates-to` and `tracks`. Count their rows by type. Only `blocks` derives an eligibility fact; `parent-child` rows derive only the parent facts POC-REQ-042's grouped view reads, under the same identifier rules. Count unlisted types in a separate total using a fixed diagnostic reason. Withhold their raw type values. Count external, wisp and out-of-prefix targets without rendering source values. A target may appear as a blocker identifier only when it passes the existing observed prefix check and exactly matches a served work item at that revision. The output shall disclose no additional tracker strings. Unreadable query output, new columns, titles, descriptions, notes, metadata values and external-reference text never enter either channel.
+The dependent is `issue_id` and the target is `depends_on_issue_id`. The closed recognized edge types are `blocks`, `parent-child`, `discovered-from`, `related`, `relates-to` and `tracks`. Count their rows by type. Only `blocks` derives an eligibility fact; `parent-child` rows derive only the parent facts POC-REQ-042's grouped view reads, under the same identifier rules. Count unlisted types in a separate total using a fixed diagnostic reason. Withhold their raw type values. Count external, wisp and out-of-prefix targets without rendering source values. A target may appear as a blocker identifier only when it passes the existing observed prefix check and exactly matches a served work item at that revision. The output shall disclose no additional tracker strings. Unreadable query output, new columns, descriptions, notes, metadata values and external-reference text never enter either channel, and no title enters through the dependency feed (a title enters only under POC-REQ-063).
 
 For an observed dependency feed, a known blocker is the served target of a `blocks` edge whose observed tracker status is other than `closed`, where the row has neither the external nor the wisp flag. Deduplicate blocker identifiers. An unlisted edge type, external or wisp blocker, out-of-prefix blocker, or absent blocker status makes the applicable item's eligibility undetermined. Use a fixed reason for each applicable failure class and stable reason ordering if several apply. Count these rows even where their targets or raw types are withheld. A row with an unidentifiable dependent or a malformed input that prevents reliable row accounting makes the feed unavailable. No malformed record can create an observed-empty or ready result.
 
@@ -2011,4 +2011,317 @@ warrants:
   decisions: []
   topology: []
   parent_requirements: [POC-REQ-010, POC-REQ-012, POC-REQ-013, POC-REQ-020, POC-REQ-040, POC-REQ-042]
+```
+
+### Requirement: POC-REQ-063 — Work-item titles render under the declared, screened title policy
+
+Group: Work-item observation. Form: **state projection/query**.
+
+**Required behavior.** The POC SHALL read each observed work item's title
+only through the work-item statement of POC-REQ-010, pinned to the revision
+it identifies, and SHALL screen every title under the declared work-item-title
+policy (`.syzygy/governance/policies/WORK-ITEM-TITLE-POLICY-v1.json`,
+policy `work-item-title` 1.0.0) before the title enters the model. The policy
+runs, over the whole title and unchanged, every detector of the project-shape
+secret policy and the active-content scan every observed body passes.
+
+- **Admission.** A title is admitted only when it is text of 1 to 500 UTF-16
+  code units with no C0 or C1 control character and no lone surrogate, no
+  detector matches it, and the scan finds nothing. The scan keeps its
+  Markdown code-context rule: markup inside a backtick code span is inert to
+  it, so such a title is admitted. An admitted title is served as the
+  item's `title.text` and rendered escaped, in a bidirectionally isolated
+  element, on the item's card, wherever the card renders, and in every
+  Trajectory list that names the item (Lists, below).
+- **Withholding.** Any other title is withheld, fail-closed (RFC5-16). The
+  item serves the RFC5-17 hash-not-body record instead: the reason
+  (`secret-matched`, `active-content` or `unclassifiable`), the redaction
+  class (`excluded-artifact` for the first two, `unclassifiable-excluded` for
+  the third) and the SHA-256 digest of the title's UTF-8 bytes, or null when
+  the tracker held no text. The record's location is the item it sits on and
+  its policy version is the observation's, so the four RFC5-17 parts are
+  served together. The withheld text appears in neither channel.
+- **One statement.** The observation states the policy identity and version
+  once, with the admitted count, the withheld count and the withheld count
+  per reason. While any title is withheld the board states the withheld
+  count once as an Unknown with primary reason `excluded-content` and its
+  RFC2-24 route, and each card with a withheld title carries a mark naming its
+  reason that refers to that one disclosure. When every title is admitted no
+  title Unknown exists and the board states the policy and the admitted count.
+- **Lists.** Every Trajectory list that names a served work item names it
+  by its identifier followed by its title as served, through one rendering
+  helper the card's title also uses: the grouped outline's parent headings,
+  what a parent sits under, a parent-child cycle's members and the group it
+  is stated under, a card's blockers, and the what-changed list. A list
+  shows an admitted title escaped in a bidirectionally isolated element,
+  clipped to its first 60 UTF-16 code units (59 when the 60th is the first
+  half of a surrogate pair) and followed by a visible ellipsis when longer;
+  the card and the machine answer keep the whole title. A list shows a
+  withheld title as a mark with the card's label, naming its reason and
+  referring to the one withheld-title disclosure. An item not served at the observed revision
+  (a removed item in the what-changed list) stays named by its identifier
+  alone. The ready set is the cards themselves and adds no list.
+- **Boundaries.** No title is sent to a model provider. No other free-text
+  column of a work item is read. No detector or scan is loosened. A title is
+  never parsed for an identifier: POC-REQ-014's governing intent is unchanged.
+
+- **Scope.** The work-item statement's selected columns; every served item's
+  `title`; the observation's `titles`; every Trajectory card; every
+  Trajectory list that names a work item; the titles notice; the machine
+  answer.
+- **Case (fixture, counterexamples and sweep).** An independent checker
+  supplies, at one revision, items whose titles are: clean text with
+  characters HTML escapes; a match for each of the four detectors; an HTML
+  tag, a comment, a script element, an SVG element with a handler, an unsafe
+  URL scheme, an entity inside a link destination and an unclosed code fence;
+  and every unscreenable input (absent, not text, empty, over 500 code
+  units, a line break, a control character, a lone high and a lone low
+  surrogate).
+  Each withheld title carries a distinctive marker. The checker sweeps both
+  channels' bytes for every marker, every card's title, and the board's
+  notice.
+- **Observable**: the admitted titles on the cards, in each list and in
+  the machine answer; the withheld records; the observation's counts; the notice; the
+  statement's selected columns.
+- **Oracle**: literal expected values typed by the checker: the selected
+  columns are exactly POC-REQ-010's revision witness and seven item columns
+  and `title`; each
+  admitted title equals its fixture text and renders escaped; each list
+  reference's title equals its fixture text, clipped where longer than 60
+  code units, or its withheld mark; each withheld
+  record equals its literal reason, class and digest; the counts equal the
+  fixture's; no marker occurs in either channel; with every title admitted
+  no title Unknown subject exists.
+- **Oracle independence**: the fixture titles, markers, digests and
+  expected records are literals the checker types; a separate check compares
+  the module's policy identity, bound, detector ids and redaction classes
+  with the declaration file.
+- **Falsifier**: a withheld title's text, or any marker, in either channel; a
+  title admitted that a detector matches or the scan flags; an admitted title
+  rendered unescaped; a list naming a served item without its title, a list
+  title longer than 60 code units or a clip that splits a surrogate pair; a
+  withheld title without its reason, class or digest;
+  counts that disagree with the served items; a second free-text column in
+  the statement; or a title Unknown while every title is admitted.
+
+#### Scenario: Clean titles are shown
+
+- **WHEN** every observed item's title is clean text
+- **THEN** each card shows its title, escaped, the machine answer serves the
+  same text for each item, and the board states the policy and that every
+  title is shown, with no title Unknown
+
+#### Scenario: A title that fails screening is withheld
+
+- **WHEN** one title matches a secret detector, one carries a script element
+  and one is absent
+- **THEN** none of their text is served on either channel; each item serves
+  its reason, redaction class and digest (null for the absent one); each card
+  marks its reason; and the board states 3 withheld once, with
+  `excluded-content` and its route
+
+#### Scenario: Every list names an item with its title
+
+- **WHEN** a card's blockers, the outline's parents and the what-changed list
+  name served items, one title is longer than 60 code units and one blocker's
+  title is withheld
+- **THEN** each list shows each item's identifier with its escaped title,
+  the long one clipped at 60 code units with an ellipsis and whole on its
+  card, the withheld one as its reason's mark, and a removed item by its
+  identifier alone
+
+```yaml
+warrants:
+  primary: SEC-5
+  doctrine: [VIS-2, VIS-3, SEC-5]
+  contracts: [RFC2-24, RFC5-16]
+  policies: []
+  decisions: []
+  topology: []
+  parent_requirements: [POC-REQ-010, POC-REQ-014, POC-REQ-020]
+```
+
+### Requirement: POC-REQ-064 — Work items join the observed repository's commits by exact identifier tokens
+
+Group: Work-item observation. Form: **state projection/query**.
+
+**Required behavior.** In the observation pass that reads the work items,
+the POC SHALL read the observed repository's history once, from the
+repository revision the observation pins and from no other ref, newest
+first and at most 5,000 commits, and SHALL join each served work item to
+the commits that name it by the naming convention (RFC4-22).
+
+- **Token rule.** A commit names an item when a token of its subject equals
+  the item's identifier exactly. A token is a maximal run of letters,
+  digits, `.`, `_` and `-`, with `.`, `_` and `-` trimmed from its ends. No
+  prefix, substring or case-folded match joins, and a token that equals no
+  served identifier joins nothing.
+- **What is kept.** Each commit's subject is read for its tokens and then
+  dropped: it is never stored, served, indexed or sent. The join keeps only
+  each commit's hash, its committer instant and the identifiers it names.
+  The author is never read.
+- **What is served.** The machine answer serves the join once per
+  observation: the revision read, the basis `naming-convention`, the
+  fidelity `reduced-fidelity` with cause `derived-from-convention`, the
+  bound, the commits read, whether older history went unread, the joined
+  and unjoined commit counts, and, for each served item some commit names,
+  its commits newest first, each as its hash and instant.
+- **Unknown.** The join is Unknown, with one closed reason and nothing
+  else, when the work items were not observed
+  (`work-items-unobserved`), the pinned revision is not a commit identifier
+  (`repository-revision-unavailable`), the history read fails
+  (`commit-history-read-failed`), or a returned row has an unexpected shape
+  or the newest row is not the pinned revision
+  (`commit-history-malformed`). A failed join is never served as an
+  observed zero, and a missing join is never fuzzy-matched.
+- **When.** The read runs inside the observation pass, which runs only on a
+  human-triggered observation or rebuild (the daemon starting, an operator
+  re-observing, and the rebuild after an operator materializes), never on a
+  merge event. It computes no reconciliation chain state.
+- **Absence.** A served item with no entry is not observed to have no
+  commits: no commit read names it, and when older history went unread it
+  may be named there. The join serves no per-item Unknown.
+
+- **Scope.** The history read; the token rule; the machine answer's
+  `commitJoins`.
+- **Case (fixture, counterexamples and sweep).** An independent checker
+  supplies histories whose subjects name served items in brackets, after a
+  branch path in a merge subject and before sentence punctuation; near
+  misses (a longer identifier, another case, a prefix, a substring, an
+  unserved identifier); one subject naming two items and one naming an item
+  twice; an empty subject; a history one commit longer than the bound; and
+  each malformed row and each failure. Each subject carries a distinctive
+  marker. A real repository adds a naming commit after the observed
+  revision.
+- **Observable**: the machine answer's `commitJoins`; the read's arguments.
+- **Oracle**: literal expected values typed by the checker: the joined items
+  with their hashes and instants, the counts, the bound and truncation, each
+  Unknown reason; no marker and no subject text in either channel; the read
+  names the pinned revision and the bound and never `--all`; a commit after
+  the observed revision joins nothing.
+- **Oracle independence**: the fixture rows, hashes, instants and expected
+  joins are literals the checker types, never derived from the module.
+- **Falsifier**: a join from a prefix, substring, case-folded or unserved
+  token; a subject, or any marker, in either channel; a read not pinned to
+  the observed revision or not bounded; a commit after the observed revision
+  joined; a failed or malformed read served as observed; or counts that
+  disagree with the joined commits.
+
+#### Scenario: Commits that name an item join it
+
+- **WHEN** the history from the observed revision holds a commit whose
+  subject names a served item in brackets, a merge whose subject names one
+  after its branch path, and a commit naming no served item
+- **THEN** the machine answer serves each named item with those commits'
+  hashes and instants, two joined and one unjoined, basis
+  `naming-convention` and fidelity `reduced-fidelity`, and no subject text
+
+#### Scenario: A history that cannot be read is Unknown
+
+- **WHEN** the history read fails, or returns a row of an unexpected shape
+- **THEN** the join is Unknown with `commit-history-read-failed` or
+  `commit-history-malformed`, never an observed zero
+
+```yaml
+warrants:
+  primary: VIS-3
+  doctrine: [VIS-2, VIS-3]
+  contracts: [RFC4-22, RFC8-21]
+  policies: []
+  decisions: []
+  topology: []
+  parent_requirements: [POC-REQ-010, POC-REQ-020]
+```
+
+### Requirement: POC-REQ-065 — Trajectory renders closed work that merged apart from closed work no commit names
+
+Group: Trajectory. Form: **state projection/query**.
+
+**Required behavior.** Trajectory SHALL read each served closed item's
+landing from the commit join (POC-REQ-064) and the item's status alone, on
+both channels.
+
+- **Landing.** A closed item that some commit read names is
+  `merged-by-convention`: a commit reachable from the observed revision
+  names it. A closed item no commit read names is `no-naming-commit-read`:
+  its join cannot be established, so where it landed is Unknown (RFC4-22:
+  "message tag absent ... renders Unknown"), counted and disclosed once,
+  reason `missing-evidence`, saying how much history was read. An item
+  that is not closed has no landing. While the join is Unknown,
+  every closed item's landing is Unknown, and none is counted as either.
+- **The answer.** The *what remains* answer (POC-REQ-044) SHALL carry
+  `closedLanding`, over every served closed item, never the rendered
+  selection: the closed count, the merged-by-convention and
+  no-naming-commit-read counts (summing to it), the basis
+  `naming-convention`, the fidelity `reduced-fidelity`, the commits read
+  and whether older history went unread; or Unknown with the closed count
+  and the commit-join disclosure, whose reason names the join's own closed
+  reason and whose route is rendered.
+- **Words.** The page SHALL say "merged by naming convention" with its
+  reduced fidelity, and that it shows where work landed, not that it
+  satisfied its intent; never a bare "merged", and no verdict word (done,
+  complete, shipped, delivered). When older history went unread, the
+  answer and every card without a naming commit SHALL say only the newest
+  commits read were checked.
+- **The card.** Each card SHALL show a closed item's landing, labelled
+  "Merged (by naming convention, reduced fidelity)"; or, in the Unknown
+  encoding linked to the unnamed-landing disclosure, "Landing: Unknown, no
+  commit names it" or, when history went unread, "Landing: Unknown, no
+  commit among the newest N read names it"; or, while the join is Unknown,
+  "Landing: Unknown" linked to the commit-join disclosure. For any item a
+  commit names, the card SHALL show the count of its naming commits and at
+  most three of them, newest first, each as its first twelve hash
+  characters and its committer instant, with the count of the rest the
+  machine answer lists. No subject is rendered.
+- **Unchanged.** Verification stays Unknown for every item, and the intent
+  answer is unchanged: a commit that names an item is neither verification
+  nor reconciliation.
+
+- **Scope.** `trajectory.answers` (`remains.closedLanding`); the
+  `unknownSubjects` entries `region:trajectory-commit-joins` and
+  `region:trajectory-landing-unnamed`; the card.
+- **Case (fixture, counterexamples and sweep).** A real repository whose
+  history from the observed revision names one closed and one open item;
+  a closed item no commit names; an item four commits name; the same model with the join marked
+  truncated; and a repository whose history walk fails. A sweep over every
+  served item's card on the default and closed views.
+- **Observable**: both channels' `closedLanding`; each card's landing and
+  commits.
+- **Oracle**: literal counts typed by the checker; each card's landing
+  equals the one derived from the machine answer's join and status; the
+  landing labels and the answer's words, with tags removed, hold no verdict
+  word and no "merged" without "naming convention"; the Unknown case
+  serves no count and marks every closed card.
+- **Oracle independence**: counts, labels, hashes and reasons are literals
+  or values read from the machine answer, never from the renderer.
+- **Falsifier**: a closed item counted merged with no naming commit, or
+  counted at all while the join is Unknown; a bare "merged" or a verdict
+  word; a landing on an item that is not closed; a truncated read stated
+  as the whole history; a subject on the page.
+
+#### Scenario: Closed items read merged by naming convention or closed with no naming commit
+
+- **WHEN** the history from the observed revision names one of two closed
+  items and nothing older went unread
+- **THEN** the remains answer counts one merged by naming convention and
+  one closed with no commit that names it, whose landing is Unknown with
+  its disclosure, on both channels, and each closed card carries its
+  label
+
+#### Scenario: Closed landings are Unknown when the history cannot be read
+
+- **WHEN** the commit join is Unknown
+- **THEN** the remains answer serves the closed count with the commit-join
+  disclosure, its reason and route, counts no landing, and every closed
+  card reads "Landing: Unknown"
+
+```yaml
+warrants:
+  primary: VIS-2
+  doctrine: [VIS-2, VIS-3]
+  contracts: [RFC4-22, RFC8-21]
+  policies: []
+  decisions: []
+  topology: []
+  parent_requirements: [POC-REQ-044, POC-REQ-064]
 ```

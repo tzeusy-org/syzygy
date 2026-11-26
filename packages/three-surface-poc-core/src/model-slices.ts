@@ -30,6 +30,7 @@ import {
 } from './seed-graph.js';
 import { resolveTestArtifactVerification, type TestArtifactVerificationResult } from './test-artifact-verification.js';
 import { projectTrajectory, type TrajectoryProjection } from './trajectory-projection.js';
+import { observeCommitJoins, type CommitJoinsResult } from './commit-joins.js';
 import { observeTrajectoryWorkItems, type WorkItemsResult } from './work-items.js';
 import { observeWorkerChange, type WorkerChangeResult } from './worker-change-observation.js';
 
@@ -178,6 +179,7 @@ function resolveMaterializationEpistemic(
  * change and its test artifact, the board projection and the dispatch. */
 export interface TrajectorySlice {
   readonly workItems: WorkItemsResult;
+  readonly commitJoins: CommitJoinsResult;
   readonly materialization: MaterializationEpistemic;
   readonly workerChange: WorkerChangeResult;
   readonly testArtifactVerification: TestArtifactVerificationResult;
@@ -193,6 +195,15 @@ export function buildTrajectorySlice(input: BuildPocModelInput, seed: SeedObserv
     beadPrefix: seeds.beadPrefix,
     capturedAt,
     ...(input.runWorkItemQuery === undefined ? {} : { runQuery: input.runWorkItemQuery }),
+  });
+  // POC-REQ-064: read inside this observation pass, which runs only on a
+  // human-triggered observation or rebuild (daemon start, operator
+  // re-observe, the rebuild after an operator materialize), never on a merge.
+  const commitJoins = observeCommitJoins({
+    repoRoot: seed.repoRoot,
+    revision: input.repositoryRevision,
+    workItems,
+    ...(input.runGit === undefined ? {} : { runGit: input.runGit }),
   });
   const materialization = resolveMaterializationEpistemic(input.materializationRecord ?? null, workItems);
   const workerChange = observeWorkerChange({
@@ -220,6 +231,7 @@ export function buildTrajectorySlice(input: BuildPocModelInput, seed: SeedObserv
   });
   return {
     workItems,
+    commitJoins,
     materialization,
     workerChange,
     testArtifactVerification,
@@ -228,6 +240,7 @@ export function buildTrajectorySlice(input: BuildPocModelInput, seed: SeedObserv
       recentClosedWindow: RECENT_CLOSED_WINDOW,
       dependencies,
       changes,
+      commitJoins,
       reconciliationChain: { materializedBeadId: materialization.beadId, workerChange },
     }),
     dispatch: dispatch === null ? null : deepFreeze(dispatch),

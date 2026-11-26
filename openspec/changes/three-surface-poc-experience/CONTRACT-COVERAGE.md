@@ -46,13 +46,13 @@ Every clause was judged exactly once and lands in exactly one part:
 | RFC1 | 39 | 12 | 4 | 23 |
 | RFC2 | 27 | 10 | 0 | 17 |
 | RFC3 | 38 | 0 | 0 | 38 |
-| RFC4 | 32 | 10 | 1 | 21 |
+| RFC4 | 32 | 11 | 1 | 20 |
 | RFC5 | 27 | 1 | 15 | 11 |
 | RFC6 | 28 | 10 | 1 | 17 |
 | RFC7 | 41 | 12 | 4 | 25 |
-| RFC8 | 32 | 16 | 1 | 15 |
+| RFC8 | 32 | 17 | 0 | 15 |
 | RFC9 | 60 | 17 | 2 | 41 |
-| **Total** | **324** | **88** | **28** | **208** |
+| **Total** | **324** | **90** | **27** | **207** |
 
 The Part A clause set is exactly the `contracts[]` union in the
 generated `GOVERNING-DEPENDENCIES.md` (verified below).
@@ -142,7 +142,7 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC4-26 | Capability/entity↔code mappings are declared-only, inferred mappings excluded | covered — Orrery's declared-mappings-only design is exactly class (i) with class (ii) excluded, matching the scope's "no inferred mappings or edges" | POC-REQ-050, POC-REQ-052 |
 | RFC4-27 | Unmapped/absence claim requires an executed coverage record with reconciling counts, never silent absence | covered — "unmapped code a visible Unknown region with reconciling counts" is this clause's coverage-record duty applied to Orrery | POC-REQ-051 |
 | RFC5-16 | (a) Observation-capture ingest screening for Butlers repo structure | covered — POC-REQ-002's "never indexed contents" sentinel sweep structurally avoids most of the screening concern for code bodies, but doesn't test the secret-detection-policy mechanism itself | POC-REQ-002 (partial) |
-| RFC5-16 | (b) Beads/Dolt work-item ingest screening | **Unknown** — POC-REQ-010/013 test provenance and Unknown-on-failure, not secret screening of ingested work-item text | — |
+| RFC5-16 | (b) Beads/Dolt work-item ingest screening | covered — Amendment row (titles, syzygy-t3jk.23): the one free-text column read, `title`, is screened under the declared work-item-title policy before it enters the model, fail-closed; every other free-text column stays unread | POC-REQ-063 |
 | RFC6-13 | Machine endpoint answers from the same fact set surfaces render; no endpoint-only or UI-only facts | covered — POC's `/api/poc` + client/no-script parity is exactly SDR-27's bidirectional obligation this clause states | POC-REQ-020, POC-REQ-022 |
 | RFC6-14 | Machine answer never silently omits or folds Unknown/epistemic state into a total | covered — Fold: full RFC2-25 tier / secondary-annotation / sibling-surface-state / challenge-pending limbs dropped — POC carries no such vocabulary | POC-REQ-020, POC-REQ-042, POC-REQ-051 |
 | RFC6-14 | Every entity and relationship in the machine answer carries exactly one epistemic record: its label, its tier where it carries one, and its primary Unknown reason verbatim from the RFC 0002 vocabulary | covered — Amendment row (vocabulary and record shape); POC-REQ-060's denominator is every element of the machine answer's entity and relationship lists, not the records that exist | POC-REQ-060 |
@@ -230,6 +230,7 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC8-22 | An invalid local representation is an explicit bounded failure, never a silently skipped join, guessed value or smaller successful answer | covered — Amendment row (observation-local governedBy wire value); no governing-intent link or source-to-claim join is admitted | POC-REQ-014 |
 | RFC8-23 | Equal Unknown values stay separate countable/filterable work-item claims; sharing neither clears Unknown nor invents warrants | covered — Amendment row (observation-local governedBy wire value); existing unresolved orphaned-work and other limbs remain Unknown | POC-REQ-014 |
 | RFC2-24 | Each of Trajectory's five answers, or part of one, that is Unknown carries one closed reason and its route, with a machine twin under its id | covered — Amendment row (five answers, syzygy-t3jk.16) | POC-REQ-044 |
+| RFC2-24 | Withheld work-item titles render once as Unknown `excluded-content` with its route and the withheld count, with a machine twin; each withheld card refers to it | covered — Amendment row (titles, syzygy-t3jk.23) | POC-REQ-063 |
 | RFC2-19(a) | Merged-but-unreconciled work renders "reconciliation evidence absent / Unknown" as a fact of the render, counted in its own right and routed to running a reconciliation evaluation, never stamped with or counted among RFC2-24 reasons | covered — Amendment row (five answers); the oracle reads the chain count and its statement and finds no RFC2-24 reason on it. Moved from Part B2 | POC-REQ-044 |
 | RFC2-19(a) | That rendering carries the member's durable identity, its merge fact and the intent revision | **Unknown** — Amendment row (five answers); the answer gives a count and one statement, naming no member, commit or revision | — |
 | RFC8-28 | The merged, not yet evaluated chain state renders as its own counted answer, never sharing a rendering with another state | covered — Amendment row (five answers); the count of materialized work on the default branch, with its own wording. Moved from Part B2 | POC-REQ-044 |
@@ -250,10 +251,17 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC8-13 | The rest of the normalized work-state, PR, VCS and liveness derivations | **Unknown** — Amendment row (eligibility); the metadata read carries no such inputs | — |
 | RFC8-17 | The blocked cause set includes the proven dependency cause and explicitly discloses cause Unknown when empty | covered — Amendment row (eligibility); the mixed edge fixture keeps the proven cause while overall eligibility is undetermined. Moved from Part B2 | POC-REQ-062 |
 | RFC8-17 | Derivations of `pr-wait`, `external` and `decision` blocked causes | **Unknown** — Amendment row (eligibility); those input families remain unread | — |
+| RFC4-22 | The work item ↔ commit link declares its basis, `naming-convention`, and is `reduced-fidelity` with cause `derived-from-convention`, and is never fuzzy-matched; a history that cannot be read is Unknown with its reason | covered — Amendment row (commit joins). Moved from Part B2 | POC-REQ-064 |
+| RFC4-22 | A closed item's join that cannot be established (no commit read names it) renders Unknown | covered — Amendment row (closed landings); its landing renders Unknown with one counted disclosure saying how much history was read. The commit-joins amendment's row here said such an item got "no entry and no per-item state"; POC-REQ-065 now gives a closed one that Unknown state | POC-REQ-065 |
+| RFC4-22 | A join that cannot be established renders Unknown for an item that is not closed | **Unknown** — Amendment row (closed landings); an open item no read commit names shows no commits and no per-item state | — |
+| RFC4-22 | The work item ↔ branch/worktree, commit → PR, PR → merge-fact and gate-outcome → artifact links | **Unknown** — Amendment row (commit joins); those inputs are unread | — |
+| RFC8-21 | The chain's work item → commits link, joined on an RFC4-22 adapter join with its declared basis | covered — Amendment row (commit joins); the machine answer serves it. Moved from Part B1, whose row said POC-REQ-014 renders the chain's first link as Unknown and no requirement renders any other | POC-REQ-064 |
+| RFC8-21 | Trajectory renders the work item → commits link with its declared basis and fidelity, and a read that stopped at its bound as thinness | covered — Amendment row (closed landings); each card and the remains answer say "by naming convention, reduced fidelity", and a truncated read says only the newest commits were checked | POC-REQ-065 |
+| RFC8-21 | Trajectory walks the whole chain in both directions, rendering each link's basis and its thinness as thinness | **Unknown** — Amendment row (commit joins; closed landings); POC-REQ-065 renders the commit link alone, and no requirement walks the chain | — |
 
 Part A totals `[Observed, computed by the sweep in "Verifying this
-table"]`: **178 consequence rows over 88 clauses — 127 covered,
-51 Unknown.**
+table"]`: **186 consequence rows over 90 clauses — 133 covered,
+53 Unknown.**
 
 **Amendment disclosure — the RFC1-26 closure row (ruling P-75 Q3).**
 The signed RFC1-26 row whose consequence reads "Relations outside the closed
@@ -338,12 +346,11 @@ direct requirement additions.
 | RFC7-3 | No other component/citation resolves to a Polaris rendering as authority | **Unknown** — applicable since Polaris is built and Cap1 runtime is reused, but no POC-REQ oracle checks cross-component citation | — |
 | RFC7-12 | Adjudicative source material (e.g. work-item text) rendered as owned text, never paraphrased in normative position | **Unknown** — applicable to any quoted work-item/structure fact; no POC-REQ tests verbatim-vs-paraphrase | — |
 | RFC7-16 | Status renders minimal (label+tier+reason+freshness), no composite maturity number/metric walls | **Unknown** — reuses Cap1 epistemic vocabulary; no POC-REQ tests the no-composite-score prohibition | — |
-| RFC8-21 | Trajectory walks the warrant→plan→materialization→work-item→run→PR→merge→reconciliation chain in both directions, each link with its declared basis, thinness rendered as thinness | **Unknown** — Amendment row, moved from Part B2: POC-REQ-014 renders the chain's first link, work item to warrant, as Unknown (RFC8-22), so the POC now renders part of the chain this clause governs; no requirement walks the chain or renders any other link | — |
 | RFC9-15 | Adding an entity must not perturb existing declared entities' coordinates across re-observations | **Unknown** — Borderline: POC's digest doesn't say whether coordinates are stable across repeated observations of an evolving repo one way or the other | — |
 | RFC9-26 | Channel/encoding meaning is declared once and stays consistent, never repurposed or unlegended | **Unknown** — POC-REQ-060's one-token-set requirement is adjacent, but no requirement tests a fail-closed unregistered-channel behavior or a formal registry | — |
 
-Part B1 totals `[Observed, computed]`: **29 consequence rows over
-28 clauses — all Unknown.**
+Part B1 totals `[Observed, computed]`: **28 consequence rows over
+27 clauses — all Unknown.**
 
 ## Part B2 — clauses believed not applicable (author's reading, non-binding)
 
@@ -450,7 +457,6 @@ are listed so the owner can review or contest each one directly.
 | RFC4-19 | The minimum durable run envelope's fields; no Execution Records exist in POC |
 | RFC4-20 | Enrichment-optionality and derivation-collision handling for run records; no run records exist to collide |
 | RFC4-21 | Model/timing/token/cost semantics on run records; no cost/token/run accounting in POC scope |
-| RFC4-22 | The change-accounting chain's join bases (work item↔branch↔commit↔PR↔merge↔gate); Trajectory reads raw work items only, no branch/commit/PR correlation |
 | RFC4-23 | Worker-liveness rendering from progress signals and a staleness bound carrying an effective state-(1) or state-(2) owner act, never the act itself as liveness evidence; Trajectory renders item status/instants, not live worker liveness — live-runtime relationship stays Unknown |
 | RFC4-24 | The reduced-fidelity granularity/cause labeling schema (RFC2-25 tiers); POC renders binary Observed/Unknown, not tiered reduced-fidelity facts |
 | RFC4-25 | Per-observer degradation-state registry declarations and cross-evaluation staleness rendering; no registry, no multi-evaluation staleness in the single-snapshot POC |
@@ -567,15 +573,15 @@ are listed so the owner can review or contest each one directly.
 | RFC9-51 | Illumination/highlight as non-truth-bearing interaction state; no highlighting feature established in POC scope |
 | RFC9-52 | The RFC-prose-to-OpenSpec authority boundary and coverage-matrix obligation; this non-binding sweep doesn't cite RFC9 as binding authority for the POC spec |
 
-Part B2 total `[Observed, computed]`: **208 clauses.**
+Part B2 total `[Observed, computed]`: **207 clauses.**
 
 ## Verifying this table
 
 - Denominator: re-run the two counting methods named above; both must
-  return 324 for RFC1–9, and 88 + 28 + 208 = 324.
+  return 324 for RFC1–9, and 90 + 27 + 207 = 324.
 - Mapped set: `python3 scripts/build_three_surface_poc_spec_dependencies.py
   --check` — Part A's clause column must equal the generated
-  `contracts[]` union (88 identifiers).
+  `contracts[]` union (90 identifiers).
 - Totals: count rows and dispositions in this file's tables (e.g.
   Python over the `| RFC` rows); the printed totals must match the
   count — they were computed that way, not transcribed.

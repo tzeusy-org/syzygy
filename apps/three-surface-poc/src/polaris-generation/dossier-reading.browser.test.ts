@@ -404,7 +404,8 @@ it.skipIf(executable === undefined)('fits every dossier page at 1440 by 844', as
 it.skipIf(executable === undefined)('shows complete citation hints on keyboard focus and pointer hover at both page edges', async () => {
   await withReflowFixture(async (page, directory, { pages, codePath, start, end }) => {
     await page.setViewport(390, 844);
-    await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
+    const indexUrl = pathToFileURL(join(directory, 'index.html')).href;
+    await page.navigate(indexUrl);
     expect(await page.evaluate('document.scripts.length')).toBe(0);
     // Make the edge fixture independent of platform font metrics and prose wrapping.
     await page.evaluate('document.querySelector("#block-local-reflow-inline").style.textAlign = "right"');
@@ -447,7 +448,12 @@ it.skipIf(executable === undefined)('shows complete citation hints on keyboard f
       });
       await page.evaluate(`${citation}.blur()`);
       expect(await page.evaluate(inspect)).toMatchObject({ hidden: true });
-      const target = await page.evaluate<{ x: number; y: number; left: number; hits: boolean }>(`(() => {
+      // Keyboard focus can scroll. Reopen the page and reapply this fixture's explicit edge alignment.
+      await page.navigate('about:blank');
+      await page.navigate(indexUrl);
+      await page.evaluate('document.querySelector("#block-local-reflow-inline").style.textAlign = "right"');
+      expect(await page.evaluate(inspect)).toMatchObject({ hidden: true, focus: false, hovered: false });
+      const measure = `(() => {
         const link = ${citation};
         // The citation's line-height:0 box has no height; measure its text ink, never the hidden popup.
         const ink = () => {
@@ -461,21 +467,50 @@ it.skipIf(executable === undefined)('shows complete citation hints on keyboard f
           }
           throw Error('Citation has no text ink');
         };
-        const before = ink();
-        window.scrollBy({ top: (before.top + before.bottom) / 2 - innerHeight / 2, behavior: 'instant' });
         const box = ink();
         const x = Math.round((box.left + box.right) / 2), y = Math.round((box.top + box.bottom) / 2);
-        return { x, y, left: box.left, hits: link.contains(document.elementFromPoint(x, y)) };
+        return { x, y, left: box.left, hits: link.contains(document.elementFromPoint(x, y)),
+          rect: { left: box.left, top: box.top, right: box.right, bottom: box.bottom }, scroll: [scrollX, scrollY] };
+      })()`;
+      type Measure = { x: number; y: number; left: number; hits: boolean;
+        rect: { left: number; top: number; right: number; bottom: number }; scroll: [number, number] };
+      const { first, second } = await page.evaluate<{ first: Measure; second: Measure }>(`(async () => {
+        const link = ${citation};
+        await document.fonts.ready;
+        const before = ${measure};
+        window.scrollBy({ top: (before.rect.top + before.rect.bottom) / 2 - innerHeight / 2, behavior: 'instant' });
+        const nextFrame = () => new Promise(resolve => requestAnimationFrame(() => resolve(${measure})));
+        const first = await nextFrame();
+        const second = await nextFrame();
+        window.addEventListener('pointermove', event => {
+          const target = event.target;
+          window.citationPointer = { inCitation: link.contains(target), trusted: event.isTrusted,
+            x: event.clientX, y: event.clientY, target: target.tagName,
+            targetId: target.closest('[id]')?.id ?? null, scroll: [scrollX, scrollY] };
+        }, { capture: true, once: true, passive: true });
+        return { first, second };
       })()`);
+      expect(second, `${selector} pointer geometry on consecutive frames`).toEqual(first);
+      const target = second;
       expect(target.hits, `${selector} pointer hit`).toBe(true);
       expect(target.left, selector).toBeGreaterThanOrEqual(leftRange[0]);
       expect(target.left, selector).toBeLessThanOrEqual(leftRange[1]);
       await page.mouseMove(target.x, target.y);
-      await expect.poll(() => page.evaluate(inspect), { message: `${selector} hover` }).toMatchObject({
-        hidden: false, hovered: true, contents: `${codePath}, ${suffix}`, contained: true, fitsPage: true,
-      });
+      const pointerEvidence = `({ event: window.citationPointer ?? null, geometry: ${measure}, hint: ${inspect} })`;
+      let observed: unknown;
+      try {
+        await expect.poll(async () => {
+          observed = await page.evaluate(pointerEvidence);
+          return observed;
+        }, { message: `${selector} hover` }).toMatchObject({
+          event: { inCitation: true, trusted: true, x: target.x, y: target.y },
+          hint: { hidden: false, hovered: true, contents: `${codePath}, ${suffix}`, contained: true, fitsPage: true },
+        });
+      } catch (cause) {
+        throw new Error(`${selector} hover evidence ${JSON.stringify({ before: second, after: observed })}`, { cause });
+      }
       await page.mouseMove(0, 0);
-      await expect.poll(() => page.evaluate(inspect)).toMatchObject({ hidden: true });
+      await expect.poll(() => page.evaluate(inspect)).toMatchObject({ hidden: true, hovered: false });
     }
   });
 });

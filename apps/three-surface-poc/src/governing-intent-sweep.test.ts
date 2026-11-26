@@ -96,8 +96,8 @@ function violations(answer: Obj, html: string): string[] {
     if (governedBy.label !== 'Unknown') found.push(`${id}: governedBy is ${String(governedBy.label)}, not Unknown`);
     if (governedBy.closedReason !== REASON) found.push(`${id}: reason ${String(governedBy.closedReason)}`);
     if (routes.length !== 1 || routes[0]?.reason !== REASON || routes[0]?.route !== ROUTE) found.push(`${id}: route is not RFC2-24's for ${REASON}`);
-    // The title is the checker's own fixture row's: the answer serves none
-    // (SEC-5, syzygy-jytt).
+    // The title is the checker's own fixture row's; it is served as the
+    // item's title (POC-REQ-063), never as its governing intent.
     const title = FIXTURE_TITLES.get(id) ?? '';
     for (const identifier of title.match(/\b[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+\b/g) ?? []) {
       if (JSON.stringify(governedBy).includes(identifier)) found.push(`${id}: governedBy names ${identifier} from its title`);
@@ -106,8 +106,11 @@ function violations(answer: Obj, html: string): string[] {
   }
   if (unknowns !== items.length) found.push(`machine: ${unknowns} of ${items.length} served items carry the Unknown`);
   if (work.governedByUnknownCount !== unknowns) found.push(`machine count ${String(work.governedByUnknownCount)} differs from the enumerated ${unknowns}`);
-  // No title is served, so no served field may hold the title's identifier.
-  const titleHolders = leaves(answer).filter(([, value]) => typeof value === 'string' && value.includes(TITLE_IDENTIFIER)).map(([path]) => path);
+  // POC-REQ-063 serves an admitted title as the item's own `title.text`;
+  // no other served field may hold the title's identifier.
+  const titleHolders = leaves(answer)
+    .filter(([path, value]) => typeof value === 'string' && value.includes(TITLE_IDENTIFIER) && !/^workItems\.items\[\d+\]\.title\.text$/.test(path))
+    .map(([path]) => path);
   for (const path of titleHolders) found.push(`${path} names ${TITLE_IDENTIFIER}`);
 
   const rendered = cards(html);
@@ -206,18 +209,18 @@ describe('POC-REQ-014: every work item\'s governing intent renders as a counted 
     }
   });
 
-  // SEC-5 (syzygy-jytt): the read row carries the title, the observation
-  // never selects or serves it, so the counterexample now shows nothing
-  // served naming the identifier at all, on either channel.
-  it('a read row titled "Implement POC-REQ-010" yields the same Unknown, and nothing served names POC-REQ-010', () => {
+  // POC-REQ-063 (syzygy-t3jk.23): the read row's title is admitted and
+  // served as the item's title, and only there: its identifier never
+  // becomes the governing intent, on either channel.
+  it('a read row titled "Implement POC-REQ-010" yields the same Unknown, and names POC-REQ-010 only as its title', () => {
     const titled = items(answer).find((item) => item.id === TITLED_ITEM);
     expect(titled).toBeDefined();
-    expect(titled).not.toHaveProperty('title');
+    expect(titled?.title).toEqual({ text: 'Implement POC-REQ-010' });
     expect(titled?.governedBy).toEqual(items(answer).find((item) => item.id === 'bu-open2')?.governedBy);
-    expect(JSON.stringify(answer)).not.toContain('POC-REQ-010');
+    expect(JSON.stringify(answer).split('POC-REQ-010').length - 1).toBe(1);
     const card = cards(html).find((entry) => entry.id === TITLED_ITEM);
-    expect(card?.body).toBeDefined();
-    expect(html).not.toContain('POC-REQ-010');
+    expect(card?.body).toContain('<bdi class="wi-name" data-parity-field="work-item-title">Implement POC-REQ-010</bdi>');
+    expect(html.split('POC-REQ-010').length - 1).toBe(1);
   });
 
   it('the count region reads, as text alone, the reason, the route and the warrant statement', () => {
