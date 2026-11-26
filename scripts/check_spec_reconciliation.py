@@ -12019,10 +12019,6 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
             witnesses.append(witness)
         if failure is not None:
             failures.append(failure)
-    _entry_kind_cases(tmp, base, witnesses, failures)
-    declared_source_historical_cases(tmp, base, clean, witnesses, failures)
-    declared_source_composition_cases(witnesses, failures)
-    url_source_cases(tmp, base, witnesses, failures)
     # These cases reconstruct historical REQ-034 floors where the prerequisites
     # for edit accounting and the terminology brief cannot exist.
     figure_base = base
@@ -12033,22 +12029,56 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         rows = ledger.read_text().splitlines(keepends=True)
         ledger.write_text("".join(line for line in rows
                                   if not is_edit_account_row(line) and not is_term_brief_row(line) and not is_qkind_row(line)))
-    for case in (figure_cases, derived_cases, ledger_cases, kinds_cases, manifests_cases,
-                 repairs_cases, maps_cases, bounds_cases, corr_cases, coverage_cases,
-                 infra_cases, findpages_cases, subsec_cases, reltype_cases, hero_cases,
-                 readers_cases, cont_cases, model_cases, worth_cases):
-        case(tmp, figure_base, witnesses, failures)
-    edit_account_cases(tmp, base, witnesses, failures)
-    poc_d10_cases(base, witnesses, failures)
-    reach_cases(tmp, base, witnesses, failures)
-    readmit_cases(tmp, base, witnesses, failures)
-    raw_read_cases(tmp, base, witnesses, failures)
-    treeread_cases(tmp, base, witnesses, failures)
-    verify_cases(tmp, base, witnesses, failures)
-    qfile_cases(tmp, base, witnesses, failures)
-    scripted_grade_cases(tmp, base, witnesses, failures)
-    covhold_cases(tmp, base, witnesses, failures)
-    term_brief_cases(tmp, base, witnesses, failures)
+    # Every family below copies its own trees from these starts and reads
+    # them only, so each runs in its own fresh fork; their witnesses,
+    # failures and printed lines are merged in this order (syzygy-7rkx).
+    families = [
+        lambda w, f: _entry_kind_cases(tmp, base, w, f),
+        lambda w, f: declared_source_historical_cases(tmp, base, clean, w, f),
+        lambda w, f: declared_source_composition_cases(w, f),
+        lambda w, f: url_source_cases(tmp, base, w, f),
+    ]
+    families += [functools.partial(case, tmp, figure_base) for case in (
+        figure_cases, derived_cases, ledger_cases, kinds_cases, manifests_cases,
+        repairs_cases, maps_cases, bounds_cases, corr_cases, coverage_cases,
+        infra_cases, findpages_cases, subsec_cases, reltype_cases, hero_cases,
+        readers_cases, cont_cases, model_cases, worth_cases)]
+    families += [
+        lambda w, f: edit_account_cases(tmp, base, w, f),
+        lambda w, f: poc_d10_cases(base, w, f),
+    ]
+    families += [functools.partial(case, tmp, base) for case in (
+        reach_cases, readmit_cases, raw_read_cases, treeread_cases, verify_cases,
+        qfile_cases, scripted_grade_cases, covhold_cases, term_brief_cases)]
+    families += [
+        lambda w, f: _scripted_addition_cases(tmp, added, w, f),
+        lambda w, f: step_measures_cases(tmp, base, w, f),
+        lambda w, f: qkind_cases(tmp, base, w, f),
+    ]
+    _run_families(families, witnesses, failures)
+    doc = {"commit": commit, "script": "scripts/check_spec_reconciliation.py",
+           "mutants": witnesses}
+    if witness_path:
+        Path(witness_path).write_text(json.dumps(doc, indent=2,
+                                                 ensure_ascii=False) + "\n",
+                                      encoding="utf-8")
+    for w in witnesses:
+        print(f"{w['outcome']:8} {w['mutant']:28} {w['expected']} "
+              f"(failed: {', '.join(w['failed'])})")
+    if failures:
+        print("\n".join(f"SELFTEST FAIL: {f}" for f in failures))
+        return 1
+    held = sum(w["outcome"] == "held" for w in witnesses)
+    print(f"SELFTEST PASS: clean scratch copy and its signed- and "
+          f"adopted-addition variants pass; {len(witnesses) - held} of "
+          f"{len(witnesses) - held} mutants killed by their expected "
+          f"predicate; {held} of {held} controls held "
+          f"(commit {commit[:12]})")
+    return 0
+
+
+def _scripted_addition_cases(tmp, added, witnesses, failures):
+    """The two scripted cases over the signed-addition tree."""
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.
@@ -12084,27 +12114,6 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
                           "outcome": "killed" if caught else "SURVIVED"})
         if not caught:
             failures.append(f"{name}: expected {expect}")
-    step_measures_cases(tmp, base, witnesses, failures)
-    qkind_cases(tmp, base, witnesses, failures)
-    doc = {"commit": commit, "script": "scripts/check_spec_reconciliation.py",
-           "mutants": witnesses}
-    if witness_path:
-        Path(witness_path).write_text(json.dumps(doc, indent=2,
-                                                 ensure_ascii=False) + "\n",
-                                      encoding="utf-8")
-    for w in witnesses:
-        print(f"{w['outcome']:8} {w['mutant']:28} {w['expected']} "
-              f"(failed: {', '.join(w['failed'])})")
-    if failures:
-        print("\n".join(f"SELFTEST FAIL: {f}" for f in failures))
-        return 1
-    held = sum(w["outcome"] == "held" for w in witnesses)
-    print(f"SELFTEST PASS: clean scratch copy and its signed- and "
-          f"adopted-addition variants pass; {len(witnesses) - held} of "
-          f"{len(witnesses) - held} mutants killed by their expected "
-          f"predicate; {held} of {held} controls held "
-          f"(commit {commit[:12]})")
-    return 0
 
 
 _CASE_STATE = None
@@ -12119,11 +12128,50 @@ def _selftest_workers():
 
 def _map_cases(count):
     """Run every case, in parallel under fork, returning results in order."""
+    return _fork_map(_run_case, count)
+
+
+def _fork_map(function, count, fresh=False):
+    """`function(i)` for each i, under a fork pool, in order.
+
+    `fresh` gives every task its own fork of this process (one task per
+    worker), so nothing one task leaves behind reaches the next.
+    """
     workers = _selftest_workers()
     if workers == 1 or "fork" not in multiprocessing.get_all_start_methods():
-        return [_run_case(i) for i in range(count)]
-    with multiprocessing.get_context("fork").Pool(workers) as pool:
-        return pool.map(_run_case, range(count), chunksize=1)
+        return [function(i) for i in range(count)]
+    with multiprocessing.get_context("fork").Pool(
+            workers, maxtasksperchild=1 if fresh else None) as pool:
+        return pool.map(function, range(count), chunksize=1)
+
+
+_FAMILY_STATE = None
+
+
+def _run_families(families, witnesses, failures):
+    """Each `family(witnesses, failures)` in a fresh fork, merged in order.
+
+    A family's witnesses and failures are appended in list order, and what it
+    printed is re-emitted at its place, so the record and the output are the
+    same as a serial run's (syzygy-7rkx).
+    """
+    global _FAMILY_STATE
+    _FAMILY_STATE = families
+    try:
+        results = _fork_map(_run_family, len(families), fresh=True)
+    finally:
+        _FAMILY_STATE = None
+    for found, failed, printed in results:
+        sys.stdout.write(printed)
+        witnesses.extend(found)
+        failures.extend(failed)
+
+
+def _run_family(index):
+    found, failed = [], []
+    with contextlib.redirect_stdout(io.StringIO()) as printed:
+        _FAMILY_STATE[index](found, failed)
+    return found, failed, printed.getvalue()
 
 
 def _run_case(index):
