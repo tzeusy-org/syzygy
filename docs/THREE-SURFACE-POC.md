@@ -340,10 +340,15 @@ eligibility reason remains visible when a separate edge is unresolved.
      "Claimed". One notice above the board says how many rendered
      items are closed and that closed is not verified: verification is
      Unknown for each of them (`trajectory-closure-notice`).
-   - Each card shows the item's own facts as text (identifier, tracker
-     status, priority, and its created, updated and closed instants) and
-     one short mark per Unknown: title withheld, governing intent and
-     verification. Each mark keeps the Unknown encoding and its reason and
+   - Each card shows the item's own facts as text (identifier, title,
+     tracker status, priority, and its created, updated and closed
+     instants) and one short mark per Unknown: governing intent,
+     verification, and the title when it is withheld. A title is shown only
+     when the work-item-title policy admits it (POC-REQ-063: the secret
+     detectors and the active-content scan, unchanged); a withheld title is
+     never served, and the board's titles notice states the policy, the
+     admitted count and, when any are withheld, how many and why. Each mark
+     keeps the Unknown encoding and its reason and
      links to the board notice that states that Unknown once, with its
      count, reason and route; the verification notice gives served, inside
      and outside counts (`trajectory.verificationUnknown` on the machine

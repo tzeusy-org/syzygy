@@ -264,39 +264,94 @@ describe('Trajectory', () => {
     expect(recent).toContain('data-parity-field="trajectory-excluded-count">2</span> items are outside this selection');
   });
 
-  // SEC-5 (owner answer 2026-10-20, syzygy-jytt): a card is named by its
-  // identifier and says its title is withheld; the board says why, once,
-  // and the machine twin carries the same reason and route. Literals typed
-  // here; the fixture rows carry titles (`fixture item <id>`) to prove none
-  // is served.
-  it('names every card by its identifier and discloses its withheld title (SEC-5)', () => {
+  // POC-REQ-063 (syzygy-t3jk.23): a card shows its title when the title
+  // policy admits it, escaped; a withheld title is a mark naming its reason
+  // that refers to the board's one disclosure, and the board states the
+  // policy and counts once. Literals typed here.
+  it('shows each admitted title on its card and states the title policy once (POC-REQ-063)', async () => {
     const model = buildFixtureModel(cleanups);
     const html = renderTrajectoryPage(model);
     if (model.trajectory.kind !== 'observed') throw new Error('unreachable');
-    const route = 'Route: <span data-unknown-route="excluded-content" data-route-actor="owner" data-route-verb="decide" data-route-target="policy">Policy change by the owner, or accept the exclusion</span>.';
     const ids = model.trajectory.rendered.map((item) => item.id);
     expect(ids).toEqual(['bu-blocked1', 'bu-open1', 'bu-progress1']);
     for (const id of ids) {
       const card = cardBody(html, id);
       expect(card).toContain(`<a class="wi-title" href="#workitem-${id}" data-parity-field="work-item-id">${id}</a>`);
-      const marks = card.split('data-parity-field="work-item-title"').length - 1;
-      expect(marks, id).toBe(1);
-      // syzygy-t3jk.15: the card's mark refers to the board's one disclosure
-      // and carries no route of its own.
-      expect(card).toContain('<span class="epistemic epistemic-unknown" data-parity-field="work-item-title" data-unknown-ref="region:work-item-titles" data-unknown-reason="excluded-content">Title: withheld (SEC-5) <a class="mark-ref" href="#n-titles" aria-describedby="n-titles">reason and route</a></span>');
-      expect(card).not.toContain(route);
+      expect(card).toContain(`<bdi class="wi-name" data-parity-field="work-item-title">fixture item ${id}</bdi>`);
+      expect(card.split('data-parity-field="work-item-title"').length - 1, id).toBe(1);
     }
+    const notice = /<p class="titles-notice notice" id="n-titles" data-parity-field="work-item-titles">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
+    expect(notice.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()).toBe(
+      'Titles: shown for 5 of 5 observed work items, each screened by the title policy work-item-title 1.0.0 (its secret detectors and its scan for markup and scripts).',
+    );
+    expect(html).not.toContain('data-unknown-disclosure="region:work-item-titles"');
+    expect(model.unknownSubjects.some((subject) => subject.id === 'region:work-item-titles')).toBe(false);
+    const served = await servedAnswer(model);
+    if (served.workItems.kind !== 'observed') throw new Error('unreachable');
+    expect(served.workItems.items.map((item) => [item.id, item.title]).sort(([a], [b]) => String(a).localeCompare(String(b)))).toEqual([
+      ['bu-blocked1', { text: 'fixture item bu-blocked1' }],
+      ['bu-closed-old', { text: 'fixture item bu-closed-old' }],
+      ['bu-closed-recent', { text: 'fixture item bu-closed-recent' }],
+      ['bu-open1', { text: 'fixture item bu-open1' }],
+      ['bu-progress1', { text: 'fixture item bu-progress1' }],
+    ]);
+  });
+
+  it('withholds a screened-out title on both channels, escapes an admitted one, and routes the withheld count once (POC-REQ-063)', async () => {
+    const at = '2026-08-01T00:00:00Z';
+    const rows = [
+      { ...fixtureWorkItemRow('bu-a1', 'open', at, at, null), title: 'Tom & Jerry say "hi" it\'s fine' },
+      { ...fixtureWorkItemRow('bu-a2', 'open', at, at, null), title: 'Set password: qz5hunter2qz5' },
+      { ...fixtureWorkItemRow('bu-a3', 'open', at, at, null), title: 'Fix <script>qz6x</script>' },
+      { ...fixtureWorkItemRow('bu-a4', 'open', at, at, null), title: null },
+    ];
+    const model = buildFixtureModel(cleanups, { workItemRows: rows });
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    const body = JSON.stringify(served);
+    for (const text of ['qz5hunter2qz5', 'qz6x', 'password:']) {
+      expect(html).not.toContain(text);
+      expect(body).not.toContain(text);
+    }
+    expect(cardBody(html, 'bu-a1')).toContain('<bdi class="wi-name" data-parity-field="work-item-title">Tom &amp; Jerry say &quot;hi&quot; it&#39;s fine</bdi>');
+    const mark = (reason: string) => `<span class="epistemic epistemic-unknown" data-parity-field="work-item-title" data-unknown-ref="region:work-item-titles" data-unknown-reason="excluded-content">Title: withheld (${reason}) <a class="mark-ref" href="#n-titles" aria-describedby="n-titles">reason and route</a></span>`;
+    expect(cardBody(html, 'bu-a2')).toContain(mark('secret-matched'));
+    expect(cardBody(html, 'bu-a3')).toContain(mark('active-content'));
+    expect(cardBody(html, 'bu-a4')).toContain(mark('unclassifiable'));
+    const route = 'Route: <span data-unknown-route="excluded-content" data-route-actor="owner" data-route-verb="decide" data-route-target="policy">Policy change by the owner, or accept the exclusion</span>.';
     expect(html.split(route).length - 1).toBe(1);
-    const notice = /<p class="titles-withheld notice" id="n-titles" data-parity-field="work-item-titles-withheld" data-unknown-disclosure="region:work-item-titles" data-unknown-reason="excluded-content">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
-    const words = notice.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-    expect(words).toBe('Titles: Unknown for 5 of 5 observed work items (every one). Work-item titles are withheld under SEC-5: a title is free text, the only declared secret-classification policy covers declared-project-shape-text and none covers work-item titles, so the observation never reads them. Each item is named by its identifier. Reason: excluded-content. Route: Policy change by the owner, or accept the exclusion.');
-    expect(html).not.toContain('fixture item');
-    expect(model.unknownSubjects.find((subject) => subject.id === 'region:work-item-titles')?.epistemic).toEqual({
-      label: 'Unknown',
-      reason: 'Work-item titles are withheld under SEC-5: a title is free text, the only declared secret-classification policy covers declared-project-shape-text and none covers work-item titles, so the observation never reads them. Each item is named by its identifier.',
-      closedReason: 'excluded-content',
-      resolutionRoutes: [{ reason: 'excluded-content', route: 'Policy change by the owner, or accept the exclusion', actor: 'owner', verb: 'decide', target: 'policy' }],
-    });
+    const notice = /<p class="titles-notice notice" id="n-titles" data-parity-field="work-item-titles" data-unknown-disclosure="region:work-item-titles" data-unknown-reason="excluded-content">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
+    expect(notice.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()).toBe(
+      'Titles: shown for 1 of 4 observed work items, screened by the title policy work-item-title 1.0.0; Unknown for 3. 3 of 4 work-item titles are withheld under the work-item-title policy 1.0.0 (1 secret-matched, 1 active-content, 1 unclassifiable): a title that matches a secret detector, carries active content the scan finds or cannot be screened is never served, and its item is named by its identifier. Reason: excluded-content. Route: Policy change by the owner, or accept the exclusion.',
+    );
+    if (served.workItems.kind !== 'observed') throw new Error('unreachable');
+    expect(served.workItems.items.map((item) => item.title)).toEqual([
+      { text: 'Tom & Jerry say "hi" it\'s fine' },
+      { withheld: 'secret-matched', redactionClass: 'excluded-artifact', digest: '1576ee2d4319dfec7a0f0e4f70e853b614c98adaf66a809bf982be892603ba7a' },
+      { withheld: 'active-content', redactionClass: 'excluded-artifact', digest: 'a5e1254256353bed59d20ae465f60420abef8288e26896c2f2141c665e53109a' },
+      { withheld: 'unclassifiable', redactionClass: 'unclassifiable-excluded', digest: null },
+    ]);
+    expect(served.unknownSubjects.find((subject) => subject.id === 'region:work-item-titles')?.epistemic.closedReason).toBe('excluded-content');
+  });
+
+  // POC-REQ-063: the largest title page. A full page of cards whose titles
+  // are the longest admitted (500 code units) and escape to the most bytes
+  // (each `"` becomes `&quot;`) stays under 60% of the human ceiling
+  // (1,190,306 of 2,097,152 bytes when written, 57%; 500 `"` escape to 3,000
+  // bytes, the most any admitted title can); a typical title adds
+  // a fraction of that.
+  it('keeps a full page of longest, most-escaped titles under 60% of the human response ceiling (POC-REQ-063)', () => {
+    const at = '2026-08-01T00:00:00Z';
+    const title = '"'.repeat(500);
+    const rows = Array.from({ length: 260 }, (_, i) => ({ ...fixtureWorkItemRow(`bu-long-${String(i).padStart(3, '0')}`, 'open', at, at, null), title }));
+    const model = buildFixtureModel(cleanups, { workItemRows: rows });
+    if (model.workItems.kind !== 'observed') throw new Error('unreachable');
+    expect(model.workItems.titles.admitted).toBe(260);
+    const html = renderTrajectoryPage(model);
+    const bytes = Buffer.byteLength(html, 'utf8');
+    console.info(`POC-REQ-063 largest title page: ${bytes} bytes of ${PWB_RESOURCE_LIMITS.maxHumanResponseBytes}`);
+    expect(html.split('&quot;'.repeat(500)).length - 1).toBe(250);
+    expect(bytes).toBeLessThan(PWB_RESOURCE_LIMITS.maxHumanResponseBytes * 0.6);
   });
 
   it('never renders closure/activity as verification satisfaction (POC-REQ-043)', () => {
@@ -912,13 +967,15 @@ describe('Trajectory board-level Unknowns and card facts (T2)', () => {
   ];
   const ROUTES = ROUTE_COUNTS.map(([literal]) => literal);
   const BASES = [
-    'Work-item titles are withheld under SEC-5',
+    '7 of 252 work-item titles are withheld under the work-item-title policy 1.0.0 (7 unclassifiable)',
     'Activity is not verification: no test evidence has been ingested for any work item.',
     'No governing intent was captured for any work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.',
   ];
 
   it('states each route and basis sentence once on the 252-row board, never on a card', () => {
-    const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
+    // Every 40th row's title is absent, so the withheld-title disclosure renders (POC-REQ-063).
+    const rows = closureRows().map((row, i) => (i % 40 === 0 ? { ...row, title: null } : row));
+    const model = buildFixtureModel(cleanups, { workItemRows: rows });
     const html = renderTrajectoryPage(model);
     if (model.trajectory.kind !== 'observed') throw new Error('unreachable');
     const cards = [...html.matchAll(/<li class="wi-card[^"]*"[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]!);
