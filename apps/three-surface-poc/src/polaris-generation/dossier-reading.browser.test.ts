@@ -42,9 +42,10 @@ interface DeliveredMove {
  * box hold still across two frames, then samples a point in its live hit band (syzygy-jetr). The pages set
  * `html{scroll-behavior:smooth}`. Chrome 120 animated the old `scrollIntoView({ behavior: 'instant' })` under it (observed
  * 2026-11-26), and a Chrome 157 replay showed a scroll moving between sampling and the trusted move, which then landed beside the
- * link; an explicit instant `scrollTo` followed by two still frames leaves no scroll in flight when the point is sampled. A
- * citation inside a sources run is an inline-block with zero leading, so its box is zero pixels tall and a point on it sits on
- * an edge; its label's glyph boxes hold a point inside the band, so they are tried first.
+ * link. An explicit instant `scrollTo` followed by two still frames is meant to leave no scroll in flight when the point is
+ * sampled [Inferred: a running smooth scroll moves the box every frame, so two equal frames mean none ran]. A citation inside a
+ * sources run is an inline-block with zero leading, so its box is zero pixels tall; its label's glyph boxes are tried first as
+ * a margin against a point on that edge, though on Chrome 120 the settled box centre also hit the link.
  */
 const settledHitPoint = (link: string): string => `(async () => {
   const link = ${link};
@@ -99,9 +100,10 @@ async function deliveredMove(page: BrowserPage): Promise<DeliveredMove | null> {
   return null;
 }
 
-/** Fails unless the move reached the link, trusted, at the scroll and box it was sampled at; the message carries both records. */
-function expectDeliveredOnLink(move: DeliveredMove | null, sample: SettledHitPoint, label: string): void {
-  expect(move, `${label} hover delivery: ${JSON.stringify({ sampled: sample, delivered: move })}`)
+/** Fails unless the move reached the link, trusted, at the scroll and box it was sampled at; the message carries both records
+ * and the hint's state as read after the move. */
+function expectDeliveredOnLink(move: DeliveredMove | null, sample: SettledHitPoint, hint: unknown, label: string): void {
+  expect(move, `${label} hover delivery: ${JSON.stringify({ sampled: sample, delivered: move, hint })}`)
     .toMatchObject({ onLink: true, trusted: true, scrollY: sample.scrollY, box: sample.box });
 }
 
@@ -513,12 +515,13 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
         await page.evaluate(recordMoves(citation));
         await page.mouseMove(sample.point!.x, sample.point!.y);
         const move = await deliveredMove(page);
-        expectDeliveredOnLink(move, sample, selector);
+        const hint = await page.evaluate(inspect);
+        expectDeliveredOnLink(move, sample, hint, selector);
         // The same move, had the page scrolled five pixels or the link moved after sampling, is a miss (the bead's replay); so is
         // an untrusted one.
-        expect(() => expectDeliveredOnLink({ ...move!, trusted: false }, sample, selector)).toThrow(/hover delivery/u);
-        expect(() => expectDeliveredOnLink({ ...move!, scrollY: move!.scrollY + 5 }, sample, selector)).toThrow(/hover delivery/u);
-        expect(() => expectDeliveredOnLink({ ...move!, box: move!.box.map(edge => edge - 5) }, sample, selector)).toThrow(/hover delivery/u);
+        expect(() => expectDeliveredOnLink({ ...move!, trusted: false }, sample, hint, selector)).toThrow(/hover delivery/u);
+        expect(() => expectDeliveredOnLink({ ...move!, scrollY: move!.scrollY + 5 }, sample, hint, selector)).toThrow(/hover delivery/u);
+        expect(() => expectDeliveredOnLink({ ...move!, box: move!.box.map(edge => edge - 5) }, sample, hint, selector)).toThrow(/hover delivery/u);
         await expect.poll(() => page.evaluate(inspect), { message: `${selector} hover: ${JSON.stringify({ sampled: sample, delivered: move })}` }).toMatchObject({
           hidden: false, hovered: true, contents: `${codePath}, ${suffix}`, contained: true, fitsPage: true,
         });
@@ -536,9 +539,13 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
       await page.mouseMove(displaced.point!.x, displaced.point!.y);
       const missed = await deliveredMove(page);
       expect(missed).toMatchObject({ onLink: false, trusted: true, scrollY: displaced.scrollY + 40 });
-      expect(() => expectDeliveredOnLink(missed, displaced, 'displaced')).toThrow(/^displaced hover delivery: \{"sampled":.*"delivered":/u);
-      expect(await page.evaluate(`(link => [getComputedStyle(link.querySelector('.cite-pop')).display, link.matches(':hover')])(${inline})`))
-        .toEqual(['none', false]);
+      const missedHint = await page.evaluate(`(link => ({ display: getComputedStyle(link.querySelector('.cite-pop')).display, hovered: link.matches(':hover') }))(${inline})`);
+      expect(() => expectDeliveredOnLink(missed, displaced, missedHint, 'displaced'))
+        .toThrow(/^displaced hover delivery: \{"sampled":.*"delivered":.*"hint":\{"display":"none","hovered":false\}/u);
+      // The recorder reads trust from the event itself: a script-made move on the link records untrusted.
+      await page.evaluate(recordMoves(inline));
+      await page.evaluate(`${inline}.dispatchEvent(new MouseEvent('mousemove', { bubbles: true }))`);
+      expect(await deliveredMove(page)).toMatchObject({ onLink: true, trusted: false });
     } finally {
       await page.close();
     }
