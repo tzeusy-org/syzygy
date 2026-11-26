@@ -6668,26 +6668,45 @@ def _per_run(function):
     return memoized
 
 
-@_reverse_cache_scope()
-def run(root):
+@contextlib.contextmanager
+def _run_scope():
+    """One run()'s memos: P115's answer, the per-run bindings, D10's state.
+
+    Entered by run() and by every caller that asks a predicate outside run()
+    (a bare `check_outcomes`, which otherwise re-derives P115 about twenty
+    times per call, syzygy-7rkx). Each entry starts empty and each exit
+    clears, so nothing carries from one scope to the next.
+    """
     global _SIGNED_MEMO, _RUN_MEMO
-    report = Report()
     _SIGNED_MEMO = {}
     _RUN_MEMO = {}
     import d10_supersession
     d10_state = d10_supersession.state
     d10_supersession.state = _per_run(d10_state)
     try:
+        yield
+    finally:
+        _SIGNED_MEMO = None
+        _RUN_MEMO = None
+        d10_supersession.state = d10_state
+
+
+def scoped_check_outcomes(root, report):
+    """`check_outcomes` as run() asks it, for a caller outside run()."""
+    with _run_scope():
+        check_outcomes(root, report)
+
+
+@_reverse_cache_scope()
+def run(root):
+    report = Report()
+    with _run_scope():
         check_outcomes(root, report)
         pop = check_census(root, report)
         check_generated(root, pop, report)
         check_routes(root, pop, report)
         check_pins(root, report)
         check_unions(root, report)
-    finally:
-        _SIGNED_MEMO = None
-        _RUN_MEMO = None
-        d10_supersession.state = d10_state
     return report
 
 
@@ -7185,7 +7204,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                       and not is_edit_account_row(line))
     ledger.write_text(absent_ledger)
     report = Report()
-    check_outcomes(tree, report)
+    scoped_check_outcomes(tree, report)
 
     def examined(result, rid):
         return next(int(match.group(1)) for line in result.lines
@@ -12410,7 +12429,7 @@ def _entry_kind_cases(tmp, base, witnesses, failures):
         got = []
         for label, method in (("run", run), ("census", census),
                               ("check_outcomes",
-                               lambda t: check_outcomes(t, Report())),
+                               lambda t: scoped_check_outcomes(t, Report())),
                               ("check_census",
                                lambda t: check_census(t, Report()))):
             got += _library_error(label, method, tree, path, cls)
