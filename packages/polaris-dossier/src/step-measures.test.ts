@@ -158,6 +158,23 @@ describe('step measures (REQ-polaris-generation-033 v2.31)', () => {
       .toMatchObject({ reviewRounds: { fidelity: { state: 'unknown', why: 'invalid-round-identity' } } });
   });
 
+  it('measures an interval whose ending shares its start instant as zero, never Unknown (R-STEP-MEASURES-IMPL-1 F1)', () => {
+    const measures = stepMeasures(read(
+      row('brief', 7),
+      row('check', 7, { outcome: 'passed', revision: 0 }),
+      row('session-prompt', 7, { outcome: 'issued', role: 'review', kind: 'design', session: 1 }),
+      row('review-check', 7, { outcome: 'validated', kind: 'design', number: 1 }),
+    ), Date.parse(at(7)));
+    expect(measures).toMatchObject({
+      elapsedMs: {
+        toClose: { state: 'measured', ms: 0 },
+        toFirstDraftCheckAttempt: { state: 'measured', ms: 0 },
+        toFirstPassedDraftCheck: { state: 'measured', ms: 0 },
+      },
+      reviewRounds: { design: { state: 'counted', opened: 1, paired: 1, unfinished: 0, pairedMs: { state: 'measured', ms: 0 } } },
+    });
+  });
+
   it('gives no paired sum when a paired interval runs backwards', () => {
     const measures = stepMeasures(read(
       row('brief', 0),

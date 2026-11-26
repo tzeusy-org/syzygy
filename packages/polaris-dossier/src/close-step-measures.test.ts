@@ -5,7 +5,7 @@ import { pathToFileURL } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { FIXTURE_SCREEN, LATER, REAL_ROOT, fixtureSources, fullFixtureRun, makeClone } from './full-run.testkit.js';
 import type { DossierRenderer } from './render.js';
-import { closeRun, type CloseDeps } from './close.js';
+import { closeRun, encodeExecutionRecord, type CloseDeps } from './close.js';
 import { closedUsage } from './status.js';
 import { tempDir } from '@syzygy/test-kit';
 
@@ -141,6 +141,16 @@ describe('close step measures (REQ-polaris-generation-033 v2.31)', () => {
     ]);
     fs.rmSync(steps(), { recursive: true, force: true });
   }, 120_000);
+
+  it('prefers the full measures in compact JSON over the capacity Unknown in the formatted form (R-STEP-MEASURES-IMPL-1 F2)', () => {
+    // 800,000 zeros nested nine arrays deep: about 1.6 MB compact, but over 16 MiB formatted, whose indentation the depth multiplies;
+    // the formatted record with the small capacity member would fit, so only the candidate order picks the compact full form.
+    let nested: unknown = new Array<number>(800_000).fill(0);
+    for (let depth = 0; depth < 8; depth++) nested = [nested];
+    const record = { format: 'polaris-dossier-execution-record/2', stepMeasures: { ...HEAD, label: 'Inferred', padding: nested } };
+    expect(Buffer.byteLength(`${JSON.stringify(record, null, 2)}\n`)).toBeGreaterThan(CEILING);
+    expect(encodeExecutionRecord(record)).toBe(`${JSON.stringify(record)}\n`);
+  });
 
   it('reads an earlier record that carries no step measures', () => {
     const file = path.join(tempDir('dossier-close-historic-'), 'record.json');

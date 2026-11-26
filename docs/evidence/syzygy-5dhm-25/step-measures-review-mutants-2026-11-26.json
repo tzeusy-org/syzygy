@@ -1,0 +1,34 @@
+{
+  "format": "syzygy-mutation-record/1",
+  "subject": "syzygy-5dhm.25 review repairs (R-STEP-MEASURES-IMPL-1 F1, F2): the two new tests in packages/polaris-dossier/src/step-measures.test.ts and close-step-measures.test.ts",
+  "ranAt": "the repair commit's parent 54204778eb82fe994a0c79955d480c4491ca9900 plus the uncommitted test additions that commit records",
+  "command": "npx vitest run packages/polaris-dossier/src/step-measures.test.ts packages/polaris-dossier/src/close-step-measures.test.ts -t \"zero, never Unknown|prefers the full measures\"",
+  "mutants": [
+    {
+      "id": "M1",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "  if (end < start) return",
+      "new": "  if (end <= start) return",
+      "outcome": "killed",
+      "tests": "1 failed | 1 passed"
+    },
+    {
+      "id": "M2",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (row.ms < pending.ms) backwards",
+      "new": "if (row.ms <= pending.ms) backwards",
+      "outcome": "killed",
+      "tests": "1 failed | 1 passed"
+    },
+    {
+      "id": "M3",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "  for (const candidate of [record, { ...record, stepMeasures: CAPACITY_UNKNOWN }]) {\n    for (const text of [`${JSON.stringify(candidate, null, 2)}\\n`, `${JSON.stringify(candidate)}\\n`]) if (fits(text)) return text;\n  }",
+      "new": "  for (const candidate of [record, { ...record, stepMeasures: CAPACITY_UNKNOWN }]) {\n    if (fits(`${JSON.stringify(candidate, null, 2)}\\n`)) return `${JSON.stringify(candidate, null, 2)}\\n`;\n  }\n  for (const candidate of [record, { ...record, stepMeasures: CAPACITY_UNKNOWN }]) {\n    if (fits(`${JSON.stringify(candidate)}\\n`)) return `${JSON.stringify(candidate)}\\n`;\n  }",
+      "outcome": "killed",
+      "tests": "1 failed | 1 passed"
+    }
+  ],
+  "killed": 3,
+  "total": 3
+}
