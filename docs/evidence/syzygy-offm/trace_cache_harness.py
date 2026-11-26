@@ -42,6 +42,9 @@ import signed_trace_cache as stc  # noqa: E402
 
 reference = checker.poc_reference()
 results = []
+D10 = ".syzygy/governance/contracts/candidates/governance-simplification-d10"
+STAT_INPUT = D10 + "/D10-LOG-ROW.txt"
+LISTED_DIR = D10 + "/proposed"
 
 
 def control(cid, held, detail):
@@ -98,47 +101,29 @@ def main(tmp):
     control("copy-hits", hit and entry.result == reference.is_signed(copy),
             f"matches {hit} in {lookup_seconds}s; stock answer {reference.is_signed(copy)!r}")
 
-    listed = {k[1] for k in entry.obs if k[0] == "list"}
-    other_paths = {k[1] for k in entry.obs if k[0] in ("read", "stat", "lstat", "readlink")}
+    # 3. stat-symlink and 4. listing-extra name fixed paths, chosen from an
+    # unmutated trace (an lstat'd, read input whose directory is not listed;
+    # a listed directory), so that a trace that drops a kind still faces them.
+    rel = STAT_INPUT
+    tree = tmp / "stat-symlink"
+    shutil.copytree(base, tree)
+    target = tree / rel
+    twin = tree / (rel + ".same-bytes")
+    shutil.copyfile(target, twin)
+    target.unlink()
+    target.symlink_to(twin.name)
+    kinds = differing_kinds(entry, tree)
+    control("stat-symlink", not stc.matches(entry, tree) and kinds == ["lstat"],
+            f"{rel} -> symlink to identical bytes: differing observation kinds {kinds}; "
+            f"stock answer {outcome(reference.is_signed, tree)!r}")
 
-    # 3. stat-symlink: an lstat'd input, read, whose parent is not listed.
-    candidates = sorted(k[1] for k in entry.obs if k[0] == "lstat" and k[1].startswith("@R/")
-                        and ("read", k[1]) in entry.obs
-                        and os.path.dirname(k[1]) not in listed)
-    if not candidates:
-        control("stat-symlink", False, "no lstat'd, read input outside a listed directory")
-    else:
-        rel = candidates[0][3:]
-        tree = tmp / "stat-symlink"
-        shutil.copytree(base, tree)
-        target = tree / rel
-        twin = tree / (rel + ".same-bytes")
-        shutil.copyfile(target, twin)
-        target.unlink()
-        target.symlink_to(twin.name)
-        kinds = differing_kinds(entry, tree)
-        control("stat-symlink", not stc.matches(entry, tree) and kinds == ["lstat"],
-                f"{rel} -> symlink to identical bytes: differing observation kinds {kinds}; "
-                f"stock answer {outcome(reference.is_signed, tree)!r}")
-
-    # 4. listing-extra: a listed directory, an extra file no observation names.
-    dirs = sorted(d for d in listed if d.startswith("@R/"))
-    chosen = None
-    for d in dirs:
-        extra = d + "/zz-offm-extra.md"
-        if extra not in other_paths:
-            chosen = d
-            break
-    if chosen is None:
-        control("listing-extra", False, "no listed directory free of other observations")
-    else:
-        tree = tmp / "listing-extra"
-        shutil.copytree(base, tree)
-        (tree / chosen[3:] / "zz-offm-extra.md").write_text("extra\n", encoding="utf-8")
-        kinds = differing_kinds(entry, tree)
-        control("listing-extra", not stc.matches(entry, tree) and kinds == ["list"],
-                f"extra file in {chosen}: differing observation kinds {kinds}; "
-                f"stock answer {outcome(reference.is_signed, tree)!r}")
+    tree = tmp / "listing-extra"
+    shutil.copytree(base, tree)
+    (tree / LISTED_DIR / "zz-offm-extra.md").write_text("extra\n", encoding="utf-8")
+    kinds = differing_kinds(entry, tree)
+    control("listing-extra", not stc.matches(entry, tree) and kinds == ["list"],
+            f"extra file in {LISTED_DIR}: differing observation kinds {kinds}; "
+            f"stock answer {outcome(reference.is_signed, tree)!r}")
 
     # 5. git-objects: .git a shared clone of the checkout, then an empty one.
     t1 = tmp / "git-shared"
