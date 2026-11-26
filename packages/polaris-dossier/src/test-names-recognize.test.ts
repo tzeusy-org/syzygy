@@ -54,6 +54,7 @@ describe('rule pytest-test-name v1', () => {
       'def helper_test():',
       'def testing_util():',
       'x = f"{1}" ; y = b\'def test_bytes():\'',
+      'class Helper:',
     ].join('\n');
     expect(names(recognizePytest(text))).toEqual(['3:test:test_one', '10:test:test_two', '12:suite:TestGroup', '13:test:test_method', '16:test:testing_util']);
   });
@@ -63,7 +64,7 @@ describe('rule pytest-test-name v1', () => {
 });
 
 describe('rule js-test-call v1', () => {
-  it('takes candidates by stem suffix and the __tests__ directory, by the longest extension', () => {
+  it('takes candidates by stem suffix and the __tests__ directory', () => {
     expect(['a.test.ts', 'src/b.spec.jsx', 'c.test.mts', 'd.test.cjs', 'src/__tests__/e.ts', 'f.ts', '.test.ts', 'g.test.d.css', 'h.testing.ts'].map(isJsTestPath))
       .toEqual([true, true, true, true, true, false, false, false, false]);
   });
@@ -111,8 +112,12 @@ describe('rule go-test-function v1', () => {
       'func Test_under(_ *testing.T) {}',
       'func TestBench(b *testing.B) {}',
       'func helper(t *testing.T) {}',
+      'var p = `C:\\`',
+      'func TestAfterRaw(t *testing.T) {}',
+      'var q = `',
+      '`',
     ].join('\n');
-    expect(names(recognizeGoTests(text))).toEqual(['4:test:TestOne', '10:test:Test', '12:test:Test_under']);
+    expect(names(recognizeGoTests(text))).toEqual(['4:test:TestOne', '10:test:Test', '12:test:Test_under', '16:test:TestAfterRaw']);
   });
 });
 
@@ -139,6 +144,7 @@ describe('rule junit-test-method v1', () => {
       '    """;',
       '  @Testing void notAnnotation() {}',
       '  void helper() {}',
+      '  @TestOnly FooTest() {}',
       '}',
     ].join('\n');
     expect(names(recognizeJunit(text))).toEqual(['5:test:plain', '6:test:withModifiers', '7:test:qualified', '10:test:parameterized', '11:test:factory']);

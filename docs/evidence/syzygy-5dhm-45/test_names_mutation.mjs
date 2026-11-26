@@ -37,7 +37,6 @@ const MUTANTS = [
   ['js-modifiers-dropped', 'js-test-call', RECOGNIZE, "((?:\\\\s*\\\\.\\\\s*(?:${JS_TEST_CALL.modifiers.join('|')}))*)", '()'],
   ['js-substitution-read', 'js-test-call', RECOGNIZE, 'if (literal === undefined || literal.value === null) continue;', 'if (literal === undefined) continue;'],
   ['js-suite-as-test', 'js-test-call', RECOGNIZE, "? 'suite' : 'test';", "? 'test' : 'test';"],
-  ['js-first-extension', 'js-test-call', RECOGNIZE, '[...JS_TEST_CALL.extensions].sort((a, b) => b.length - a.length)', '[...JS_TEST_CALL.extensions]'],
   // go-test-function.
   ['go-any-testing-type', 'go-test-function', RECOGNIZE, '[ \\t]+\\*testing\\.T[ \\t]*\\)', '[ \\t]+\\*testing\\.[A-Z][ \\t]*\\)'],
   ['go-lowercase-after-test', 'go-test-function', RECOGNIZE, '(Test(?![a-z])', '(Test'],

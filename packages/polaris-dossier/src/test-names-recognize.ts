@@ -26,8 +26,8 @@ export function isPytestPath(path: string): boolean {
 export function isJsTestPath(path: string): boolean {
   const segments = path.split('/');
   const base = segments[segments.length - 1]!;
-  // The longest listed extension the basename ends with, so `.mts` is never read as `.ts`.
-  const extension = [...JS_TEST_CALL.extensions].sort((a, b) => b.length - a.length).find((e) => base.endsWith(e));
+  // No listed extension ends another (each begins with its dot), so at most one matches.
+  const extension = JS_TEST_CALL.extensions.find((e) => base.endsWith(e));
   if (extension === undefined) return false;
   const stem = base.slice(0, -extension.length);
   return JS_TEST_CALL.stemSuffixes.some((s) => stem.endsWith(s) && stem.length > s.length)
