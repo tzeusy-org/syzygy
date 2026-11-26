@@ -1,0 +1,124 @@
+{
+  "subject": {
+    "commit": "8eeefbf07d37c7086aa546fe2c346045a6634f04",
+    "sha256": {
+      "ci-selection.ts": "4cb6da815af0c4a000b55310be155b04ebb90d9e3ffddf3b84cddf6bbad30372",
+      "scripts/select_ci_tests.mjs": "f5c25dd0e61a732890250423757e97a9d3507f44491a0457461949106d393ee6",
+      "scripts/run_ci_tier.mjs": "6fc1568f27484398157da71200d1adc2a3567ef97d19c0dd7cb1d2ed97008229",
+      "scripts/check_unit_tmpdir.mjs": "c41d8147124a694c90272275871a0720c8131417159885860873a282c91a934c",
+      ".github/workflows/node-ci.yml": "407b6d2f1e7fd53701724b56e22e29e6d168d9ce2b6e60a65ddcb3adfbe67e1a"
+    }
+  },
+  "date": "2026-11-27",
+  "measurement": {
+    "case": "PR #1007 (syzygy-t3jk.26, Trajectory closed landings): the selector and ci-selection.ts at the subject commit, run in a detached checkout of e08d5fdc9 with --base e08d5fdc9^1",
+    "command": "node scripts/select_ci_tests.mjs --base e08d5fdc9^1 --out <file>",
+    "counts": {
+      "unit": {
+        "selected": 94,
+        "population": 227
+      },
+      "integration": {
+        "selected": 97,
+        "population": 107
+      },
+      "e2e": {
+        "selected": 11,
+        "population": 29
+      },
+      "live": {
+        "selected": 3,
+        "population": 3
+      }
+    },
+    "dossierBrowserTestsSelected": [],
+    "e2eSelected": [
+      "apps/three-surface-poc/src/orrery.browser.test.ts",
+      "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+      "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+      "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+      "apps/three-surface-poc/src/product-build.test.ts",
+      "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+      "apps/three-surface-poc/src/surface-routes.test.ts",
+      "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+      "apps/three-surface-poc/src/tuple-encoding.test.ts",
+      "packages/polaris-dossier/src/no-egress.test.ts"
+    ],
+    "before": "Every pull request ran every file of every tier.",
+    "rejectedRules": [
+      {
+        "rule": "a reader names the changed path's top segment ('docs', '.syzygy', 'openspec')",
+        "selected": "unit 171 of 227, integration 99 of 107, e2e 18 of 29"
+      },
+      {
+        "rule": "a reader names any segment below the top",
+        "selected": "unit 164 of 227, integration 100 of 107, e2e 18 of 29"
+      },
+      {
+        "rule": "a bare '..' path literal counts as locating the repository",
+        "selected": "unit 182 of 227, integration 106 of 107, e2e 17 of 29"
+      }
+    ]
+  },
+  "notes": [
+    "[Observed] Integration stays near whole for a Trajectory change (97 of 107): almost every integration test locates and reads the real repository, and a Trajectory PR always carries governed documents.",
+    "[Observed] No Polaris dossier browser test is selected for PR #1007's diff; the flaky dossier hover case (syzygy-jetr) would not have run there.",
+    "[Inferred] A test that reads the repository through a root handed in by a module it does not import, or a path assembled from parts naming no token, can be missed on a pull request; the merge-group run is always whole, so such a miss fails in the queue, never on main."
+  ],
+  "mutants": {
+    "command": "npx vitest run --project unit apps/three-surface-poc/src/ci-selection.test.ts",
+    "file": "ci-selection.ts",
+    "results": [
+      {
+        "id": "rooted-readers-dropped",
+        "mutation": "a governed document no longer selects the modules that locate the repository",
+        "old": "(rooted && ROOTED.test(text)) || ",
+        "new": "",
+        "exit": 1
+      },
+      {
+        "id": "basename-readers-dropped",
+        "mutation": "no module is a reader by naming the path",
+        "old": "|| tokens.some((token) => namesPath(text, token))",
+        "new": "",
+        "exit": 1
+      },
+      {
+        "id": "workflow-trigger-dropped",
+        "mutation": "the workflow no longer forces a full run",
+        "old": "  { rule: 'workflow', test: /^\\.github\\/workflows\\/node-ci\\.yml$/u },\n",
+        "new": "",
+        "exit": 1
+      },
+      {
+        "id": "lockfile-trigger-dropped",
+        "mutation": "the lockfile no longer forces a full run",
+        "old": "  { rule: 'lockfile', test: /^package-lock\\.json$/u },\n",
+        "new": "",
+        "exit": 1
+      },
+      {
+        "id": "removal-rule-dropped",
+        "mutation": "deleting a workspace module no longer forces a full run",
+        "old": "    if (removed && WORKSPACE.test(removedPath)) reasons.push(`workspace module removed or renamed: ${removedPath}`);\n",
+        "new": "",
+        "exit": 1
+      },
+      {
+        "id": "open-closer-only",
+        "mutation": "a name in prose counts as a path literal",
+        "old": "['\"\\`/]${escaped}['\"\\`/]",
+        "new": "${escaped}",
+        "exit": 1
+      },
+      {
+        "id": "non-module-directory-dropped",
+        "mutation": "a workspace fixture is no longer read by its directory",
+        "old": "return [...new Set([basename, parts[parts.length - 2]!])];",
+        "new": "return [basename];",
+        "exit": 1
+      }
+    ]
+  }
+}
