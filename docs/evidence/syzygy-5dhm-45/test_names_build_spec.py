@@ -93,13 +93,13 @@ SCENARIOS = '''
 
 #### Scenario: Test names read from code, never from comments or strings
 
-- **WHEN** under declared-source policy 2.0.0 a render's pinned tree holds `test_root.py` declaring `test_at_root`; `tests/test_api.py` with a comment `# def test_commented():`, a function `test_get` whose docstring holds `def test_doc(): pass`, and a class `TestPost` with a method `test_create`; `web/src/app.test.ts` with a comment `// it('commented')`, a call `describe('app', ...)` holding `it('renders', ...)` and a string holding `it('in a string')`; `cmd/run_test.go` with a commented `func TestCommented(t *testing.T) {}` and `func TestRun(t *testing.T) {}`; and `java/src/FooTest.java` with a commented `@Test void commented()` and `@Test void works()`
+- **WHEN** under declared-source policy 2.0.0 a render's pinned tree holds `test_root.py` declaring `test_at_root`; tests/test_api.py with a comment `# def test_commented():`, a function `test_get` whose docstring holds `def test_doc(): pass`, and a class `TestPost` with a method `test_create`; `web/src/app.test.ts` with a comment `// it('commented')`, a call `describe('app', ...)` holding `it('renders', ...)` and a string holding `it('in a string')`; `cmd/run_test.go` with a commented `func TestCommented(t *testing.T) {}` and `func TestRun(t *testing.T) {}`; and `java/src/FooTest.java` with a commented `@Test void commented()` and `@Test void works()`
 - **THEN** the member lists eight names in order: `TestRun` (unit `cmd`), `works` (`java`), `test_at_root` (unit null), `test_get`, `TestPost` as a suite and `test_create` (`tests`), and `app` as a suite and `renders` (`web`), each Inferred with its path and line
 - **AND** no name, member or page of the render holds `test_commented`, `test_doc`, `commented`, `in a string` or `TestCommented`
 
 #### Scenario: Test files left out, set apart or Unknown
 
-- **WHEN** a tree holds a pytest candidate under a directory a secret detector matches, one under `vendor/`, a JavaScript candidate under `dist/`, a symbolic link `tests/test_link.py`, `tests/test_open.py` whose body ends inside a triple-quoted string, `tests/test_refused.py` whose read the reader refuses, `tests/test_bytes.py` that is not UTF-8 text and `tests/test_secret.py` whose body a secret detector matches
+- **WHEN** a tree holds a pytest candidate under a directory a secret detector matches, one under `vendor/`, a JavaScript candidate under `dist/`, a symbolic link tests/test_link.py, tests/test_open.py whose body ends inside a triple-quoted string, tests/test_refused.py whose read the reader refuses, tests/test_bytes.py that is not UTF-8 text and tests/test_secret.py whose body a secret detector matches
 - **THEN** `pytest-test-name` counts 7 candidates, 1 left out for its secret path, 1 set apart, none read for names and 5 Unknown, listed as `not-utf8-text`, `unparsed` with `unterminated`, `object-read-refused`, `secret-detector-match` and `symbolic-link`; `js-test-call` sets 1 apart
 - **AND** the member names no unit, and neither the secret-matching directory, `vendor`, `dist/` nor any name from the excluded bodies
 
@@ -110,7 +110,7 @@ SCENARIOS = '''
 
 #### Scenario: Test-names page rendered
 
-- **WHEN** a render holds the derived structure and a member whose units are the root, `tests` and `web`, one name of which is `renders <b>`, and one Unknown file `tests/test_open.py` (`unparsed`, `unterminated`)
+- **WHEN** a render holds the derived structure and a member whose units are the root, `tests` and `web`, one name of which is `renders <b>`, and one Unknown file tests/test_open.py (`unparsed`, `unterminated`)
 - **THEN** `reference/test-names.html` holds the per-unit table with the row `Repository root`, its files read and its names per rule, each name entry `Test <name>, in <path> at line <n>.` with `Derived by Syzygy` and its evidence, the name shown as `renders &lt;b&gt;`, and the Unknown file's item opened by `Not established.` with `data-unknown-reason="mapping-coverage-absent"`
 - **AND** `contents.html` links the page and `machine.json`'s `testNames` holds its page and the member's names, and the page holds no script
 
