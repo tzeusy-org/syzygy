@@ -337,7 +337,14 @@ eligibility reason remains visible when a separate edge is unresolved.
    identifier exactly. Only each commit's hash and instant are kept, never
    its subject; the join is labelled `naming-convention`,
    `reduced-fidelity`, and is Unknown with its reason when the history
-   cannot be read. The page does not render it yet.
+   cannot be read. The page renders it as closed landings
+   (POC-REQ-065, `syzygy-t3jk.26`): the remains answer counts the closed
+   items merged by naming convention apart from those no commit names, and
+   each card shows a closed item's landing ("Merged (by naming convention,
+   reduced fidelity)", "Closed, no commit names it", or, past the bound,
+   "... in the newest N read") and up to three naming commits by short
+   hash and instant. While the join is Unknown, every closed card reads
+   "Landing: Unknown", linked to its reason and route.
 
    The board then shows two separately honest fields for a work item, not
    one:

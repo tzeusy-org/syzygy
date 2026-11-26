@@ -10,6 +10,7 @@ import {
   TRAJECTORY_CHANGED_ID,
   TRAJECTORY_COST_ID,
   TRAJECTORY_ORPHANED_WORK_ID,
+  TRAJECTORY_COMMIT_JOINS_ID,
   type TrajectoryProjection,
 } from './trajectory-projection.js';
 import type { DispatchDisclosure, MaterializationRecord } from './materialization.js';
@@ -307,6 +308,20 @@ function changedBasis(windows: readonly { readonly window: ChangeWindow; readonl
 const COST_BASIS = 'No cost record is read: no effort, compute, token, money or blocked-time measure is captured for any work item, so those costs are Unknown, never zero; elapsed time alone is measured, as lead time and age.';
 const ORPHANED_WORK_BASIS = 'No orphaned-work check is implemented, and the observation does not read who created each tracker item, which that check would compare with materialization records, so how many items are orphaned is Unknown, never 0.';
 
+/** POC-REQ-065: why each closed item's landing is Unknown, by the commit
+ * join's closed reason (POC-REQ-064). */
+const COMMIT_JOINS_UNKNOWN_BASIS: Readonly<Record<string, string>> = {
+  'work-items-unobserved': 'the work items were not observed',
+  'repository-revision-unavailable': 'the observed repository revision is not a commit identifier',
+  'commit-history-read-failed': "the observed repository's history could not be read",
+  'commit-history-malformed': "the observed repository's history read returned rows of an unexpected shape, or did not start at the observed revision",
+};
+
+function commitJoinsBasis(joins: CommitJoinsResult): string {
+  const why = joins.kind === 'unknown' ? COMMIT_JOINS_UNKNOWN_BASIS[joins.reason] ?? joins.reason : 'the commit join was not read';
+  return `Whether each closed item merged, by a commit that names it, is Unknown: ${why} (commit join ${joins.kind === 'unknown' ? joins.reason : 'unread'}). No closed item is counted as merged or as having no naming commit.`;
+}
+
 export const WORK_ITEM_VERIFICATION_REGION_ID = 'region:work-item-verification' as const;
 
 /** POC-REQ-014: the Trajectory region that counts the served items whose
@@ -327,6 +342,7 @@ interface UnknownSubjectInputs {
   readonly workItems: WorkItemsResult;
   readonly orrery: OrreryProjection;
   readonly trajectory: TrajectoryProjection;
+  readonly commitJoins: CommitJoinsResult;
   readonly workerChange: WorkerChangeResult;
   readonly testArtifactVerification: TestArtifactVerificationResult;
   readonly governingIntentId: string | null;
@@ -371,6 +387,12 @@ function deriveUnknownSubjects(input: UnknownSubjectInputs): readonly PocUnknown
       }
       add(TRAJECTORY_COST_ID, COST_BASIS, 'source-uncaptured-or-unreachable');
       add(TRAJECTORY_ORPHANED_WORK_ID, ORPHANED_WORK_BASIS, 'source-uncaptured-or-unreachable');
+      // POC-REQ-065 (syzygy-t3jk.26): closed items' landings are Unknown
+      // exactly when the commit join is.
+      const remains = input.trajectory.answers.find((answer) => answer.id === 'remains');
+      if (remains !== undefined && 'closedLanding' in remains && remains.closedLanding.state === 'unknown') {
+        add(TRAJECTORY_COMMIT_JOINS_ID, commitJoinsBasis(input.commitJoins), 'source-uncaptured-or-unreachable');
+      }
       const intent = input.trajectory.answers.find((answer) => answer.id === 'intent');
       if (intent !== undefined && 'reconciliationChain' in intent && typeof intent.reconciliationChain.members !== 'number') {
         const change = input.workerChange;
