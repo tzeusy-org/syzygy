@@ -1,0 +1,89 @@
+{
+  "format": "paired-selftest/1",
+  "bead": "syzygy-7rkx",
+  "workers": 4,
+  "method": "paired_selftest.sh <commit> <before ref> <label>: a fresh `git clone --shared` checked out at <commit>; the selftest runs first with <before ref>'s scripts/check_spec_reconciliation.py written over the checkout (HEAD unchanged, so both witness records name the same commit), then with the commit's own file; SELFTEST_WORKERS=4, TMPDIR under ~/.tmp. The host is shared with other lanes; the load average at the end of each run is recorded beside its wall.",
+  "pairs": {
+    "p1": {
+      "what": "proposal 1 alone: main's file against the per-run scope",
+      "commit": "ef79b04062768f680c9534b3569b56cb23fe4475",
+      "beforeRef": "1c42a078e",
+      "before": {
+        "exit": 0,
+        "wallSeconds": 864.3,
+        "loadAverage": "1.23 1.43 1.65",
+        "fileSha256": "3408e908055dce7360111df23bfb9568bacb407ae314856b019b9ce9bc1328be",
+        "verdict": "SELFTEST PASS: clean scratch copy and its signed- and adopted-addition variants pass; 632 of 632 mutants killed by their expected predicate; 146 of 146 controls held (commit ef79b0406276)",
+        "witnessSha256": "9d4ec7781b5d4955ac485e2b307f7e9fe1ce3799c11bef8e2556b1e0c17f3857",
+        "stdoutSha256": "c88fe2961b3f8eca72038ccef22f17e4a81bf95ae98c1fcc7971448df066e489"
+      },
+      "after": {
+        "exit": 0,
+        "wallSeconds": 484.6,
+        "loadAverage": "1.80 2.10 2.03",
+        "fileSha256": "db713736ae3b1bc7519398b7e3f3c6d86b836dce520ef9466cbaaebdde5fb52e",
+        "verdict": "SELFTEST PASS: clean scratch copy and its signed- and adopted-addition variants pass; 632 of 632 mutants killed by their expected predicate; 146 of 146 controls held (commit ef79b0406276)",
+        "witnessSha256": "9d4ec7781b5d4955ac485e2b307f7e9fe1ce3799c11bef8e2556b1e0c17f3857",
+        "stdoutSha256": "c88fe2961b3f8eca72038ccef22f17e4a81bf95ae98c1fcc7971448df066e489"
+      },
+      "witnessByteIdentical": true,
+      "stdoutByteIdentical": true,
+      "witnessCommit": "ef79b04062768f680c9534b3569b56cb23fe4475",
+      "witnessEntries": 778
+    },
+    "p2": {
+      "what": "proposal 2 on top of 1: the scope's file against the family pool",
+      "commit": "c9da8e56beae76aaf6554e50bb9e2dc63b568862",
+      "beforeRef": "ef79b0406",
+      "before": {
+        "exit": 0,
+        "wallSeconds": 553.8,
+        "loadAverage": "5.42 7.84 5.58",
+        "fileSha256": "db713736ae3b1bc7519398b7e3f3c6d86b836dce520ef9466cbaaebdde5fb52e",
+        "verdict": "SELFTEST PASS: clean scratch copy and its signed- and adopted-addition variants pass; 632 of 632 mutants killed by their expected predicate; 146 of 146 controls held (commit c9da8e56beae)",
+        "witnessSha256": "8093b14c7822e69fb2f8918afa7658d09e83dd314de7a75ace4872b63cccfc90",
+        "stdoutSha256": "99868b3b0ad990d31324a69023d8d78f8554663335f505e853bcddededca3928"
+      },
+      "after": {
+        "exit": 0,
+        "wallSeconds": 237.8,
+        "loadAverage": "5.30 6.82 5.70",
+        "fileSha256": "dda3c14e0813a1b7a27b723d67441f67c826be71e4d5bb5fd9b3acffeb1ad4ea",
+        "verdict": "SELFTEST PASS: clean scratch copy and its signed- and adopted-addition variants pass; 632 of 632 mutants killed by their expected predicate; 146 of 146 controls held (commit c9da8e56beae)",
+        "witnessSha256": "8093b14c7822e69fb2f8918afa7658d09e83dd314de7a75ace4872b63cccfc90",
+        "stdoutSha256": "99868b3b0ad990d31324a69023d8d78f8554663335f505e853bcddededca3928"
+      },
+      "witnessByteIdentical": true,
+      "stdoutByteIdentical": true,
+      "witnessCommit": "c9da8e56beae76aaf6554e50bb9e2dc63b568862",
+      "witnessEntries": 778
+    },
+    "full": {
+      "what": "both: main's file against the final file",
+      "commit": "c9da8e56beae76aaf6554e50bb9e2dc63b568862",
+      "beforeRef": "1c42a078e",
+      "before": {
+        "exit": 0,
+        "wallSeconds": 865.0,
+        "loadAverage": "1.95 2.25 3.68",
+        "fileSha256": "3408e908055dce7360111df23bfb9568bacb407ae314856b019b9ce9bc1328be",
+        "verdict": "SELFTEST PASS: clean scratch copy and its signed- and adopted-addition variants pass; 632 of 632 mutants killed by their expected predicate; 146 of 146 controls held (commit c9da8e56beae)",
+        "witnessSha256": "8093b14c7822e69fb2f8918afa7658d09e83dd314de7a75ace4872b63cccfc90",
+        "stdoutSha256": "99868b3b0ad990d31324a69023d8d78f8554663335f505e853bcddededca3928"
+      },
+      "after": {
+        "exit": 0,
+        "wallSeconds": 230.3,
+        "loadAverage": "4.24 3.60 3.93",
+        "fileSha256": "dda3c14e0813a1b7a27b723d67441f67c826be71e4d5bb5fd9b3acffeb1ad4ea",
+        "verdict": "SELFTEST PASS: clean scratch copy and its signed- and adopted-addition variants pass; 632 of 632 mutants killed by their expected predicate; 146 of 146 controls held (commit c9da8e56beae)",
+        "witnessSha256": "8093b14c7822e69fb2f8918afa7658d09e83dd314de7a75ace4872b63cccfc90",
+        "stdoutSha256": "99868b3b0ad990d31324a69023d8d78f8554663335f505e853bcddededca3928"
+      },
+      "witnessByteIdentical": true,
+      "stdoutByteIdentical": true,
+      "witnessCommit": "c9da8e56beae76aaf6554e50bb9e2dc63b568862",
+      "witnessEntries": 778
+    }
+  }
+}
