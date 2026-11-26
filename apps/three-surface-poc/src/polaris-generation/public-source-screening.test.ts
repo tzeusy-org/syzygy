@@ -9,7 +9,7 @@ import { applyUnifiedPatch, tempDir } from '@syzygy/test-kit';
 
 import { withConsent, POLICY_ACT_FORMS, type AdmissionRecord } from '@syzygy/polaris-generation-consent';
 import { DEFAULT_DISCOVERY_BUDGET, discoverAndSelect, excludedSourceId, generationSourceIdentity, generationSourcesForBody, gitBlobObjectId, runGenerationPipeline, stageSchema, validateGenerationSources, validateStage, reviewVerdict, type GenerationSource, type PipelinePorts, type PipelineResult } from '@syzygy/polaris-generation-core';
-import { compileDetectors, detectSecrets, PWB_DENIED_PATH_RULES, PWB_SECRET_POLICY } from '@syzygy/three-surface-poc-core';
+import { compileDetectors, detectSecrets, PWB_DENIED_PATH_RULES, PWB_SECRET_POLICY } from '@syzygy/three-surface-poc-core/screening';
 
 import { renderDossier } from './dossier-render.js';
 import { runSyntheticProject, syntheticProjects } from './pipeline-demo.js';
