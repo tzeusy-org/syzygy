@@ -1,0 +1,119 @@
+{
+  "sourceCommit": "6710c7afcdb227422cc543d58b171fe3359686be",
+  "parent": "cd78c7fed6a02419fb46f2b489689daee03ae681",
+  "scope": "CI source repair and retained failed ordinary verification; not native recovery acceptance",
+  "archive": {
+    "path": "proof.tar.gz",
+    "sha256": "4ab4940a0ea64ce745df8d1bc4791963d566b1b4db5470d0917505b882d9b4e4",
+    "bytes": 98494,
+    "members": [
+      {
+        "path": "ci-profile/candidate/.github/workflows/node-ci.yml",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/ci-native-node-profile-cd78-R1/candidate/.github/workflows/node-ci.yml",
+        "bytes": 13799,
+        "sha256": "81a6e5a704052448e9432fe7c6e244894ebf5867651951da286b250c59a52221"
+      },
+      {
+        "path": "ci-profile/candidate/scripts/check_node_segment_rules.mjs",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/ci-native-node-profile-cd78-R1/candidate/scripts/check_node_segment_rules.mjs",
+        "bytes": 7636,
+        "sha256": "be3e7aa5a442fcccc0f196e24f2f06b8555ea478e12ed32f1885af8a8fefb27e"
+      },
+      {
+        "path": "ci-profile/check_node_segment_rules.mjs.patch",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/ci-native-node-profile-cd78-R1/check_node_segment_rules.mjs.patch",
+        "bytes": 548,
+        "sha256": "c39ff423eea299fa56173c93f811718ee403672a8f989bb43338204a5453a9a5"
+      },
+      {
+        "path": "ci-profile/manifest.json",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/ci-native-node-profile-cd78-R1/manifest.json",
+        "bytes": 1030,
+        "sha256": "473fe93a2c1ad0ee90322f678047a3ef916412aa2443a1d0b39f3e687025c259"
+      },
+      {
+        "path": "ci-profile/node-ci.yml.patch",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/ci-native-node-profile-cd78-R1/node-ci.yml.patch",
+        "bytes": 1385,
+        "sha256": "69d63dfa23e878898f4d402c701504cb1abd82ec9efa1a7635ffd3036dcd664d"
+      },
+      {
+        "path": "ci-profile/original/.github/workflows/node-ci.yml",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/ci-native-node-profile-cd78-R1/original/.github/workflows/node-ci.yml",
+        "bytes": 13747,
+        "sha256": "8bfaf1f607e8d25a26ca9be63861834e8c011e8beb8ae0397a3f5285e3f7808a"
+      },
+      {
+        "path": "ci-profile/original/scripts/check_node_segment_rules.mjs",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/ci-native-node-profile-cd78-R1/original/scripts/check_node_segment_rules.mjs",
+        "bytes": 7635,
+        "sha256": "dde81cff110da5314cdbf4782f5f5b326a713b7666774d28c85a4258cfa54dfa"
+      },
+      {
+        "path": "ci-profile/segment-check.log",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/ci-native-node-profile-cd78-R1/segment-check.log",
+        "bytes": 51,
+        "sha256": "2c42bb6d9399a8e95ee752d404671bf64dcbd5c2bc53b2b15e48771937843eed"
+      },
+      {
+        "path": "ci-profile/source-commit.json",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/ci-native-node-profile-cd78-R1/source-commit.json",
+        "bytes": 938,
+        "sha256": "01c01f09f2c370a1fd03ce8f2c35a2cfa3904c1da5a44fa51d2d0b3224b9eb86"
+      },
+      {
+        "path": "hosted-cd78-governance-status.json",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/hosted-cd78-governance-status.json",
+        "bytes": 33460,
+        "sha256": "47d117cb9145ce1942c1ef1ed51e86ec99331709fe0dced0cafea54852a30143"
+      },
+      {
+        "path": "hosted-cd78-unit-failed.log",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/hosted-cd78-unit-failed.log",
+        "bytes": 2059,
+        "sha256": "4aff812a24636ddbd9923e76104ca9fbbafdeaea52346dcae3db2cadecfb8a89"
+      },
+      {
+        "path": "ordinary-cd78/build.log",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/ordinary-recovery-cd78c7-1/build.log",
+        "bytes": 349,
+        "sha256": "76f7a19f422c174c03744f80bd3b23bd943328fb1c2e5deb9cc13d40005cc856"
+      },
+      {
+        "path": "ordinary-cd78/operator.py",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/run-current-ordinary-recovery.py",
+        "bytes": 4882,
+        "sha256": "cdc62235a800c833d37113ba46407b977f7aa8ba945361edae3492dc6b5e903d"
+      },
+      {
+        "path": "ordinary-cd78/recovery.log",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/ordinary-recovery-cd78c7-1/recovery.log",
+        "bytes": 457145,
+        "sha256": "003db9f73ac011e1b78ece5a793d81916ab8cf6c9d95ff70b802f7c0b9c70288"
+      },
+      {
+        "path": "ordinary-cd78/runtime-verification.json",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/ordinary-recovery-cd78c7-1/runtime-verification.json",
+        "bytes": 74974,
+        "sha256": "10730a583480959712e88bce8c2874b22424fb954a99edb1d8ae6044ab84d786"
+      },
+      {
+        "path": "ordinary-cd78/terminal.json",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/ordinary-recovery-cd78c7-1/terminal.json",
+        "bytes": 5403,
+        "sha256": "1f8004d5df2c81f9509c491fa6a36a8a63a763bfd19081da51589ed9f9c2da7e"
+      },
+      {
+        "path": "ordinary-cd78/vitest.json",
+        "source": "/home/orca/.tmp/f3-native-admission-fixes/ordinary-recovery-cd78c7-1/vitest.json",
+        "bytes": 5097,
+        "sha256": "8da2e2ed20872c94ce2659f170de5b56499d7e82d5a1ef01ed3eaf651dddcb92"
+      }
+    ]
+  },
+  "rawReview": {
+    "path": "docs/reviews/F3-CI-NATIVE-NODE-PROFILE-CD78-RAW.md",
+    "sha256": "5dfbe40b250b3e361a019e6d6a97571dd456fc3109e6eba656e7a555f1773fae"
+  },
+  "adoption": "A-266"
+}

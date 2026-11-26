@@ -1,0 +1,3 @@
+ERROR: check inputs differ from HEAD
+HEAD input drift: docs/review-campaigns/d10-f3-url-supervisor.md
+HEAD input drift: docs/reviews/F3-CI-NATIVE-NODE-PROFILE-CD78-RAW.md

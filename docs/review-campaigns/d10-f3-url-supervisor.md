@@ -2,6 +2,10 @@
 
 ## Patterns
 
+- `F3-MAIN-4B86-COMPOSITION-(DF318|E22D3)-RAW\.md`
+- `syzygy-k54o-3/f3-policy-git-microdiagnostic-r2-review-RAW\.md`
+- `F3-CI-NATIVE-NODE-PROFILE-CD78-RAW\.md`
+
 - `F3-ORDERED-AUTHORITY-JOIN-REVIEW-R1-RAW\.md`
 
 - `F3-COLD-HISTORY-FIXTURE-BATCH-REVIEW-R1-RAW\.md`
