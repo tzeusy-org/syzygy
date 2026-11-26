@@ -185,3 +185,25 @@ describe('the daemon path, every module the entry reaches outside its dossier an
     expect(edges.filter((edge) => edge.specifier === null).map((edge) => `${edge.module}: ${edge.edge}`)).toEqual([]);
   });
 });
+
+describe('Polaris screening depends on the narrow POC subpath', () => {
+  it('has no bare POC core imports in the Polaris source trees', () => {
+    const barrel = '@syzygy/three-surface-poc-core';
+    const polarisPackages = fs.readdirSync(path.join(ROOT, 'packages'), { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && entry.name.startsWith('polaris-'))
+      .map((entry) => path.posix.join('packages', entry.name));
+    const directories = [...polarisPackages, 'apps/three-surface-poc/src/polaris-generation'];
+    const violations: string[] = [];
+    for (const directory of directories) {
+      for (const file of fs.globSync('**/*.{ts,tsx,js,jsx,mts,cts,mjs,cjs}', {
+        cwd: path.join(ROOT, directory),
+        exclude: ['**/node_modules/**', '**/dist/**', '**/.git/**'],
+      })) {
+        const module = path.join(directory, file);
+        const source = readModule(module);
+        if (importsOf(source).includes(barrel)) violations.push(module);
+      }
+    }
+    expect(violations.sort()).toEqual([]);
+  });
+});
