@@ -2,7 +2,7 @@
 
 Population: `git ls-files` of packages/polaris-dossier/src/*.ts and apps/three-surface-poc/src/polaris-generation/*.ts at HEAD, less
 *.test.ts and *.testkit.ts (the 3efd-80 population). Predicate: the 3efd-80 predicate (readFileSync, readFile, readRecord,
-readFileAsSized, readBoundedFile) widened by readSync, so a hand-written read loop over a descriptor is a site too; Python `re` per line,
+readFileAsSized, readBoundedFile) widened by readSync and main's readPrivateBoundedFile, so a hand-written read loop over a descriptor is a site too; Python `re` per line,
 lines that are an import or that define readRecord, readBoundedFile or readFileAsSized excluded, one site per match.
 
 Each site is classified by CLASSES below: first by an exact (file, line text) carried from the 3efd-80 record, then by the rules this
@@ -19,8 +19,8 @@ from pathlib import Path
 
 ROOT = Path(subprocess.check_output(['git', 'rev-parse', '--show-toplevel'], text=True).strip())
 PRIOR = ROOT / 'docs/evidence/syzygy-3efd-80/run-tree-read-sweep-2026-11-23.json'
-CALL = re.compile(r'\b(readFileSync|readFile|readRecord|readFileAsSized|readBoundedFile|readSync)\(')
-DEFINES = re.compile(r'^\s*import\b|function (readRecord|readBoundedFile|readFileAsSized)\b|\b(readRecord|readBoundedFile|readFileAsSized) = ')
+CALL = re.compile(r'\b(readFileSync|readFile|readRecord|readFileAsSized|readBoundedFile|readPrivateBoundedFile|readSync)\(')
+DEFINES = re.compile(r'^\s*import\b|function (readRecord|readBoundedFile|readPrivateBoundedFile|readFileAsSized)\b|\b(readRecord|readBoundedFile|readPrivateBoundedFile|readFileAsSized) = ')
 
 AGENT_WRITABLE_CLONE = ('the clone .git HEAD, references, packed-refs and configuration, within the agent sessions write reach: '
                         'read by the version 2.10 reader rule with no-follow (readBoundedFile, followLink false; the launch reader also refuseGrowth), bounds code-stated '
@@ -50,7 +50,7 @@ RULES: list[tuple[str, str, str, str]] = [
 ]
 
 # Any call of the reader rule itself is bounded by construction (the 3efd-80 class "already-bounded"), whatever file it reads.
-BOUNDED_CALLS = ('readBoundedFile', 'readFileAsSized')
+BOUNDED_CALLS = ('readBoundedFile', 'readPrivateBoundedFile', 'readFileAsSized')
 
 
 def sites(commit: str) -> list[dict]:
