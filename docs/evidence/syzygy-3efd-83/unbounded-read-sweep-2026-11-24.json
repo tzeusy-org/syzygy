@@ -1,18 +1,18 @@
 {
  "subject": {
-  "commit": "d937255781e97c9aa99bed1f9b9802686d20e33d",
+  "commit": "702a2dd8f73469065d4bf49b39ad67603c411932",
   "population": "git ls-files packages/polaris-dossier/src/*.ts apps/three-surface-poc/src/polaris-generation/*.ts, less *.test.ts and *.testkit.ts",
-  "files": 123
+  "files": 133
  },
- "predicate": "Python re per line: \\b(readFileSync|readFile|readRecord|readFileAsSized|readBoundedFile|readSync)\\( ; lines matching ^\\s*import\\b|function (readRecord|readBoundedFile|readFileAsSized)\\b|\\b(readRecord|readBoundedFile|readFileAsSized) =  are excluded; one site per match",
- "sweepScriptSha256": "bd8b74abc6966f4c0d66fc05c6b3ea99c07318f4e782c77ef9bb56d46332995c",
+ "predicate": "Python re per line: \\b(readFileSync|readFile|readRecord|readFileAsSized|readBoundedFile|readPrivateBoundedFile|readSync)\\( ; lines matching ^\\s*import\\b|function (readRecord|readBoundedFile|readPrivateBoundedFile|readFileAsSized)\\b|\\b(readRecord|readBoundedFile|readPrivateBoundedFile|readFileAsSized) =  are excluded; one site per match",
+ "sweepScriptSha256": "3cc50752d9d714a684ef7408292393cffe26edcb3977d07ae7f049e205f4ba57",
  "prior": {
   "record": "docs/evidence/syzygy-3efd-80/run-tree-read-sweep-2026-11-23.json",
   "sha256": "22b1708a43351011895fb88d756c83abbac8b87b3fae8423fd50f5d62957424f"
  },
- "sites": 81,
+ "sites": 83,
  "counts": {
-  "already-bounded": 30,
+  "already-bounded": 32,
   "bounded-code-stated": 3,
   "in-scope": 11,
   "not-a-file-read": 3,
@@ -171,7 +171,7 @@
    "from": "syzygy-3efd.80"
   },
   {
-   "site": "packages/polaris-dossier/src/check-record-read.ts:88",
+   "site": "packages/polaris-dossier/src/check-record-read.ts:96",
    "call": "readSync",
    "text": "const read = fs.readSync(fd, buffer, total, buffer.length - total, null);",
    "class": "already-bounded",
@@ -179,7 +179,7 @@
    "from": "syzygy-3efd.83"
   },
   {
-   "site": "packages/polaris-dossier/src/check-record-read.ts:104",
+   "site": "packages/polaris-dossier/src/check-record-read.ts:112",
    "call": "readBoundedFile",
    "text": "return parseBoundedJson(readBoundedFile(file, CHECK_RECORD_LIMITS.maxBytes).toString('utf8'), CHECK_RECORD_LIMITS);",
    "class": "already-bounded",
@@ -187,7 +187,7 @@
    "from": "syzygy-3efd.80"
   },
   {
-   "site": "packages/polaris-dossier/src/check.ts:439",
+   "site": "packages/polaris-dossier/src/check.ts:444",
    "call": "readBoundedFile",
    "text": "record = parseBoundedJson(readBoundedFile(path.join(run, RUN_LAYOUT.briefRecord), BRIEF_JSON_LIMITS.maxBytes).toString('utf8'), BRIEF_JSON_LIMITS);",
    "class": "already-bounded",
@@ -195,7 +195,7 @@
    "from": "syzygy-3efd.80"
   },
   {
-   "site": "packages/polaris-dossier/src/check.ts:462",
+   "site": "packages/polaris-dossier/src/check.ts:467",
    "call": "readBoundedFile",
    "text": "return new Uint8Array(readBoundedFile(file, DRAFT_MAX_BYTES));",
    "class": "already-bounded",
@@ -243,7 +243,7 @@
    "from": "syzygy-3efd.83"
   },
   {
-   "site": "packages/polaris-dossier/src/close.ts:276",
+   "site": "packages/polaris-dossier/src/close.ts:312",
    "call": "readFileAsSized",
    "text": "const bytes = bound === undefined ? readFileAsSized(full) : readBoundedFile(full, bound);",
    "class": "already-bounded",
@@ -251,7 +251,7 @@
    "from": "syzygy-3efd.80"
   },
   {
-   "site": "packages/polaris-dossier/src/close.ts:276",
+   "site": "packages/polaris-dossier/src/close.ts:312",
    "call": "readBoundedFile",
    "text": "const bytes = bound === undefined ? readFileAsSized(full) : readBoundedFile(full, bound);",
    "class": "already-bounded",
@@ -323,7 +323,7 @@
    "from": "syzygy-3efd.83"
   },
   {
-   "site": "packages/polaris-dossier/src/inventory.ts:74",
+   "site": "packages/polaris-dossier/src/inventory.ts:76",
    "call": "readBoundedFile",
    "text": "const draft = parseBoundedJson(readBoundedFile(path.join(run, RUN_LAYOUT.drafts, name), DRAFT_JSON_LIMITS.maxBytes).toString('utf8'), DRAFT_JSON_LIMITS);",
    "class": "already-bounded",
@@ -331,7 +331,7 @@
    "from": "syzygy-3efd.80"
   },
   {
-   "site": "packages/polaris-dossier/src/inventory.ts:219",
+   "site": "packages/polaris-dossier/src/inventory.ts:222",
    "call": "readFileAsSized",
    "text": "try { stored = readFileAsSized(path.join(sessionDirectory(opened.run, session), INVENTORY_BRIEF_FILE)).toString('utf8'); } catch { stored = undefined; }",
    "class": "already-bounded",
@@ -339,7 +339,7 @@
    "from": "syzygy-3efd.83"
   },
   {
-   "site": "packages/polaris-dossier/src/inventory.ts:383",
+   "site": "packages/polaris-dossier/src/inventory.ts:389",
    "call": "readBoundedFile",
    "text": "try { bytes = new Uint8Array(readBoundedFile(path.join(run, frozen), RUN_TREE_BOUNDS.inventory)); } catch (cause) { return no(`the frozen inventory ${frozen} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.inventory)})`); }",
    "class": "already-bounded",
@@ -347,7 +347,7 @@
    "from": "syzygy-3efd.83"
   },
   {
-   "site": "packages/polaris-dossier/src/inventory.ts:386",
+   "site": "packages/polaris-dossier/src/inventory.ts:392",
    "call": "readRecord",
    "text": "const prompt = readRecord(path.join(run, RUN_LAYOUT.inventory, promptRecordName(number)));",
    "class": "in-scope",
@@ -357,7 +357,7 @@
    "from": "syzygy-3efd.80"
   },
   {
-   "site": "packages/polaris-dossier/src/inventory.ts:389",
+   "site": "packages/polaris-dossier/src/inventory.ts:395",
    "call": "readRecord",
    "text": "const launch = readRecord(path.join(run, RUN_LAYOUT.inventory, launchRecordName(number)));",
    "class": "in-scope",
@@ -440,7 +440,7 @@
    "from": "syzygy-3efd.83"
   },
   {
-   "site": "packages/polaris-dossier/src/polaris.ts:706",
+   "site": "packages/polaris-dossier/src/polaris.ts:707",
    "call": "readRecord",
    "text": "export const readReviewCheck = (file: string): unknown => readRecord(file);",
    "class": "already-bounded",
@@ -496,7 +496,7 @@
    "from": "syzygy-3efd.80"
   },
   {
-   "site": "packages/polaris-dossier/src/review-packet.ts:49",
+   "site": "packages/polaris-dossier/src/review-packet.ts:50",
    "call": "readBoundedFile",
    "text": "try { bytes = new Uint8Array(readBoundedFile(path.join(run, frozen), DRAFT_MAX_BYTES)); } catch (cause) {",
    "class": "already-bounded",
@@ -504,7 +504,7 @@
    "from": "syzygy-3efd.80"
   },
   {
-   "site": "packages/polaris-dossier/src/review-packet.ts:97",
+   "site": "packages/polaris-dossier/src/review-packet.ts:98",
    "call": "readBoundedFile",
    "text": "try { inventoryBytes = new Uint8Array(readBoundedFile(path.join(run, counted.file), RUN_TREE_BOUNDS.inventory)); } catch (cause) { return { ok: false, stage: 'inventory', reason: `the frozen inventory ${counted.file} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.inventory)})` }; }",
    "class": "already-bounded",
@@ -512,7 +512,7 @@
    "from": "syzygy-3efd.83"
   },
   {
-   "site": "packages/polaris-dossier/src/review.ts:141",
+   "site": "packages/polaris-dossier/src/review.ts:148",
    "call": "readBoundedFile",
    "text": "bytes = new Uint8Array(readBoundedFile(file, VERDICT_MAX_BYTES));",
    "class": "already-bounded",
@@ -520,7 +520,7 @@
    "from": "syzygy-3efd.83"
   },
   {
-   "site": "packages/polaris-dossier/src/review.ts:250",
+   "site": "packages/polaris-dossier/src/review.ts:257",
    "call": "readRecord",
    "text": "const check = readRecord(path.join(run, REVIEW_CHECKS, verdictFileName(kind, number)));",
    "class": "in-scope",
@@ -530,7 +530,7 @@
    "from": "syzygy-3efd.80"
   },
   {
-   "site": "packages/polaris-dossier/src/review.ts:255",
+   "site": "packages/polaris-dossier/src/review.ts:262",
    "call": "readBoundedFile",
    "text": "try { bytes = new Uint8Array(readBoundedFile(path.join(run, frozen), RUN_TREE_BOUNDS.verdict)); } catch (cause) { return no(`the frozen verdict ${frozen} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.verdict)})`); }",
    "class": "already-bounded",
@@ -538,7 +538,7 @@
    "from": "syzygy-3efd.83"
   },
   {
-   "site": "packages/polaris-dossier/src/review.ts:265",
+   "site": "packages/polaris-dossier/src/review.ts:272",
    "call": "readRecord",
    "text": "const prompt = readRecord(path.join(run, RUN_LAYOUT.reviews, reviewPromptRecordName(kind, session)));",
    "class": "in-scope",
@@ -548,7 +548,7 @@
    "from": "syzygy-3efd.80"
   },
   {
-   "site": "packages/polaris-dossier/src/review.ts:268",
+   "site": "packages/polaris-dossier/src/review.ts:275",
    "call": "readRecord",
    "text": "const launch = readRecord(path.join(run, RUN_LAYOUT.reviews, reviewLaunchRecordName(kind, session)));",
    "class": "in-scope",
@@ -590,7 +590,23 @@
    "from": "syzygy-3efd.83"
   },
   {
-   "site": "packages/polaris-dossier/src/session-handover.ts:541",
+   "site": "packages/polaris-dossier/src/scripted-benchmark-store.ts:157",
+   "call": "readPrivateBoundedFile",
+   "text": "const bytes = readPrivateBoundedFile(join(root, RUN_LAYOUT.config), RUN_RECORD_BYTES);",
+   "class": "already-bounded",
+   "why": "a call of the version 2.10 reader rule (readBoundedFile or readFileAsSized)",
+   "from": "syzygy-3efd.83"
+  },
+  {
+   "site": "packages/polaris-dossier/src/scripted-benchmark-store.ts:179",
+   "call": "readPrivateBoundedFile",
+   "text": "return inDirectory(directory, root => readPrivateBoundedFile(join(root, name), limit));",
+   "class": "already-bounded",
+   "why": "a call of the version 2.10 reader rule (readBoundedFile or readFileAsSized)",
+   "from": "syzygy-3efd.83"
+  },
+  {
+   "site": "packages/polaris-dossier/src/session-handover.ts:551",
    "call": "readRecord",
    "text": "const prompt = readRecord(path.join(run, recordsDir, role === 'inventory' ? promptRecordName(session) : reviewPromptRecordName(kind, session)));",
    "class": "in-scope",
