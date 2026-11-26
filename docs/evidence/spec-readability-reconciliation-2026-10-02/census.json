@@ -275,8 +275,8 @@
       }
     },
     "POC": {
-      "requirements": 30,
-      "scenarios": 57,
+      "requirements": 31,
+      "scenarios": 59,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -483,6 +483,13 @@
             "Clean titles are shown",
             "A title that fails screening is withheld",
             "Every list names an item with its title"
+          ]
+        },
+        "POC-REQ-064": {
+          "name": "Work items join the observed repository's commits by exact identifier tokens",
+          "scenarios": [
+            "Commits that name an item join it",
+            "A history that cannot be read is Unknown"
           ]
         }
       }

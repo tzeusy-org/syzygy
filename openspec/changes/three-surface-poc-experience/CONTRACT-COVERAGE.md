@@ -46,13 +46,13 @@ Every clause was judged exactly once and lands in exactly one part:
 | RFC1 | 39 | 12 | 4 | 23 |
 | RFC2 | 27 | 10 | 0 | 17 |
 | RFC3 | 38 | 0 | 0 | 38 |
-| RFC4 | 32 | 10 | 1 | 21 |
+| RFC4 | 32 | 11 | 1 | 20 |
 | RFC5 | 27 | 1 | 15 | 11 |
 | RFC6 | 28 | 10 | 1 | 17 |
 | RFC7 | 41 | 12 | 4 | 25 |
-| RFC8 | 32 | 16 | 1 | 15 |
+| RFC8 | 32 | 17 | 0 | 15 |
 | RFC9 | 60 | 17 | 2 | 41 |
-| **Total** | **324** | **88** | **28** | **208** |
+| **Total** | **324** | **90** | **27** | **207** |
 
 The Part A clause set is exactly the `contracts[]` union in the
 generated `GOVERNING-DEPENDENCIES.md` (verified below).
@@ -251,10 +251,15 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC8-13 | The rest of the normalized work-state, PR, VCS and liveness derivations | **Unknown** — Amendment row (eligibility); the metadata read carries no such inputs | — |
 | RFC8-17 | The blocked cause set includes the proven dependency cause and explicitly discloses cause Unknown when empty | covered — Amendment row (eligibility); the mixed edge fixture keeps the proven cause while overall eligibility is undetermined. Moved from Part B2 | POC-REQ-062 |
 | RFC8-17 | Derivations of `pr-wait`, `external` and `decision` blocked causes | **Unknown** — Amendment row (eligibility); those input families remain unread | — |
+| RFC4-22 | The work item ↔ commit link declares its basis, `naming-convention`, and is `reduced-fidelity` with cause `derived-from-convention`, and is never fuzzy-matched; a history that cannot be read is Unknown with its reason | covered — Amendment row (commit joins). Moved from Part B2 | POC-REQ-064 |
+| RFC4-22 | A per-item join that cannot be established renders Unknown | **Unknown** — Amendment row (commit joins); an item no read commit names gets no entry and no per-item state, and beyond the bound its absence is not "no commits" | — |
+| RFC4-22 | The work item ↔ branch/worktree, commit → PR, PR → merge-fact and gate-outcome → artifact links | **Unknown** — Amendment row (commit joins); those inputs are unread | — |
+| RFC8-21 | The chain's work item → commits link, joined on an RFC4-22 adapter join with its declared basis | covered — Amendment row (commit joins); the machine answer serves it. Moved from Part B1, whose row said POC-REQ-014 renders the chain's first link as Unknown and no requirement renders any other | POC-REQ-064 |
+| RFC8-21 | Trajectory walks the whole chain in both directions, rendering each link's basis and its thinness as thinness | **Unknown** — Amendment row (commit joins); no requirement renders the commit link or walks the chain | — |
 
 Part A totals `[Observed, computed by the sweep in "Verifying this
-table"]`: **179 consequence rows over 88 clauses — 129 covered,
-50 Unknown.**
+table"]`: **184 consequence rows over 90 clauses — 131 covered,
+53 Unknown.**
 
 **Amendment disclosure — the RFC1-26 closure row (ruling P-75 Q3).**
 The signed RFC1-26 row whose consequence reads "Relations outside the closed
@@ -339,12 +344,11 @@ direct requirement additions.
 | RFC7-3 | No other component/citation resolves to a Polaris rendering as authority | **Unknown** — applicable since Polaris is built and Cap1 runtime is reused, but no POC-REQ oracle checks cross-component citation | — |
 | RFC7-12 | Adjudicative source material (e.g. work-item text) rendered as owned text, never paraphrased in normative position | **Unknown** — applicable to any quoted work-item/structure fact; no POC-REQ tests verbatim-vs-paraphrase | — |
 | RFC7-16 | Status renders minimal (label+tier+reason+freshness), no composite maturity number/metric walls | **Unknown** — reuses Cap1 epistemic vocabulary; no POC-REQ tests the no-composite-score prohibition | — |
-| RFC8-21 | Trajectory walks the warrant→plan→materialization→work-item→run→PR→merge→reconciliation chain in both directions, each link with its declared basis, thinness rendered as thinness | **Unknown** — Amendment row, moved from Part B2: POC-REQ-014 renders the chain's first link, work item to warrant, as Unknown (RFC8-22), so the POC now renders part of the chain this clause governs; no requirement walks the chain or renders any other link | — |
 | RFC9-15 | Adding an entity must not perturb existing declared entities' coordinates across re-observations | **Unknown** — Borderline: POC's digest doesn't say whether coordinates are stable across repeated observations of an evolving repo one way or the other | — |
 | RFC9-26 | Channel/encoding meaning is declared once and stays consistent, never repurposed or unlegended | **Unknown** — POC-REQ-060's one-token-set requirement is adjacent, but no requirement tests a fail-closed unregistered-channel behavior or a formal registry | — |
 
-Part B1 totals `[Observed, computed]`: **29 consequence rows over
-28 clauses — all Unknown.**
+Part B1 totals `[Observed, computed]`: **28 consequence rows over
+27 clauses — all Unknown.**
 
 ## Part B2 — clauses believed not applicable (author's reading, non-binding)
 
@@ -451,7 +455,6 @@ are listed so the owner can review or contest each one directly.
 | RFC4-19 | The minimum durable run envelope's fields; no Execution Records exist in POC |
 | RFC4-20 | Enrichment-optionality and derivation-collision handling for run records; no run records exist to collide |
 | RFC4-21 | Model/timing/token/cost semantics on run records; no cost/token/run accounting in POC scope |
-| RFC4-22 | The change-accounting chain's join bases (work item↔branch↔commit↔PR↔merge↔gate); Trajectory reads raw work items only, no branch/commit/PR correlation |
 | RFC4-23 | Worker-liveness rendering from progress signals and a staleness bound carrying an effective state-(1) or state-(2) owner act, never the act itself as liveness evidence; Trajectory renders item status/instants, not live worker liveness — live-runtime relationship stays Unknown |
 | RFC4-24 | The reduced-fidelity granularity/cause labeling schema (RFC2-25 tiers); POC renders binary Observed/Unknown, not tiered reduced-fidelity facts |
 | RFC4-25 | Per-observer degradation-state registry declarations and cross-evaluation staleness rendering; no registry, no multi-evaluation staleness in the single-snapshot POC |
@@ -568,15 +571,15 @@ are listed so the owner can review or contest each one directly.
 | RFC9-51 | Illumination/highlight as non-truth-bearing interaction state; no highlighting feature established in POC scope |
 | RFC9-52 | The RFC-prose-to-OpenSpec authority boundary and coverage-matrix obligation; this non-binding sweep doesn't cite RFC9 as binding authority for the POC spec |
 
-Part B2 total `[Observed, computed]`: **208 clauses.**
+Part B2 total `[Observed, computed]`: **207 clauses.**
 
 ## Verifying this table
 
 - Denominator: re-run the two counting methods named above; both must
-  return 324 for RFC1–9, and 88 + 28 + 208 = 324.
+  return 324 for RFC1–9, and 90 + 27 + 207 = 324.
 - Mapped set: `python3 scripts/build_three_surface_poc_spec_dependencies.py
   --check` — Part A's clause column must equal the generated
-  `contracts[]` union (88 identifiers).
+  `contracts[]` union (90 identifiers).
 - Totals: count rows and dispositions in this file's tables (e.g.
   Python over the `| RFC` rows); the printed totals must match the
   count — they were computed that way, not transcribed.

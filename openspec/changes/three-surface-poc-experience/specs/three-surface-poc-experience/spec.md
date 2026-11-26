@@ -2140,3 +2140,95 @@ warrants:
   topology: []
   parent_requirements: [POC-REQ-010, POC-REQ-014, POC-REQ-020]
 ```
+
+### Requirement: POC-REQ-064 — Work items join the observed repository's commits by exact identifier tokens
+
+Group: Work-item observation. Form: **state projection/query**.
+
+**Required behavior.** In the observation pass that reads the work items,
+the POC SHALL read the observed repository's history once, from the
+repository revision the observation pins and from no other ref, newest
+first and at most 5,000 commits, and SHALL join each served work item to
+the commits that name it by the naming convention (RFC4-22).
+
+- **Token rule.** A commit names an item when a token of its subject equals
+  the item's identifier exactly. A token is a maximal run of letters,
+  digits, `.`, `_` and `-`, with `.`, `_` and `-` trimmed from its ends. No
+  prefix, substring or case-folded match joins, and a token that equals no
+  served identifier joins nothing.
+- **What is kept.** Each commit's subject is read for its tokens and then
+  dropped: it is never stored, served, indexed or sent. The join keeps only
+  each commit's hash, its committer instant and the identifiers it names.
+  The author is never read.
+- **What is served.** The machine answer serves the join once per
+  observation: the revision read, the basis `naming-convention`, the
+  fidelity `reduced-fidelity` with cause `derived-from-convention`, the
+  bound, the commits read, whether older history went unread, the joined
+  and unjoined commit counts, and, for each served item some commit names,
+  its commits newest first, each as its hash and instant.
+- **Unknown.** The join is Unknown, with one closed reason and nothing
+  else, when the work items were not observed
+  (`work-items-unobserved`), the pinned revision is not a commit identifier
+  (`repository-revision-unavailable`), the history read fails
+  (`commit-history-read-failed`), or a returned row has an unexpected shape
+  or the newest row is not the pinned revision
+  (`commit-history-malformed`). A failed join is never served as an
+  observed zero, and a missing join is never fuzzy-matched.
+- **When.** The read runs inside the observation pass, which runs only on a
+  human-triggered observation or rebuild (the daemon starting, an operator
+  re-observing, and the rebuild after an operator materializes), never on a
+  merge event. It computes no reconciliation chain state.
+- **Absence.** A served item with no entry is not observed to have no
+  commits: no commit read names it, and when older history went unread it
+  may be named there. The join serves no per-item Unknown.
+
+- **Scope.** The history read; the token rule; the machine answer's
+  `commitJoins`.
+- **Case (fixture, counterexamples and sweep).** An independent checker
+  supplies histories whose subjects name served items in brackets, after a
+  branch path in a merge subject and before sentence punctuation; near
+  misses (a longer identifier, another case, a prefix, a substring, an
+  unserved identifier); one subject naming two items and one naming an item
+  twice; an empty subject; a history one commit longer than the bound; and
+  each malformed row and each failure. Each subject carries a distinctive
+  marker. A real repository adds a naming commit after the observed
+  revision.
+- **Observable**: the machine answer's `commitJoins`; the read's arguments.
+- **Oracle**: literal expected values typed by the checker: the joined items
+  with their hashes and instants, the counts, the bound and truncation, each
+  Unknown reason; no marker and no subject text in either channel; the read
+  names the pinned revision and the bound and never `--all`; a commit after
+  the observed revision joins nothing.
+- **Oracle independence**: the fixture rows, hashes, instants and expected
+  joins are literals the checker types, never derived from the module.
+- **Falsifier**: a join from a prefix, substring, case-folded or unserved
+  token; a subject, or any marker, in either channel; a read not pinned to
+  the observed revision or not bounded; a commit after the observed revision
+  joined; a failed or malformed read served as observed; or counts that
+  disagree with the joined commits.
+
+#### Scenario: Commits that name an item join it
+
+- **WHEN** the history from the observed revision holds a commit whose
+  subject names a served item in brackets, a merge whose subject names one
+  after its branch path, and a commit naming no served item
+- **THEN** the machine answer serves each named item with those commits'
+  hashes and instants, two joined and one unjoined, basis
+  `naming-convention` and fidelity `reduced-fidelity`, and no subject text
+
+#### Scenario: A history that cannot be read is Unknown
+
+- **WHEN** the history read fails, or returns a row of an unexpected shape
+- **THEN** the join is Unknown with `commit-history-read-failed` or
+  `commit-history-malformed`, never an observed zero
+
+```yaml
+warrants:
+  primary: VIS-3
+  doctrine: [VIS-2, VIS-3]
+  contracts: [RFC4-22, RFC8-21]
+  policies: []
+  decisions: []
+  topology: []
+  parent_requirements: [POC-REQ-010, POC-REQ-020]
+```
