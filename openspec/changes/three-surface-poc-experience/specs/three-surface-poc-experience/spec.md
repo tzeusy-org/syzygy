@@ -2050,15 +2050,15 @@ secret policy and the active-content scan every observed body passes.
   title Unknown exists and the board states the policy and the admitted count.
 - **Lists.** Every Trajectory list that names a served work item names it
   by its identifier followed by its title as served, through one rendering
-  helper the card's title also uses: the epic outline's parent headings,
+  helper the card's title also uses: the grouped outline's parent headings,
   what a parent sits under, a parent-child cycle's members and the group it
   is stated under, a card's blockers, and the what-changed list. A list
   shows an admitted title escaped in a bidirectionally isolated element,
   clipped to its first 60 UTF-16 code units (59 when the 60th is the first
   half of a surrogate pair) and followed by a visible ellipsis when longer;
   the card and the machine answer keep the whole title. A list shows a
-  withheld title as the card's mark, naming its reason and referring to the
-  one withheld-title disclosure. An item not served at the observed revision
+  withheld title as a mark with the card's label, naming its reason and
+  referring to the one withheld-title disclosure. An item not served at the observed revision
   (a removed item in the what-changed list) stays named by its identifier
   alone. The ready set is the cards themselves and adds no list.
 - **Boundaries.** No title is sent to a model provider. No other free-text

@@ -401,9 +401,10 @@ function governingIntentRegion(model: PocModel, rendered: readonly TrajectoryLan
 }
 
 /** POC-REQ-063: how many UTF-16 code units of a title a list shows. The
- * card shows the whole title; a list names many items, some of them (a
- * card's blockers) without a count bound, so its title is clipped to keep the
- * page under the response ceiling. */
+ * card shows the whole title; a list names many items, so its title is
+ * clipped to cap each reference's cost. A card's blockers have no count
+ * bound, so this caps a page's bytes per blocker, not the page
+ * (syzygy-262m). */
 export const LIST_TITLE_LIMIT = 60;
 
 /** A title cut to `LIST_TITLE_LIMIT` code units, never inside a surrogate

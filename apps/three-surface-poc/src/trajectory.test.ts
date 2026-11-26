@@ -1988,10 +1988,11 @@ describe('Every Trajectory list names an item with its screened title (POC-REQ-0
   });
 
   // Review note 6 of R-T5S1-TITLES-1: a grouped page repeats the card of an
-  // item under two parents. The worst page here gives every title the most
-  // bytes escaping can make (500 `"`), every item two parents and three
-  // blockers, and a full changed list.
-  it('keeps the worst grouped and default pages, titles everywhere, under the human response ceiling', async () => {
+  // item under two parents. This fixture gives every title the most bytes
+  // escaping can make (500 `"`), every item two parents and three blockers,
+  // and a full changed list. It measures that fan-in, not a bound: blockers
+  // per card are unbounded (syzygy-262m).
+  it('keeps a page of most-escaped titles with two parents and three blockers per item under 90% of the human response ceiling', async () => {
     const worst = '"'.repeat(500);
     const ids = Array.from({ length: 260 }, (_, index) => `bu-w${String(index).padStart(3, '0')}`);
     const parents = ids.slice(0, 10);
