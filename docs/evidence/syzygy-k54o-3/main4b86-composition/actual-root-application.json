@@ -1,0 +1,49 @@
+{
+  "sourceCommit": "e22d3da2f23ff61cb87c67ca4244049d075edee2",
+  "tree": "736b45b9889079da6587a3bd5478b13edbe3eb28",
+  "parents": [
+    "35434f2ebf965226d6b184e8b10926f173e05f53",
+    "4b86e4285e7c78ddf049f64c9a3fd95fc0952cf3"
+  ],
+  "reviewedMainProposalTree": "3dbdff3ffafa771909208512b43ae63771a34b27",
+  "manifestSHA256": "35979969c0de138ea4c2756376fc1578a0c0ec77820a7dc85c91cefd1992e778",
+  "rawReviewSHA256": "64a805ae08b3ef97a5ed863a0b6363cea41a91800f0f85cbfe3f4c85e38f5717",
+  "candidateInventoryPopulation": 12575,
+  "actualIndexPopulation": 12575,
+  "differencesFromReviewedMainProposal": {
+    "packages/polaris-dossier/README.md": {
+      "reviewed": [
+        "100644",
+        "03f29c81729139f2c8d21f17cf0db9f1503d7724"
+      ],
+      "actual": [
+        "100644",
+        "fcb5b656f7a7097b6a02e2634e0c2f65c409b3ad"
+      ]
+    },
+    "packages/polaris-dossier/src/policy-git-native.test.ts": {
+      "reviewed": [
+        "100644",
+        "b5f6da4823d3dd9fc0e57c4b8661e5ee7ccd5ce5"
+      ],
+      "actual": [
+        "100644",
+        "dc12d061892d193739b1c6a713c67cf1a6796f36"
+      ]
+    },
+    "packages/polaris-dossier/src/policy-git.c": {
+      "reviewed": [
+        "100644",
+        "8973aa2010944f9fa792fb9dfebbac9f15487006"
+      ],
+      "actual": [
+        "100644",
+        "99ae3fc27eeeabe85992ffe50eea143ec323409c"
+      ]
+    }
+  },
+  "readmeComposition": "exact reviewed candidate README plus exact reviewed pidfd paragraph at single unchanged build paragraph anchor",
+  "pathsComparedToNativeParent": 43,
+  "adoption": "A322 pending proof row before publication",
+  "A65Mapping": "main A65 preserved exactly; unlanded branch A65 -> A321 and A169 live citation"
+}

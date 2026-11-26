@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "e22d3da2f23ff61cb87c67ca4244049d075edee2",
+  "stagedTreeDuringCheck": "9c69feb92a577e601c01922fff3739db97afee2c",
+  "command": [
+    "python3",
+    "scripts/check_governance.py"
+  ],
+  "TMPDIR": "/home/orca/.tmp",
+  "exitCode": 0,
+  "counts": {
+    "OK": 22,
+    "WARN": 17,
+    "FAIL": 0
+  },
+  "wholeCheckPopulation": 39,
+  "logSHA256": "9d1f11716a7df79f5d1227de2e9f511566961dfad4350df22cb7a4ce5e07cae4",
+  "scope": "ordinary checker only; not full canonical battery"
+}

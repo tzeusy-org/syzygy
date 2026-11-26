@@ -1,0 +1,740 @@
+{
+  "format": "host-pidfd-evidence/1",
+  "sourceCommit": "35434f2ebf965226d6b184e8b10926f173e05f53",
+  "sourceTree": "1bec69f1fb57c97af5c528759890d285d52c1c19",
+  "proofAssemblyHead": "e22d3da2f23ff61cb87c67ca4244049d075edee2",
+  "scope": "source acceptance only; genuine ordinary recovery pending",
+  "archiveFiles": [
+    {
+      "path": "candidate-R1/README.md",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/README.md",
+      "bytes": 6204,
+      "sha256": "dc0211f29b3c51445ad52c75a99f76478f0205444c3d9cfd02c2340acc081986"
+    },
+    {
+      "path": "candidate-R1/SHA256SUMS",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/SHA256SUMS",
+      "bytes": 1656,
+      "sha256": "bc1e90ba6d412f6973611d31b2cc36e8a5ef6cc3d6057c25e9b226ec616253ad"
+    },
+    {
+      "path": "candidate-R1/candidate/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/candidate/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "bytes": 37187,
+      "sha256": "ce9950cdd82f78a8c0ea115086e5b7777e1007f152541a32c69e852b0330f6d5"
+    },
+    {
+      "path": "candidate-R1/candidate/packages/polaris-dossier/src/policy-git.c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/candidate/packages/polaris-dossier/src/policy-git.c",
+      "bytes": 17950,
+      "sha256": "47ca11e2648d14e9114edd2e6932e783057261a7a4c8c847d1a981895152ff19"
+    },
+    {
+      "path": "candidate-R1/candidate.patch",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/candidate.patch",
+      "bytes": 9958,
+      "sha256": "f374e0a1485f68e3e5120b36800477686b447d3b1b70db889fed084870ec6fa0"
+    },
+    {
+      "path": "candidate-R1/manifest.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/manifest.json",
+      "bytes": 2784,
+      "sha256": "b0cbff8012506f644c60e731fe2ba389b9ff0f4ed77277bb31babb886f34ec80"
+    },
+    {
+      "path": "candidate-R1/measurement-binding.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/measurement-binding.json",
+      "bytes": 2094,
+      "sha256": "d7e81948f484f901c920c2f3369b341ea484dacd459228f9a9f4e299e957e6da"
+    },
+    {
+      "path": "candidate-R1/original/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/original/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "bytes": 31949,
+      "sha256": "d30c5ac7706f304ba85f7312b1e0ef615cc8c91f53add507077dead59982fb6c"
+    },
+    {
+      "path": "candidate-R1/original/packages/polaris-dossier/src/policy-git-native.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/original/packages/polaris-dossier/src/policy-git-native.ts",
+      "bytes": 11991,
+      "sha256": "b899ceba35cce3c6561a3e7bae7d8b97d5a05865468ce49dc5f37ccede9c2971"
+    },
+    {
+      "path": "candidate-R1/original/packages/polaris-dossier/src/policy-git-protocol.h",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/original/packages/polaris-dossier/src/policy-git-protocol.h",
+      "bytes": 1236,
+      "sha256": "7581b1b969c752427e08360ea34b4439c3d393a053a0fda18727ce019d337c95"
+    },
+    {
+      "path": "candidate-R1/original/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/original/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "bytes": 13042,
+      "sha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c"
+    },
+    {
+      "path": "candidate-R1/original/packages/polaris-dossier/src/policy-git.c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/original/packages/polaris-dossier/src/policy-git.c",
+      "bytes": 17441,
+      "sha256": "ba4f7e3a1da1926fb5b853b51863f92ecbbdd50a8780db4e4a245e6eb9703eb9"
+    },
+    {
+      "path": "candidate-R1/original/packages/polaris-dossier/src/policy-git.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/original/packages/polaris-dossier/src/policy-git.ts",
+      "bytes": 6757,
+      "sha256": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3"
+    },
+    {
+      "path": "candidate-R1/original/packages/polaris-dossier/src/policy-snapshot.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/original/packages/polaris-dossier/src/policy-snapshot.ts",
+      "bytes": 15887,
+      "sha256": "d70ac5f8487edb1a13758ed321714db19c1247de040971d148981f752e9279ef"
+    },
+    {
+      "path": "candidate-R1/original/packages/polaris-dossier/src/url-parent-adoption.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/original/packages/polaris-dossier/src/url-parent-adoption.ts",
+      "bytes": 16441,
+      "sha256": "65fa616855825a68b23a741ea0dd10ce9eed122d8ae21064d3ac1b61e41ce7df"
+    },
+    {
+      "path": "candidate-R1/static-proof.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-70fc55-R1/static-proof.json",
+      "bytes": 1219,
+      "sha256": "0c500e26f2e8f0c6c13c07ee15f23498bfd95a6addc4f3f518cc6298b779f264"
+    },
+    {
+      "path": "candidate-R2/R1-owning-failure-terminal.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/R1-owning-failure-terminal.json",
+      "bytes": 3096,
+      "sha256": "47a6f929fe89344d9a854192c4e9880d135995fa750b196a7c5a107345c361cf"
+    },
+    {
+      "path": "candidate-R2/README.md",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/README.md",
+      "bytes": 2244,
+      "sha256": "d98449a1475f8e3d4b1e026db18542b09c131a1ad56f042534fca81dc2e76099"
+    },
+    {
+      "path": "candidate-R2/SHA256SUMS",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/SHA256SUMS",
+      "bytes": 1754,
+      "sha256": "c75d9d5691d0a0c12740180b30daf543855507de325d16eee849d37137358612"
+    },
+    {
+      "path": "candidate-R2/candidate/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/candidate/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "bytes": 37253,
+      "sha256": "f5e494f17f9dfbaf71dbe55058700d2f33fc7020b2b6521c08651d13f0fcd27d"
+    },
+    {
+      "path": "candidate-R2/candidate/packages/polaris-dossier/src/policy-git.c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/candidate/packages/polaris-dossier/src/policy-git.c",
+      "bytes": 17950,
+      "sha256": "47ca11e2648d14e9114edd2e6932e783057261a7a4c8c847d1a981895152ff19"
+    },
+    {
+      "path": "candidate-R2/candidate.patch",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/candidate.patch",
+      "bytes": 10027,
+      "sha256": "a9405a4d30c92158e8e769a6a283e501e9c8950dd2ee621358a5f8037ec3185c"
+    },
+    {
+      "path": "candidate-R2/fixture-correction.patch",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/fixture-correction.patch",
+      "bytes": 643,
+      "sha256": "771d5a9bdd875e439829af4a167eedac9160223f27c1e864eb2be99bde4f24fd"
+    },
+    {
+      "path": "candidate-R2/manifest.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/manifest.json",
+      "bytes": 3109,
+      "sha256": "7d7eb98388f77dad8facbb865dff72740509205d82da7cb505fc8d5df3a1f1a9"
+    },
+    {
+      "path": "candidate-R2/original/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/original/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "bytes": 31949,
+      "sha256": "d30c5ac7706f304ba85f7312b1e0ef615cc8c91f53add507077dead59982fb6c"
+    },
+    {
+      "path": "candidate-R2/original/packages/polaris-dossier/src/policy-git-native.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/original/packages/polaris-dossier/src/policy-git-native.ts",
+      "bytes": 11991,
+      "sha256": "b899ceba35cce3c6561a3e7bae7d8b97d5a05865468ce49dc5f37ccede9c2971"
+    },
+    {
+      "path": "candidate-R2/original/packages/polaris-dossier/src/policy-git-protocol.h",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/original/packages/polaris-dossier/src/policy-git-protocol.h",
+      "bytes": 1236,
+      "sha256": "7581b1b969c752427e08360ea34b4439c3d393a053a0fda18727ce019d337c95"
+    },
+    {
+      "path": "candidate-R2/original/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/original/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "bytes": 13042,
+      "sha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c"
+    },
+    {
+      "path": "candidate-R2/original/packages/polaris-dossier/src/policy-git.c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/original/packages/polaris-dossier/src/policy-git.c",
+      "bytes": 17441,
+      "sha256": "ba4f7e3a1da1926fb5b853b51863f92ecbbdd50a8780db4e4a245e6eb9703eb9"
+    },
+    {
+      "path": "candidate-R2/original/packages/polaris-dossier/src/policy-git.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/original/packages/polaris-dossier/src/policy-git.ts",
+      "bytes": 6757,
+      "sha256": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3"
+    },
+    {
+      "path": "candidate-R2/original/packages/polaris-dossier/src/policy-snapshot.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/original/packages/polaris-dossier/src/policy-snapshot.ts",
+      "bytes": 15887,
+      "sha256": "d70ac5f8487edb1a13758ed321714db19c1247de040971d148981f752e9279ef"
+    },
+    {
+      "path": "candidate-R2/original/packages/polaris-dossier/src/url-parent-adoption.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/original/packages/polaris-dossier/src/url-parent-adoption.ts",
+      "bytes": 16441,
+      "sha256": "65fa616855825a68b23a741ea0dd10ce9eed122d8ae21064d3ac1b61e41ce7df"
+    },
+    {
+      "path": "candidate-R2/static-proof.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-df318-R2/static-proof.json",
+      "bytes": 1436,
+      "sha256": "2a11591d145e555c2692b6f627e625e78ab3d6d20bc5f7c574ab4446f86e6326"
+    },
+    {
+      "path": "owning-R1/native.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-1/native.log",
+      "bytes": 5258,
+      "sha256": "d9cbd673f3a1af5991dc28ca9a0c0ba57e6538f95a3979ae90d938aaebc6069f"
+    },
+    {
+      "path": "owning-R1/terminal.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-1/terminal.json",
+      "bytes": 3096,
+      "sha256": "47a6f929fe89344d9a854192c4e9880d135995fa750b196a7c5a107345c361cf"
+    },
+    {
+      "path": "owning-R1/typecheck.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-1/typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "owning-R1/vitest.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-1/vitest.json",
+      "bytes": 8781,
+      "sha256": "b0bc61067fa4f0640ab9f8f986a790e24cf4e77ca767e2904b2d25186a7274ae"
+    },
+    {
+      "path": "owning-R2/mutant-ignore-pidfd-failure.c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-R2/mutant-ignore-pidfd-failure.c",
+      "bytes": 17958,
+      "sha256": "3a291ecf2d0c2872ba924b67d29249e4f745cae39720370b01abd1f6fdaf5a15"
+    },
+    {
+      "path": "owning-R2/mutant-ignore-pidfd-failure.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-R2/mutant-ignore-pidfd-failure.json",
+      "bytes": 7757,
+      "sha256": "dcb774949aec621ca226be8a1a04455b7b36583e0dac4b25dc66c4698074f39b"
+    },
+    {
+      "path": "owning-R2/mutant-ignore-pidfd-failure.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-R2/mutant-ignore-pidfd-failure.log",
+      "bytes": 4298,
+      "sha256": "9c88a99852e5a39be95027e7ec2d0ed43c145ea9db5bef13cb6b9d8fe156a174"
+    },
+    {
+      "path": "owning-R2/mutant-leak-pidfd.c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-R2/mutant-leak-pidfd.c",
+      "bytes": 17974,
+      "sha256": "542f6288130749f47bcc877850fee108a3cd84be1aa6da21e3d40bfd38e70e98"
+    },
+    {
+      "path": "owning-R2/mutant-leak-pidfd.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-R2/mutant-leak-pidfd.json",
+      "bytes": 8153,
+      "sha256": "ac855ec48d2577a980adb7733902e272fead0ff0f51b515df52ac846d4442fc5"
+    },
+    {
+      "path": "owning-R2/mutant-leak-pidfd.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-R2/mutant-leak-pidfd.log",
+      "bytes": 3731,
+      "sha256": "c675789ec8e52ec0ff0267615c29a82c9de138f9b66c4edea1fb301e440de6f4"
+    },
+    {
+      "path": "owning-R2/mutant-predecessor.c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-R2/mutant-predecessor.c",
+      "bytes": 17441,
+      "sha256": "ba4f7e3a1da1926fb5b853b51863f92ecbbdd50a8780db4e4a245e6eb9703eb9"
+    },
+    {
+      "path": "owning-R2/mutant-predecessor.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-R2/mutant-predecessor.json",
+      "bytes": 7683,
+      "sha256": "9f9a6156f43d25d99c81db83b04ff921c08a4c05db1bb5c297a21b3a4d7289b1"
+    },
+    {
+      "path": "owning-R2/mutant-predecessor.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-R2/mutant-predecessor.log",
+      "bytes": 4291,
+      "sha256": "ffc57d4275a727ca41bb29d612f9d6c7e9ab17ab242a91683c7171e520b77725"
+    },
+    {
+      "path": "owning-R2/mutation-fragments.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-R2/mutation-fragments.json",
+      "bytes": 43991,
+      "sha256": "78405a6fb9c3ba2a99a5fd65cea3eb7a01aea64f0d4d46564616a85c4b9a38d9"
+    },
+    {
+      "path": "owning-R2/progress.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-R2/progress.json",
+      "bytes": 7282,
+      "sha256": "8b6f44752920f086613b6765c53ace55128bd83f82f04e5cddfb581db2dc720b"
+    },
+    {
+      "path": "owning-R2/repaired-failure-case.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-R2/repaired-failure-case.json",
+      "bytes": 6915,
+      "sha256": "68d5f9e88153bb54248a3f546451b63bf5a2a1c0639ba526ca97e117acd6c271"
+    },
+    {
+      "path": "owning-R2/repaired-failure-case.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-R2/repaired-failure-case.log",
+      "bytes": 635,
+      "sha256": "d1f04bb17414e8972795ba95bb8116b831881690b5733e64225e477eb9e1ce4c"
+    },
+    {
+      "path": "owning-R2/terminal.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-owning-df318-R2/terminal.json",
+      "bytes": 7343,
+      "sha256": "64b0859ae634c0a51bcc59ed6e27c23a7c01f3fdb21d5e366b29e2dadfac99fa"
+    },
+    {
+      "path": "paired-operator/README.md",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-paired-df318-R1/README.md",
+      "bytes": 3264,
+      "sha256": "ce543932dfd4b6afaf7516a621683afea429244267c83e40c9331568ca11cbbe"
+    },
+    {
+      "path": "paired-operator/SHA256SUMS",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-paired-df318-R1/SHA256SUMS",
+      "bytes": 379,
+      "sha256": "39b9c01cd3362829740d8fd60234ae29e95dc3cdf87358164e93d48dafa1eaa7"
+    },
+    {
+      "path": "paired-operator/candidate.c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-paired-df318-R1/candidate.c",
+      "bytes": 17950,
+      "sha256": "47ca11e2648d14e9114edd2e6932e783057261a7a4c8c847d1a981895152ff19"
+    },
+    {
+      "path": "paired-operator/manifest.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-paired-df318-R1/manifest.json",
+      "bytes": 1007,
+      "sha256": "e5bd9baca3bae5cf8931e4d86a054a5ad85eaa92f8f60530f3a50c1f8508aee5"
+    },
+    {
+      "path": "paired-operator/old.c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-paired-df318-R1/old.c",
+      "bytes": 17441,
+      "sha256": "ba4f7e3a1da1926fb5b853b51863f92ecbbdd50a8780db4e4a245e6eb9703eb9"
+    },
+    {
+      "path": "paired-operator/run.py",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-host-pidfd-paired-df318-R1/run.py",
+      "bytes": 6491,
+      "sha256": "a88dae5afe33034856a1c439ed40187fff545526482c70914398396d35969112"
+    },
+    {
+      "path": "paired-execution/01-A/command.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/01-A/command.log",
+      "bytes": 582,
+      "sha256": "197b8aec44316bca2902987a94e6805a8ca50aa5c6514fc38cf70f6b712d6885"
+    },
+    {
+      "path": "paired-execution/01-A/vitest.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/01-A/vitest.json",
+      "bytes": 6915,
+      "sha256": "5446d76f124cae3e3ec03e00c7af1c51597b735bc24f3f764e44ad42a0440f54"
+    },
+    {
+      "path": "paired-execution/02-B/command.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/02-B/command.log",
+      "bytes": 581,
+      "sha256": "f63620d937858d9196a502e724d9869fa23abef19c786b6bfb4f920118722c8b"
+    },
+    {
+      "path": "paired-execution/02-B/vitest.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/02-B/vitest.json",
+      "bytes": 6908,
+      "sha256": "45f24af45b37e686f1c786c538ffa925e3e143060e5257079615e82f81d1a342"
+    },
+    {
+      "path": "paired-execution/03-B/command.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/03-B/command.log",
+      "bytes": 580,
+      "sha256": "fa5c3c7ea1f8d4a40621466aa388c926edaa489dc198deed721d6b429f5bf14b"
+    },
+    {
+      "path": "paired-execution/03-B/vitest.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/03-B/vitest.json",
+      "bytes": 6916,
+      "sha256": "4c15d275dd010e7adafffbea0f6ab76502c630a2b93277b21172ba07e496ac19"
+    },
+    {
+      "path": "paired-execution/04-A/command.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/04-A/command.log",
+      "bytes": 580,
+      "sha256": "ac7a3d4e7dd651b6c9d1e42579b59d99c665f4634a5c0857b9d84b1f9c81ef43"
+    },
+    {
+      "path": "paired-execution/04-A/vitest.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/04-A/vitest.json",
+      "bytes": 6916,
+      "sha256": "d9d4c13086993e4aff3168a4bc91b16ec4a1ceade1bbd785accb0e6c1ff0028a"
+    },
+    {
+      "path": "paired-execution/05-B/command.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/05-B/command.log",
+      "bytes": 580,
+      "sha256": "451ccde3e58b5cfa7e918bd6ab519f99166c6064966fea59a85abffd9f2928fd"
+    },
+    {
+      "path": "paired-execution/05-B/vitest.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/05-B/vitest.json",
+      "bytes": 6908,
+      "sha256": "1104c58a01f9ad3c0a007117cc4a2dbedb73b4dd656ac8dea726a5d947d6e05d"
+    },
+    {
+      "path": "paired-execution/06-A/command.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/06-A/command.log",
+      "bytes": 580,
+      "sha256": "546979ef2959b23a9072442317cdcf637395086a358e70127fcd634596ae3529"
+    },
+    {
+      "path": "paired-execution/06-A/vitest.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/06-A/vitest.json",
+      "bytes": 6909,
+      "sha256": "d1326dd2281c9ef90dd9df3e8a99c82567b33264b6bc0de50e4dde0e29d6ef48"
+    },
+    {
+      "path": "paired-execution/07-A/command.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/07-A/command.log",
+      "bytes": 580,
+      "sha256": "d3b38f3007d210e7fc5b90754cc1cb310aefd0cec9a013d9059c355d58768d98"
+    },
+    {
+      "path": "paired-execution/07-A/vitest.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/07-A/vitest.json",
+      "bytes": 6909,
+      "sha256": "23a3ddf191ed75cf543862dc34c3e39d6771dce162c72b6c7f5b4ee386fd7760"
+    },
+    {
+      "path": "paired-execution/08-B/command.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/08-B/command.log",
+      "bytes": 580,
+      "sha256": "0d0129078262a46bf79ed48b5f4fd46e556f1fc01baf9ab69a6c711ddf223470"
+    },
+    {
+      "path": "paired-execution/08-B/vitest.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/08-B/vitest.json",
+      "bytes": 6915,
+      "sha256": "57d30198083136816cd374f2902fb7c6d0a11402b8823e7f44cc03bc6bf21fe6"
+    },
+    {
+      "path": "paired-execution/result.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-paired-35434-1/result.json",
+      "bytes": 10567,
+      "sha256": "7e6bfb41d6e3d96ef45f2bdbd52db9089d66649c768661078abfc8082c69da31"
+    },
+    {
+      "path": "source-and-operators/host-pidfd-source-commit.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-source-commit.json",
+      "bytes": 790,
+      "sha256": "4cb3dd35728bca0f340f18dd49fe69322d4b547b9dc2714bf1915751266ef03a"
+    },
+    {
+      "path": "source-and-operators/run-host-pidfd-r2.py",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/run-host-pidfd-r2.py",
+      "bytes": 3927,
+      "sha256": "e63d1abd06dc4ccf896774bd4c251be435457291c2a3470acb40f15af7bd16f3"
+    },
+    {
+      "path": "source-and-operators/host-pidfd-readme-paragraph.md",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-readme-paragraph.md",
+      "bytes": 413,
+      "sha256": "d272f2ada01b5f35135f6f7b8a81b37f637f1a4f0a2875cb93a3af7e1ab09022"
+    },
+    {
+      "path": "source-and-operators/host-pidfd-readme-paragraph-R2.md",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/host-pidfd-readme-paragraph-R2.md",
+      "bytes": 494,
+      "sha256": "4e22f2219819af5e237da58889c8b9da8047ac97b0bedda2373d483a88abc60f"
+    },
+    {
+      "path": "microdiagnostic-R4/manifest.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/manifest.json",
+      "bytes": 3909,
+      "sha256": "c2c31fd9dbcc7671407ed500933f47f7f95a29e6fc55d6f3684ee507812505ea"
+    },
+    {
+      "path": "microdiagnostic-R4/README.md",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/README.md",
+      "bytes": 10125,
+      "sha256": "aa9e567ec1b65dd3eb184bedce41758e4a2657f7592c2ada5131dd26da26bd46"
+    },
+    {
+      "path": "microdiagnostic-R4/SHA256SUMS",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/SHA256SUMS",
+      "bytes": 2760,
+      "sha256": "003bbc58027c5b6ca1521a71cde12bbcff54f9273bb65c6e892b61394ddf3aa3"
+    },
+    {
+      "path": "microdiagnostic-R4/run-isolated.py",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/run-isolated.py",
+      "bytes": 9965,
+      "sha256": "390eba09c06b8eb5423f4db22dd9cd1bf3c23a2ee120249a5e4292839c3b8259"
+    },
+    {
+      "path": "microdiagnostic-R4/diagnostic.patch",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/diagnostic.patch",
+      "bytes": 17579,
+      "sha256": "aba05490b3aabfb0411077dc275cf447ffdbbe9bd7835ad37c8a709ae6b625d8"
+    },
+    {
+      "path": "microdiagnostic-R4/focus-binding.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/focus-binding.json",
+      "bytes": 1721,
+      "sha256": "d59c609bc8ac51abe4781281f52d11dd8b713067b670a6e3df46310567ce8e82"
+    },
+    {
+      "path": "microdiagnostic-R4/subject-change-receipt.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/subject-change-receipt.json",
+      "bytes": 6526,
+      "sha256": "28ca46c75a87aae05098785dbc8f2d8dc1a5ca5cf942752916e552fae62f64dc"
+    },
+    {
+      "path": "microdiagnostic-R4/static-proof.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/static-proof.json",
+      "bytes": 1773,
+      "sha256": "98ee3092a6d98d65864c36cac74c27a55ce8bd77a922484732950631478e1a37"
+    },
+    {
+      "path": "microdiagnostic-R4/original/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/original/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "bytes": 31949,
+      "sha256": "d30c5ac7706f304ba85f7312b1e0ef615cc8c91f53add507077dead59982fb6c"
+    },
+    {
+      "path": "microdiagnostic-R4/original/packages/polaris-dossier/src/policy-git-native.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/original/packages/polaris-dossier/src/policy-git-native.ts",
+      "bytes": 11991,
+      "sha256": "b899ceba35cce3c6561a3e7bae7d8b97d5a05865468ce49dc5f37ccede9c2971"
+    },
+    {
+      "path": "microdiagnostic-R4/original/packages/polaris-dossier/src/policy-git-protocol.h",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/original/packages/polaris-dossier/src/policy-git-protocol.h",
+      "bytes": 1236,
+      "sha256": "7581b1b969c752427e08360ea34b4439c3d393a053a0fda18727ce019d337c95"
+    },
+    {
+      "path": "microdiagnostic-R4/original/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/original/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "bytes": 13042,
+      "sha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c"
+    },
+    {
+      "path": "microdiagnostic-R4/original/packages/polaris-dossier/src/policy-git.c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/original/packages/polaris-dossier/src/policy-git.c",
+      "bytes": 17441,
+      "sha256": "ba4f7e3a1da1926fb5b853b51863f92ecbbdd50a8780db4e4a245e6eb9703eb9"
+    },
+    {
+      "path": "microdiagnostic-R4/original/packages/polaris-dossier/src/policy-git.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/original/packages/polaris-dossier/src/policy-git.ts",
+      "bytes": 6757,
+      "sha256": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3"
+    },
+    {
+      "path": "microdiagnostic-R4/original/packages/polaris-dossier/src/policy-snapshot.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/original/packages/polaris-dossier/src/policy-snapshot.ts",
+      "bytes": 15887,
+      "sha256": "d70ac5f8487edb1a13758ed321714db19c1247de040971d148981f752e9279ef"
+    },
+    {
+      "path": "microdiagnostic-R4/original/packages/polaris-dossier/src/url-parent-adoption.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/original/packages/polaris-dossier/src/url-parent-adoption.ts",
+      "bytes": 16441,
+      "sha256": "65fa616855825a68b23a741ea0dd10ce9eed122d8ae21064d3ac1b61e41ce7df"
+    },
+    {
+      "path": "microdiagnostic-R4/overlay/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/overlay/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "bytes": 32544,
+      "sha256": "7cdb29fb13831c08f86b8c67bb6b411bc872d7f17d2f12e72175aa6ec557abaa"
+    },
+    {
+      "path": "microdiagnostic-R4/overlay/packages/polaris-dossier/src/policy-git-native.ts",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/overlay/packages/polaris-dossier/src/policy-git-native.ts",
+      "bytes": 14225,
+      "sha256": "733c2f73904f2247af33af32090696e4c9b7400c7aea40efc73d6194d55b0596"
+    },
+    {
+      "path": "microdiagnostic-R4/overlay/packages/polaris-dossier/src/policy-git-protocol.h",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/overlay/packages/polaris-dossier/src/policy-git-protocol.h",
+      "bytes": 1452,
+      "sha256": "5419147df18a5e2bd2bb5d134a3a46921dfc7663d47a132678add212e7e16a9c"
+    },
+    {
+      "path": "microdiagnostic-R4/overlay/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/overlay/packages/polaris-dossier/src/policy-git-supervisor.c",
+      "bytes": 14494,
+      "sha256": "b169796b5fc9464c7e79c67ff321aa136682d1625839e4fd22808639ef202ea0"
+    },
+    {
+      "path": "microdiagnostic-R4/overlay/packages/polaris-dossier/src/policy-git.c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/overlay/packages/polaris-dossier/src/policy-git.c",
+      "bytes": 19861,
+      "sha256": "c7123913cf90884d7796a3cfe316afc01f37f95ec06a12469954c3fdc25a3e4d"
+    },
+    {
+      "path": "microdiagnostic-R4/execution-1/checkout.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/execution-1/checkout.log",
+      "bytes": 87,
+      "sha256": "24a8446003dafcb348b6b91818785c6c36c10a868aee9b66ca8b145d56b8cac6"
+    },
+    {
+      "path": "microdiagnostic-R4/execution-1/clone.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/execution-1/clone.log",
+      "bytes": 124,
+      "sha256": "dac1e4dfa024e992f82ad74636873f29e070e9d8954ff5eed478d96cc849f5aa"
+    },
+    {
+      "path": "microdiagnostic-R4/execution-1/commands.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/execution-1/commands.json",
+      "bytes": 3538,
+      "sha256": "0fb63e45393d7d6de92bc09e22bcd879aff243335adaa54b8efba2ac05fe2952"
+    },
+    {
+      "path": "microdiagnostic-R4/execution-1/diagnostic-focused.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/execution-1/diagnostic-focused.log",
+      "bytes": 27885,
+      "sha256": "7513220e2c0e6719b85488d48724b5a8c04f7b8fb91b99fbaca092b768879c3c"
+    },
+    {
+      "path": "microdiagnostic-R4/execution-1/diagnostic-vitest.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/execution-1/diagnostic-vitest.json",
+      "bytes": 6608,
+      "sha256": "c6bdb6709c15eda6c9cf742a098081307d84fa1fa8508968082cca8268315924"
+    },
+    {
+      "path": "microdiagnostic-R4/execution-1/install.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/execution-1/install.log",
+      "bytes": 29,
+      "sha256": "d3f47e65312d8045a7def831d655445aa849eeb0ed17ce62f57a96924cc735ed"
+    },
+    {
+      "path": "microdiagnostic-R4/execution-1/metrics.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/execution-1/metrics.json",
+      "bytes": 31546,
+      "sha256": "ab831a20f254e1648d5a471ff706ea48a1a79f964cdd457afa9d51ecef5ef958"
+    },
+    {
+      "path": "microdiagnostic-R4/execution-1/node-version.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/execution-1/node-version.log",
+      "bytes": 8,
+      "sha256": "6f04c633350579b737efe7ea4c4c02ffd9f9081ca024378e28970231550211d4"
+    },
+    {
+      "path": "microdiagnostic-R4/execution-1/original-focused.log",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/execution-1/original-focused.log",
+      "bytes": 3872,
+      "sha256": "73660b472bc21a242687730c4af964c99a884fd0fa030cc703c4b819626e5178"
+    },
+    {
+      "path": "microdiagnostic-R4/execution-1/original-vitest.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/execution-1/original-vitest.json",
+      "bytes": 6606,
+      "sha256": "b7f0949bfc1c73660da3111324acc66acb0e45c6103c54bd0d3541e47629ab73"
+    },
+    {
+      "path": "microdiagnostic-R4/execution-1/result.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4/execution-1/result.json",
+      "bytes": 5019,
+      "sha256": "9b38f244731b2149537a2d0d10ff2825c5b519fd7acc8b75c528e85ed67307eb"
+    },
+    {
+      "path": "microdiagnostic-motivation/policy-git-microdiagnostic-70fc55-R4-root-binding-review.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R4-root-binding-review.json",
+      "bytes": 832,
+      "sha256": "68e8c673dd69543e6b6674ec7e1b0334bc5b2f5df7f4b220f53950e3bf6953e8"
+    },
+    {
+      "path": "microdiagnostic-motivation/policy-git-microdiagnostic-70fc55-R3-rejected-binding.json",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/policy-git-microdiagnostic-70fc55-R3-rejected-binding.json",
+      "bytes": 825,
+      "sha256": "ef9c9ac1624914916488f5fb5bcc979d9446eef043511dc0a2dc0ff63f278a48"
+    }
+  ],
+  "rawReviews": [
+    {
+      "path": "docs/reviews/syzygy-k54o-3/f3-host-pidfd-r1-review-RAW.md",
+      "source": "/home/orca/.tmp/f3-host-pidfd-r1-review-RAW.md",
+      "bytes": 6319,
+      "sha256": "09e53c444ede3c1d1c8c00e9edbc13af506f708f40686247239806dcead02fef"
+    },
+    {
+      "path": "docs/reviews/syzygy-k54o-3/f3-host-pidfd-r2-review-RAW.md",
+      "source": "/home/orca/.tmp/f3-host-pidfd-r2-review-RAW.md",
+      "bytes": 8956,
+      "sha256": "d0149828aca9572faa75884003d8bee138635d6187c19b475bc0c4dce6a6f931"
+    },
+    {
+      "path": "docs/reviews/syzygy-k54o-3/f3-host-pidfd-r2-readme-addendum-RAW.md",
+      "source": "/home/orca/.tmp/f3-host-pidfd-r2-readme-addendum-RAW.md",
+      "bytes": 2595,
+      "sha256": "754eb6ce26ef2b2a2d0b254df32190e7c98b3eb1c41e52af937875ab069cc525"
+    },
+    {
+      "path": "docs/reviews/syzygy-k54o-3/f3-host-pidfd-r2-readme-r2-addendum-RAW.md",
+      "source": "/home/orca/.tmp/f3-host-pidfd-r2-readme-r2-addendum-RAW.md",
+      "bytes": 1710,
+      "sha256": "35573bef3d147e268dc35116a3bd5329e82bbddcff08496c3a094e242c7af875"
+    },
+    {
+      "path": "docs/reviews/syzygy-k54o-3/f3-policy-git-microdiagnostic-r2-review-RAW.md",
+      "source": "/home/orca/.tmp/f3-policy-git-microdiagnostic-r2-review-RAW.md",
+      "bytes": 4426,
+      "sha256": "fa862bacb68fa0f1156f8a8e6dc35275c967d39d0a937f7a769e84632c4d5803"
+    }
+  ],
+  "paired": {
+    "schedule": "ABBABAAB",
+    "samples": 8,
+    "pairs": 4,
+    "caseMedianChangePercent": -4.104057887156065,
+    "commandWallMedianChangePercent": -1.5086778963856573,
+    "casePairedChangePercent": [
+      2.093504010183622,
+      -19.225994969418547,
+      -8.180431867569183,
+      5.3347311083764115
+    ],
+    "interpretation": "Mixed paired direction; no consistent performance or ordinary recovery claim."
+  },
+  "excluded": [
+    "checkout directories",
+    "node_modules",
+    "runtime scratch and compile caches",
+    "rejected R3 execution payload; only its rejection binding metadata is retained"
+  ],
+  "archive": {
+    "path": "proof.tar.gz",
+    "bytes": 231724,
+    "sha256": "12af19a44e9d3399a9493424be9373a9c28bd7d8012efb7618191ad3cf61d5a6",
+    "payloadFiles": 113,
+    "indexedEvidenceFiles": 112
+  }
+}

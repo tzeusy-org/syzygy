@@ -1,0 +1,14 @@
+{
+  "subject": "e22d3da2f23ff61cb87c67ca4244049d075edee2",
+  "mainPin": "4b86e4285e7c78ddf049f64c9a3fd95fc0952cf3",
+  "beforeRows": 273,
+  "afterRows": 275,
+  "distinctRows": 275,
+  "twoMethodsAgree": true,
+  "preservedMainRows": 102,
+  "added": [
+    "A-265",
+    "A-322"
+  ],
+  "historicalMapping": "unlanded branch A65 -> A321; main A65 unchanged"
+}

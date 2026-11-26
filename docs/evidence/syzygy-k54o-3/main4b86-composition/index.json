@@ -1,0 +1,280 @@
+{
+  "format": "f3-main4b-source-proof/1",
+  "status": "Source-only reviewed proposal; actual application/adoption pending",
+  "reviewedSubject": {
+    "manifestSha256": "35979969c0de138ea4c2756376fc1578a0c0ec77820a7dc85c91cefd1992e778",
+    "checkpoint": "df31849a43770e2a0c4c4802030b21b434a285b8",
+    "checkpointTree": "9691ab2cb0a14ceda1f1957d500db7c06f8cdd70",
+    "incoming": "4b86e4285e7c78ddf049f64c9a3fd95fc0952cf3",
+    "incomingTree": "512f80e3ccbab7542462ac303a2197302c34ef2e",
+    "base": "50d9d2a45978b7916cbe7ed6911a57ced2d640b9",
+    "candidateTree": "3dbdff3ffafa771909208512b43ae63771a34b27",
+    "completePatch": {
+      "bytes": 876208,
+      "sha256": "496a23155624f906ab30f0c6258420e471842902f4bce07cc80851945b0694bb"
+    },
+    "incomingPaths": 43,
+    "overlaps": 6,
+    "textualConflicts": 2,
+    "candidateAdditions": 23,
+    "candidateDeletions": 0
+  },
+  "rawReview": {
+    "sourcePath": "/home/orca/.tmp/f3-main-4b86-composition-review-df318-RAW.md",
+    "repositoryPath": "docs/reviews/F3-MAIN-4B86-COMPOSITION-DF318-RAW.md",
+    "bytes": 8799,
+    "sha256": "64a805ae08b3ef97a5ed863a0b6363cea41a91800f0f85cbfe3f4c85e38f5717",
+    "verdictVerbatim": "PASS \u2014 fixed source composition only."
+  },
+  "archive": {
+    "path": "reviewed-source.tar.gz",
+    "bytes": 261787,
+    "sha256": "c4d42f52509156e0a630fb629864fa2f4d6fe2037dc5fe6d90bddf671b7cd0a2",
+    "members": [
+      {
+        "path": "reviewed-source/manifest.json",
+        "bytes": 25757,
+        "sha256": "35979969c0de138ea4c2756376fc1578a0c0ec77820a7dc85c91cefd1992e778"
+      },
+      {
+        "path": "reviewed-source/SHA256SUMS",
+        "bytes": 14341,
+        "sha256": "67977d2f47225bbcccdc86f9928f2965b9b31edd5db7b349a4c30db264828c8c"
+      },
+      {
+        "path": "reviewed-source/seal.json",
+        "bytes": 999,
+        "sha256": "7cd635f2ebadb2bef9b5ec8ed5c88fe4f457198d222e0a8204d23ca21cc4e04d"
+      },
+      {
+        "path": "reviewed-source/candidate-vs-ours.patch",
+        "bytes": 876208,
+        "sha256": "496a23155624f906ab30f0c6258420e471842902f4bce07cc80851945b0694bb"
+      },
+      {
+        "path": "reviewed-source/population-bindings.json",
+        "bytes": 26782,
+        "sha256": "585aa25c730f6fc0937003c40a3889b3aca8028ad7b5db4af9c04a68dd8d99aa"
+      },
+      {
+        "path": "reviewed-source/ledger-union.json",
+        "bytes": 9148,
+        "sha256": "edf2fc036d90815331a24cc868cb375ae65b41f81c20394ee9a8031e886207e2"
+      },
+      {
+        "path": "reviewed-source/checkpoint-A65-citations.txt",
+        "bytes": 2036,
+        "sha256": "bad63c1598359df013e25613ef9f217c8bcdfd385e12803f1e78c0cb47851c6d"
+      },
+      {
+        "path": "reviewed-source/collision-citation-sweep.json",
+        "bytes": 488,
+        "sha256": "045120292d5566c9c7e694daee01235846410da86821784436e6688f374adb97"
+      },
+      {
+        "path": "reviewed-source/initial-bindings.json",
+        "bytes": 590,
+        "sha256": "5e3a9d231ceb30853a0b9456bb9f2949800dfb4be1505d4b5a0cfb6296c397c3"
+      },
+      {
+        "path": "reviewed-source/overlap-bindings.json",
+        "bytes": 4271,
+        "sha256": "bc8eb9221b0e9716c34bbd6388af771f4d8e9ffd8bee88339a04eedab1b6884d"
+      },
+      {
+        "path": "reviewed-source/candidate-overlap-bindings.json",
+        "bytes": 5052,
+        "sha256": "6e3421809a764fc313e04f5383bbe559e25ef7c5fe0651f4b88ac3425cee0395"
+      },
+      {
+        "path": "reviewed-source/candidate-bindings.json",
+        "bytes": 1511,
+        "sha256": "1f43d8a16b31ba0730101f261fc748cd585ea6a7934e633b77da34f3f52d6b70"
+      },
+      {
+        "path": "reviewed-source/static-composition-checks.json",
+        "bytes": 1821,
+        "sha256": "28ed14fd27c3acb7f87ac438447df03c25d1774019ff7b0290a7449877f0a702"
+      },
+      {
+        "path": "reviewed-source/source-quotes.json",
+        "bytes": 2775,
+        "sha256": "001b8a16260344843d30de71775054cc8b656a6dbff079e3440e9cc6d5746886"
+      },
+      {
+        "path": "reviewed-source/README.md",
+        "bytes": 8109,
+        "sha256": "f84929500d265c7245ab17c89c01d3b5c98987a7bbadfe4c35ccddfc8cc8b34b"
+      },
+      {
+        "path": "reviewed-source/authority-probe-impact.json",
+        "bytes": 8222,
+        "sha256": "5ed18c7b68060fa60478d081f6e54b17b7bfef4fa6e2b2d6aff897d646dd95d3"
+      },
+      {
+        "path": "reviewed-source/protected-f3-bindings.json",
+        "bytes": 6720,
+        "sha256": "569d218d4cd3609716582216e7eb67a0d531bc783ea0965240da5659d07d3dc5"
+      },
+      {
+        "path": "reviewed-source/typescript-syntax.json",
+        "bytes": 2839,
+        "sha256": "7ca2c63bfd3f4d115d2dbafca7105c31a336770c20b7efa89e6d34b735a27a0d"
+      },
+      {
+        "path": "reviewed-source/targeted-checks.json",
+        "bytes": 1524,
+        "sha256": "dbc0c82e1b167a9b90eb7413d2a986928526418aca3705dea53aa82f4463fb84"
+      },
+      {
+        "path": "reviewed-source/primary-final-binding.json",
+        "bytes": 1088,
+        "sha256": "434584d7efdacc90855a6d2a963d55bc9865b105751c17d3013bb8cf1857aafe"
+      },
+      {
+        "path": "reviewed-source/incoming-paths.txt",
+        "bytes": 2184,
+        "sha256": "3d9924f43cf1baa82ec8e3075ae033d20bbb553c7dd546dbcd2e7c9e3858a5c9"
+      },
+      {
+        "path": "reviewed-source/overlap-paths.txt",
+        "bytes": 222,
+        "sha256": "df0fedd46c36834656c8a84a3244a7aba8dd8a94b8412f40d3049ae4e99bd812"
+      },
+      {
+        "path": "reviewed-source/candidate-vs-ours-paths.txt",
+        "bytes": 2184,
+        "sha256": "3d9924f43cf1baa82ec8e3075ae033d20bbb553c7dd546dbcd2e7c9e3858a5c9"
+      },
+      {
+        "path": "reviewed-source/candidate-vs-ours-stat.txt",
+        "bytes": 2743,
+        "sha256": "0635573ae1dc3e31932a51fcedc9387f89c5da2a570e8383db077fc124b5ecac"
+      },
+      {
+        "path": "reviewed-source/candidate-diff-check.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "reviewed-source/incoming-diff-check.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "reviewed-source/resolutions-vs-marker.patch",
+        "bytes": 27873,
+        "sha256": "a23122fa3ccecd4c9f1dfe1504f903d05910f3a86f87d951b966159f2c0474c6"
+      }
+    ],
+    "memberPopulation": 27
+  },
+  "originalSourcePacket": {
+    "path": "/home/orca/.tmp/f3-main-4b86-composition-preparation-df318",
+    "manifest": {
+      "bytes": 25757,
+      "sha256": "35979969c0de138ea4c2756376fc1578a0c0ec77820a7dc85c91cefd1992e778"
+    },
+    "payloadPopulation": 158,
+    "artifactPopulation": 161,
+    "payloadBytes": 18690393,
+    "fullPacketRetained": false,
+    "fullPopulationPayloadsRetained": false,
+    "retainedExactPatchAndManifest": true,
+    "externalTreeInventories": [
+      {
+        "path": "/home/orca/.tmp/f3-main-4b86-composition-preparation-df318/ours-tree.z",
+        "bytes": 1548959,
+        "sha256": "3881608be010d98cbd8d08d0282892caabb0b644bac8c424a1d1cd8f07b39519",
+        "entries": 12552
+      },
+      {
+        "path": "/home/orca/.tmp/f3-main-4b86-composition-preparation-df318/main-tree.z",
+        "bytes": 1337005,
+        "sha256": "48554d8854cdc40666c90f5e0b73add17442c50b1a03018d08bda7b398919f9b",
+        "entries": 10878
+      },
+      {
+        "path": "/home/orca/.tmp/f3-main-4b86-composition-preparation-df318/candidate-tree.z",
+        "bytes": 1551453,
+        "sha256": "9742a18df7bcf47f77b04717d33513cf79fcc3b8e8cf399d212deab6cc4d6a58",
+        "entries": 12575
+      }
+    ],
+    "omittedClasses": [
+      "scratch Git object store/index",
+      "full tree inventory bytes",
+      "86 duplicated incoming/candidate population payloads",
+      "numbered overlap source byte copies",
+      "incoming.patch duplicate delta; original hash remains in retained original manifest"
+    ],
+    "availabilityLimit": "Omitted external bytes, scratch alternate objects and original large packet may become unavailable. Retained hashes/counts and historical review do not recreate missing bytes. The exact patch and its bound manifest are durable here; reproducing the full candidate requires the named checkpoint Git objects."
+  },
+  "collision": {
+    "landedMain": "A-65",
+    "unlandedBranchOld": "A-65",
+    "branchCorrected": "A-321",
+    "heldRecoveryCommit": "483acdd49",
+    "candidateLedgerRows": 273,
+    "distinctIds": 273,
+    "changedLiveCitation": "A-169",
+    "trackedCheckpointTextDenominator": 12552,
+    "tokenHits": 2,
+    "originalAndCorrectedRows": "reviewed-source.tar.gz:reviewed-source/ledger-union.json",
+    "historicalMapping": "Unlanded F3 held-recovery A-65 references map to A-321; landed main figure-plan A-65 is unchanged."
+  },
+  "actualRootApplication": {
+    "status": "Applied and source-reviewed; runtime/full gates Unknown",
+    "sourceCommit": "e22d3da2f23ff61cb87c67ca4244049d075edee2",
+    "tree": "736b45b9889079da6587a3bd5478b13edbe3eb28",
+    "receipt": {
+      "path": "actual-root-application.json",
+      "sha256": "440d1d2e7e261e9733399336a9d6bcf14078440a17a5cbea70997e73f5e1c27c"
+    },
+    "rawReview": {
+      "path": "docs/reviews/F3-MAIN-4B86-COMPOSITION-E22D3-RAW.md",
+      "sha256": "e3557e2f0caba713400d27461c6b2d5317103a7cf24354d0bb31b97279628a65"
+    },
+    "adoptionRow": "A-322"
+  },
+  "acceptance": {
+    "sourceReview": "PASS \u2014 fixed source composition only.",
+    "productExecutedByPreparation": false,
+    "runtimeClosure": "Unknown",
+    "tests": "Unknown on future applied subject",
+    "nativeRecovery": "Unknown",
+    "hostedCI": "Unknown"
+  },
+  "separateNativeCommitObservation": {
+    "commit": "35434f2ebf965226d6b184e8b10926f173e05f53",
+    "tree": "1bec69f1fb57c97af5c528759890d285d52c1c19",
+    "changedPaths": [
+      {
+        "path": "packages/polaris-dossier/README.md",
+        "bytes": 7239,
+        "sha256": "c08f74e2d9b378f8d51a0fef3b049d4b1c8c7b808b79a64c100b174a8e4c5584"
+      },
+      {
+        "path": "packages/polaris-dossier/src/policy-git-native.test.ts",
+        "bytes": 37253,
+        "sha256": "f5e494f17f9dfbaf71dbe55058700d2f33fc7020b2b6521c08651d13f0fcd27d"
+      },
+      {
+        "path": "packages/polaris-dossier/src/policy-git.c",
+        "bytes": 17950,
+        "sha256": "47ca11e2648d14e9114edd2e6932e783057261a7a4c8c847d1a981895152ff19"
+      }
+    ],
+    "overlapWithReviewedProposal": [
+      "packages/polaris-dossier/README.md"
+    ],
+    "scope": "Read-only observation after source review; not part of reviewed df318 candidate and no native acceptance inference."
+  },
+  "failedSelftest": {
+    "path": "selftest-R1-failure.json",
+    "sha256": "d15c8bcb9b4a98e37a2aa1ffd5da84bb15284ab30c51588879250da4eb7e6f08",
+    "exitCode": 1,
+    "cause": "fixture copy ENOSPC in shared /tmp",
+    "captureLimitation": "Tool-poll capture is partial; initial stderr chunk omitted and final traceback truncated."
+  }
+}
