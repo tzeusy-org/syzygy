@@ -9,7 +9,7 @@ import { readBoundedFile, readCheckRecord, readFileAsSized } from './check-recor
 import { RUN_TREE_BOUNDS, readCause } from './run-tree-read.js';
 import { checkSubject, declaredSessionId, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckedRevision, type ExcludedQuotation, type CitedBlob, type SubjectBlock, type SubjectPlan, type SubjectReport, type SubjectRules, type VerifiedQuotation } from './check.js';
 import { readSec3 } from './doctrine-quote.js';
-import { INVENTORY_ENTRY_KINDS, INVENTORY_QUOTATION_FORM, LOCAL_INVENTORY_SCHEMA_VERSION, SESSION_ID_RULE, inventorySchemaDocument, localInventorySchema } from './draft-schema.js';
+import { INVENTORY_ENTRY_KINDS, INVENTORY_QUOTATION_FORM, LOCAL_INVENTORY_SCHEMA_VERSION, LOCAL_INVENTORY_SCHEMA_VERSION_V1, SESSION_ID_RULE, inventorySchemaDocument, localInventorySchema } from './draft-schema.js';
 import { PERMITTING_ARM_ENABLED, decideExecutionRule, executionRuleSection, type ExecutionRule } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH, SOURCE_SCREENING_RULE, type GateSources } from './gate-sources.js';
 import { isoOf } from './iso-of.js';
@@ -39,7 +39,9 @@ export type { OpenedRun } from './run-dir.js';
  * (`inventoryOfRecord`, `session-statement.ts`). Every stored value is within the agent sessions' write reach and Inferred; the
  * inventory's completeness over the clone is the inventory session's self-report and never verified. */
 
-export const INVENTORY_BRIEF_VERSION = 'polaris-dossier-inventory-brief-v3';
+/** v4 (REQ-polaris-generation-034 version 2.26, syzygy-5dhm.41): inventory brief v3 with inventory schema v2 and the `worth-knowing` kind
+ * in the list of kinds, and this line changed. */
+export const INVENTORY_BRIEF_VERSION = 'polaris-dossier-inventory-brief-v4';
 export const INVENTORY_CHECK_FORMAT = 'polaris-dossier-inventory-check/1';
 export const INVENTORY_BRIEF_FILE = 'inventory-brief.md';
 export const INVENTORY_FILE = 'inventory.json';
@@ -102,6 +104,7 @@ const KIND_GLOSS: Readonly<Record<(typeof INVENTORY_ENTRY_KINDS)[number], string
   term: 'a term it defines or uses in its own sense',
   qualification: 'a limit, caveat or condition it states on any of these',
   conflict: 'two of its statements that disagree',
+  'worth-knowing': 'a fact it states about itself that an engineer new to the project would not guess from the kind of project it is, such as a default, a limit, an ordering or a choice unlike that of similar projects; look for one to three in each major part of the project, and record none where you find none, never one made to fill a quota',
   other: 'anything else it states that a reader would need',
 };
 
@@ -228,6 +231,9 @@ export function inventoryRules(pinned: string): SubjectRules {
   return {
     noun: 'inventory',
     schema: localInventorySchema({ pinnedRevision: pinned }),
+    // A v1 inventory takes the v1 kinds alone: an entry of kind `worth-knowing` in one is a schema finding (version 2.26).
+    earlier: (subject) => (isRecord(subject) && subject['schemaVersion'] === LOCAL_INVENTORY_SCHEMA_VERSION_V1
+      ? { schema: localInventorySchema({ pinnedRevision: pinned }, 'v1'), reported: { test: () => false } } : undefined),
     maxQuestions: null,
     structural: () => undefined,
     blocks: (doc) => (Array.isArray(doc['entries']) ? doc['entries'] : []).flatMap((entry, i): SubjectBlock[] => (isRecord(entry) ? [{

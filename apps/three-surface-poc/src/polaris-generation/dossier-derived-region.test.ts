@@ -142,10 +142,11 @@ describe('the derived structure on an operator-agent site', () => {
     const index = files.get('index.html')!;
     const at = index.indexOf('<section id="derived-structure"');
     expect(at).toBeGreaterThan(index.indexOf('<section id="section-'));
-    // Only the review-status region follows it inside main.
+    // The review-status region remains inside main. Reading-order links follow the complete main landmark.
     const after = index.slice(index.indexOf('</figure></section>', at) + '</figure></section>'.length);
     expect(after.startsWith('<aside class="review-status"')).toBe(true);
-    expect(after.indexOf('</main>')).toBe(after.indexOf('</aside>') + '</aside>'.length);
+    const afterStatus = after.slice(after.indexOf('</aside>') + '</aside>'.length);
+    expect(afterStatus).toMatch(/^<\/main><nav class="reading-order"[^>]*>.*<\/nav>/u);
     // The generated index (the index-and-task-routes change) links each derived directory back to the region; no other page names it.
     for (const [file, html] of files) if (file !== 'index.html' && file !== 'name-index.html' && file.endsWith('.html')) expect(html, file).not.toContain('derived-structure');
     expect(files.get('name-index.html')!.split('derived-structure').length - 1).toBe(files.get('name-index.html')!.split('href="index.html#derived-structure"').length - 1);

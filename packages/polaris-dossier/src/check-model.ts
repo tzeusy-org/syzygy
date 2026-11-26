@@ -17,6 +17,7 @@ import type { FigureFit, FigureLayout } from './figure-fit.js';
 import type { ReadingDifference, ReadingLedger } from './reading-ledger.js';
 import type { ManifestFacts } from './manifest-facts.js';
 import type { InventoryCoverageAdvice, InventoryOfRecordReader } from './inventory-coverage.js';
+import type { QuestionKindAdvice } from './question-kinds.js';
 
 /** The check's record formats, finding and result types, and the small shared readers; split out of `check.ts` unchanged. */
 
@@ -48,6 +49,8 @@ export type CheckFindingKind =
   // Version 2.19 (schema v9): a node's unit that names no unit of its kind, and an edge rule `relation-witness` challenges.
   | 'unit-reference'
   | 'relation-challenged'
+  // Version 2.26 (schema v13): a worth-knowing mark off a section's own paragraph, on an uncited block or on a judgement.
+  | 'worth-knowing'
   // Version 2.10: the check record would be past the read bound, so its bounded form is written.
   | 'check-record-bound';
 
@@ -227,6 +230,9 @@ export interface CheckReportMembers {
   /** The entries of the inventory of record that no block of the draft covers (`inventory-coverage.ts`, syzygy-5dhm.28); on the report,
    * never the record, and never a finding. */
   readonly inventoryCoverageAdvice?: InventoryCoverageAdvice;
+  /** The kinds of newcomer question no declared block answers per major unit (`question-kinds.ts`, syzygy-5dhm.135, version 2.32); on
+   * the report, never the record, and never a finding. */
+  readonly questionKindAdvice?: QuestionKindAdvice;
 }
 
 /** `file` is null where the run file could not be written, `inRun` then the count this check computed for it. */

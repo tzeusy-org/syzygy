@@ -1,6 +1,6 @@
 // Test support: only the dossier reading tests import this.
 import { generationAnchorId, gitBlobObjectId, type EvidenceAnchor, type GenerationSource, type LocalRenderInput } from '@syzygy/polaris-generation-core';
-import type { LocalDerivedStructure, LocalManifestFact, LocalManifestRecognizerEntry } from '@syzygy/polaris-generation-core/live';
+import { generationSourcesForBody, type LocalDerivedStructure, type LocalManifestFact, type LocalManifestRecognizerEntry } from '@syzygy/polaris-generation-core/live';
 
 const REVISION = 'c'.repeat(40);
 const anchor = (source: GenerationSource): EvidenceAnchor => ({ targetClass: 'evidence-artifact-identifier-with-integrity-digest',
@@ -55,7 +55,7 @@ export function readingInput(): { readonly local: LocalRenderInput; readonly sou
     sources: [source],
     local: {
       // The lines the introduction cites, as the render adapter records them: its citation mark shows them on focus and hover.
-      citationLines: new Map([['introduction', new Map([[source.sourceId, 'lines 1\u20133']])]]),
+      citationLines: new Map([['introduction', new Map([[source.sourceId, [{ start: 1, end: 3 }]]])]]),
       draft: {
         title: 'Reading dossier', introduction: { id: 'introduction', text: 'intro', sourceIds: [source.sourceId] },
         sections: [
@@ -165,4 +165,88 @@ export function computedMapsInput(): { readonly local: LocalRenderInput; readonl
     },
   };
   return { sources, local: { ...local, derivedStructure, manifestFacts } };
+}
+
+/** One deep dive for a why-only Pole, another for a Pole with its own page, and the computed map routes. */
+export function navigationInput(): ReturnType<typeof readingInput> {
+  const { local, sources } = computedMapsInput();
+  const draft = local.draft as unknown as Record<string, unknown>;
+  const blocks = new Map(local.blocks);
+  const deepDives = [
+    { id: 'why-detail', sectionId: 'one', title: 'Purpose detail' },
+    { id: 'words-detail', sectionId: 'two', title: 'Words detail' },
+  ].map(dive => {
+    const paragraph = `${dive.id}-paragraph`;
+    blocks.set(paragraph, claim(dive.title));
+    return { ...dive, paragraphs: [{ id: paragraph, text: dive.title, sourceIds: [READING_SOURCE.sourceId], children: [] }], disposition: { kind: 'produced', assetIds: [] } };
+  });
+  return { sources, local: {
+    ...local, blocks, draft: { ...draft, deepDives } as unknown as LocalRenderInput['draft'],
+    poles: { whySection: 'one', poles: [
+      { label: 'Why it exists', sections: ['one'] },
+      { label: 'Words', sections: ['two', 'three', 'four'] },
+      { label: 'The rest', sections: ['five', 'six', 'seven', 'nine', 'eight'] },
+    ] },
+  } };
+}
+
+/** Pole hue as identity (syzygy-5dhm.56): the navigation dossier with a set of three cards in the why section (Pole 1, drawn on the
+ * landing page), in section two (Pole 2's page) and in the deep dive on section two, a figure homed on that deep dive, and a figure
+ * homed on the overview, which belongs to no Pole. */
+export function poleHueInput(): ReturnType<typeof readingInput> {
+  const { local, sources } = navigationInput();
+  const draft = local.draft as unknown as { sections: { id: string; paragraphs: unknown[] }[]; deepDives: { id: string; paragraphs: unknown[] }[]; diagrams: unknown[] };
+  const blocks = new Map(local.blocks);
+  const cards = (at: string) => {
+    const items = ['first', 'second', 'third'].map(n => {
+      blocks.set(`${at}-card-${n}`, claim(`Card ${n} of ${at}.`));
+      return { label: `${at} ${n}`, body: { id: `${at}-card-${n}`, text: 'x', sourceIds: [READING_SOURCE.sourceId], children: [] } };
+    });
+    blocks.set(`${at}-cards`, claim(`The cards of ${at}.`));
+    return { id: `${at}-cards`, text: 'x', sourceIds: [READING_SOURCE.sourceId], children: [], element: { kind: 'cards', items } };
+  };
+  const figure = (id: string, sectionId: string, home: unknown) => ({
+    id, sectionId, home, kind: 'flow', title: `Figure ${id}`, relationship: 'how it goes', disposition: { kind: 'produced', assetIds: [] },
+    nodes: ['p', 'q'].map(n => ({ id: `${id}-${n}`, label: `Node ${n}`, epistemic: 'inferred', sourceIds: [READING_SOURCE.sourceId] })),
+    edges: [{ id: `${id}-edge`, from: `${id}-p`, to: `${id}-q`, label: 'then', epistemic: 'inferred', sourceIds: [READING_SOURCE.sourceId] }],
+  });
+  return { sources, local: { ...local, blocks, draft: {
+    ...draft,
+    sections: draft.sections.map(s => s.id === 'one' || s.id === 'two' ? { ...s, paragraphs: [...s.paragraphs, cards(s.id)] } : s),
+    deepDives: draft.deepDives.map(d => d.id === 'words-detail' ? { ...d, paragraphs: [...d.paragraphs, cards(d.id)] } : d),
+    diagrams: [...draft.diagrams, figure('dive-figure', 'two', { kind: 'deep-dive', id: 'words-detail' }), figure('overview-figure', '', { kind: 'overview' })],
+  } as unknown as LocalRenderInput['draft'] } };
+}
+
+function lineCitationFixture(body: string, introduction: readonly { start: number; end: number }[], forms: readonly { start: number; end: number }[]) {
+  const input = readingInput();
+  const { repositoryId, revision, evaluationId } = READING_SOURCE;
+  const pieces = generationSourcesForBody({ repositoryId, revision, evaluationId, sourceId: 'src-9876543210fedcba98765432',
+    objectId: gitBlobObjectId(body), path: 'docs/settings.conf', body });
+  const first = pieces[0]!;
+  const sourceAnchors = new Map(input.local.sourceAnchors);
+  for (const piece of pieces) sourceAnchors.set(piece.sourceId, anchor(piece));
+  const citationLines = new Map(input.local.citationLines);
+  citationLines.set('introduction', new Map([[first.sourceId, introduction]]));
+  citationLines.set('forms', new Map([[first.sourceId, forms]]));
+  const draft = { ...input.local.draft,
+    introduction: { ...input.local.draft.introduction, sourceIds: [first.sourceId] },
+    sections: input.local.draft.sections.map(entry => ({ ...entry, paragraphs: entry.paragraphs.map(p => p.id === 'forms' ? { ...p, sourceIds: [first.sourceId] } : p) })),
+  };
+  return { local: { ...input.local, draft, sourceAnchors, citationLines }, sources: [...input.sources, ...pieces] };
+}
+
+/** Long plain text with distinguishable LF, CRLF, and bare CR line ends. Every line is synthetic. */
+export function lineCitationInput() {
+  const body = Array.from({ length: 2100 }, (_, index) => {
+    const ending = index % 3 === 0 ? '\r\n' : index % 3 === 1 ? '\r' : '\n';
+    return `# synthetic option ${index + 1}: local documentation${ending}`;
+  }).join('');
+  return lineCitationFixture(body, [{ start: 1200, end: 1202 }, { start: 1207, end: 1208 }], [{ start: 1204, end: 1205 }]);
+}
+
+/** 100 UTF-8 bytes per line, so the production source-piece boundary lies exactly after line 1000. */
+export function splitLineCitationInput() {
+  const body = Array.from({ length: 1200 }, (_, index) => `# synthetic setting ${index + 1}`.padEnd(99, ' ') + '\n').join('');
+  return lineCitationFixture(body, [{ start: 999, end: 1002 }], [{ start: 998, end: 1004 }]);
 }

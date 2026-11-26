@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 538 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 567 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -240,6 +240,44 @@ authority and no model yet called on the current path.
     it, the model and view findings, a pure migration from schema v10 and v11, brief v18); its code is not yet landed.
     *(2026-11-24: the predecessor figure "524 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
+    [Edit and repair accounting amendment 2.25](openspec/changes/polaris-edit-repair-deletion-accounting) is agent-adopted in A-208.
+    REQ-polaris-generation-006 carries six scenarios. The new scenario requires edits and repairs to account
+    for each input block, and repairs to give each finding a disposition. Generator implementation is tracked
+    by syzygy-dov.6.3.
+    *(2026-11-24: edit and repair accounting supersedes the predecessor figure of 538 scenarios.)*
+    [Worth-knowing amendment 2.26](openspec/changes/dossier-worth-knowing) is agent-adopted in A-217.
+    It replaces REQ-polaris-generation-034 again (207 to 214 scenarios: draft schema v13 lets a cited section paragraph
+    carry the worth-knowing mark and a Pole say why it marks none, the `worth-knowing` finding and count advice, one
+    "Worth knowing" callout per page for blocks that render Inferred, brief v19, inventory brief v4 with the `worth-knowing` entry kind); its code
+    (syzygy-5dhm.41) lands with it; v13 is schema v10 plus the mark and brief v19 is brief v16 plus one paragraph.
+    [Question-file amendment 2.27](openspec/changes/dossier-question-file) is agent-adopted in A-304.
+    It replaces REQ-polaris-generation-033 again (16 to 18 scenarios): the run record names the question file, the one
+    source of reader questions, by format, version and digest; its held-out part records opaque evaluator key identifiers, digests and counts
+    and leaves the Redis comparison pending genuinely blind lists; its code (syzygy-5dhm.21) lands with it.
+    *(2026-11-25: the predecessor figure "546 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Coverage-hold amendment 2.28](openspec/changes/dossier-coverage-hold) is agent-adopted in A-305.
+    [Terminology-brief amendment](openspec/changes/dossier-brief-terminology) is agent-adopted in A-306.
+    It replaces REQ-polaris-generation-035 over its run-tree read-bounds version 2.18
+    (40 to 46 scenarios). Packet issuance waits while a listed inventory entry lacks an
+    outcome. The refusal carries the selected pair. The supervisor keeps the repair
+    instruction in the bounded author notice and records a send after both pane operations succeed.
+    *(2026-11-25: this supersedes the predecessor figure of 548 scenarios and retains all 39 requirement identities.)*
+    *(2026-11-24: the predecessor figure "539 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Scripted benchmark grading amendment 2.30](openspec/changes/dossier-scripted-benchmark-grading) is agent-adopted in A-307.
+    It replaces REQ-polaris-generation-033 (18 to 21 scenarios) with a private
+    synthetic evaluator companion and literal blind grading. Scripted runtime acceptance
+    remains in syzygy-5dhm.22.
+    *(2026-11-25: the predecessor figure of 555 scenarios is superseded.)*
+    [Dossier close measures amendment 2.31](openspec/changes/dossier-step-measures) is agent-adopted in A-310.
+    It replaces REQ-polaris-generation-033 from version 2.30, adding four timing, round-count and bounded-record scenarios.
+    The close implementation remains in syzygy-5dhm.25.
+    *(2026-11-25: the predecessor figure of 558 scenarios is superseded.)*
+    [Question-kind floor amendment 2.32](openspec/changes/dossier-question-kind-floor) is agent-adopted in A-315.
+    It replaces REQ-polaris-generation-034 from version 2.29 (215 to 220 scenarios): check advises, per major unit,
+    the kinds of newcomer question no block declared in a v13 draft's `questionKinds` answers; brief v21 asks for them.
+    *(2026-11-26: the predecessor figure of 562 scenarios is superseded.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
@@ -502,7 +540,7 @@ Every gate below is closed; each row names what closed it.
 | PWB implementation authorization | ✅ Granted 2026-09-02 by owner direction; PWB tasks §2–§5 dispatchable, body read gated on PWB-REQ-005 evaluation inside the implementation | `decisions/PWB-IMPLEMENTATION-AUTHORIZATION-ACT.md` |
 | PWB implementation-authorization continuation | ✅ Continued 2026-09-05 by owner direction for the 2026-09-05 amendment only; amended spec, policy and registry entry are the implementation target, every original exclusion retained | `decisions/PWB-IMPLEMENTATION-AUTHORIZATION-CONTINUATION-ACT.md` |
 | Signed-amendment implementation (P-96, P-97, P-86, P-100, P-99; P-98 on landing; tree framing v1.0) | ✅ Granted 2026-10-15 by owner direction: exactly the signed text; no new Butlers content class, read or egress; shared-model lanes WIP one (P-97 → P-100 → P-86 → P-96 → tree framing); P-98 unsigned today, covered when its sign-off record lands | `decisions/OWNER-DIRECTION-IMPLEMENTATION-SIGNED-AMENDMENTS-2026-10-15.md` |
-| PWB implementation continuation for M2 slice 5 (P-69, `syzygy-dov.19`) | ✅ Continued 2026-10-21 by owner direction for M2 slice 5 (`syzygy-dov.2.2`) only, as that record's copied behavior states; its B11 uses wait for the PR #489 direction's confirmation *(Marked 2026-10-21: the owner confirmed that direction the same day, before this continuation, through the confirmation line in `decisions/OWNER-DIRECTION-IMPLEMENTATION-SIGNED-AMENDMENTS-2026-10-20.md`; that record's own rule still holds that no lane starts until it is on `main`)*, and the briefing route (`syzygy-dov.5.2`) stays gated (`syzygy-bivj`) | `decisions/PWB-M2-SLICE-5-IMPLEMENTATION-CONTINUATION-DIRECTION.md` |
+| PWB implementation continuation for M2 slice 5 (P-69, `syzygy-dov.19`) | ✅ Continued 2026-10-21 by owner direction for M2 slice 5 (`syzygy-dov.2.2`) only, as that record's copied behavior states; its B11 uses wait for the PR #489 direction's confirmation *(Marked 2026-10-21: the owner confirmed that direction the same day, before this continuation, through the confirmation line in `decisions/OWNER-DIRECTION-IMPLEMENTATION-SIGNED-AMENDMENTS-2026-10-20.md`; that record's own rule still holds that no lane starts until it is on `main`)*, and the briefing route (`syzygy-dov.5.2`) stays gated (`syzygy-bivj`) [superseded 2026-11-24: A-213 satisfied the separate implementation gate. The loopback POC registers authenticated `GET /api/poc/briefing?for=<full-claim-id>` and requires the verified briefing ceiling] | `decisions/PWB-M2-SLICE-5-IMPLEMENTATION-CONTINUATION-DIRECTION.md` |
 | Signed-amendment implementation, second batch (machine view, opening band slice 3, container shape, item depth, dismissal) | ✅ Granted by owner direction 2026-10-20 and confirmed by the owner 2026-10-21 through the confirmation line in the record, which names the commit and the record's SHA-256. The record owns the scope, the carve-outs, the shared-model chain and the sequencing against `syzygy-dov.19`; missing currency was selected and is not authorized by that record. M2 slice 5 is continued by the separate direction in the row above | `decisions/OWNER-DIRECTION-IMPLEMENTATION-SIGNED-AMENDMENTS-2026-10-20.md` |
 | POC vocabulary and epistemic-record amendment implementation (P-108) | ✅ Granted 2026-10-21 by owner direction: exactly the signed text through M9 slices 4a, 4b and 8, one acceptance condition added, queued in the shared-model chain after the second batch; slices 5, 6b and 7, any production Inferred constructor and `syzygy-nw3o` excluded | `decisions/OWNER-DIRECTION-P108-IMPLEMENTATION-2026-10-21.md` |
 | Retained evaluation record layout (P-79, `syzygy-dov.12.1`) | ✅ Ruled 2026-10-21: one added top-level key, `claimStates`, holding only the three per-claim fields the 2026-09-23 retention direction already lists; the six keys and four `evaluation` members unchanged, no retention content changed. Slice 1 takes link 3 of the second-batch chain | `decisions/POLARIS-RETAINED-EVALUATIONS-CLAIM-STATES-RULING-2026-10-21.md` |
@@ -580,7 +618,10 @@ output; it is the canonical battery.
 ```sh
 python3 scripts/check_governance.py
 python3 scripts/check_governance.py --selftest
+python3 scripts/check_merge_conflict_markers.py  # unresolved delimiters in the checked-out Git commit
+python3 scripts/check_merge_conflict_markers.py --selftest
 python3 scripts/record_polaris_understanding_adoption.py --selftest
+python3 scripts/count_polaris_effective_scenarios.py --selftest
 python3 scripts/launch_gate_results.py --selftest            # historical Markdown records
 python3 scripts/validate_launch_administration.py --selftest # the structured record path
 python3 scripts/render_launch_administration.py --selftest
@@ -719,7 +760,7 @@ python3 scripts/dossier_pilot_runs.py --selftest   # page classes and one mutati
 python3 scripts/test_dossier_pilot.py   # the pilot harness tests, literal expectations; needs node and git for the screened-tree cases
 ```
 
-The one hundred and thirty-five checks above are the same one hundred and thirty-five the hosted workflow runs
+The one hundred and thirty-eight checks above are the same one hundred and thirty-eight the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.

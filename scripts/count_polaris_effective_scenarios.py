@@ -83,6 +83,13 @@ The verify-text version2.21 amendment replaces 033 after the run-tree
 read-bounds version2.18 when its own adoption binding verifies; each parser
 counts its one replacement (033).
 
+The question-file version2.27 amendment replaces 033 after the verify-text
+version2.21 when its own adoption binding verifies; each parser counts its one
+replacement (033).
+The coverage-hold version 2.28 amendment replaces 035 after the run-tree
+read-bounds version 2.18 when its own adoption binding verifies; each parser
+counts its one replacement (035).
+
 The declared-source reach version2.6 amendment follows version2.0 when its own
 adoption binding verifies; each parser counts its one replacement (046).
 
@@ -614,12 +621,12 @@ def model_amendment(root: Path) -> str | None:
     return text
 
 
-def figplan_amendment(root: Path) -> str | None:
+def edit_account_amendment(root: Path) -> str | None:
     """Verified text, a pending or retired amendment, or a counting refusal."""
     import check_spec_reconciliation as adoption
-    text, records, subjects = adoption.figplan_binding(root)
+    text, records, subjects = adoption.edit_account_binding(root)
     if records or subjects:
-        raise ScenarioCountError("figure plan adoption findings:\n" + "\n".join(records + subjects))
+        raise ScenarioCountError("edit and repair accounting adoption findings:\n" + "\n".join(records + subjects))
     return text
 
 
@@ -629,6 +636,15 @@ def cont_amendment(root: Path) -> str | None:
     text, records, subjects = adoption.cont_binding(root)
     if records or subjects:
         raise ScenarioCountError("containment figure adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
+def worth_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+    text, records, subjects = adoption.worth_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("worth-knowing adoption findings:\n" + "\n".join(records + subjects))
     return text
 
 
@@ -696,6 +712,66 @@ def verify_amendment(root: Path) -> str | None:
     return text
 
 
+def qfile_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.qfile_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("question file adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
+def scripted_grade_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.scripted_grade_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("scripted benchmark grading adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
+def step_measures_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.step_measures_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("dossier close measures adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
+def qkind_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.qkind_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("question-kind floor adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
+def covhold_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.covhold_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("coverage hold adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
+def term_brief_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.term_brief_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("terminology brief adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def build_composition(root: Path) -> CompositionResult:
     import check_spec_reconciliation as adoption
     sources = [(path.relative_to(root).as_posix(), path.read_text(encoding="utf-8"))
@@ -720,12 +796,19 @@ def build_composition(root: Path) -> CompositionResult:
                         (adoption.RAW_READ_SPEC, raw_read_amendment(root)),
                         (adoption.TREEREAD_SPEC, treeread_amendment(root)),
                         (adoption.VERIFY_SPEC, verify_amendment(root)),
+                        (adoption.QFILE_SPEC, qfile_amendment(root)),
+                        (adoption.SCRIPTED_GRADE_SPEC, scripted_grade_amendment(root)),
+                        (adoption.STEP_MEASURES_SPEC, step_measures_amendment(root)),
+                        (adoption.COVHOLD_SPEC, covhold_amendment(root)),
                         (adoption.RELTYPE_SPEC, reltype_amendment(root)),
                         (adoption.HERO_SPEC, hero_amendment(root)),
                         (adoption.READERS_SPEC, readers_amendment(root)),
                         (adoption.CONT_SPEC, cont_amendment(root)),
                         (adoption.MODEL_SPEC, model_amendment(root)),
-                        (adoption.FIGPLAN_SPEC, figplan_amendment(root))):
+                        (adoption.EDIT_ACCOUNT_SPEC, edit_account_amendment(root)),
+                        (adoption.WORTH_SPEC, worth_amendment(root)),
+                        (adoption.TERM_BRIEF_SPEC, term_brief_amendment(root)),
+                        (adoption.QKIND_SPEC, qkind_amendment(root))):
         if text is not None:
             sources.append((label, text))
 
@@ -778,20 +861,28 @@ def composition_inputs(root: Path) -> list[Path]:
     raw_read_amendment(root)
     treeread_amendment(root)
     verify_amendment(root)
+    covhold_amendment(root)
     reltype_amendment(root)
+    qfile_amendment(root)
+    scripted_grade_amendment(root)
+    step_measures_amendment(root)
     hero_amendment(root)
     readers_amendment(root)
     cont_amendment(root)
     model_amendment(root)
-    figplan_amendment(root)
+    edit_account_amendment(root)
+    worth_amendment(root)
+    term_brief_amendment(root)
+    qkind_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
         adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
         *adoption.URL_SOURCE_RFC_PATHS, *adoption.FIGURE_SUBJECTS, *adoption.DERIVED_SUBJECTS,
         *adoption.LEDGER_SUBJECTS, *adoption.KINDS_SUBJECTS, *adoption.MANIFESTS_SUBJECTS,
         *adoption.REPAIRS_SUBJECTS, *adoption.MAPS_SUBJECTS, *adoption.BOUNDS_SUBJECTS, *adoption.CORR_SUBJECTS,
-        *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.FINDPAGES_SUBJECTS, *adoption.SUBSEC_SUBJECTS, *adoption.RELTYPE_SUBJECTS, *adoption.HERO_SUBJECTS, *adoption.READERS_SUBJECTS, *adoption.CONT_SUBJECTS, *adoption.MODEL_SUBJECTS, *adoption.FIGPLAN_SUBJECTS,
+        *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.FINDPAGES_SUBJECTS, *adoption.SUBSEC_SUBJECTS, *adoption.RELTYPE_SUBJECTS, *adoption.HERO_SUBJECTS, *adoption.READERS_SUBJECTS, *adoption.CONT_SUBJECTS, *adoption.MODEL_SUBJECTS, *adoption.WORTH_SUBJECTS,
         *adoption.REACH_SUBJECTS, *adoption.READMIT_SUBJECTS, *adoption.RAW_READ_SUBJECTS, *adoption.TREEREAD_SUBJECTS,
-        *adoption.VERIFY_SUBJECTS,
+        *adoption.VERIFY_SUBJECTS, *adoption.QFILE_SUBJECTS, *adoption.SCRIPTED_GRADE_SUBJECTS, *adoption.STEP_MEASURES_SUBJECTS, *adoption.COVHOLD_SUBJECTS, *adoption.EDIT_ACCOUNT_SUBJECTS,
+        *adoption.TERM_BRIEF_SUBJECTS, *adoption.QKIND_SUBJECTS,
     }
     files = discover_composition_files(root)
     files += [root / rel for rel in sorted(paths) if (root / rel).is_file()]

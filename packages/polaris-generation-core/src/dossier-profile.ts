@@ -9,20 +9,16 @@ import { sha256 } from '@syzygy/support';
 
 import type { RequestedAsset } from './draft-model.js';
 import type { GenerationSource } from './generation-source.js';
+import { QUESTION_FILE } from './question-file.js';
 import { READER_QUESTIONS_FORMAT, type ReaderQuestion } from './topics.js';
 
 export const DOSSIER_PROFILE_ID = 'dossier-v1';
 
 /** What a dossier reader must come away able to answer. The advantage
  * question is deliberately about the maintainers' own claims: a dossier
- * reports what they say and where, never its own comparative judgment. */
-export const DOSSIER_READER_QUESTIONS: readonly ReaderQuestion[] = [
-  { id: 'core-ideas', topics: ['core-ideas'], text: 'What are this project\'s core ideas, stated so a newcomer could repeat them?' },
-  { id: 'end-to-end-workflows', topics: ['end-to-end-workflows'], text: 'How does a user get from start to finish on the most important end-to-end workflows?' },
-  { id: 'mechanisms', topics: ['mechanisms'], text: 'What mechanisms underneath make those workflows work, and where does each live?' },
-  { id: 'maintainer-stated-advantages', topics: ['maintainer-stated-advantages'], text: 'What advantages over alternatives do the maintainers themselves claim, in which words and where?' },
-  { id: 'trade-offs', topics: ['trade-offs'], text: 'What trade-offs, limits and costs does the design accept, and what does it give up for them?' },
-];
+ * reports what they say and where, never its own comparative judgment.
+ * Written once, in the question file's public part (`question-file.ts`). */
+export const DOSSIER_READER_QUESTIONS: readonly ReaderQuestion[] = QUESTION_FILE.public.readerQuestions;
 
 /** The frozen questions file the dossier evaluator reads. */
 export const dossierQuestionsFile = (): string =>

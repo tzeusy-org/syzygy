@@ -40,6 +40,7 @@ export interface ReobserveSessionOptions {
 
 interface ReobserveSession {
   readonly model: () => PocModel;
+  readonly briefingResponseLimit: () => number | undefined;
   readonly latest: () => Reevaluation;
   /** One owner request at a time, from the browser or the console. */
   readonly reobserve: () => Promise<ReobserveResult>;
@@ -105,6 +106,7 @@ export function createReobserveSession(options: ReobserveSessionOptions): Reobse
 
   return {
     model: () => state.get(),
+    briefingResponseLimit: () => state.getCapture().briefingResponseLimit,
     latest: () => latest,
     reobserve,
     afterMaterialized,

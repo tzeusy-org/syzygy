@@ -351,6 +351,56 @@ describe('render', () => {
     expect(report.scanFindings).toEqual([]);
   });
 
+  it('lands every ranged reading citation on its first kept line and keeps the unranged fallback', async () => {
+    const run = await prepared();
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const anchors = new Map([
+      [`${objectIds['src/kestrel.c']}:3-37`, 1],
+      [`${objectIds['src/kestrel.c']}:${byteOffset(KESTREL, 'Each command')}-${byteOffset(KESTREL, 'starts.') + 'starts.'.length}`, 2],
+      [`${objectIds['docs/notes.txt']}:13-48`, 2],
+    ]);
+    let ranged = 0, unranged = 0, quoted = 0;
+    const numberedPages: string[] = [];
+    for (const [page, bytes] of html(files)) {
+      if (/<span class="source-line[^"]*" id="L\d+"/u.test(bytes)) numberedPages.push(page);
+      for (const match of bytes.matchAll(/<a class="(?:anchor-link )?cite" href="([^"]+)"[^>]*>/gu)) {
+        const [route, fragment] = match[1]!.split('#');
+        const source = files.get(path.posix.join(path.posix.dirname(page), route!));
+        expect(source, `${page}: ${match[1]}`).toBeDefined();
+        const anchor = /data-anchor-identifier="([^"]+)"[^>]*data-anchor-fragment="([^"]+)"/u.exec(match[0]);
+        const label = /aria-label="[^"]+?, lines? (\d+)/u.exec(match[0]);
+        if (anchor !== null) {
+          const origin = anchors.get(`${anchor[1]}:${anchor[2]}`);
+          expect(origin, match[0]).toBeDefined();
+          expect(fragment).toBe(`L${origin}`);
+          quoted++;
+        } else if (label !== null) {
+          expect(fragment).toBe(`L${label[1]}`);
+          ranged++;
+        } else {
+          expect(fragment).toBe('exact-text');
+          unranged++;
+        }
+        expect(source).toContain(`id="${fragment}"`);
+      }
+      let detailsDepth = 0;
+      const lines: number[] = [];
+      for (const tag of bytes.matchAll(/<details\b[^>]*>|<\/details>|<[^>]+ id="L(\d+)"[^>]*>/gu)) {
+        if (tag[0].startsWith('<details')) detailsDepth++;
+        else if (tag[0] === '</details>') detailsDepth--;
+        else {
+          expect(detailsDepth, `${page} ${tag[0]}`).toBe(0);
+          lines.push(Number(tag[1]));
+        }
+      }
+      if (numberedPages.at(-1) === page) expect(lines, page).toEqual(bytes.includes('src/kestrel.c</h1>') ? [1, 2, 3, 4, 5] : [1, 2]);
+      else expect(lines, page).toEqual([]);
+    }
+    expect({ ranged, unranged, quoted, sourcePages: numberedPages.length }).toEqual({ ranged: 15, unranged: 2, quoted: 3, sourcePages: 2 });
+  });
+
   it('labels blocks by the agent\'s label, the counted review and screening, and keeps the pages and machine view in parity per tuple', async () => {
     const run = await prepared();
     const result = await renderRun(run, renderDeps());
@@ -593,7 +643,11 @@ describe('render', () => {
     expect(appendix).toContain('Syzygy can see only the marking: whether an unmarked claim rests on the agent\'s building or running of the project is the agent\'s report.');
     // The appendix is the last page of the reading order, and every page's navigation reaches it.
     expect(JSON.parse(files.get('dossier.json')!).pages.at(-1)).toEqual({ path: 'appendix.html', depth: 1 });
-    for (const [file, page] of html(files)) expect(page, file).toMatch(/<li><a href="(\.\.\/)?appendix\.html">Appendix<\/a><\/li><\/ol>/u);
+    for (const [file, page] of html(files)) {
+      const up = file.includes('/') ? '../' : '';
+      const current = file === 'appendix.html' ? ' aria-current="page"' : '';
+      expect(page, file).toContain(`<li><a href="${up}appendix.html"${current}>Appendix</a></li></ol>`);
+    }
   });
 
   it('says on the sources list why the agent reports choosing each source, Inferred, never a secret-named path (syzygy-pdja.15)', async () => {
@@ -664,8 +718,8 @@ describe('render', () => {
     const report = ['understanding.html', 'discovery.html', 'clarifications.html', 'executions.html', 'review.html', 'size-report.html', 'appendix.html'].filter(path => files.has(path));
     for (const path of ['understanding.html', 'discovery.html', 'size-report.html', 'appendix.html']) expect(report, path).toContain(path);
     for (const [file, page] of html(files)) {
-      const navs = [...page.matchAll(/<nav aria-label="Dossier">([\s\S]*?)<\/nav>/gu)].map(match => match[1]!);
-      expect(navs.length, file).toBeGreaterThan(0);
+      const navs = [...page.matchAll(/<nav aria-label="Dossier(?: \(mobile\))?">([\s\S]*?)<\/nav>/gu)].map(match => match[1]!);
+      expect(navs, file).toHaveLength(2);
       for (const nav of navs) {
         const fold = nav.indexOf('<details class="about-this-run"');
         expect(fold, file).toBeGreaterThan(0);
@@ -683,7 +737,7 @@ describe('render', () => {
         expect(folded.endsWith('</ol></details>'), file).toBe(true);
       }
     }
-    const contents = files.get('contents.html')!.split('<section id="contents">')[1]!;
+    const contents = files.get('contents.html')!.split('<section id="contents">')[1]!.split('</section>')[0]!;
     const heading = contents.indexOf('<h2 id="about-this-run">About this run</h2>');
     expect(heading).toBeGreaterThan(0);
     for (const path of report) {
@@ -708,13 +762,13 @@ describe('render', () => {
     expect(runPages.length).toBeGreaterThan(3);
     for (const [file, page] of html(files)) {
       const up = file.includes('/') ? '../' : '';
-      for (const nav of [...page.matchAll(/<nav aria-label="Dossier">([\s\S]*?)<\/nav>/gu)].map(match => match[1]!)) {
+      for (const nav of [...page.matchAll(/<nav aria-label="Dossier(?: \(mobile\))?">([\s\S]*?)<\/nav>/gu)].map(match => match[1]!)) {
         const folded = nav.slice(nav.indexOf('<details class="about-this-run"'));
         const linked = [...folded.matchAll(/href="([^"#]*)/gu)].map(match => match[1]!.slice(up.length));
         expect(linked, file).toEqual(runPages);
       }
     }
-    const contents = files.get('contents.html')!.split('<section id="contents">')[1]!;
+    const contents = files.get('contents.html')!.split('<section id="contents">')[1]!.split('</section>')[0]!;
     const after = contents.slice(contents.indexOf('<h2 id="about-this-run">About this run</h2>'));
     expect([...after.matchAll(/href="([^"#]*)/gu)].map(match => match[1]!)).toEqual(runPages);
   });
@@ -860,6 +914,8 @@ describe('render', () => {
     const sourcePage = [...readSite(result.report.site).entries()].find(([file, page]) => file.startsWith('sources/') && page.includes('Kestrel keeps every key'))![1];
     expect(sourcePage).toContain(`data-quote-start="${Buffer.byteLength(lines.slice(0, 4).join(''))}"`);
     expect(sourcePage.match(/class="redaction-note"/gu)).toHaveLength(1);
+    expect([...sourcePage.matchAll(/<span class="source-line(?: cited-span)?" id="L(\d+)"/gu)].map(match => Number(match[1]))).toEqual([1, 2, 3, 5]);
+    expect([...readSite(result.report.site).values()].join('')).not.toMatch(/href="[^"]+#L4"/u);
     // syzygy-pdja.1: RFC5-17's count stays on the claim, on the citation itself, and the sentence never repeats in the reading text.
     const site = readSite(result.report.site);
     const reading = site.get('index.html')!.slice(site.get('index.html')!.indexOf('<main'));
@@ -1434,15 +1490,25 @@ describe('rendered-design review (S9b)', () => {
     const again = await renderRun(run, renderDeps());
     if (!again.ok) throw new Error(again.refusal.reason);
     expect(again.report.designReview).toEqual({ counts: true, packetSha256: digest, label: 'Observed' });
+    if (!again.report.fidelityReview.counts) throw new Error(again.report.fidelityReview.why);
+    const fidelityDigest = again.report.fidelityReview.packetSha256;
     const before = readSite(site), after = readSite(again.report.site);
     // The published pages equal the reviewed pages outside the region, and the region alone changed: it now states the review.
     expect(outside(after)).toEqual(outside(before));
     const changed = [...after.keys()].filter((file) => after.get(file) !== before.get(file)).sort();
     expect(changed).toEqual([...after.keys()].filter((file) => file.endsWith('.html') || file === 'machine.json').sort());
     const region = regionOf(after.get('glossary.html')!);
-    expect(region).toContain(`Rendered-design review: one counts, bound to packet ${digest}, which Syzygy built at this render from these pages outside this region; its verdict, ready, is the review session&#39;s.`);
+    expect(region).toContain('Rendered-design review: one counts, bound to the packet shown on the review page, which Syzygy built at this render from these pages outside this region; its verdict, ready, is the review session&#39;s.');
     expect(region).toContain('data-label="Inferred"');
-    expect(JSON.parse(after.get('machine.json')!).reviewStatus[1]).toMatchObject({ id: 'review-status/design', label: 'Inferred' });
+    const reviewRegion = regionOf(after.get('review.html')!);
+    const shownDigests = [...reviewRegion.matchAll(/(?:[0-9a-f]{8} ){7}[0-9a-f]{8}/g)].map(([hex]) => hex.replaceAll(' ', ''));
+    expect(shownDigests).toEqual([fidelityDigest, digest]);
+    expect(after.get('review.html')!).toContain(`its digest is ${fidelityDigest}, and the counted verdict names that digest.`);
+    const [fidelityStatus, designStatus] = JSON.parse(after.get('machine.json')!).reviewStatus;
+    expect(fidelityStatus).toMatchObject({ id: 'review-status/fidelity', label: 'Inferred' });
+    expect(fidelityStatus.text).toContain(`bound to packet ${fidelityDigest}`);
+    expect(designStatus).toMatchObject({ id: 'review-status/design', label: 'Inferred' });
+    expect(designStatus.text).toContain(`bound to packet ${digest}`);
     // A third render, the region unchanged, keeps it counted too.
     const third = await renderRun(run, renderDeps());
     expect(third.ok && third.report.designReview).toEqual({ counts: true, packetSha256: digest, label: 'Observed' });
@@ -1745,9 +1811,9 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
     if (!result.ok) throw new Error(result.refusal.reason);
     const index = readSite(result.report.site).get('index.html')!;
     const section = index.slice(index.indexOf('<section id="section-core-ideas"'));
-    // An operator-agent page gives its first diagram the first hue (syzygy-pdja.14).
-    expect(section.indexOf('<figure data-hue="1" data-visual-provenance="curated" id="figure-d-core">')).toBeGreaterThan(-1);
-    expect(section.indexOf('<figure data-hue="1" data-visual-provenance="curated" id="figure-d-core">')).toBeLessThan(section.indexOf('data-claim-id="p1"'));
+    // A figure carries no hue of its own: it takes its Pole's from the region around it (syzygy-5dhm.56).
+    expect(section.indexOf('<figure data-visual-provenance="curated" id="figure-d-core">')).toBeGreaterThan(-1);
+    expect(section.indexOf('<figure data-visual-provenance="curated" id="figure-d-core">')).toBeLessThan(section.indexOf('data-claim-id="p1"'));
   });
 
   it('puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria', () => {
@@ -2136,7 +2202,7 @@ describe('render: derived structure (version 2.3)', () => {
     const run = await prepared(doc, false);
     const { files, index } = await rendered(run);
     const authored = index.slice(index.lastIndexOf('<figure', index.indexOf('<figcaption id="diagram-title-0">zq-authored tree</figcaption>')), index.indexOf('</figure>', index.indexOf('zq-authored tree')));
-    expect(authored.startsWith('<figure data-hue="1" data-visual-provenance="curated" id="figure-d-tree">')).toBe(true);
+    expect(authored.startsWith('<figure data-visual-provenance="curated" id="figure-d-tree">')).toBe(true);
     expect([...authored.matchAll(/<g class="(?:node|edge) (\w+)/gu)].map((m) => m[1])).toEqual(['inferred', 'inferred', 'inferred']);
     expect(authored).not.toContain('Solid: observed');
     expect(authored).not.toContain('data-derived-id');
@@ -2591,6 +2657,67 @@ describe('render: subsections (schema v8)', () => {
 });
 
 // syzygy-5dhm.70 and syzygy-5dhm.71: the find-by-task page and the generated index through the whole chain (the index-and-task-routes change).
+describe('render: glossary definitions and first-use links', () => {
+  const term = (id: string) => ({
+    id, label: 'inferred', statement: 'A term for the server\'s storage.', scope: 'The server.',
+    citations: [cite(`term-cite-${id}`, 'src/kestrel.c', 1, 1)],
+  });
+
+  it('displays the written glossary terms as definitions, with one first-use link and one index entry per term', async () => {
+    const doc = draft();
+    doc.understanding.terminology = [term('append-only_file'), term('AOF')];
+    doc.introduction.text += ' An append-only file supports AOF. The append-only file explains AOF.';
+    doc.sections[0].paragraphs[0].text += ' This is an append only file.';
+    doc.sections[0].paragraphs[1].text += ' The append-only_file marker uses the literal `append-only_file`.';
+
+    const result = await renderRun(await prepared(doc), renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const glossary = files.get('glossary.html')!;
+    expect(glossary.match(/<dt\b/gu)).toHaveLength(2);
+    expect([...glossary.matchAll(/<dt id="(term-glossary\/[^"]+)"><dfn>([^<]+)<\/dfn><\/dt>/gu)].map((entry) => entry.slice(1))).toEqual([
+      ['term-glossary/append-only_file', 'append-only file'], ['term-glossary/AOF', 'AOF'],
+    ]);
+
+    const overview = files.get('index.html')!;
+    expect([...overview.matchAll(/<a class="term" href="glossary\.html#([^"]+)" aria-label="[^"]+">([^<]+)/gu)].map((link) => link.slice(1))).toEqual([
+      ['term-glossary/append-only_file', 'append-only file'], ['term-glossary/AOF', 'AOF'],
+      ['term-glossary/append-only_file', 'append-only_file'],
+    ]);
+    expect(overview).toContain('<code>append-only_file</code>');
+    const index = files.get('name-index.html')!;
+    expect(index.match(/data-index-name="append-only[ _]file"><span class="index-name">.*?<\/span>/gu)).toEqual([
+      'data-index-name="append-only file"><span class="index-name">append-only file</span>',
+      'data-index-name="append-only_file"><span class="index-name"><code>append-only_file</code></span>',
+    ]);
+    const machine = JSON.parse(files.get('machine.json')!) as {
+      nameIndex: { names: { kind: string; name: string; home: { fragment: string } | null; blocks: { fragment: string }[] }[] };
+    };
+    const names = machine.nameIndex.names;
+    expect(names.filter((entry) => entry.kind === 'term').map((entry) => [entry.name, entry.home?.fragment, entry.blocks.map((block) => block.fragment)])).toEqual([
+      ['AOF', 'term-glossary/AOF', ['block-intro']],
+      ['append-only file', 'term-glossary/append-only_file', ['block-intro', 'block-p1']],
+    ]);
+    expect(names.filter((entry) => entry.name === 'append-only_file')).toEqual([
+      { kind: 'identifier', name: 'append-only_file', home: null, blocks: [{ page: 'index.html', fragment: 'block-p2' }] },
+    ]);
+  });
+
+  it('still links the earlier hyphenated glossary term from its space-separated form', async () => {
+    const doc = draft();
+    doc.understanding.terminology = [term('append-only-file')];
+    doc.introduction.text += ' This uses an append only file.';
+
+    const result = await renderRun(await prepared(doc), renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    expect(files.get('index.html')).toContain('<a class="term" href="glossary.html#term-glossary/append-only-file" aria-label="append only file, glossary entry">append only file<span class="term-pop"');
+    expect(files.get('glossary.html')!.match(/<dt\b[^<]*><dfn>[^<]*<\/dfn><\/dt>/gu)).toEqual([
+      '<dt id="term-glossary/append-only-file"><dfn>append-only-file</dfn></dt>',
+    ]);
+  });
+});
+
 describe('render: task routes and the generated index', () => {
   const step = (id: string, over: Doc = {}): Doc => ({ id, label: 'inferred', basis: 'source', text: `Add the handler beside main zq-${id}.`, citations: [cite(`c-${id}`, 'src/kestrel.c', 4, 4)], quotations: [], ...over });
   const routedDraft = (change: (doc: Doc) => void = () => {}): Doc => {
@@ -2621,7 +2748,7 @@ describe('render: task routes and the generated index', () => {
     expect(page.match(/<section id="route-route-\d" class="task-route"/gu)).toHaveLength(8);
     const kestrel = [...files.keys()].find((file) => file.startsWith('sources/') && files.get(file)!.includes('int main(void)'))!;
     expect(page).toContain('<section id="route-route-1" class="task-route" data-task-route="route-1"><h2>Add a command 1</h2><ol class="steps route-steps"><li data-claim-id="r1s1" data-epistemic="inferred" id="block-r1s1">Start in <code>main</code>, in src/kestrel.c. <span class="marking inferred">[Inferred]</span> ');
-    expect(page).toContain(`<span class="route-where">Read or change: <a href="${kestrel}#exact-text"><code>src/kestrel.c</code></a>, line 4</span><span class="route-see">In this dossier: <a href="index.html#section-core-ideas">Core ideas</a></span></li>`);
+    expect(page).toContain(`<span class="route-where">Read or change: <a href="${kestrel}#L4"><code>src/kestrel.c</code></a>, line 4</span><span class="route-see">In this dossier: <a href="index.html#section-core-ideas">Core ideas</a></span></li>`);
     // A quotation in a step is the located span, drawn as any quotation is.
     expect(page).toContain('data-claim-id="r1s2"');
     expect(page).toContain('<code>docs/notes.txt</code></a>, line 2</span>');
@@ -2814,5 +2941,144 @@ describe('render: overview hero (schema v10)', () => {
     expect(JSON.parse(files.get('machine.json')!)).not.toHaveProperty('hero');
     expect(index.indexOf('id="figure-overview-secondary"')).toBeGreaterThan(-1);
     expect(index.indexOf('id="figure-system-hero"')).toBeGreaterThan(index.indexOf('id="figure-overview-secondary"'));
+  });
+});
+
+// REQ-polaris-generation-034 version 2.26 (syzygy-5dhm.41): schema v13's worth-knowing marks through the render command. A marked block
+// renders once, in its page's callout before the page's sections, followed by a link to its section; a Pole that says why it marks none
+// gets Syzygy's none-found sentence and never its reason; a v13 draft without marks renders as the same v10 draft does. Literals throughout.
+describe('render: the worth-knowing callout (schema v13)', () => {
+  const V10 = 'polaris-dossier-local-draft-v10', V13 = 'polaris-dossier-local-draft-v13';
+  // A v10 or later draft names its hero; both versions here name the same overview graph.
+  const HERO_FIGURE: Doc = {
+    id: 'system-hero', title: 'system-hero', kind: 'boundary', home: { kind: 'overview' }, relationship: 'Related parts of one system.',
+    nodes: [{ id: 'hero-a', label: 'Client', epistemic: 'inferred', citations: [cite('hero-ca', 'src/kestrel.c', 1, 1)] },
+      { id: 'hero-b', label: 'Server', epistemic: 'inferred', citations: [cite('hero-cb', 'src/kestrel.c', 1, 1)] }],
+    edges: [{ id: 'hero-ab', from: 'hero-a', to: 'hero-b', label: 'Communicates', relation: 'relates-to', epistemic: 'inferred', citations: [cite('hero-cab', 'src/kestrel.c', 1, 1)] }],
+    disposition: { kind: 'produced', assetIds: ['system-hero'] },
+  };
+  const REASON = 'REASON-NEVER-RENDERED no fact here meets the test.';
+  const sectionOf = (id: string, title: string, paragraphs: Doc[]): Doc => ({ id, title, paragraphs, disposition: { kind: 'produced', assetIds: [id] } });
+  const versioned = (version: string, mark: boolean, poles: boolean): Doc => {
+    const doc: Doc = { ...draft(), schemaVersion: version, thesisBasis: 'stated', hero: { figure: 'system-hero' }, diagrams: [HERO_FIGURE] };
+    const sections = doc['sections'] as Doc[];
+    // p1 carries the member set false: only `true` marks a block.
+    if (mark) { (sections[0]!['paragraphs'] as Doc[])[1]!['worthKnowing'] = true; (sections[0]!['paragraphs'] as Doc[])[0]!['worthKnowing'] = false; }
+    if (poles) {
+      sections.unshift(sectionOf('why', 'Why Kestrel exists', [{ id: 'w1', label: 'non-normative', text: 'Framing for the why.', children: [] }]));
+      sections.push(sectionOf('later', 'Later', [{ id: 'l1', label: 'non-normative', text: 'Later words.', children: [] }]));
+      doc['poles'] = [{ label: 'Why', sections: ['why'] }, { label: 'How it works', sections: ['core-ideas'] },
+        { label: 'Later on', sections: ['later'], ...(mark ? { worthKnowingNone: REASON } : {}) }];
+      doc['whySection'] = 'why';
+    }
+    return doc;
+  };
+  // Reviewed, so a supported block renders Inferred: only such a block is lifted into the callout.
+  const unreviewed = async (doc: Doc): Promise<ReadonlyMap<string, string>> => {
+    const result = await renderRun(await prepared(doc, false), renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return readSite(result.report.site);
+  };
+  const rendered = async (doc: Doc, extraSupport: readonly Doc[] = []): Promise<ReadonlyMap<string, string>> => {
+    const framing = (doc['poles'] === undefined ? [] : ['w1', 'l1']).map((blockId) => ({ blockId, verdict: 'supported', spanIds: [], reason: 'Non-normative fits.', quotations: [] }));
+    // A supported Inferred row names a span: the added rows take the span of the line they cite, src/kestrel.c line 1.
+    const run = await prepared(doc, true, [...framing, ...extraSupport], { verdict: (v, spans) => {
+      for (const row of v['blockSupport'] as Doc[]) if (extraSupport.includes(row) && row['verdict'] === 'supported') row['spanIds'] = spans.filter((span) => span.path === 'src/kestrel.c' && span.startLine === 1).slice(0, 1).map((span) => span.id);
+    } });
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return readSite(result.report.site);
+  };
+  const OPEN = '<aside class="callout callout-important worth-knowing" id="worth-knowing" aria-label="Worth knowing"><p class="callout-title"><span class="callout-tone">Worth knowing</span> What a newcomer would not guess</p><div class="worth-knowing-item"><p ';
+  const FROM = (href: string) => `<p class="worth-knowing-from">In <a href="${href}">Core ideas</a></p></div></aside>`;
+  const NONE = '<aside class="callout callout-note worth-knowing" id="worth-knowing" data-worth-knowing="none" aria-label="Worth knowing"><p class="callout-title"><span class="callout-tone">Worth knowing</span> None found</p><p>The authoring session reports that no fact in this part meets the test of what a newcomer would not guess (Inferred, self-reported).</p></aside>';
+
+  // REQ-polaris-generation-034 version 2.32 (syzygy-5dhm.135): `questionKinds` is never rendered, so a v13 draft carrying it renders, page
+  // for page, as the same draft without it but for the digests of the draft's own bytes (the frozen revision and the packet built on it).
+  it('renders a v13 draft carrying questionKinds as the same draft without it, but for the draft\'s digests', async () => {
+    const plain = await rendered(versioned(V13, true, true));
+    const declared = versioned(V13, true, true);
+    declared['questionKinds'] = [{ blockId: 'p1', kinds: ['change', 'limits'] }, { blockId: 'QKIND-NEVER-RENDERED', kinds: ['purpose'] }];
+    const files = await rendered(declared);
+    expect([...files.keys()]).toEqual([...plain.keys()]);
+    for (const [file, page] of files) {
+      expect(page, file).not.toContain('QKIND-NEVER-RENDERED');
+      expect(page, file).not.toContain('questionKinds');
+      const digestless = (text: string): string => text.replace(/[0-9a-f]{64}/gu, '<sha256>').replace(/[0-9a-f]{8}(?: [0-9a-f]{8}){7}/gu, '<sha256>');
+      expect(digestless(page), file).toBe(digestless(plain.get(file)!));
+    }
+  });
+
+  it('draws a Pole\'s marked block once, in a callout before its sections, linked to its section, and says none was found on a Pole that says why', async () => {
+    const files = await rendered(versioned(V13, true, true));
+    const pole = files.get('poles/2.html')!;
+    const at = pole.indexOf(OPEN);
+    expect(at).toBeGreaterThan(-1);
+    expect(pole.indexOf(FROM('#section-core-ideas'), at)).toBeGreaterThan(at);
+    expect(pole.indexOf('id="block-p2"')).toBeGreaterThan(at);
+    expect(pole.indexOf('id="block-p2"')).toBeLessThan(pole.indexOf('<section id="section-core-ideas"'));
+    expect(pole.match(/data-claim-id="p2"/gu)).toHaveLength(1);
+    expect(pole.indexOf('id="block-p1"')).toBeGreaterThan(pole.indexOf('<section id="section-core-ideas"'));
+    expect(files.get('poles/3.html')).toContain(NONE);
+    for (const [file, page] of files) {
+      expect(page, file).not.toContain('REASON-NEVER-RENDERED');
+      if (file.endsWith('.html')) expect(page.toLowerCase(), file).not.toContain('<script');
+    }
+    expect(files.get('index.html')).not.toContain('worth-knowing');
+    const claims = (JSON.parse(files.get('machine.json')!) as { claims: { id: string; page: string }[] }).claims;
+    expect(claims.filter((claim) => claim.id === 'p2').map((claim) => claim.page)).toEqual(['poles/2.html']);
+  });
+
+  it('draws the callout on the landing page, before the sections, for a draft with no Poles', async () => {
+    const index = (await rendered(versioned(V13, true, false))).get('index.html')!;
+    const at = index.indexOf(OPEN);
+    expect(at).toBeGreaterThan(index.indexOf('</header>'));
+    expect(index.indexOf(FROM('#section-core-ideas'), at)).toBeGreaterThan(at);
+    expect(index.indexOf(FROM('#section-core-ideas'))).toBeLessThan(index.indexOf('<section id="section-core-ideas"'));
+    expect(index.match(/data-claim-id="p2"/gu)).toHaveLength(1);
+  });
+
+  it('lifts only a supported Inferred block: an Unknown, a withheld or a detector-matched marked block stays in its section', async () => {
+    const doc = versioned(V13, true, false);
+    const paragraphs = (doc['sections'] as Doc[])[0]!['paragraphs'] as Doc[];
+    // p1 is marked, but the review finds its anchor does not support it, so it renders Unknown.
+    paragraphs[0]!['worthKnowing'] = true;
+    paragraphs.push(
+      { id: 'p7', label: 'inferred', basis: 'source', text: 'zq-held paragraph.', citations: [cite('c-p7', '.env', 1, 1)], quotations: [], children: [], worthKnowing: true },
+      { id: 'p8', label: 'inferred', basis: 'source', text: `zq-matched ${SECRET_PATH} paragraph.`, citations: [cite('c-p8', 'src/kestrel.c', 1, 1)], quotations: [], children: [], worthKnowing: true },
+      // Supported and Inferred, but `worthKnowing: false` marks nothing.
+      { id: 'p9', label: 'inferred', basis: 'source', text: 'zq-unmarked paragraph.', citations: [cite('c-p9', 'src/kestrel.c', 1, 1)], quotations: [], children: [], worthKnowing: false });
+    // Unreviewed, every block renders Unknown, so none is lifted and no callout renders.
+    expect((await unreviewed(doc)).get('index.html')).not.toContain('class="worth-knowing-item"');
+    const files = await rendered(doc, [
+      { blockId: 'p7', verdict: 'withheld', spanIds: [], reason: 'Withheld.', quotations: [] },
+      { blockId: 'p8', verdict: 'supported', spanIds: [], reason: 'The span says it.', quotations: [] },
+      { blockId: 'p9', verdict: 'supported', spanIds: [], reason: 'The span says it.', quotations: [] }]);
+    const index = files.get('index.html')!;
+    const at = index.indexOf(OPEN);
+    const section = index.indexOf('<section id="section-core-ideas"');
+    expect(at).toBeGreaterThan(-1);
+    expect(index.indexOf('id="block-p2"')).toBeGreaterThan(at);
+    expect(index.indexOf('id="block-p2"')).toBeLessThan(section);
+    expect(index.slice(at, section).match(/class="worth-knowing-item"/gu)).toHaveLength(1);
+    for (const id of ['p1', 'p7', 'p8', 'p9']) {
+      expect(index.match(new RegExp(`data-claim-id="${id}"`, 'gu')), id).toHaveLength(1);
+      expect(index.indexOf(`id="block-${id}"`), id).toBeGreaterThan(section);
+    }
+    expect(marked(index, 'p1')).toEqual({ epistemic: 'unknown', reason: 'missing-evidence' });
+    expect(marked(index, 'p7')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect(marked(index, 'p8')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect(marked(index, 'p9')).toEqual({ epistemic: 'inferred', reason: null });
+  });
+
+  it('renders a v13 draft without marks as the same v10 draft, page for page', async () => {
+    for (const poles of [true, false]) {
+      // Unreviewed, so no record digest of the draft's bytes differs between the two.
+      const v10 = await unreviewed(versioned(V10, false, poles));
+      const v13 = await unreviewed(versioned(V13, false, poles));
+      expect([...v13.keys()].sort(), String(poles)).toEqual([...v10.keys()].sort());
+      for (const [file, page] of v10) if (file.endsWith('.html')) expect(v13.get(file)!.replaceAll(V13, V10), `${poles} ${file}`).toBe(page);
+      for (const page of v13.values()) expect(page).not.toContain('worth-knowing');
+    }
   });
 });

@@ -95,6 +95,24 @@ const HEADING_SCRIPT = `(() => {
   });
 })()`;
 
+// Read the existing shell footer, outside the document's rendered source
+// content. Recheck the same document after opening disclosures and reading AX.
+const EVALUATION_DOCUMENT = '__pwbReq016EvaluationDocument';
+const READ_EVALUATION = `(initial) => {
+  const marker = ${JSON.stringify(EVALUATION_DOCUMENT)};
+  if (initial) window[marker] = document;
+  else if (window[marker] !== document) return { kind: 'document-replaced' };
+  const footers = document.querySelectorAll('body > footer, body > .reading-layout > footer');
+  if (footers.length === 0) return { kind: 'missing-footer' };
+  if (footers.length !== 1) return { kind: 'ambiguous-footer' };
+  const nodes = [...footers[0].childNodes];
+  const text = (node, expected) => node?.nodeType === Node.TEXT_NODE && node.textContent === expected;
+  const code = (node) => node?.nodeName === 'CODE' && node.childNodes.length === 1 && node.firstChild.nodeType === Node.TEXT_NODE;
+  if (nodes.length !== 5 || !text(nodes[0], 'Evaluation ') || !code(nodes[1]) || !text(nodes[2], ' as of ') ||
+      !code(nodes[3]) || !text(nodes[4], '.')) return { kind: 'malformed-footer' };
+  return { kind: 'read', url: location.href, snapshot: nodes[1].textContent, asOf: nodes[3].textContent };
+}`;
+
 // ---------------------------------------------------------------------------
 // Shapes.
 
@@ -128,11 +146,13 @@ type NameHeadingViolationKind =
   | 'shared-name-different-targets'
   | 'shared-label-name-does-not-begin-with-label'
   | 'shared-label-exact-source-name-omits-path'
+  | 'shared-label-exact-source-path-unknown'
   | 'level-one-heading-count'
   | 'heading-level-skipped'
   | 'page-not-swept'
   | 'page-not-in-machine-answer'
-  | 'page-not-served';
+  | 'page-not-served'
+  | 'page-evaluation-unbound';
 
 export interface NameHeadingViolation {
   readonly kind: NameHeadingViolationKind;
@@ -149,6 +169,7 @@ export interface PageNameHeadingReport {
   readonly levelOneHeadings: number;
   readonly sharedLabelGroups: number;
   readonly exactSourceTargets: number;
+  readonly exactSourceTargetsWithoutMachinePath: number;
   readonly violations: readonly NameHeadingViolation[];
 }
 
@@ -180,7 +201,7 @@ export function exactSourceIdentity(href: string): string | undefined {
  * `sourcePaths` maps each source identity the machine answer lists to the
  * repository-relative path it carries for that source.
  */
-export function distinctNameViolations(elements: readonly InteractiveElement[], sourcePaths: ReadonlyMap<string, string>): { readonly violations: readonly NameHeadingViolation[]; readonly sharedLabelGroups: number; readonly exactSourceTargets: number } {
+export function distinctNameViolations(elements: readonly InteractiveElement[], sourcePaths: ReadonlyMap<string, string>): Pick<PageNameHeadingReport, 'violations' | 'sharedLabelGroups' | 'exactSourceTargets' | 'exactSourceTargetsWithoutMachinePath'> {
   const violations: NameHeadingViolation[] = [];
   const byName = new Map<string, InteractiveElement[]>();
   for (const element of elements) byName.set(element.name, [...(byName.get(element.name) ?? []), element]);
@@ -194,27 +215,32 @@ export function distinctNameViolations(elements: readonly InteractiveElement[], 
   for (const element of elements) byLabel.set(element.label, [...(byLabel.get(element.label) ?? []), element]);
   let sharedLabelGroups = 0;
   let exactSourceTargets = 0;
+  let exactSourceTargetsWithoutMachinePath = 0;
   for (const [label, group] of byLabel) {
     const targets = new Set(group.map((element) => targetKey(element.target)));
     if (targets.size < 2) continue;
     sharedLabelGroups += 1;
     for (const element of group) {
+      const identity = element.target.kind === 'href' ? exactSourceIdentity(element.target.value) : undefined;
+      const mappedPath = identity ? sourcePaths.get(identity) : undefined;
+      const path = typeof mappedPath === 'string' && mappedPath.length > 0 ? mappedPath : undefined;
+      if (identity !== undefined) {
+        exactSourceTargets += 1;
+        if (!path) {
+          exactSourceTargetsWithoutMachinePath += 1;
+          violations.push({ kind: 'shared-label-exact-source-path-unknown', where: describeElement(element), detail: 'Unknown: exact-source target has no path in the machine answer' });
+        }
+      }
       if (!element.name.startsWith(label)) {
         violations.push({ kind: 'shared-label-name-does-not-begin-with-label', where: describeElement(element), detail: `name "${element.name.slice(0, 80)}" does not begin with the shared label "${label.slice(0, 60)}"` });
         continue;
       }
-      if (element.target.kind !== 'href') continue;
-      const identity = exactSourceIdentity(element.target.value);
-      if (identity === undefined) continue;
-      exactSourceTargets += 1;
-      const path = sourcePaths.get(identity);
-      if (path === undefined) continue; // the route serves no source of this evaluation
-      if (!element.name.slice(label.length).includes(path)) {
+      if (path && !element.name.slice(label.length).includes(path)) {
         violations.push({ kind: 'shared-label-exact-source-name-omits-path', where: describeElement(element), detail: `name "${element.name.slice(0, 80)}" omits the source path ${path} after the label` });
       }
     }
   }
-  return { violations, sharedLabelGroups, exactSourceTargets };
+  return { violations, sharedLabelGroups, exactSourceTargets, exactSourceTargetsWithoutMachinePath };
 }
 
 // Test seam: exported for the tests; production code reaches it only inside this file.
@@ -241,6 +267,16 @@ export function headingOrderViolations(headings: readonly HeadingElement[]): rea
 /** The minimal slice of the machine answer the page list reads. */
 export interface MachineAnswerSources {
   readonly projectShape: { readonly kind: string; readonly sources?: readonly { readonly identity: string; readonly path: string }[] };
+}
+
+interface EvaluationIdentity {
+  readonly snapshot: string;
+  readonly inputsDigest: string;
+  readonly asOf: string;
+}
+
+export interface MachineAnswerEvaluation extends MachineAnswerSources {
+  readonly evaluation: EvaluationIdentity;
 }
 
 interface PolarisPage {
@@ -279,6 +315,10 @@ export function coverageViolations(listed: readonly PolarisPage[], swept: readon
  * its browser-computed name. */
 export async function measurePage(page: BrowserPage, url: string): Promise<{ readonly elements: readonly InteractiveElement[]; readonly headings: readonly HeadingElement[] }> {
   await page.navigate(url);
+  return measureLoadedPage(page, url);
+}
+
+async function measureLoadedPage(page: BrowserPage, url: string): ReturnType<typeof measurePage> {
   const described = await page.evaluate<readonly Omit<InteractiveElement, 'name'>[]>(INTERACTIVE_DESCRIPTION_SCRIPT);
   const headings = await page.evaluate<readonly HeadingElement[]>(HEADING_SCRIPT);
   const held = await page.evaluate<number>(HOLD_POPULATION_SCRIPT);
@@ -292,7 +332,10 @@ export async function measurePage(page: BrowserPage, url: string): Promise<{ rea
 /** Measures one page and reports the violations of both checks beside
  * their denominators. */
 export async function checkNamesAndHeadings(page: BrowserPage, url: string, label: string, sourcePaths: ReadonlyMap<string, string>): Promise<PageNameHeadingReport> {
-  const { elements, headings } = await measurePage(page, url);
+  return namesAndHeadings(await measurePage(page, url), url, label, sourcePaths);
+}
+
+function namesAndHeadings({ elements, headings }: Awaited<ReturnType<typeof measurePage>>, url: string, label: string, sourcePaths: ReadonlyMap<string, string>): PageNameHeadingReport {
   const distinct = distinctNameViolations(elements, sourcePaths);
   return {
     page: label,
@@ -300,10 +343,41 @@ export async function checkNamesAndHeadings(page: BrowserPage, url: string, labe
     interactive: elements.length,
     headings: headings.length,
     levelOneHeadings: headings.filter((heading) => heading.level === 1).length,
-    sharedLabelGroups: distinct.sharedLabelGroups,
-    exactSourceTargets: distinct.exactSourceTargets,
+    ...distinct,
     violations: [...distinct.violations, ...headingOrderViolations(headings)],
   };
+}
+
+type BrowserEvaluation =
+  | { readonly kind: 'read'; readonly url: string; readonly snapshot: string; readonly asOf: string }
+  | { readonly kind: 'document-replaced' | 'missing-footer' | 'ambiguous-footer' | 'malformed-footer' };
+
+type EvaluationFailure = Exclude<BrowserEvaluation['kind'], 'read'>
+  | 'unexpected-location' | 'invalid-machine-evaluation' | 'snapshot-mismatch' | 'observation-time-mismatch';
+
+function isObservationTime(value: string): boolean {
+  const match = /^(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d)(?:\.(\d{1,3}))?Z$/.exec(value);
+  return match !== null && Number.isFinite(Date.parse(value)) &&
+    new Date(value).toISOString() === `${match[1]}.${(match[2] ?? '').padEnd(3, '0')}Z`;
+}
+
+function snapshotDigest(snapshot: string): string | undefined {
+  return /^.+\|inputs:sha256:([0-9a-f]{64})$/.exec(snapshot)?.[1];
+}
+
+function machineEvaluationValid(evaluation: EvaluationIdentity | undefined): boolean {
+  return evaluation != null && typeof evaluation.snapshot === 'string' && typeof evaluation.inputsDigest === 'string' &&
+    snapshotDigest(evaluation.snapshot) === evaluation.inputsDigest && typeof evaluation.asOf === 'string' && isObservationTime(evaluation.asOf);
+}
+
+function evaluationFailure(document: BrowserEvaluation, url: string, expected: EvaluationIdentity): EvaluationFailure | undefined {
+  if (document.kind !== 'read') return document.kind;
+  if (document.url !== url) return 'unexpected-location';
+  const digest = snapshotDigest(document.snapshot);
+  if (!digest || !isObservationTime(document.asOf)) return 'malformed-footer';
+  if (document.snapshot !== expected.snapshot || digest !== expected.inputsDigest) return 'snapshot-mismatch';
+  if (document.asOf !== expected.asOf) return 'observation-time-mismatch';
+  return undefined;
 }
 
 export interface WholeSurfaceReport {
@@ -311,7 +385,10 @@ export interface WholeSurfaceReport {
   readonly pagesSwept: number;
   readonly interactive: number;
   readonly headings: number;
+  readonly exactSourceTargetsWithoutMachinePath: number;
+  readonly machineEvaluationValid: boolean;
   readonly pages: readonly PageNameHeadingReport[];
+  readonly unboundPages: readonly { readonly page: string; readonly reason: EvaluationFailure }[];
   readonly violations: readonly NameHeadingViolation[];
 }
 
@@ -320,10 +397,17 @@ export interface WholeSurfaceReport {
  * `sourcePath` carry any mount prefix). A page answering other than 200 is
  * a `page-not-served` violation, never a skip.
  */
-export async function sweepPolarisNamesAndHeadings(page: BrowserPage, baseUrl: string, answer: MachineAnswerSources, entryPath: string, sourcePath: string, status: (url: string) => Promise<number>): Promise<WholeSurfaceReport> {
+export async function sweepPolarisNamesAndHeadings(page: BrowserPage, baseUrl: string, answer: MachineAnswerEvaluation, entryPath: string, sourcePath: string, status: (url: string) => Promise<number>): Promise<WholeSurfaceReport> {
   const { pages, sourcePaths } = polarisPagesFromMachineAnswer(answer, entryPath, sourcePath);
   const reports: PageNameHeadingReport[] = [];
+  const unboundPages: { page: string; reason: EvaluationFailure }[] = [];
   const violations: NameHeadingViolation[] = [];
+  const evaluation = answer.evaluation;
+  const validEvaluation = machineEvaluationValid(evaluation);
+  const unbound = (listed: PolarisPage, reason: EvaluationFailure) => {
+    unboundPages.push({ page: listed.page, reason });
+    violations.push({ kind: 'page-evaluation-unbound', where: listed.page, detail: `Unknown: ${reason}` });
+  };
   for (const listed of pages) {
     const url = new URL(listed.path, baseUrl).href;
     const code = await status(url);
@@ -331,7 +415,34 @@ export async function sweepPolarisNamesAndHeadings(page: BrowserPage, baseUrl: s
       violations.push({ kind: 'page-not-served', where: listed.page, detail: `${listed.path} answered ${code}` });
       continue;
     }
-    const report = await checkNamesAndHeadings(page, url, listed.page, sourcePaths);
+    if (!validEvaluation) {
+      unbound(listed, 'invalid-machine-evaluation');
+      continue;
+    }
+    await page.navigate(url);
+    const started = evaluationFailure(await page.evaluate<BrowserEvaluation>(`(${READ_EVALUATION})(true)`), url, evaluation);
+    if (started !== undefined) {
+      unbound(listed, started);
+      continue;
+    }
+    // A replacement can discard the held elements before AX reads them.
+    // Recheck the document even when measurement failed.
+    const measured = await measureLoadedPage(page, url).then(
+      (populations) => ({ kind: 'measured' as const, populations }),
+      (error: unknown) => ({ kind: 'failed' as const, error }),
+    );
+    let finished: EvaluationFailure | undefined;
+    try {
+      finished = evaluationFailure(await page.evaluate<BrowserEvaluation>(`(${READ_EVALUATION})(false)`), url, evaluation);
+    } catch (error) {
+      throw measured.kind === 'failed' ? measured.error : error;
+    }
+    if (finished !== undefined) {
+      unbound(listed, finished);
+      continue;
+    }
+    if (measured.kind === 'failed') throw measured.error;
+    const report = namesAndHeadings(measured.populations, url, listed.page, sourcePaths);
     reports.push(report);
     for (const violation of report.violations) {
       violations.push({ ...violation, where: `${listed.page}: ${violation.where}` });
@@ -345,7 +456,10 @@ export async function sweepPolarisNamesAndHeadings(page: BrowserPage, baseUrl: s
     pagesSwept: reports.length,
     interactive: reports.reduce((sum, report) => sum + report.interactive, 0),
     headings: reports.reduce((sum, report) => sum + report.headings, 0),
+    exactSourceTargetsWithoutMachinePath: reports.reduce((sum, report) => sum + report.exactSourceTargetsWithoutMachinePath, 0),
+    machineEvaluationValid: validEvaluation,
     pages: reports,
+    unboundPages,
     violations,
   };
 }

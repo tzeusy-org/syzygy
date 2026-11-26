@@ -1,11 +1,37 @@
 export * from './model.js';
 export * from './poc-seeds.js';
 export * from './code-structure.js';
-export * from './work-items.js';
+export {
+  countGoverningIntentUnknown,
+  GOVERNING_INTENT_UNKNOWN_BASIS,
+  governingIntentUnknown,
+  observeWorkItems,
+  countWorkItemTitles,
+  workItemTitlesDisclosure,
+  type GoverningIntentUnknown,
+  type WorkItemTitlesScreened,
+  type WorkItemFact,
+  type WorkItemsObserved,
+  type WorkItemsResult,
+  type WorkItemStatus,
+} from './work-items.js';
+export * from './work-item-titles.js';
+export * from './commit-joins.js';
 export * from './worker-change-observation.js';
 export * from './orrery-projection.js';
 export * from './trajectory-projection.js';
 export * from './trajectory-time-measures.js';
+export {
+  CHANGE_KINDS,
+  CHANGE_WINDOWS,
+  observeWorkItemChanges,
+  type ChangeFact,
+  type ChangeKind,
+  type ChangeWindow,
+  type ChangeWindowObservation,
+  type ChangeWindowReason,
+  type CommitPoint,
+} from './work-item-history.js';
 export * from './effect-authority.js';
 export * from './materialization.js';
 export * from './test-artifact-verification.js';

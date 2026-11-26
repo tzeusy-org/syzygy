@@ -1,6 +1,7 @@
+import { readdirSync, readFileSync } from 'node:fs';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { generationAnchorId, gitBlobObjectId, pageSinkCspFinding, type GenerationSource } from '@syzygy/polaris-generation-core';
-import { READING_QUOTE, READING_SOURCE, readingInput } from './dossier-reading.testkit.js';
+import { READING_QUOTE, READING_SOURCE, navigationInput, poleHueInput, readingInput } from './dossier-reading.testkit.js';
 import { DOSSIER_THEME_CSS, figureLegend, renderLocalDossier } from './dossier-site.js';
 
 // syzygy-pdja.1: the owner's review of the Redis dossier. Expected values are literals, never read from the renderer.
@@ -35,18 +36,33 @@ describe('Poles: a landing page with the why section and a map, then one page pe
     expect(sectionsOn(files.get('poles/3.html')!)).toEqual(['five', 'six', 'seven', 'nine', 'eight']);
     expect(index).toContain('<nav class="pole-map" aria-label="The parts of this dossier"><h2>The parts of this dossier</h2><ol><li data-hue="1"><a href="index.html#section-one">Why it exists</a><ul><li><a href="index.html#section-one">One</a></li></ul></li><li data-hue="2"><a href="poles/2.html">Words</a><ul><li><a href="poles/2.html#section-two">Two</a></li>');
     // Every page's navigation reaches each Pole page, and the contents send a section to its Pole's page.
-    for (const [path, html] of files) if (path.endsWith('.html')) expect(html, path).toContain(`<li data-hue="3"><a href="${path.includes('/') ? '../' : ''}poles/3.html">The rest</a></li>`);
+    for (const [path, html] of files) {
+      if (!path.endsWith('.html')) continue;
+      const current = path === 'poles/3.html' ? ' aria-current="page"' : '';
+      expect(html, path).toContain(`<li data-hue="3"><a href="${path.includes('/') ? '../' : ''}poles/3.html"${current}>The rest</a></li>`);
+    }
     expect(files.get('contents.html')!).toContain('<li><a href="poles/2.html#section-two">Two</a>');
     // A Pole page is a narrative page: it opens in the reading view with the legend.
     expect(files.get('poles/2.html')!.split('class="reading-legend"').length - 1).toBe(1);
   });
 
-  it('colours a Pole page by its Pole, its diagrams included, and a diagram on the landing page by its own hue (syzygy-pdja.14)', () => {
+  it('keeps deep dives reachable on drafts without Poles', () => {
+    const { sources, local: { poles: _poles, ...local } } = navigationInput();
+    const files = renderLocalDossier({ sources, local }).files;
+    const html = files.get('deep-dives/why-detail.html')!;
+    expect(html).not.toContain('<ol class="pole-dive-links">');
+    expect(html).toContain('<li><a href="../deep-dives/why-detail.html" aria-current="page">Purpose detail</a></li>');
+    expect(html).toContain('<a rel="prev" href="../contents.html">Previous: Contents</a>');
+    expect(html).toContain('<a rel="next" href="../deep-dives/words-detail.html">Next: Words detail</a>');
+  });
+
+  it('colours a Pole page, and its why section on the landing page, by its Pole; a figure carries no hue of its own (syzygy-5dhm.56)', () => {
     const files = withPoles(SPEC);
     const pole = files.get('poles/2.html')!;
     expect(pole).toContain('<section id="pole" data-reading-level="1" data-pole="poles/2.html" data-hue="2">');
     expect(pole).toContain('<figure data-visual-provenance="curated" id="figure-loop"><figcaption id="diagram-title-1">Loop</figcaption>');
-    expect(files.get('index.html')!).toContain('<figure data-hue="1" data-visual-provenance="curated" id="figure-flow"><figcaption id="diagram-title-0">Flow</figcaption>');
+    expect(files.get('index.html')!).toMatch(/<section id="section-one" data-reading-level="1" data-topics="[^"]*" data-hue="1">/u);
+    expect(files.get('index.html')!).toContain('<figure data-visual-provenance="curated" id="figure-flow"><figcaption id="diagram-title-0">Flow</figcaption>');
   });
 
   it('loses and repeats no claim against the page division with no Poles', () => {
@@ -136,9 +152,8 @@ describe('an operator-agent dossier page reads without its machinery', () => {
   });
 
   it('names a size-report source page by its file, not its hashed route', () => {
-    const row = /<tr><td><a href="(sources\/(?!index)[^"]+)">([^<]+)<\/a>/u.exec(files.get('size-report.html')!)!;
-    expect(row[2]).toBe(READING_SOURCE.path);
-    expect(row[1]).not.toBe(row[2]);
+    const row = /<tr><td><a href="(sources\/(?!index)[^"]+)"(?: style="overflow-wrap:anywhere")?>([^<]+)<\/a>/u.exec(files.get('size-report.html')!);
+    expect(row?.slice(1)).toEqual(['sources/6e042a3d943e7663eb4d591e.html', 'docs/reading.md']);
   });
 
   it('folds the desktop navigation with no script, and the page stays under the policy CSP', () => {
@@ -189,15 +204,35 @@ describe('the sources list says why each file is there (syzygy-pdja.15)', () => 
   });
 });
 
-describe('colour: six hues for Poles, diagrams and cards, none carrying a claim (syzygy-pdja.14)', () => {
+describe('colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56)', () => {
   const luminance = (hex: string): number => {
     const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(c => c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
     return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!;
   };
   const contrast = (a: string, b: string): number => { const [x, y] = [luminance(a), luminance(b)].sort((p, q) => p - q); return (y! + 0.05) / (x! + 0.05); };
   const tokens = (css: string): Record<string, string> => Object.fromEntries([...css.matchAll(/--([a-z0-9-]+):(#[0-9a-f]{6})/gu)].map(match => [match[1]!, match[2]!]));
+  // The hue each element inherits: the `data-hue` of its nearest ancestor (or itself), over the page's tags; style and pre bodies hold no tags.
+  const VOID = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
+  const huesOf = (html: string, wanted: RegExp): { readonly tag: string; readonly hue: string | null }[] => {
+    const found: { tag: string; hue: string | null }[] = [];
+    const stack: { name: string; hue: string | null }[] = [];
+    const body = html.replace(/<style>[\s\S]*?<\/style>/gu, '').replace(/<pre>[\s\S]*?<\/pre>/gu, '');
+    for (const m of body.matchAll(/<(\/?)([a-zA-Z][a-zA-Z0-9-]*)((?:[^>"]|"[^"]*")*?)(\/?)>/gu)) {
+      const [whole, close, name, attrs, selfClose] = m as unknown as [string, string, string, string, string];
+      if (close === '/') {
+        const at = stack.map(entry => entry.name).lastIndexOf(name);
+        if (at >= 0) stack.length = at;
+        continue;
+      }
+      const own = /\sdata-hue="(\d)"/u.exec(attrs)?.[1];
+      const hue = own ?? stack.at(-1)?.hue ?? null;
+      if (wanted.test(whole)) found.push({ tag: whole, hue });
+      if (selfClose !== '/' && !VOID.has(name)) stack.push({ name, hue });
+    }
+    return found;
+  };
 
-  it('defines every hue and its tint in both themes, with ink, muted text and links at 4.5:1 or more on each tint, and each line colour at 3:1', () => {
+  it('keeps every hue legible in both themes: as text on the page, a panel and its own tint, and the neutral accent outside every Pole', () => {
     // The light theme is what the light-scheme blocks set; the dark theme, the default, is everything outside them.
     const parts = DOSSIER_THEME_CSS.split('@media (prefers-color-scheme:light){');
     const inside = parts.slice(1).map(part => part.slice(0, part.indexOf('}}') + 1));
@@ -210,20 +245,142 @@ describe('colour: six hues for Poles, diagrams and cards, none carrying a claim 
         expect(line, `h${hue}`).toMatch(/^#[0-9a-f]{6}$/u);
         expect(tint, `h${hue}t`).toMatch(/^#[0-9a-f]{6}$/u);
         for (const text of ['ink', 'muted', 'cyan']) expect(contrast(theme[text]!, tint!), `${text} on h${hue}t`).toBeGreaterThanOrEqual(4.5);
-        expect(contrast(line!, tint!), `h${hue} on h${hue}t`).toBeGreaterThanOrEqual(3);
+        // An eyebrow, a card label and a code language are written in the hue.
+        for (const ground of [tint!, theme['void']!, theme['panel']!]) expect(contrast(line!, ground), `h${hue} on ${ground}`).toBeGreaterThanOrEqual(4.5);
       }
+      // Outside every Pole the accent is the muted ink on the inset panel.
+      for (const ground of ['void', 'panel', 'd-surface-2']) expect(contrast(theme['muted']!, theme[ground]!), `muted on ${ground}`).toBeGreaterThanOrEqual(4.5);
+      expect(contrast(theme['ink']!, theme['d-surface-2']!)).toBeGreaterThanOrEqual(4.5);
     }
     expect(light.h1).toBe('#3a64b8');
     expect(dark.h1).toBe('#8fb0f0');
-    for (let hue = 1; hue <= 6; hue++) expect(DOSSIER_THEME_CSS).toContain(`[data-hue="${hue}"],ul.cards>li.card:nth-child(6n+${hue % 6}){--accent:var(--h${hue});--accent-tint:var(--h${hue}t)}`);
+    for (let hue = 1; hue <= 6; hue++) expect(DOSSIER_THEME_CSS).toContain(`[data-hue="${hue}"]{--accent:var(--h${hue});--accent-tint:var(--h${hue}t)}`);
+    expect(DOSSIER_THEME_CSS).toContain('--accent:var(--muted);--accent-tint:var(--d-surface-2)}');
+    expect(DOSSIER_THEME_CSS).toContain('.eyebrow{color:var(--accent)}');
+    expect(DOSSIER_THEME_CSS).toContain('.card-label{');
+    expect(DOSSIER_THEME_CSS).toMatch(/\.card-label\{[^}]*color:var\(--accent\)\}/u);
+    // The theme names no decorative colour of its own: every accent it draws is the region's.
+    expect(DOSSIER_THEME_CSS).not.toContain('var(--cyan)');
   });
 
-  it('gives each diagram outside a Pole page a hue in turn, and a diagram on a Pole page its Pole\'s', () => {
-    const files = render();
-    const figures = [...files].flatMap(([path, html]) => path.endsWith('.html') ? [...html.matchAll(/<figure( data-hue="(\d)")? data-visual-provenance="curated" id="figure-[^"]+"><figcaption id="diagram-title-\d+">[^<]*<\/figcaption><p class="diagram-relationship">/gu)].map(match => ({ path, hue: match[2] })) : []);
-    expect(figures.length).toBeGreaterThan(0);
-    expect(figures[0]).toEqual({ path: 'index.html', hue: '1' });
-    for (const figure of figures) expect(figure.hue === undefined, figure.path).toBe(figure.path.startsWith('poles/'));
+  it('colours nothing by its position: no positional selector on any page sets a hue', () => {
+    const files = renderLocalDossier(poleHueInput()).files;
+    const rules = [...files].flatMap(([path, html]) => path.endsWith('.html')
+      ? [...html.matchAll(/<style>([\s\S]*?)<\/style>/gu)].flatMap(style => [...style[1]!.matchAll(/([^{}]+)\{([^{}]*)\}/gu)].map(rule => ({ path, selector: rule[1]!, body: rule[2]! }))) : []);
+    const positional = rules.filter(rule => /:nth-(?:last-)?(?:child|of-type)\(/u.test(rule.selector));
+    // Denominator: every rule of every page's stylesheet, and the positional ones among them.
+    expect(rules.length).toBeGreaterThan(1000);
+    expect(positional.length).toBeGreaterThan(0);
+    // A rule chooses a hue when it sets the accent, names a Pole hue or the old decorative accent, or writes a colour literal; reading the
+    // region's `var(--accent)` chooses nothing.
+    const hueBearing = /--accent(?:-tint)?:|var\(--h\d|var\(--cyan\)|#[0-9a-f]{3,8}\b/u;
+    expect(positional.filter(rule => hueBearing.test(rule.body)).map(rule => `${rule.path}: ${rule.selector}{${rule.body}}`)).toEqual([]);
+    // What remains positional: the table's neutral stripe, and a source page's cited-line range, which reads the region's accent.
+    for (const rule of positional) expect(rule.selector === 'tbody tr:nth-child(even) td' || /\.cited-span:nth-child\(n\+\d+\):nth-child\(-n\+\d+\)$/u.test(rule.selector), rule.selector).toBe(true);
+  });
+
+  it('gives a card, a figure and an eyebrow their Pole\'s hue wherever they are drawn, and nothing in no Pole a hue', () => {
+    const files = renderLocalDossier(poleHueInput()).files;
+    const at = (path: string, wanted: RegExp) => huesOf(files.get(path)!, wanted).map(entry => entry.hue);
+    // Cards: the why section's on the landing page (Pole 1), section two's on Pole 2's page, and its deep dive's.
+    expect(at('index.html', /^<li class="card">$/u)).toEqual(['1', '1', '1']);
+    expect(at('poles/2.html', /^<li class="card">$/u)).toEqual(['2', '2', '2']);
+    expect(at('deep-dives/words-detail.html', /^<li class="card">$/u)).toEqual(['2', '2', '2']);
+    // Figures: by the Pole of the page or section they sit in, never by their own place in the draft; an overview figure has no Pole.
+    const figures = new Map([...files].flatMap(([path, html]) => path.endsWith('.html')
+      ? huesOf(html, /^<figure [^>]*data-visual-provenance="curated"/u).map(entry => [/id="figure-([^"]+)"/u.exec(entry.tag)![1]!, entry.hue] as const) : []));
+    expect(Object.fromEntries(figures)).toEqual({ 'overview-figure': null, flow: '1', loop: '2', pair: '2', 'dive-figure': '2' });
+    for (const [path, html] of files) if (path.endsWith('.html')) expect(html, path).not.toMatch(/<figure[^>]* data-hue=/u);
+    // Eyebrows: in the reading column, a Pole page's, a deep dive's and a figure kind's take the hue around them; the overview's and the
+    // navigation's own (the dossier title) are in no Pole.
+    const eyebrows = (path: string, column: boolean) => huesOf(column ? main(files.get(path)!) : files.get(path)!.slice(0, files.get(path)!.indexOf('<main')), /^<span class="eyebrow">$/u).map(entry => entry.hue);
+    expect(eyebrows('poles/2.html', true)).toEqual(['2', '2', '2', '2', '2', '2']);
+    expect(eyebrows('deep-dives/words-detail.html', true)).toEqual(['2', '2']);
+    expect(eyebrows('deep-dives/why-detail.html', true)).toEqual(['1']);
+    for (const path of ['poles/2.html', 'deep-dives/words-detail.html', 'deep-dives/why-detail.html']) expect(eyebrows(path, false), path).toEqual([null, null]);
+  });
+
+  // Every rule of every page's stylesheets, in cascade order, as selector parts and declarations.
+  const stylesheetRules = (html: string) => [...html.matchAll(/<style>([\s\S]*?)<\/style>/gu)].flatMap(style => [...style[1]!.matchAll(/([^{}]+)\{([^{}]*)\}/gu)]
+    .map(rule => ({ parts: rule[1]!.split(',').map(part => part.trim()), decls: rule[2]!.split(';').flatMap(decl => {
+      const at = decl.indexOf(':');
+      return at < 0 ? [] : [{ prop: decl.slice(0, at).trim(), value: decl.slice(at + 1).trim() }];
+    }) })));
+  // The declarations that read a token in `reads` on a selector part `allowed` does not match, and that no later rule on the same selector
+  // part takes back (the same property, or its colour longhand, set without such a token).
+  const standing = (html: string, reads: RegExp, allowed: RegExp | null): string[] => {
+    const rules = stylesheetRules(html);
+    return rules.flatMap((rule, index) => rule.decls.filter(decl => reads.test(decl.value)).flatMap(decl => rule.parts
+      .filter(part => allowed === null || !allowed.test(part))
+      .filter(part => !rules.slice(index + 1).some(later => later.parts.includes(part)
+        && later.decls.some(d => (d.prop === decl.prop || d.prop === `${decl.prop}-color`) && !reads.test(d.value))))
+      .map(part => `${part}{${decl.prop}:${decl.value}}`)));
+  };
+
+  it('draws an evidence-state colour only on an evidence-state element, and the decorative accent nowhere (R-POLE-HUE-1 F1, F2)', () => {
+    const files = renderLocalDossier(poleHueInput()).files;
+    const pages = [...files].filter(([path]) => path.endsWith('.html'));
+    // Denominator: every page of the fixture, each with its full set of stylesheets.
+    expect(pages.length).toBeGreaterThan(10);
+    const evidence = /var\(--(?:observed|proposed|unknown|amber|d-ok-tint|d-info-tint|d-warn-tint)\)/u;
+    const evidenceElement = /epistemic|claim-tuple|unknown|verified-quote|exact-source|not-established|unresolved-asset|withheld/u;
+    for (const [path, html] of pages) {
+      expect(standing(html, evidence, evidenceElement), path).toEqual([]);
+      expect(standing(html, /var\(--cyan\)/u, null), path).toEqual([]);
+    }
+    // The predicate sees what it claims to: an evidence-state rule is read, and the base sheet's decorative rules are taken back.
+    const index = files.get('index.html')!;
+    expect(stylesheetRules(index).some(rule => rule.parts.includes('blockquote.exact-source') && rule.decls.some(d => evidence.test(d.value)))).toBe(true);
+    expect(stylesheetRules(index).filter(rule => rule.decls.some(d => /var\(--cyan\)/u.test(d.value))).length).toBeGreaterThan(5);
+  });
+
+  it('gives six Poles six hues and a seventh none, and names every Pole in words (R-POLE-HUE-1 F3)', () => {
+    const input = poleHueInput();
+    const labels = ['Why it exists', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven'];
+    const sections = [['one'], ['two'], ['three'], ['four'], ['five'], ['six'], ['seven', 'nine', 'eight']];
+    const files = renderLocalDossier({ ...input, local: { ...input.local, poles: { whySection: 'one', poles: labels.map((label, i) => ({ label, sections: sections[i]! })) } } }).files;
+    const index = files.get('index.html')!;
+    expect([...index.matchAll(/<li( data-hue="(\d)")?><a href="[^"]*">([^<]*)<\/a><ul>/gu)].map(m => [m[3], m[2] ?? null]))
+      .toEqual(labels.map((label, i) => [label, i < 6 ? String(i + 1) : null]));
+    for (let pole = 2; pole <= 7; pole++) {
+      const html = files.get(`poles/${pole}.html`)!;
+      expect(html, `pole ${pole}`).toContain(`<section id="pole" data-reading-level="1" data-pole="poles/${pole}.html"${pole < 7 ? ` data-hue="${pole}"` : ''}><span class="eyebrow">Part of <a href="../index.html">Reading dossier</a></span><h1>${labels[pole - 1]}</h1>`);
+    }
+    expect(huesOf(files.get('poles/7.html')!, /^<li class="card">$/u)).toEqual([]);
+    expect(main(files.get('poles/7.html')!)).not.toMatch(/data-hue=/u);
+  });
+
+  it('writes no positional hue rule in any source module either (R-POLE-HUE-1 F4)', () => {
+    const root = new URL('../../../../', import.meta.url);
+    const walk = (dir: URL): string[] => readdirSync(dir, { withFileTypes: true }).flatMap(entry => entry.name === 'node_modules' || entry.name === 'dist' || entry.name.startsWith('.')
+      ? [] : entry.isDirectory() ? walk(new URL(`${entry.name}/`, dir)) : /\.(?:ts|mts|mjs|js|css|html)$/u.test(entry.name) && !/\.(?:test|testkit)\.ts$/u.test(entry.name) ? [new URL(entry.name, dir).pathname] : []);
+    const files = ['apps/', 'packages/', 'scripts/'].flatMap(dir => walk(new URL(dir, root)));
+    // Denominator: every non-test source module under the three implementation trees.
+    expect(files.length).toBeGreaterThan(300);
+    const positional = /:nth-(?:last-)?(?:child|of-type)\(/gu;
+    const hits = files.flatMap(file => {
+      const text = readFileSync(file, 'utf8');
+      return [...text.matchAll(positional)].map(m => {
+        const open = text.indexOf('{', m.index), close = text.indexOf('}', open);
+        return { file: file.slice(new URL(root).pathname.length), block: open < 0 || close < 0 ? '' : text.slice(open, close + 1) };
+      });
+    });
+    expect([...new Set(hits.map(hit => hit.file))].sort()).toEqual([
+      'apps/three-surface-poc/src/polaris-accessibility.ts',
+      'apps/three-surface-poc/src/polaris-generation/dossier-site.ts',
+      'apps/three-surface-poc/src/polaris-generation/dossier-source-lines.ts',
+    ]);
+    // The accessibility audit builds a selector to name an element, not a style; the two stylesheet rules set no hue.
+    const hueBearing = /--accent(?:-tint)?:|var\(--h\d|var\(--cyan\)|#[0-9a-f]{3,8}\b/u;
+    for (const hit of hits.filter(hit => !hit.file.endsWith('polaris-accessibility.ts'))) expect(hueBearing.test(hit.block), `${hit.file} ${hit.block}`).toBe(false);
+  });
+
+  it('gives a worth-knowing block the landing page borrows from the why section its Pole\'s hue', () => {
+    const input = poleHueInput();
+    const marked = renderLocalDossier({ ...input, local: { ...input.local, worthKnowing: { blockIds: ['one-cards'], nonePoles: [] } } }).files.get('index.html')!;
+    const items = huesOf(marked, /^<div class="worth-knowing-item"/u);
+    expect(items.map(entry => entry.tag)).toEqual(['<div class="worth-knowing-item" data-hue="1">']);
+    expect(huesOf(marked, /^<li class="card">$/u).map(entry => entry.hue)).toEqual(['1', '1', '1']);
   });
 });
 
@@ -299,9 +456,9 @@ describe('glossary terms in agent prose', () => {
   });
 
   it('marks the diagram element under the pointer, and a label\'s line with it', () => {
-    expect(DOSSIER_THEME_CSS).toContain('.diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--cyan);stroke-width:1.5}');
+    expect(DOSSIER_THEME_CSS).toContain('.diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--accent);stroke-width:1.5}');
     expect(DOSSIER_THEME_CSS).toContain('.diagram-scroll path.edge-leader{stroke-width:1;fill:none}');
-    expect(DOSSIER_THEME_CSS).toContain('.diagram-scroll path.edge-echo{display:none;fill:none;stroke:var(--cyan);stroke-width:3;pointer-events:none}.diagram-scroll g.edge-text:hover path.edge-echo{display:inline}');
+    expect(DOSSIER_THEME_CSS).toContain('.diagram-scroll path.edge-echo{display:none;fill:none;stroke:var(--accent);stroke-width:3;pointer-events:none}.diagram-scroll g.edge-text:hover path.edge-echo{display:inline}');
   });
 
   it('fills an arrowhead and never strokes it, so it is drawn as the leader rule models it', () => {

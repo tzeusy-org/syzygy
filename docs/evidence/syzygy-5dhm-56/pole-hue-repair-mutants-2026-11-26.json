@@ -1,0 +1,89 @@
+{
+  "bead": "syzygy-5dhm.56",
+  "rule": "AGENTS.md verification rule 6",
+  "commit": "10998aebfb15a8341b12be305ed1cb5c46514a14",
+  "test": "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+  "command": "npx vitest run apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts --reporter=json",
+  "mutants": [
+    {
+      "id": "R1-callout-tip-observed",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "+ '.callout-note,.callout-tip,.callout-caution,.callout-important{--c:var(--accent);--t:var(--accent-tint)}'",
+      "new": "+ '.callout-note,.callout-caution,.callout-important{--c:var(--accent);--t:var(--accent-tint)}.callout-tip{--c:var(--observed);--t:var(--d-ok-tint)}'",
+      "outcome": "killed",
+      "testsRun": 41,
+      "failedTests": [
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) draws an evidence-state colour only on an evidence-state element, and the decorative accent nowhere (R-POLE-HUE-1 F1, F2)"
+      ]
+    },
+    {
+      "id": "R2-run-notice-proposed",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "background:var(--d-surface-2);color:var(--ink);`\n  + `border:${tokens.line.hairline} solid var(--line);",
+      "new": "background:var(--d-info-tint);color:var(--ink);`\n  + `border:${tokens.line.hairline} solid var(--line);",
+      "outcome": "killed",
+      "testsRun": 41,
+      "failedTests": [
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) draws an evidence-state colour only on an evidence-state element, and the decorative accent nowhere (R-POLE-HUE-1 F1, F2)"
+      ]
+    },
+    {
+      "id": "R3-base-notice-caution",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": ".notice{border-left-color:var(--line)}",
+      "new": "",
+      "outcome": "killed",
+      "testsRun": 41,
+      "failedTests": [
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) draws an evidence-state colour only on an evidence-state element, and the decorative accent nowhere (R-POLE-HUE-1 F1, F2)"
+      ]
+    },
+    {
+      "id": "R4-link-decorative",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "+ 'a{color:var(--accent)}summary",
+      "new": "+ 'summary",
+      "outcome": "killed",
+      "testsRun": 41,
+      "failedTests": [
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) draws an evidence-state colour only on an evidence-state element, and the decorative accent nowhere (R-POLE-HUE-1 F1, F2)"
+      ]
+    },
+    {
+      "id": "R5-summary-decorative",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "summary{color:var(--accent)}tr:target",
+      "new": "tr:target",
+      "outcome": "killed",
+      "testsRun": 41,
+      "failedTests": [
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) draws an evidence-state colour only on an evidence-state element, and the decorative accent nowhere (R-POLE-HUE-1 F1, F2)"
+      ]
+    },
+    {
+      "id": "R6-pole-hue-wraps",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "hue: index < HUES ? index + 1 : null, path:",
+      "new": "hue: index % HUES + 1, path:",
+      "outcome": "killed",
+      "testsRun": 41,
+      "failedTests": [
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) gives six Poles six hues and a seventh none, and names every Pole in words (R-POLE-HUE-1 F3)"
+      ]
+    },
+    {
+      "id": "R7-source-only-positional-hue",
+      "file": "apps/three-surface-poc/src/orrery.ts",
+      "old": "(end of file)",
+      "new": "\nexport const MUTANT_RULE = 'ol>li:nth-child(2){--accent:var(--h2)}';\n",
+      "outcome": "killed",
+      "testsRun": 41,
+      "failedTests": [
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) gives six Poles six hues and a seventh none, and names every Pole in words (R-POLE-HUE-1 F3)",
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) writes no positional hue rule in any source module either (R-POLE-HUE-1 F4)"
+      ],
+      "note": "A second run of R7 alone failed only the F4 test; the F3 test passes in isolation under R7, so its failure in the batch run is unexplained (Unknown; most likely a timeout under load, not a predicate of R7)."
+    }
+  ],
+  "review": "R-POLE-HUE-1 (docs/reviews/syzygy-5dhm-56/R-POLE-HUE-1-RAW.md), findings F1-F4"
+}

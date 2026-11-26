@@ -265,7 +265,10 @@ describe('session-prompt inventory', () => {
       'Syzygy refuses an inventory whose identifier equals the authoring session\'s',
       `syzygy dossier inventory-check ${run} --inventory inventory.json`,
       'never open the run directory\'s `drafts/`, `checks/`, `brief.md`',
-      '"$id": "urn:syzygy:polaris-dossier:polaris-dossier-local-inventory-v1"',
+      '"$id": "urn:syzygy:polaris-dossier:polaris-dossier-local-inventory-v2"',
+      '- Brief version: `polaris-dossier-inventory-brief-v4`',
+      // Inventory brief v4 (version 2.26): the worth-knowing kind, between `conflict` and `other`.
+      '- `conflict`: two of its statements that disagree\n- `worth-knowing`: a fact it states about itself that an engineer new to the project would not guess from the kind of project it is, such as a default, a limit, an ordering or a choice unlike that of similar projects; look for one to three in each major part of the project, and record none where you find none, never one made to fill a quota\n- `other`: anything else it states that a reader would need',
       'You run nothing from the clone, so you report no executions',
     ]) expect(brief).toContain(text);
     expect(brief).not.toContain('list in `executions`');
@@ -389,6 +392,23 @@ describe('inventory-check', () => {
     expect(report).not.toHaveProperty('manifestFacts');
     expect(JSON.parse(fs.readFileSync(path.join(run, 'inventory', 'checks', 'rev-0.json'), 'utf8'))).not.toHaveProperty('manifestFacts');
     expect(report).not.toHaveProperty('reviewReach');
+  });
+
+  it('takes the worth-knowing kind in a v2 inventory and refuses it in a v1 inventory, whose kinds are v1\'s alone (version 2.26)', async () => {
+    const kindsV1 = 'must be one of purpose, beneficiary, thesis, capability, choice, term, qualification, conflict, other';
+    for (const [schemaVersion, expected] of [
+      ['polaris-dossier-local-inventory-v2', []],
+      ['polaris-dossier-local-inventory-v1', [['schema', '$.entries[1].kind', kindsV1]]],
+    ] as const) {
+      const run = await runWithDrafts();
+      const dir = await handedOver(run);
+      const inventory = validInventory();
+      inventory.schemaVersion = schemaVersion;
+      inventory.entries[1].kind = 'worth-knowing';
+      writeInventory(dir, inventory);
+      const report = passed(await checkInventory(run, {}, deps()));
+      expect(report.findings.map((finding) => [finding.kind, finding.at, finding.detail])).toEqual(expected);
+    }
   });
 
   it('reports a quotation the cited file does not carry, a quotation in an unknown entry and an absent coverage path', async () => {

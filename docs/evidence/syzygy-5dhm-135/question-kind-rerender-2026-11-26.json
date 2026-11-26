@@ -1,0 +1,61 @@
+{
+  "subject": "syzygy-5dhm.135: the comprehension-regression rule (CONTRIBUTING.md) over the stored Redis runs, re-rendered before and after",
+  "before": "dba7a40f622084889db826a57bafeed0af22147a",
+  "after": "dcb731947e00fe7aa6eda9f63953f570fdae1027",
+  "harness": "docs/evidence/syzygy-5dhm-135/question_kind_rerender_all.sh, through docs/evidence/syzygy-5dhm-136/reader_edition_rerender.ts",
+  "runs": [
+    {
+      "run": "run-2ecdcab0c77e228f6ad9d3e0acfa1414",
+      "filesBefore": 53,
+      "filesAfter": 53,
+      "samePathSet": true,
+      "differing": [],
+      "siteDigest": "0c009eb030794913150bc5baaff8848d95e717bb893497df653580875e523680"
+    },
+    {
+      "run": "run-36df95faf04a4c98eabbb32a18a4e833",
+      "filesBefore": 62,
+      "filesAfter": 62,
+      "samePathSet": true,
+      "differing": [],
+      "siteDigest": "9562afc062ce23132cba2d7d52d3fded2bfc7829c2362f89e374e03987cc59ef"
+    },
+    {
+      "run": "run-4465d22f5ce1829ca49059a5b8451bb0",
+      "filesBefore": 55,
+      "filesAfter": 55,
+      "samePathSet": true,
+      "differing": [],
+      "siteDigest": "eaa2fb217f72f6f8e3c0355f44cb528157e7318769d67584e4e248d2fbbffe80"
+    },
+    {
+      "run": "run-658f2f90470f73eea1dc1d90209c5ef7",
+      "filesBefore": 52,
+      "filesAfter": 52,
+      "samePathSet": true,
+      "differing": [],
+      "siteDigest": "9688e33cae0e24bbe21bc4276a5892e7b155e558aff6f779776e2feae1d74828"
+    },
+    {
+      "run": "run-d9411d26ca55ebe0250e2e9b94dc0e32",
+      "filesBefore": 72,
+      "filesAfter": 72,
+      "samePathSet": true,
+      "differing": [],
+      "siteDigest": "6cfa696e4a03bef4ca6f18aad9397f77cd4f6caaca35527d29eab6eba2f1dda6"
+    },
+    {
+      "run": "run-ffe579c77dc21d9f6dd87ca6e2bc9301",
+      "filesBefore": 55,
+      "filesAfter": 55,
+      "samePathSet": true,
+      "differing": [],
+      "siteDigest": "4066a228a962445ee16ff5e1c1d6297d29d44b562dea46c19ed7bd9212715354"
+    }
+  ],
+  "allIdentical": true,
+  "readerShare": {
+    "renderedSite": "Observed: where every file is byte-identical, a reader of the re-rendered site reads what the kept pilot arms read, so the before and after shares of a stored run are equal by construction; no reader was run.",
+    "briefV21": "Unknown: brief v21 changes only what a new authoring session is asked; no new run was made (it needs consent this session never gives), so its effect on what a reader recovers is not measured."
+  }
+}

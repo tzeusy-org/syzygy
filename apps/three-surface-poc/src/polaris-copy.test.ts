@@ -110,6 +110,10 @@ function sweep(html: string): { strings: CopyString[]; violations: Violation[] }
         pocBound += 1;
         if (roleValues[0] !== 'scope-instruction') violations.push({ rule: 'scope-instruction-role', text: attrs.trim() });
       }
+      if (tag === 'nav' && /\sdata-polaris-opening-index(?:\s|$)/.test(attrs)) {
+        for (const label of attr(attrs, 'aria-label')) strings.push({ role: roleValues[0], text: decode(label) });
+        if (roleValues[0] !== 'scope-instruction') violations.push({ rule: 'scope-instruction-role', text: attrs.trim() });
+      }
       const classes = attr(attrs, 'class').join(' ');
       if (/\b(claim-tuple|unknown-disclosure|notice)\b/.test(classes) && roleValues[0] !== 'epistemic-disclosure') {
         violations.push({ rule: 'disclosure-role', text: attrs.trim() });

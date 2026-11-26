@@ -8,9 +8,9 @@ const recipes: [GenerationStage, string, string][] = [
   ['inventory', 'polaris-inventory-v1', 'ea6c06ff89668f4914859b4c1133f9def4db51f2456f28b2cf86ba89fb1411af'],
   ['plan', 'polaris-plan-v2', 'e632eada2e46aac167345b95fa5911e04ebf6b183d1fb19e1564ede4da7db344'],
   ['author', 'polaris-author-v2', '5ff6d41c45e7fe9cf28d5e957d0c85ff3c714aa9f3f2de17523a4c2e554c9743'],
-  ['edit', 'polaris-edit-v2', 'd0af06409f066c42c7a1f69f60b0c2f60b097926ea3508fd8322e6f11413e6de'],
+  ['edit', 'polaris-edit-v3', '08bdef65f65c1676801fa02e5561454d15a66775243cb17474d3d48af1b05678'],
   ['fidelity', 'polaris-fidelity-v1', 'ea3d5f99f5ac1520ae46a1a3f9c0fca7e0180427ca92a2aaf85a0c975f97377c'],
-  ['repair', 'polaris-repair-v2', '0ad55710dc4c7dabc4586aa04861880533b6c88749acbc3ca2f1c9183b50b34b'],
+  ['repair', 'polaris-repair-v3', '78156300af4f30bde43070d630564750075c79cf37fd45a30ecc36a7be0037fd'],
 ];
 
 describe('versioned stage prompts', () => {

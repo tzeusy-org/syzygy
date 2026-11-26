@@ -1,0 +1,7 @@
+# CONFIRM
+
+[Observed] The structural fixture correction at `a03efc9bfb07741ed4138065c4d65aa61ac08a37`, tree `67064543b42b003992cb18c86a694878d4c85f0b`, directly follows frozen R3 `c1a9940dd27ba25b39be2df28d4fddc16987df8b`. The exact patch changes one census regex in each of two test files. No expected line list, link assertion or runtime byte changes. Review scope is the split-source and withheld-line census under the original `syzygy-fnry.20` criteria, REQ-034, RFC7-10, SEC-5, and CC-REV-2.
+
+[Observed] Independently reran both tests on the exact parent and successor. The parent failed 2/2: the first-piece split CRLF census read four apparent L1 IDs instead of one, and the withheld-line census read 2,1,1,2,3,5 instead of 1,2,3,5. The successor passed 2/2 with both original expected populations intact. The new pattern scans actual source-line span openers, includes highlighted and plain numbered spans, and excludes CSS attribute selectors. The asserted absent L4 href stays intact. Replay log digests in predecessor/successor order are `11bc90dbea48b30a1d2c66db2b7f20a17334df066ebe8799c56a7912ec62d99c` and `03054bd8a5ce19b728fb218dcffb12d0ec5f42af22ee867f459978ae160ffc73`.
+
+[Observed] The runtime bytes covered by focused R3 remain identical. Exact detached successor was clean and the two-file patch passes the Git whitespace check. This review binds the test repair to the focused R3 continuation disposition. Final assembly and the canonical suite are separate checkpoints.

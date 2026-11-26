@@ -49,6 +49,15 @@ admission.
 - One thin-documentation repository, chosen later: does the generator invent a
   thesis where none is stated, or say Unknown?
 
+**The dossier corpus (2026-11-24).** The stratified corpus that agent-started
+dossier runs use (pursuit 2026-11-21b R16) is
+[`dossier-corpus-v1.json`](dossier-corpus-v1.json): fourteen repositories
+pinned to commits, the mechanism-version definition, the pass budget and the
+generality pass rule, sealed before any pass. It reuses T1, T2 and ripgrep at
+the pins above and leaves T3 out for a permissively licensed large monorepo.
+`node scripts/dossier_corpus.mjs --check` validates it; `--digest` prints the
+current mechanism version.
+
 ## Changed-source regeneration: Redis's licence history
 
 The portability proof needs a real change of source meaning — "retract a
@@ -73,10 +82,10 @@ revisions.
 Per target, frozen before generating (per the kit's
 [Prove portability](README.md#prove-portability)):
 
-1. **Reader test.** A fresh reader answers seven frozen questions — purpose,
-   beneficiary, central thesis, important capabilities, one architectural
-   choice, a limit, an uncertainty — from the generated page alone, recording
-   attempted paths. A second fresh reader answers the same questions from the
+1. **Reader test.** A fresh reader answers the seven frozen evaluation
+   questions of the [question file](question-file-v1.json) (its public part,
+   `evaluationQuestions`; the one place reader questions are written) from
+   the generated page alone, recording attempted paths. A second fresh reader answers the same questions from the
    reference site. Accuracy and comprehension are scored separately from
    visual polish.
 2. **Fidelity.** Every factual claim resolves to an admitted source span;

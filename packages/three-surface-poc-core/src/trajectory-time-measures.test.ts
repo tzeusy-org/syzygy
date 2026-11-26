@@ -8,7 +8,7 @@ import { governingIntentUnknown, type WorkItemFact } from './work-items.js';
 // module under test.
 
 function item(id: string, status: WorkItemFact['status'], createdAt: string, closedAt: string | null): WorkItemFact {
-  return { id, status, issueType: 'task', priority: 2, createdAt, updatedAt: createdAt, closedAt, governedBy: governingIntentUnknown() };
+  return { id, status, issueType: 'task', priority: 2, createdAt, updatedAt: createdAt, closedAt, governedBy: governingIntentUnknown(), title: { text: 'fixture title' } };
 }
 
 const ITEMS: readonly WorkItemFact[] = [

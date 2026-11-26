@@ -97,7 +97,8 @@ describe('redacted Git source fidelity and safe transport', () => {
     const ports: PipelinePorts = { now: Date.now, verifySources: async () => make(), permissionIdentity: async () => 'fixture',
       admit: async input => ({ kind: 'reserved', permit: { attemptId: String(input.ordinal), maxUsageUnits: 1, maxOutputBytes: 1_000 } }),
       permitted: async () => true, releaseUnsent: async () => undefined, responseSchema: () => ({ version: 'fixture', schema: {} }),
-      generate: async input => { sends.push(input.input); return { body: '{}', model: 'fixture', usageUnits: 1 }; },
+      generate: async input => { sends.push(input.input);
+        return { body: input.stage === 'edit' ? '{"draft":{},"changes":[]}' : '{}', model: 'fixture', usageUnits: 1 }; },
       validate: (_stage, data) => data, record: async () => undefined, lateReceipt: async () => undefined, fidelity: () => ({ blocking: false, findings: [] }) };
     expect(await runGenerationPipeline(request(transport(original)), { ...ports, verifySources: async () => true }, new AbortController().signal)).toMatchObject({ status: 'stopped', reason: 'source-refused' });
     const forgeries = [

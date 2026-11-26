@@ -1,0 +1,9 @@
+CONFIRM
+
+[Observed] Reviewed exact 3f74ef34701a8d55a98f5eef858a01f3ac2a30f1, tree c2b2d47fa7f423abeaa122c3e2cd00bf7a1cafa1, direct successor to the source-only R1. From R1, only scripts/check_spec_reconciliation.py changes. The standalone counter, reviewed REQ-006 candidate bytes, governed plane and generator runtime are unchanged.
+
+[Observed] F1 is resolved. The correct active index and status routes pass. Independent single-fault controls reject a wrong ledger destination, wrong adoption identity, wrong version tag, wrong candidate destination, a Candidate status in the active index, and a wrong identity in project status. An adopted index using an arbitrary link caption is refused while pending and while retired. The retired candidate form is accepted. The exact active index now requires the named candidate route, adopted state, exact ledger route, exact adoption identity and exact version tag.
+
+[Observed] F2 is resolved. Reusing existing A-64 as the v2.25 identity now refuses with the explicit ledger identity finding. The same malformed row followed by a tempting veto still refuses, and the disposition reader does not mask the collision. An otherwise valid synthetic A-999 activates solely REQ-polaris-generation-006, preserving the other 38 requirements. The two counters agree at 39/539, and valid later A-1000 restores the complete predecessor at 39/538. The missing-predecessor, malformed-row and changed-subject refusals still hold. No proof fixture lands a v2.25 row or tag.
+
+[Observed] I reran the original independent probe and eight added discriminators in a separate detached clone. The 23 observations and exact output binding are recorded at SHA-256 0fee882bf25601dd4566748e9219fc9fc7684b41f8dd7ccff06f4cc62b2da15e. Git diff hygiene passed and the fixture clone was restored clean. No remaining R1 source finding. The later exact composition package, real Git adoption and version tag require their own evidence.

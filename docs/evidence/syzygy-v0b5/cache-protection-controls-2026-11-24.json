@@ -1,0 +1,188 @@
+{
+  "format": "mutation-run/1",
+  "protectedBaseline": "f9fbc5d3f5e2be8c2f330eae0778acd7522732c3",
+  "candidateParent": "24eeac0a181d4c11c014d929c128915499d45e7b",
+  "subjects": {
+    "scripts/check_spec_reconciliation.py": "77b21eaa26458eda77ad0850c3537b3a6be1d46bc2ac8c2df3ecb03bfc4432f9",
+    "docs/evidence/syzygy-v0b5/reverse_cache_harness.py": "be548683e41c1f99155e590ccac01329cbe0d062c42709f16b03d431ca601caa",
+    "docs/evidence/syzygy-v0b5/memo_rerun_harness.py": "82db20662157ca99d5d1b5e45e4bda6e96f58b7b49ab4fd875b8c0d5fe3e3150"
+  },
+  "baseline": [
+    {
+      "fixture": "reverse_cache_harness.py",
+      "exitCode": 0,
+      "expected": "PASS: frozen patch bytes",
+      "logSha256": "9612b7f5af49209f0cd91da42e26eea6c81dab46634446afb61e32c3b8d2068b"
+    },
+    {
+      "fixture": "memo_rerun_harness.py",
+      "exitCode": 0,
+      "expected": "FRESH: the second run over the same path saw the broken record",
+      "logSha256": "b96f00fd4e8d45866eb9b17d944301d8895b11d17311f9c49bb4d363a0d1232a"
+    }
+  ],
+  "mutants": [
+    {
+      "id": "key-omits-patch",
+      "fixture": "reverse_cache_harness.py",
+      "expected": "patch changes require a fresh reversal",
+      "fragments": [
+        {
+          "old": "    key = (sha(patch), Path(target_rel).as_posix(), sha(body), zero_context)",
+          "new": "    key = (Path(target_rel).as_posix(), sha(body), zero_context)"
+        }
+      ],
+      "exitCode": 1,
+      "outcome": "killed",
+      "logSha256": "3353686b1b63d64f01473fcff8f72b278b00840684be8c87472e7373bace3d91"
+    },
+    {
+      "id": "key-omits-target",
+      "fixture": "reverse_cache_harness.py",
+      "expected": "target changes require a fresh reversal",
+      "fragments": [
+        {
+          "old": "    key = (sha(patch), Path(target_rel).as_posix(), sha(body), zero_context)",
+          "new": "    key = (sha(patch), sha(body), zero_context)"
+        }
+      ],
+      "exitCode": 1,
+      "outcome": "killed",
+      "logSha256": "c9c77ba8bca1ff34627a75e90219ca8f7eb41ef3e642436d5e4a11155cb283ec"
+    },
+    {
+      "id": "key-omits-body",
+      "fixture": "reverse_cache_harness.py",
+      "expected": "body changes require a fresh reversal",
+      "fragments": [
+        {
+          "old": "    key = (sha(patch), Path(target_rel).as_posix(), sha(body), zero_context)",
+          "new": "    key = (sha(patch), Path(target_rel).as_posix(), zero_context)"
+        }
+      ],
+      "exitCode": 1,
+      "outcome": "killed",
+      "logSha256": "aa27199266533ffff1dddd4296784e2ef48cf7a3d47e9cf4057803c891e17c18"
+    },
+    {
+      "id": "key-omits-mode",
+      "fixture": "reverse_cache_harness.py",
+      "expected": "mode changes require a fresh reversal",
+      "fragments": [
+        {
+          "old": "    key = (sha(patch), Path(target_rel).as_posix(), sha(body), zero_context)",
+          "new": "    key = (sha(patch), Path(target_rel).as_posix(), sha(body))"
+        }
+      ],
+      "exitCode": 1,
+      "outcome": "killed",
+      "logSha256": "2768b19375856cab4a2d946d388798eca574b5619e3daed2865181c0d06d6594"
+    },
+    {
+      "id": "reopen-patch",
+      "fixture": "reverse_cache_harness.py",
+      "expected": "Git must consume the patch bytes used as the key",
+      "fragments": [
+        {
+          "old": "    result = _reverse_apply(patch, target_rel, body, zero_context=zero_context)",
+          "new": "    result = _reverse_apply((root / patch_rel).read_bytes(), target_rel, body, zero_context=zero_context)"
+        }
+      ],
+      "exitCode": 1,
+      "outcome": "killed",
+      "logSha256": "cf7c59ed858def779264ce75efd0f5bb77e8b2d85cb455a14525963dc4d39657"
+    },
+    {
+      "id": "unbounded-entries",
+      "fixture": "reverse_cache_harness.py",
+      "expected": "retention must stop at 128 entries",
+      "fragments": [
+        {
+          "old": "    if len(cache) < _REVERSE_CACHE_ENTRIES and (",
+          "new": "    if ("
+        }
+      ],
+      "exitCode": 1,
+      "outcome": "killed",
+      "logSha256": "f3ad192e06eb2d4c1d1daaa0dce6226f7bd2702f4e0627887ab647c86603e0c5"
+    },
+    {
+      "id": "unbounded-output",
+      "fixture": "reverse_cache_harness.py",
+      "expected": "oversized results must bypass retention",
+      "fragments": [
+        {
+          "old": "            result is None or len(result) <= _REVERSE_CACHE_RESULT_BYTES):",
+          "new": "            True):"
+        }
+      ],
+      "exitCode": 1,
+      "outcome": "killed",
+      "logSha256": "3d64a1ab6d56d71e902ab78eebe806210281c2b1c3e445c34261db089ed1fe56"
+    },
+    {
+      "id": "keep-reverse-cache",
+      "fixture": "reverse_cache_harness.py",
+      "expected": "the reverse cache must end with the owning invocation",
+      "fragments": [
+        {
+          "old": "    finally:\n        _REVERSE_CACHE = None",
+          "new": "    finally:\n        pass"
+        }
+      ],
+      "exitCode": 1,
+      "outcome": "killed",
+      "logSha256": "60602a87df3af2431d60185ee9b5103be88f60126c2f28493bf0625940315b2d"
+    },
+    {
+      "id": "raise-on-unreadable-patch",
+      "fixture": "reverse_cache_harness.py",
+      "expected": "PermissionError: fixture",
+      "fragments": [
+        {
+          "old": "    try:\n        patch = (root / patch_rel).read_bytes()\n    except OSError:\n        # A removed or unreadable patch fails the reversal, as Git did.\n        return None\n",
+          "new": "    patch = (root / patch_rel).read_bytes()\n"
+        }
+      ],
+      "exitCode": 1,
+      "outcome": "killed",
+      "logSha256": "2867e3f061737c186f4f7fc4d799c018ff52fcaac5221195e882c338d38309f0"
+    },
+    {
+      "id": "wrap-foreign-binding",
+      "fixture": "memo_rerun_harness.py",
+      "expected": "CONTRACT BROKEN: a foreign binding was memoized",
+      "fragments": [
+        {
+          "old": "                and value.__module__ == namespace[\"__name__\"]\n",
+          "new": ""
+        }
+      ],
+      "exitCode": 1,
+      "outcome": "killed",
+      "logSha256": "b993130be1da73c68072edae9e11a7378ec95e2195f536f5d9721015d7864301"
+    },
+    {
+      "id": "keep-run-memo",
+      "fixture": "memo_rerun_harness.py",
+      "expected": "STALE: the second run over the same path did not see the broken record",
+      "fragments": [
+        {
+          "old": "    _RUN_MEMO = {}\n    import d10_supersession",
+          "new": "    _RUN_MEMO = _RUN_MEMO if _RUN_MEMO is not None else {}\n    import d10_supersession"
+        },
+        {
+          "old": "        _SIGNED_MEMO = None\n        _RUN_MEMO = None\n",
+          "new": "        _SIGNED_MEMO = None\n"
+        }
+      ],
+      "exitCode": 1,
+      "outcome": "killed",
+      "logSha256": "8080dbce7d0675b2ac4c6bddc53e1721d01c8621acb584d2be217e406c6bb043"
+    }
+  ],
+  "counts": {
+    "killed": 11,
+    "baselineHeld": 2
+  }
+}

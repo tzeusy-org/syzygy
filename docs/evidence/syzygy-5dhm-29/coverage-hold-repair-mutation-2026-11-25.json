@@ -1,0 +1,440 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-24T23:50:23.255328+00:00",
+  "commit": "23434d292245770bade94376844ddb42a4fc4c83",
+  "subject": {
+    "packages/polaris-dossier/src/coverage-hold-flow.test.ts": "f27024d74136d875401388a2e2818be3641d4fb1b97cb942d274acc4e52521d9",
+    "packages/polaris-dossier/src/coverage-hold.test.ts": "5095c3cf2b4cd7ac02a6c6dd3fb7b4ac0d41743fb38f831fa128c0eb9dd278af",
+    "packages/polaris-dossier/src/coverage-hold.ts": "f1283da60cffd600ece44ad0e7bf01aa794217192455dd717e02aa8be55e9dc0",
+    "packages/polaris-dossier/src/inventory-coverage.ts": "167c3e98b743b13460bd76fbc9faf1a96048dc66df1ee99eb551994d873be198",
+    "packages/polaris-dossier/src/review-packet.ts": "c5e287be009c292c56837f3fe3f9c34be961c3be455c6f3490d0aff8ec5621ca",
+    "packages/polaris-dossier/src/review.ts": "59708034705dcfaee1ea1827b1e3448c342b46af09471de97e4810317b0117e1",
+    "packages/polaris-dossier/src/session-handover.ts": "946aec705bbb1bc669bfb611d768c73b278b4f475a8b51412893ee245bf337bc",
+    "packages/polaris-dossier/src/waiting-sessions.test.ts": "a228e2ed5d2f2558c0e114114a8f1c9fba12cbc8e3970750657dcc655b5d6c79"
+  },
+  "command": "npx --no-install vitest run <testFile> --testTimeout=120000 --reporter=json --outputFile=<scratch>/<id>.json",
+  "method": "Replace each unique old fragment by new at the exact commit. Restore the file after the test. A kill requires a named failing test and the exact positive test population.",
+  "baselines": [
+    {
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 0,
+      "seconds": 2.02,
+      "tests": 14,
+      "failedTests": []
+    },
+    {
+      "testFile": "packages/polaris-dossier/src/coverage-hold-flow.test.ts",
+      "exitCode": 0,
+      "seconds": 2.571,
+      "tests": 2,
+      "failedTests": []
+    },
+    {
+      "testFile": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "exitCode": 0,
+      "seconds": 15.2,
+      "tests": 168,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "hold-never",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "if (uncovered.length === 0) return undefined;",
+      "new": "if (uncovered.length >= 0) return undefined;",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.02,
+      "tests": 14,
+      "failedTests": [
+        "fidelityCoverageHold holds a v5 draft that leaves an entry without an outcome, naming it by identifier and path",
+        "fidelityCoverageHold does not count a disjoint span on the same path, or an omission row without a reason",
+        "fidelityCoverageHold leaves out an entry screening withholds, whose outcome is Syzygy's",
+        "fidelityCoverageHold names twelve entries in its paragraph, counts the rest, and lists every one in its reasons",
+        "the launched run's hold notice keeps the complete edit and check instructions when long descriptions fill the notice budget"
+      ]
+    },
+    {
+      "id": "hold-earlier-schemas",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "typeof schemaVersion === 'string' && !PRE_V5_SCHEMA_VERSIONS.includes(schemaVersion)",
+      "new": "typeof schemaVersion === 'string'",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.019,
+      "tests": 14,
+      "failedTests": [
+        "fidelityCoverageHold never holds a draft of schema v2 to v4, which can record no omission"
+      ]
+    },
+    {
+      "id": "hold-screened-outcome-ignored",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": ".filter((entry) => !isWithheldItem(entry, standing))",
+      "new": ".filter(() => true)",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 1.969,
+      "tests": 14,
+      "failedTests": [
+        "fidelityCoverageHold leaves out an entry screening withholds, whose outcome is Syzygy's"
+      ]
+    },
+    {
+      "id": "hold-names-secret-path",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "entry.paths.map((cited) => JSON.stringify(cited))",
+      "new": "[...entry.paths, ...Array(entry.unnamedPaths).fill(\"config/synthetic-hidden.txt\")].map((cited) => JSON.stringify(cited))",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.019,
+      "tests": 14,
+      "failedTests": [
+        "fidelityCoverageHold counts a secret path and never names it, and names an entry with no identifier or no path plainly"
+      ]
+    },
+    {
+      "id": "hold-identifier-unquoted",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "entry.entryId === null ? 'an entry with no identifier' : JSON.stringify(entry.entryId)",
+      "new": "entry.entryId === null ? 'an entry with no identifier' : entry.entryId",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.019,
+      "tests": 14,
+      "failedTests": [
+        "fidelityCoverageHold holds a v5 draft that leaves an entry without an outcome, naming it by identifier and path",
+        "fidelityCoverageHold does not count a disjoint span on the same path, or an omission row without a reason",
+        "fidelityCoverageHold leaves out an entry screening withholds, whose outcome is Syzygy's",
+        "fidelityCoverageHold counts a secret path and never names it, and names an entry with no identifier or no path plainly",
+        "fidelityCoverageHold names twelve entries in its paragraph, counts the rest, and lists every one in its reasons",
+        "the launched run's hold notice keeps the complete edit and check instructions when long descriptions fill the notice budget"
+      ]
+    },
+    {
+      "id": "hold-paragraph-list-unbounded",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "const listed = reasons.slice(0, HELD_ENTRIES_NAMED);",
+      "new": "const listed = reasons;",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.019,
+      "tests": 14,
+      "failedTests": [
+        "fidelityCoverageHold names twelve entries in its paragraph, counts the rest, and lists every one in its reasons"
+      ]
+    },
+    {
+      "id": "hold-full-repair-dropped",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "`${coverageRepairSteps(subject.run)} `",
+      "new": "''",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.02,
+      "tests": 14,
+      "failedTests": [
+        "fidelityCoverageHold holds a v5 draft that leaves an entry without an outcome, naming it by identifier and path",
+        "fidelityCoverageHold names twelve entries in its paragraph, counts the rest, and lists every one in its reasons"
+      ]
+    },
+    {
+      "id": "packet-build-drops-hold",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "old": "...(hold === undefined ? {} : { coverageHold: hold }),",
+      "new": "",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold-flow.test.ts",
+      "exitCode": 1,
+      "seconds": 2.52,
+      "tests": 2,
+      "failedTests": [
+        "the fidelity review waits for inventory coverage issues no fidelity packet while a listed entry has no outcome, says why and what to do, and issues it once each entry has one"
+      ]
+    },
+    {
+      "id": "review-packet-drops-hold",
+      "file": "packages/polaris-dossier/src/review.ts",
+      "old": "if (built.coverageHold !== undefined) {",
+      "new": "if (false && built.coverageHold !== undefined) {",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold-flow.test.ts",
+      "exitCode": 1,
+      "seconds": 2.472,
+      "tests": 2,
+      "failedTests": [
+        "the fidelity review waits for inventory coverage issues no fidelity packet while a listed entry has no outcome, says why and what to do, and issues it once each entry has one"
+      ]
+    },
+    {
+      "id": "fresh-review-drops-hold",
+      "file": "packages/polaris-dossier/src/session-handover.ts",
+      "old": "    if (fidelity.coverageHold !== undefined) return { ok: false, refusal: {\n      command: 'session-prompt', outcome: 'refused', ...coverageRefusal(fidelity.coverageHold), disclosures: PROMPT_DISCLOSURES,\n    } };",
+      "new": "",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold-flow.test.ts",
+      "exitCode": 1,
+      "seconds": 2.521,
+      "tests": 2,
+      "failedTests": [
+        "the fidelity review waits for inventory coverage issues no fidelity packet while a listed entry has no outcome, says why and what to do, and issues it once each entry has one"
+      ]
+    },
+    {
+      "id": "waiting-review-drops-hold",
+      "file": "packages/polaris-dossier/src/session-handover.ts",
+      "old": "    if (fidelity.coverageHold !== undefined) return { ok: false, refusal: {\n      command: 'session-prompt', outcome: 'refused', ...coverageRefusal(fidelity.coverageHold), disclosures: DELIVERY_DISCLOSURES,\n    } };",
+      "new": "",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "exitCode": 1,
+      "seconds": 15.6,
+      "tests": 168,
+      "failedTests": [
+        "delivery to a waiting review session delivers nothing while a listed inventory entry has no outcome in the passed draft (syzygy-5dhm.29, version 2.28; mutant: drop the delivery hold)"
+      ]
+    },
+    {
+      "id": "advice-claims-issuance-gate",
+      "file": "packages/polaris-dossier/src/inventory-coverage.ts",
+      "old": "costs a review round. Before asking for a review,",
+      "new": "costs a review round, so Syzygy issues no fidelity packet while an entry is listed here. Before asking for a review,",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold-flow.test.ts",
+      "exitCode": 1,
+      "seconds": 2.67,
+      "tests": 2,
+      "failedTests": [
+        "the fidelity review waits for inventory coverage issues no fidelity packet while a listed entry has no outcome, says why and what to do, and issues it once each entry has one"
+      ]
+    },
+    {
+      "id": "refusal-misnames-pair",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "coverage: hold.pair",
+      "new": "coverage: { ...hold.pair, draftRevision: hold.pair.draftRevision - 1 }",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold-flow.test.ts",
+      "exitCode": 1,
+      "seconds": 2.62,
+      "tests": 2,
+      "failedTests": [
+        "the fidelity review waits for inventory coverage issues no fidelity packet while a listed entry has no outcome, says why and what to do, and issues it once each entry has one"
+      ]
+    },
+    {
+      "id": "supervisor-notice-uses-old-pair",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "pair = selected;",
+      "new": "pair = current;",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.019,
+      "tests": 14,
+      "failedTests": [
+        "the launched run's hold notice uses the pair selected by the delivery after the supervisor snapshot moves, and records a successful send once"
+      ]
+    },
+    {
+      "id": "supervisor-retries-held-packet",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "if (!this.knows(currentKey)) {",
+      "new": "if (true) {",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 1.968,
+      "tests": 14,
+      "failedTests": [
+        "the launched run's hold notice uses the pair selected by the delivery after the supervisor snapshot moves, and records a successful send once",
+        "the launched run's hold notice retains a hold across a failed notice and retries the saved message without marking a send",
+        "the launched run's hold notice stops after five failed sends or a typed notice that was not submitted, and records neither as sent"
+      ]
+    },
+    {
+      "id": "supervisor-keeps-sending-after-ack",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "      this.holds.delete(key);",
+      "new": "",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.019,
+      "tests": 14,
+      "failedTests": [
+        "the launched run's hold notice uses the pair selected by the delivery after the supervisor snapshot moves, and records a successful send once"
+      ]
+    },
+    {
+      "id": "supervisor-memoizes-failed-send",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "    const outcome = send(pending.message);",
+      "new": "    const outcome = send(pending.message);\n    if (outcome !== 'sent') this.notified.push(key);",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.019,
+      "tests": 14,
+      "failedTests": [
+        "the launched run's hold notice retains a hold across a failed notice and retries the saved message without marking a send",
+        "the launched run's hold notice stops after five failed sends or a typed notice that was not submitted, and records neither as sent"
+      ]
+    },
+    {
+      "id": "supervisor-notice-retries-unbounded",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "pending.exhausted = pending.attempts >= COVERAGE_NOTICE_ATTEMPTS;",
+      "new": "pending.exhausted = false;",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.019,
+      "tests": 14,
+      "failedTests": [
+        "the launched run's hold notice stops after five failed sends or a typed notice that was not submitted, and records neither as sent"
+      ]
+    },
+    {
+      "id": "supervisor-retypes-after-failed-enter",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "this.submissionUnknown = true;",
+      "new": "this.submissionUnknown = false;",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.07,
+      "tests": 14,
+      "failedTests": [
+        "the launched run's hold notice stops after five failed sends or a typed notice that was not submitted, and records neither as sent"
+      ]
+    },
+    {
+      "id": "supervisor-notice-loses-repair",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "${rest > 0 ? omitted(rest) : ''}${ending}`;",
+      "new": "${rest > 0 ? omitted(rest) : ''}`;",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.019,
+      "tests": 14,
+      "failedTests": [
+        "the launched run's hold notice uses the pair selected by the delivery after the supervisor snapshot moves, and records a successful send once",
+        "the launched run's hold notice keeps the complete edit and check instructions when long descriptions fill the notice budget",
+        "the launched run's hold notice preserves bounded recheck instructions for a path too long to print or containing terminal controls"
+      ]
+    },
+    {
+      "id": "supervisor-notice-length-unbounded",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "    if (used + line.length + 2 > COVERAGE_NOTICE_LIMIT) break;",
+      "new": "",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.019,
+      "tests": 14,
+      "failedTests": [
+        "the launched run's hold notice keeps the complete edit and check instructions when long descriptions fill the notice budget"
+      ]
+    },
+    {
+      "id": "submit-enters-after-failed-write",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "  if (!sendLiteral()) return 'failed';",
+      "new": "  sendLiteral();",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.019,
+      "tests": 14,
+      "failedTests": [
+        "the launched run's hold notice distinguishes a failed literal write, an Enter failure and two acknowledged operations"
+      ]
+    },
+    {
+      "id": "submit-counts-failed-enter-as-sent",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "  return submit() ? 'sent' : 'unsubmitted';",
+      "new": "  submit(); return 'sent';",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.071,
+      "tests": 14,
+      "failedTests": [
+        "the launched run's hold notice distinguishes a failed literal write, an Enter failure and two acknowledged operations"
+      ]
+    },
+    {
+      "id": "supervisor-recheck-relative-target",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "const check = coverageRepairSteps(argument);",
+      "new": "const check = coverageRepairSteps('.');",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold-flow.test.ts",
+      "exitCode": 1,
+      "seconds": 2.821,
+      "tests": 2,
+      "failedTests": [
+        "the fidelity review waits for inventory coverage delivers a runnable repair command through the author broker from a different working directory"
+      ]
+    },
+    {
+      "id": "supervisor-recheck-unquoted-run",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "? run : shellQuote(run);",
+      "new": "? run : run;",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold-flow.test.ts",
+      "exitCode": 1,
+      "seconds": 2.62,
+      "tests": 2,
+      "failedTests": [
+        "the fidelity review waits for inventory coverage delivers a runnable repair command through the author broker from a different working directory"
+      ]
+    },
+    {
+      "id": "supervisor-recheck-loses-length-fallback",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": " && beginning.length + omitted(reasons.length).length + check.length + cycle.length <= COVERAGE_NOTICE_LIMIT",
+      "new": "",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.07,
+      "tests": 14,
+      "failedTests": [
+        "the launched run's hold notice preserves bounded recheck instructions for a path too long to print or containing terminal controls"
+      ]
+    },
+    {
+      "id": "supervisor-recheck-loses-control-fallback",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "!/[\\p{Cc}\\u2028\\u2029]/u.test(run) && ",
+      "new": "",
+      "killed": true,
+      "testFile": "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "exitCode": 1,
+      "seconds": 2.07,
+      "tests": 14,
+      "failedTests": [
+        "the launched run's hold notice preserves bounded recheck instructions for a path too long to print or containing terminal controls"
+      ]
+    }
+  ],
+  "summary": {
+    "mutants": 27,
+    "killed": 27,
+    "survived": 0
+  }
+}

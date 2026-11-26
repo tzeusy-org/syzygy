@@ -1,0 +1,113 @@
+{
+  "format": "polaris-question-file/1",
+  "version": 1,
+  "public": {
+    "briefTopics": [
+      {
+        "id": "why-the-project-exists",
+        "text": "Why does this project exist: what problem does it solve, for whom, and what advantages over the alternatives do its maintainers themselves state? Write it as an argument; a quotation, where you use one, supports the argument and is never the argument itself. A repository that states no reason for existing gets an `unknown` block here, never an invented reason."
+      },
+      {
+        "id": "core-ideas",
+        "text": "What are this project's core ideas, stated so a newcomer could repeat them?"
+      },
+      {
+        "id": "end-to-end-workflows",
+        "text": "How does a user get from start to finish on the most important end-to-end workflows?"
+      },
+      {
+        "id": "mechanisms-and-trade-offs",
+        "text": "What mechanisms underneath make those workflows work, where does each live, and what trade-offs, limits and costs does the design accept for them?"
+      }
+    ],
+    "readerQuestions": [
+      {
+        "id": "core-ideas",
+        "topics": [
+          "core-ideas"
+        ],
+        "text": "What are this project's core ideas, stated so a newcomer could repeat them?"
+      },
+      {
+        "id": "end-to-end-workflows",
+        "topics": [
+          "end-to-end-workflows"
+        ],
+        "text": "How does a user get from start to finish on the most important end-to-end workflows?"
+      },
+      {
+        "id": "mechanisms",
+        "topics": [
+          "mechanisms"
+        ],
+        "text": "What mechanisms underneath make those workflows work, and where does each live?"
+      },
+      {
+        "id": "maintainer-stated-advantages",
+        "topics": [
+          "maintainer-stated-advantages"
+        ],
+        "text": "What advantages over alternatives do the maintainers themselves claim, in which words and where?"
+      },
+      {
+        "id": "trade-offs",
+        "topics": [
+          "trade-offs"
+        ],
+        "text": "What trade-offs, limits and costs does the design accept, and what does it give up for them?"
+      }
+    ],
+    "evaluationQuestions": [
+      {
+        "id": "purpose",
+        "text": "purpose"
+      },
+      {
+        "id": "beneficiary",
+        "text": "beneficiary"
+      },
+      {
+        "id": "central-thesis",
+        "text": "central thesis"
+      },
+      {
+        "id": "important-capabilities",
+        "text": "important capabilities"
+      },
+      {
+        "id": "architectural-choice",
+        "text": "one architectural choice"
+      },
+      {
+        "id": "limit",
+        "text": "a limit"
+      },
+      {
+        "id": "uncertainty",
+        "text": "an uncertainty"
+      }
+    ]
+  },
+  "heldOut": {
+    "rule": "An evaluator-owned key identifier names a digest-bound list outside authoring packets and readable mounts. This file carries reference metadata only. A public regression key cannot bind a blind comparison.",
+    "entries": [
+      {
+        "id": "redis-comparison",
+        "repository": "github.com/redis/redis",
+        "commit": "498ecd0d6d007db11ddb3aea9428552598a78622",
+        "graded": {
+          "state": "not-written",
+          "reason": "A new blind graded list is required. The published Redis pilot is a historical regression."
+        },
+        "depth": {
+          "state": "not-written",
+          "reason": "An independent evaluator freezes ten to twenty depth facts before the comparison."
+        },
+        "tasks": {
+          "state": "not-written",
+          "reason": "An independent evaluator freezes five reader tasks before the comparison."
+        }
+      }
+    ]
+  }
+}

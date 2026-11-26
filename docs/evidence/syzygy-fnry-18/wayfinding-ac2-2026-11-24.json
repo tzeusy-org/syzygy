@@ -1,0 +1,111 @@
+{
+  "format": "syzygy-wayfinding-ac2-evidence/1",
+  "outcome": "syzygy-fnry.18, acceptance 2 with existing provider compatibility",
+  "base": "38fcdf81b114dc14c0ced63c1d02d8e0ad50e56d",
+  "subject": {
+    "commit": "f772a046cff9d19ded8d92d3aa51b5c1e04bc9e7",
+    "tree": "ea6d2dc300036b4a6b17df18ce953374d1811900",
+    "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+    "sha256": "c08faef83d936c5be6aa57e2a0ab53364f8f1d9727b8b853eda650460fead1b3"
+  },
+  "browserFixture": {
+    "readingPages": 17,
+    "rawSourcePages": 1,
+    "sidebarCopiesPerReadingPage": 2,
+    "first": "index.html",
+    "last": "appendix.html",
+    "previousNextLinks": 32,
+    "covered": [
+      "distinct accessible navigation names",
+      "self-link and visual underline",
+      "Pole nesting including a why-only Pole",
+      "desktop sticky and mobile static navigation",
+      "native keyboard activation",
+      "links outside details",
+      "no page turns on exact source"
+    ]
+  },
+  "rule6": {
+    "executionCommit": "240587d280435cce239a4c522be91372556fb95b",
+    "scopeAtSubject": "identical renderer and named browser case",
+    "command": [
+      "vitest",
+      "run",
+      "--project",
+      "e2e",
+      "dossier-reading.browser.test.ts",
+      "-t",
+      "keeps every dossier reading page oriented and linked in the same scriptless order"
+    ],
+    "browser": "Chromium, loading local fixture HTML with script elements removed and policy CSP enforced",
+    "positive": {
+      "exit": 0,
+      "sha256": "4f8ddbdb9126b57ca1a77a6011fb83500f54489f51912a957202246a0986a11d",
+      "durationMs": 829.429548,
+      "diagnostic": []
+    },
+    "mutations": [
+      {
+        "label": "without-current-mark",
+        "old": "${local !== undefined && from === link.path ? ' aria-current=\"page\"' : ''}",
+        "new": "",
+        "exit": 1,
+        "sha256": "5fa76587c2692a65694351fe14920c60eaf0e45e07742cf38af33c07786c4088",
+        "durationMs": 437.04927399999997,
+        "diagnostic": "AssertionError: index.html: expected [ { name: 'Dossier', …(3) }, …(1) ] to deeply equal [ { name: 'Dossier', …(3) }, …(1) ]"
+      },
+      {
+        "label": "without-page-turn",
+        "old": "${chrome?.pageTurn(path) ?? ''}",
+        "new": "",
+        "exit": 1,
+        "sha256": "373dcc900ddf59a03b499bc921f6999aada06510764805b7ca1d86416b7ad07b",
+        "durationMs": 434.096639,
+        "diagnostic": "AssertionError: index.html: expected { name: 'Review status', …(3) } to deeply equal { name: 'Reading order', …(3) }"
+      }
+    ]
+  },
+  "focusedChecks": [
+    {
+      "tests": 88,
+      "skipped": 0,
+      "includesProviderGolden": true,
+      "rawSha256": "fbd48522b5669c55d3021249b820d7067065d52eb6f23a71abe7ef18188b48b5"
+    },
+    {
+      "tests": 190,
+      "skipped": 0,
+      "scope": "normal renderer integration, measurement and run rendering",
+      "rawSha256": "4d93cdbe74ed07b8c3806baa0633ea637054a508d1fd6fdb5e5e55d9836a731d"
+    }
+  ],
+  "foreignComposition": {
+    "actual": "38fcdf81b114dc14c0ced63c1d02d8e0ad50e56d",
+    "authored": "f772a046cff9d19ded8d92d3aa51b5c1e04bc9e7",
+    "authoredPaths": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-derived-region.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.testkit.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "packages/polaris-dossier/src/render.test.ts"
+    ],
+    "base": "b83abe8751dd60cee71eaf5d98a42af6c64317bd",
+    "baselineTree": "ca3afb2fa87cd1fb4f52cf8e84140b3e428b46cd",
+    "candidateTree": "e21554d28ba80ecdaebe962e697f61a95d178e13",
+    "composedSha256": {
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "59dc93e772f93ea73d10e19290e40f086bd1dfc8943ce0387ed6431b5d523325",
+      "packages/polaris-dossier/src/render.test.ts": "50c4da951f06771f491c39535c7c2dc700f5c60c8eb34e2a0bdda6fef00b3be4"
+    },
+    "foreign": "441bd0b96cd8dac7edf369ad64daf15454e6dada",
+    "foreignPathPopulation": 1131,
+    "status": "Observed clean Git tree composition; only the two named files share paths with the exact draft."
+  },
+  "remaining": [
+    "Glossary title, earlier-link and terminology-brief verification",
+    "Counted-review status text and digest validation",
+    "Full 390 px reflow across pages with review status",
+    "Original combined outcome"
+  ]
+}

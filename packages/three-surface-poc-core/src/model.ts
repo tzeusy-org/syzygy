@@ -1,6 +1,8 @@
+import type { CommitJoinsResult, CommitJoinsUnknown, CommitJoinUnknownReason } from './commit-joins.js';
 import type { CodeStructureResult } from './code-structure.js';
 import { GOVERNING_INTENT_UNKNOWN_BASIS, workItemTitlesDisclosure, type WorkItemsResult } from './work-items.js';
 import type { WorkerChangeResult } from './worker-change-observation.js';
+import type { ChangeWindow, ChangeWindowReason } from './work-item-history.js';
 import type { OrreryProjection } from './orrery-projection.js';
 import {
   GOVERNING_INTENT_REGION_ID,
@@ -8,6 +10,8 @@ import {
   TRAJECTORY_CHANGED_ID,
   TRAJECTORY_COST_ID,
   TRAJECTORY_ORPHANED_WORK_ID,
+  TRAJECTORY_COMMIT_JOINS_ID,
+  TRAJECTORY_LANDING_UNNAMED_ID,
   type TrajectoryProjection,
 } from './trajectory-projection.js';
 import type { DispatchDisclosure, MaterializationRecord } from './materialization.js';
@@ -173,6 +177,9 @@ export interface PocModel {
   readonly surfaces: readonly PocSurface[];
   readonly codeStructure: CodeStructureResult;
   readonly workItems: WorkItemsResult;
+  /** POC-REQ-064 (syzygy-t3jk.25): the observed repository's commits that
+   * name each served item, by the naming convention; no subject is kept. */
+  readonly commitJoins: CommitJoinsResult;
   readonly workerChange: WorkerChangeResult;
   readonly testArtifactVerification: TestArtifactVerificationResult;
   readonly orrery: OrreryProjection;
@@ -275,9 +282,54 @@ const WORK_ITEM_VERIFICATION_BASIS =
   'Activity is not verification: no test evidence has been ingested for any work item.';
 
 /** POC-REQ-044 basis sentences for the five answers' Unknown parts. */
-const CHANGED_BASIS = 'No movement source is read: the observation holds each work item\'s current status and recorded instants, not its history of changes.';
+/** syzygy-t3jk.21: why a change window is Unknown, one sentence per reason. */
+export const CHANGE_WINDOW_REASON_TEXT: Readonly<Record<ChangeWindowReason, string>> = {
+  'work-item-revision-unavailable': 'no exact work-item revision was available to end the window at',
+  'observation-instant-unavailable': 'the observation instant could not be read, so the window bound is not known',
+  'history-read-failed': 'the tracker history read failed',
+  'history-result-malformed': 'the tracker history read returned rows of an unexpected shape',
+  'history-revision-unverified': 'the tracker history did not confirm the observed revision',
+  'history-shorter-than-window': 'the retained tracker history holds no commit as old as the window bound',
+  'history-non-linear': 'the tracker history between the window start and the observed revision holds a merge or out-of-order commit dates, so the start found by date is not a point on one line of history',
+  'history-not-read': 'no tracker history read was attempted for this observation',
+  'no-previous-evaluation-recorded': 'no previous evaluation\'s work-item revision is recorded, so there is no start to diff from',
+};
+
+const CHANGE_WINDOW_LABEL: Readonly<Record<ChangeWindow, string>> = {
+  day: 'the day window',
+  week: 'the week window',
+  'since-last': 'the since-last-evaluation window',
+};
+
+/** The one changed disclosure: every Unknown window with its reason. */
+function changedBasis(windows: readonly { readonly window: ChangeWindow; readonly kind: string; readonly reason?: ChangeWindowReason }[]): string {
+  const parts = windows.flatMap((window) => (window.kind === 'unknown' && window.reason !== undefined ? [`${CHANGE_WINDOW_LABEL[window.window]} is Unknown because ${CHANGE_WINDOW_REASON_TEXT[window.reason]}`] : []));
+  return `What changed is answered from the tracker's own history between two named revisions, where it can be read; ${parts.join('; ')}. An Unknown window is never a zero.`;
+}
 const COST_BASIS = 'No cost record is read: no effort, compute, token, money or blocked-time measure is captured for any work item, so those costs are Unknown, never zero; elapsed time alone is measured, as lead time and age.';
 const ORPHANED_WORK_BASIS = 'No orphaned-work check is implemented, and the observation does not read who created each tracker item, which that check would compare with materialization records, so how many items are orphaned is Unknown, never 0.';
+
+/** POC-REQ-065: why each closed item's landing is Unknown, by the commit
+ * join's closed reason (POC-REQ-064). */
+const COMMIT_JOINS_UNKNOWN_BASIS: Readonly<Record<CommitJoinUnknownReason, string>> = {
+  'work-items-unobserved': 'the work items were not observed',
+  'repository-revision-unavailable': 'the observed repository revision is not a commit identifier',
+  'commit-history-read-failed': "the observed repository's history could not be read",
+  'commit-history-malformed': "the observed repository's history read returned rows of an unexpected shape, or did not start at the observed revision",
+};
+
+function commitJoinsBasis(joins: CommitJoinsUnknown): string {
+  return `Where each closed item landed, by a commit that names it (naming convention), is Unknown: ${COMMIT_JOINS_UNKNOWN_BASIS[joins.reason]} (commit join ${joins.reason}). No closed item is counted as merged by naming convention or as having no naming commit.`;
+}
+
+/** POC-REQ-065: why a closed item no read commit names has an Unknown
+ * landing, with the count and the read's extent. */
+function landingUnnamedBasis(count: number, read: number, truncated: boolean): string {
+  const extent = truncated
+    ? `only the newest ${read} commits from the observed revision were read, and older history may name them`
+    : `the observed revision's whole history (${read} commits) was read`;
+  return `${count} closed items have no commit that names them, so where each landed is Unknown: no commit subject carries the item's identifier as an exact token, and the join is never fuzzy-matched (RFC4-22); ${extent}. A commit that names the item resolves it.`;
+}
 
 export const WORK_ITEM_VERIFICATION_REGION_ID = 'region:work-item-verification' as const;
 
@@ -286,9 +338,8 @@ export const WORK_ITEM_VERIFICATION_REGION_ID = 'region:work-item-verification' 
  * item's own value is its served `governedBy`. */
 export const WORK_ITEM_GOVERNING_INTENT_REGION_ID = GOVERNING_INTENT_REGION_ID;
 
-/** SEC-5: the one disclosure every rendered card's withheld title, and the
- * board's notice, render under. One id, since one policy gap withholds
- * every title. */
+/** POC-REQ-063: the one disclosure every rendered card's withheld title,
+ * and the board's notice, render under, present while any title is withheld. */
 export const WORK_ITEM_TITLES_REGION_ID = 'region:work-item-titles' as const;
 
 export function workerChangeVerificationId(beadId: string): string {
@@ -300,6 +351,7 @@ interface UnknownSubjectInputs {
   readonly workItems: WorkItemsResult;
   readonly orrery: OrreryProjection;
   readonly trajectory: TrajectoryProjection;
+  readonly commitJoins: CommitJoinsResult;
   readonly workerChange: WorkerChangeResult;
   readonly testArtifactVerification: TestArtifactVerificationResult;
   readonly governingIntentId: string | null;
@@ -332,13 +384,32 @@ function deriveUnknownSubjects(input: UnknownSubjectInputs): readonly PocUnknown
       // (`workItems.items[].governedBy`, `trajectory.rendered[].verification`).
       add(WORK_ITEM_VERIFICATION_REGION_ID, WORK_ITEM_VERIFICATION_BASIS, 'missing-evidence');
       add(WORK_ITEM_GOVERNING_INTENT_REGION_ID, GOVERNING_INTENT_UNKNOWN_BASIS, 'source-uncaptured-or-unreachable');
-      // SEC-5: the machine twin of the board's withheld-title disclosure is
-      // the observation's own `titles` with its basis sentence.
-      subjects.push({ id: WORK_ITEM_TITLES_REGION_ID, epistemic: workItemTitlesDisclosure(input.workItems.titles) });
+      // POC-REQ-063: while any title is withheld, the machine twin of the
+      // board's withheld-title disclosure is the observation's own `titles`
+      // with its counted basis sentence.
+      const titles = workItemTitlesDisclosure(input.workItems.titles);
+      if (titles !== null) subjects.push({ id: WORK_ITEM_TITLES_REGION_ID, epistemic: titles });
       // POC-REQ-044 (syzygy-t3jk.16): the five answers' Unknown parts.
-      add(TRAJECTORY_CHANGED_ID, CHANGED_BASIS, 'source-uncaptured-or-unreachable');
+      const changed = input.trajectory.answers.find((answer) => answer.id === 'changed');
+      if (changed !== undefined && 'windows' in changed && changed.windows.some((window) => window.kind === 'unknown')) {
+        add(TRAJECTORY_CHANGED_ID, changedBasis(changed.windows), 'source-uncaptured-or-unreachable');
+      }
       add(TRAJECTORY_COST_ID, COST_BASIS, 'source-uncaptured-or-unreachable');
       add(TRAJECTORY_ORPHANED_WORK_ID, ORPHANED_WORK_BASIS, 'source-uncaptured-or-unreachable');
+      // POC-REQ-065 (syzygy-t3jk.26): closed items' landings are Unknown
+      // exactly when the commit join is.
+      const remains = input.trajectory.answers.find((answer) => answer.id === 'remains');
+      if (remains !== undefined && 'closedLanding' in remains) {
+        const landing = remains.closedLanding;
+        if (landing.state === 'unknown') {
+          const basis = input.commitJoins.kind === 'unknown'
+            ? commitJoinsBasis(input.commitJoins)
+            : 'Where each closed item landed is Unknown: the commit join was not supplied to the Trajectory projection. No closed item is counted as merged by naming convention or as having no naming commit.';
+          add(TRAJECTORY_COMMIT_JOINS_ID, basis, 'source-uncaptured-or-unreachable');
+        } else if (landing.noNamingCommitRead > 0) {
+          add(TRAJECTORY_LANDING_UNNAMED_ID, landingUnnamedBasis(landing.noNamingCommitRead, landing.commitsRead, landing.historyTruncated), 'missing-evidence');
+        }
+      }
       const intent = input.trajectory.answers.find((answer) => answer.id === 'intent');
       if (intent !== undefined && 'reconciliationChain' in intent && typeof intent.reconciliationChain.members !== 'number') {
         const change = input.workerChange;
@@ -403,6 +474,7 @@ export function buildPocModel(input: BuildPocModelInput): PocModel {
     relationships: graph.relationships,
     codeStructure: orrery.codeStructure,
     workItems: trajectory.workItems,
+    commitJoins: trajectory.commitJoins,
     workerChange: trajectory.workerChange,
     testArtifactVerification: trajectory.testArtifactVerification,
     orrery: orrery.orrery,
