@@ -93,18 +93,33 @@ const sameFile = (left: fs.BigIntStats, right: fs.BigIntStats): boolean =>
 function safePath(file: string): boolean {
   return path.isAbsolute(file) && path.normalize(file) === file && file.length <= 4096 && !/[\0-\x1f\x7f]/u.test(file);
 }
+// One idle read buffer only. Active synchronous reads, including reentrant
+// reads, own distinct scratch; returned bytes never alias this storage.
+let idleProcReadScratch: Buffer | undefined;
 function bytesAt(file: string, maximum: number): Buffer {
   const fd = fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK);
+  let scratch: Buffer | undefined;
   try {
-    const bytes = Buffer.alloc(maximum + 1); let length = 0;
+    const idle = idleProcReadScratch;
+    idleProcReadScratch = undefined;
+    scratch = idle !== undefined && idle.length >= maximum + 1 ? idle : Buffer.alloc(maximum + 1);
+    const bytes = scratch.subarray(0, maximum + 1); let length = 0;
     while (length < bytes.length) {
       const count = fs.readSync(fd, bytes, length, bytes.length - length, null);
       if (count === 0) break;
       length += count;
     }
     if (length > maximum) throw refused();
-    return bytes.subarray(0, length);
-  } finally { fs.closeSync(fd); }
+    const owned = Buffer.alloc(length);
+    bytes.copy(owned, 0, 0, length);
+    return owned;
+  } finally {
+    try { fs.closeSync(fd); }
+    finally {
+      if (scratch !== undefined && (idleProcReadScratch === undefined || idleProcReadScratch.length < scratch.length))
+        idleProcReadScratch = scratch;
+    }
+  }
 }
 function pinnedFile(file: string, expected: string, maximum: number): fs.BigIntStats {
   if (!safePath(file) || fs.realpathSync(file) !== file || !digest(expected)) throw refused();

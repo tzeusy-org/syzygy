@@ -1,5 +1,5 @@
 import { execFile } from 'node:child_process';
-import { fstatSync } from 'node:fs';
+import { fstatSync, readlinkSync } from 'node:fs';
 import * as fs from 'node:fs/promises';
 import { createServer, connect, type Socket, type Server, type AddressInfo } from 'node:net';
 import os from 'node:os';
@@ -23,14 +23,17 @@ import { captureKernelUnixPeer, captureKernelUnixPeerAsync } from './session-pee
 
 const nativeObservations = vi.hoisted(() => ({ calls: (): readonly (readonly unknown[])[] => [],
   synchronous: (): readonly (readonly unknown[])[] => [] }));
-const filesystemBoundary = vi.hoisted(() => ({ refuseLargeSyncReads: false, largeSyncReads: 0 }));
+const filesystemBoundary = vi.hoisted(() => ({ refuseLargeSyncReads: false, largeSyncReads: 0,
+  afterRead: undefined as undefined | ((fd: number, bytes: Uint8Array, count: number) => void) }));
 vi.mock('node:fs', async importOriginal => {
   const actual = await importOriginal<typeof import('node:fs')>();
   return { ...actual, readSync: (...args: Parameters<typeof actual.readSync>): number => {
     if (filesystemBoundary.refuseLargeSyncReads && actual.fstatSync(args[0]).size > 1_048_576) {
       filesystemBoundary.largeSyncReads++; throw new Error('owned large synchronous read refused');
     }
-    return Reflect.apply(actual.readSync, actual, args) as number;
+    const count = Reflect.apply(actual.readSync, actual, args) as number;
+    if (args[1] instanceof Uint8Array) filesystemBoundary.afterRead?.(args[0], args[1], count);
+    return count;
   } };
 });
 vi.mock('node:child_process', async importOriginal => {
@@ -47,7 +50,7 @@ const exec = promisify(execFile), id = () => randomBytes(32).toString('hex');
 const canonical = (value: unknown) => Buffer.from(encodeCanonicalJson(value, URL_MACHINE_CLIENT_LIMITS));
 const cleanup: (() => void | Promise<unknown>)[] = [];
 let programs: UrlMachinePeerOptions['programs'], buildRoot: string;
-afterEach(async () => { filesystemBoundary.refuseLargeSyncReads = false; for (const close of cleanup.splice(0).reverse()) await close(); });
+afterEach(async () => { filesystemBoundary.afterRead = undefined; filesystemBoundary.refuseLargeSyncReads = false; for (const close of cleanup.splice(0).reverse()) await close(); });
 afterAll(async () => { await fs.rm(buildRoot, { recursive: true, force: true }); });
 beforeAll(async () => {
   const root = buildRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'mp-build-'));
@@ -479,7 +482,44 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     let effects = 0;
     expect(await mediateUrlMachinePeer(f.peer!, 'artifact_write', () => ++effects)).toEqual({ ok: false });
     expect(await mediateUrlMachinePeer({ verifier: f.peer!.verifier }, 'artifact_read', () => ++effects)).toEqual({ ok: false });
-    expect(await mediateUrlMachinePeer(f.peer!, 'artifact_read', boundary => { expect(boundary()).toBe(true); return ++effects; })).toEqual({ ok: true, value: 1 });
+    let guard: (() => boolean) | undefined, armed = false, reentered = false, nestedAllowed = false;
+    let sawSmall = false, sawLarge = false, checkedOwnedReturn = false;
+    let commandBytes: Buffer | undefined, returnedCommand: Buffer | undefined, retainedCommand: Buffer | undefined;
+    const comparison: Pick<Buffer, 'equals'> = Buffer.prototype;
+    const originalEquals = comparison.equals;
+    const equals = vi.spyOn(comparison, 'equals').mockImplementation(function (this: Buffer, other: Uint8Array) {
+      if (armed && returnedCommand === undefined && commandBytes !== undefined && originalEquals.call(this, commandBytes)) {
+        returnedCommand = this; retainedCommand = Buffer.from(this);
+      }
+      return originalEquals.call(this, other);
+    });
+    filesystemBoundary.afterRead = (fd, bytes, count) => {
+      if (!armed || count === 0) return;
+      const file = readlinkSync(`/proc/self/fd/${fd}`);
+      if (file.endsWith('/stat')) {
+        expect(bytes.length).toBe(8193); sawSmall = true;
+        if (returnedCommand !== undefined) {
+          expect(originalEquals.call(returnedCommand, retainedCommand!)).toBe(true);
+          checkedOwnedReturn = true;
+        }
+      } else if (file.endsWith('/mountinfo') || file.endsWith('/cmdline')) {
+        expect(bytes.length).toBe(2_097_153); sawLarge = true;
+        if (file.endsWith('/cmdline')) commandBytes = Buffer.from(bytes.subarray(0, count));
+        if (file.endsWith('/mountinfo') && !reentered && guard !== undefined) {
+          reentered = true; nestedAllowed = guard();
+        }
+      }
+    };
+    try {
+      expect(await mediateUrlMachinePeer(f.peer!, 'artifact_read', boundary => {
+        armed = true; guard = boundary;
+        try { expect(boundary()).toBe(true); expect(boundary()).toBe(true); }
+        finally { armed = false; guard = undefined; }
+        return ++effects;
+      })).toEqual({ ok: true, value: 1 });
+      expect(reentered).toBe(true); expect(nestedAllowed).toBe(true);
+      expect(sawSmall).toBe(true); expect(sawLarge).toBe(true); expect(checkedOwnedReturn).toBe(true);
+    } finally { filesystemBoundary.afterRead = undefined; equals.mockRestore(); }
     expect(f.audited()).toBe(1); expect(effects).toBe(1);
     const revoked = { ...record, revision: 2, revokedAt: new Date(f.options.now()).toISOString() };
     expect((await f.publish(revoked, { revision: 1, sha256: sha256(canonical(record)) })).ok).toBe(true);
