@@ -41,6 +41,7 @@ const FILE_KINDS: Readonly<Record<string, 'searched' | 'test-support'>> = {
   '.testkit.ts': 'test-support',
   '.ts': 'searched',
   '.c': 'searched',
+  '.h': 'searched',
   '.json': 'searched',
   '.md': 'searched',
 };
@@ -83,6 +84,7 @@ describe('the regression key is held out of authoring text', () => {
     expect(kindOf('packages/polaris-dossier/src/brief.test.ts')).toBe('test-support');
     expect(kindOf('packages/polaris-dossier/src/launch.testkit.ts')).toBe('test-support');
     expect(kindOf('packages/polaris-dossier/src/session-peer.c')).toBe('searched');
+    expect(kindOf('packages/polaris-dossier/src/policy-git-protocol.h')).toBe('searched');
     expect(kindOf('packages/polaris-dossier/src/session-peer-lifetime.test.c')).toBe('test-support');
     expect(kindOf('packages/polaris-dossier/src/shape-packs/default.json')).toBe('searched');
     expect(kindOf('packages/polaris-dossier/src/notes.txt')).toBe('unclassified');
@@ -95,6 +97,7 @@ describe('the regression key is held out of authoring text', () => {
 
   it('finds no key question in any brief source, agent text or authoring guide', () => {
     for (const required of ['packages/polaris-dossier/src/brief.ts', 'packages/polaris-dossier/src/review-packet.ts', 'packages/polaris-dossier/src/shape-packs/default.json',
+      'packages/polaris-dossier/src/policy-git-protocol.h',
       'packages/polaris-dossier/README.md', 'apps/three-surface-poc/src/polaris-generation/dossier-render.ts', '.claude/skills/polaris-dossier/SKILL.md',
       '.codex/skills/polaris-dossier/SKILL.md', 'docs/polaris-generation/AUTHORING.md']) expect(POPULATION).toContain(required);
     expect(POPULATION.filter((file) => file.includes('.test.') || file.includes('.testkit.'))).toEqual([]);

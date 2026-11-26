@@ -340,6 +340,9 @@ describe('the live Node entries and the parked provider island', () => {
       }
       if (rendererBytes === undefined) throw new Error();
       installed.set(runtime, { root, rendererBytes, rendererSha256: files[1]!.sha256,
+        policyGitProgram: deepFreeze({ addon: { file: path.join(directory, POLICY_ADDON), sha256: files[8]!.sha256 },
+          supervisor: { file: path.join(directory, POLICY_SUPERVISOR), sha256: files[9]!.sha256 },
+          git: { file: git, sha256: manifest.nativeBuild.git.sha256 } }),
         machineReaderProgram: deepFreeze({ executable: path.join(directory, MACHINE_PEER), sha256: files[7]!.sha256 }),
         orderedScreenProgram: deepFreeze({ node: { path: node, bytes: Number(manifest.node.bytes), sha256: manifest.node.sha256 },
           worker: { path: path.join(directory, ORDERED_SCREEN), bytes: files[6]!.bytes, sha256: files[6]!.sha256 } }) });
@@ -354,7 +357,8 @@ describe('the live Node entries and the parked provider island', () => {
       outputs.set('renderer.mjs', design.outputFiles[0].contents);
       const inputs = new Set([...Object.keys(result.metafile.inputs), ...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs),
         ...Object.keys(orderedScreen.metafile.inputs), ...ORDERED_SCREEN_SOURCES, ...profileSources,
-        worker, ...peerSources.map(([source]) => source), 'scripts/build_dossier_runtime.mjs', 'scripts/compile_dossier_session_support.mjs', 'package-lock.json']);
+        worker, ...peerSources.map(([source]) => source), ...POLICY_GIT_SOURCES,
+        'scripts/build_dossier_runtime.mjs', 'scripts/compile_dossier_policy_git.mjs', 'scripts/compile_dossier_session_support.mjs', 'package-lock.json']);
       for (const name of [...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs), ...Object.keys(orderedScreen.metafile.inputs)])
         if (!captured.has(name)) throw new Error('uncaptured host/renderer/screen compiler input');
     `)) expect(builder).toContain(statement);
