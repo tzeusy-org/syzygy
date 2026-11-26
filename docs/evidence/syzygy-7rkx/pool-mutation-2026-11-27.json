@@ -1,0 +1,201 @@
+{
+ "format": "mutation-run/1",
+ "ranAt": "2026-11-26T17:24:36.026182+00:00",
+ "commit": "6d3f8f2a1f1c98d0068c15fdc97bd9ec43a5558a",
+ "subject": {
+  "scripts/check_spec_reconciliation.py": "5e812d6995ef2df5f0c323f4f680bc8c2e1666f01cbf627334b33a62888bc9ac",
+  "scripts/test_reconciliation_pool.py": "0110dbcd1bbd3baeb2808c6d0adfc03db31b20968966951f28f0a77def53073c"
+ },
+ "method": "Rule-6 run of scripts/test_reconciliation_pool.py over the scope and the pool (syzygy-7rkx).\n\nUsage: python3 pool_mutation.py <checkout root> <out.json>\n\nSupersedes scope_family_mutation.py and its synthetic harness after review\nR7RKX (docs/reviews/syzygy-7rkx/R7RKX-REVIEW-RAW.md): the controls now live in\nscripts/test_reconciliation_pool.py, which CI runs beside the selftest.\n\nEach mutant replaces fragments that each occur exactly once in\nscripts/check_spec_reconciliation.py, runs the test file (unittest, 300 s\nbound), and restores the file in `finally`. A mutant is killed when the tests\nexit non-zero or overrun the bound (a hang is a failure). The kills are by\nthese tests alone; `--selftest` is not run under any mutant, because no\nmutant here changes a selftest verdict on the clean path (the review's\ninference, F3). The record keeps each mutant's fragments, the failing test\nnames, the commit and the subject digest. The unmutated baseline runs first\nand must pass.",
+ "killedBy": "scripts/test_reconciliation_pool.py only",
+ "withSelftest": false,
+ "baseline": {
+  "testsExit": 0,
+  "testsFailed": [],
+  "testsVerdict": "OK",
+  "testsSeconds": 7
+ },
+ "mutants": [
+  {
+   "id": "scope-keeps-memo",
+   "what": "the scope does not reset the memo between runs",
+   "fragments": [
+    {
+     "old": "    assert _SIGNED_MEMO is None and _RUN_MEMO is None, \"_run_scope nested\"\n    _SIGNED_MEMO = {}\n    _RUN_MEMO = {}\n",
+     "new": "    _SIGNED_MEMO = {} if _SIGNED_MEMO is None else _SIGNED_MEMO\n    _RUN_MEMO = {} if _RUN_MEMO is None else _RUN_MEMO\n"
+    },
+    {
+     "old": "    finally:\n        _SIGNED_MEMO = None\n        _RUN_MEMO = None\n        d10_supersession.state = d10_state",
+     "new": "    finally:\n        d10_supersession.state = d10_state"
+    }
+   ],
+   "testsExit": 1,
+   "testsFailed": [
+    "test_a_nested_scope_is_refused (__main__.RunScopeTest.test_a_nested_scope_is_refused)",
+    "test_each_scope_starts_empty_and_exit_clears (__main__.RunScopeTest.test_each_scope_starts_empty_and_exit_clears)",
+    "test_run_asks_p115_once_per_tree (__main__.RunScopeTest.test_run_asks_p115_once_per_tree)"
+   ],
+   "testsVerdict": "FAILED (failures=3)",
+   "testsSeconds": 7,
+   "outcome": "killed"
+  },
+  {
+   "id": "scope-nests",
+   "what": "a nested scope is entered instead of refused",
+   "fragments": [
+    {
+     "old": "    assert _SIGNED_MEMO is None and _RUN_MEMO is None, \"_run_scope nested\"\n",
+     "new": ""
+    }
+   ],
+   "testsExit": 1,
+   "testsFailed": [
+    "test_a_nested_scope_is_refused (__main__.RunScopeTest.test_a_nested_scope_is_refused)"
+   ],
+   "testsVerdict": "FAILED (failures=1)",
+   "testsSeconds": 7,
+   "outcome": "killed"
+  },
+  {
+   "id": "run-skips-scope",
+   "what": "run() does not enter the scope (review mutant B)",
+   "fragments": [
+    {
+     "old": "    report = Report()\n    with _run_scope():\n        check_outcomes(root, report)",
+     "new": "    report = Report()\n    with contextlib.nullcontext():\n        check_outcomes(root, report)"
+    }
+   ],
+   "testsExit": 1,
+   "testsFailed": [
+    "test_run_asks_p115_once_per_tree (__main__.RunScopeTest.test_run_asks_p115_once_per_tree)"
+   ],
+   "testsVerdict": "FAILED (failures=1)",
+   "testsSeconds": 7,
+   "outcome": "killed"
+  },
+  {
+   "id": "families-share-worker",
+   "what": "state leaks across families in a worker (no fresh fork per family)",
+   "fragments": [
+    {
+     "old": "            workers, maxtasksperchild=1 if fresh else None) as pool:",
+     "new": "            workers, maxtasksperchild=None) as pool:"
+    }
+   ],
+   "testsExit": 1,
+   "testsFailed": [
+    "test_each_family_runs_in_a_fresh_fork (__main__.FamilyPoolTest.test_each_family_runs_in_a_fresh_fork)"
+   ],
+   "testsVerdict": "FAILED (failures=1)",
+   "testsSeconds": 7,
+   "outcome": "killed"
+  },
+  {
+   "id": "merge-out-of-order",
+   "what": "results are merged in completion order",
+   "fragments": [
+    {
+     "old": "        pending = pool.map_async(functools.partial(_guarded, function),\n                                 range(count), chunksize=1)\n        try:\n            return pending.get(timeout=_selftest_timeout())",
+     "new": "        done = pool.imap_unordered(functools.partial(_guarded, function),\n                                   range(count), chunksize=1)\n        try:\n            return [done.next(timeout=_selftest_timeout()) for _ in range(count)]"
+    }
+   ],
+   "testsExit": 1,
+   "testsFailed": [
+    "test_results_and_output_merge_in_list_order (__main__.FamilyPoolTest.test_results_and_output_merge_in_list_order)",
+    "test_results_come_back_in_order (__main__.ForkMapTest.test_results_come_back_in_order)"
+   ],
+   "testsVerdict": "FAILED (failures=2)",
+   "testsSeconds": 7,
+   "outcome": "killed"
+  },
+  {
+   "id": "drop-family-failures",
+   "what": "a family's failures are dropped when it records no witness",
+   "fragments": [
+    {
+     "old": "        failures.extend(failed)",
+     "new": "        if found:\n            failures.extend(failed)"
+    }
+   ],
+   "testsExit": 1,
+   "testsFailed": [
+    "test_every_familys_failures_are_kept (__main__.FamilyPoolTest.test_every_familys_failures_are_kept)"
+   ],
+   "testsVerdict": "FAILED (failures=1)",
+   "testsSeconds": 7,
+   "outcome": "killed"
+  },
+  {
+   "id": "family-exception-swallowed",
+   "what": "a family's exception is swallowed (review mutant A)",
+   "fragments": [
+    {
+     "old": "        except KeyboardInterrupt:\n            raise\n        except BaseException as exc:\n            failed.append(f\"family {index} ({_family_name(family)}) raised \"\n                          f\"{type(exc).__name__}: {exc}\")",
+     "new": "        except BaseException:\n            pass"
+    }
+   ],
+   "testsExit": 1,
+   "testsFailed": [
+    "test_a_family_that_exits_fails_the_run_and_does_not_hang (__main__.FamilyPoolTest.test_a_family_that_exits_fails_the_run_and_does_not_hang)",
+    "test_a_family_that_exits_fails_the_run_and_does_not_hang (__main__.FamilyPoolTest.test_a_family_that_exits_fails_the_run_and_does_not_hang)",
+    "test_a_family_that_raises_fails_the_run (__main__.FamilyPoolTest.test_a_family_that_raises_fails_the_run)",
+    "test_a_family_that_raises_fails_the_run (__main__.FamilyPoolTest.test_a_family_that_raises_fails_the_run)"
+   ],
+   "testsVerdict": "FAILED (failures=4)",
+   "testsSeconds": 7,
+   "outcome": "killed"
+  },
+  {
+   "id": "family-exit-uncaught",
+   "what": "a family's SystemExit is not turned into a failure (F1)",
+   "fragments": [
+    {
+     "old": "        except BaseException as exc:\n            failed.append(",
+     "new": "        except Exception as exc:\n            failed.append("
+    }
+   ],
+   "testsExit": 1,
+   "testsFailed": [
+    "test_a_family_that_exits_fails_the_run_and_does_not_hang (__main__.FamilyPoolTest.test_a_family_that_exits_fails_the_run_and_does_not_hang)",
+    "test_a_family_that_exits_fails_the_run_and_does_not_hang (__main__.FamilyPoolTest.test_a_family_that_exits_fails_the_run_and_does_not_hang)"
+   ],
+   "testsVerdict": "FAILED (errors=2)",
+   "testsSeconds": 7,
+   "outcome": "killed"
+  },
+  {
+   "id": "task-exit-unguarded",
+   "what": "a pooled task's SystemExit kills its worker (F1)",
+   "fragments": [
+    {
+     "old": "    except BaseException as exc:\n        raise RuntimeError(",
+     "new": "    except BaseException as exc:\n        raise\n        raise RuntimeError("
+    }
+   ],
+   "testsExit": 1,
+   "testsFailed": [
+    "test_a_task_that_exits_fails_the_run (__main__.ForkMapTest.test_a_task_that_exits_fails_the_run)"
+   ],
+   "testsVerdict": "FAILED (failures=1)",
+   "testsSeconds": 67,
+   "outcome": "killed"
+  },
+  {
+   "id": "no-timeout",
+   "what": "a lost result is waited for without bound (F1)",
+   "fragments": [
+    {
+     "old": "            return pending.get(timeout=_selftest_timeout())",
+     "new": "            return pending.get()"
+    }
+   ],
+   "testsExit": null,
+   "testsFailed": [
+    "overran 300 s"
+   ],
+   "testsVerdict": "HUNG",
+   "testsSeconds": 300,
+   "outcome": "killed"
+  }
+ ]
+}
