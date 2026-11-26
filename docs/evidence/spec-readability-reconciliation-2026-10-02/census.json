@@ -657,7 +657,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 567,
+      "scenarios": 579,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1274,7 +1274,19 @@
             "Unit answering all six kinds is not advised",
             "Nothing declared is Unknown",
             "Declarations in an earlier schema",
-            "Brief v21 teaches the six kinds"
+            "Brief v21 teaches the six kinds",
+            "A figure plan names each place's question and figure",
+            "Draft without a figure plan refused",
+            "Every place is planned once",
+            "Malformed plan entry refused",
+            "A planned figure is the one drawn at its place",
+            "Earlier schema keeps its bytes with a figure plan added",
+            "A chain of three or fewer is advised as a sentence",
+            "A figure that draws nothing new is advised as a duplicate",
+            "A figure that mixes levels is advised",
+            "Figure advice gates nothing",
+            "Schema v14 joins the system model to the worth-knowing mark",
+            "Brief v22 asks for the figure plan"
           ]
         },
         "REQ-polaris-generation-035": {

@@ -1,5 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { NotARegularFileError, PastBoundError, readBoundedFile } from './check-record-read.js';
 
 /** The commit the clone has checked out (REQ-polaris-generation-033: "the clone's checked-out HEAD commit").
  *
@@ -7,7 +8,12 @@ import * as path from 'node:path';
  * revisions the in-force observation consent names and, once pinned, read only by object identifier with every object re-hashed
  * (git-object-reader.ts). This module reads `.git/HEAD`, at most one loose ref under `refs/heads/`, and `packed-refs`; it runs no
  * process and reads no other file. A `.git` that is a file (a gitdir pointer) or a symbolic link is refused, never followed, as the
- * object reader refuses it. */
+ * object reader refuses it.
+ *
+ * Each of those files is read by the reader rule of version 2.10 (`readBoundedFile`, syzygy-3efd.83): one open, without blocking and
+ * without following a link at the path, the type and size taken from that descriptor, and at most one byte past the bound read, so a FIFO,
+ * a link or a file grown after its size was taken is refused, never read whole. The two bounds are this reader's own, stated here and in
+ * no requirement yet (syzygy-nffo states them in REQ-polaris-generation-033). */
 
 export type CloneHead =
   | { readonly ok: true; readonly commit: string; readonly via: string; readonly gitDir: string }
@@ -19,17 +25,11 @@ const OBJECT_ID = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/;
 const BRANCH_REF = /^refs\/heads\/[A-Za-z0-9._-]+(?:\/[A-Za-z0-9._-]+)*$/;
 
 function readSmall(file: string, limit: number): { readonly text: string } | { readonly reason: string } {
-  let stats: fs.Stats;
   try {
-    stats = fs.lstatSync(file);
+    return { text: readBoundedFile(file, limit, { followLink: false }).toString('utf8') };
   } catch (cause) {
-    return { reason: `${file} cannot be read (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
-  }
-  if (!stats.isFile()) return { reason: `${file} is not a regular file` };
-  if (stats.size > limit) return { reason: `${file} is larger than ${limit} bytes` };
-  try {
-    return { text: fs.readFileSync(file, 'utf8') };
-  } catch (cause) {
+    if (cause instanceof NotARegularFileError) return { reason: `${file} is not a regular file` };
+    if (cause instanceof PastBoundError) return { reason: `${file} is larger than ${limit} bytes` };
     return { reason: `${file} cannot be read (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
   }
 }
