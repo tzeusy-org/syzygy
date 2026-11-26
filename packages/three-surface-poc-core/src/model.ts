@@ -1,3 +1,4 @@
+import type { CommitJoinsResult, CommitJoinsUnknown, CommitJoinUnknownReason } from './commit-joins.js';
 import type { CodeStructureResult } from './code-structure.js';
 import { GOVERNING_INTENT_UNKNOWN_BASIS, workItemTitlesDisclosure, type WorkItemsResult } from './work-items.js';
 import type { WorkerChangeResult } from './worker-change-observation.js';
@@ -9,6 +10,8 @@ import {
   TRAJECTORY_CHANGED_ID,
   TRAJECTORY_COST_ID,
   TRAJECTORY_ORPHANED_WORK_ID,
+  TRAJECTORY_COMMIT_JOINS_ID,
+  TRAJECTORY_LANDING_UNNAMED_ID,
   type TrajectoryProjection,
 } from './trajectory-projection.js';
 import type { DispatchDisclosure, MaterializationRecord } from './materialization.js';
@@ -174,6 +177,9 @@ export interface PocModel {
   readonly surfaces: readonly PocSurface[];
   readonly codeStructure: CodeStructureResult;
   readonly workItems: WorkItemsResult;
+  /** POC-REQ-064 (syzygy-t3jk.25): the observed repository's commits that
+   * name each served item, by the naming convention; no subject is kept. */
+  readonly commitJoins: CommitJoinsResult;
   readonly workerChange: WorkerChangeResult;
   readonly testArtifactVerification: TestArtifactVerificationResult;
   readonly orrery: OrreryProjection;
@@ -303,6 +309,28 @@ function changedBasis(windows: readonly { readonly window: ChangeWindow; readonl
 const COST_BASIS = 'No cost record is read: no effort, compute, token, money or blocked-time measure is captured for any work item, so those costs are Unknown, never zero; elapsed time alone is measured, as lead time and age.';
 const ORPHANED_WORK_BASIS = 'No orphaned-work check is implemented, and the observation does not read who created each tracker item, which that check would compare with materialization records, so how many items are orphaned is Unknown, never 0.';
 
+/** POC-REQ-065: why each closed item's landing is Unknown, by the commit
+ * join's closed reason (POC-REQ-064). */
+const COMMIT_JOINS_UNKNOWN_BASIS: Readonly<Record<CommitJoinUnknownReason, string>> = {
+  'work-items-unobserved': 'the work items were not observed',
+  'repository-revision-unavailable': 'the observed repository revision is not a commit identifier',
+  'commit-history-read-failed': "the observed repository's history could not be read",
+  'commit-history-malformed': "the observed repository's history read returned rows of an unexpected shape, or did not start at the observed revision",
+};
+
+function commitJoinsBasis(joins: CommitJoinsUnknown): string {
+  return `Where each closed item landed, by a commit that names it (naming convention), is Unknown: ${COMMIT_JOINS_UNKNOWN_BASIS[joins.reason]} (commit join ${joins.reason}). No closed item is counted as merged by naming convention or as having no naming commit.`;
+}
+
+/** POC-REQ-065: why a closed item no read commit names has an Unknown
+ * landing, with the count and the read's extent. */
+function landingUnnamedBasis(count: number, read: number, truncated: boolean): string {
+  const extent = truncated
+    ? `only the newest ${read} commits from the observed revision were read, and older history may name them`
+    : `the observed revision's whole history (${read} commits) was read`;
+  return `${count} closed items have no commit that names them, so where each landed is Unknown: no commit subject carries the item's identifier as an exact token, and the join is never fuzzy-matched (RFC4-22); ${extent}. A commit that names the item resolves it.`;
+}
+
 export const WORK_ITEM_VERIFICATION_REGION_ID = 'region:work-item-verification' as const;
 
 /** POC-REQ-014: the Trajectory region that counts the served items whose
@@ -323,6 +351,7 @@ interface UnknownSubjectInputs {
   readonly workItems: WorkItemsResult;
   readonly orrery: OrreryProjection;
   readonly trajectory: TrajectoryProjection;
+  readonly commitJoins: CommitJoinsResult;
   readonly workerChange: WorkerChangeResult;
   readonly testArtifactVerification: TestArtifactVerificationResult;
   readonly governingIntentId: string | null;
@@ -367,6 +396,20 @@ function deriveUnknownSubjects(input: UnknownSubjectInputs): readonly PocUnknown
       }
       add(TRAJECTORY_COST_ID, COST_BASIS, 'source-uncaptured-or-unreachable');
       add(TRAJECTORY_ORPHANED_WORK_ID, ORPHANED_WORK_BASIS, 'source-uncaptured-or-unreachable');
+      // POC-REQ-065 (syzygy-t3jk.26): closed items' landings are Unknown
+      // exactly when the commit join is.
+      const remains = input.trajectory.answers.find((answer) => answer.id === 'remains');
+      if (remains !== undefined && 'closedLanding' in remains) {
+        const landing = remains.closedLanding;
+        if (landing.state === 'unknown') {
+          const basis = input.commitJoins.kind === 'unknown'
+            ? commitJoinsBasis(input.commitJoins)
+            : 'Where each closed item landed is Unknown: the commit join was not supplied to the Trajectory projection. No closed item is counted as merged by naming convention or as having no naming commit.';
+          add(TRAJECTORY_COMMIT_JOINS_ID, basis, 'source-uncaptured-or-unreachable');
+        } else if (landing.noNamingCommitRead > 0) {
+          add(TRAJECTORY_LANDING_UNNAMED_ID, landingUnnamedBasis(landing.noNamingCommitRead, landing.commitsRead, landing.historyTruncated), 'missing-evidence');
+        }
+      }
       const intent = input.trajectory.answers.find((answer) => answer.id === 'intent');
       if (intent !== undefined && 'reconciliationChain' in intent && typeof intent.reconciliationChain.members !== 'number') {
         const change = input.workerChange;
@@ -431,6 +474,7 @@ export function buildPocModel(input: BuildPocModelInput): PocModel {
     relationships: graph.relationships,
     codeStructure: orrery.codeStructure,
     workItems: trajectory.workItems,
+    commitJoins: trajectory.commitJoins,
     workerChange: trajectory.workerChange,
     testArtifactVerification: trajectory.testArtifactVerification,
     orrery: orrery.orrery,

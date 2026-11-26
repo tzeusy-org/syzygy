@@ -1,5 +1,6 @@
 import { recordedInstant, trajectoryTimeMeasures, type TrajectoryTimeMeasures } from './trajectory-time-measures.js';
 import type { WorkItemFact, WorkItemsResult, WorkItemStatus } from './work-items.js';
+import type { CommitJoinsResult } from './commit-joins.js';
 import { CHANGE_WINDOWS, type ChangeWindow, type ChangeWindowObservation } from './work-item-history.js';
 import {
   DEPENDENCY_EDGE_REASONS,
@@ -59,6 +60,13 @@ export const TRAJECTORY_CHANGED_ID = 'region:trajectory-changed' as const;
 export const TRAJECTORY_COST_ID = 'region:trajectory-cost' as const;
 export const TRAJECTORY_ORPHANED_WORK_ID = 'region:trajectory-orphaned-work' as const;
 export const TRAJECTORY_CHAIN_MEMBERSHIP_ID = 'region:trajectory-chain-membership' as const;
+/** POC-REQ-065 (syzygy-t3jk.26): the disclosure a closed item's landing
+ * names when the commit join (POC-REQ-064) is Unknown. */
+export const TRAJECTORY_COMMIT_JOINS_ID = 'region:trajectory-commit-joins' as const;
+/** POC-REQ-065: the disclosure every closed item no read commit names
+ * refers to. RFC4-22: a join that cannot be established (message tag
+ * absent) renders Unknown, never fuzzy-matched. */
+export const TRAJECTORY_LANDING_UNNAMED_ID = 'region:trajectory-landing-unnamed' as const;
 /** The board's governing-intent disclosure (POC-REQ-014); model.ts exports it. */
 export const GOVERNING_INTENT_REGION_ID = 'region:work-item-governing-intent' as const;
 /** The disclosure every answer names when work items were not observed. */
@@ -75,6 +83,59 @@ export interface TrajectoryAnswerUnknown {
   readonly disclosure: string;
 }
 
+/** POC-REQ-065 (syzygy-t3jk.26): a closed item's landing, from the commit
+ * join alone. `merged-by-convention`: a commit reachable from the observed
+ * revision names it (RFC4-22 `naming-convention`, `reduced-fidelity`), never
+ * proof the work was done or the intent satisfied. `no-naming-commit-read`:
+ * no commit read names it, so its join cannot be established and where it
+ * landed is Unknown (RFC4-22); when the read was truncated, older history
+ * may name it. */
+export type ClosedItemLanding = 'merged-by-convention' | 'no-naming-commit-read';
+
+/** The closed items' landings, counted over every served closed item, or
+ * Unknown with the commit-join disclosure when the join is Unknown. */
+export type TrajectoryClosedLanding =
+  | {
+      readonly state: 'observed';
+      readonly closed: number;
+      readonly mergedByConvention: number;
+      readonly noNamingCommitRead: number;
+      readonly basis: 'naming-convention';
+      readonly fidelity: 'reduced-fidelity';
+      /** Commits read, newest first from the observed revision. */
+      readonly commitsRead: number;
+      /** True when older history was not read: a closed item counted under
+       * `noNamingCommitRead` may be named there. */
+      readonly historyTruncated: boolean;
+    }
+  | (TrajectoryAnswerUnknown & { readonly closed: number });
+
+/** The landing of one served item, or null when it is not closed or the
+ * join is Unknown. Both channels derive a card's landing from this alone. */
+export function closedItemLanding(item: { readonly id: string; readonly status: WorkItemStatus }, joins: CommitJoinsResult): ClosedItemLanding | null {
+  if (item.status !== 'closed' || joins.kind !== 'observed') return null;
+  return joins.items.some((entry) => entry.id === item.id) ? 'merged-by-convention' : 'no-naming-commit-read';
+}
+
+function closedLanding(items: readonly WorkItemFact[], joins: CommitJoinsResult | undefined): TrajectoryClosedLanding {
+  const closed = items.filter((item) => item.status === 'closed');
+  if (joins === undefined || joins.kind !== 'observed') {
+    return { state: 'unknown', disclosure: TRAJECTORY_COMMIT_JOINS_ID, closed: closed.length };
+  }
+  const joined = new Set(joins.items.map((entry) => entry.id));
+  const merged = closed.filter((item) => joined.has(item.id)).length;
+  return {
+    state: 'observed',
+    closed: closed.length,
+    mergedByConvention: merged,
+    noNamingCommitRead: closed.length - merged,
+    basis: joins.basis,
+    fidelity: joins.fidelity,
+    commitsRead: joins.read,
+    historyTruncated: joins.truncated,
+  };
+}
+
 /** POC-REQ-044. Every count is over all served work items, never the
  * rendered selection. No answer is omitted for being Unknown. */
 export type TrajectoryAnswer =
@@ -84,6 +145,8 @@ export type TrajectoryAnswer =
       /** Served items per tracker status, every status listed; sums to `served`. */
       readonly byStatus: Readonly<Record<WorkItemStatus, number>>;
       readonly served: number;
+      /** POC-REQ-065: how the closed items landed, by the commit join. */
+      readonly closedLanding: TrajectoryClosedLanding;
     }
   | {
       readonly id: 'running';
@@ -597,6 +660,8 @@ interface ProjectTrajectoryOptions extends RecentLimits {
   readonly dependencies?: WorkItemDependencyObservation;
   /** syzygy-t3jk.21: the history read's windows; absent reads as unread. */
   readonly changes?: readonly ChangeWindowObservation[];
+  /** POC-REQ-065: the commit join; absent reads as Unknown. */
+  readonly commitJoins?: CommitJoinsResult;
 }
 
 /** RFC2-18: only materialized work that reached merge enters the chain.
@@ -618,12 +683,12 @@ function changeWindows(changes: readonly ChangeWindowObservation[] | undefined):
   return (changes ?? unread).map((window) => (window.kind === 'unknown' ? { ...window, disclosure: TRAJECTORY_CHANGED_ID } : window));
 }
 
-function observedAnswers(workItems: Extract<WorkItemsResult, { kind: 'observed' }>, chain: ReconciliationChainInput | undefined, changes: readonly ChangeWindowObservation[] | undefined): readonly TrajectoryAnswer[] {
+function observedAnswers(workItems: Extract<WorkItemsResult, { kind: 'observed' }>, chain: ReconciliationChainInput | undefined, changes: readonly ChangeWindowObservation[] | undefined, joins: CommitJoinsResult | undefined): readonly TrajectoryAnswer[] {
   const byStatus = Object.fromEntries(Object.keys(STATUS_TO_COLUMN).map((status) => [status, 0])) as Record<WorkItemStatus, number>;
   for (const item of workItems.items) byStatus[item.status] += 1;
   const served = workItems.items.length;
   return [
-    { id: 'remains', state: 'observed', byStatus, served },
+    { id: 'remains', state: 'observed', byStatus, served, closedLanding: closedLanding(workItems.items, joins) },
     { id: 'running', state: 'observed', claimed: byStatus.in_progress, served, liveness: 'activity-undetermined' },
     { id: 'changed', state: 'observed', windows: changeWindows(changes) },
     { id: 'cost', state: 'unknown', disclosure: TRAJECTORY_COST_ID },
@@ -770,7 +835,7 @@ export function projectTrajectory(
     totalCount: sorted.length,
     timeMeasures: trajectoryTimeMeasures(workItems.items, workItems.capturedAt),
     eligibility: projectEligibility(sorted, dependencies),
-    answers: observedAnswers(workItems, options.reconciliationChain, options.changes),
+    answers: observedAnswers(workItems, options.reconciliationChain, options.changes, options.commitJoins),
     outline: projectOutline(dependencies),
   };
   const { nonClosedLimit, recentClosedWindow } = options;
