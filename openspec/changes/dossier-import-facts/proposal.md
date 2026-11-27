@@ -1,6 +1,6 @@
 # Proposal: lexical import facts in the check record
 
-**State:** Candidate, reviewed once (`REVISE`, every finding repaired; `design.md` Review). Version number, adoption and implementation pending.
+**State:** Version 2.39, rebuilt over 2.38 for adoption (`design.md` D8), reviewed once over 2.33 (`REVISE`, every finding repaired; `design.md` Review); no review has read the repaired bytes or the rebuild. Implementation pending.
 
 ## Why
 

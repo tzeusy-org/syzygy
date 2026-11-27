@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate SEMANTIC-DELTA.md for version 2.NN (lexical import facts) from the bytes of the predecessor and the new text.
+"""Generate SEMANTIC-DELTA.md for version 2.39 (lexical import facts; drafted as 2.NN over 2.33, rebuilt over 2.38) from the bytes of the predecessor and the new text.
 
 Usage: import_facts_delta.py <worktree>. It also asserts the survival counts: no predecessor line removed, and every
 predecessor scenario block carried byte for byte.
@@ -10,7 +10,7 @@ import pathlib
 import sys
 
 W = pathlib.Path(sys.argv[1])
-PRED = 'openspec/changes/dossier-figure-plan/proposed/polaris-generation/spec.md'
+PRED = 'openspec/changes/dossier-migration-parity/proposed/polaris-generation/spec.md'
 NEW = 'openspec/changes/dossier-import-facts/proposed/polaris-generation/spec.md'
 pb, nb_ = (W / PRED).read_bytes(), (W / NEW).read_bytes()
 old, new = pb.decode('utf-8').split('\n'), nb_.decode('utf-8').split('\n')
@@ -96,7 +96,7 @@ for lead, paras in para_groups:
     added += [f'- "{" ".join(p.split(" ")[:16])} …"' for p in paras]
     added.append('')
 
-out = f'''# Version 2.NN semantic delta
+out = f'''# Version 2.39 semantic delta
 
 [Inferred] Candidate agent-decided amendment under VIS-4. No adoption is claimed; this file states exactly what changes so the change is reviewable as one delta (`NORMATIVE-CHANGE-WORKFLOW.md`). Every quoted text and count below was extracted from the bytes by script (a line diff of the requirement block and a word diff of each changed line), not transcribed: `docs/evidence/syzygy-3efd-60/import_facts_delta.py` writes this file.
 
@@ -106,7 +106,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `{PRED}` (dossier figure plan version 2.33, row A-65, tag `polaris-dossier-figure-plan-v2.33`; sha256 `{sha(pb)}`), the effective REQ-034 on `main` at this writing. [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces that text. Its version number is left as the placeholder 2.NN: other candidates over REQ-034 are expected to adopt first (`design.md` D8), and at adoption the text is rebuilt over the newest effective REQ-034 by re-running the build script with its anchors. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.33's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `{PRED}` (dossier migration parity version 2.38, row A-269, tag `polaris-dossier-migration-parity-v2.38`; sha256 `{sha(pb)}`), the REQ-034 this version is adopted over. [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces that text. It was drafted and reviewed over figure plan 2.33 under the placeholder 2.NN (`design.md` D8) and is rebuilt over 2.38 as version 2.39 by re-running the build script with its anchors, which changes the predecessor, its name and number and the label alone. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.33's, byte for byte.
 
 ## Carried unchanged
 
@@ -114,14 +114,14 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Amended in place
 
-[Observed] The title and preamble (file head, not requirement text) name version 2.NN and this change. In the requirement, each changed line, with the displaced words and the words that replace them:
+[Observed] The title and preamble (file head, not requirement text) name version 2.39 and this change. In the requirement, each changed line, with the displaced words and the words that replace them:
 
 {chr(10).join(amend)}
 
 ## Added
 
 ''' + '\n'.join(added) + f'''
-[Observed] {len(scen)} scenarios, after the predecessor's last scenario and before the Form line: {", ".join(f'"{s}"' for s in scen)}.
+[Observed] {len(scen)} scenarios, after the predecessor's scenario "Witnessed edge to a withheld node leaves the migration parity" and before the Form line: {", ".join(f'"{s}"' for s in scen)}.
 
 ## Removed
 
@@ -129,7 +129,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Effect on bytes
 
-[Inferred] As the added paragraph beginning "These are the bytes version 2.NN changes" states and `design.md` D7 explains: every full draft check record written in the operator-agent mode gains `importFacts` before `manifestFacts`, and with it check's report and the record's digest. The structure record, `manifestFacts`, inventory check records, the brief, the draft schemas, every rendered page, `machine.json`, `dossier.json`, the size report, the review packets, the relation witness states and every provider-mode byte are unchanged.
+[Inferred] As the added paragraph beginning "These are the bytes version 2.39 changes" states and `design.md` D7 explains: every full draft check record written in the operator-agent mode gains `importFacts` before `manifestFacts`, and with it check's report and the record's digest. The structure record, `manifestFacts`, inventory check records, the brief, the draft schemas, every rendered page, `machine.json`, `dossier.json`, the size report, the review packets, the relation witness states and every provider-mode byte are unchanged.
 '''
 (W / 'openspec/changes/dossier-import-facts/SEMANTIC-DELTA.md').write_text(out, encoding='utf-8')
 print('changed', len(changed), 'kept', kept, 'of', len(ob), 'paragraph groups', [len(p) for _, p in para_groups],

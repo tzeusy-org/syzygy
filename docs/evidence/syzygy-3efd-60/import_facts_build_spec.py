@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Build the version 2.NN MODIFIED REQ-polaris-generation-034 (lexical import facts) from the version 2.33 bytes by anchored edits (syzygy-3efd.60).
+"""Build the version 2.39 MODIFIED REQ-polaris-generation-034 (lexical import facts) from the version 2.38 bytes by anchored edits (syzygy-3efd.60).
+
+Drafted and reviewed over version 2.33 (the figure plan) under the placeholder label 2.NN; rebuilt over version 2.38 (the
+migration parity) for adoption by changing PRED, NUMS, the two head assertions and VERSION alone.
 
 Every edit asserts its anchor occurs exactly once. Usage: import_facts_build_spec.py <worktree> <out>.
 """
@@ -8,11 +11,13 @@ import sys
 
 W = pathlib.Path(sys.argv[1])
 out = pathlib.Path(sys.argv[2])
-PRED = 'openspec/changes/dossier-figure-plan/proposed/polaris-generation/spec.md'
+PRED = 'openspec/changes/dossier-migration-parity/proposed/polaris-generation/spec.md'
 text = (W / PRED).read_text(encoding='utf-8')
 
 # The successor's numbers, kept symbolic so a rebuild over a later predecessor changes these constants and the anchors alone.
-NUMS = {'<PV>': '2.33', '<PN>': 'figure plan'}
+NUMS = {'<PV>': '2.38', '<PN>': 'migration parity'}
+# The label this text is adopted under; the edits below write the placeholder 2.NN, replaced at the end.
+VERSION = '2.39'
 
 
 def sym(s):
@@ -33,8 +38,8 @@ def insert_after(anchor, paragraphs):
 
 
 lines = text.split('\n')
-assert lines[0].startswith('# Dossier figure plan'), lines[0]
-assert lines[2].startswith('Candidate version 2.33;'), lines[2][:40]
+assert lines[0].startswith('# Dossier migration parity'), lines[0]
+assert lines[2].startswith('Candidate version 2.38;'), lines[2][:40]
 lines[0] = '# Dossier lexical import facts: which unit a TypeScript file\'s import statements name, in the check record'
 lines[2] = ("Candidate version 2.NN; binds nothing until its agent adoption row in AGENT-ADOPTIONS.md and its version tag. One MODIFIED "
             "requirement, REQ-polaris-generation-034, whose complete text below replaces the effective text that <PN> version <PV> gave "
@@ -376,5 +381,7 @@ n = text.count(F_ANCHOR)
 assert n == 1, n
 text = text.replace(F_ANCHOR, block + F_ANCHOR, 1)
 
+assert text.count('2.NN') == 4, text.count('2.NN')
+text = text.replace('2.NN', VERSION)
 out.write_text(text, encoding='utf-8')
 print('built', out, len(text.split('\n')), 'lines')
