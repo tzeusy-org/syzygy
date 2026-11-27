@@ -238,7 +238,7 @@ describe('local-agent draft schema: the worth-knowing mark (v13)', () => {
     ]);
   });
 
-  it('names no v11 or v12 schema: those numbers belong to changes this code does not implement, so neither reads as v10 or v13', () => {
+  it('names neither v11, which no brief issues, nor v12, which this code does not implement, so neither reads as v13', () => {
     for (const version of ['polaris-dossier-local-draft-v11', 'polaris-dossier-local-draft-v12']) {
       const errors = checkDraftShape(SCHEMA, mutate((d) => { d.schemaVersion = version; }));
       expect(errors.map(({ path }) => path), version).toEqual(['$.schemaVersion']);

@@ -1,11 +1,12 @@
 import * as fs from 'node:fs';
+import { groupsOf } from './containment.js';
 import * as path from 'node:path';
 import { BoundedJsonError, bodyLines, parseBoundedJson, retainedWithMarkers, spanTouchesWithheld } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectCitations, declaredSessionId, nextRevision } from './check.js';
 import { NotARegularFileError, isCheckRecordOf, readBoundedFile, readCheckRecord } from './check-record-read.js';
 import { DRAFT_MAX_BYTES } from './check-model.js';
-import { DEFICIENT_SUBJECTS, UNIT_FIELD, VERDICT_QUOTATION_FORM, hasHeroForm, hasRelationForm, hasWithheldHeroIdentity, membersOfKind, verdictSchemaDocument } from './draft-schema.js';
+import { DEFICIENT_SUBJECTS, GROUPS_FIELD, UNIT_FIELD, VERDICT_QUOTATION_FORM, hasHeroForm, hasRelationForm, hasWithheldHeroIdentity, membersOfKind, verdictSchemaDocument } from './draft-schema.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { BLOB_MODES, GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { INVENTORY_INFERRED, errno, inventoryOfRecord, type OpenedRun } from './inventory.js';
@@ -69,9 +70,12 @@ function withheldDiagramUnits(draft: Readonly<Record<string, unknown>>, screen: 
   const withheld = new Set<object>();
   if (!hasRelationForm(draft['schemaVersion'])) return withheld;
   const isSecretPath = secretPathOf(screen);
-  for (const diagram of list(draft['diagrams'])) {
-    if (!isRecord(diagram) || membersOfKind(diagram['kind'])?.[0] !== 'nodes') continue;
-    for (const node of list(diagram['nodes'])) {
+  list(draft['diagrams']).forEach((diagram, i) => {
+    if (!isRecord(diagram)) return;
+    // A v11 containment's groups carry a node's unit at every level (version 2.23).
+    const kind = membersOfKind(diagram['kind'], draft['schemaVersion'])?.[0];
+    const holders = kind === 'nodes' ? list(diagram['nodes']) : kind === GROUPS_FIELD ? groupsOf(diagram, i).map(({ group }) => group) : [];
+    for (const node of holders) {
       if (!isRecord(node) || !Object.hasOwn(node, UNIT_FIELD)) continue;
       const unit = unitOf(node[UNIT_FIELD]);
       if (unit === undefined || Object.entries(unit).some(([field, value]) => field !== 'kind'
@@ -79,7 +83,7 @@ function withheldDiagramUnits(draft: Readonly<Record<string, unknown>>, screen: 
         withheld.add(node);
       }
     }
-  }
+  });
   return withheld;
 }
 
