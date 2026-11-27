@@ -8,11 +8,11 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-migration-bounds/proposed/polaris-generation/spec.md` (dossier migration bounds version 2.41, row A-272, tag `polaris-dossier-migration-bounds-v2.41`; sha256 `87d64cdd7ded843aed556c1749f280079e9428221589f52daec6033524748e93`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-imports-corroboration/proposed/polaris-generation/spec.md`, sha256 `134fe22906cfc9a9cac80100ce9ce9c2c1933185d01e5e6ad2d3897dc5abc4ee`) replaces that text, composed after version 2.41. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.41's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-migration-bounds/proposed/polaris-generation/spec.md` (dossier migration bounds version 2.41, row A-272, tag `polaris-dossier-migration-bounds-v2.41`; sha256 `64869dc96bf377b6d085bb646e0873606e631adb42084eb8723caa3f82e30b4c`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-imports-corroboration/proposed/polaris-generation/spec.md`, sha256 `db75e47cb14e2aa88467db8d72005313602ab3c0cd035abe3a09e1d6416fccbd`) replaces that text, composed after version 2.41. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.41's, byte for byte.
 
 ## Carried unchanged
 
-[Observed] Of the predecessor requirement's 2016 lines, 2010 appear byte for byte and in order in the new text; 6 are amended in place (below) and none is removed. All 292 predecessor scenarios are carried with their blocks byte for byte. The new text was built from the predecessor bytes by a script that replaces or inserts only at anchors it asserts occur exactly once (`docs/evidence/syzygy-3efd-86/imports_witness_build_spec.py`, which reproduces the spec byte for byte).
+[Observed] Of the predecessor requirement's 2017 lines, 2011 appear byte for byte and in order in the new text; 6 lines are amended in place and none is removed. Below, each edit is one item, so a line edited in several places gives several items (10 items over 6 lines). All 292 predecessor scenarios are carried with their blocks byte for byte. The new text was built from the predecessor bytes by a script that replaces or inserts only at anchors it asserts occur exactly once (`docs/evidence/syzygy-3efd-86/imports_witness_build_spec.py`, which reproduces the spec byte for byte).
 
 ## Amended in place
 

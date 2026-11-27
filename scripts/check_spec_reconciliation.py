@@ -3654,7 +3654,7 @@ IMPWIT_REPLACES = (POLARIS_ID + "034",)
 IMPWIT_COUNT_SCOPE = "With the imports corroboration"
 IMPWIT_COUNT_PREFIX = "With the imports corroboration version effective, Polaris has "
 IMPWIT_SUBJECTS = {
-    IMPWIT_SPEC: "134fe22906cfc9a9cac80100ce9ce9c2c1933185d01e5e6ad2d3897dc5abc4ee",
+    IMPWIT_SPEC: "db75e47cb14e2aa88467db8d72005313602ab3c0cd035abe3a09e1d6416fccbd",
 }
 IMPWIT_BOUND_PARTS = len(IMPWIT_SUBJECTS)
 

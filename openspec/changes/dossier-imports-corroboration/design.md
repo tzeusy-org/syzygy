@@ -11,6 +11,7 @@
   - the end of 2.19's render paragraph, after which the two new paragraphs go;
   - the four Form lines, each extended after its 2.41 sentence.
   The scenarios precede the one Form line. If another REQ-034 version lands first, the script is re-run over it with the predecessor path changed.
+- [Observed] First installed at `4115d9817` over the 2.41 text as first installed (sha256 `87d64cdd…6e93`; this spec then `134fe229…c4ee`). It was rebuilt over the 2.41 text as repaired after that version's review (sha256 `64869dc9…0b4c`). The same script ran with one anchor moved: the Falsifier line's 2.41 sentence now ends "a nesting is counted as a relationship, or the migration yields no draft for it.". The other 2.41 repairs (line 142, line 252 and the 2.41 scenario) fall on text this version does not edit, so they are carried.
 
 ## D2. Corroborate, never witness
 

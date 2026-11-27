@@ -102,7 +102,7 @@ extend("each migrated draft's element and relationship counts and check's findin
 extend("and the expected `schema` finding written before check runs.",
        "; for version 2.42, each `imports` edge's expected state, reason and fact written as literals from the fixture's import "
        "facts before the rule runs.")
-extend("migrates to a draft check passes, or the migration yields no draft for it.",
+extend("a nesting is counted as a relationship, or the migration yields no draft for it.",
        "; for version 2.42, an `imports` edge renders Observed or solid, is `challenged` or draws a `relation-challenged` finding, "
        "is corroborated by a fact whose outcome is not `edge` or that joins other units, or a page or `machine.json` names an "
        "import fact's path or operand.")
