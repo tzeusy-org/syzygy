@@ -40,7 +40,10 @@ function install(census: Census): void {
     }
   };
   // Content reads only: a listing or an existence check depends on which files exist, not on what a change writes into one.
-  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync'];
+  // A copy reads its source (the first argument); a directory copied whole is recorded as the directory, which is no
+  // tracked file. Reads inside a worker thread are not recorded: the thread has its own fs bindings.
+  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',
+    'openAsBlob'];
   wrap(fs as unknown as Record<string, unknown>, READS);
   wrap(fsPromises as unknown as Record<string, unknown>, READS);
   syncBuiltinESMExports();

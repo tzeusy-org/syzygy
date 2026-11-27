@@ -161,10 +161,15 @@ See [repository scripts](scripts/README.md) for the Python governance tools.
   directory), and `scripts/check_read_census.mjs` fails the run when the
   selection for a change to that file alone would not pick the test. Repair a
   failure by making the reader visible to the rules in `ci-selection.ts`, or by
-  a row in its `DECLARED_READERS`. Locally: `SYZYGY_READ_CENSUS=/tmp/rc npx
-  vitest run --project unit`, then `node scripts/check_read_census.mjs /tmp/rc`.
-  Reads made by a child process (git, a spawned script) and directory listings
-  are not recorded.
+  a row in its `DECLARED_READERS`. Locally, in a fresh absolute directory (the
+  recorder appends): `rc=$(mktemp -d) && SYZYGY_READ_CENSUS=$rc npx vitest run
+  --project unit && node scripts/check_read_census.mjs "$rc"`. Recorded routes:
+  `readFile`, `readFileSync`, `createReadStream`, `open`, `openSync`,
+  `copyFile`, `copyFileSync`, `cp`, `cpSync` and `openAsBlob`, in `node:fs`
+  and `node:fs/promises`; `read-census.test.ts` reads a canary through each,
+  and the unit check fails when one goes missing. Not recorded: reads by a
+  child process (git, a spawned script), inside a worker thread, through
+  another API, and directory listings.
 - **Where a test goes.** A new test file is a unit test until
   `vitest.tiers.ts` lists it under `INTEGRATION_TESTS`, `E2E_TESTS` or
   `LIVE_TESTS`; list it under the lowest tier that holds what it uses. The

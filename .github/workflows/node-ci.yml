@@ -135,7 +135,7 @@ jobs:
       # selection would not pick a test for a change to a file it read (syzygy-qu5j).
       - name: read census check (merge group)
         if: github.event_name != 'pull_request'
-        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check_read_census.mjs "$RUNNER_TEMP/read-census"
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check_read_census.mjs "$RUNNER_TEMP/read-census" --require-canaries
 
       - name: unit tests, selected (pull requests)
         if: github.event_name == 'pull_request'

@@ -53,7 +53,7 @@ describe('the pull-request selection plan', () => {
   it('runs every tier for a change the graph cannot bound, naming each trigger', () => {
     const triggers = ['package.json', 'apps/a/package.json', 'package-lock.json', '.npmrc', 'vitest.config.ts', 'vitest.tiers.ts', 'vitest.setup.ts',
       'packages/cap1-system/vitest.config.ts', 'tsconfig.json', 'packages/p/tsconfig.build.json', 'ci-selection.ts', 'ci-reader-inventory.ts', 'scripts/select_ci_tests.mjs',
-      'scripts/run_ci_tier.mjs', 'scripts/check_unit_tmpdir.mjs', 'scripts/check_read_census.mjs', 'vitest.read-census.setup.ts', '.github/workflows/node-ci.yml',
+      'scripts/run_ci_tier.mjs', 'scripts/check_unit_tmpdir.mjs', 'scripts/check_read_census.mjs', 'vitest.read-census.setup.ts', 'read-census-canaries.ts', '.github/workflows/node-ci.yml',
       '.github/workflows/governance-docs.yml', '.github/workflows/generation-mutation-gate.yml'];
     for (const path of triggers) {
       const plan = planSelection([M('M', 'apps/a/src/trajectory.ts'), M('M', path)], MODULES);

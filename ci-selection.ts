@@ -1,6 +1,7 @@
 // Which tests a pull request runs (syzygy-qu5j). The caller supplies the changed paths and reads module texts on demand, and
 // `scripts/select_ci_tests.mjs` turns the plan into test files through Vitest's own module graph. Merge-group runs never
-// read this: the tree that lands is always tested whole.
+// select: the tree that lands is always tested whole, and its read census (`scripts/check_read_census.mjs`) checks this
+// plan against what every test actually read.
 //
 // Two ways a change reaches a test:
 //   - by import: every test whose module graph holds a changed module (`apps/*`, `packages/*`, or a script or root
@@ -8,7 +9,8 @@
 //   - by reading: tests read documents, fixtures, scripts and sibling sources from disk, which no import graph sees. A
 //     "reader" module selects every test that imports it (itself included):
 //       - for a path outside the workspaces, every module that locates the real repository (`ROOTED` below: a relative
-//         `new URL('../..')`, `process.cwd()`, `git rev-parse`), and every module naming the path's basename as a path
+//         `new URL('../..')`, a literal of two or more parent steps such as `'../../..'`, `process.cwd()`,
+//         `git rev-parse`), and every module naming the path's basename as a path
 //         literal. A bare `'..'` join is not counted: 178 of 739 modules carry one, and counting it selected 308 of 366
 //         test files for a Trajectory change (measured 2026-11-27 on PR #1007's diff);
 //       - for a path inside a workspace, every module naming its basename, and for a file that is not a module also its
@@ -18,11 +20,13 @@
 //         `sync-child-process-guard.test.ts` walks the repository) are walkers, so a new module is checked by them.
 //         Only test files count: a product module that lists a directory reads the input its caller hands it, and
 //         counting those selected every dossier browser test for a Trajectory change (measured on PR #1007's diff).
-//       - a renamed or copied path is looked up by its old name as well as its new one.
+//       - a renamed or copied path is looked up by its old name as well as its new one;
+//       - a test in `DECLARED_READERS` reads the paths its row declares (tests that parse workspace sources).
 //     The rule over-selects on purpose. A reader it cannot see (a path assembled from parts that never name a token, a
 //     directory read from a root handed in by a caller it does not import, a walk that names no listing call) is the
-//     residual: no unit test fails when a new test escapes the rule, and the full merge-group run is what catches it,
-//     in the queue, never on main.
+//     residual. The merge-group read census fails when a test read, in-process, a tracked file whose change would not
+//     select it; reads it cannot record (a child process, a directory listing) are still covered only by the full
+//     merge-group run, in the queue, never on main.
 // A change the graph cannot bound runs every tier in full: manifests, the lockfile, test and type configuration, the
 // workflow, this selector and its runners, and a deleted or renamed workspace module.
 
@@ -55,7 +59,7 @@ export const FULL_RUN_TRIGGERS: ReadonlyArray<{ readonly rule: string; readonly 
   { rule: 'test configuration', test: /^vitest[^/]*\.(ts|mts|js|mjs)$/u },
   { rule: 'package test configuration', test: /^(apps|packages)\/[^/]+\/vitest[^/]*\.(ts|mts|js|mjs)$/u },
   { rule: 'type configuration', test: /(^|\/)tsconfig[^/]*\.json$/u },
-  { rule: 'selector', test: /^ci-(selection|reader-inventory)\.ts$/u },
+  { rule: 'selector', test: /^(ci-(selection|reader-inventory)|read-census-canaries)\.ts$/u },
   { rule: 'selector', test: /^scripts\/(select_ci_tests|run_ci_tier|check_unit_tmpdir|check_read_census)\.mjs$/u },
   { rule: 'workflow', test: /^\.github\/workflows\//u },
 ];
@@ -75,13 +79,13 @@ export const ROOTED = /new URL\(\s*['"`](\.\.\/?)+['"`]|['"`]\.\.(\/\.\.)+\/?['"
 export const DECLARED_READERS: ReadonlyArray<{ readonly reader: string; readonly reads: RegExp; readonly why: string }> = [
   {
     reader: 'packages/polaris-generation-core/src/island-boundary.test.ts',
-    reads: /^(apps|packages)\/[^/]+\/src\/.+\.(ts|mts|cts|tsx|js|mjs|cjs)$/u,
+    reads: /^(apps|packages)\/[^/]+\/src\/(?!.*\.test\.[cm]?[jt]sx?$).+\.(ts|mts|cts|tsx|js|mjs|cjs)$/u,
     why: 'parses every workspace source module it reaches from the production entries',
   },
   {
     reader: 'apps/three-surface-poc/src/product-build.test.ts',
-    reads: /^(apps|packages)\/[^/]+\/src\/.+\.(ts|mts|cts|tsx|js|mjs|cjs)$/u,
-    why: 'builds every tracked workspace module in a clone and compares the emitted files',
+    reads: /^(apps|packages)\/[^/]+\/src\/(?!.*\.test\.[cm]?[jt]sx?$).+\.(ts|mts|cts|tsx|js|mjs|cjs)$/u,
+    why: 'type-checks each product build program over the repository and compares what it would emit (test files excluded; the build still emits two kits)',
   },
   {
     reader: 'packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts',

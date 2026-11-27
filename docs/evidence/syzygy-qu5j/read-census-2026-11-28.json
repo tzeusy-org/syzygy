@@ -1,21 +1,23 @@
 {
   "subject": {
-    "base": "00a8f8d8c1fb678d6003d4212c12d12a273f3305",
-    "note": "working tree of agent/syzygy-qu5j-census before its first commit; sha256 of each changed file",
+    "base": "d3aad6c52838d601db151fc03f2c52aabb50d709",
+    "note": "branch agent/syzygy-qu5j-census after the R-QU5J-READ-CENSUS-1 repairs, before their commit; sha256 of each file",
     "sha256": {
-      "ci-selection.ts": "b8081754a695d71eff91486cd5479cb236254af9d4ccb0a8b9b6f4cb8125bafa",
-      "scripts/check_read_census.mjs": "2804a5d99011762e44886dcd1464edab81f458bbf391395611b8a78e518a6685",
-      "vitest.read-census.setup.ts": "353d3a47777a1b8a5ce03a495035c9fe7346d6cd7869f80759f2cebb6c70b58d",
+      "ci-selection.ts": "cbf2fcc2d9983476b199b28ca80ad03d6f381c1f8478570e68fc6af7002e9e81",
+      "scripts/check_read_census.mjs": "8971ad461067423cc6452045dfc3b76b4b397602ff6ea72ab7fcd240e3ec5645",
+      "vitest.read-census.setup.ts": "2732266a7a199e877cf074455bc565d0d4fa6f358ff70bec333ee378317d1246",
       "vitest.config.ts": "b6c6ebb8b16d069dbb4aa266e589bfd79c17e8a6753940280c4d3b814d481eef",
-      ".github/workflows/node-ci.yml": "fbb46f937e39b2c9422cac582c4fc8b4216af94f3e82e3cb488454fe95b1dad4",
-      "apps/three-surface-poc/src/ci-selection.test.ts": "54d74cf097675ee40d2b6498bd37004a3e43c0253846aa24e92459bae34ed16d"
+      ".github/workflows/node-ci.yml": "e8e8bee26f090344a5a075ae492ae4cdb478be7521032df67f54b64113c3ff66",
+      "apps/three-surface-poc/src/ci-selection.test.ts": "6dbca3349d79a5685965c687f3787070379328105d17b8582fde59fcdcd199ee",
+      "apps/three-surface-poc/src/read-census.test.ts": "415f0261b55e694236fc744c8ef7fa713e85c4e2ad9ab37edac2f18ab1424ad4",
+      "read-census-canaries.ts": "49df210d779340bca48a8dee6d4e2fd5fb971b8829f1094ddf6979303ada8c32"
     }
   },
   "date": "2026-11-28",
   "census": {
     "method": "SYZYGY_READ_CENSUS=<dir> npx vitest run --project <tier>; node scripts/check_read_census.mjs <dir>",
     "beforeRepair": {
-      "note": "census of content and metadata reads (stat, exists, readdir) with the selector as on main",
+      "note": "[Observed] an earlier recorder that also wrapped stat, statSync, lstat, lstatSync, exists/existsSync, access, readdir, readdirSync, opendir, opendirSync, readlink and realpath (its code was not retained, so this figure cannot be re-run); selector as on main at the time",
       "unit": {
         "files": 230,
         "paths": 1065,
@@ -23,7 +25,37 @@
         "misses": 1194
       }
     },
-    "contentReadsOnMainSelector": {
+    "e2eBeforeDeclaration": {
+      "misses": 234,
+      "reader": "apps/three-surface-poc/src/product-build.test.ts"
+    },
+    "after": {
+      "unit": {
+        "files": 231,
+        "paths": 985,
+        "pairs": 3600,
+        "fullRunPaths": 82,
+        "misses": 0,
+        "note": "[Observed] before the canary directory literal was added; the canary test alone then checked 10 pairs, 0 misses"
+      },
+      "integration": {
+        "files": 108,
+        "paths": 6749,
+        "pairs": 9354,
+        "fullRunPaths": 94,
+        "misses": 0
+      },
+      "e2e": {
+        "files": 18,
+        "paths": 372,
+        "pairs": 387,
+        "fullRunPaths": 78,
+        "misses": 0
+      },
+      "note": "[Observed] on the tree rebased onto #1033; fullRunPaths grew because #1033's dossier corpus inventory makes its manifest's paths full-run triggers"
+    },
+    "localRuns": "unit 230 files passed; integration 108 passed; e2e 17 of 18 passed, the failure dossier-reading.browser.test.ts '390 by 844' layout case on local Chrome 120 (hosted Chrome differs; unrelated to the census)",
+    "contentReadsAfterRootedWidening": {
       "unit": {
         "misses": 306,
         "readers": {
@@ -31,36 +63,8 @@
           "packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts": 23
         }
       },
-      "note": "after counting a multi-level parent literal ('../../..') as locating the repository; before that the same census also missed corpus.test.ts, real-tree.test.ts, workspace-reach.test.ts, test-tiers.test.ts, regression-hold-out.test.ts, synthetic-shapes.test.ts and figure-fit.test.ts"
-    },
-    "e2eBeforeDeclaration": {
-      "misses": 234,
-      "reader": "apps/three-surface-poc/src/product-build.test.ts"
-    },
-    "after": {
-      "unit": {
-        "files": 230,
-        "paths": 984,
-        "pairs": 3596,
-        "fullRunPaths": 19,
-        "misses": 0
-      },
-      "integration": {
-        "files": 108,
-        "paths": 6746,
-        "pairs": 9351,
-        "fullRunPaths": 31,
-        "misses": 0
-      },
-      "e2e": {
-        "files": 18,
-        "paths": 372,
-        "pairs": 387,
-        "fullRunPaths": 26,
-        "misses": 0
-      }
-    },
-    "localRuns": "unit 230 files passed; integration 108 passed; e2e 17 of 18 passed, the failure dossier-reading.browser.test.ts '390 by 844' layout case on local Chrome 120 (hosted Chrome differs; unrelated to the census)"
+      "note": "[Observed] content-read census, measured after the multi-level parent literal was added to ROOTED and before DECLARED_READERS existed; this is not main's selector. Before the ROOTED change the same census also missed corpus.test.ts, real-tree.test.ts, workspace-reach.test.ts, test-tiers.test.ts, regression-hold-out.test.ts, synthetic-shapes.test.ts and figure-fit.test.ts (seen in the run, counts not retained)"
+    }
   },
   "pr1007": {
     "case": "PR #1007's diff (e08d5fdc9^1..e08d5fdc9), selector at this subject vs at main, run in a detached checkout of e08d5fdc9",
@@ -126,52 +130,169 @@
     "note": "[Observed] real-tree.test.ts reads .syzygy/governance/decisions/*.md (census) and #1007 changed AGENT-ADOPTIONS.md: main's selector missed it."
   },
   "mutants": {
-    "method": "mutate ci-selection.ts, re-run scripts/check_read_census.mjs over the recorded census of the named tier; killed = exit 1 with misses",
-    "results": [
-      {
-        "id": "island-boundary-row-dropped",
-        "file": "ci-selection.ts",
-        "old": "reader: 'packages/polaris-generation-core/src/island-boundary.test.ts',",
-        "new": "reader: 'dropped/island-boundary.test.ts',",
-        "census": "unit",
-        "exit": 1,
-        "misses": 283,
-        "outcome": "killed"
-      },
-      {
-        "id": "live-source-row-dropped",
-        "file": "ci-selection.ts",
-        "old": "reader: 'packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts',",
-        "new": "reader: 'dropped/live-source.test.ts',",
-        "census": "unit",
-        "exit": 1,
-        "misses": 23,
-        "outcome": "killed"
-      },
-      {
-        "id": "product-build-row-dropped",
-        "file": "ci-selection.ts",
-        "old": "reader: 'apps/three-surface-poc/src/product-build.test.ts',",
-        "new": "reader: 'dropped/product-build.test.ts',",
-        "census": "e2e",
-        "exit": 1,
-        "misses": 234,
-        "outcome": "killed"
-      },
-      {
-        "id": "multi-level-parent-not-rooted",
-        "file": "ci-selection.ts",
-        "old": "|['\"`]\\.\\.(\\/\\.\\.)+\\/?['\"`]|",
-        "new": "|",
-        "census": "unit",
-        "exit": 1,
-        "misses": 260,
-        "outcome": "killed"
-      }
-    ]
+    "selector": {
+      "method": "mutate ci-selection.ts, re-run scripts/check_read_census.mjs over the recorded census of the named tier; killed = exit 1 with misses",
+      "results": [
+        {
+          "id": "island-boundary-row-dropped",
+          "file": "ci-selection.ts",
+          "old": "reader: 'packages/polaris-generation-core/src/island-boundary.test.ts',",
+          "new": "reader: 'dropped/island-boundary.test.ts',",
+          "census": "unit",
+          "exit": 1,
+          "misses": 237,
+          "outcome": "killed"
+        },
+        {
+          "id": "live-source-row-dropped",
+          "file": "ci-selection.ts",
+          "old": "reader: 'packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts',",
+          "new": "reader: 'dropped/live-source.test.ts',",
+          "census": "unit",
+          "exit": 1,
+          "misses": 23,
+          "outcome": "killed"
+        },
+        {
+          "id": "product-build-row-dropped",
+          "file": "ci-selection.ts",
+          "old": "reader: 'apps/three-surface-poc/src/product-build.test.ts',",
+          "new": "reader: 'dropped/product-build.test.ts',",
+          "census": "e2e",
+          "exit": 1,
+          "misses": 191,
+          "outcome": "killed"
+        },
+        {
+          "id": "multi-level-parent-not-rooted",
+          "file": "ci-selection.ts",
+          "old": "|['\"`]\\.\\.(\\/\\.\\.)+\\/?['\"`]|",
+          "new": "|",
+          "census": "unit",
+          "exit": 1,
+          "misses": 236,
+          "outcome": "killed"
+        }
+      ]
+    },
+    "recorder": {
+      "method": "drop one route from READS in vitest.read-census.setup.ts (or disable wrapping), run read-census.test.ts alone with the census on, check with --require-canaries; killed = non-zero exit",
+      "results": [
+        {
+          "id": "route-readFile-dropped",
+          "file": "vitest.read-census.setup.ts",
+          "old": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "new": "  const READS = ['readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "exit": 1,
+          "message": "  if (lost.length > 0) throw new Error(`census lost the canary read route(s): ${lost.join(', ')}`);",
+          "outcome": "killed"
+        },
+        {
+          "id": "route-readFileSync-dropped",
+          "file": "vitest.read-census.setup.ts",
+          "old": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "new": "  const READS = ['readFile', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "exit": 1,
+          "message": "  if (lost.length > 0) throw new Error(`census lost the canary read route(s): ${lost.join(', ')}`);",
+          "outcome": "killed"
+        },
+        {
+          "id": "route-createReadStream-dropped",
+          "file": "vitest.read-census.setup.ts",
+          "old": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "new": "  const READS = ['readFile', 'readFileSync', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "exit": 0,
+          "message": "read-census files=1 paths=10 pairs=10 full-run-paths=0 misses=0",
+          "outcome": "SURVIVED"
+        },
+        {
+          "id": "route-open-dropped",
+          "file": "vitest.read-census.setup.ts",
+          "old": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "new": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "exit": 1,
+          "message": "  if (lost.length > 0) throw new Error(`census lost the canary read route(s): ${lost.join(', ')}`);",
+          "outcome": "killed"
+        },
+        {
+          "id": "route-openSync-dropped",
+          "file": "vitest.read-census.setup.ts",
+          "old": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "new": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'copyFile', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "exit": 1,
+          "message": "  if (lost.length > 0) throw new Error(`census lost the canary read route(s): ${lost.join(', ')}`);",
+          "outcome": "killed"
+        },
+        {
+          "id": "route-copyFile-dropped",
+          "file": "vitest.read-census.setup.ts",
+          "old": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "new": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "exit": 1,
+          "message": "  if (lost.length > 0) throw new Error(`census lost the canary read route(s): ${lost.join(', ')}`);",
+          "outcome": "killed"
+        },
+        {
+          "id": "route-copyFileSync-dropped",
+          "file": "vitest.read-census.setup.ts",
+          "old": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "new": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "exit": 1,
+          "message": "  if (lost.length > 0) throw new Error(`census lost the canary read route(s): ${lost.join(', ')}`);",
+          "outcome": "killed"
+        },
+        {
+          "id": "route-cp-dropped",
+          "file": "vitest.read-census.setup.ts",
+          "old": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "new": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cpSync',\n    'openAsBlob'];",
+          "exit": 0,
+          "message": "read-census files=1 paths=10 pairs=10 full-run-paths=0 misses=0",
+          "outcome": "SURVIVED"
+        },
+        {
+          "id": "route-cpSync-dropped",
+          "file": "vitest.read-census.setup.ts",
+          "old": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "new": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp',\n    'openAsBlob'];",
+          "exit": 0,
+          "message": "read-census files=1 paths=10 pairs=10 full-run-paths=0 misses=0",
+          "outcome": "SURVIVED"
+        },
+        {
+          "id": "route-openAsBlob-dropped",
+          "file": "vitest.read-census.setup.ts",
+          "old": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',\n    'openAsBlob'];",
+          "new": "  const READS = ['readFile', 'readFileSync', 'createReadStream', 'open', 'openSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync',];",
+          "exit": 1,
+          "message": "  if (lost.length > 0) throw new Error(`census lost the canary read route(s): ${lost.join(', ')}`);",
+          "outcome": "killed"
+        },
+        {
+          "id": "recorder-off",
+          "file": "vitest.read-census.setup.ts",
+          "old": "  wrap(fs as unknown as Record<string, unknown>, READS);\n  wrap(fsPromises as unknown as Record<string, unknown>, READS);",
+          "new": "  // recorder off",
+          "exit": 1,
+          "message": "if (recorded === 0) throw new Error(`census under ${dir} records no read of a tracked file`);",
+          "outcome": "killed"
+        }
+      ],
+      "survivors": "[Inferred] equivalent: Node's createReadStream opens its file through fs.open, and cp/cpSync copy through copyFile/copyFileSync, all still wrapped, so the canary read is recorded either way"
+    }
   },
   "limits": [
-    "[Observed] Only in-process content reads (readFile, readFileSync, createReadStream, open, openSync) are recorded; git and spawned-script reads and directory listings are not.",
+    "[Observed] Recorded routes: readFile, readFileSync, createReadStream, open, openSync, copyFile, copyFileSync, cp, cpSync, openAsBlob, in node:fs and node:fs/promises. Not recorded: child processes (git, spawned scripts), worker threads, other APIs, directory listings.",
     "[Inferred] An added file a walker would list is not checked by the census; the full merge-group run still runs that walker."
-  ]
+  ],
+  "reviewRepairs": {
+    "review": "docs/reviews/R-QU5J-READ-CENSUS-1-RAW.md (CONFIRM WITH EXCEPTIONS over 98ff70dcb)",
+    "F1": "canary test read-census.test.ts reads one tracked canary per recorded route; the unit check runs with --require-canaries and fails when a route is lost (recorder mutants below)",
+    "F2": "copyFile, copyFileSync, cp, cpSync and openAsBlob are now recorded; worker-thread reads, child processes, other APIs and listings are named as unrecorded",
+    "F3": "ci-selection.ts head comment names the census, the parent-literal form and DECLARED_READERS",
+    "F4": "declared patterns exclude test files; kits stay, because the census showed island-boundary reading recorder-fixtures.testkit.ts (excluding kits produced 1 miss)",
+    "F8": "CONTRIBUTING recipe uses a fresh mktemp directory",
+    "F9": "labels corrected in this record",
+    "found-by-census": "[Observed] the census found a real miss in this PR's own canary test: the canary paths were built from a template in a root module, so no selection rule saw the test read them (10 misses); the test now names the canary directory as a path literal"
+  }
 }
