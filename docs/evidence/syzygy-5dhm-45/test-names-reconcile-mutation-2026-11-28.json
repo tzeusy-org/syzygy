@@ -1,5 +1,5 @@
 {
-  "commit": "023d52750a3bbddb10571cc076b94304a3b3b449",
+  "commit": "3756f8d43eda9b6235a19564ac847a2a71c65c52",
   "script": "docs/evidence/syzygy-5dhm-45/test_names_reconcile_mutation.py",
   "baseline": {
     "python3 scripts/check_spec_reconciliation.py --check": {
@@ -13,8 +13,8 @@
     {
       "mutant": "status-count-off",
       "path": "PROJECT-STATUS.md",
-      "old": "Polaris has 39 requirements and 619 scenarios.",
-      "new": "Polaris has 39 requirements and 618 scenarios.",
+      "old": "Polaris has 39 requirements and 631 scenarios.",
+      "new": "Polaris has 39 requirements and 630 scenarios.",
       "command": "python3 scripts/check_spec_reconciliation.py --check",
       "expected": "does not declare the exact test-name recognizers census",
       "exit": 1,
@@ -23,8 +23,8 @@
     {
       "mutant": "status-count-off-counter",
       "path": "PROJECT-STATUS.md",
-      "old": "Polaris has 39 requirements and 619 scenarios.",
-      "new": "Polaris has 39 requirements and 618 scenarios.",
+      "old": "Polaris has 39 requirements and 631 scenarios.",
+      "new": "Polaris has 39 requirements and 630 scenarios.",
       "command": "python3 scripts/count_polaris_effective_scenarios.py",
       "expected": "test-name recognizers count differs",
       "exit": 1,
@@ -103,8 +103,8 @@
     {
       "mutant": "projection-skips-tnames",
       "path": "scripts/check_spec_reconciliation.py",
-      "old": "                    findings.append(\"POLARIS test-name recognizers: selected census projections disagree\")\n                selected_population = by_id\n",
-      "new": "                    findings.append(\"POLARIS test-name recognizers: selected census projections disagree\")\n",
+      "old": "                            findings.append(\"POLARIS test-name recognizers: selected census projections disagree\")\n                        selected_population = by_id\n",
+      "new": "                            findings.append(\"POLARIS test-name recognizers: selected census projections disagree\")\n",
       "command": "python3 scripts/check_spec_reconciliation.py --check",
       "expected": "selected census differs",
       "exit": 1,
