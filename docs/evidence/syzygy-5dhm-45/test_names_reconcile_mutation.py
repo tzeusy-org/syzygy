@@ -40,9 +40,9 @@ MUTANTS = [
      '                b, extra_b = compose_figure_by_name(b, tnames_amendment, TNAMES_REPLACES)\n',
      '                extra_a = extra_b = []\n', CHECK_RUN, 'FAIL  R3'),
     ('expected-skips-tnames', CHECK, '        n_scen += tnames_delta(root, findings)\n', '        pass\n', CHECK_RUN, 'FAIL  R3'),
-    ('projection-skips-tnames', CHECK, '                findings.append("POLARIS test-name recognizers: selected census projections disagree")\n'
-     '            selected_population = by_id\n',
-     '                findings.append("POLARIS test-name recognizers: selected census projections disagree")\n',
+    ('projection-skips-tnames', CHECK, '                    findings.append("POLARIS test-name recognizers: selected census projections disagree")\n'
+     '                selected_population = by_id\n',
+     '                    findings.append("POLARIS test-name recognizers: selected census projections disagree")\n',
      CHECK_RUN, 'selected census differs'),
     ('status-want-unadjusted', CHECK, "            want = (want[0], str(int(want[1]) - tnames_delta(root, findings)))\n", '',
      CHECK_RUN, 'FAIL  R5'),
