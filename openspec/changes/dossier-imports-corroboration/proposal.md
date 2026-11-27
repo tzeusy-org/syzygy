@@ -1,6 +1,6 @@
-# Dossier imports corroboration — version 2.42
+# Dossier imports corroboration — version 2.44
 
-[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10, built over migration bounds 2.41 (design D1).
+[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10, built over migration bounds 2.43 (design D1; first built as 2.42 over 2.41).
 
 ## Why
 

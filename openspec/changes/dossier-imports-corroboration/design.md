@@ -1,17 +1,18 @@
-# Design — imports corroboration (version 2.42)
+# Design — imports corroboration (version 2.44)
 
-[Inferred] Version 2.42 of REQ-polaris-generation-034, for syzygy-3efd.86. It is drafted on `agent/syzygy-3efd.86` over the version 2.41 text (`dossier-migration-bounds`, row A-272, tag `polaris-dossier-migration-bounds-v2.41`), the newest REQ-034 version on this chain when it was drafted.
+[Inferred] Version 2.44 of REQ-polaris-generation-034, for syzygy-3efd.86. It was drafted on `agent/syzygy-3efd.86` as 2.42 over migration bounds 2.41, and is rebuilt over migration bounds 2.43 (`dossier-migration-bounds`, row A-272, tag `polaris-dossier-migration-bounds-v2.43`), which stands on test-name recognizers 2.42 (A-337), the newest REQ-034 on main.
 
 ## D1. The version label and the predecessor
 
-- [Observed] At drafting, 2.39 (import facts, A-270) is on main, 2.40 (figure walks, A-271) is in PR #1040, and 2.41 (migration bounds, A-272) is on `agent/syzygy-3efd.87`, built on 2.40. This change is built on 2.41 and takes 2.42 and the tag `polaris-dossier-imports-corroboration-v2.42`.
-- [Observed] The build script (`docs/evidence/syzygy-3efd-86/imports_witness_build_spec.py`) edits the 2.41 bytes at anchors it asserts occur exactly once:
+- [Observed] At drafting, 2.39 (import facts, A-270) was on main, 2.40 (figure walks, A-271) in PR #1040, and 2.41 (migration bounds, A-272) on `agent/syzygy-3efd.87`, so this change took 2.42. Test-name recognizers then reached main as 2.42 (A-337, PR #1037) over 2.40, and migration bounds was rebuilt over it as 2.43. This change takes 2.44 and the tag `polaris-dossier-imports-corroboration-v2.44`.
+- [Observed] The build script (`docs/evidence/syzygy-3efd-86/imports_witness_build_spec.py`) edits the predecessor's bytes at anchors it asserts occur exactly once:
   - 2.39's sentence that nothing reads `importFacts`;
   - one carried scenario's THEN line;
   - the end of 2.19's render paragraph, after which the two new paragraphs go;
-  - the four Form lines, each extended after its 2.41 sentence.
+  - the four Form lines, each extended after its migration bounds sentence.
   The scenarios precede the one Form line. If another REQ-034 version lands first, the script is re-run over it with the predecessor path changed.
 - [Observed] First installed at `4115d9817` over the 2.41 text as first installed (sha256 `87d64cdd…6e93`; this spec then `134fe229…c4ee`). It was rebuilt over the 2.41 text as repaired after that version's review (sha256 `64869dc9…0b4c`). The same script ran with one anchor moved: the Falsifier line's 2.41 sentence now ends "a nesting is counted as a relationship, or the migration yields no draft for it.". The other 2.41 repairs (line 142, line 252 and the 2.41 scenario) fall on text this version does not edit, so they are carried.
+- [Observed] Rebuilt again over migration bounds 2.43 (sha256 `bbc1ab47…cf02`) as 2.44, with only the version labels changed: every anchor still occurs once, because 2.43 ends each Form line with its own sentence and leaves 2.19's text, 2.39's sentence and the carried scenario as 2.41 had them. The spec hashes to `5b13a3998bfa9b2b05361ef5f7523b8a7ae58a3d074a440b22e870571d933955`; REQ-034 goes from 298 to 301 scenarios.
 
 ## D2. Corroborate, never witness
 
@@ -58,13 +59,14 @@
   - the renderer's attributes and evidence text, and the `machine.json` `witness` state.
 - [Inferred] Tests: literal conformance tests for each scenario and each reason in the order, and rule-6 mutants. The mutants should make a corroborated arrow Observed, accept a non-`edge` fact, swap `from` and `to`, give `challenged` under `complete` coverage, or read the `edges` list.
 
-## D7. Composition with versions 2.35 to 2.41
+## D7. Composition with versions 2.35 to 2.43
 
 - [Inferred] 2.35 (screening): no draft-supplied value reaches a new sink. The evidence text carries a fact identity Syzygy writes, a rule name, the revision and a digest.
 - [Inferred] 2.36 and 2.37 read no witness.
-- [Inferred] 2.38 and 2.41 (migration parity): both sides are decided by version 2, so an `imports` arrow keeps parity under the same exceptions.
+- [Inferred] 2.38 and 2.43 (migration parity and its bounds): both sides are decided by version 2, so an `imports` arrow keeps parity under the same exceptions.
 - [Inferred] 2.39: this version is the reader it anticipated. Its sentence that nothing reads the member is dated, not deleted.
 - [Inferred] 2.40 (walks): a walk step may name a corroborated arrow's end elements as before. Walks name elements, not edges.
+- [Inferred] 2.42 (test-name recognizers) publishes declared test names on their own page and reads no witness; `imports` arrows and test names share nothing.
 
 ## Review
 
