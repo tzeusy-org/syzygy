@@ -2,7 +2,7 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { checkShape, ref, handle, leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText, type Schema } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { CONTAINMENT_BOUNDS, CONTAINMENT_KIND, figureMembersOf, hasContainmentForm, hasModelForm, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, RELATION_FIELD, UNIT_FIELD, hasRelationForm, hasHeroForm, heroOf, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, QUESTION_KINDS_FIELD, hasWorthKnowingForm, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
+import { CONTAINMENT_BOUNDS, CONTAINMENT_KIND, figureMembersOf, hasContainmentForm, hasModelForm, LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V13, LOCAL_DRAFT_SCHEMA_VERSION_V14, FIGURE_PLAN_FIELD, issuedDraftSchema, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, RELATION_FIELD, UNIT_FIELD, hasRelationForm, hasHeroForm, heroOf, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, QUESTION_KINDS_FIELD, hasWorthKnowingForm, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
 import { isEntryPoint } from './derive.js';
 import { expandModel, modelFieldVersionFindings, modelFieldVersionPaths, modelIndex } from './system-model.js';
 import { containmentName, containmentDiagrams, containmentFieldVersionFindings, containmentFieldVersionPaths, containmentStructuralFindings, groupName, groupsOf } from './containment.js';
@@ -763,6 +763,13 @@ function questionKindsFieldVersionPaths(doc: Readonly<Record<string, unknown>>):
   return !hasWorthKnowingForm(doc['schemaVersion']) && Object.hasOwn(doc, QUESTION_KINDS_FIELD) ? [`$.${QUESTION_KINDS_FIELD}`] : [];
 }
 
+/** A `figurePlan` in a draft of schema v13 or earlier: a field-version finding at `$.figurePlan`, in place of the schema finding there
+ * (version 2.33). A v14 draft's plan is read by its own findings (figure-plan.ts), never here. */
+function figurePlanFieldVersionPaths(doc: Readonly<Record<string, unknown>>): string[] {
+  return doc['schemaVersion'] !== LOCAL_DRAFT_SCHEMA_VERSION_V14 && LOCAL_DRAFT_SCHEMA_VERSIONS.some((known) => known === doc['schemaVersion'])
+    && Object.hasOwn(doc, FIGURE_PLAN_FIELD) ? [`$.${FIGURE_PLAN_FIELD}`] : [];
+}
+
 /** Where a v13 block may carry the worth-knowing mark: one of a section's own paragraphs, never a child, an element's claim, a subsection,
  * a deep dive, the introduction or a route step. */
 const WORTH_KNOWING_PLACE = /^\$\.sections\[\d+\]\.paragraphs\[\d+\]$/u;
@@ -774,9 +781,10 @@ const WORTH_KNOWING_PLACE = /^\$\.sections\[\d+\]\.paragraphs\[\d+\]$/u;
 function worthKnowingStructure(doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void): void {
   for (const at of worthKnowingFieldVersionPaths(doc)) {
     const member = at.endsWith(WORTH_KNOWING_NONE_FIELD) ? WORTH_KNOWING_NONE_FIELD : WORTH_KNOWING_FIELD;
-    add({ kind: 'field-version', at, detail: `\`${member}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+    add({ kind: 'field-version', at, detail: `\`${member}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V13}` });
   }
-  for (const at of questionKindsFieldVersionPaths(doc)) add({ kind: 'field-version', at, detail: `\`${QUESTION_KINDS_FIELD}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+  for (const at of questionKindsFieldVersionPaths(doc)) add({ kind: 'field-version', at, detail: `\`${QUESTION_KINDS_FIELD}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V13}` });
+  for (const at of figurePlanFieldVersionPaths(doc)) add({ kind: 'field-version', at, detail: `\`${FIGURE_PLAN_FIELD}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V14}` });
   if (!hasWorthKnowingForm(doc['schemaVersion'])) return;
   walk(doc, '$', (value, at) => {
     if (value[WORTH_KNOWING_FIELD] !== true || value['label'] !== 'inferred') return;
@@ -792,7 +800,9 @@ function worthKnowingStructure(doc: Readonly<Record<string, unknown>>, add: (fin
 /** The authoring draft's rules: its schema and question limit, references, understanding record, blocks and discovery account. */
 export function draftRules(pinned: string, maxQuestions: number, poleLimit: number = DEFAULT_POLE_LIMIT): SubjectRules {
   const parameters = { pinnedRevision: pinned, maxQuestions };
-  const current = localDraftSchema({ ...parameters, hero: 'required' });
+  // v14 joins v12's members and v13's (version 2.33); its plan is read apart from the schema (figure-plan.ts).
+  const current = issuedDraftSchema(parameters);
+  const v13 = localDraftSchema({ ...parameters, hero: 'required' });
   // Every schema before v13 has no worth-knowing mark (version 2.26).
   const v10 = localDraftSchema({ ...parameters, hero: 'required' }, 'home', 'required', 'taken', 'taken', 'taken', 'absent');
   // v11 is v10 with the containment kind and its recursive group (version 2.23).
@@ -829,6 +839,8 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
       for (const at of worthKnowingFieldVersionPaths(doc)) subsectionPaths.add(at);
       // The question-kind declarations in a v10 or earlier draft: likewise (version 2.32).
       for (const at of questionKindsFieldVersionPaths(doc)) subsectionPaths.add(at);
+      // A `figurePlan` in a v13 or earlier draft: likewise (version 2.33).
+      for (const at of figurePlanFieldVersionPaths(doc)) subsectionPaths.add(at);
       // A containment kind or `groups` in a v10 or earlier draft: likewise (version 2.23).
       for (const at of containmentFieldVersionPaths(doc)) subsectionPaths.add(at);
       // `model` or a diagram's `view` in a v11 or earlier draft: likewise (version 2.24).
@@ -863,7 +875,7 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
           unitsReported.add(unit);
           return [{ path: unit, detail: unitFormsDetail }];
         });
-        const schema = hasWorthKnowingForm(version) ? current : hasModelForm(version) ? v12 : hasContainmentForm(version) ? v11 : hasHeroForm(version) ? v10 : hasRelationForm(version) ? v9 : version === LOCAL_DRAFT_SCHEMA_VERSION_V8 ? v8 : v7;
+        const schema = version === LOCAL_DRAFT_SCHEMA_VERSION_V14 ? current : hasWorthKnowingForm(version) ? v13 : hasModelForm(version) ? v12 : hasContainmentForm(version) ? v11 : hasHeroForm(version) ? v10 : hasRelationForm(version) ? v9 : version === LOCAL_DRAFT_SCHEMA_VERSION_V8 ? v8 : v7;
         return { schema, reported: { test: (path) => standing.has(path) || fieldVersioned(path) }, replaced };
       }
       const fieldVersion = new Set(figureFieldVersionPaths(doc));

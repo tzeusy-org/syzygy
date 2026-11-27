@@ -30,6 +30,7 @@ import { type Derived, type SubjectRules, applyHeroFindings, containmentRelation
 import { applyContainmentFindings, containmentStructuralFindings, undecidedContainments } from './containment.js';
 import { expandModel, modelDecisions, modelFindings, modelIndex, modelRelationFindings, modelUndecided, undecidedViews } from './system-model.js';
 import { hasModelForm, hasRelationForm, hasWithheldHeroIdentity } from './draft-schema.js';
+import { figureAdvice as computeFigureAdvice, figurePlanFindings, plansFigures, withoutFigurePlan, type FigureAdvice } from './figure-plan.js';
 import { BLOB_MODES } from './git-object-reader.js';
 import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
 export { CHECK_RECORD_FORMAT, STEP_LOG_FORMAT, DEFAULT_DRAFT, DRAFT_MAX_BYTES, reviewVisibility, lineRanges, blobRedaction } from './check-model.js';
@@ -104,7 +105,7 @@ export interface SubjectPlan<R extends object, G> {
 /** `screenCensus` (`census.ts`), `structureRecord` (`derive.ts`), `readerAdvice` (`reader-advice.ts`), `reviewReach` (`review-reach.ts`) and `inventoryCoverageAdvice` (`inventory-coverage.ts`) and `questionKindAdvice` (`question-kinds.ts`) are on `check`'s report only: advice to the author, never written
  * to the check record and never a finding. */
 /** The record part is the record written: the full record, or its bounded form (version 2.10), whose report adds `findingsLeftOut`. */
-export type SubjectReport<R extends object> = (R | BoundedCheckRecord<R>) & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly readingLedger?: ReadingLedger; readonly readingDifference?: ReadingDifference; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility; readonly mechanismAdvice?: MechanismAdvice; readonly findingsLeftOut?: readonly CheckFinding[]; readonly inventoryCoverageAdvice?: InventoryCoverageAdvice; readonly questionKindAdvice?: QuestionKindAdvice; readonly sourceExampleAdvice?: SourceExampleAdvice };
+export type SubjectReport<R extends object> = (R | BoundedCheckRecord<R>) & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly readingLedger?: ReadingLedger; readonly readingDifference?: ReadingDifference; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility; readonly mechanismAdvice?: MechanismAdvice; readonly findingsLeftOut?: readonly CheckFinding[]; readonly inventoryCoverageAdvice?: InventoryCoverageAdvice; readonly questionKindAdvice?: QuestionKindAdvice; readonly sourceExampleAdvice?: SourceExampleAdvice; readonly figureAdvice?: FigureAdvice };
 export type SubjectResult<R extends object> = Outcome<SubjectReport<R>, CheckRefusal>;
 
 const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
@@ -204,6 +205,10 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   } catch {
     parseFault = `the ${noun} is not one bounded UTF-8 JSON document`;
   }
+  // A v14 draft's figure plan is read by check alone (version 2.33): its findings come last, below, and every other reader is handed the
+  // draft without it. The frozen bytes keep it.
+  const planned = plan.command === 'check' && parseFault === null && plansFigures(doc) ? doc : undefined;
+  if (planned !== undefined) doc = withoutFigurePlan(planned);
 
   const gate = plan.gate(run, parseFault === null ? doc : undefined);
   if (!gate.ok) return refuse(gate.stage, gate.reason);
@@ -335,6 +340,9 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     }
   }
 
+  // Version 2.33: after every finding version 2.32 reports, a v14 draft's figure-plan findings.
+  if (planned !== undefined) findings.push(...figurePlanFindings(planned));
+
   const frozen = path.join(frozenDir, `rev-${revision}.json`), checkFile = path.join(checksDir, `rev-${revision}.json`);
   // A derived record already in place for this revision (planted, or left by a crash) is never overwritten or adopted: refused here,
   // before the draft is frozen, so the revision is not spent.
@@ -372,7 +380,9 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // A v12 draft's figures, their advice and its reading ledger are its views' expansion's (version 2.24); an advisory's path is moved back
   // to the model or view member it reads, and the ledger locates it at the diagram it was found in, as the expansion's own draft would.
   const viewed = parseFault === null && isRecord(doc) && hasModelForm(doc['schemaVersion']) ? expandModel(doc) : undefined;
-  const figureDoc = viewed === undefined ? doc : viewed.doc;
+  // A v14 draft's expansion keeps its own schema, so the rules that name schema v13 or v14 read it as render does (version 2.33); a v12
+  // draft's stays v11's, as version 2.24 reports it.
+  const figureDoc = viewed === undefined ? doc : planned !== undefined && isRecord(doc) ? { ...viewed.doc, schemaVersion: doc['schemaVersion'] } : viewed.doc;
   const fit = plan.command === 'check' && parseFault === null ? figureFit(figureDoc, deps.layoutFigure) : undefined;
   // The reading ledger (REQ-polaris-generation-034 version 2.4, syzygy-3efd.21): counts over the draft beside figureFit, from the same
   // draft bytes, so two checks of one draft write the same member; an inventory check record carries none.
@@ -441,6 +451,11 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   const kinds = plan.command === 'check' && parseFault === null ? questionKindAdvice(doc, treeFacts, secretPathOf(screen)) : undefined;
   const sourceExample = full && plan.command === 'check' && shapeValid && isRecord(doc)
     ? sourceExampleAdvice(doc) : undefined;
+  // Version 2.33: a v14 draft with no schema finding has figure advice; a failure to compute it leaves the member out, never fails check.
+  let figures: FigureAdvice | undefined;
+  if (planned !== undefined && !findings.some((finding) => finding.kind === 'schema')) {
+    try { figures = computeFigureAdvice(planned); } catch { figures = undefined; }
+  }
   return { ok: true, report: {
     command: plan.command, run, checkFile, ...written, ...reportFit, ...leftOut, ...(mechanismAdvice === undefined ? {} : { mechanismAdvice }), disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
     ...(structureRecord === undefined ? {} : { structureRecord }),
@@ -449,6 +464,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     ...(coverage === undefined ? {} : { inventoryCoverageAdvice: coverage }),
     ...(kinds === undefined ? {} : { questionKindAdvice: kinds }),
     ...(sourceExample === undefined ? {} : { sourceExampleAdvice: sourceExample }),
+    ...(figures === undefined ? {} : { figureAdvice: figures }),
   } };
 }
 

@@ -1,4 +1,5 @@
 import * as fs from 'node:fs';
+import { withoutFigurePlan } from './figure-plan.js';
 import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { decodeUtf8, isRecord, sha256 } from '@syzygy/support';
@@ -109,6 +110,8 @@ export function measureDraft(bytes: Uint8Array, layout: FigureLayout | undefined
   if (decoded === undefined) return { outcome: 'refused', schemaVersion: null, why: 'not-utf8', schemaFindings: 0 };
   let doc: unknown;
   try { doc = parseBoundedJson(decoded, DRAFT_JSON_LIMITS); } catch { return { outcome: 'refused', schemaVersion: null, why: 'not-json', schemaFindings: 0 }; }
+  // A v14 draft is measured without its figure plan, which no ledger counts (version 2.33).
+  doc = withoutFigurePlan(doc);
   const version = isRecord(doc) && typeof doc['schemaVersion'] === 'string' ? doc['schemaVersion'] : null;
   if (version === null || !(LOCAL_DRAFT_SCHEMA_VERSIONS as readonly string[]).includes(version)) return { outcome: 'refused', schemaVersion: version, why: 'unknown-schema-version', schemaFindings: 0 };
   const pinned = isRecord(doc) ? doc['pinnedRevision'] : undefined;
