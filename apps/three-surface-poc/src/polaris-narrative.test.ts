@@ -331,7 +331,12 @@ describe('Polaris narrative claim blocks (PWB-REQ-014; RFC7-2, RFC7-3, RFC7-9)',
       return response.body;
     };
     const html = await get('/polaris');
-    const envelope = JSON.parse(await get('/api/poc/polaris')) as { narrative: ReturnType<typeof renderPolarisPresentation>['narrative'] };
+    const envelope = JSON.parse(await get('/api/poc/polaris')) as {
+      narrative: ReturnType<typeof renderPolarisPresentation>['narrative'];
+      links: { path: string; self: boolean }[];
+    };
+    const machinePath = host === 'tzeusy.parrot-hen.ts.net' ? '/butlers-syzygy/api/poc/polaris' : '/api/poc/polaris';
+    expect(envelope.links.filter((link) => link.self).map((link) => link.path), host).toEqual([machinePath]);
     const start = html.indexOf('data-polaris-class="catalog-entry"');
     return {
       html, group: html.slice(start, html.indexOf('</section>', start)),
@@ -377,7 +382,9 @@ describe('Polaris narrative claim blocks (PWB-REQ-014; RFC7-2, RFC7-3, RFC7-9)',
       expect(group, host).toMatch(/data-claim-role="epistemic-claim"[^>]*>This catalog lists its entries and shows their source status\.<\/p>\s*<p><span[^>]*>Unknown<\/span>/);
       const targets = [...group.matchAll(/<a href="#([^"]+)" data-opening-child="([^"]+)"[^>]*data-copy-role="action-label"/g)];
       expect(targets.map((match) => [match[1], match[2]]), host).toEqual(unknownIds.map((id) => [catalogGap, id]));
-      expect(html, host).toMatch(/id="polaris-gap-contradicted-pending-adjudication"[^>]*>[\s\S]*?Route: Owner adjudication\./);
+      const gaps = [...html.matchAll(/<li id="polaris-gap-contradicted-pending-adjudication"[^>]*>([\s\S]*?)<\/li>/g)];
+      expect(gaps, host).toHaveLength(1);
+      expect(gaps[0]?.[1], host).toContain('Route: Owner adjudication.');
       for (const id of unknownIds) {
         expect(group, host).toContain(`data-unknown-disclosure="${id}"`);
       }
