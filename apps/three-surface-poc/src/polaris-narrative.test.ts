@@ -5,9 +5,11 @@ import type { PocModel, ProjectShape, ProjectShapeClaim } from '@syzygy/three-su
 
 import { NarrativeRegistry } from './polaris-narrative.js';
 import { renderPolarisPage, renderPolarisPresentation } from './polaris.js';
+import { pocRoutes } from './routes.js';
 import { SHARED_FIXTURE_TIMEOUT_MS, buildFixtureModel, sharedFixtureModels } from './test-model-fixture.js';
 import {
   ADMITTING_AUTHORITY,
+  PROJECT_SHAPE_FIXTURE_TEXTS_WITHOUT_BASELINE_SPEC,
   PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC,
   PROJECT_SHAPE_FIXTURE_TEXTS_WITH_SECRET,
   REJECTING_AUTHORITY,
@@ -165,10 +167,260 @@ describe('Polaris narrative claim blocks (PWB-REQ-014; RFC7-2, RFC7-3, RFC7-9)',
           // Only anchored blocks state project facts with provenance.
           expect(unit.inner.split('data-claim-provenance=').length - 1, `${variant}: provenance outside an anchored block: <${unit.tag}${unit.attrs}>`).toBe(0 + (unit.inner.match(/data-claim-role="anchored-project-fact"/g)?.length ?? 0) * 0 + countNested(unit.inner));
         }
-        if (roles[0] === 'epistemic-claim') expect(unit.attrs).toContain('data-copy-role="epistemic-disclosure"');
+        if (roles[0] === 'epistemic-claim') {
+          const copyRole = attr(unit.attrs, 'data-polaris-group-opening') === undefined ? 'epistemic-disclosure' : 'project-fact';
+          expect(attr(unit.attrs, 'data-copy-role')).toBe(copyRole);
+        }
       }
     }
     expect(anchored).toBeGreaterThan(40);
+  });
+
+  it('pairs each unavailable project opening with its own visible disclosure and keeps it out of the resolved anchor counts', () => {
+    const expected = [
+      ['overview', 'project-category', 'Butlers\u2019 purpose and promises are unknown.'],
+      ['boundaries', 'project-category', 'The scope and principles are unknown.'],
+      ['v1', 'project-category', 'The declared V1 scope is unknown.'],
+      ['architecture', 'project-category', 'The declared architecture is unknown.'],
+      ['catalog', 'catalog', 'The project catalog is unknown.'],
+    ] as const;
+    for (const variant of ['unevaluated', 'rejected'] as const) {
+      const { html, narrative } = renderPolarisPresentation(shared.get(variant));
+      expect(narrative.openings.filter((opening) => opening.groupClass !== 'evidence')).toEqual(expected.map(([group, groupClass]) => ({
+        kind: 'group-opening',
+        groupId: `polaris-group-${group}`,
+        groupClass,
+        label: 'Unknown',
+        childIds: ['claim:project-shape'],
+        role: 'epistemic-claim',
+        presentation: 'presentation-artifact',
+        citable: false,
+      })));
+      for (const opening of narrative.openings) {
+        expect(opening).not.toHaveProperty('anchors');
+        expect(opening).not.toHaveProperty('anchorsResolved');
+      }
+      const ledes = narrativeUnits(html).filter((unit) => attr(unit.attrs, 'data-polaris-group-opening')?.startsWith('polaris-group-'));
+      expect(ledes.map((unit) => [attr(unit.attrs, 'data-polaris-group-opening'), unit.inner]))
+        .toEqual(expected.map(([group, , sentence]) => [`polaris-group-${group}`, sentence]));
+      for (const [group] of expected) {
+        const target = `polaris-shape-status-${group}`;
+        expect(html.match(new RegExp(`id="${target}"`, 'g'))).toHaveLength(1);
+        expect(html).toContain(`href="#${target}" data-opening-child="claim:project-shape"`);
+        expect(html).toContain(`<section class="claim-section" id="${target}" data-polaris-section="shape:${group}"`);
+      }
+      expect(narrative.blocks.flatMap((block) => block.anchors).some((anchor) => anchor.supports.includes('claim:project-shape'))).toBe(false);
+    }
+  });
+
+
+
+  it('puts the unavailable answer first even over the existing tuple key and reconciliation', () => {
+    const { html } = renderPolarisPresentation(shared.get('rejected'));
+    for (const group of ['overview', 'boundaries', 'v1', 'architecture', 'catalog']) {
+      const header = new RegExp(`<header class="group" data-polaris-group="${group}"[^>]*>.*?</header>`, 's');
+      const end = header.exec(html);
+      expect(end, group).not.toBeNull();
+      const following = html.slice((end?.index ?? 0) + (end?.[0].length ?? 0)).trimStart();
+      expect(following.startsWith(`<p class="group-lede" data-polaris-group-opening="polaris-group-${group}"`), group).toBe(true);
+    }
+  });
+
+  it('matches every unavailable category evidence opening to the existing machine claim and its in-place disclosure', () => {
+    const categories = ['overview', 'boundaries', 'v1', 'architecture', 'catalog'] as const;
+    for (const variant of ['unevaluated', 'rejected'] as const) {
+      const model = shared.get(variant);
+      const machine = JSON.parse(JSON.stringify(model)) as PocModel;
+      const claim = machine.projectShape.claim;
+      expect(claim).toMatchObject({ claimId: 'claim:project-shape', epistemic: { label: 'Unknown' } });
+      const primary = 'reasons' in claim.epistemic ? claim.epistemic.reasons.primary : undefined;
+      const route = claim.resolutionRoutes.find((entry) => entry.reason === primary)?.route;
+      expect(route).toBeDefined();
+      const { html, narrative } = renderPolarisPresentation(model);
+      const openings = narrative.openings.filter((opening) => opening.groupClass === 'evidence');
+      expect(openings).toEqual(categories.map((category) => ({
+        kind: 'group-opening',
+        groupId: `polaris-evidence-${category}`,
+        groupClass: 'evidence',
+        label: claim.epistemic.label,
+        childIds: [claim.claimId],
+        role: 'epistemic-claim',
+        presentation: 'presentation-artifact',
+        citable: false,
+      })));
+      const units = narrativeUnits(html);
+      for (const category of categories) {
+        const target = `polaris-evidence-status-${category}`;
+        const group = `polaris-evidence-${category}`;
+        expect(html).toContain(`data-polaris-section="shape:${category}" data-polaris-evidence-owner="polaris-group-${category}"`);
+        const headings = units.filter((unit) => attr(unit.attrs, 'data-polaris-group-opening') === group);
+        expect(headings.map((unit) => unit.inner)).toEqual(['Evidence for this group is unavailable.']);
+        const links = units.filter((unit) => unit.tag === 'a' && attr(unit.attrs, 'href') === `#${target}`);
+        expect(links).toHaveLength(1);
+        expect(attr(links[0]?.attrs ?? '', 'data-opening-child')).toBe(claim.claimId);
+        expect(attr(links[0]?.attrs ?? '', 'data-copy-role')).toBe('action-label');
+        expect(html.match(new RegExp(`id="${target}"`, 'g'))).toHaveLength(1);
+        expect(html).toContain(`id="${target}"><div class="unknown-disclosure" data-unknown-disclosure="${claim.claimId}"`);
+        const targetIndex = html.indexOf(`id="${target}"`);
+        const disclosure = html.slice(targetIndex, html.indexOf('</section>', targetIndex));
+        expect(disclosure).toContain(`data-unknown-reason="${primary}"`);
+        expect(disclosure).toContain(route?.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;').replaceAll("'", '&#39;'));
+      }
+    }
+  });
+
+  it('reads the empty baseline catalog from its existing claim without promoting a withheld aggregate', () => {
+    const model = buildFixtureModel(cleanups, {
+      projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITHOUT_BASELINE_SPEC) },
+    });
+    const shape = model.projectShape;
+    expect(shape.kind).toBe('observed');
+    if (shape.kind !== 'observed') throw new Error('synthetic project shape unavailable');
+    expect(shape.items.some((item) => item.class === 'baseline-spec')).toBe(false);
+
+    const groupId = 'polaris-class-baseline-spec';
+    const group = (input: PocModel) => {
+      const { html, narrative } = renderPolarisPresentation(input);
+      return { html, opening: narrative.openings.find((opening) => opening.groupId === groupId) };
+    };
+    const empty = group(model);
+    expect(empty.opening).toMatchObject({ groupClass: 'catalog', label: 'Observed', childIds: ['claim:class:baseline-spec'] });
+    expect(empty.html).toMatch(/data-polaris-group-opening="polaris-class-baseline-spec"[^>]*>No items were declared by admitted sources\.<\/p>/);
+    expect(empty.html).not.toContain('href="#polaris-class-status-baseline-spec"');
+
+    const aggregate = shape.classes['baseline-spec'];
+    const unavailable = shared.get('rejected').projectShape.claim;
+    const withheld: PocModel = {
+      ...model,
+      projectShape: {
+        ...shape,
+        classes: {
+          ...shape.classes,
+          'baseline-spec': {
+            ...aggregate,
+            claim: { ...aggregate.claim, epistemic: unavailable.epistemic, resolutionRoutes: unavailable.resolutionRoutes },
+          },
+        },
+      },
+    };
+    const unknown = group(withheld);
+    expect(unknown.opening).toMatchObject({ label: 'Unknown', childIds: ['claim:class:baseline-spec'] });
+    expect(unknown.html).toMatch(/data-polaris-group-opening="polaris-class-baseline-spec"[^>]*>The declarations for this class are unknown[.]<\/p>/);
+    expect(unknown.html).toContain('href="#polaris-class-status-baseline-spec" data-opening-child="claim:class:baseline-spec"');
+    expect(unknown.html).toContain('<div id="polaris-class-status-baseline-spec"><div class="unknown-disclosure" data-unknown-disclosure="claim:class:baseline-spec"');
+    expect(unknown.html).toContain('data-unknown-reason="unconsented-source-or-provider"');
+    const populated = group(shared.get('observed-with-baseline'));
+    expect(populated.html).not.toMatch(/data-polaris-group-opening="polaris-class-baseline-spec"[^>]*>No items were declared/);
+  });
+
+  const catalogGroupId = 'polaris-class-catalog-entry';
+  const catalogChildIds = ['claim:class:catalog-entry', 'claim:item:catalog-entry:Bus', 'claim:item:catalog-entry:Atlas', 'claim:item:catalog-entry:Bishop'];
+  const catalogHosts = ['127.0.0.1:1', 'tzeusy.parrot-hen.ts.net'];
+  const catalogReason = 'contradicted-pending-adjudication';
+
+  async function catalogResponses(input: PocModel, host: string) {
+    const routes = pocRoutes(() => input);
+    const get = async (path: string): Promise<string> => {
+      const route = routes.find((candidate) => candidate.method === 'GET' && candidate.path === path);
+      if (route === undefined) throw new Error(`Missing Polaris route: ${path}`);
+      const response = await route.handle({ request: { method: 'GET', path, headers: { host }, query: new URLSearchParams() } });
+      expect(response.status, `${host} ${path}`).toBe(200);
+      if (typeof response.body !== 'string') throw new Error(`Expected a string response at ${path}`);
+      return response.body;
+    };
+    const html = await get('/polaris');
+    const envelope = JSON.parse(await get('/api/poc/polaris')) as {
+      narrative: ReturnType<typeof renderPolarisPresentation>['narrative'];
+      links: { path: string; self: boolean }[];
+    };
+    const machinePath = host === 'tzeusy.parrot-hen.ts.net' ? '/butlers-syzygy/api/poc/polaris' : '/api/poc/polaris';
+    expect(envelope.links.filter((link) => link.self).map((link) => link.path), host).toEqual([machinePath]);
+    const start = html.indexOf('data-polaris-class="catalog-entry"');
+    return {
+      html, group: html.slice(start, html.indexOf('</section>', start)),
+      openings: envelope.narrative.openings.filter((opening) => opening.groupId === catalogGroupId),
+    };
+  }
+
+  it('opens the populated catalog with only its existing declaration and source-status children', async () => {
+    for (const host of catalogHosts) {
+      const { group, openings } = await catalogResponses(shared.get('observed'), host);
+      expect([...group.matchAll(/data-polaris-item="([^"]+)"/g)].map((match) => match[1]), host).toEqual(catalogChildIds.slice(1));
+      expect(group, host).toMatch(/<\/h3>\s*<p[^>]*data-polaris-group-opening="polaris-class-catalog-entry"[^>]*>This catalog lists its entries and shows their source status\.<\/p>/);
+      expect(openings, host).toEqual([{
+        kind: 'group-opening', role: 'epistemic-claim', presentation: 'presentation-artifact', citable: false,
+        groupId: catalogGroupId, groupClass: 'catalog', label: 'Observed', childIds: catalogChildIds,
+      }]);
+      expect(group, host).not.toContain('data-opening-child=');
+    }
+  });
+
+  it('keeps native Unknown item disclosures without using the shared reason row as their opening destination', async () => {
+    const base = shared.get('observed');
+    const shape = base.projectShape;
+    if (shape.kind !== 'observed') throw new Error('synthetic project shape unavailable');
+    const unknownIds = ['claim:item:catalog-entry:Bus', 'claim:item:catalog-entry:Atlas'];
+    const makeAdverse = (route: string): PocModel => ({
+      ...base,
+      projectShape: {
+        ...shape,
+        items: shape.items.map((item) => unknownIds.includes(item.claim.claimId) ? {
+          ...item, state: 'contradicted', unknownReason: catalogReason,
+          claim: {
+            ...item.claim,
+            epistemic: { label: 'Unknown', reasons: { primary: catalogReason, secondary: [] }, tier: 'suspended', freshness: 'fresh' },
+            resolutionRoutes: [{ reason: catalogReason, route, actor: 'owner', verb: 'adjudicate', target: 'act' }],
+          },
+        } : item),
+      },
+    });
+    for (const host of catalogHosts) {
+      for (const route of ['Owner adjudication', 'Owner adjudication for this item only']) {
+        const { html, group, openings } = await catalogResponses(makeAdverse(route), host);
+        expect(openings, host).toEqual([]);
+        expect(group, host).not.toContain('data-polaris-group-opening=');
+        expect(group, host).not.toContain('data-opening-child=');
+        expect([...group.matchAll(/data-polaris-item="([^"]+)"/g)].map((match) => match[1]), host).toEqual(catalogChildIds.slice(1));
+
+        const gaps = [...html.matchAll(/<li id="polaris-gap-contradicted-pending-adjudication"[^>]*>([\s\S]*?)<\/li>/g)];
+        expect(gaps, host).toHaveLength(1);
+        expect(gaps[0]?.[1], host).toContain('Route: Owner adjudication.');
+        for (const id of unknownIds) {
+          expect(gaps[0]?.[1], host).not.toContain(id);
+          const disclosure = group.match(new RegExp(`data-unknown-disclosure="${id}"[^>]*>([\\s\\S]*?)<\\/div>`));
+          expect(disclosure?.[1], `${host} ${id}`).toContain('data-unknown-reason="contradicted-pending-adjudication"');
+          expect(disclosure?.[1], `${host} ${id}`).toContain(`Route: ${route}.`);
+        }
+      }
+    }
+  });
+
+  it('keeps the populated catalog source-status remedy in its own section when source status is Unknown', async () => {
+    const base = shared.get('observed');
+    const shape = base.projectShape;
+    if (shape.kind !== 'observed') throw new Error('synthetic project shape unavailable');
+    const aggregate = shape.classes['catalog-entry'];
+    const refused = shared.get('rejected').projectShape.claim;
+    const input: PocModel = {
+      ...base,
+      projectShape: {
+        ...shape,
+        classes: {
+          ...shape.classes,
+          'catalog-entry': {
+            ...aggregate,
+            claim: { ...aggregate.claim, epistemic: refused.epistemic, resolutionRoutes: refused.resolutionRoutes },
+          },
+        },
+      },
+    };
+    for (const host of catalogHosts) {
+      const { group, openings } = await catalogResponses(input, host);
+      expect(openings, host).toEqual([expect.objectContaining({ label: 'Unknown', childIds: catalogChildIds })]);
+      expect(group, host).toContain('href="#polaris-class-status-catalog-entry" data-opening-child="claim:class:catalog-entry"');
+      expect(group, host).toMatch(/id="polaris-class-status-catalog-entry"><div class="unknown-disclosure" data-unknown-disclosure="claim:class:catalog-entry"[^>]*>[\s\S]*?data-unknown-reason="unconsented-source-or-provider"/);
+    }
   });
 
   it('binds every named diagram element to its source declaration anchor', () => {

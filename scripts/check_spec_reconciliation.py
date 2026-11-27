@@ -375,6 +375,58 @@ CAP1_OVERLAY_DEPS = f"{CHANGES}/{CAP1_OVERLAY_CHANGE}/GOVERNING-DEPENDENCIES.jso
 CAP1_OVERLAY_ADOPTION = f"{CHANGES}/{CAP1_OVERLAY_CHANGE}/ADOPTION.md"
 CAP1_OVERLAY_REPLACES = ("CAP1-REQ-011", "CAP1-REQ-046")
 CAP1_OVERLAY_SECTION = "## MODIFIED Requirements"
+CAP1_ROOT_CHANGE = "cap1-root-adjudication"
+CAP1_ROOT_HOME = f"{CHANGES}/{CAP1_ROOT_CHANGE}"
+CAP1_ROOT_SPEC = f"{CAP1_ROOT_HOME}/proposed/{CAP1_CHANGE}/spec.md"
+CAP1_ROOT_COVERAGE = f"{CAP1_ROOT_HOME}/CONTRACT-COVERAGE.md"
+CAP1_ROOT_PROJECTION = f"{CAP1_ROOT_HOME}/CAP1-PROSPECTIVE-PROJECTION.json"
+CAP1_ROOT_REPLACES = ("CAP1-REQ-006",)
+CAP1_ROOT_VERSION = "1.0"
+CAP1_ROOT_VERSION_NAME = f"{CAP1_ROOT_CHANGE}-v{CAP1_ROOT_VERSION}"
+CAP1_ROOT_VERSION_MARKER = f"Candidate version {CAP1_ROOT_VERSION}."
+CAP1_ROOT_CANDIDATE_MARKER = "Candidate version unallocated."
+CAP1_ROOT_RFC_FILES = tuple(
+    f"{directory}/rfcs/{path}"
+    for directory in (CANDIDATES, ".syzygy/governance/contracts")
+    for path in ("RFC-0001-project-graph-identity-state-planes.md",
+                 "RFC-0003/manifests-and-namespace.md")
+)
+CAP1_ROOT_RFC_DIGESTS = dict(zip(CAP1_ROOT_RFC_FILES, (
+    "edf7538687997c9199f5155973332247d6a44ddce356480329c0886e3375d3be",
+    "84350c1fc0d066fb7f1d41f0e07e959ff55329a799273e10d4c71debfc05de20",
+) * 2))
+CAP1_ROOT_SUCCESSOR_DIGEST = "a7596452f408d0f29efe7375e4c8e6a870010f0bdace58025642d4db942691a7"
+CAP1_ROOT_SUBJECTS = {
+    CAP1_ROOT_SPEC: "185af92ae6eed07aae21f6b285ff980e9fd106d43f0f814bd2a30afe7e4d96bd",
+    CAP1_ROOT_COVERAGE: "480abb4ea4796e19ff38ecda02596aeafe13e784c8480e7ea6f83eb2d322fa14",
+}
+CAP1_ROOT_BOUND_PATHS = (*CAP1_ROOT_SUBJECTS, CAP1_ROOT_PROJECTION, *CAP1_ROOT_RFC_FILES)
+CAP1_ROOT_STATUS_RECORD = f"[CAP1 root adjudication {CAP1_ROOT_VERSION}]({CAP1_ROOT_HOME})"
+CAP1_ROOT_INDEX_STAGE = "**Conditional activation.**"
+_CAP1_SELFTEST_GIT_ROOT = None
+_VBASE_SELFTEST_GIT_ROOT = None
+CAP1_ROOT_INDEX = f"{CANDIDATES}/05-CONTRACT-INDEX.yaml"
+CAP1_HISTORIC_COVERAGE = f"{CHANGES}/{CAP1_CHANGE}/CONTRACT-COVERAGE.md"
+CAP1_CONSENT_COVERAGE = f"{CHANGES}/{CAP1_OVERLAY_CHANGE}/CONTRACT-COVERAGE.md"
+# The CAP1 readability act and the annotated P-109 v1.0 source bind
+# these inputs. Regeneration cannot independently replace their bytes.
+CAP1_ROOT_PREDECESSORS = {
+    FAMILY_SPECS["CAP1"]: "65b66c913cd2650881a9df8cb34a3c63b3f518041e83f45d2451980d9f1d0448",
+    CAP1_OVERLAY_SPEC: "359ff741742902f0b07bbf1b4ec9aa997d17145cd56805fb49d6e683a12776e7",
+    CAP1_OVERLAY_DEPS: "fb96db1a5e04167bfd8d25f4580be96ad506d556f70ed2f34f1900ccc2df02d8",
+    CAP1_HISTORIC_COVERAGE: "15431d8ba1fe25a61e4dc2713c4d51fad1cf6d25ef7a9103cc616265102289c9",
+    CAP1_CONSENT_COVERAGE: "972ab4b306999104327de27e1af3a2ee5e94fb38c08e75c25e68c3d9065dae45",
+}
+CAP1_ROOT_TAG_CLAIM = re.compile(rf"`{CAP1_ROOT_CHANGE}-v[0-9]+(?:\.[0-9]+)+`")
+CAP1_ROOT_STATUS_SUBJECT = rf"\[[^\]]+\]\((?:\./)?{CAP1_ROOT_HOME}(?:/[^)\s]*)?\)"
+CAP1_ROOT_ACTIVE_STATE = r"(?:agent[- ]adopted|adopted|effective|in force)\b"
+CAP1_ROOT_STATUS_CLAIM = re.compile(
+    rf"{CAP1_ROOT_STATUS_SUBJECT} (?:\*\*)?is (?:now )?(?:\*\*)?{CAP1_ROOT_ACTIVE_STATE}",
+    re.IGNORECASE)
+CAP1_ROOT_STATUS_LINK = re.compile(CAP1_ROOT_STATUS_SUBJECT)
+CAP1_ROOT_STATUS_CELL = re.compile(
+    rf"(?:\[(?:Observed|Inferred|Unknown)\][ \t]+)?(?:\*\*)?{CAP1_ROOT_ACTIVE_STATE}",
+    re.IGNORECASE)
 POLARIS_BASE_SPEC = spec_path(BASE_CHANGE, "polaris-generation")
 POLARIS_OVERLAY_SPEC = spec_path(UNDERSTANDING_CHANGE, "polaris-generation")
 POLARIS_ID = "REQ-polaris-generation-"
@@ -878,20 +930,47 @@ FIGPLAN_SUBJECTS = {
 }
 FIGPLAN_BOUND_PARTS = len(FIGPLAN_SUBJECTS)
 
-# Lexical import facts (syzygy-3efd.60): one MODIFIED REQ-polaris-generation-034 after
-# the v2.33 figure plan, pending until its own VIS-4 ledger row. The version label is
-# chosen at adoption; until then it is the placeholder 2.NN.
-IMPFACTS_CHANGE = "dossier-import-facts"
-IMPFACTS_HOME = f"{CHANGES}/{IMPFACTS_CHANGE}"
-IMPFACTS_SPEC = f"{IMPFACTS_HOME}/proposed/polaris-generation/spec.md"
-IMPFACTS_UNION = f"{IMPFACTS_HOME}/GOVERNING-DEPENDENCIES.json"
-IMPFACTS_TAG = "polaris-dossier-import-facts-v2.NN"
-IMPFACTS_STATUS_PREFIX = f"[Import facts amendment 2.NN]({IMPFACTS_HOME})"
-IMPFACTS_REPLACES = (POLARIS_ID + "034",)
-IMPFACTS_SUBJECTS = {
-    IMPFACTS_SPEC: "5d5213855dc7cd2a82fbaf66e0c06e86e040ce9aff37fdef87644794a25c0254",
+# The v2.34 derived-base views (syzygy-3efd.38): one MODIFIED REQ-polaris-generation-034
+# after the v2.33 figure plan, pending until its own VIS-4 ledger row.
+VBASE_CHANGE = "dossier-derived-base-views"
+VBASE_HOME = f"{CHANGES}/{VBASE_CHANGE}"
+VBASE_SPEC = f"{VBASE_HOME}/proposed/polaris-generation/spec.md"
+VBASE_UNION = f"{VBASE_HOME}/GOVERNING-DEPENDENCIES.json"
+VBASE_TAG = "polaris-dossier-derived-base-views-v2.34"
+VBASE_STATUS_PREFIX = f"[Derived-base views amendment 2.34]({VBASE_HOME})"
+VBASE_REPLACES = (POLARIS_ID + "034",)
+VBASE_SUBJECTS = {
+    VBASE_SPEC: "a404fa70e788f7ca20761f5a30f1d840604706cb811fcf50664f3e2942592c45",
 }
-IMPFACTS_BOUND_PARTS = len(IMPFACTS_SUBJECTS)
+VBASE_BOUND_PARTS = len(VBASE_SUBJECTS)
+
+# Corrected derived bases replace the historical, untagged v2.34 claim.
+VBASE_SCREENING_CHANGE = "dossier-derived-base-screening"
+VBASE_SCREENING_HOME = f"{CHANGES}/{VBASE_SCREENING_CHANGE}"
+VBASE_SCREENING_SPEC = f"{VBASE_SCREENING_HOME}/proposed/polaris-generation/spec.md"
+VBASE_SCREENING_UNION = f"{VBASE_SCREENING_HOME}/GOVERNING-DEPENDENCIES.json"
+VBASE_SCREENING_REPLACES = VBASE_REPLACES
+VBASE_SCREENING_PROJECTION = f"{VBASE_SCREENING_HOME}/POLARIS-CENSUS-PROJECTION.json"
+VBASE_SCREENING_VERSION = "2.35"
+VBASE_SCREENING_TAG = f"polaris-dossier-derived-base-screening-v{VBASE_SCREENING_VERSION}"
+VBASE_SCREENING_STATUS_PREFIX = f"[Derived-base screening {VBASE_SCREENING_VERSION}]("
+VBASE_PHASE_PREFIXES = (
+    "Before the derived-base screening version is effective,",
+    "With the derived-base screening version effective,",
+)
+VBASE_SCREENING_PREDECESSOR = "1c35aed0961b709ffd33c49eb9586bb66c8b8121"
+VBASE_SCREENING_HISTORICAL_SOURCE = "e9eaf3e4601e997996186a57670defc62fd65591"
+VBASE_SCREENING_RETIREMENT_SUBJECTS = {
+    "PROJECT-STATUS.md": "c8e60c56820ce05d383e659bae5a1a16ac510e504bbbd9274c063126b8bbe829",
+    "docs/evidence/spec-readability-reconciliation-2026-10-02/census.json": "0e6773a58477242d09050bae3b48bada4feed03dae05764736a087a50a3251f8",
+    "openspec/README.md": "a88cd64f2d327b636f27b33a2620b067a835675400a66334d21cf4f8409a9a7c",
+    "openspec/changes/dossier-derived-base-views/README.md": "20b2a3b4529f31e98617f9ebae0d985d543e9b5a1d0366928909cc80832c423e",
+    "openspec/changes/dossier-derived-base-views/tasks.md": "59cb16d0b2369264c3d76d3b59d207fb547df8324c41c9854a6969e507be80da",
+}
+VBASE_SCREENING_SUBJECTS = {
+    VBASE_SCREENING_SPEC: "a784c6712ce31a9b72136be27d49a535465a8637a2493d2ef1305a28fcdbc698",
+    VBASE_SCREENING_UNION: "3f6c2b317bf01c0d940f7ee7b41ce73ddb2b0cfd5aa4efe2afbfb26c4ae3efef",
+}
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
 ADOPTION_TABLE_HEADER = "| Id | Date | Commit | What changed | Why | Revert | Tag |"
 ADOPTION_TABLE_DIVIDER = "|---|---|---|---|---|---|---|"
@@ -916,7 +995,11 @@ def valid_adoption_date(value):
 
 def adoption_table_rows(root):
     """Read only the unique canonical ledger table outside Markdown fences."""
-    title, *lines = (read_text(root, AGENT_ADOPTIONS) or "").split("\n")
+    return _adoption_table_rows(read_text(root, AGENT_ADOPTIONS) or "")
+
+
+def _adoption_table_rows(text):
+    title, *lines = text.split("\n")
     if title != ADOPTION_LEDGER_TITLE:
         return []
     rows = None
@@ -968,7 +1051,8 @@ def is_url_source_row(line):
     return all(f"]({snapshot}{path})" in cells[3] for path in URL_SOURCE_SUBJECTS)
 
 
-def recorded_disposition(root, identity, commit, tag, paths, plain_revert=False, also_reverts=None):
+def recorded_disposition(root, identity, commit, tag, paths, plain_revert=False, also_reverts=None,
+                         *, ledger_rows=None):
     """Read an explicit later veto/revert/retirement in the ledger's change cell.
 
     The ledger uses prose. Recognize an action with an exact immediate
@@ -982,7 +1066,7 @@ def recorded_disposition(root, identity, commit, tag, paths, plain_revert=False,
     if plain_revert and also_reverts:
         reverts += (f"`git revert {commit} {also_reverts}`",)
     adopted_date = None
-    for line in adoption_table_rows(root):
+    for line in adoption_table_rows(root) if ledger_rows is None else ledger_rows:
         cells = [cell.strip() for cell in line.split("|")[1:-1]]
         if len(cells) != 7:
             continue
@@ -1915,6 +1999,10 @@ ID_MENTION = re.compile(
     r"((?:[ \t]*(?:/|,|–|\.\.|…|and)[ \t]*\d{3}\b)*)")
 STATUS_FIGURE = re.compile(
     r"(\d+) requirements and (\d+) scenarios in the effective composition")
+VBASE_STATUS_PRETAG = re.compile(
+    r"Before the derived-base screening version is effective, Polaris has (\d+) requirements and (\d+) scenarios\.")
+VBASE_STATUS_ACTIVE = re.compile(
+    r"With the derived-base screening version effective, Polaris has (\d+) requirements and (\d+) scenarios\.")
 
 
 class Report:
@@ -3424,31 +3512,598 @@ def figplan_binding(root):
     )
 
 
-def is_impfacts_row(line):
-    return _is_reviewed_version_row(line, IMPFACTS_TAG, IMPFACTS_SUBJECTS)
+def is_vbase_row(line):
+    return _is_reviewed_version_row(line, VBASE_TAG, VBASE_SUBJECTS)
 
 
-def impfacts_rows(root):
+def vbase_rows(root):
     return [[cell.strip() for cell in line.split("|")[1:-1]]
-            for line in adoption_table_rows(root) if is_impfacts_row(line)]
+            for line in adoption_table_rows(root) if is_vbase_row(line)]
 
 
-def impfacts_disposition(root, rows):
-    if IMPFACTS_TAG is not None and len(rows) == 1 and len(rows[0]) == 7:
+def vbase_disposition(root, rows):
+    if VBASE_TAG is not None and len(rows) == 1 and len(rows[0]) == 7:
         identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
-        return recorded_disposition(root, identity, commit.strip("`"), IMPFACTS_TAG,
-                                    IMPFACTS_SUBJECTS, plain_revert=True)
+        return recorded_disposition(root, identity, commit.strip("`"), VBASE_TAG,
+                                    VBASE_SUBJECTS, plain_revert=True)
     return None
 
 
-def impfacts_binding(root):
-    """Apply the lexical import facts only over the effective v2.33 figure-plan REQ-034."""
+def vbase_binding(root):
+    """Apply the derived base only over the effective v2.33 figure-plan REQ-034."""
     return _reviewed_version_binding(
-        root, impfacts_rows(root), impfacts_disposition,
-        version_tag=IMPFACTS_TAG, subjects_map=IMPFACTS_SUBJECTS, spec=IMPFACTS_SPEC,
-        predecessor=figplan_binding, predecessor_label="v2.33 figure plan", version="v2.NN",
-        label="import facts",
+        root, vbase_rows(root), vbase_disposition,
+        version_tag=VBASE_TAG, subjects_map=VBASE_SUBJECTS, spec=VBASE_SPEC,
+        predecessor=figplan_binding, predecessor_label="v2.33 figure plan", version="v2.34",
+        label="derived base",
     )
+
+
+P5_ADVICE_CHANGE = "polaris-source-example-advice"
+P5_ADVICE_HOME = f"{CHANGES}/{P5_ADVICE_CHANGE}"
+P5_ADVICE_SPEC = f"{P5_ADVICE_HOME}/proposed/polaris-generation/spec.md"
+SOURCE_EXAMPLE_TAG = "polaris-dossier-source-example-advice-v2.36"
+P5_ADVICE_PREDECESSOR = "b7d3324969101e742b2592869d8761f680fe8615"
+P5_ADVICE_STATUS_PREFIX = "[Source-example advice]("
+P5_ADVICE_INDEX_PREFIX = f"| [`{P5_ADVICE_CHANGE}`]("
+P5_ADVICE_COUNT_SCOPE = "With the source-example advice"
+P5_ADVICE_COUNT_PREFIX = "With the source-example advice version effective, Polaris has "
+P5_ADVICE_COUNT = re.compile(re.escape(P5_ADVICE_COUNT_PREFIX) + r"(\d+) requirements and (\d+) scenarios\.")
+P5_ADVICE_CANDIDATE_INDEX = '| [`polaris-source-example-advice`](changes/polaris-source-example-advice) | One immediate advisory for a known absent code selection in a supported operator-agent draft. | **Candidate.** Adoption and implementation pending | [Draft semantic delta](changes/polaris-source-example-advice/SEMANTIC-DELTA.md) |'
+P5_ADVICE_SUBJECTS = {
+    "openspec/changes/polaris-source-example-advice/proposed/polaris-generation/spec.md": "e2688ca4162bd10065fbd87dcf6134ab8263a8039dbd3de62b4eb2de85771177",
+    "openspec/changes/polaris-source-example-advice/GOVERNING-DEPENDENCIES.json": "3f6c2b317bf01c0d940f7ee7b41ce73ddb2b0cfd5aa4efe2afbfb26c4ae3efef",
+    "openspec/changes/polaris-source-example-advice/SCREENING-SUCCESSOR-DELTA.md": "77fe62bf7a02a5f91dcf32fb036b59eeb1a0621c1934bf6a091394728afa9890",
+}
+
+# The v2.38 migration parity (syzygy-3efd.85): one MODIFIED REQ-polaris-generation-034 after
+# the v2.36 source-example advice, adopted by an agent row and its version tag.
+MIGPAR_CHANGE = "dossier-migration-parity"
+MIGPAR_HOME = f"{CHANGES}/{MIGPAR_CHANGE}"
+MIGPAR_SPEC = f"{MIGPAR_HOME}/proposed/polaris-generation/spec.md"
+MIGPAR_UNION = f"{MIGPAR_HOME}/GOVERNING-DEPENDENCIES.json"
+MIGPAR_TAG = "polaris-dossier-migration-parity-v2.38"
+MIGPAR_STATUS_PREFIX = f"[Migration parity amendment 2.38]({MIGPAR_HOME})"
+MIGPAR_INDEX_PREFIX = f"| [`{MIGPAR_CHANGE}`]("
+MIGPAR_REPLACES = (POLARIS_ID + "034",)
+MIGPAR_COUNT_SCOPE = "With the migration parity"
+MIGPAR_COUNT_PREFIX = "With the migration parity version effective, Polaris has "
+MIGPAR_SUBJECTS = {
+    MIGPAR_SPEC: "3f292ca99bec13885c08e2c4e84932156962de847022f3e35f8a910ed82f52be",
+}
+MIGPAR_BOUND_PARTS = len(MIGPAR_SUBJECTS)
+
+
+def is_vbase_screening_row(row):
+    return _is_reviewed_version_row(row, VBASE_SCREENING_TAG, VBASE_SCREENING_SUBJECTS)
+
+
+def vbase_screening_rows(rows):
+    return [row for row in rows if is_vbase_screening_row(row)]
+
+
+def vbase_screening_binding(root):
+    """Select the corrected derived-base spec from an exact protected version."""
+    ledger = adoption_table_rows(root)
+    claims = vbase_screening_rows(ledger)
+    ref = f"refs/tags/{VBASE_SCREENING_TAG}"
+
+    git_root = _VBASE_SELFTEST_GIT_ROOT or root
+
+    def invalid(reason):
+        return "invalid", None, [f"Derived-base screening: {reason}"], []
+
+    if not claims:
+        if (root / ".git").exists() and local_git(git_root, "rev-parse", "--verify", ref) is not None:
+            return invalid("the successor tag has no canonical adoption row")
+        return "candidate", None, [], []
+
+    rows = [[cell.strip() for cell in row.split("|")[1:-1]] for row in claims]
+    text, records, subjects = _reviewed_version_binding(
+        root, rows, lambda _root, _rows: None,
+        version_tag=VBASE_SCREENING_TAG, subjects_map=VBASE_SCREENING_SUBJECTS,
+        spec=VBASE_SCREENING_SPEC, predecessor=figplan_binding,
+        predecessor_label="v2.33 figure plan", version=VBASE_SCREENING_VERSION,
+        label="Derived-base screening",
+    )
+    if text is None:
+        return "invalid", None, records, subjects
+    identity, _date, recorded_source, _what, _why, inverse, _tag = rows[0]
+    source = recorded_source[1:-1]
+    if sum(row.split("|")[1].strip() == identity for row in ledger) != 1:
+        return invalid("the adoption identity is not globally unique")
+    historical = [row for row in ledger if is_vbase_row(row)]
+    old_rows = vbase_rows(root)
+    if (len(old_rows) != 1 or len(old_rows[0]) != 7
+            or old_rows[0][0] != "A-267"
+            or old_rows[0][2] != f"`{VBASE_SCREENING_HISTORICAL_SOURCE}`"):
+        return invalid("the exact historical A-267 claim is unavailable")
+    retired_by = vbase_disposition(root, old_rows)
+    retirements = [row for row in ledger if row.split("|")[1].strip() == retired_by]
+    if len(retirements) != 1 or int(retired_by[2:]) >= int(identity[2:]):
+        return invalid("A-267 has no distinct prior retirement")
+    retirement = retirements[0]
+    retirement_fields = [cell.strip() for cell in retirement.split("|")[1:-1]]
+    retired_source = retirement_fields[2][1:-1]
+    if not re.fullmatch(r"[0-9a-f]{40}", retired_source):
+        return invalid("the A-267 retirement does not identify an exact revision")
+
+    authored = local_git(git_root, "rev-parse", "--verify", "HEAD^{commit}")
+    authored = authored.decode("ascii").strip() if authored else None
+    if authored is None or local_git(git_root, "merge-base", "--is-ancestor", source, authored) is None:
+        return invalid("the exact source is outside authored history")
+    parent_line = local_git(git_root, "rev-list", "--parents", "-n", "1", source)
+    parts = parent_line.split() if parent_line else []
+    if (parts != [source.encode("ascii"), retired_source.encode("ascii")]
+            or inverse != f"`git revert {source}`"):
+        return invalid("the correction cannot be reverted to its exact previously retired state")
+    if not vbase_retirement_verified(git_root, retired_source):
+        return invalid("the exact retired predecessor would not survive the inverse")
+    historical_routes = {
+        STATUS: (VBASE_STATUS_PREFIX,),
+        OPENSPEC_README: (f"| [`{VBASE_CHANGE}`](",),
+    }
+    if not git_routes_match(root, git_root, retired_source, historical_routes):
+        return invalid("the archived status and index routes differ from the exact retirement")
+    if not vbase_screening_git_matches(root, git_root, claims, historical, retirement, source, authored):
+        return invalid("the row and reviewed subjects do not match authored Git")
+    route_error = vbase_screening_authority_route_error(root, identity)
+    if route_error:
+        return invalid(route_error)
+    predecessor_rows = [row for row in ledger if is_figplan_row(row)]
+    if (local_git(git_root, "rev-parse", "--verify", f"refs/tags/{FIGPLAN_TAG}^{{commit}}")
+            != VBASE_SCREENING_PREDECESSOR.encode("ascii") + b"\n"
+            or not vbase_figplan_verified(git_root, authored, predecessor_rows)):
+        return invalid("the exact v2.33 predecessor is unavailable in authored Git")
+
+    refs = local_git(
+        git_root, "for-each-ref", "--format=%(refname) %(objecttype) %(tag) %(*objecttype) %(*objectname)",
+        ref, f"refs/tags/{VBASE_TAG}",
+    )
+    if refs is None:
+        return invalid("the local version tag inventory is unavailable")
+    by_name = {row.split(maxsplit=1)[0].decode("ascii"): row.split()
+               for row in refs.splitlines()}
+    if _VBASE_SELFTEST_GIT_ROOT is not None:
+        # The copied mutation fixtures exercise the pre-tag source shape.
+        by_name.pop(ref, None)
+    if f"refs/tags/{VBASE_TAG}" in by_name:
+        return invalid("a tag attempts to bind the retired A-267 claim")
+    if ref not in by_name:
+        return "staged", None, [], []
+    if by_name[ref] != [ref.encode("ascii"), b"tag", VBASE_SCREENING_TAG.encode("ascii"),
+                        b"commit", source.encode("ascii")]:
+        return invalid("the version is not annotated directly on its exact source")
+
+    protected = local_git(git_root, "rev-parse", "--verify", "refs/remotes/origin/main^{commit}")
+    protected = protected.decode("ascii").strip() if protected else None
+    if protected is None or not vbase_screening_git_matches(
+        root, git_root, claims, historical, retirement, source, protected
+    ):
+        return invalid("the row and reviewed subjects are absent from protected main")
+    if not vbase_figplan_verified(git_root, protected, predecessor_rows):
+        return invalid("the exact v2.33 predecessor row or subject is unavailable on protected main")
+    # Authority routes stay bound to protected main. A checkout containing
+    # protected main may have a later adoption that changes census totals.
+    # R3 and R5 verify the later checkout against its own composition.
+    stale = local_git(git_root, "merge-base", "--is-ancestor", protected, authored) is None
+    if not vbase_screening_routes_match(root, git_root, protected, compare_census=stale):
+        return invalid("the scoped census or status routes differ from protected main")
+
+    def disposition(rows_at_ref):
+        return recorded_disposition(
+            root, identity, source, VBASE_SCREENING_TAG, VBASE_SCREENING_SUBJECTS,
+            plain_revert=True, ledger_rows=rows_at_ref,
+        )
+
+    current_disposition = disposition(ledger)
+    authored_disposition = disposition(git_adoption_rows(git_root, authored))
+    protected_disposition = disposition(git_adoption_rows(git_root, protected))
+    if current_disposition != authored_disposition or authored_disposition != protected_disposition:
+        return invalid("worktree, authored and protected dispositions disagree")
+    if protected_disposition:
+        return "reverted", None, [], []
+    return "effective", text, [], []
+
+
+def is_source_example_row(row):
+    return _is_reviewed_version_row(row, SOURCE_EXAMPLE_TAG, P5_ADVICE_SUBJECTS)
+
+
+def p5_advice_claims(rows):
+    return [row for row in rows if is_source_example_row(row)]
+
+
+def p5_advice_authority(root, identity, candidate_only=False):
+    status = read_text(root, STATUS) or ""
+    index = read_text(root, OPENSPEC_README) or ""
+    expected_status = (
+        f"{P5_ADVICE_STATUS_PREFIX}{P5_ADVICE_HOME}) records {identity}. "
+        "The advisory applies when its protected adoption and exact version tag are verified."
+    )
+    index_home = f"changes/{P5_ADVICE_CHANGE}"
+    expected_index = (
+        f"{P5_ADVICE_INDEX_PREFIX}{index_home}) | One immediate advisory for a known absent code "
+        f"selection in a supported operator-agent draft. | `{identity}` in "
+        f"[AGENT-ADOPTIONS.md](../{AGENT_ADOPTIONS}) applies when the exact version tag is verified, "
+        f"`{SOURCE_EXAMPLE_TAG}` | [Semantic delta]({index_home}/SCREENING-SUCCESSOR-DELTA.md) |"
+    )
+    status_rows = scoped_route_lines(status, (P5_ADVICE_STATUS_PREFIX,))
+    index_rows = scoped_route_lines(index, (P5_ADVICE_INDEX_PREFIX,))
+    if candidate_only:
+        return not status_rows and len(index_rows) == 1 and index_rows[0] == P5_ADVICE_CANDIDATE_INDEX
+    return status_rows == [expected_status] and index_rows == [expected_index]
+
+
+def p5_advice_binding(root):
+    """Select the source-example advisory only after its exact protected version binds."""
+    ledger = adoption_table_rows(root)
+    claims = p5_advice_claims(ledger)
+    ref = f"refs/tags/{SOURCE_EXAMPLE_TAG}"
+    git_root = _VBASE_SELFTEST_GIT_ROOT or root
+
+    def invalid(reason):
+        return "invalid", None, [f"Source-example advice: {reason}"], []
+
+    tag = local_git(git_root, "for-each-ref",
+                    "--format=%(refname) %(objecttype) %(tag) %(*objecttype) %(*objectname)", ref)
+    if _VBASE_SELFTEST_GIT_ROOT is not None:
+        # The shared copied-history selftest predates this version.
+        tag = b""
+    if not claims:
+        if tag:
+            return invalid("a version tag has no canonical adoption")
+        status = read_text(root, STATUS) or ""
+        index = read_text(root, OPENSPEC_README) or ""
+        routes = scoped_route_lines(index, (P5_ADVICE_INDEX_PREFIX,))
+        if (any(route != P5_ADVICE_CANDIDATE_INDEX for route in routes)
+                or len(routes) > 1
+                or scoped_route_lines(status, (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_SCOPE))):
+            return invalid("a candidate displays an active or conflicting authority route")
+        return "candidate", None, [], []
+
+    if len(claims) != 1:
+        return invalid("expected exactly one adoption")
+    row = [cell.strip() for cell in claims[0].split("|")[1:-1]]
+    if len(row) != 7:
+        return invalid("expected a seven-column adoption row")
+    identity, date, commit, subject_links, why, inverse, version = row
+    match = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+    if (not re.fullmatch(r"A-[1-9][0-9]*", identity) or not valid_adoption_date(date)
+            or match is None or not why or version != f"`{SOURCE_EXAMPLE_TAG}`"):
+        return invalid("malformed adoption identity, date, commit, reason or tag")
+    source = match[1]
+    if (inverse != f"`git revert {source}`" or any(
+            f"](https://github.com/tzeusy-org/syzygy/blob/{source}/{path})" not in subject_links
+            for path in P5_ADVICE_SUBJECTS)):
+        return invalid("the row does not name the exact reviewed source and inverse")
+
+    if vbase_screening_binding(root)[0] != "effective":
+        return invalid("the effective v2.35 screening predecessor is unavailable")
+    parent = local_git(git_root, "rev-list", "--parents", "-n1", source)
+    if (parent is None or len(parent.split()) != 2
+            or local_git(git_root, "merge-base", "--is-ancestor", P5_ADVICE_PREDECESSOR, f"{source}^") is None):
+        return invalid("the source has no single parent with the screened predecessor")
+    paths = local_git(git_root, "diff-tree", "--no-commit-id", "-r", "--name-only", "-z", source)
+    if paths is None or set(paths.rstrip(b"\0").split(b"\0")) != {
+            path.encode("ascii") for path in (*P5_ADVICE_SUBJECTS, STATUS, OPENSPEC_README)}:
+        return invalid("the source commit changes paths outside the reviewed source and its routes")
+    source_subjects = {}
+    for path, digest in P5_ADVICE_SUBJECTS.items():
+        entry = local_git(git_root, "ls-tree", "-z", source, "--", path)
+        body = local_git(git_root, "show", f"{source}:{path}")
+        if not entry or not entry.startswith(b"100644 blob ") or body is None or sha(body) != digest:
+            return invalid(f"the exact reviewed Git subject is unavailable at {path}")
+        source_subjects[path] = entry, body
+
+    def evidence(commit_oid):
+        rows = git_adoption_rows(git_root, commit_oid)
+        if ([line for line in rows if line.split("|")[1].strip() == identity] != claims
+                or p5_advice_claims(rows) != claims
+                or local_git(git_root, "merge-base", "--is-ancestor", source, commit_oid) is None):
+            return None
+        return rows
+
+    head = "HEAD"
+    authored = evidence(head)
+    if (authored is None
+            or [line for line in ledger if line.split("|")[1].strip() == identity] != claims):
+        return invalid("the unique adoption and source are outside authored Git")
+    protected = "refs/remotes/origin/main"
+    protected_rows = evidence(protected) if tag else None
+    if tag is None:
+        return invalid("the local version ref inventory is unavailable")
+    if tag and tag.split() != [ref.encode("ascii"), b"tag", SOURCE_EXAMPLE_TAG.encode("ascii"),
+                              b"commit", source.encode("ascii")]:
+        return invalid("the version is not annotated directly on its exact source")
+    if tag and protected_rows is None:
+        return invalid("the exact adopted source is outside protected main")
+
+    def disposition(rows):
+        return recorded_disposition(root, identity, source, SOURCE_EXAMPLE_TAG, P5_ADVICE_SUBJECTS,
+                                    plain_revert=True, ledger_rows=rows)
+
+    revoked = disposition(ledger)
+    if revoked != disposition(authored) or (tag and revoked != disposition(protected_rows)):
+        return invalid("worktree, authored and protected dispositions disagree")
+    if revoked:
+        added = p5_advice_member_delta(read_text(root, VBASE_SCREENING_SPEC) or "",
+                                      source_subjects[P5_ADVICE_SPEC][1].decode("utf-8"))
+        if added is None or not tag or not p5_advice_inverse_verified(
+                root, git_root, source, revoked, protected_rows, added):
+            return invalid("the recorded withdrawal lacks its protected source-only inverse")
+        return "reverted", None, [], []
+
+    for path, (entry, body) in source_subjects.items():
+        if (body != read_bytes(root, path) or entry != local_git(git_root, "ls-tree", "-z", head, "--", path)
+                or (tag and entry != local_git(git_root, "ls-tree", "-z", protected, "--", path))):
+            return invalid(f"the worktree and exact Git subjects disagree at {path}")
+    scopes = {STATUS: (P5_ADVICE_STATUS_PREFIX,), OPENSPEC_README: (P5_ADVICE_INDEX_PREFIX,)}
+    counts = {STATUS: (P5_ADVICE_COUNT_SCOPE,)}
+    stale = tag and local_git(git_root, "merge-base", "--is-ancestor", protected, head) is None
+    if (not p5_advice_authority(root, identity) or not git_routes_match(root, git_root, source, scopes)
+            or not git_routes_match(root, git_root, head, scopes)
+            or (tag and not git_routes_match(root, git_root, protected, scopes))
+            or (stale and not git_routes_match(root, git_root, protected, counts))):
+        return invalid("the exact adoption authority routes disagree")
+    return ("effective", read_text(root, P5_ADVICE_SPEC), [], []) if tag else ("staged", None, [], [])
+
+
+def p5_advice_delta(root, findings):
+    predecessor = read_text(root, VBASE_SCREENING_SPEC) or ""
+    successor = read_text(root, P5_ADVICE_SPEC) or ""
+    added = p5_advice_member_delta(predecessor, successor)
+    if added is None:
+        findings.append("POLARIS source-example advice: cannot count the screened and advisory members")
+        return 0
+    return added
+
+
+def p5_advice_member_delta(predecessor, successor):
+    ident = VBASE_SCREENING_REPLACES[0]
+    counts = []
+    for text in (predecessor, successor):
+        members = [len(block["scenarios"]) for block in _polaris_blocks_manual(text)
+                   if block["section"] == "MODIFIED" and tuple(block["ids"]) == (ident,)]
+        if len(members) != 1:
+            return None
+        counts.append(members[0])
+    return counts[1] - counts[0]
+
+
+def p5_advice_inverse_verified(root, git_root, source, identity, protected_rows, added):
+    withdrawal = [row for row in protected_rows if row.split("|")[1].strip() == identity]
+    if len(withdrawal) != 1:
+        return False
+    commit = withdrawal[0].split("|")[3].strip().strip("`")
+    protected = "refs/remotes/origin/main"
+    parents = local_git(git_root, "rev-list", "--parents", "-n1", commit)
+    if (parents is None or len(parents.split()) != 2
+            or local_git(git_root, "merge-base", "--is-ancestor", source, commit) is None
+            or local_git(git_root, "merge-base", "--is-ancestor", commit, protected) is None
+            or local_git(git_root, "merge-base", "--is-ancestor", commit, "HEAD") is None
+            or not p5_advice_authority(root, None, candidate_only=True)
+            or scoped_route_lines(read_text(root, STATUS) or "", (P5_ADVICE_COUNT_SCOPE,))):
+        return False
+
+    def changed_lines(before, after):
+        diff = local_git(git_root, "diff", "--binary", "--no-color", "--no-ext-diff", "--no-textconv",
+                         "--no-renames", "--no-indent-heuristic", "--diff-algorithm=myers",
+                         "--src-prefix=a/", "--dst-prefix=b/", "--unified=0", before, after, "--")
+        if not diff:
+            return None
+        # Later changes can shift hunks and blob identities. Compare the paths,
+        # modes, hunk boundaries and exact added or removed bytes.
+        return [b"@@" if line.startswith(b"@@ ") else line
+                for line in diff.split(b"\n") if not line.startswith(b"index ")]
+
+    def count_deletion(revision):
+        raw = local_git(git_root, "show", f"{revision}:{STATUS}")
+        if raw is None:
+            return None
+        try:
+            body = raw.decode("utf-8")
+        except UnicodeDecodeError:
+            return None
+        counts = scoped_route_lines(body, (P5_ADVICE_COUNT_SCOPE,))
+        screening = scoped_route_lines(body, (VBASE_PHASE_PREFIXES[1],))
+        advice = P5_ADVICE_COUNT.fullmatch(counts[0]) if len(counts) == 1 else None
+        base = VBASE_STATUS_ACTIVE.fullmatch(screening[0]) if len(screening) == 1 else None
+        if not advice or not base or (int(advice[1]), int(advice[2])) != (int(base[1]), int(base[2]) + added):
+            return None
+        return b"-" + counts[0].encode("utf-8")
+
+    reverse = changed_lines(source, f"{source}^")
+    source_count = count_deletion(source)
+    current_count = count_deletion(f"{commit}^")
+    if reverse is None or source_count is None or current_count is None or reverse.count(source_count) != 1:
+        return False
+    # An authorized later addition can update the derived count before this
+    # inverse. It is the only substituted line in the exact reverse patch.
+    expected = [current_count if line == source_count else line for line in reverse]
+    if changed_lines(f"{commit}^", commit) != expected:
+        return False
+    for path in P5_ADVICE_SUBJECTS:
+        if read_bytes(root, path) is not None or any(
+                local_git(git_root, "ls-tree", "-z", ref, "--", path) != b""
+                for ref in (f"{source}^", commit, "HEAD", protected)):
+            return False
+    for path, prefixes in (
+        (STATUS, (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_SCOPE)),
+        (OPENSPEC_README, (P5_ADVICE_INDEX_PREFIX,)),
+    ):
+        bodies = [local_git(git_root, "show", f"{ref}:{path}")
+                  for ref in (f"{source}^", commit, "HEAD", protected)]
+        try:
+            scopes = [scoped_route_lines(body.decode("utf-8"), prefixes) if body is not None else None
+                      for body in bodies]
+        except UnicodeDecodeError:
+            return False
+        expected = [] if path == STATUS else [P5_ADVICE_CANDIDATE_INDEX]
+        if any(scope != expected for scope in scopes):
+            return False
+    return True
+
+
+def is_migpar_row(line):
+    return _is_reviewed_version_row(line, MIGPAR_TAG, MIGPAR_SUBJECTS)
+
+
+def migpar_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_migpar_row(line)]
+
+
+def migpar_disposition(root, rows):
+    if MIGPAR_TAG is not None and len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), MIGPAR_TAG,
+                                    MIGPAR_SUBJECTS, plain_revert=True)
+    return None
+
+
+def p5_advice_effective(root):
+    """The v2.36 source-example advice text only while that version is effective."""
+    state, text, records, subjects = p5_advice_binding(root)
+    return (text if state == "effective" else None), records, subjects
+
+
+def migpar_binding(root):
+    """Apply the migration parity only over the effective v2.36 source-example advice REQ-034."""
+    return _reviewed_version_binding(
+        root, migpar_rows(root), migpar_disposition,
+        version_tag=MIGPAR_TAG, subjects_map=MIGPAR_SUBJECTS, spec=MIGPAR_SPEC,
+        predecessor=p5_advice_effective, predecessor_label="v2.36 source-example advice", version="v2.38",
+        label="migration parity",
+    )
+
+
+def migpar_delta(root, findings):
+    """Scenarios the migration parity adds to REQ-034 over the source-example advice, counted from both texts."""
+    added = p5_advice_member_delta(read_text(root, P5_ADVICE_SPEC) or "", read_text(root, MIGPAR_SPEC) or "")
+    if added is None:
+        findings.append("POLARIS migration parity: cannot count predecessor and successor for 034")
+        return 0
+    return added
+
+
+def vbase_screening_git_matches(root, git_root, claims, historical, retirement, source, commit):
+    rows = git_adoption_rows(git_root, commit)
+    if (vbase_screening_rows(rows) != claims
+            or [row for row in rows if is_vbase_row(row)] != historical
+            or local_git(git_root, "merge-base", "--is-ancestor", source, commit) is None):
+        return False
+    for required in (*claims, *historical, retirement):
+        identity = required.split("|")[1].strip()
+        if [row for row in rows if row.split("|")[1].strip() == identity] != [required]:
+            return False
+    historical_body = local_git(git_root, "show", f"{commit}:{VBASE_SPEC}")
+    if historical_body is None or sha(historical_body) != VBASE_SUBJECTS[VBASE_SPEC]:
+        return False
+    for path in VBASE_SCREENING_SUBJECTS:
+        source_entry = local_git(git_root, "ls-tree", "-z", source, "--", path)
+        if (not source_entry or not source_entry.startswith(b"100644 blob ")
+                or local_git(git_root, "ls-tree", "-z", commit, "--", path) != source_entry
+                or local_git(git_root, "show", f"{source}:{path}") != read_bytes(root, path)):
+            return False
+    return True
+
+
+def vbase_screening_authority_route_error(root, identity):
+    status = read_text(root, STATUS) or ""
+    route = f"changes/{VBASE_SCREENING_CHANGE}"
+    activation = (
+        f"{VBASE_SCREENING_STATUS_PREFIX}{VBASE_SCREENING_HOME}) records {identity}. "
+        "The correction applies when its protected adoption and exact version tag are verified."
+    )
+    if scoped_route_lines(status, (VBASE_SCREENING_STATUS_PREFIX,)) != [activation]:
+        return f"`{STATUS}` does not route the exact screening adoption and activation condition"
+
+    index = read_text(root, OPENSPEC_README) or ""
+    prefix = f"| [`{VBASE_SCREENING_CHANGE}`]("
+    expected_row = (
+        f"{prefix}{route}) | Qualifies the diagnostic details and reasons emitted by a derived-base view | "
+        f"`{identity}` in [AGENT-ADOPTIONS.md](../{AGENT_ADOPTIONS}) applies when the exact version tag "
+        f"is verified, `{VBASE_SCREENING_TAG}` | [Semantic delta]({route}/SEMANTIC-DELTA.md) |"
+    )
+    if scoped_route_lines(index, (prefix,)) != [expected_row]:
+        return f"`{OPENSPEC_README}` does not route the exact screening row and tag"
+    return None
+
+
+def scoped_route_lines(body, prefixes):
+    return [line.strip() for line in visible_route_lines(body) if line.strip().startswith(prefixes)]
+
+
+def vbase_screening_routes_match(root, git_root, commit, *, compare_census):
+    scopes = {
+        STATUS: (VBASE_STATUS_PREFIX, VBASE_SCREENING_STATUS_PREFIX),
+        OPENSPEC_README: (f"| [`{VBASE_CHANGE}`](", f"| [`{VBASE_SCREENING_CHANGE}`]("),
+    }
+    if compare_census:
+        projection = read_bytes(root, VBASE_SCREENING_PROJECTION)
+        if projection is None or projection != local_git(
+            git_root, "show", f"{commit}:{VBASE_SCREENING_PROJECTION}"
+        ):
+            return False
+        scopes[STATUS] += VBASE_PHASE_PREFIXES
+    return git_routes_match(root, git_root, commit, scopes)
+
+
+def git_routes_match(root, git_root, commit, scopes):
+    for rel, prefixes in scopes.items():
+        authored = read_text(root, rel)
+        protected = local_git(git_root, "show", f"{commit}:{rel}")
+        if authored is None or protected is None:
+            return False
+        try:
+            protected = protected.decode("utf-8")
+        except UnicodeDecodeError:
+            return False
+        present = scoped_route_lines(authored, prefixes)
+        if not present or present != scoped_route_lines(protected, prefixes):
+            return False
+    return True
+
+
+def vbase_figplan_verified(git_root, commit, expected_rows):
+    rows = git_adoption_rows(git_root, commit)
+    if (len(expected_rows) != 1
+            or [row for row in rows if is_figplan_row(row)] != expected_rows
+            or local_git(git_root, "merge-base", "--is-ancestor",
+                         VBASE_SCREENING_PREDECESSOR, commit) is None):
+        return False
+    identity, _date, source, _what, _why, _inverse, _tag = [
+        cell.strip() for cell in expected_rows[0].split("|")[1:-1]
+    ]
+    if identity != "A-65" or source != f"`{VBASE_SCREENING_PREDECESSOR}`":
+        return False
+    if (sum(row.split("|")[1].strip() == identity for row in rows) != 1
+            or recorded_disposition(
+                git_root, identity, VBASE_SCREENING_PREDECESSOR, FIGPLAN_TAG,
+                FIGPLAN_SUBJECTS, plain_revert=True, ledger_rows=rows,
+            )):
+        return False
+    for rel, digest in FIGPLAN_SUBJECTS.items():
+        mode = local_git(git_root, "ls-tree", "-z", commit, "--", rel)
+        body = local_git(git_root, "show", f"{commit}:{rel}")
+        if body is None or not mode or not mode.startswith(b"100644 blob ") or sha(body) != digest:
+            return False
+    return True
+
+
+def vbase_retirement_verified(git_root, commit):
+    changes = local_git(git_root, "diff-tree", "--no-commit-id", "--name-only", "-z", "-r", commit)
+    if changes is None or set(changes.split(b"\0")) - {b""} != {
+        rel.encode("ascii") for rel in VBASE_SCREENING_RETIREMENT_SUBJECTS
+    }:
+        return False
+    for rel, digest in VBASE_SCREENING_RETIREMENT_SUBJECTS.items():
+        body = local_git(git_root, "show", f"{commit}:{rel}")
+        mode = local_git(git_root, "ls-tree", "-z", commit, "--", rel)
+        if body is None or not mode or not mode.startswith(b"100644 blob ") or sha(body) != digest:
+            return False
+    return True
 
 
 def url_source_contract_findings(root):
@@ -4173,15 +4828,30 @@ def check_outcomes(root, report):
         subjects_seen += FIGPLAN_BOUND_PARTS
     r1 += figplan_records
     r2 += figplan_subjects
-    impfacts_retired_by = impfacts_disposition(root, impfacts_rows(root))
-    impfacts_amendment, impfacts_records, impfacts_subjects = impfacts_binding(root)
-    if impfacts_retired_by:
+    vbase_retired_by = vbase_disposition(root, vbase_rows(root))
+    vbase_amendment, vbase_records, vbase_subjects = vbase_binding(root)
+    if vbase_retired_by:
         records += 2
-    elif impfacts_amendment is not None or impfacts_records or impfacts_subjects:
+    elif vbase_amendment is not None or vbase_records or vbase_subjects:
         records += 1
-        subjects_seen += IMPFACTS_BOUND_PARTS
-    r1 += impfacts_records
-    r2 += impfacts_subjects
+        subjects_seen += VBASE_BOUND_PARTS
+    r1 += vbase_records
+    r2 += vbase_subjects
+    vbase_state, _vbase, screening_records, screening_subjects = vbase_screening_binding(root)
+    if vbase_state != "candidate":
+        records += 1
+        subjects_seen += len(VBASE_SCREENING_SUBJECTS)
+    r1 += screening_records
+    r2 += screening_subjects
+    migpar_retired_by = migpar_disposition(root, migpar_rows(root))
+    migpar_amendment, migpar_records, migpar_subjects = migpar_binding(root)
+    if migpar_retired_by:
+        records += 2
+    elif migpar_amendment is not None or migpar_records or migpar_subjects:
+        records += 1
+        subjects_seen += MIGPAR_BOUND_PARTS
+    r1 += migpar_records
+    r2 += migpar_subjects
     retirement = ""
     if declared_retired_by:
         retirement += f"; v2.0 inactive by {declared_retired_by}"
@@ -4237,8 +4907,10 @@ def check_outcomes(root, report):
         retirement += f"; v2.32 inactive by {qkind_retired_by}"
     if figplan_retired_by:
         retirement += f"; v2.33 inactive by {figplan_retired_by}"
-    if impfacts_retired_by:
-        retirement += f"; import facts v2.NN inactive by {impfacts_retired_by}"
+    if migpar_retired_by:
+        retirement += f"; v2.38 inactive by {migpar_retired_by}"
+    if vbase_retired_by:
+        retirement += f"; v2.34 inactive by {vbase_retired_by}"
     if qfile_retired_by:
         retirement += f"; v2.27 inactive by {qfile_retired_by}"
     if scripted_grade_retired_by:
@@ -4776,10 +5448,10 @@ def _cap1_overlay_guard_manual(text):
     return out + [p for p in _header_problems_manual(text)]
 
 
-def compose_cap1_by_id(base, overlay):
+def compose_cap1_by_id(base, overlay, replaces=CAP1_OVERLAY_REPLACES):
     """Method A: parse both files by regex, then replace by identifier.
 
-    The overlay must carry exactly `CAP1_OVERLAY_REPLACES`, in that order,
+    The overlay must carry exactly the expected IDs in order,
     and each must already be a base requirement (a full replacement, never
     an addition).
     """
@@ -4788,9 +5460,9 @@ def compose_cap1_by_id(base, overlay):
     problems = [f"base: duplicate or orphan {p}" for p in pb]
     problems += [f"overlay: duplicate or orphan {p}" for p in po]
     problems += [f"overlay: {p}" for p in _cap1_overlay_guard_regex(overlay)]
-    if tuple(over) != CAP1_OVERLAY_REPLACES:
+    if tuple(over) != replaces:
         problems.append(f"overlay replaces {list(over)}, expected exactly "
-                        f"{list(CAP1_OVERLAY_REPLACES)}")
+                        f"{list(replaces)}")
     for ident, req in over.items():
         if ident not in comp:
             problems.append(f"overlay: {ident} is dangling (not in the base)")
@@ -4821,7 +5493,7 @@ def _cap1_spans_manual(lines):
     return spans
 
 
-def compose_cap1_by_text(base, overlay):
+def compose_cap1_by_text(base, overlay, replaces=CAP1_OVERLAY_REPLACES):
     """Method B: splice the overlay's blocks into the base text, then parse.
 
     No regular expression: the composed bytes come from a line splice, are
@@ -4831,9 +5503,9 @@ def compose_cap1_by_text(base, overlay):
     problems = [f"overlay: {p}" for p in _cap1_overlay_guard_manual(overlay)]
     b_lines, o_lines = _lines_keep(base), _lines_keep(overlay)
     b_spans, o_spans = _cap1_spans_manual(b_lines), _cap1_spans_manual(o_lines)
-    if tuple(o_spans) != CAP1_OVERLAY_REPLACES:
+    if tuple(o_spans) != replaces:
         problems.append(f"overlay replaces {list(o_spans)}, expected exactly "
-                        f"{list(CAP1_OVERLAY_REPLACES)}")
+                        f"{list(replaces)}")
     composed = b_lines
     for ident in o_spans:
         if len(o_spans[ident]) != 1:
@@ -4865,14 +5537,14 @@ def cap1_overlay_signed(root):
     return []
 
 
-def compose_cap1(root, text):
-    """(population, findings): the bound CAP1 file with the overlay applied."""
+def compose_cap1_consent(root, text):
+    """Verify the historical P-109 composition before any later overlay."""
     overlay = read_text(root, CAP1_OVERLAY_SPEC)
     unsigned = cap1_overlay_signed(root)
     if overlay is None or unsigned:
         a, pa = parse_regex(text, "CAP1")
         return a, unsigned or [f"CAP1: overlay `{CAP1_OVERLAY_SPEC}` missing; "
-                               "the bound file alone is counted"]
+                               "the bound file alone is counted"], None
     a, pa = compose_cap1_by_id(text, overlay)
     b, pb, composed = compose_cap1_by_text(text, overlay)
     findings = [f"CAP1 method A: {p}" for p in pa]
@@ -4888,7 +5560,311 @@ def compose_cap1(root, text):
     if sha(composed.encode("utf-8")) != recorded:
         findings.append(f"CAP1 method B: composed bytes do not hash to "
                         f"`{CAP1_OVERLAY_DEPS}` composed_spec_sha256")
-    return a, findings
+    return a, findings, composed
+
+
+def cap1_root_row_claims_version(row):
+    """Recognize an attempted binding even if the review packet is incomplete."""
+    cells = [cell.strip() for cell in row.split("|")[1:-1]]
+    tag_cells = cells[6:] if len(cells) == 7 else cells
+    return (any(CAP1_ROOT_TAG_CLAIM.fullmatch(cell) for cell in tag_cells)
+            or _is_reviewed_version_row(row, None, (CAP1_ROOT_SPEC,)))
+
+
+def cap1_root_git(root, *args):
+    """Read local Git objects without replacement objects or lazy network reads."""
+    if _CAP1_SELFTEST_GIT_ROOT is not None and args[0] == "for-each-ref":
+        # The existing rule-6 fixtures exercise the authored, pre-tag state.
+        return b""
+    return local_git(_CAP1_SELFTEST_GIT_ROOT or root, *args)
+
+
+def local_git(root, *args):
+    """Read an exact local Git object without replacements or network fetches."""
+    result = subprocess.run(
+        ["git", *args], cwd=root, capture_output=True,
+        env={**os.environ, "GIT_NO_REPLACE_OBJECTS": "1", "GIT_NO_LAZY_FETCH": "1",
+             "GIT_OPTIONAL_LOCKS": "0"}, check=False,
+    )
+    return result.stdout if result.returncode == 0 else None
+
+
+def cap1_root_tree_entry(root, commit, path):
+    entry = cap1_root_git(root, "ls-tree", "-z", commit, "--", path)
+    return entry if entry and entry.startswith(b"100644 blob ") else None
+
+
+def cap1_root_ledger_at(root, commit):
+    if cap1_root_tree_entry(root, commit, AGENT_ADOPTIONS) is None:
+        return []
+    body = cap1_root_git(root, "show", f"{commit}:{AGENT_ADOPTIONS}")
+    return decode_git_adoption_rows(body)
+
+
+def git_adoption_rows(root, commit):
+    entry = local_git(root, "ls-tree", "-z", commit, "--", AGENT_ADOPTIONS)
+    if not entry or not entry.startswith(b"100644 blob "):
+        return []
+    return decode_git_adoption_rows(local_git(root, "show", f"{commit}:{AGENT_ADOPTIONS}"))
+
+
+def decode_git_adoption_rows(body):
+    try:
+        return _adoption_table_rows(body.decode("utf-8")) if body is not None else []
+    except UnicodeDecodeError:
+        return []
+
+
+def cap1_root_binding(root):
+    """Classify the reviewed overlay from its current row and local Git evidence."""
+    ledger = adoption_table_rows(root)
+    claims = [row for row in ledger if cap1_root_row_claims_version(row)]
+    versioned = CAP1_ROOT_VERSION_MARKER in (read_text(root, CAP1_ROOT_SPEC) or "")
+    if not claims and not versioned:
+        return "candidate", []
+
+    def invalid(reason):
+        return "invalid", [f"CAP1 root adjudication: {reason}"]
+
+    if len(claims) != 1:
+        return invalid("expected exactly one version record")
+    cells = [cell.strip() for cell in claims[0].split("|")[1:-1]]
+    if len(cells) != 7 or not all(cells):
+        return invalid("expected seven nonempty adoption cells")
+    identity, date, commit, what, why, inverse, tag = cells
+    if (not versioned or tag != f"`{CAP1_ROOT_VERSION_NAME}`"
+            or not valid_adoption_date(date) or not re.fullmatch(r"A-[1-9][0-9]*", identity)
+            or not re.fullmatch(r"`[0-9a-f]{40}`", commit)):
+        return invalid("invalid adoption identity, source, date or version")
+    if sum(row.split("|")[1].strip() == identity for row in ledger) != 1:
+        return invalid("adoption identity is not globally unique")
+    source = commit[1:-1]
+    prefix = f"https://github.com/tzeusy-org/syzygy/blob/{source}/"
+    links = re.findall(r"\]\(([^)]+)\)", what)
+    if any(links.count(prefix + path) != 1 for path in CAP1_ROOT_BOUND_PATHS):
+        return invalid("adoption lacks a unique own-source snapshot for each subject")
+
+    if cap1_root_git(root, "cat-file", "-t", source) != b"commit\n":
+        return invalid("source is not an exact commit object")
+    parents = cap1_root_git(root, "rev-list", "--parents", "-n", "1", source)
+    if not parents or len(parents.split()) not in (2, 3):
+        return invalid("exact source commit and its parents are unavailable")
+    mainline = " -m 1" if len(parents.split()) == 3 else ""
+    if inverse != f"`git revert{mainline} {source}`":
+        return invalid("revert does not name the exact source and mainline")
+    authored = cap1_root_git(root, "rev-parse", "--verify", "HEAD^{commit}")
+    if not authored:
+        return invalid("exact authored commit is unavailable")
+    authored = authored.decode("ascii").strip()
+    if cap1_root_git(root, "merge-base", "--is-ancestor", source, authored) is None:
+        return invalid("exact source commit is outside the authored history")
+    authored_rows = cap1_root_ledger_at(root, authored)
+    if [row for row in authored_rows if cap1_root_row_claims_version(row)] != claims:
+        return invalid("adoption row is absent from the exact authored commit")
+    snapshots = {}
+    for path in CAP1_ROOT_BOUND_PATHS:
+        current = read_bytes(root, path)
+        entry = cap1_root_tree_entry(root, source, path)
+        snapshot = cap1_root_git(root, "show", f"{source}:{path}")
+        if current is None or snapshot != current:
+            return invalid(f"`{path}` differs from the exact source snapshot")
+        if entry is None or cap1_root_tree_entry(root, authored, path) != entry:
+            return invalid(f"`{path}` differs at the exact authored commit")
+        snapshots[path] = entry
+    annotation = f"refs/tags/{CAP1_ROOT_VERSION_NAME}"
+    refs = cap1_root_git(
+        root, "for-each-ref", "--format=%(refname) %(objecttype) %(tag) %(*objecttype) %(*objectname)",
+        annotation,
+    )
+    if refs is None:
+        return invalid("version tag inventory is unreadable")
+    rows = [row.split() for row in refs.splitlines()
+            if row.split(maxsplit=1)[0] == annotation.encode("ascii")]
+    if not rows:
+        return "staged", []
+    if rows != [[annotation.encode("ascii"), b"tag", CAP1_ROOT_VERSION_NAME.encode("ascii"),
+                 b"commit", source.encode("ascii")]]:
+        return invalid("tag is not a direct annotation of the exact source")
+    protected = cap1_root_git(root, "rev-parse", "--verify", "refs/remotes/origin/main^{commit}")
+    if not protected:
+        return invalid("protected main is unavailable")
+    protected = protected.decode("ascii").strip()
+    protected_rows = cap1_root_ledger_at(root, protected)
+    if (cap1_root_git(root, "merge-base", "--is-ancestor", source, protected) is None
+            or [row for row in protected_rows if cap1_root_row_claims_version(row)] != claims
+            or sum(row.split("|")[1].strip() == identity for row in protected_rows) != 1):
+        return invalid("annotated source and binding row are not both on protected main")
+
+    def disposition(rows):
+        identity_to_find = recorded_disposition(
+            root, identity, source, CAP1_ROOT_VERSION_NAME, CAP1_ROOT_BOUND_PATHS,
+            plain_revert=not mainline, ledger_rows=rows,
+        )
+        return [row for row in rows if row.split("|")[1].strip() == identity_to_find]
+
+    proposed_disposition = disposition(ledger)
+    authored_disposition = disposition(authored_rows)
+    protected_disposition = disposition(protected_rows)
+    if any(len(matches) > 1 for matches in
+           (proposed_disposition, authored_disposition, protected_disposition)):
+        return invalid("disposition identity is not unique")
+    if proposed_disposition != authored_disposition:
+        return invalid("authored and worktree disposition evidence disagree")
+    if authored_disposition and authored_disposition != protected_disposition:
+        return invalid("authored disposition is not recorded on protected main")
+    if protected_disposition:
+        return "reverted", []
+    for path, entry in snapshots.items():
+        if cap1_root_tree_entry(root, protected, path) != entry:
+            return invalid(f"`{path}` differs on protected main from the exact source snapshot")
+    return "effective", []
+
+
+def cap1_root_effective(root, text):
+    """Return the selected CAP1 bytes as well as the census."""
+    population, findings, effective = compose_cap1_consent(root, text)
+    state, binding = cap1_root_binding(root)
+    findings.extend(binding)
+    if state == "effective" and not findings:
+        overlay = read_text(root, CAP1_ROOT_SPEC)
+        by_id, problems_a = compose_cap1_by_id(effective, overlay, CAP1_ROOT_REPLACES)
+        by_text, problems_b, successor = compose_cap1_by_text(effective, overlay, CAP1_ROOT_REPLACES)
+        if (problems_a or problems_b or by_id != by_text or by_id != population
+                or sha(successor.encode("utf-8")) != CAP1_ROOT_SUCCESSOR_DIGEST):
+            findings.append("CAP1 root adjudication: exact successor census does not compose")
+        else:
+            population, effective = by_id, successor
+    return population, findings, effective
+
+
+def compose_cap1(root, text):
+    population, findings, _ = cap1_root_effective(root, text)
+    return population, findings
+
+
+def _cap1_coverage_rows(text):
+    return [line for line in text.splitlines() if line.startswith("| RFC")]
+
+
+def _cap1_coverage_states(rows, column):
+    counts = {"covered": 0, "unknown": 0, "other": 0}
+    for row in rows:
+        cells = row.split("|")[1:-1]
+        if len(cells) != 4:
+            raise ValueError("expected four cells in each coverage row")
+        words = cells[column].split(maxsplit=1)
+        state = words[0].strip("*;").lower() if words else ""
+        counts[state if state in ("covered", "unknown") else "other"] += 1
+    return counts
+
+
+def cap1_root_projection(root):
+    """Derive the dormant 006 warrant and coverage projection from exact inputs."""
+    from build_capability_1_spec_dependencies import CLASSES, parse as parse_warrants
+
+    inputs = {path: read_bytes(root, path)
+              for path in (*CAP1_ROOT_PREDECESSORS, *CAP1_ROOT_SUBJECTS,
+                           *CAP1_ROOT_RFC_FILES, CAP1_ROOT_INDEX)}
+    if any(data is None for data in inputs.values()):
+        raise ValueError("CAP1 composition input is missing")
+    for path, expected in CAP1_ROOT_PREDECESSORS.items():
+        if sha(inputs[path]) != expected:
+            raise ValueError(f"`{path}` differs from the signed predecessor")
+    for path, expected in CAP1_ROOT_RFC_DIGESTS.items():
+        if sha(inputs[path]) != expected:
+            raise ValueError(f"`{path}` differs from the reviewed RFC collateral")
+    for path, expected in CAP1_ROOT_SUBJECTS.items():
+        body = inputs[path]
+        if path == CAP1_ROOT_SPEC:
+            old = f"\n{CAP1_ROOT_CANDIDATE_MARKER} ".encode("utf-8")
+            new = f"\n{CAP1_ROOT_VERSION_MARKER} ".encode("utf-8")
+            body = body.replace(new, old, 1)
+        if sha(body) != expected:
+            raise ValueError(f"`{path}` differs from the reviewed candidate")
+    base, p109, historical = compose_cap1_consent(
+        root, inputs[FAMILY_SPECS["CAP1"]].decode("utf-8"))
+    if p109:
+        raise ValueError("P-109 predecessor did not bind: " + "; ".join(p109))
+    proposal = inputs[CAP1_ROOT_SPEC].decode("utf-8")
+    a, pa = compose_cap1_by_id(historical, proposal, CAP1_ROOT_REPLACES)
+    b, pb, successor = compose_cap1_by_text(historical, proposal, CAP1_ROOT_REPLACES)
+    if pa or pb or a != b or a != base:
+        raise ValueError("006 replacement does not preserve the CAP1 population")
+
+    def warrants(text):
+        requirements, errors = parse_warrants(text)
+        if errors:
+            raise ValueError("; ".join(errors))
+        return {key: sorted({item for _, fields in requirements for item in fields[key]})
+                for key in CLASSES}
+
+    previous_warrants = warrants(historical)
+    next_warrants = warrants(successor)
+    signed = json.loads(inputs[CAP1_OVERLAY_DEPS])["dependencies"]
+    if previous_warrants != {key: sorted(signed[key]) for key in CLASSES}:
+        raise ValueError("P-109 warrants disagree with the signed union")
+    expected_warrants = {**previous_warrants,
+                         "contracts": sorted(set(previous_warrants["contracts"]) | {"RFC1-21"})}
+    if "RFC1-21" in previous_warrants["contracts"] or next_warrants != expected_warrants:
+        raise ValueError("expected RFC1-21 as the sole warrant change")
+
+    source = inputs[CAP1_HISTORIC_COVERAGE].decode("utf-8")
+    part_a = source.partition("## Part A — ")[2].partition("## Part B — ")[0]
+    old_rows = _cap1_coverage_rows(part_a)
+    consent_source = inputs[CAP1_CONSENT_COVERAGE].decode("utf-8")
+    before_consent, _, after_consent = consent_source.partition("## Proposed scoped replacement")
+    removed = _cap1_coverage_rows(before_consent)
+    consent = _cap1_coverage_rows(after_consent)
+    if len(removed) != 1 or old_rows.count(removed[0]) != 1 or not consent:
+        raise ValueError("P-109 coverage preimage must occur exactly once")
+    prior = [row for row in old_rows if row != removed[0]]
+    delta = inputs[CAP1_ROOT_COVERAGE].decode("utf-8")
+
+    def coverage_fragment(name):
+        pattern = rf"^```text {name}-coverage\n((?:[^\n]*\n)+?)^```$"
+        match = re.findall(pattern, delta, re.M)
+        if len(match) != 1:
+            raise ValueError(f"expected exactly one {name} coverage block")
+        return _cap1_coverage_rows(match[0])
+
+    removed = coverage_fragment("predecessor")
+    replacement = coverage_fragment("proposed")
+    if len(removed) != 1 or prior.count(removed[0]) != 1 or len(replacement) != 2:
+        raise ValueError("006 coverage must replace exactly one prior row with two")
+    index = prior.index(removed[0])
+    future = prior[:index] + replacement + prior[index + 1:]
+    clauses = re.findall(r"^      - \{id: (RFC[1-9]-[^,]+),",
+                         inputs[CAP1_ROOT_INDEX].decode("utf-8"), re.M)
+    if len(clauses) != len(set(clauses)) or not set(next_warrants["contracts"]) <= set(clauses):
+        raise ValueError("invalid Wave A/B clause population")
+    clause_digest = sha("".join(f"{clause}\n" for clause in sorted(clauses)).encode("utf-8"))
+
+    def coverage(rows, mapped):
+        mapped = len(mapped)
+        states = _cap1_coverage_states(rows, 2)
+        for key, count in _cap1_coverage_states(consent, 3).items():
+            states[key] += count
+        return {"consequences": len(rows) + len(consent), **states,
+                "mapped_contracts": mapped, "unmapped_contracts": len(clauses) - mapped}
+
+    return {
+        "kind": "prospective-cap1-root-adjudication",
+        "requirement_count": len(a),
+        "scenario_count": sum(len(req["scenarios"]) for req in a.values()),
+        "predecessor_sha256": sha(historical.encode("utf-8")),
+        "composed_spec_sha256": sha(successor.encode("utf-8")),
+        "source_files": {path: sha(data) for path, data in inputs.items()
+                         if path != CAP1_ROOT_INDEX},
+        "dependencies": next_warrants,
+        "coverage": {
+            "accepted_clauses": len(clauses),
+            "accepted_clauses_sha256": clause_digest,
+            "retained_consent_rows": len(consent),
+            "signed_baseline_literal": {"consequences": len(old_rows), **_cap1_coverage_states(old_rows, 2)},
+            "predecessor": coverage(prior, previous_warrants["contracts"]),
+            "successor": coverage(future, next_warrants["contracts"]),
+        },
+    }
 
 
 def census(root):
@@ -5266,14 +6242,31 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, figplan_amendment, FIGPLAN_REPLACES)
                 pa += extra_a
                 pb += extra_b
-        impfacts_amendment, impfacts_records, impfacts_subjects = impfacts_binding(root)
-        findings += impfacts_records + impfacts_subjects
-        if impfacts_amendment is not None:
+        _vbase_state, vbase_amendment, vbase_records, vbase_subjects = vbase_screening_binding(root)
+        findings += vbase_records + vbase_subjects
+        if vbase_amendment is not None:
             if figplan_amendment is None:
-                findings.append("POLARIS: import facts require effective figure plan v2.33")
+                findings.append("POLARIS: derived base requires effective figure plan v2.33")
             else:
-                a, extra_a = compose_figure_by_id(a, impfacts_amendment, IMPFACTS_REPLACES)
-                b, extra_b = compose_figure_by_name(b, impfacts_amendment, IMPFACTS_REPLACES)
+                a, extra_a = compose_figure_by_id(a, vbase_amendment, VBASE_SCREENING_REPLACES)
+                b, extra_b = compose_figure_by_name(b, vbase_amendment, VBASE_SCREENING_REPLACES)
+                pa += extra_a
+                pb += extra_b
+        _advice_state, advice, advice_records, advice_subjects = p5_advice_binding(root)
+        findings += advice_records + advice_subjects
+        if advice is not None:
+            a, extra_a = compose_figure_by_id(a, advice, VBASE_SCREENING_REPLACES)
+            b, extra_b = compose_figure_by_name(b, advice, VBASE_SCREENING_REPLACES)
+            pa += extra_a
+            pb += extra_b
+        migpar_amendment, migpar_records, migpar_subjects = migpar_binding(root)
+        findings += migpar_records + migpar_subjects
+        if migpar_amendment is not None:
+            if advice is None:
+                findings.append("POLARIS: migration parity requires effective source-example advice v2.36")
+            else:
+                a, extra_a = compose_figure_by_id(a, migpar_amendment, MIGPAR_REPLACES)
+                b, extra_b = compose_figure_by_name(b, migpar_amendment, MIGPAR_REPLACES)
                 pa += extra_a
                 pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
@@ -5299,6 +6292,52 @@ def census_json(pop):
             "members": {k: reqs[k] for k in sorted(reqs)},
         }
     return json.dumps(doc, indent=2, ensure_ascii=False, sort_keys=False) + "\n"
+
+
+def vbase_screening_projects(root, pop, findings):
+    """Regenerate both sides of the tag transition using independent parsers."""
+    state, _text, _records, _subjects = vbase_screening_binding(root)
+    if state not in {"staged", "effective"}:
+        return pop, None
+    antecedent, _records, _subjects = figplan_binding(root)
+    amendment = read_text(root, VBASE_SCREENING_SPEC)
+    current = pop.get("POLARIS", {})
+    projections = {}
+    for label, source in (("pretag", antecedent), ("active", amendment)):
+        by_id, errors_a = compose_figure_by_id(current, source or "", VBASE_SCREENING_REPLACES)
+        by_name, errors_b = compose_figure_by_name(current, source or "", VBASE_SCREENING_REPLACES)
+        if errors_a or errors_b or by_id != by_name:
+            findings.append(f"POLARIS derived-base screening {label}: census projections disagree")
+            return pop, None
+        projections[label] = by_id
+    selected = "active" if state == "effective" else "pretag"
+    selected_population = projections[selected]
+    _advice_state, advice, _records, _subjects = p5_advice_binding(root)
+    if advice is not None:
+        by_id, errors_a = compose_figure_by_id(selected_population, advice, VBASE_SCREENING_REPLACES)
+        by_name, errors_b = compose_figure_by_name(selected_population, advice, VBASE_SCREENING_REPLACES)
+        if errors_a or errors_b or by_id != by_name:
+            findings.append("POLARIS source-example advice: selected census projections disagree")
+        selected_population = by_id
+        migpar_amendment, _records, _subjects = migpar_binding(root)
+        if migpar_amendment is not None:
+            by_id, errors_a = compose_figure_by_id(selected_population, migpar_amendment, MIGPAR_REPLACES)
+            by_name, errors_b = compose_figure_by_name(selected_population, migpar_amendment, MIGPAR_REPLACES)
+            if errors_a or errors_b or by_id != by_name:
+                findings.append("POLARIS migration parity: selected census projections disagree")
+            selected_population = by_id
+    if selected_population != current:
+        findings.append("POLARIS: selected census differs from the separately verified screening transition")
+    ident = VBASE_SCREENING_REPLACES[0]
+    ledger = {"requirement": ident, "tag": VBASE_SCREENING_TAG, "populations": {}}
+    for label, requirements in projections.items():
+        ledger["populations"][label] = {
+            "requirements": len(requirements),
+            "scenarios": sum(len(row["scenarios"]) for row in requirements.values()),
+            "member": requirements[ident],
+        }
+    baseline = {**pop, "POLARIS": projections["pretag"]}
+    return baseline, json.dumps(ledger, indent=2, ensure_ascii=False) + "\n"
 
 
 def polaris_expected(root, findings):
@@ -5662,18 +6701,22 @@ def polaris_expected(root, findings):
             findings.append("POLARIS figure plan: cannot count predecessor and successor for 034")
         else:
             n_scen += replacement[0] - previous[0]
-    impfacts_amendment, _records, _subjects = impfacts_binding(root)
-    if impfacts_amendment is not None:
+    _state, vbase_amendment, _records, _subjects = vbase_screening_binding(root)
+    if vbase_amendment is not None:
         # Only 034 moves, after the figure plan v2.33.
-        ident = IMPFACTS_REPLACES[0]
+        ident = VBASE_SCREENING_REPLACES[0]
         previous = [len(block["scenarios"]) for block in _polaris_blocks_manual(figplan_amendment or "")
                     if block["section"] == "MODIFIED" and tuple(block["ids"]) == (ident,)]
-        replacement = [len(block["scenarios"]) for block in _polaris_blocks_manual(impfacts_amendment)
+        replacement = [len(block["scenarios"]) for block in _polaris_blocks_manual(vbase_amendment)
                        if block["section"] == "MODIFIED" and tuple(block["ids"]) == (ident,)]
         if len(previous) != 1 or len(replacement) != 1:
-            findings.append("POLARIS import facts: cannot count predecessor and successor for 034")
+            findings.append("POLARIS derived base: cannot count predecessor and successor for 034")
         else:
             n_scen += replacement[0] - previous[0]
+    if p5_advice_binding(root)[0] == "effective":
+        n_scen += p5_advice_delta(root, findings)
+    if migpar_binding(root)[0] is not None:
+        n_scen += migpar_delta(root, findings)
     return n_req, n_scen, ids
 
 
@@ -5724,15 +6767,19 @@ def check_census(root, report):
             if set(reqs) != p_ids:
                 findings.append("POLARIS: identities differ from the effective composition "
                                 f"(off by {sorted(set(reqs) ^ p_ids)[:6]})")
+    baseline, projection = vbase_screening_projects(root, pop, findings)
     committed = read_text(root, CENSUS)
     if committed is None:
         findings.append(f"`{CENSUS}` missing")
-    elif committed != census_json(pop):
+    elif committed != census_json(baseline):
         findings.append(f"`{CENSUS}` differs from regeneration "
                         "(a name or scenario title moved)")
+    if projection is not None and projection != read_text(root, VBASE_SCREENING_PROJECTION):
+        findings.append(f"`{VBASE_SCREENING_PROJECTION}` differs from regeneration")
+    state, _ = cap1_root_binding(root)
     report.add("R3", "populations agree by two methods and match the census",
-               examined, findings,
-               "requirements examined across CAP1, POC, PWB and Polaris")
+               examined, findings, "requirements examined across CAP1, POC, PWB and Polaris"
+               f". CAP1 root adjudication: {state}")
     return pop
 
 
@@ -5800,6 +6847,12 @@ def check_generated(root, pop, report):
     if stated != [(str(len(cap1)), str(cap1_scen))]:
         findings.append(f"`{CAP1_OVERLAY_ADOPTION}`: states {stated}, census "
                         f"composes {len(cap1)} / {cap1_scen}")
+    examined += 1
+    try:
+        if json.loads(read_text(root, CAP1_ROOT_PROJECTION) or "null") != cap1_root_projection(root):
+            findings.append(f"`{CAP1_ROOT_PROJECTION}`: stale prospective CAP1 projection")
+    except (ValueError, KeyError, TypeError) as exc:
+        findings.append(f"`{CAP1_ROOT_PROJECTION}`: {exc}")
     numbers = {fam: {k[-3:] for k in reqs} for fam, reqs in pop.items()}
     files = []
     for child in CHILDREN:
@@ -5911,9 +6964,14 @@ def check_generated(root, pop, report):
     figplan_amendment, _records, _subjects = figplan_binding(root)
     if figplan_amendment is not None:
         files += tracked(root, FIGPLAN_HOME)
-    impfacts_amendment, _records, _subjects = impfacts_binding(root)
-    if impfacts_amendment is not None:
-        files += tracked(root, IMPFACTS_HOME)
+    vbase_state, vbase_amendment, _records, _subjects = vbase_screening_binding(root)
+    if vbase_state in {"staged", "effective"}:
+        files += tracked(root, VBASE_SCREENING_HOME)
+        if vbase_amendment is None:
+            vbase_amendment = read_text(root, VBASE_SCREENING_SPEC)
+    migpar_amendment, _records, _subjects = migpar_binding(root)
+    if migpar_amendment is not None:
+        files += tracked(root, MIGPAR_HOME)
     candidate_ref_dirs = addition_dirs + (URL_SOURCE_HOME + "/",)
     files += list(ROUTE_PAGES)
     # An addition may cite a candidate Polaris requirement still under
@@ -5983,7 +7041,8 @@ def check_generated(root, pop, report):
                         (term_brief_amendment, TERM_BRIEF_UNION),
                         (qkind_amendment, QKIND_UNION),
                         (figplan_amendment, FIGPLAN_UNION),
-                        (impfacts_amendment, IMPFACTS_UNION)):
+                        (vbase_amendment, VBASE_SCREENING_UNION),
+                        (migpar_amendment, MIGPAR_UNION)):
         if delta is None:
             continue
         examined += 1
@@ -6008,7 +7067,38 @@ def check_generated(root, pop, report):
 # R5: default routes.
 # --------------------------------------------------------------------------
 
-def visible_route_lines(text):
+def cap1_root_status_claimed(status):
+    """Check the linked CAP1 subject's own predicate in prose and status tables."""
+    from check_governance import _gfm_data_row, _gfm_row_cells, _gfm_table_start
+
+    lines = list(visible_route_lines(status, keep_fence_breaks=True))
+    outside_fences = [False] * len(lines)
+    prose = []
+    index = 0
+    while index < len(lines):
+        if _gfm_table_start(lines, index, outside_fences) is None:
+            line = lines[index]
+            prose.append("" if line.lstrip().startswith(("#", "|")) else line)
+            index += 1
+            continue
+
+        header = _gfm_row_cells(lines[index])
+        state_column = header.index("State", 1) if "State" in header[1:] else None
+        prose.append("")
+        index += 2
+        while index < len(lines) and _gfm_data_row(lines[index]):
+            cells = _gfm_row_cells(lines[index])
+            index += 1
+            if (state_column is not None and cells and state_column < len(cells)
+                    and CAP1_ROOT_STATUS_LINK.fullmatch(cells[0])
+                    and CAP1_ROOT_STATUS_CELL.match(cells[state_column])):
+                return True
+
+    paragraphs = re.split(r"\n[ \t]*\n", "\n".join(prose))
+    return any(CAP1_ROOT_STATUS_CLAIM.search(" ".join(block.split())) for block in paragraphs)
+
+
+def visible_route_lines(text, *, keep_fence_breaks=False):
     """Yield route prose outside HTML comments and fenced examples."""
     fence = None
     for line in re.sub(r"<!--.*?(?:-->|\Z)", "", text, flags=re.S).splitlines():
@@ -6019,6 +7109,8 @@ def visible_route_lines(text):
             continue
         if marker and (marker[1][0] == "~" or "`" not in marker[2]):
             fence = marker[1]
+            if keep_fence_breaks:
+                yield ""
             continue
         yield line
 
@@ -6069,6 +7161,28 @@ def check_routes(root, pop, report):
                         f"does not name its terminal record `{name}`")
     if CAP1_OVERLAY_RECORD not in status and name not in status:
         findings.append(f"`{STATUS}` cites no terminal record `{name}`")
+    examined += 2
+    root_route = rows.get(CAP1_ROOT_CHANGE, [])
+    cap1_state, _ = cap1_root_binding(root)
+    root_versioned = CAP1_ROOT_VERSION_MARKER in (read_text(root, CAP1_ROOT_SPEC) or "")
+    if len(root_route) == 1:
+        cells = [cell.strip() for cell in root_route[0].split("|")[1:-1]]
+        route = f"[`{CAP1_ROOT_CHANGE}`](changes/{CAP1_ROOT_CHANGE})"
+        state_marker = CAP1_ROOT_INDEX_STAGE if root_versioned else "**Candidate.**"
+        if (len(cells) != 4 or cells[0] != route
+                or not cells[2].startswith(state_marker)
+                or (root_versioned and (f"`{CAP1_ROOT_VERSION_NAME}`" not in cells[2]
+                                       or Path(AGENT_ADOPTIONS).name not in cells[3]))):
+            findings.append(f"`{OPENSPEC_README}`: the `{CAP1_ROOT_CHANGE}` row "
+                            "must route the CAP1 candidate or exact conditional record")
+    cap1_status = [line.strip() for line in visible_route_lines(status)
+                   if line.strip().startswith(CAP1_ROOT_STATUS_RECORD)]
+    if root_versioned and (len(cap1_status) != 1 or
+                           f"`{CAP1_ROOT_VERSION_NAME}`" not in cap1_status[0] or
+                           AGENT_ADOPTIONS not in cap1_status[0]):
+        findings.append(f"`{STATUS}` does not route the conditional CAP1 binding")
+    if cap1_state != "effective" and cap1_root_status_claimed(status):
+        findings.append(f"`{STATUS}` must keep CAP1 root-adjudication pending until effective")
     amendment, _records, _subjects = declared_source_binding(root)
     if amendment is not None:
         examined += 2
@@ -6522,24 +7636,41 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls figure plan v2.33 adopted while it is not in force")
         if any("Agent adoption" in line for line in rows.get(FIGPLAN_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls figure plan v2.33 adopted while it is not in force")
-    impfacts_amendment, _records, _subjects = impfacts_binding(root)
-    impfacts_fields = [line.strip() for line in visible_route_lines(status)
-                       if line.strip().startswith(IMPFACTS_STATUS_PREFIX)]
-    if impfacts_amendment is not None:
+    migpar_amendment, _records, _subjects = migpar_binding(root)
+    migpar_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(MIGPAR_STATUS_PREFIX)]
+    if migpar_amendment is not None:
         examined += 2
-        if not any(Path(AGENT_ADOPTIONS).name in line and IMPFACTS_TAG in line
-                   for line in rows.get(IMPFACTS_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` does not route import facts v2.NN "
+        if not any(Path(AGENT_ADOPTIONS).name in line and MIGPAR_TAG in line
+                   for line in rows.get(MIGPAR_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route migration parity v2.38 "
                             f"to `{AGENT_ADOPTIONS}` and its version tag")
-        identity = impfacts_rows(root)[0][0]
-        if AGENT_ADOPTIONS not in status or impfacts_fields != [f"{IMPFACTS_STATUS_PREFIX} is agent-adopted in {identity}."]:
-            findings.append(f"`{STATUS}` does not route import facts v2.NN and its adoption {identity}")
-    elif IMPFACTS_CHANGE in changes:
+        identity = migpar_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or migpar_fields != [f"{MIGPAR_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route migration parity v2.38 and its adoption {identity}")
+    elif MIGPAR_CHANGE in changes:
         examined += 2
-        if any("is agent-adopted" in field for field in impfacts_fields):
-            findings.append(f"`{STATUS}` calls import facts v2.NN adopted while it is not in force")
-        if any("Agent adoption" in line for line in rows.get(IMPFACTS_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` calls import facts v2.NN adopted while it is not in force")
+        if any("is agent-adopted" in field for field in migpar_fields):
+            findings.append(f"`{STATUS}` calls migration parity v2.38 adopted while it is not in force")
+        if any("Agent adoption" in line for line in rows.get(MIGPAR_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls migration parity v2.38 adopted while it is not in force")
+    vbase_retired_by = vbase_disposition(root, vbase_rows(root))
+    vbase_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(VBASE_STATUS_PREFIX)]
+    if VBASE_CHANGE in changes:
+        examined += 2
+        old_rows = rows.get(VBASE_CHANGE, [])
+        if any("is agent-adopted" in line for line in vbase_fields):
+            findings.append(f"`{STATUS}` calls untagged A-267 derived-base views effective")
+        if any("Agent adoption" in line for line in old_rows):
+            findings.append(f"`{OPENSPEC_README}` routes untagged A-267 as an adoption")
+        if vbase_retired_by:
+            historical_line = f"{VBASE_STATUS_PREFIX} records the untagged A-267 proposal, retired by {vbase_retired_by}."
+            if vbase_fields != [historical_line] or not any(
+                f"`{vbase_retired_by}`" in line and 'retired' in line for line in old_rows
+            ):
+                findings.append("the historical derived-base routes do not name the exact retirement")
+    screening_state, _text, _records, _subjects = vbase_screening_binding(root)
     reltype_amendment, _records, _subjects = reltype_binding(root)
     reltype_fields = [line.strip() for line in visible_route_lines(status)
                     if line.strip().startswith(RELTYPE_STATUS_PREFIX)]
@@ -6702,7 +7833,46 @@ def check_routes(root, pop, report):
     examined += 1
     reqs = pop.get("POLARIS", {})
     want = (str(len(reqs)), str(sum(len(r["scenarios"]) for r in reqs.values())))
-    if figures != [want]:
+    if screening_state in {"staged", "effective"}:
+        try:
+            projection = json.loads(read_text(root, VBASE_SCREENING_PROJECTION) or "null")
+            populations = projection["populations"]
+            expected_figures = [
+                (str(populations[phase]["requirements"]), str(populations[phase]["scenarios"]))
+                for phase in ("pretag", "active")
+            ]
+        except (ValueError, TypeError, KeyError):
+            expected_figures = []
+        declarations = []
+        visible = [line.strip() for line in visible_route_lines(status)]
+        for prefix, pattern in zip(VBASE_PHASE_PREFIXES, (VBASE_STATUS_PRETAG, VBASE_STATUS_ACTIVE), strict=True):
+            candidates = [line for line in visible if line.startswith(prefix)]
+            match = pattern.fullmatch(candidates[0]) if len(candidates) == 1 else None
+            declarations.append(match.groups() if match else None)
+        selected = 1 if screening_state == "effective" else 0
+        advice_state, _advice, _records, _subjects = p5_advice_binding(root)
+        if migpar_binding(root)[0] is not None:
+            # The migration parity's own sentence states the current total; the earlier sentences state theirs.
+            if scoped_route_lines(status, (MIGPAR_COUNT_SCOPE,)) != [
+                    f"{MIGPAR_COUNT_PREFIX}{want[0]} requirements and {want[1]} scenarios."]:
+                findings.append(f"`{STATUS}` does not declare the exact migration parity census")
+            want = (want[0], str(int(want[1]) - migpar_delta(root, findings)))
+        elif scoped_route_lines(status, (MIGPAR_COUNT_SCOPE,)):
+            findings.append(f"`{STATUS}` declares a migration parity census while it is not in force")
+        screening_want = want
+        if advice_state in {"staged", "effective"}:
+            added = p5_advice_delta(root, findings)
+            current_scenarios = int(want[1])
+            screening_scenarios = current_scenarios - added if advice_state == "effective" else current_scenarios
+            screening_want = (want[0], str(screening_scenarios))
+            prospective = f"{P5_ADVICE_COUNT_PREFIX}{want[0]} requirements and {screening_scenarios + added} scenarios."
+            if scoped_route_lines(status, (P5_ADVICE_COUNT_SCOPE,)) != [prospective]:
+                findings.append(f"`{STATUS}` does not declare the exact source-example advice census")
+        if (figures or len(expected_figures) != 2
+                or declarations != expected_figures
+                or expected_figures[selected] != screening_want):
+            findings.append(f"`{STATUS}` does not declare both exact Polaris census states")
+    elif figures != [want]:
         findings.append(f"`{STATUS}`: Polaris composition figure {figures} "
                         f"!= census {want}")
     report.add("R5", "default routes name the terminal records", examined,
@@ -6948,7 +8118,8 @@ def inputs(root):
         manifest = read_text(root, child["manifest"]) or ""
         paths |= {p for _d, p in ROW.findall(manifest)}
         paths |= set(tracked(root, f"{CHANGES}/{child['change']}"))
-    paths |= set(tracked(root, CHANGES)) | {CAP1_OVERLAY_RECORD}
+    paths |= set(tracked(root, CHANGES)) | {CAP1_OVERLAY_RECORD, CAP1_ROOT_INDEX,
+                                          *CAP1_ROOT_RFC_FILES}
     for change, rel in polaris_additions(root):
         paths |= {rel} | {r for r, _t, _v in addition_records(root, change)}
         paths |= {r for r, _t, _v in addition_terminals(root, change)}
@@ -6987,7 +8158,9 @@ def inputs(root):
     paths |= {TERM_BRIEF_UNION, *TERM_BRIEF_SUBJECTS}
     paths |= {QKIND_UNION, *QKIND_SUBJECTS}
     paths |= {FIGPLAN_UNION, *FIGPLAN_SUBJECTS}
-    paths |= {IMPFACTS_UNION, *IMPFACTS_SUBJECTS}
+    paths |= {VBASE_UNION, *VBASE_SUBJECTS}
+    paths |= {VBASE_SCREENING_PROJECTION, *VBASE_SCREENING_SUBJECTS, *P5_ADVICE_SUBJECTS}
+    paths |= {MIGPAR_UNION, *MIGPAR_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -7388,10 +8561,14 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     figplan_retired = figplan_disposition(tree, figplan_rows_now)
     figplan_records = 2 if figplan_retired else int(bool(figplan_rows_now))
     figplan_subjects = FIGPLAN_BOUND_PARTS if figplan_rows_now and not figplan_retired else 0
-    impfacts_rows_now = impfacts_rows(tree)
-    impfacts_retired = impfacts_disposition(tree, impfacts_rows_now)
-    impfacts_records = 2 if impfacts_retired else int(bool(impfacts_rows_now))
-    impfacts_subjects = IMPFACTS_BOUND_PARTS if impfacts_rows_now and not impfacts_retired else 0
+    migpar_rows_now = migpar_rows(tree)
+    migpar_retired = migpar_disposition(tree, migpar_rows_now)
+    migpar_records = 2 if migpar_retired else int(bool(migpar_rows_now))
+    migpar_subjects = MIGPAR_BOUND_PARTS if migpar_rows_now and not migpar_retired else 0
+    vbase_rows_now = vbase_rows(tree)
+    vbase_retired = vbase_disposition(tree, vbase_rows_now)
+    vbase_records = 2 if vbase_retired else int(bool(vbase_rows_now))
+    vbase_subjects = VBASE_BOUND_PARTS if vbase_rows_now and not vbase_retired else 0
     edit_rows = edit_account_rows(tree)
     edit_retired = edit_account_disposition(tree, edit_rows)
     edit_records = 2 if edit_retired else int(bool(edit_rows))
@@ -7404,7 +8581,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                             and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_readmit_row(line) and not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_impfacts_row(line)
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_migpar_row(line)
                       and not is_infra_row(line)
                       and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line) and not is_worth_row(line)
                       and not is_edit_account_row(line))
@@ -7420,8 +8597,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records - step_records - qkind_records - figplan_records - impfacts_records
-            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects - step_subjects - qkind_subjects - figplan_subjects - impfacts_subjects
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records - step_records - qkind_records - figplan_records - vbase_records - migpar_records
+            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects - step_subjects - qkind_subjects - figplan_subjects - vbase_subjects - migpar_subjects
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
             - (DERIVED_BOUND_PARTS if had_derived else 0)
@@ -7579,7 +8756,7 @@ def url_source_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_url_source_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_impfacts_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_migpar_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -10560,7 +11737,7 @@ def reach_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_reach_row(line) and not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_impfacts_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_migpar_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -10680,7 +11857,7 @@ def raw_read_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_impfacts_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_migpar_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "01234567"
@@ -10752,7 +11929,7 @@ def treeread_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_impfacts_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_migpar_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "89abcdef"
@@ -11287,7 +12464,7 @@ def qkind_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_qkind_row(line) and not is_figplan_row(line) and not is_impfacts_row(line))
+                      if not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_migpar_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -11380,7 +12557,7 @@ def figplan_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_figplan_row(line) and not is_impfacts_row(line))
+                      if not is_figplan_row(line) and not is_vbase_row(line) and not is_migpar_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -11455,48 +12632,135 @@ def figplan_cases(tmp, base, witnesses, failures):
             and not found and retired["POLARIS"] == prior)
     record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 034", found, held, baseline=True)
 
-def impfacts_cases(tmp, base, witnesses, failures):
-    """Guard the REQ034 succession over the figure plan, the checked spec bytes and retirement."""
-    original = read_text(base, IMPFACTS_SPEC)
-    if original is None or IMPFACTS_TAG is None or figplan_binding(base)[0] is None:
+
+def migpar_cases(tmp, base, witnesses, failures):
+    """Guard the migration parity's row, its predecessor, its checked spec bytes and its retirement.
+
+    The selftest base is projected onto the history before the v2.36 source-example advice, whose
+    effectiveness needs its protected Git tag, so the migration parity can only be pending or refused here;
+    `--check` on the delivered tree witnesses it effective.
+    """
+    original = read_text(base, MIGPAR_SPEC)
+    if original is None or MIGPAR_TAG is None:
         return
 
     def record(name, rel, old, new, expected, found, held, baseline=False):
-        mutant = f"import-facts-{name}"
+        mutant = f"migration-parity-{name}"
         witnesses.append({"mutant": mutant, "path": rel, "old": old, "new": new,
                           "expected": expected, "failed": found,
                           "outcome": ("held" if baseline else "killed") if held else "SURVIVED"})
         if not held:
             failures.append(mutant)
 
-    tree = Path(tmp) / "dossier-import-facts"
+    tree = Path(tmp) / "dossier-migration-parity"
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_impfacts_row(line))
+                      if not is_migpar_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
-    requirement = IMPFACTS_REPLACES[0]
-    held = (impfacts_binding(tree) == (None, [], []) and not before_findings
+    held = migpar_binding(tree) == (None, [], []) and not before_findings
+    record("pending", AGENT_ADOPTIONS, "<no row>", "<unchanged>", "no migration parity binding and a clean census",
+           before_findings, held, baseline=True)
+
+    oid = "0123456789abcdef0123456789abcdef01234567"
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{MIGPAR_SPEC}"
+    row = (f"| A-999 | 2026-11-25 | `{oid}` | [spec]({snapshot}) | Selftest | "
+           f"`git revert -m 1 {oid}` | `{MIGPAR_TAG}` |\n")
+    later = "f" * 40
+    unrelated = f"| A-1001 | 2026-11-25 | `{later}` | "
+    for name, citation in (
+        ("prior-snapshot", unrelated + f"[prior spec]({snapshot}) | Other work | `git revert {later}` | — |\n"),
+        ("tag-in-reason", unrelated + f"Other work | `{MIGPAR_TAG}` | `git revert {later}` | — |\n"),
+    ):
+        ledger.write_text(pending + citation)
+        text, r1, r2 = migpar_binding(tree)
+        record(f"pending-{name}", AGENT_ADOPTIONS, "<no citation>", citation,
+               "an unrelated row does not claim this adoption", r1 + r2,
+               text is None and not r1 and not r2, baseline=True)
+
+    # The row without an effective v2.36 predecessor is refused, and the census keeps the predecessor.
+    ledger.write_text(pending + row)
+    text, r1, r2 = migpar_binding(tree)
+    after, after_findings = census(tree)
+    record("prior-unavailable", AGENT_ADOPTIONS, "<no row>", row, "R1 requires effective v2.36", r1 + r2,
+           text is None and not r2 and any("prior v2.36 source-example advice" in finding for finding in r1)
+           and after["POLARIS"] == prior)
+
+    for name, old, new, detail in (
+        ("malformed-tagged", "| Selftest | ", "| ", "seven-column"),
+        ("wrong-tag", MIGPAR_TAG, MIGPAR_TAG + "-wrong", "malformed"),
+        ("wrong-snapshot", snapshot, snapshot.replace("/blob/", "/tree/"), "does not name"),
+        ("wrong-revert", f"git revert -m 1 {oid}", f"git revert {'0' * 40}", "revert"),
+    ):
+        assert row.count(old) == 1 and old != new
+        ledger.write_text(pending + row.replace(old, new, 1))
+        text, r1, r2 = migpar_binding(tree)
+        record(name, AGENT_ADOPTIONS, old, new, f"R1 refusal mentioning {detail}", r1 + r2,
+               text is None and not r2 and any(detail in finding for finding in r1))
+
+    ledger.write_text(pending + row)
+    spec = tree / MIGPAR_SPEC
+    changed = "is not itself rendered as a withheld item, both of whose end nodes renders"
+    current_capacity = "is not itself rendered as a withheld item, either of whose end nodes renders"
+    assert original.count(current_capacity) == 1
+    spec.write_text(original.replace(current_capacity, changed, 1))
+    text, r1, r2 = migpar_binding(tree)
+    record("modified-exception", MIGPAR_SPEC, current_capacity, changed, "R2 bound-subject refusal",
+           r1 + r2, text is None and len(r2) == 1 and MIGPAR_SPEC in r2[0])
+    spec.write_text(original)
+
+    veto = "| A-1000 | 2026-11-25 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n"
+    ledger.write_text(pending + row + veto)
+    retired, found = census(tree)
+    held = (migpar_disposition(tree, migpar_rows(tree)) == "A-1000"
+            and migpar_binding(tree) == (None, [], []) and not found and retired["POLARIS"] == prior)
+    record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 034", found, held, baseline=True)
+
+
+def vbase_cases(tmp, base, witnesses, failures):
+    """Guard the REQ034 succession over the figure plan, the checked spec bytes and retirement."""
+    original = read_text(base, VBASE_SPEC)
+    if original is None or VBASE_TAG is None or figplan_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expected, found, held, baseline=False):
+        mutant = f"derived-base-{name}"
+        witnesses.append({"mutant": mutant, "path": rel, "old": old, "new": new,
+                          "expected": expected, "failed": found,
+                          "outcome": ("held" if baseline else "killed") if held else "SURVIVED"})
+        if not held:
+            failures.append(mutant)
+
+    tree = Path(tmp) / "dossier-derived-base-views"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_vbase_row(line) and not is_migpar_row(line))
+    ledger.write_text(pending)
+    before, before_findings = census(tree)
+    prior = before["POLARIS"]
+    requirement = VBASE_REPLACES[0]
+    held = (vbase_binding(tree) == (None, [], []) and not before_findings
             and len(prior[requirement]["scenarios"]) == 232)
     record("pending", AGENT_ADOPTIONS, "<no row>", "<unchanged>", "prior 034 has 232 scenarios",
            before_findings, held, baseline=True)
 
     oid = "0123456789abcdef0123456789abcdef01234567"
-    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{IMPFACTS_SPEC}"
-    row = (f"| A-999 | 2026-11-27 | `{oid}` | [spec]({snapshot}) | Selftest | "
-           f"`git revert -m 1 {oid}` | `{IMPFACTS_TAG}` |\n")
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{VBASE_SPEC}"
+    row = (f"| A-999 | 2026-11-25 | `{oid}` | [spec]({snapshot}) | Selftest | "
+           f"`git revert -m 1 {oid}` | `{VBASE_TAG}` |\n")
     later = "f" * 40
-    unrelated = f"| A-1001 | 2026-11-27 | `{later}` | "
+    unrelated = f"| A-1001 | 2026-11-25 | `{later}` | "
     citations = (
         ("prior-snapshot", unrelated + f"[prior spec]({snapshot}) | Other work | `git revert {later}` | — |\n"),
-        ("tag-in-reason", unrelated + f"Other work | `{IMPFACTS_TAG}` | `git revert {later}` | — |\n"),
+        ("tag-in-reason", unrelated + f"Other work | `{VBASE_TAG}` | `git revert {later}` | — |\n"),
     )
     for state, prefix, expected in (("pending", pending, None), ("adopted", pending + row, original)):
         for name, citation in citations:
             ledger.write_text(prefix + citation)
-            text, r1, r2 = impfacts_binding(tree)
+            text, r1, r2 = vbase_binding(tree)
             record(f"{state}-{name}", AGENT_ADOPTIONS, "<no citation>", citation,
                    "an unrelated row does not claim this adoption", r1 + r2,
                    text == expected and not r1 and not r2, baseline=True)
@@ -11504,47 +12768,45 @@ def impfacts_cases(tmp, base, witnesses, failures):
     ledger.write_text(pending + row)
     after, after_findings = census(tree)
     effective = after["POLARIS"]
-    held = (impfacts_binding(tree) == (original, [], []) and not after_findings
-            and len(effective[requirement]["scenarios"]) == 244
-            and set(prior) == set(effective)
-            and all(prior[other] == body for other, body in effective.items() if other != requirement))
-    record("adopted", AGENT_ADOPTIONS, "<no row>", row, "only 034 moves from 232 to 244 scenarios",
-           after_findings, held, baseline=True)
+    held = (vbase_binding(tree) == (original, [], []) and not after_findings
+            and effective == prior and len(effective[requirement]["scenarios"]) == 232)
+    record("historical-row", AGENT_ADOPTIONS, "<no row>", row,
+           "structural A-267 validation keeps tagged v2.33 selected", after_findings, held, baseline=True)
 
     for name, old, new, detail in (
         ("duplicate-row", row, row + row, "seven-column"),
         ("malformed-tagged", "| Selftest | ", "| ", "seven-column"),
-        ("wrong-tag", IMPFACTS_TAG, IMPFACTS_TAG + "-wrong", "malformed"),
+        ("wrong-tag", VBASE_TAG, VBASE_TAG + "-wrong", "malformed"),
         ("wrong-snapshot", snapshot, snapshot.replace("/blob/", "/tree/"), "does not name"),
         ("wrong-revert", f"git revert -m 1 {oid}", f"git revert {'0' * 40}", "revert"),
     ):
         assert row.count(old) == 1 and old != new
         ledger.write_text(pending + row.replace(old, new, 1))
-        text, r1, r2 = impfacts_binding(tree)
+        text, r1, r2 = vbase_binding(tree)
         record(name, AGENT_ADOPTIONS, old, new, f"R1 refusal mentioning {detail}", r1 + r2,
                text is None and not r2 and any(detail in finding for finding in r1))
 
     predecessor = next(line for line in pending.splitlines(keepends=True) if is_figplan_row(line))
     ledger.write_text(pending.replace(predecessor, "", 1) + row)
-    text, r1, r2 = impfacts_binding(tree)
+    text, r1, r2 = vbase_binding(tree)
     record("prior-unavailable", AGENT_ADOPTIONS, predecessor, "", "R1 requires effective v2.33", r1 + r2,
            text is None and not r2 and any("prior v2.33" in finding for finding in r1))
 
     ledger.write_text(pending + row)
-    spec = tree / IMPFACTS_SPEC
-    current_bound = "with its object bound set to 262,144 bytes"
-    changed = "with its object bound set to 524,288 bytes"
-    assert original.count(current_bound) == 1
-    spec.write_text(original.replace(current_bound, changed, 1))
-    text, r1, r2 = impfacts_binding(tree)
-    record("modified-read-bound", IMPFACTS_SPEC, current_bound, changed, "R2 bound-subject refusal",
-           r1 + r2, text is None and not r1 and len(r2) == 1 and IMPFACTS_SPEC in r2[0])
+    spec = tree / VBASE_SPEC
+    changed = "double border, two lines 4 px apart"
+    current_capacity = "double border, two lines 3 px apart"
+    assert original.count(current_capacity) == 1
+    spec.write_text(original.replace(current_capacity, changed, 1))
+    text, r1, r2 = vbase_binding(tree)
+    record("modified-border", VBASE_SPEC, current_capacity, changed, "R2 bound-subject refusal",
+           r1 + r2, text is None and not r1 and len(r2) == 1 and VBASE_SPEC in r2[0])
     spec.write_text(original)
 
-    veto = "| A-1000 | 2026-11-27 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n"
+    veto = "| A-1000 | 2026-11-25 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n"
     ledger.write_text(pending + row + veto)
     retired, found = census(tree)
-    held = (impfacts_disposition(tree, impfacts_rows(tree)) == "A-1000"
+    held = (vbase_disposition(tree, vbase_rows(tree)) == "A-1000"
             and not found and retired["POLARIS"] == prior)
     record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 034", found, held, baseline=True)
 
@@ -11694,7 +12956,7 @@ def term_brief_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_impfacts_row(line))
+                      if not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_migpar_row(line))
     ledger.write_text(pending)
     before_pop, before_findings = census(tree)
     before = before_pop["POLARIS"]
@@ -11778,8 +13040,7 @@ def term_brief_cases(tmp, base, witnesses, failures):
         status = tree / STATUS
         prior_status = status.read_text()
         status_without_route = "".join(line for line in prior_status.splitlines(keepends=True)
-                                       if not line.strip().startswith((TERM_BRIEF_STATUS_PREFIX, QKIND_STATUS_PREFIX, FIGPLAN_STATUS_PREFIX,
-                                                                                 IMPFACTS_STATUS_PREFIX)))
+                                       if not line.strip().startswith((TERM_BRIEF_STATUS_PREFIX, QKIND_STATUS_PREFIX, FIGPLAN_STATUS_PREFIX, VBASE_STATUS_PREFIX)))
         pending_total = sum(len(item["scenarios"]) for item in before.values())
         adopted_total = sum(len(item["scenarios"]) for item in after.values())
         pending_status, slots = STATUS_FIGURE.subn(
@@ -11804,12 +13065,12 @@ def term_brief_cases(tmp, base, witnesses, failures):
             figplan_cells = figplan_row.split(" | ")
             figplan_cells[2] = "**Candidate.** Specification version and adoption pending"
             base_index = base_index.replace(figplan_row, " | ".join(figplan_cells), 1)
-        # The import facts stand on v2.33, so they are candidate too.
-        impfacts_row = next((line for line in base_index.splitlines() if line.startswith(f"| [`{IMPFACTS_CHANGE}`]")), None)
-        if impfacts_row is not None:
-            impfacts_cells = impfacts_row.split(" | ")
-            impfacts_cells[2] = "**Candidate.** Specification version and adoption pending"
-            base_index = base_index.replace(impfacts_row, " | ".join(impfacts_cells), 1)
+        # The v2.34 derived-base views stand on v2.33, so they are candidate too.
+        vbase_row = next((line for line in base_index.splitlines() if line.startswith(f"| [`{VBASE_CHANGE}`]")), None)
+        if vbase_row is not None:
+            vbase_cells = vbase_row.split(" | ")
+            vbase_cells[2] = "**Candidate.** Specification version and adoption pending"
+            base_index = base_index.replace(vbase_row, " | ".join(vbase_cells), 1)
         index_row = next(line for line in base_index.splitlines() if line.startswith(f"| [`{TERM_BRIEF_CHANGE}`]"))
         cells = index_row.split(" | ")
         assert len(cells) == 4
@@ -11899,7 +13160,7 @@ def readmit_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_impfacts_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_migpar_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -12070,6 +13331,190 @@ def cap1_overlay_mutants():
     )
 
 
+def cap1_root_mutants():
+    """Refuse source drift and premature CAP1 candidate binding or routing."""
+    oid = "a" * 40
+    repo = "https://github.com/tzeusy-org/syzygy/blob/"
+    links = " ".join(f"[candidate]({repo}{oid}/{path})" for path in CAP1_ROOT_SUBJECTS)
+
+    def row(text, source, changed=links, tag="—"):
+        return text.rstrip("\n") + (
+            f"\n| A-9999 | 2026-11-27 | `{source}` | {changed} | Why | "
+            f"`git revert {source}` | {tag} |\n")
+
+    def status_route(text, state, separator=" ", suffix=""):
+        return text.rstrip("\n") + (
+            f"\n\n[CAP1 root adjudication]({CAP1_ROOT_HOME}/)"
+            f"{separator}is {state}.{suffix}\n")
+
+    def status_table(text, state, *, outer_pipes=True, other_row=""):
+        row = f"[CAP1 root adjudication]({CAP1_ROOT_HOME}/) | {state} | Review packet"
+        if outer_pipes:
+            row = f"| {row} |"
+        return text.rstrip("\n") + (
+            f"\n\n| Step | State | Owning record |\n| --- | --- | --- |\n{row}\n{other_row}")
+
+    def premature_route(text):
+        return "".join(line.replace("**Candidate.**", "**Adopted.**")
+                       .replace(CAP1_ROOT_INDEX_STAGE, "**Adopted.**")
+                       if f"`{CAP1_ROOT_CHANGE}`" in line else line
+                       for line in text.splitlines(keepends=True))
+
+    return (
+        ("cap1-root-candidate-spec-drift", CAP1_ROOT_SPEC,
+         _replace(" SHALL ", "  SHALL "), "R4:differs from the reviewed candidate"),
+        ("cap1-root-candidate-coverage-drift", CAP1_ROOT_COVERAGE,
+         lambda text: text + "\n", "R4:differs from the reviewed candidate"),
+        ("cap1-root-stale-projection-count", CAP1_ROOT_PROJECTION,
+         _replace('"consequences": 87', '"consequences": 88'),
+         "R4:stale prospective CAP1 projection"),
+        ("cap1-root-candidate-premature-adoption", AGENT_ADOPTIONS,
+         lambda text: row(text, oid), "R3:root adjudication: expected exactly one version record"),
+        ("cap1-root-candidate-partial-own-snapshot", AGENT_ADOPTIONS,
+         lambda text: row(text, oid, f"[006]({repo}{oid}/{CAP1_ROOT_SPEC})"),
+         "R3:root adjudication: expected exactly one version record"),
+        ("cap1-root-candidate-tag-without-own-snapshot", AGENT_ADOPTIONS,
+         lambda text: row(text, "b" * 40, tag=f"`{CAP1_ROOT_CHANGE}-v999.999`"),
+         "R3:root adjudication: expected exactly one version record"),
+        ("cap1-root-candidate-citation-only", AGENT_ADOPTIONS,
+         lambda text: row(text, "b" * 40), "R3=0"),
+        ("cap1-root-candidate-premature-route", OPENSPEC_README,
+         premature_route, "R5:route the CAP1 candidate or exact conditional record"),
+        ("cap1-root-candidate-wrong-index-target", OPENSPEC_README,
+         _replace(f"`](changes/{CAP1_ROOT_CHANGE})", f"`](changes/{CAP1_OVERLAY_CHANGE})"),
+         "R5:route the CAP1 candidate or exact conditional record"),
+        ("cap1-root-candidate-premature-status", STATUS,
+         lambda text: status_route(
+             text, "adopted. CAP1-REQ-006 now routes under RFC1-21"),
+         "R5:keep CAP1 root-adjudication pending until effective"),
+        ("cap1-root-candidate-wrapped-premature-status", STATUS,
+         lambda text: status_route(
+             text, "adopted. CAP1-REQ-006 now routes under RFC1-21", separator="\n"),
+         "R5:keep CAP1 root-adjudication pending until effective"),
+        ("cap1-root-candidate-neutral-status-citation", STATUS,
+         lambda text: status_route(text, "a candidate"), "R5=0"),
+        ("cap1-root-candidate-status-other-sentence", STATUS,
+         lambda text: status_route(
+             text, "a historical candidate",
+             suffix=" The prior P-109 version is adopted; its CAP1-REQ-046 stays effective."),
+         "R5=0"),
+        ("cap1-root-candidate-status-block-boundary", STATUS,
+         lambda text: status_route(text, "adopted", separator="\n\n"), "R5=0"),
+        ("cap1-root-candidate-premature-status-row", STATUS,
+         lambda text: status_table(text, "**Adopted.**"),
+         "R5:keep CAP1 root-adjudication pending until effective"),
+        ("cap1-root-candidate-premature-status-epistemic-row", STATUS,
+         lambda text: status_table(text, "[Observed] **Adopted.**"),
+         "R5:keep CAP1 root-adjudication pending until effective"),
+        ("cap1-root-candidate-premature-status-borderless-row", STATUS,
+         lambda text: status_table(text, "**Adopted.**", outer_pipes=False),
+         "R5:keep CAP1 root-adjudication pending until effective"),
+        ("cap1-root-candidate-neutral-status-row-with-adopted-sibling", STATUS,
+         lambda text: status_table(
+             text, "[Observed] **Candidate.**", outer_pipes=False,
+             other_row=f"| [Prior P-109]({CHANGES}/{CAP1_OVERLAY_CHANGE}/) | "
+             "[Observed] **Adopted.** | P-109 owning record |\n"), "R5=0"),
+        ("cap1-root-signed-base-coverage-drift", CAP1_HISTORIC_COVERAGE,
+         _replace("| covered |", "| Unknown |"), "R4:differs from the signed predecessor"),
+        ("cap1-root-signed-consent-coverage-drift", CAP1_CONSENT_COVERAGE,
+         _replace("| covered |", "| Unknown |"), "R4:differs from the signed predecessor"),
+    )
+
+
+def cap1_root_binding_cases(tmp, witnesses, failures):
+    """Exercise the binding seam with real Git refs and a minimal fixture."""
+    root = Path(tmp) / "cap1-binding"
+    root.mkdir()
+
+    def git(*args):
+        options = ("core.hooksPath=/dev/null", "user.name=CAP1 fixture",
+                   "user.email=fixture@example.invalid", "commit.gpgsign=false",
+                   "tag.gpgsign=false", "init.templateDir=")
+        config = [arg for option in options for arg in ("-c", option)]
+        fixture_time = "2026-11-27T00:00:00Z"
+        env = {**os.environ, "GIT_AUTHOR_DATE": fixture_time, "GIT_COMMITTER_DATE": fixture_time}
+        return subprocess.check_output(["git", *config, *args], cwd=root, env=env, text=True).strip()
+
+    def commit(message):
+        git("add", "--all")
+        git("commit", "--quiet", "-m", message)
+        return git("rev-parse", "HEAD")
+
+    def write(path, text):
+        target = root / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(text, encoding="utf-8")
+
+    def check(name, path, old, new, expected, reason=None):
+        global _CAP1_SELFTEST_GIT_ROOT
+        saved = _CAP1_SELFTEST_GIT_ROOT
+        try:
+            _CAP1_SELFTEST_GIT_ROOT = None
+            state, findings = cap1_root_binding(root)
+        finally:
+            _CAP1_SELFTEST_GIT_ROOT = saved
+        expected_findings = [] if reason is None else [f"CAP1 root adjudication: {reason}"]
+        matches = (state, findings) == (expected, expected_findings)
+        outcome = "killed" if expected == "invalid" or name == "stale-head-sees-veto" else "held"
+        expect = f"{expected}: {reason}" if reason else expected
+        witnesses.append({"mutant": f"cap1-binding-{name}", "path": path,
+                          "old": old, "new": new, "expected": expect,
+                          "failed": findings, "outcome": outcome if matches else "SURVIVED"})
+        if not matches:
+            failures.append(f"{name}: expected {(expected, expected_findings)}, got {(state, findings)}")
+
+    git("init", "--quiet", "--object-format=sha1")
+    ledger = (f"{ADOPTION_LEDGER_TITLE}\n\n{ADOPTION_TABLE_HEADER}\n"
+              f"{ADOPTION_TABLE_DIVIDER}\n")
+    write(AGENT_ADOPTIONS, ledger)
+    predecessor = commit("Synthetic predecessor")
+    for path in CAP1_ROOT_BOUND_PATHS:
+        value = CAP1_ROOT_VERSION_MARKER if path == CAP1_ROOT_SPEC else "Synthetic CAP1 subject"
+        write(path, value + "\n")
+    source = commit("Synthetic CAP1 source")
+    version = "cap1-root-adjudication-v1.0"
+    date = "2026-11-27"
+    links = " ".join(f"[subject](https://github.com/tzeusy-org/syzygy/blob/{source}/{path})"
+                     for path in CAP1_ROOT_BOUND_PATHS)
+    row = f"| A-401 | {date} | `{source}` | {links} | Fixture | `git revert {source}` | `{version}` |\n"
+    write(AGENT_ADOPTIONS, ledger + row)
+    tip = commit("Synthetic binding row")
+    protected = "refs/remotes/origin/main"
+    git("update-ref", protected, tip)
+    check("pretag", AGENT_ADOPTIONS, "", row, "staged")
+    git("tag", "-a", version, "-m", "Synthetic CAP1 version", source)
+    check("matched-protected", AGENT_ADOPTIONS, row, row, "effective")
+
+    fenced_row = f"\n```md\n{row}```\n"
+    write(AGENT_ADOPTIONS, ledger + fenced_row)
+    git("update-ref", protected, commit("Fence only the protected row"))
+    git("checkout", "--quiet", "--detach", tip)
+    check("protected-fenced-row", AGENT_ADOPTIONS, row, fenced_row, "invalid",
+          "annotated source and binding row are not both on protected main")
+
+    projection = root / CAP1_ROOT_PROJECTION
+    projection_before = projection.read_text()
+    projection_after = projection_before + "\n"
+    projection.write_text(projection_after)
+    git("update-ref", protected, commit("Drift only the protected projection"))
+    git("checkout", "--quiet", "--detach", tip)
+    check("protected-projection-drift", CAP1_ROOT_PROJECTION, projection_before, projection_after,
+          "invalid", f"`{CAP1_ROOT_PROJECTION}` differs on protected main from the exact source snapshot")
+
+    veto = f"| A-402 | {date} | `{predecessor}` | Veto A-401. | Fixture | `git revert {predecessor}` | — |\n"
+    write(AGENT_ADOPTIONS, ledger + row + veto)
+    veto_tip = commit("Record the protected veto")
+    git("update-ref", protected, veto_tip)
+    check("matched-veto", AGENT_ADOPTIONS, "", veto, "reverted")
+    write(AGENT_ADOPTIONS, ledger + row)
+    check("worktree-omits-veto", AGENT_ADOPTIONS, veto, "", "invalid",
+          "authored and worktree disposition evidence disagree")
+    git("restore", "--worktree", AGENT_ADOPTIONS)
+    git("checkout", "--quiet", "--detach", tip)
+    check("stale-head-sees-veto", AGENT_ADOPTIONS, "", veto, "reverted")
+
+
+
 def _status_figure_moved(text):
     """The PROJECT-STATUS Polaris figure, five scenarios short."""
     m = STATUS_FIGURE.search(text)
@@ -12167,10 +13612,14 @@ def _install_addition(tree, change=ADDITION, ident=ADDITION_ID,
         fh.write(f"\n| [`{change}`](changes/{change}) | Selftest | "
                  f"Signed: `{name}` | — |\n")
     status = (tree / STATUS).read_text(encoding="utf-8")
-    m = STATUS_FIGURE.search(status)
-    status = (status[:m.start()] + f"{int(m.group(1)) + 1} requirements and "
-              f"{int(m.group(2)) + 2} scenarios in the effective composition"
-              + status[m.end():] + f"\nSelftest addition: `{name}`.\n")
+    def add_to_figure(match):
+        return (match[0][:match.start(1) - match.start()]
+                + f"{int(match[1]) + 1} requirements and {int(match[2]) + 2}"
+                + match[0][match.end(2) - match.start():])
+
+    for pattern in (STATUS_FIGURE, VBASE_STATUS_PRETAG, VBASE_STATUS_ACTIVE):
+        status = pattern.sub(add_to_figure, status)
+    status += f"\nSelftest addition: `{name}`.\n"
     (tree / STATUS).write_text(status, encoding="utf-8")
     regenerate(tree)
 
@@ -12343,6 +13792,471 @@ def adopted_mutants():
     )
 
 
+def project_source_example_history(root):
+    """Keep the established screening mutants on the earlier advisory-free history."""
+    ledger = root / AGENT_ADOPTIONS
+    body = ledger.read_text(encoding="utf-8")
+    ledger.write_text("".join(line for line in body.splitlines(keepends=True)
+                              if not is_source_example_row(line.rstrip("\n"))
+                              and not is_migpar_row(line.rstrip("\n"))), encoding="utf-8")
+    for path in P5_ADVICE_SUBJECTS:
+        (root / path).unlink(missing_ok=True)
+    status = root / STATUS
+    # The v2.38 migration parity stands on v2.36, so its routes leave with it.
+    prefixes = (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_SCOPE, MIGPAR_STATUS_PREFIX, MIGPAR_COUNT_SCOPE)
+    status.write_text("".join(line for line in status.read_text(encoding="utf-8").splitlines(keepends=True)
+                              if not line.strip().startswith(prefixes)), encoding="utf-8")
+    index = root / OPENSPEC_README
+    lines = index.read_text(encoding="utf-8").splitlines(keepends=True)
+    index.write_text("".join(
+        P5_ADVICE_CANDIDATE_INDEX + "\n" if line.strip().startswith(P5_ADVICE_INDEX_PREFIX)
+        else _candidate_index_row(line) if line.strip().startswith(MIGPAR_INDEX_PREFIX) else line
+        for line in lines
+    ), encoding="utf-8")
+
+
+def _candidate_index_row(line):
+    cells = line.rstrip("\n").split(" | ")
+    cells[2] = "**Candidate.** Specification version and adoption pending"
+    return " | ".join(cells) + "\n"
+
+
+def project_vbase_screening_history(root):
+    """Keep the older amendment fixtures on their own tagged history."""
+    retirement = vbase_disposition(root, vbase_rows(root))
+    ledger = root / AGENT_ADOPTIONS
+    rows = ledger.read_text().splitlines(keepends=True)
+    ledger.write_text("".join(
+        row for row in rows
+        if not is_vbase_screening_row(row)
+        and (not row.startswith("| A-") or row.split("|")[1].strip() != retirement)
+    ))
+    status = root / STATUS
+    lines = []
+    for line in status.read_text().splitlines(keepends=True):
+        body = line.strip()
+        phase = VBASE_STATUS_PRETAG.fullmatch(body)
+        if phase:
+            indent = line[:len(line) - len(line.lstrip())]
+            lines.append(f"{indent}{phase[1]} requirements and {phase[2]} scenarios in the effective composition\n")
+        elif not VBASE_STATUS_ACTIVE.fullmatch(body) and not body.startswith("[Derived-base screening "):
+            lines.append(line)
+    status.write_text("".join(lines))
+    index = root / OPENSPEC_README
+    index.write_text("".join(
+        line for line in index.read_text().splitlines(keepends=True)
+        if not line.startswith(f"| [`{VBASE_SCREENING_CHANGE}`](")
+    ))
+    shutil.rmtree(root / VBASE_SCREENING_HOME)
+
+
+def vbase_screening_document_cases(root, witnesses, failures):
+    """Exercise current staged projections separately from the historical cases."""
+    ledger = read_text(root, AGENT_ADOPTIONS) or ""
+    retirement = vbase_disposition(root, vbase_rows(root))
+    row = next(line for line in ledger.splitlines(keepends=True)
+               if line.startswith(f"| {retirement} |"))
+    status = read_text(root, STATUS) or ""
+    active = next(match for line in visible_route_lines(status)
+                  if (match := VBASE_STATUS_ACTIVE.fullmatch(line.strip())))
+    shifted = active[0][:active.start(2)] + str(int(active[2]) + 1) + active[0][active.end(2):]
+    activation = next(line for line in visible_route_lines(status)
+                      if line.strip().startswith(VBASE_SCREENING_STATUS_PREFIX))
+    competing = activation.replace(VBASE_SCREENING_HOME, FIGPLAN_HOME)
+    assert competing != activation
+    projection = read_text(root, VBASE_SCREENING_PROJECTION) or ""
+    title = json.loads(projection)["populations"]["active"]["member"]["scenarios"][-1]
+    quoted = json.dumps(title, ensure_ascii=False)
+    index = read_text(root, OPENSPEC_README) or ""
+    index_row = next(line for line in visible_route_lines(index)
+                     if line.strip().startswith(f"| [`{VBASE_SCREENING_CHANGE}`]("))
+    occupied = (
+        ("missing-retirement", AGENT_ADOPTIONS, row, "", "R1", "no distinct prior retirement"),
+        ("unsafe-projected-title", VBASE_SCREENING_PROJECTION, quoted,
+         json.dumps(title + " changed", ensure_ascii=False), "R3", "differs from regeneration"),
+        ("one-false-phase-figure", STATUS, active[0], shifted,
+         "R5", "does not declare both exact Polaris census states"),
+        ("competing-authority-route", STATUS, activation, activation + "\n" + competing,
+         "R1", "does not route the exact screening adoption and activation condition"),
+        ("conflicting-tag-index", OPENSPEC_README, index_row,
+         index_row.replace("version tag is verified,", "version tag is verified, and before,"),
+         "R1", "does not route the exact screening row and tag"),
+        ("conflicting-delta-index", OPENSPEC_README, index_row,
+         index_row.replace("SEMANTIC-DELTA.md) |",
+                           "SEMANTIC-DELTA.md) v2.35 also applies before tag verification. |"),
+         "R1", "does not route the exact screening row and tag"),
+        ("competing-phase-figure", STATUS, active[0],
+         active[0] + "\n" + VBASE_PHASE_PREFIXES[1] + " see the old projection.",
+         "R5", "does not declare both exact Polaris census states"),
+        ("conflicting-historical-route", STATUS, VBASE_STATUS_PREFIX,
+         VBASE_STATUS_PREFIX + " is still effective.",
+         "R1", "archived status and index routes differ from the exact retirement"),
+    )
+    for name, rel, old, new, rule, claim in occupied:
+        file = root / rel
+        original = file.read_text()
+        assert original.count(old) >= 1 and old != new, name
+        try:
+            file.write_text(original.replace(old, new, 1))
+            findings = run(root).findings.get(rule, [])
+        finally:
+            file.write_text(original)
+        held = any(claim in message for message in findings)
+        mutant = "derived-base-screening-" + name
+        witnesses.append({
+            "mutant": mutant, "path": rel, "old": old, "new": new,
+            "expected": f"{rule}: {claim}", "failed": findings,
+            "outcome": "killed" if held else "SURVIVED",
+        })
+        if not held:
+            failures.append(mutant)
+
+
+def vbase_screening_git_cases(tmp, witnesses, failures):
+    """Exercise protected state with real objects in a disposable local Git store."""
+    global _VBASE_SELFTEST_GIT_ROOT
+    repo = Path(tmp) / "derived-base-screening-git"
+    subprocess.run(
+        ["git", "clone", "--quiet", "--shared", "--no-checkout", str(ROOT), str(repo)],
+        check=True, capture_output=True,
+    )
+
+    def git(*args):
+        result = subprocess.run(
+            ["git", "-c", "commit.gpgsign=false", "-c", "tag.gpgsign=false",
+             "-c", "user.name=Reconciliation selftest", "-c",
+             "user.email=reconciliation-selftest@example.invalid", *args],
+            cwd=repo, check=True, capture_output=True, text=True,
+        )
+        return result.stdout.strip()
+
+    def check(name, rel, old, new, expected, clue=None):
+        state, overlay, records, subjects = vbase_screening_binding(repo)
+        found = records + subjects
+        held = (state == expected and (overlay is not None) == (expected == "effective")
+                and (clue is None or any(clue in finding for finding in found)))
+        mutant = "derived-base-screening-git-" + name
+        witnesses.append({
+            "mutant": mutant, "path": rel, "old": old, "new": new,
+            "expected": f"{expected}" + (f": {clue}" if clue else ""),
+            "failed": found, "outcome": ("killed" if clue else "held") if held else "SURVIVED",
+        })
+        if not held:
+            failures.append(mutant)
+
+    head = local_git(ROOT, "rev-parse", "HEAD^{commit}")
+    assert head is not None
+    head = head.decode("ascii").strip()
+    advice = p5_advice_claims(adoption_table_rows(ROOT))
+    if advice:
+        line, = advice
+        source = line.split("|")[3].strip().strip("`")
+        head = git("rev-parse", f"{source}^")
+        if git("tag", "--list", SOURCE_EXAMPLE_TAG):
+            git("tag", "-d", SOURCE_EXAMPLE_TAG)
+    git("checkout", "--quiet", "--detach", head)
+    ledger = repo / AGENT_ADOPTIONS
+    initial = ledger.read_text()
+    row = vbase_screening_rows(adoption_table_rows(repo))[0]
+    source = row.split("|")[3].strip().strip("`")
+    retirement = git("rev-parse", f"{source}^")
+    base = git("rev-parse", f"{retirement}^")
+    protected = "refs/remotes/origin/main"
+    tag = f"refs/tags/{VBASE_SCREENING_TAG}"
+    if git("tag", "--list", VBASE_SCREENING_TAG):
+        git("tag", "-d", VBASE_SCREENING_TAG)
+
+    saved = _VBASE_SELFTEST_GIT_ROOT
+    _VBASE_SELFTEST_GIT_ROOT = None
+    try:
+        git("update-ref", protected, head)
+        check("staged", tag, "", "", "staged")
+        git("tag", "-a", VBASE_SCREENING_TAG, source, "-m", "Synthetic exact annotation")
+        check("exact-annotation", tag, "", source, "effective")
+
+        projection = repo / VBASE_SCREENING_PROJECTION
+        before_projection = projection.read_text()
+        _propose_candidate(repo)
+        _install_addition(repo)
+        expanded_projection = projection.read_text()
+        git("add", "-A")
+        git("commit", "-m", "Install a later synthetic signed addition")
+        check("later-authored-addition", VBASE_SCREENING_PROJECTION,
+              before_projection, expanded_projection, "effective")
+        expected = json.loads(before_projection)
+        for population in expected["populations"].values():
+            population["requirements"] += 1
+            population["scenarios"] += 2
+        if (json.loads(expanded_projection) != expected or regenerate(repo)
+                or run(repo).failed):
+            failures.append("derived-base-screening-git-expanded-census")
+
+        status = repo / STATUS
+        before_status = status.read_text()
+        authority = next(line for line in visible_route_lines(before_status)
+                         if line.strip().startswith(VBASE_SCREENING_STATUS_PREFIX))
+        competing = authority.replace(VBASE_SCREENING_HOME, FIGPLAN_HOME)
+        assert competing != authority
+        status.write_text(before_status + "\n" + competing + "\n")
+        git("add", STATUS)
+        git("commit", "-m", "Add a competing authority route")
+        check("descendant-competing-route", STATUS, "", competing, "invalid",
+              "does not route the exact screening adoption")
+        git("checkout", "--quiet", "--detach", head)
+        status.write_text(status.read_text() + "\n" + competing + "\n")
+        check("same-head-competing-route", STATUS, "", competing, "invalid",
+              "does not route the exact screening adoption")
+        git("restore", STATUS)
+
+        git("update-ref", protected, base)
+        check("before-protected", protected, head, base, "invalid", "absent from protected main")
+        git("update-ref", protected, head)
+
+        git("tag", "-d", VBASE_SCREENING_TAG)
+        git("tag", VBASE_SCREENING_TAG, source)
+        check("lightweight", tag, "annotated", "lightweight", "invalid", "not annotated directly")
+        git("tag", "-d", VBASE_SCREENING_TAG)
+        git("tag", "-a", VBASE_SCREENING_TAG, source, "-m", "Synthetic exact annotation")
+
+        figure_row = next(line for line in initial.splitlines(keepends=True) if is_figplan_row(line))
+        ledger.write_text(initial.replace(figure_row, "", 1))
+        git("add", AGENT_ADOPTIONS)
+        git("commit", "-m", "Remove the exact predecessor on simulated protected main")
+        protected_without_predecessor = git("rev-parse", "HEAD")
+        git("checkout", "--quiet", "--detach", head)
+        git("update-ref", protected, protected_without_predecessor)
+        check("stale-predecessor", AGENT_ADOPTIONS, figure_row, "", "invalid", "predecessor row or subject")
+
+        projection = repo / VBASE_SCREENING_PROJECTION
+        before_projection = projection.read_text()
+        changed_projection = json.loads(before_projection)
+        changed_projection["populations"]["active"]["scenarios"] += 1
+        damaged = json.dumps(changed_projection, ensure_ascii=False, indent=2) + "\n"
+        projection.write_text(damaged)
+        git("add", VBASE_SCREENING_PROJECTION)
+        git("commit", "-m", "Change the scoped protected census")
+        protected_with_drift = git("rev-parse", "HEAD")
+        git("checkout", "--quiet", "--detach", head)
+        git("update-ref", protected, protected_with_drift)
+        check("stale-projection", VBASE_SCREENING_PROJECTION, before_projection, damaged,
+              "invalid", "census or status routes differ")
+
+        tree = git("rev-parse", f"{base}^{{tree}}")
+        empty_retirement = git("commit-tree", tree, "-p", base, "-m", "Synthetic empty retirement")
+        tree = git("rev-parse", f"{source}^{{tree}}")
+        changed_source = git("commit-tree", tree, "-p", empty_retirement, "-m", "Synthetic source history")
+        git("checkout", "--quiet", "--detach", changed_source)
+        ledger.write_text(initial.replace(retirement, empty_retirement).replace(source, changed_source))
+        git("add", AGENT_ADOPTIONS)
+        git("commit", "-m", "Stage a synthetic successor on an empty retirement")
+        git("update-ref", protected, git("rev-parse", "HEAD"))
+        git("tag", "-d", VBASE_SCREENING_TAG)
+        git("tag", "-a", VBASE_SCREENING_TAG, changed_source, "-m", "Synthetic selected annotation")
+        check("empty-retirement", AGENT_ADOPTIONS, retirement, empty_retirement,
+              "invalid", "retired predecessor would not survive the inverse")
+    finally:
+        _VBASE_SELFTEST_GIT_ROOT = saved
+
+
+def source_example_git_cases(tmp, witnesses, failures):
+    """Replay the source-example version against actual bound predecessor objects."""
+    import build_polaris_dossier_local_agent_mode as legacy_dossier
+
+    global _VBASE_SELFTEST_GIT_ROOT
+    repo = Path(tmp) / "source-example-git"
+    subprocess.run(["git", "clone", "--quiet", "--shared", "--no-checkout", str(ROOT), str(repo)],
+                   check=True, capture_output=True)
+
+    def git(*args):
+        result = subprocess.run(
+            ["git", "-c", "commit.gpgsign=false", "-c", "tag.gpgsign=false",
+             "-c", "user.name=Reconciliation selftest",
+             "-c", "user.email=reconciliation-selftest@example.invalid", *args],
+            cwd=repo, check=True, capture_output=True, text=True,
+        )
+        return result.stdout.strip()
+
+    def check(name, path, old, new, expected, figure=None, clue=None):
+        state, text, records, subjects = p5_advice_binding(repo)
+        report = run(repo)
+        counter = subprocess.run(
+            [sys.executable, "-B", "-c", (
+                "import sys\n"
+                "from pathlib import Path\n"
+                "sys.path.insert(0, sys.argv[1])\n"
+                "import count_polaris_effective_scenarios as counter\n"
+                "counter.ROOT = Path.cwd()\n"
+                "sys.argv = ['count_polaris_effective_scenarios.py', '--check']\n"
+                "raise SystemExit(counter.main())\n"
+            ), str(ROOT / "scripts")],
+            cwd=repo, capture_output=True, text=True,
+        )
+        found = [*records, *subjects, *(item for rows in report.findings.values() for item in rows)]
+        counter_output = counter.stdout + counter.stderr
+        held = state == expected and (text is not None) == (expected == "effective")
+        if clue:
+            held = held and any(clue.lower() in item.lower() for item in found) and counter.returncode != 0
+            held = held and clue.lower() in counter_output.lower()
+        else:
+            _, total = figure
+            held = held and not report.failed and counter.returncode == 0
+            held = held and f"CHECK PASS: recomputed total {total} matches expected {total}." in counter_output
+            held = held and legacy_dossier.status_figure(repo) == figure
+        mutant = "source-example-git-" + name
+        witnesses.append({"mutant": mutant, "path": path, "old": old, "new": new,
+                          "expected": clue or f"{expected} {figure}", "failed": found,
+                          "counterDiagnostic": counter.stderr.strip(),
+                          "outcome": ("killed" if clue else "held") if held else "SURVIVED"})
+        if not held:
+            failures.append(mutant)
+
+    def record_inverse(inverse):
+        row = (f"| A-99999 | 2026-11-27 | `{inverse}` | Reverted {line.split('|')[1].strip()} | "
+               f"Fixture withdrawal. | `git revert {inverse}` | — |")
+        content = ledger.read_text(encoding="utf-8")
+        assert content.count(line) == 1
+        ledger.write_text(content.replace(line, line + "\n" + row), encoding="utf-8")
+        git("add", AGENT_ADOPTIONS)
+        git("commit", "-m", "Record the synthetic protected withdrawal")
+        git("update-ref", protected, git("rev-parse", "HEAD"))
+        return row
+
+    def withdraw_refreshed_count():
+        current = status.read_text(encoding="utf-8")
+        authority, = scoped_route_lines(current, (P5_ADVICE_STATUS_PREFIX,))
+        phase, = scoped_route_lines(current, (P5_ADVICE_COUNT_SCOPE,))
+        original = f"\n{authority}\n\n{phase}\n"
+        assert current.count(original) == 1
+        without_advice = current.replace(original, "", 1)
+        try:
+            git("revert", "--no-commit", source)
+        except subprocess.CalledProcessError:
+            assert git("diff", "--name-only", "--diff-filter=U") == STATUS
+            status.write_text(without_advice, encoding="utf-8")
+            git("add", STATUS)
+        assert status.read_text(encoding="utf-8") == without_advice
+        git("commit", "-m", "Withdraw the advice and preserve the later census refresh")
+        return record_inverse(git("rev-parse", "HEAD"))
+
+    git("remote", "set-url", "origin", str(Path(tmp) / "no-source-example-remote"))
+    git("remote", "set-url", "--push", "origin", str(Path(tmp) / "no-source-example-push"))
+    line, = p5_advice_claims(adoption_table_rows(ROOT))
+    source = line.split("|")[3].strip().strip("`")
+    # Replay the first carrier so later adoptions and recorded withdrawals do not
+    # change the census of this historical fixture.
+    current = local_git(ROOT, "rev-parse", "HEAD").decode("ascii").strip()
+    authored = git("log", "--reverse", "--format=%H", "--ancestry-path", "-S", line,
+                   f"{source}..{current}", "--", AGENT_ADOPTIONS).splitlines()[0]
+    before_source = git("rev-parse", f"{source}^")
+    git("checkout", "--quiet", "--detach", authored)
+    ledger = repo / AGENT_ADOPTIONS
+    protected = "refs/remotes/origin/main"
+    tag = f"refs/tags/{SOURCE_EXAMPLE_TAG}"
+    if git("tag", "--list", SOURCE_EXAMPLE_TAG):
+        git("tag", "-d", SOURCE_EXAMPLE_TAG)
+    git("update-ref", protected, before_source)
+    saved = _VBASE_SELFTEST_GIT_ROOT
+    _VBASE_SELFTEST_GIT_ROOT = None
+    try:
+        check("staged", tag, "", "", "staged", (39, 603))
+        git("tag", "-a", SOURCE_EXAMPLE_TAG, source, "-m", "Synthetic exact annotation")
+        check("tag-before-protection", protected, authored, before_source, "invalid",
+              clue="outside protected main")
+        git("update-ref", protected, authored)
+        check("active", tag, "", source, "effective", (39, 610))
+
+        git("tag", "-d", SOURCE_EXAMPLE_TAG)
+        git("tag", SOURCE_EXAMPLE_TAG, source)
+        check("lightweight", tag, "annotated", "lightweight", "invalid", clue="not annotated directly")
+        git("tag", "-d", SOURCE_EXAMPLE_TAG)
+        git("tag", "-a", SOURCE_EXAMPLE_TAG, source, "-m", "Synthetic exact annotation")
+
+        status = repo / STATUS
+        before = status.read_text(encoding="utf-8")
+        count = next(row.strip() for row in visible_route_lines(before)
+                     if row.strip().startswith(P5_ADVICE_COUNT_PREFIX))
+        fault = count.replace("610 scenarios.", "611 scenarios.")
+        assert before.count(count) == 1 and fault != count
+        status.write_text(before.replace(count, fault), encoding="utf-8")
+        check("wrong-count", STATUS, count, fault, "effective", clue="source-example advice")
+        competing = "\nWith the source-example advice effective, Polaris has 39 requirements and 611 scenarios.\n"
+        status.write_text(before + competing, encoding="utf-8")
+        check("competing-count", STATUS, "", competing, "effective", clue="source-example advice")
+        git("add", STATUS)
+        git("commit", "-m", "Record a conflicting protected advice count")
+        git("update-ref", protected, git("rev-parse", "HEAD"))
+        check("authored-competing-count", STATUS, "", competing, "effective", clue="source-example advice")
+        git("checkout", "--quiet", "--detach", authored)
+        check("stale-count", STATUS, "", competing, "invalid", clue="authority routes disagree")
+        git("update-ref", protected, authored)
+        status.write_text(before, encoding="utf-8")
+
+        spec = repo / P5_ADVICE_SPEC
+        prior = spec.read_text(encoding="utf-8")
+        addition = "\nSynthetic unexpected body.\n"
+        spec.write_text(prior + addition, encoding="utf-8")
+        check("dirty-source", P5_ADVICE_SPEC, "", addition, "invalid",
+              clue="worktree and exact Git subjects disagree")
+        spec.write_text(prior, encoding="utf-8")
+
+        _propose_candidate(repo)
+        _install_addition(repo)
+        expanded = count.replace("39 requirements and 610 scenarios.", "40 requirements and 612 scenarios.")
+        assert expanded != count
+        status.write_text(status.read_text(encoding="utf-8").replace(count, expanded), encoding="utf-8")
+        assert not regenerate(repo)
+        git("add", "-A")
+        git("commit", "-m", "Install a later signed addition with refreshed advice counts")
+        check("later-addition", STATUS, count, expanded, "effective", (40, 612))
+        expanded_head = git("rev-parse", "HEAD")
+        git("update-ref", protected, expanded_head)
+        check("protected-later-addition", STATUS, count, expanded, "effective", (40, 612))
+        row = withdraw_refreshed_count()
+        check("refreshed-inverse", AGENT_ADOPTIONS, "", row, "reverted", (40, 605))
+
+        git("checkout", "--quiet", "--detach", expanded_head)
+        incorrect = expanded.replace("612 scenarios.", "613 scenarios.")
+        assert expanded != incorrect
+        status.write_text(status.read_text(encoding="utf-8").replace(expanded, incorrect), encoding="utf-8")
+        git("add", STATUS)
+        git("commit", "-m", "Record the wrong refreshed advice count")
+        withdraw_refreshed_count()
+        check("incorrect-refreshed-inverse", STATUS, expanded, incorrect, "invalid",
+              clue="protected source-only inverse")
+
+        git("checkout", "--quiet", "--detach", authored)
+        git("update-ref", protected, authored)
+
+        later = "\nUnrelated fixture note after source-example adoption.\n"
+        status.write_text(before + later, encoding="utf-8")
+        git("add", STATUS)
+        git("commit", "-m", "Retain unrelated later status text")
+        prior_inverse = git("rev-parse", "HEAD")
+        git("revert", "--no-edit", source)
+        inverse = git("rev-parse", "HEAD")
+        check("unrecorded-inverse", P5_ADVICE_SPEC, source, inverse, "invalid",
+              clue="worktree and exact Git subjects disagree")
+        row = record_inverse(inverse)
+        withdrawn = git("rev-parse", "HEAD")
+        assert later in status.read_text(encoding="utf-8")
+        check("recorded-inverse", AGENT_ADOPTIONS, "", row, "reverted", (39, 603))
+
+        git("checkout", "--quiet", "--detach", prior_inverse)
+        git("revert", "--no-commit", source)
+        side_effect = "\nUnrelated edit in the same inverse commit.\n"
+        status.write_text(status.read_text(encoding="utf-8") + side_effect, encoding="utf-8")
+        git("add", STATUS)
+        git("commit", "-m", "Withdraw the source and add an unrelated line")
+        record_inverse(git("rev-parse", "HEAD"))
+        check("inverse-side-effect", STATUS, "", side_effect, "invalid", clue="protected source-only inverse")
+
+        git("update-ref", protected, withdrawn)
+        git("checkout", "--quiet", "--detach", authored)
+        check("stale-inverse", protected, authored, inverse, "invalid", clue="dispositions disagree")
+    finally:
+        _VBASE_SELFTEST_GIT_ROOT = saved
+
+
 # The case workers fork after the parent warms this invocation's cache.
 @_reverse_cache_scope()
 def selftest(witness_path=None):
@@ -12352,12 +14266,24 @@ def selftest(witness_path=None):
     with tempfile.TemporaryDirectory() as tmp:
         base = Path(tmp) / "base"
         scratch(ROOT, base)
+        if p5_advice_claims(adoption_table_rows(base)):
+            source_example_git_cases(tmp, witnesses, failures)
+            project_source_example_history(base)
         _propose_candidate(base)
         clean = run(base)
         if clean.failed:
             print("\n".join(clean.lines))
             print("SELFTEST FAIL: the unmutated scratch copy does not pass")
             return 1
+        if vbase_screening_binding(base)[0] == "staged":
+            vbase_screening_document_cases(base, witnesses, failures)
+            vbase_screening_git_cases(tmp, witnesses, failures)
+            project_vbase_screening_history(base)
+            clean = run(base)
+            if clean.failed:
+                print("\n".join(clean.lines))
+                print("SELFTEST FAIL: the historical derived-base projection does not pass")
+                return 1
         # The signed-addition hook: a synthetic addition, signed and
         # regenerated, must pass, and each of its mutants must fail.
         added = Path(tmp) / "with-signed-addition"
@@ -12405,6 +14331,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
                     added, with_addition, adopted, with_adopted):
     cases = ([(base, clean, m) for m in mutants(ROOT)]
              + [(base, clean, m) for m in cap1_overlay_mutants()]
+             + [(base, clean, m) for m in cap1_root_mutants()]
              + [(base, clean, m) for m in declared_source_mutants()]
              + [(added, with_addition, m)
                 for m in addition_mutants()]
@@ -12433,7 +14360,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         ledger = figure_base / AGENT_ADOPTIONS
         rows = ledger.read_text().splitlines(keepends=True)
         ledger.write_text("".join(line for line in rows
-                                  if not is_edit_account_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_impfacts_row(line)))
+                                  if not is_edit_account_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_migpar_row(line)))
     # The families below run side by side, each in its own fresh fork, and
     # their witnesses, failures and printed lines are merged in this order
     # (syzygy-7rkx). A family added here must keep three rules, or a
@@ -12451,6 +14378,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         lambda w, f: _entry_kind_cases(tmp, base, w, f),
         lambda w, f: declared_source_historical_cases(tmp, base, clean, w, f),
         lambda w, f: declared_source_composition_cases(w, f),
+        functools.partial(cap1_root_binding_cases, tmp),
         lambda w, f: url_source_cases(tmp, base, w, f),
     ]
     families += [functools.partial(case, tmp, figure_base) for case in (
@@ -12470,7 +14398,8 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         lambda w, f: step_measures_cases(tmp, base, w, f),
         lambda w, f: qkind_cases(tmp, base, w, f),
         lambda w, f: figplan_cases(tmp, base, w, f),
-        lambda w, f: impfacts_cases(tmp, base, w, f),
+        lambda w, f: migpar_cases(tmp, base, w, f),
+        lambda w, f: vbase_cases(tmp, base, w, f),
     ]
     _run_families(families, witnesses, failures)
     doc = {"commit": commit, "script": "scripts/check_spec_reconciliation.py",
@@ -13159,11 +15088,17 @@ def regenerate(root):
     pop, findings = census(root)
     if findings:
         raise SystemExit("census refused:\n" + "\n".join(findings))
+    baseline, projection = vbase_screening_projects(root, pop, findings)
+    if findings:
+        raise SystemExit("derived-base projection refused:\n" + "\n".join(findings))
     written = unions.write_additions(root)
-    body = census_json(pop)
-    if read_text(root, CENSUS) != body:
-        (root / CENSUS).write_text(body, encoding="utf-8")
-        written.append(CENSUS)
+    outputs = [(CENSUS, census_json(baseline))]
+    if projection is not None:
+        outputs.append((VBASE_SCREENING_PROJECTION, projection))
+    for target, body in outputs:
+        if read_text(root, target) != body:
+            (root / target).write_text(body, encoding="utf-8")
+            written.append(target)
     return written
 
 
@@ -13174,14 +15109,22 @@ def main(argv):
     mode.add_argument("--census", action="store_true")
     mode.add_argument("--selftest", action="store_true")
     mode.add_argument("--regenerate", action="store_true")
+    mode.add_argument("--cap1-root-projection", action="store_true",
+                      help="print the prospective CAP1 candidate projection")
+    mode.add_argument("--cap1-effective", action="store_true",
+                      help="print the bound CAP1 composition and coverage census")
     parser.add_argument("--witnesses", help="selftest: write rule-6 JSON here")
     args = parser.parse_args(argv)
-    global _COLLECT_REFUSALS
+    global _COLLECT_REFUSALS, _CAP1_SELFTEST_GIT_ROOT, _VBASE_SELFTEST_GIT_ROOT
     saved = _COLLECT_REFUSALS
+    saved_git_root = _CAP1_SELFTEST_GIT_ROOT
+    saved_vbase_git_root = _VBASE_SELFTEST_GIT_ROOT
     try:
         if args.selftest:
             # Its fixtures drive the library path, which must raise each
             # entry's own read error, so it never collects.
+            _CAP1_SELFTEST_GIT_ROOT = ROOT
+            _VBASE_SELFTEST_GIT_ROOT = ROOT
             return selftest(args.witnesses)
         _COLLECT_REFUSALS = True
         return _main(args)
@@ -13190,9 +15133,44 @@ def main(argv):
         return 1
     finally:
         _COLLECT_REFUSALS = saved
+        _CAP1_SELFTEST_GIT_ROOT = saved_git_root
+        _VBASE_SELFTEST_GIT_ROOT = saved_vbase_git_root
 
 
 def _main(args):
+    if args.cap1_effective:
+        base = read_text(ROOT, FAMILY_SPECS["CAP1"])
+        if base is None:
+            print("CAP1 predecessor specification is unavailable", file=sys.stderr)
+            return 1
+        population, findings, selected = cap1_root_effective(ROOT, base)
+        try:
+            projection = cap1_root_projection(ROOT)
+            if json.loads(read_text(ROOT, CAP1_ROOT_PROJECTION) or "null") != projection:
+                findings.append("stale prospective CAP1 projection")
+        except (ValueError, KeyError, TypeError) as exc:
+            findings.append(str(exc))
+        if findings or selected is None:
+            print("\n".join(findings), file=sys.stderr)
+            return 1
+        state, _ = cap1_root_binding(ROOT)
+        coverage = "successor" if state == "effective" else "predecessor"
+        print(json.dumps({
+            "state": state,
+            "effective_spec_sha256": sha(selected.encode("utf-8")),
+            "requirements": len(population),
+            "scenarios": sum(len(req["scenarios"]) for req in population.values()),
+            "coverage": projection["coverage"][coverage],
+        }, indent=2, sort_keys=True))
+        return 0
+    if args.cap1_root_projection:
+        try:
+            projection = cap1_root_projection(ROOT)
+        except (ValueError, KeyError, TypeError) as exc:
+            print(str(exc), file=sys.stderr)
+            return 1
+        print(json.dumps(projection, indent=2, sort_keys=True))
+        return 0
     if args.census:
         pop, findings = census(ROOT)
         if findings:
