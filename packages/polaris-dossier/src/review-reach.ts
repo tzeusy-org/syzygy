@@ -3,7 +3,9 @@ import { isRecord } from '@syzygy/support';
 import { unconsentedClass } from './class-gate.js';
 import type { Derived } from './check-derive.js';
 import { collectBlocks } from './check-derive.js';
-import { hasFigureKindForm } from './draft-schema.js';
+import { CONTAINMENT_KIND, hasContainmentForm, hasFigureKindForm, hasModelForm } from './draft-schema.js';
+import { groupsOf } from './containment.js';
+import { modelIndex } from './system-model.js';
 import type { CitedBlob } from './check-model.js';
 import { secretPathOf, type DossierScreen } from './screen.js';
 import { citationIdsOf, isWithheldItem, type SpanStanding } from './withheld-items.js';
@@ -160,7 +162,16 @@ export function reviewReachAdvice(doc: unknown, inputs: ReachInputs): ReviewReac
       for (const [part, kind] of parts) {
         list(diagram[part]).forEach((value, j) => { if (isRecord(value)) element(`$.diagrams[${i}].${part}[${j}]`, kind, value); });
       }
+      // A v11 containment's groups, at every level in preorder, take a node's rule (version 2.23).
+      if (hasContainmentForm(doc['schemaVersion']) && diagram['kind'] === CONTAINMENT_KIND) for (const { group, at } of groupsOf(diagram, i)) element(at, 'diagram-node', group);
     });
+    // A v12 model's elements take a node's rule and its cited relationships an edge's, each once at its model path (version 2.24); a
+    // derived relationship cites nothing and is no claim of the draft.
+    if (hasModelForm(doc['schemaVersion'])) {
+      const { elements: modelElements, relationships } = modelIndex(doc);
+      for (const { element: value, at } of modelElements) element(at, 'diagram-node', value);
+      for (const { relationship, at, derived } of relationships) if (!derived) element(at, 'diagram-edge', relationship);
+    }
   }
   return {
     note: NOTE,

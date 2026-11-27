@@ -813,6 +813,36 @@ def choice_amendment(root: Path) -> str | None:
     return text
 
 
+def migpar_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.migpar_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("migration parity adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
+def impfacts_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.impfacts_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("import facts adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
+def walk_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.walk_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("figure walks adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def screening_inputs() -> tuple[str, ...]:
     """Inputs a hypothetical source patch may not change while reusing Git proof."""
     import check_spec_reconciliation as adoption
@@ -892,7 +922,10 @@ def build_composition(root: Path, *, screening_authority: Path | None = None) ->
                         (adoption.FIGPLAN_SPEC, figplan_amendment(root)),
                         (adoption.VBASE_SCREENING_SPEC, screening),
                         (adoption.P5_ADVICE_SPEC, source_example),
-                        (adoption.CHOICE_SPEC, choice_amendment(root))):
+                        (adoption.CHOICE_SPEC, choice_amendment(root)),
+                        (adoption.MIGPAR_SPEC, migpar_amendment(root)),
+                        (adoption.IMPFACTS_SPEC, impfacts_amendment(root)),
+                        (adoption.WALK_SPEC, walk_amendment(root))):
         if text is not None:
             sources.append((label, text))
 
@@ -965,6 +998,9 @@ def composition_inputs(root: Path) -> list[Path]:
     screening_amendment(root)
     source_example_amendment(root)
     choice_amendment(root)
+    migpar_amendment(root)
+    impfacts_amendment(root)
+    walk_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
         adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
         *adoption.URL_SOURCE_RFC_PATHS, *adoption.FIGURE_SUBJECTS, *adoption.DERIVED_SUBJECTS,
@@ -973,7 +1009,7 @@ def composition_inputs(root: Path) -> list[Path]:
         *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.FINDPAGES_SUBJECTS, *adoption.SUBSEC_SUBJECTS, *adoption.RELTYPE_SUBJECTS, *adoption.HERO_SUBJECTS, *adoption.READERS_SUBJECTS, *adoption.CONT_SUBJECTS, *adoption.MODEL_SUBJECTS, *adoption.WORTH_SUBJECTS,
         *adoption.REACH_SUBJECTS, *adoption.READMIT_SUBJECTS, *adoption.RAW_READ_SUBJECTS, *adoption.TREEREAD_SUBJECTS,
         *adoption.VERIFY_SUBJECTS, *adoption.QFILE_SUBJECTS, *adoption.SCRIPTED_GRADE_SUBJECTS, *adoption.STEP_MEASURES_SUBJECTS, *adoption.SESSION_USAGE_SUBJECTS, *adoption.COVHOLD_SUBJECTS, *adoption.EDIT_ACCOUNT_SUBJECTS,
-        *adoption.TERM_BRIEF_SUBJECTS, *adoption.QKIND_SUBJECTS, *adoption.FIGPLAN_SUBJECTS, *screening_inputs(), *adoption.CHOICE_SUBJECTS,
+        *adoption.TERM_BRIEF_SUBJECTS, *adoption.QKIND_SUBJECTS, *adoption.FIGPLAN_SUBJECTS, *screening_inputs(), *adoption.CHOICE_SUBJECTS, *adoption.MIGPAR_SUBJECTS, *adoption.IMPFACTS_SUBJECTS, *adoption.WALK_SUBJECTS,
     }
     files = discover_composition_files(root)
     files += [root / rel for rel in sorted(paths) if (root / rel).is_file()]
@@ -1019,8 +1055,11 @@ def read_status_assertion(root: Path, *, screening_state: str,
         if advisory_figure != (screening_figure[0], screening_figure[1] + new_count - old_count):
             raise ScenarioCountError(f"{path} source-example advice count differs from its two source members")
         if source_example_state != "effective" or choice_amendment(root) is None:
-            if any(line.startswith(adoption.CHOICE_COUNT_SCOPE) for line in lines):
-                raise ScenarioCountError(f"{path} declares a choice floor count while it is not in force")
+            if any(line.startswith((adoption.CHOICE_COUNT_SCOPE, adoption.MIGPAR_COUNT_SCOPE, adoption.IMPFACTS_COUNT_SCOPE,
+                                    adoption.WALK_COUNT_SCOPE))
+                   for line in lines):
+                raise ScenarioCountError(f"{path} declares a choice floor, migration parity, import facts or figure walks count "
+                                         "while it is not in force")
             return advisory_figure if source_example_state == "effective" else screening_figure
         choices = [line for line in lines if line.startswith(adoption.CHOICE_COUNT_SCOPE)]
         choice = CHOICE_COUNT.fullmatch(choices[0].removeprefix(adoption.CHOICE_COUNT_PREFIX)) if len(choices) == 1 else None
@@ -1030,7 +1069,44 @@ def read_status_assertion(root: Path, *, screening_state: str,
         added = adoption.choice_delta(root, findings)
         if findings or (int(choice[1]), int(choice[2])) != (advisory_figure[0], advisory_figure[1] + added):
             raise ScenarioCountError(f"{path} choice floor count differs from its two source members")
-        return int(choice[1]), int(choice[2])
+        choice_figure = int(choice[1]), int(choice[2])
+        if migpar_amendment(root) is None:
+            if any(line.startswith((adoption.MIGPAR_COUNT_SCOPE, adoption.IMPFACTS_COUNT_SCOPE, adoption.WALK_COUNT_SCOPE))
+                   for line in lines):
+                raise ScenarioCountError(f"{path} declares a migration parity, import facts or figure walks count while it is not in force")
+            return choice_figure
+        migpar_lines = [line for line in lines if line.startswith(adoption.MIGPAR_COUNT_SCOPE)]
+        migpar = CHOICE_COUNT.fullmatch(migpar_lines[0].removeprefix(adoption.MIGPAR_COUNT_PREFIX)) if len(migpar_lines) == 1 else None
+        if migpar is None:
+            raise ScenarioCountError(f"{path} needs one complete migration parity count")
+        added = adoption.migpar_delta(root, findings)
+        if findings or (int(migpar[1]), int(migpar[2])) != (choice_figure[0], choice_figure[1] + added):
+            raise ScenarioCountError(f"{path} migration parity count differs from its two source members")
+        migpar_figure = int(migpar[1]), int(migpar[2])
+        if impfacts_amendment(root) is None:
+            if any(line.startswith((adoption.IMPFACTS_COUNT_SCOPE, adoption.WALK_COUNT_SCOPE)) for line in lines):
+                raise ScenarioCountError(f"{path} declares an import facts or figure walks count while it is not in force")
+            return migpar_figure
+        impfacts_lines = [line for line in lines if line.startswith(adoption.IMPFACTS_COUNT_SCOPE)]
+        impfacts = CHOICE_COUNT.fullmatch(impfacts_lines[0].removeprefix(adoption.IMPFACTS_COUNT_PREFIX)) if len(impfacts_lines) == 1 else None
+        if impfacts is None:
+            raise ScenarioCountError(f"{path} needs one complete import facts count")
+        added = adoption.impfacts_delta(root, findings)
+        if findings or (int(impfacts[1]), int(impfacts[2])) != (migpar_figure[0], migpar_figure[1] + added):
+            raise ScenarioCountError(f"{path} import facts count differs from its two source members")
+        impfacts_figure = int(impfacts[1]), int(impfacts[2])
+        if walk_amendment(root) is None:
+            if any(line.startswith(adoption.WALK_COUNT_SCOPE) for line in lines):
+                raise ScenarioCountError(f"{path} declares a figure walks count while it is not in force")
+            return impfacts_figure
+        walk_lines = [line for line in lines if line.startswith(adoption.WALK_COUNT_SCOPE)]
+        walk = CHOICE_COUNT.fullmatch(walk_lines[0].removeprefix(adoption.WALK_COUNT_PREFIX)) if len(walk_lines) == 1 else None
+        if walk is None:
+            raise ScenarioCountError(f"{path} needs one complete figure walks count")
+        added = adoption.walk_delta(root, findings)
+        if findings or (int(walk[1]), int(walk[2])) != (impfacts_figure[0], impfacts_figure[1] + added):
+            raise ScenarioCountError(f"{path} figure walks count differs from its two source members")
+        return int(walk[1]), int(walk[2])
 
     if len(legacy) != 1:
         raise ScenarioCountError(f"{path} needs exactly one historical effective composition count")

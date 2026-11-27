@@ -1,0 +1,692 @@
+{
+ "format": "byte-identity-comparison/1",
+ "subject": {
+  "before": "4b86e4285",
+  "after": "a49a56fdc"
+ },
+ "dumps": {
+  "before": "ac606cea50a2da79efeaa04e6f790595431f4ec20a929334556f58aad96ac7dd",
+  "after": "d0687e5cd31f775ebaf4d063179033ccd8869ac7d81179166c742dc93abee656"
+ },
+ "method": "Each dump is written by the describe block in byte-identity-dump-block.ts.txt, appended for the run to packages/polaris-dossier/src/render.test.ts in a checkout of the named commit and removed after it (run with CONTAIN_DUMP=<file>). It checks and, where the check passes, renders a draft of each schema v2 to v10 and v13 in two variants (plain, and carrying a diagram of kind `containment` with `groups`) and hashes every file of the run directory but run.json. The record lists, per variant, the outcome and every file whose bytes differ, and, where findings differ, both lists in full. Population: the 20 synthetic variants the dumper builds, nothing else. It is not every stored fixture: every other stored draft is exercised only by the existing literal suites, whose expectations this change left unchanged except version literals, and the provider golden, which its own test compares byte for byte. Both dumps are kept beside the record. brief.json and brief.md name the run's temporary clone directory, which differs on every run, so they differ between any two dumps (checked on the fixture's default draft by copying both briefs from a run in each tree: with the directory name replaced, brief.md is identical, and brief.json differs only at `sourceBindingSha256`, whose input includes `subject.clone.path` (run-record.ts), and at the brief.md digest; the draft.schema.json digest is equal).",
+ "population": {
+  "variants": 20,
+  "files": 418
+ },
+ "variants": [
+  {
+   "variant": "polaris-dossier-local-draft-v2/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 32,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v2/containment",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "checks/rev-0.json"
+   ],
+   "differingFindings": {
+    "before": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[0].groups",
+      "detail": "is not a field of this form"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[0].kind",
+      "detail": "must be one of flow, lifecycle, state-machine, boundary, dependency, placement"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[0].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[0].edges",
+      "detail": "is required"
+     }
+    ],
+    "after": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[0].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[0].edges",
+      "detail": "is required"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[0].kind",
+      "detail": "parts: the kind `containment` needs draft schema polaris-dossier-local-draft-v11"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[0].groups",
+      "detail": "parts: `groups` needs draft schema polaris-dossier-local-draft-v11"
+     }
+    ]
+   }
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v3/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 32,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v3/containment",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "checks/rev-0.json"
+   ],
+   "differingFindings": {
+    "before": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[0].groups",
+      "detail": "is not a field of this form"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[0].kind",
+      "detail": "must be one of flow, lifecycle, state-machine, boundary, dependency, placement"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[0].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[0].edges",
+      "detail": "is required"
+     }
+    ],
+    "after": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[0].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[0].edges",
+      "detail": "is required"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[0].kind",
+      "detail": "parts: the kind `containment` needs draft schema polaris-dossier-local-draft-v11"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[0].groups",
+      "detail": "parts: `groups` needs draft schema polaris-dossier-local-draft-v11"
+     }
+    ]
+   }
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v4/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v4/containment",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "checks/rev-0.json"
+   ],
+   "differingFindings": {
+    "before": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].groups",
+      "detail": "is not a field of this form"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].kind",
+      "detail": "must be one of flow, lifecycle, state-machine, boundary, dependency, placement"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].edges",
+      "detail": "is required"
+     }
+    ],
+    "after": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].edges",
+      "detail": "is required"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[1].kind",
+      "detail": "parts: the kind `containment` needs draft schema polaris-dossier-local-draft-v11"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[1].groups",
+      "detail": "parts: `groups` needs draft schema polaris-dossier-local-draft-v11"
+     }
+    ]
+   }
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v5/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v5/containment",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "checks/rev-0.json"
+   ],
+   "differingFindings": {
+    "before": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].groups",
+      "detail": "is not a field of this form"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].kind",
+      "detail": "must be one of flow, lifecycle, state-machine, boundary, dependency, placement"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].edges",
+      "detail": "is required"
+     }
+    ],
+    "after": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].edges",
+      "detail": "is required"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[1].kind",
+      "detail": "parts: the kind `containment` needs draft schema polaris-dossier-local-draft-v11"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[1].groups",
+      "detail": "parts: `groups` needs draft schema polaris-dossier-local-draft-v11"
+     }
+    ]
+   }
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v6/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v6/containment",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "checks/rev-0.json"
+   ],
+   "differingFindings": {
+    "before": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].groups",
+      "detail": "is not a field of this form"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].kind",
+      "detail": "must be one of flow, lifecycle, state-machine, boundary, dependency, placement"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].edges",
+      "detail": "is required"
+     }
+    ],
+    "after": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[1].edges",
+      "detail": "is required"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[1].kind",
+      "detail": "parts: the kind `containment` needs draft schema polaris-dossier-local-draft-v11"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[1].groups",
+      "detail": "parts: `groups` needs draft schema polaris-dossier-local-draft-v11"
+     }
+    ]
+   }
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v7/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v7/containment",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "checks/rev-0.json"
+   ],
+   "differingFindings": {
+    "before": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].groups",
+      "detail": "is not a field of this form"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].kind",
+      "detail": "must be one of flow, lifecycle, state-machine, boundary, dependency, placement, sequence, swimlane"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].edges",
+      "detail": "is required"
+     }
+    ],
+    "after": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].edges",
+      "detail": "is required"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[2].kind",
+      "detail": "parts: the kind `containment` needs draft schema polaris-dossier-local-draft-v11"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[2].groups",
+      "detail": "parts: `groups` needs draft schema polaris-dossier-local-draft-v11"
+     }
+    ]
+   }
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v8/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v8/containment",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "checks/rev-0.json"
+   ],
+   "differingFindings": {
+    "before": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].groups",
+      "detail": "is not a field of this form"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].kind",
+      "detail": "must be one of flow, lifecycle, state-machine, boundary, dependency, placement, sequence, swimlane"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].edges",
+      "detail": "is required"
+     }
+    ],
+    "after": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].edges",
+      "detail": "is required"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[2].kind",
+      "detail": "parts: the kind `containment` needs draft schema polaris-dossier-local-draft-v11"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[2].groups",
+      "detail": "parts: `groups` needs draft schema polaris-dossier-local-draft-v11"
+     }
+    ]
+   }
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v9/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v9/containment",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "checks/rev-0.json"
+   ],
+   "differingFindings": {
+    "before": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].groups",
+      "detail": "is not a field of this form"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].kind",
+      "detail": "must be one of flow, lifecycle, state-machine, boundary, dependency, placement, sequence, swimlane"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].edges",
+      "detail": "is required"
+     }
+    ],
+    "after": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].edges",
+      "detail": "is required"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[2].kind",
+      "detail": "parts: the kind `containment` needs draft schema polaris-dossier-local-draft-v11"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[2].groups",
+      "detail": "parts: `groups` needs draft schema polaris-dossier-local-draft-v11"
+     }
+    ]
+   }
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v10/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v10/containment",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "checks/rev-0.json"
+   ],
+   "differingFindings": {
+    "before": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].groups",
+      "detail": "is not a field of this form"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].kind",
+      "detail": "must be one of flow, lifecycle, state-machine, boundary, dependency, placement, sequence, swimlane"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].edges",
+      "detail": "is required"
+     }
+    ],
+    "after": [
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].nodes",
+      "detail": "is required"
+     },
+     {
+      "kind": "schema",
+      "at": "$.diagrams[2].edges",
+      "detail": "is required"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[2].kind",
+      "detail": "parts: the kind `containment` needs draft schema polaris-dossier-local-draft-v11"
+     },
+     {
+      "kind": "field-version",
+      "at": "$.diagrams[2].groups",
+      "detail": "parts: `groups` needs draft schema polaris-dossier-local-draft-v11"
+     }
+    ]
+   }
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v13/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v13/containment",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  }
+ ]
+}

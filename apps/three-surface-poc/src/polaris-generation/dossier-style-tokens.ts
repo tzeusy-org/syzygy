@@ -78,6 +78,8 @@ export const DOSSIER_STYLE = {
     markerGap: '.45em',
     hairline: '.1rem',
     stepInset: '.15rem',
+    // A containment outline's nested list indent (version 2.23): 12 px.
+    outlineIndent: '12px',
     hintInset: '.2rem',
     tight: '.25rem',
     markInset: '.3rem',
@@ -192,4 +194,6 @@ export const DOSSIER_STYLE = {
     code: 'ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace',
   },
   figureFormWidths: [408, 592, 776, 960],
+  /** A containment's laid-out widths (version 2.23): one to five columns, so it may also be 224 px wide. */
+  containmentFormWidths: [224, 408, 592, 776, 960],
 } as const;

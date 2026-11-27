@@ -2,13 +2,13 @@ import { DESIGN_TOKENS_CSS } from '../design-tokens.js';
 import { DOSSIER_STYLE as tokens } from './dossier-style-tokens.js';
 
 import {
-  DOSSIER_FORMAT, OWNER_TOPICS, PAGE_SINK_CONTRACT, checkDraftQuotes, diagramToMermaid, figureToMermaid, isDossierPagePath, parseDossierManifest, readerCost, reviewVerdict, scanDossierPage, sourceTextById, withoutReviewStatusRegion,
+  CONTAINMENT_KIND, DOSSIER_FORMAT, OWNER_TOPICS, PAGE_SINK_CONTRACT, checkDraftQuotes, diagramToMermaid, figureToMermaid, isDossierPagePath, parseDossierManifest, readerCost, reviewVerdict, scanDossierPage, sourceTextById, withoutReviewStatusRegion,
   generationSourceIdentity, generationSpanRange, validateGenerationSources,
-  type DossierDraft, type DossierManifest, type DraftBlock, type DraftDiagram, type DraftElement, type DraftFigure, type DraftFigureElement, type DraftParagraph, type EpistemicMarking, type GenerationSource, type LocalPageItem,
+  type DossierDraft, type DossierManifest, type DraftBlock, type DraftContainmentGroup, type DraftDiagram, type DraftElement, type DraftFigure, type DraftFigureElement, type DraftParagraph, type EpistemicMarking, type GenerationSource, type LocalPageItem,
   type LocalBlock, type LocalDerivedFact, type LocalDerivedStructure, type LocalManifestFact, type LocalManifestFacts, type LocalManifestFileEntry, type LocalManifestRecognizerEntry, type LocalEdgeRelation, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
-import { READABLE_SPACING, layoutDiagram, layoutSequence, layoutSwimlane, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg } from './diagram-layout.js';
+import { READABLE_SPACING, layoutContainment, layoutDiagram, layoutSequence, layoutSwimlane, renderContainmentSvg, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg, type ContainmentClaim } from './diagram-layout.js';
 import { FINDING_CSS, FIND_BY_TASK_PAGE, NAME_INDEX_PAGE, NO_TASK_ROUTES, TASK_ROUTES_WITHHELD, buildNameIndex, glossaryDisplayName, glossaryNameForms, indexLinkCount, renderNameIndex, type IndexTarget, type IndexedBlock } from './dossier-finding.js';
 import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureList, regionMarkup } from './dossier-render-local.js';
 import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as escape } from './draft-preview.js';
@@ -315,13 +315,13 @@ const LOCAL_REFLOW_CSS = new Map([
   ['understanding.html', '#page-understanding{overflow-wrap:anywhere}'],
 ]);
 
-function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome, figureKinds = false, mapCss = '', subsections = false): string {
+function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome, figureKinds = '', mapCss = '', subsections = false): string {
   const content = `<main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region(path) ?? ''}</main>`;
   // Wayfinding follows the reading text so the main-only converter retains its original input.
   const turn = chrome?.pageTurn(path) ?? '';
   const column = turn === '' ? content : `<div class="reading-column">${content}${turn}</div>`;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${DRAFT_PREVIEW_CSP_META}<title>${escape(title)}</title><style>${DESIGN_TOKENS_CSS}
-${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}${READING_NAV_CSS}${LOCAL_REFLOW_CSS.get(path) ?? ''}${path === FIND_BY_TASK_PAGE || path === NAME_INDEX_PAGE ? FINDING_CSS : ''}`}${figureKinds ? FIGURE_KINDS_CSS : ''}${subsections ? SUBSECTION_CSS : ''}${mapCss}
+${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}${READING_NAV_CSS}${LOCAL_REFLOW_CSS.get(path) ?? ''}${path === FIND_BY_TASK_PAGE || path === NAME_INDEX_PAGE ? FINDING_CSS : ''}`}${figureKinds}${subsections ? SUBSECTION_CSS : ''}${mapCss}
 </style></head><body><a class="skip" href="#content">Skip to content</a><div class="pipeline-notice">${chrome?.notice ?? 'Generated dossier draft — not reviewed or adopted'}</div>${chrome?.disclosure(path) ?? ''}<div class="layout">${chrome === undefined ? `<nav class="contents desktop-contents" aria-label="Dossier">${nav}</nav>` : `<details class="contents desktop-contents nav-panel" open><summary>Contents</summary><nav aria-label="Dossier">${nav}</nav></details>`}<details class="contents mobile-contents"><summary>In this dossier</summary><nav aria-label="${chrome === undefined ? 'Dossier' : 'Dossier (mobile)'}">${nav}</nav></details>${column}</div></body></html>`;
 }
 
@@ -760,37 +760,83 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   type WitnessedRelation = Extract<LocalEdgeRelation, { readonly evidence: object }>;
   const witnessAttrs = (relation: LocalEdgeRelation): string => ` data-relation="${escape(relation.relation)}"${relation.evidence === undefined ? ''
     : ` data-witness-fact="${escape(relation.witness.fact)}" data-witness-rule="${escape(relation.witness.rule)}" data-witness-rule-version="${relation.witness.ruleVersion}"`}`;
+  // A schema-v12 draft's model (version 2.24): its figures arrive as their views' expansions. An element or cited relationship more than one
+  // view selects carries `data-element` or `data-relationship` in every figure drawing it, and its claim renders once, in its first figure:
+  // the first, in draft diagram order, whose view selects it and that renders as a `<figure>`; each later figure lists it `as shown in` that
+  // one. A derived relationship is no claim: Observed in Syzygy's words where witnessed, Unknown in Syzygy's words otherwise.
+  const model = local?.model;
+  const derivedIds = new Set(model?.relationships.flatMap(r => (r.basis === 'derived' ? [r.id] : [])) ?? []);
+  const viewsOf = new Map<string, readonly string[]>([...(model?.elements ?? []), ...(model?.relationships ?? []).filter(r => r.basis === 'cited')].map(entry => [entry.id, entry.views]));
+  const shared = (id: string): boolean => (viewsOf.get(id)?.length ?? 0) > 1;
+  const figurePage = (d: DraftDiagram): string | undefined => {
+    if (d.disposition.kind !== 'produced') return undefined;
+    if (d.home?.kind === 'overview') return view.drafted ? 'index.html' : undefined;
+    if (d.home?.kind === 'deep-dive' && deepPaths.has(d.home.id)) return deepPaths.get(d.home.id);
+    const section = draft.sections.find(entry => entry.id === d.sectionId);
+    return section === undefined || section.disposition.kind !== 'produced' || view.deferredSections.has(section.id) ? undefined : sectionPage(section.id);
+  };
+  const firstFigure = (id: string): { readonly index: number; readonly page: string } | undefined => {
+    const views = viewsOf.get(id) ?? [];
+    for (const [i, d] of draft.diagrams.entries()) {
+      if (!views.includes(d.id)) continue;
+      const page = figurePage(d);
+      if (page !== undefined) return { index: i, page };
+    }
+    return undefined;
+  };
+  // `, as shown in <a href>title</a>` for a shared element or cited relationship listed in a figure that is not its first; undefined otherwise.
+  const asShown = (from: string, id: string, index: number): string | undefined => {
+    if (!shared(id)) return undefined;
+    const first = firstFigure(id);
+    if (first === undefined || first.index === index) return undefined;
+    const target = draft.diagrams[first.index]!;
+    const link = first.page === from ? `#figure-${target.id}` : href(from, first.page, `figure-${target.id}`);
+    return `, as shown in <a href="${escape(link)}">${escape(target.title)}</a>`;
+  };
+  const sharedAttr = (id: string, kind: 'element' | 'relationship'): string => (shared(id) ? ` data-${kind}="${escape(id)}"` : '');
   const diagram = (from: string, asDrafted: DraftDiagram, index: number, asHero = false): string => {
     if (asDrafted.disposition.kind !== 'produced') return notice(from, asDrafted.id, asDrafted.disposition, asHero);
+    if (asDrafted.figure?.kind === CONTAINMENT_KIND) return containmentFigure(from, asDrafted, asDrafted.figure.groups, index);
     if (asDrafted.figure !== undefined) return kindedFigure(from, asDrafted, asDrafted.figure, index);
     // `d` is the figure as drawn: a witnessed edge in Syzygy's words and marked Observed, every other element keeping the draft's label
     // and marking.
     const words = (id: string): string | undefined => relationOf(id)?.evidence?.words;
     const d: DraftDiagram = local?.edgeRelations === undefined ? asDrafted
-      : { ...asDrafted, edges: asDrafted.edges.map(e => { const said = words(e.id); return said === undefined ? e : { ...e, label: said, epistemic: 'observed' as const, sourceIds: [] }; }) };
+      : { ...asDrafted, edges: asDrafted.edges.map(e => { const said = words(e.id); return said !== undefined ? { ...e, label: said, epistemic: 'observed' as const, sourceIds: [] }
+        : derivedIds.has(e.id) ? { ...e, epistemic: 'unknown' as const, sourceIds: [] } : e; }) };
     const nodes = new Map(d.nodes.map(node => [node.id, node]));
     // A withheld node or edge (v1.5) reads `Withheld item` and says, in Syzygy's words, what is withheld, with its count.
     const held = (id: string): WithheldNote | undefined => local?.withheldElements?.get(id);
     const heldText = (id: string): string => held(id) === undefined ? '' : ` <span class="withheld-note">${escape(withheldWords(held(id)!))}</span>`;
     const heldAttrs = (id: string): string => held(id) === undefined ? '' : ' data-unknown-reason="excluded-content"';
-    const nodeList = d.nodes.map(n => claim('li', n.id, n.epistemic, `${escape(n.label)}${heldText(n.id)} ${mark(from, n.epistemic)} ${refs(from, n.sourceIds, n.id)}`, heldAttrs(n.id), held(n.id) === undefined ? null : 'excluded-content', held(n.id) === undefined ? undefined : { withheldSources: held(n.id)!.sources })).join('');
+    const nodeList = d.nodes.map(n => { const shown = asShown(from, n.id, index); return shown !== undefined ? `<li>${escape(n.label)}${shown}</li>` : claim('li', n.id, n.epistemic, `${escape(n.label)}${heldText(n.id)} ${mark(from, n.epistemic)} ${refs(from, n.sourceIds, n.id)}`, heldAttrs(n.id), held(n.id) === undefined ? null : 'excluded-content', held(n.id) === undefined ? undefined : { withheldSources: held(n.id)!.sources }); }).join('');
     const witnessItem = (e: DraftDiagram['edges'][number], relation: WitnessedRelation): string =>
       `<li${witnessAttrs(relation)} data-epistemic="observed">${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(relation.evidence.words)} <span class="derived-mark">Witnessed by Syzygy</span>`
       + `<span class="visually-hidden ev"> ${escape(`Evidence: label Observed; witnessed by fact ${relation.witness.fact} (${relation.evidence.factKind}), derived by Syzygy by rule ${relation.witness.rule} version ${relation.witness.ruleVersion} at revision ${relation.evidence.revision}; record sha256:${relation.evidence.recordSha256}.`)}</span></li>`;
     const diagramRelationEdges: typeof relationEdges = [];
     const edgeList = d.edges.map(e => {
       const relation = relationOf(e.id);
-      if (relation !== undefined) diagramRelationEdges.push({ index, entry: { diagram: d.id, page: from, id: e.id, from: e.from, to: e.to, epistemic: e.epistemic, text: e.label, relation: relation.relation, witness: relation.witness } });
+      if (relation !== undefined) diagramRelationEdges.push({ index, entry: { diagram: d.id, page: from, id: e.id, from: e.from, to: e.to, epistemic: e.epistemic, text: e.label, ...(derivedIds.has(e.id) ? { basis: 'derived' } : {}), relation: relation.relation, witness: relation.witness } });
       if (relation?.evidence !== undefined) return witnessItem(e, relation);
+      const ends = `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}`;
+      // A derived relationship not witnessed (version 2.24): Syzygy's words for what it could not derive, and the state's reason.
+      if (derivedIds.has(e.id)) {
+        const reason = relation === undefined ? 'unknown' : relation.witness.state === 'challenged' ? 'challenged' : relation.witness.reason ?? 'unknown';
+        return `<li data-relation="${escape(relation?.relation ?? '')}" data-unknown-reason="${escape(reason)}">${ends}: Syzygy could not derive this relation (${escape(reason)})</li>`;
+      }
+      const shown = asShown(from, e.id, index);
+      if (shown !== undefined) return `<li>${ends}: ${escape(e.label)}${shown}</li>`;
       return claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)}${heldText(e.id)} ${mark(from, e.epistemic)} ${refs(from, e.sourceIds, e.id)}`, `${heldAttrs(e.id)}${relation === undefined ? '' : witnessAttrs(relation)}`, held(e.id) === undefined ? null : 'excluded-content', held(e.id) === undefined ? undefined : { withheldSources: held(e.id)!.sources });
     }).join('');
     // A witnessed arrow's group also carries `data-epistemic="observed"`; its line style is the `observed` class every arrow's marking gives.
     // Keyed by edge id: `renderDiagramSvg` asks the hook for nodes too, which get nothing here because check's `duplicate-id` keeps every
     // identity of a rendered (passed) draft unique, so no node shares an edge's id.
-    const edgeAttrs = new Map(d.edges.flatMap(e => {
+    const edgeAttrs = new Map([...d.nodes.flatMap(n => (shared(n.id) ? [[n.id, sharedAttr(n.id, 'element')] as const] : [])), ...d.edges.flatMap(e => {
       const relation = relationOf(e.id);
-      return relation === undefined ? [] : [[e.id, `${witnessAttrs(relation)}${relation.evidence === undefined ? '' : ' data-epistemic="observed"'}`] as const];
-    }));
+      const marking = relation?.evidence !== undefined ? ' data-epistemic="observed"' : derivedIds.has(e.id) ? ' data-epistemic="unknown"' : '';
+      const attrs = `${sharedAttr(e.id, 'relationship')}${relation === undefined ? '' : witnessAttrs(relation)}${marking}`;
+      return attrs === '' ? [] : [[e.id, attrs] as const];
+    })]);
     let svg: string;
     try {
       svg = edgeAttrs.size === 0 ? renderDiagramSvg(d, index, escape, local === undefined ? undefined : READABLE_SPACING)
@@ -812,10 +858,59 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // its phone form, of which the stylesheet displays one by the width of the `figure-forms` box. Each participant, lane and step is a claim
   // as a node is, and each message as an edge is, listed once; the phone form carries no identity, citation, anchor or label token.
   const figurePages = new Set<string>();
+  // The pages that render a containment's two forms (version 2.23), which alone carry the outline's rules.
+  const containmentPages = new Set<string>();
   // The pages that render a subsection (version 2.16), which alone carry the subsection and contents-list style rules.
   const subsectionPages = new Set<string>();
   const figureStructures: { readonly index: number; readonly entry: Record<string, unknown> }[] = [];
-  const kindedFigure = (from: string, d: DraftDiagram, figure: DraftFigure, index: number): string => {
+  // A v11 containment (version 2.23): the figure a graph figure with its home takes, holding its drawing and its phone form, a nested list.
+  // Each group is a claim as a node is, listed once in preorder; a witnessed nesting is listed after them in Syzygy's words, Observed, with
+  // no claim anchor, and leaves both groups' boxes, items and marks as the draft states them.
+  const containmentFigure = (from: string, d: DraftDiagram, groups: readonly DraftContainmentGroup[], index: number): string => {
+    const held = (id: string): WithheldNote | undefined => local?.withheldElements?.get(id);
+    const heldText = (id: string): string => held(id) === undefined ? '' : ` <span class="withheld-note">${escape(withheldWords(held(id)!))}</span>`;
+    const heldAttrs = (id: string): string => held(id) === undefined ? '' : ' data-unknown-reason="excluded-content"';
+    const preorder: { readonly group: DraftContainmentGroup; readonly parent: DraftContainmentGroup | undefined; readonly level: number }[] = [];
+    const visit = (group: DraftContainmentGroup, parent: DraftContainmentGroup | undefined, level: number): void => {
+      preorder.push({ group, parent, level });
+      for (const child of group.children) visit(child, group, level + 1);
+    };
+    for (const group of groups) visit(group, undefined, 1);
+    let svg: string, layout: ReturnType<typeof layoutContainment>;
+    try {
+      svg = renderContainmentSvg(groups, index, escape, id => sharedAttr(id, 'element'));
+      assertInertSvg(svg);
+      layout = layoutContainment(groups);
+    } catch {
+      return notice(from, d.id, { kind: 'unresolved', reason: 'diagram could not be rendered inertly', references: [...new Set(preorder.flatMap(({ group }) => group.sourceIds))] });
+    }
+    const listed = preorder.map(({ group, parent }) => { const shown = asShown(from, group.id, index); return shown !== undefined
+      ? `<li>${escape(group.label)}${parent === undefined ? '' : ` (in ${escape(parent.label)})`}${shown}</li>` : claim('li', group.id, group.epistemic,
+      `${escape(group.label)}${parent === undefined ? '' : ` (in ${escape(parent.label)})`}${heldText(group.id)} ${mark(from, group.epistemic)} ${refs(from, group.sourceIds, group.id)}`,
+      heldAttrs(group.id), held(group.id) === undefined ? null : 'excluded-content', held(group.id) === undefined ? undefined : { withheldSources: held(group.id)!.sources }); }).join('');
+    const witnessed = preorder.flatMap(({ group, parent }) => {
+      const relation = parent === undefined ? undefined : relationOf(group.id);
+      return relation?.evidence === undefined ? [] : [`<li${witnessAttrs(relation)} data-epistemic="observed">${escape(parent!.label)} contains ${escape(group.label)}: <span class="derived-mark">Witnessed by Syzygy</span>`
+        + `<span class="visually-hidden ev"> ${escape(`Evidence: label Observed; witnessed by fact ${relation.witness.fact} (${relation.evidence.factKind}), derived by Syzygy by rule ${relation.witness.rule} version ${relation.witness.ruleVersion} at revision ${relation.evidence.revision}; record sha256:${relation.evidence.recordSha256}.`)}</span></li>`];
+    }).join('');
+    const outline = (group: DraftContainmentGroup): string =>
+      `<li class="${group.epistemic}">${escape(group.label)}${group.epistemic === 'unknown' ? ' ?' : ''}${group.children.length === 0 ? '' : `<ul>${group.children.map(outline).join('')}</ul>`}</li>`;
+    const witnesses = preorder.filter(({ group, parent }) => parent !== undefined && relationOf(group.id)?.evidence !== undefined).length;
+    const tallyHead = `${counted(preorder.length, 'group', 'groups')} in ${counted(layout.levels, 'level', 'levels')}`;
+    const tally = figureLegend(preorder.map(({ group }) => group.epistemic), 0, 0, 'as marked', tallyHead);
+    // ` {N} nestings witnessed by Syzygy.` follows the tally where at least one nesting is witnessed.
+    const legend = witnesses === 0 ? tally : tally.replace(/<\/p>$/u, ` ${counted(witnesses, 'nesting', 'nestings')} witnessed by Syzygy.</p>`);
+    containmentPages.add(from);
+    figureStructures.push({ index, entry: { diagram: d.id, kind: CONTAINMENT_KIND, page: from, laidOutPx: layout.width,
+      groups: preorder.map(({ group, parent, level }) => ({ id: group.id, parent: parent?.id ?? null, level })),
+      nestings: preorder.flatMap(({ group, parent }) => (parent === undefined ? [] : [{ parent: parent.id, child: group.id, witness: relationOf(group.id)?.witness ?? null }])) } });
+    if (local !== undefined) figureHomes.push({ id: d.id, title: d.title, home: { page: from, fragment: `figure-${d.id}`, label: 'Figure' } });
+    const ids = figureIds(index);
+    return `<figure${curated} data-figure-kind="${CONTAINMENT_KIND}"${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${CONTAINMENT_KIND}</span> ${escape(d.relationship)}</p>`
+      + `<div class="figure-forms" data-figure-width="${layout.width}"><div class="diagram-scroll figure-drawing">${svg}</div><ul class="figure-outline">${groups.map(outline).join('')}</ul></div>`
+      + `${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${listed}${witnessed}</ul>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(figureToMermaid({ kind: CONTAINMENT_KIND, groups: [...groups] }))}</pre></details></details></figure>`;
+  };
+  const kindedFigure = (from: string, d: DraftDiagram, figure: Exclude<DraftFigure, { readonly kind: typeof CONTAINMENT_KIND }>, index: number): string => {
     const held = (id: string): WithheldNote | undefined => local?.withheldElements?.get(id);
     const heldText = (id: string): string => held(id) === undefined ? '' : ` <span class="withheld-note">${escape(withheldWords(held(id)!))}</span>`;
     const heldAttrs = (id: string): string => held(id) === undefined ? '' : ' data-unknown-reason="excluded-content"';
@@ -944,7 +1039,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const add = (path: string, depth: number, pageTitle: string, main: string | (() => { markup: string; styles: string }), mapCss = ''): void => {
     pageTitles.set(path, pageTitle);
     const draw = (markup: string, styles: string): string =>
-      page(`${pageTitle} — ${title}`, path, nav(path), legended(path, markup), chrome, figurePages.has(path), styles, subsectionPages.has(path));
+      page(`${pageTitle} — ${title}`, path, nav(path), legended(path, markup), chrome, figureKindsCss(figurePages.has(path), containmentPages.has(path)), styles, subsectionPages.has(path));
     if (typeof main === 'string') files.set(path, draw(main, mapCss));
     else {
       files.set(path, '');
@@ -1329,6 +1424,12 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       // Present only for a schema-v9 draft (version 2.19): each graph edge as drawn, with its relation and witness state. A witnessed edge is
       // labelled `observed`, its text is Syzygy's words, and it is in no list of `claims`.
       ...(local.edgeRelations === undefined ? {} : { edges: [...relationEdges].sort((a, b) => a.index - b.index).map(({ entry }) => entry) }),
+      // Present only for a schema-v12 draft (version 2.24): its model, each element and relationship once, with the views selecting it and,
+      // for a relationship, the witness state a rule gave it at this render, null where no rule decides it.
+      ...(local.model === undefined ? {} : { model: {
+        elements: local.model.elements.map(e => ({ id: e.id, type: e.type, parent: e.parent, views: e.views })),
+        relationships: local.model.relationships.map(r => ({ id: r.id, from: r.from, to: r.to, relation: r.relation, basis: r.basis, views: r.views, witness: local.edgeRelations?.get(r.id)?.witness ?? null })),
+      } }),
       pages: [...pages.map(p => p.path), 'size-report.html'],
       claims: claimsByPage,
       nonNormative,
@@ -1352,7 +1453,12 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
  * withheld element's replaced label at render changes no width, and check's width depends on the draft's bytes alone. It throws for a
  * figure the site would not draw (one that is not inert), whose fit is then Unknown. */
 export function figureLaidOutWidth(figure: Parameters<typeof renderDiagramSvg>[0]
-  | ({ readonly kind: 'sequence' } & Parameters<typeof renderSequenceSvg>[0]) | ({ readonly kind: 'swimlane' } & Parameters<typeof renderSwimlaneSvg>[0])): number {
+  | ({ readonly kind: 'sequence' } & Parameters<typeof renderSequenceSvg>[0]) | ({ readonly kind: 'swimlane' } & Parameters<typeof renderSwimlaneSvg>[0])
+  | { readonly kind: typeof CONTAINMENT_KIND; readonly groups: readonly ContainmentClaim[] }): number {
+  if ('kind' in figure && figure.kind === CONTAINMENT_KIND) {
+    assertInertSvg(renderContainmentSvg(figure.groups, 0, escape));
+    return layoutContainment(figure.groups).width;
+  }
   // A figure the site cannot draw inertly renders a notice, not a drawing, so it has no width to fit: throwing makes its fit Unknown.
   if ('kind' in figure && figure.kind === 'sequence') {
     assertInertSvg(renderSequenceSvg(figure, 0, escape));
@@ -1427,7 +1533,7 @@ export function figureLegend(markings: readonly EpistemicMarking[], boxes: numbe
 
 /** A v7 figure kind's claims, participants or lanes then messages or steps; none for a graph figure. */
 const figureElements = (d: DraftDiagram): readonly DraftFigureElement[] => d.figure === undefined ? []
-  : d.figure.kind === 'sequence' ? [...d.figure.participants, ...d.figure.messages] : [...d.figure.lanes, ...d.figure.steps];
+  : d.figure.kind === CONTAINMENT_KIND ? containmentClaims(d.figure.groups) : d.figure.kind === 'sequence' ? [...d.figure.participants, ...d.figure.messages] : [...d.figure.lanes, ...d.figure.steps];
 
 /** The style rules a page carries only where a sequence or swimlane figure renders its two forms (version 2.5), so every other page keeps
  * its bytes. The `figure-forms` box is a size container; it displays its drawing while it is at least the drawing's laid-out width W wide
@@ -1441,6 +1547,29 @@ export const FIGURE_KINDS_CSS = `.figure-forms{container-type:inline-size}.figur
   + `.figure-drawing path.step-order{stroke:var(--muted);stroke-width:${tokens.line.svgHairline};stroke-dasharray:none}.figure-drawing marker.order-head path{fill:var(--muted)}`
   + `.legend-line.order{border-top:${tokens.line.hairline} solid var(--muted)}`
   + tokens.figureFormWidths.map(w => `@container (width < ${w}px){.figure-forms[data-figure-width="${w}"]>.figure-drawing{display:none}.figure-forms[data-figure-width="${w}"]>.figure-stepper{display:block}}`).join('');
+
+/** A v11 containment's groups in preorder (version 2.23). */
+const containmentClaims = (groups: readonly DraftContainmentGroup[]): DraftFigureElement[] => groups.flatMap(group => [group, ...containmentClaims(group.children)]);
+
+/** The phone form of a containment (version 2.23): a nested list at the 13 px figure text, each nested list indented 12 px, each item drawn
+ * with a left border solid, dashed or dotted by its mark, wrapping within its box. Carried only by a page that renders a containment's two
+ * forms. */
+export const CONTAINMENT_OUTLINE_CSS = `.figure-outline{display:none;margin:${tokens.spacing.small} ${tokens.spacing.none};padding-left:${tokens.spacing.none};list-style:none;`
+  + `font:${tokens.type.figureStepper}/${tokens.type.bodyLeading} var(--font-mono);overflow-wrap:anywhere}.figure-outline ul{list-style:none;margin:${tokens.spacing.none};padding-left:${tokens.spacing.outlineIndent}}`
+  + `.figure-outline li{border-left:${tokens.line.emphasis} solid var(--accent);padding:${tokens.spacing.stepInset} ${tokens.spacing.none} ${tokens.spacing.stepInset} ${tokens.spacing.mediumSmall};margin:${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.compact}}`
+  + `.figure-outline li.inferred{border-left-style:dashed}.figure-outline li.unknown{border-left-style:dotted}`;
+/** The queries that show a containment's drawing while its box is at least the drawing's laid-out width W wide and its outline while it is
+ * narrower. A page with a containment and no sequence or swimlane carries the size container and these in place of `FIGURE_KINDS_CSS`, so it
+ * carries none of the stepper's rules; a page with both carries `FIGURE_KINDS_CSS` and these too (a containment may be 224 px wide, a
+ * width the stepper's queries never name). */
+const CONTAINMENT_QUERY_CSS = tokens.containmentFormWidths.map(w => `@container (width < ${w}px){.figure-forms[data-figure-width="${w}"]>.figure-drawing{display:none}.figure-forms[data-figure-width="${w}"]>.figure-outline{display:block}}`).join('');
+const FIGURE_FORMS_CSS = '.figure-forms{container-type:inline-size}';
+/** The figure-kind style rules a page carries (versions 2.5 and 2.23): the stepper's where a sequence or swimlane renders its two forms,
+ * the outline's where a containment does, and neither where none does, so a page without a containment keeps its bytes. */
+export function figureKindsCss(stepper: boolean, containment: boolean): string {
+  if (!containment) return stepper ? FIGURE_KINDS_CSS : '';
+  return stepper ? `${FIGURE_KINDS_CSS}${CONTAINMENT_OUTLINE_CSS}${CONTAINMENT_QUERY_CSS}` : `${FIGURE_FORMS_CSS}${CONTAINMENT_OUTLINE_CSS}${CONTAINMENT_QUERY_CSS}`;
+}
 
 /** The subsection and on-page contents-list rules (version 2.16), carried only by a page that renders a subsection. Never sticky: sticky
  * styling stays scoped to the site navigation. */

@@ -106,7 +106,7 @@ function knownStylesheet(node: ts.Expression, isToken: (value: ts.Expression) =>
       || map.expression.name.text !== 'map' || map.arguments.length !== 1) return false;
   const widths = map.expression.expression;
   const callback = map.arguments[0]!;
-  return ts.isPropertyAccessExpression(widths) && widths.name.text === 'figureFormWidths' && isToken(widths)
+  return ts.isPropertyAccessExpression(widths) && (widths.name.text === 'figureFormWidths' || widths.name.text === 'containmentFormWidths') && isToken(widths)
     && ts.isArrowFunction(callback) && ts.isTemplateExpression(callback.body) && knownStylesheet(callback.body, isToken);
 }
 
@@ -250,7 +250,7 @@ function computedFigureWidth(expression: ts.Expression, isToken: (value: ts.Expr
   if (ts.isVariableDeclaration(parent)) return ts.isIdentifier(parent.name) && parent.name.text === 'mapWidthQuery';
   if (!ts.isCallExpression(parent) || !ts.isPropertyAccessExpression(parent.expression) || parent.expression.name.text !== 'map') return false;
   const widths = parent.expression.expression;
-  return ts.isPropertyAccessExpression(widths) && widths.name.text === 'figureFormWidths' && isToken(widths);
+  return ts.isPropertyAccessExpression(widths) && (widths.name.text === 'figureFormWidths' || widths.name.text === 'containmentFormWidths') && isToken(widths);
 }
 
 function tokenBinding(file: ts.SourceFile, checker: ts.TypeChecker): (expression: ts.Expression) => boolean {

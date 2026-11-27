@@ -26,8 +26,10 @@ import { derivedRecordFile, encodeDerivedRecord, secretPathOf } from './derived-
 import { CHECK_RECORD_LIMITS, NotARegularFileError, readBoundedFile } from './check-record-read.js';
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type BoundedCheckRecord, type RecordMeasure, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type MechanismAdvice, type ReviewVisibility, type SourceExampleAdvice, STEP_LOG_FORMAT, type VerifiedQuotation, errno, list, reviewVisibility, text } from './check-model.js';
-import { type Derived, type SubjectRules, applyHeroFindings, deriveFindings, draftRules, relationDecisions, relationFindings } from './check-derive.js';
-import { hasRelationForm, hasWithheldHeroIdentity } from './draft-schema.js';
+import { type Derived, type SubjectRules, applyHeroFindings, containmentRelationFindings, deriveFindings, draftRules, relationDecisions, relationFindings, type RelationDecisions } from './check-derive.js';
+import { applyContainmentFindings, containmentStructuralFindings, undecidedContainments } from './containment.js';
+import { expandModel, modelDecisions, modelFindings, modelIndex, modelRelationFindings, modelUndecided, undecidedViews } from './system-model.js';
+import { hasModelForm, hasRelationForm, hasWithheldHeroIdentity } from './draft-schema.js';
 import { BLOB_MODES } from './git-object-reader.js';
 import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
 export { CHECK_RECORD_FORMAT, STEP_LOG_FORMAT, DEFAULT_DRAFT, DRAFT_MAX_BYTES, reviewVisibility, lineRanges, blobRedaction } from './check-model.js';
@@ -277,6 +279,8 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // Version 2.19 (syzygy-3efd.28): after every finding version 2.16 reports, the `unit-reference` findings and then the `relation-challenged`
   // findings of a v9 draft, from the tree this check listed, the structure facts and the manifest facts it derived. The states of the edges
   // are decided only for a draft with no schema finding; an `unknown` state is never a finding. Check reads no currency policy for them.
+  // A v11 draft's group units and nestings (version 2.23), decided here and reported after its structural containment findings below.
+  let containmentDecisions: Pick<RelationDecisions, 'groupUnits' | 'nestings'> | undefined;
   if (plan.command === 'check' && parseFault === null && isRecord(doc) && hasRelationForm(doc['schemaVersion'])) {
     const isSecretPath = secretPathOf(screen);
     const blobs = new Set(listedEntries?.filter((entry) => BLOB_MODES.has(entry.mode)).map((entry) => entry.path));
@@ -289,11 +293,47 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
         structure: treeFacts === undefined ? { state: 'unknown' } : { state: 'derived', ...treeFacts },
         manifest: manifestFacts === undefined || manifestFacts.state !== 'derived' ? { state: 'unknown' } : manifestFacts,
         hidden,
-      });
-    findings.push(...relationFindings(findings.some((finding) => finding.kind === 'schema') ? { ...decisions, edges: [] } : decisions));
+      }, (element) => isWithheldElement(element, reach),
+      // A containment with a figure-kind, depth, size or flat finding has no nesting decided; where the draft has a schema finding no
+      // nesting is decided at all (cleared below), so the structural findings are read here as if no list had one.
+      undecidedContainments([...findings, ...containmentStructuralFindings(doc, new Set())]));
+    const schemaFault = findings.some((finding) => finding.kind === 'schema');
+    findings.push(...relationFindings(schemaFault ? { ...decisions, edges: [] } : decisions));
+    containmentDecisions = schemaFault ? { ...decisions, nestings: [] } : decisions;
   }
 
-  if (plan.command === 'check' && parseFault === null && isRecord(doc)) applyHeroFindings(doc, findings);
+  if (plan.command === 'check' && parseFault === null && isRecord(doc)) {
+    applyHeroFindings(doc, findings);
+    // Version 2.23: after every finding version 2.22 reports, a v11 draft's containment-depth, -size and -flat findings, then its groups'
+    // unit-reference and its nestings' relation-challenged findings.
+    applyContainmentFindings(doc, findings);
+    if (containmentDecisions !== undefined) findings.push(...containmentRelationFindings(containmentDecisions));
+  }
+
+  // Version 2.24: after every finding version 2.23 reports, a v12 draft's model and view findings, then the `relation-challenged` findings
+  // of its relationships and parents, decided once each from its views' expansion where no schema, unresolved-reference, element-type or
+  // element-parent finding stands.
+  if (plan.command === 'check' && parseFault === null && isRecord(doc) && hasModelForm(doc['schemaVersion'])) {
+    const isSecretPath = secretPathOf(screen);
+    const blobs = new Set(listedEntries?.filter((entry) => BLOB_MODES.has(entry.mode)).map((entry) => entry.path));
+    const hidden = (repositoryPath: string): boolean => secretOrUnder(repositoryPath.split('/'), isSecretPath) || screen.screenPath(repositoryPath) === 'denied-path';
+    const tree = listedEntries === undefined ? undefined : { hidden, isBlob: (repositoryPath: string) => blobs.has(repositoryPath) };
+    findings.push(...modelFindings(doc, new Set(findings.filter((finding) => finding.kind === 'schema').map((finding) => finding.at)), tree));
+    if (!modelUndecided(findings)) {
+      const reach = { citedBlobs, admitted, screen, consented: checked.contentClasses };
+      const elements = modelIndex(doc).elementById;
+      const held = (element: Readonly<Record<string, unknown>>): boolean => isWithheldElement(element, reach);
+      const endHeld = (id: unknown): boolean => { const entry = typeof id === 'string' ? elements.get(id) : undefined; return entry !== undefined && held(entry.element); };
+      const expanded = expandModel(doc).doc;
+      // A relationship either of whose elements renders as a withheld item is unasserted (`edge-not-inferred`), as a withheld edge is.
+      const decisions = relationDecisions(expanded, (edge) => edge['epistemic'] === 'inferred' && !held(edge) && !endHeld(edge['from']) && !endHeld(edge['to']), tree, {
+        structure: treeFacts === undefined ? { state: 'unknown' } : { state: 'derived', ...treeFacts },
+        manifest: manifestFacts === undefined || manifestFacts.state !== 'derived' ? { state: 'unknown' } : manifestFacts,
+        hidden,
+      }, held, undecidedViews(findings));
+      findings.push(...modelRelationFindings(modelDecisions(doc, decisions.edges, decisions.nestings)));
+    }
+  }
 
   const frozen = path.join(frozenDir, `rev-${revision}.json`), checkFile = path.join(checksDir, `rev-${revision}.json`);
   // A derived record already in place for this revision (planted, or left by a crash) is never overwritten or adopted: refused here,
@@ -329,11 +369,23 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   }, gate.found, declared);
   // Figure fit (syzygy-3efd.20): advice like readerAdvice, but kept in the draft's check record so a later check can be compared with
   // this one; an inventory check record carries none, and a draft that does not parse states nothing about fit.
-  const fit = plan.command === 'check' && parseFault === null ? figureFit(doc, deps.layoutFigure) : undefined;
+  // A v12 draft's figures, their advice and its reading ledger are its views' expansion's (version 2.24); an advisory's path is moved back
+  // to the model or view member it reads, and the ledger locates it at the diagram it was found in, as the expansion's own draft would.
+  const viewed = parseFault === null && isRecord(doc) && hasModelForm(doc['schemaVersion']) ? expandModel(doc) : undefined;
+  const figureDoc = viewed === undefined ? doc : viewed.doc;
+  const fit = plan.command === 'check' && parseFault === null ? figureFit(figureDoc, deps.layoutFigure) : undefined;
   // The reading ledger (REQ-polaris-generation-034 version 2.4, syzygy-3efd.21): counts over the draft beside figureFit, from the same
   // draft bytes, so two checks of one draft write the same member; an inventory check record carries none.
-  const advice = plan.command === 'check' && parseFault === null ? readerAdvice(doc) : undefined;
-  const ledger = fit === undefined || advice === undefined ? undefined : readingLedger(doc, fit, advice);
+  const figureAdvice = plan.command === 'check' && parseFault === null ? readerAdvice(figureDoc) : undefined;
+  // An advisory on a shared element or relationship is located once, at the first diagram whose view selects it (version 2.24).
+  const movedKey = (advisory: { readonly at: string }): string => JSON.stringify({ ...advisory, at: viewed!.move(advisory.at) });
+  const ledgerAdvice = figureAdvice === undefined || viewed === undefined ? figureAdvice
+    : { ...figureAdvice, advisories: figureAdvice.advisories.filter((advisory, k, all) => all.findIndex((other) => movedKey(other) === movedKey(advisory)) === k) };
+  const ledger = fit === undefined || ledgerAdvice === undefined ? undefined : readingLedger(figureDoc, fit, ledgerAdvice);
+  const advice = figureAdvice === undefined || viewed === undefined ? figureAdvice
+    // A relationship two views share is advised once, at its one path.
+    : { ...figureAdvice, advisories: [...new Map(figureAdvice.advisories.map((advisory) => ({ ...advisory, at: viewed.move(advisory.at) }))
+      .map((advisory) => [JSON.stringify(advisory), advisory] as const)).values()] };
   const stored = {
     ...record, ...(fit === undefined ? {} : { figureFit: fit }), ...(ledger === undefined ? {} : { readingLedger: ledger }),
     ...(manifestFacts === undefined ? {} : { manifestFacts }),
