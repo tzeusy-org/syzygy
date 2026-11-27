@@ -1,6 +1,6 @@
 # Proposed Capability 1 multiple-root adjudication amendment
 
-Candidate version unallocated. One MODIFIED requirement, CAP1-REQ-006.
+Candidate version 1.0. One MODIFIED requirement, CAP1-REQ-006.
 
 ## MODIFIED Requirements
 

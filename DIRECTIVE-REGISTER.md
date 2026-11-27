@@ -270,16 +270,16 @@ Owner-approved craft. 55 identifiers, defined across 8 files.
 | `RFC3-2` | Every manifest field names exactly one write authority | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:127 |
 | `RFC3-3` | Direct-write containment | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:214 |
 | `RFC3-4` | (location, not any field value, designates the governance root) | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:56 |
-| `RFC3-5` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:245 |
-| `RFC3-6` | Repository entries | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:268 |
-| `RFC3-7` | Consent records | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:278 |
-| `RFC3-8` | Revocation and withdrawal | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:304 |
-| `RFC3-9` | Drafting and repair | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:325 |
-| `RFC3-10` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:339 |
-| `RFC3-11` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:348 |
-| `RFC3-12` | Never authoritative for project-internal truth (SDR-30) | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:355 |
-| `RFC3-13` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:363 |
-| `RFC3-14` | Asymmetric relation semantics | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:368 |
+| `RFC3-5` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:248 |
+| `RFC3-6` | Repository entries | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:271 |
+| `RFC3-7` | Consent records | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:281 |
+| `RFC3-8` | Revocation and withdrawal | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:307 |
+| `RFC3-9` | Drafting and repair | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:328 |
+| `RFC3-10` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:342 |
+| `RFC3-11` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:351 |
+| `RFC3-12` | Never authoritative for project-internal truth (SDR-30) | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:358 |
+| `RFC3-13` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:366 |
+| `RFC3-14` | Asymmetric relation semantics | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:371 |
 | `RFC3-15` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:83 |
 | `RFC3-15(a)` | Why records/ exists | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:105 |
 | `RFC3-16` | Lifecycle status: a self-declaration inside content, an effective status outside it | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:117 |
@@ -289,22 +289,22 @@ Owner-approved craft. 55 identifiers, defined across 8 files.
 | `RFC3-16(d)` | Bounded mechanically instantiated URL-dossier local machine-credential data | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:390 |
 | `RFC3-17` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:406 |
 | `RFC3-17(a)` | Where challenges and their admission records live | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:415 |
-| `RFC3-18` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:420 |
-| `RFC3-19` | .syzygy/work/ | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:427 |
-| `RFC3-20` | .syzygy/cache/ is rebuildable projection, nothing else | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:440 |
-| `RFC3-21` | .syzygy/local/ is personal presentation state | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:453 |
-| `RFC3-22` | Version stamps | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:466 |
-| `RFC3-23` | Migrations are identity-preserving | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:473 |
-| `RFC3-24` | Migration is an explicit, reviewed, revertable act | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:482 |
-| `RFC3-25` | Forward and backward behavior | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:494 |
-| `RFC3-26` | openspec/ | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:505 |
-| `RFC3-27` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:513 |
-| `RFC3-28` | Spec anchors (SDR-32) | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:525 |
-| `RFC3-29` | One plane per repository; one root per Project — upheld | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:538 |
-| `RFC3-30` | Dual roles are lawful and per-pair | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:543 |
-| `RFC3-31` | Nesting is composition by declaration | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:599 |
-| `RFC3-32` | What a parent may never do | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:611 |
-| `RFC3-33` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:635 |
+| `RFC3-18` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:423 |
+| `RFC3-19` | .syzygy/work/ | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:430 |
+| `RFC3-20` | .syzygy/cache/ is rebuildable projection, nothing else | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:443 |
+| `RFC3-21` | .syzygy/local/ is personal presentation state | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:456 |
+| `RFC3-22` | Version stamps | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:469 |
+| `RFC3-23` | Migrations are identity-preserving | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:476 |
+| `RFC3-24` | Migration is an explicit, reviewed, revertable act | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:485 |
+| `RFC3-25` | Forward and backward behavior | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:497 |
+| `RFC3-26` | openspec/ | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:508 |
+| `RFC3-27` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:516 |
+| `RFC3-28` | Spec anchors (SDR-32) | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:528 |
+| `RFC3-29` | One plane per repository; one root per Project — upheld | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:541 |
+| `RFC3-30` | Dual roles are lawful and per-pair | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:546 |
+| `RFC3-31` | Nesting is composition by declaration | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:602 |
+| `RFC3-32` | What a parent may never do | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:614 |
+| `RFC3-33` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:638 |
 | `RFC4-1` | Two roles, one discipline | `.syzygy/governance/contracts/rfcs/RFC-0004/general-contract.md`:69 |
 | `RFC4-2` | Mandatory declaration set | `.syzygy/governance/contracts/rfcs/RFC-0004/general-contract.md`:77 |
 | `RFC4-3` | Emission obligations | `.syzygy/governance/contracts/rfcs/RFC-0004/general-contract.md`:100 |
@@ -607,16 +607,16 @@ Candidate — **binds nothing.** RFC-0010 and RFC-0011, plus the candidate copie
 | `RFC3-2` | Every manifest field names exactly one write authority | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:127 |
 | `RFC3-3` | Direct-write containment | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:214 |
 | `RFC3-4` | (location, not any field value, designates the governance root) | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:56 |
-| `RFC3-5` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:245 |
-| `RFC3-6` | Repository entries | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:268 |
-| `RFC3-7` | Consent records | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:278 |
-| `RFC3-8` | Revocation and withdrawal | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:304 |
-| `RFC3-9` | Drafting and repair | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:325 |
-| `RFC3-10` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:339 |
-| `RFC3-11` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:348 |
-| `RFC3-12` | Never authoritative for project-internal truth (SDR-30) | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:355 |
-| `RFC3-13` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:363 |
-| `RFC3-14` | Asymmetric relation semantics | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:368 |
+| `RFC3-5` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:248 |
+| `RFC3-6` | Repository entries | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:271 |
+| `RFC3-7` | Consent records | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:281 |
+| `RFC3-8` | Revocation and withdrawal | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:307 |
+| `RFC3-9` | Drafting and repair | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:328 |
+| `RFC3-10` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:342 |
+| `RFC3-11` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:351 |
+| `RFC3-12` | Never authoritative for project-internal truth (SDR-30) | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:358 |
+| `RFC3-13` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:366 |
+| `RFC3-14` | Asymmetric relation semantics | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:371 |
 | `RFC3-15` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:83 |
 | `RFC3-15(a)` | Why records/ exists | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:105 |
 | `RFC3-16` | Lifecycle status: a self-declaration inside content, an effective status outside it | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:117 |
@@ -626,22 +626,22 @@ Candidate — **binds nothing.** RFC-0010 and RFC-0011, plus the candidate copie
 | `RFC3-16(d)` | Bounded mechanically instantiated URL-dossier local machine-credential data | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:390 |
 | `RFC3-17` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:406 |
 | `RFC3-17(a)` | Where challenges and their admission records live | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:415 |
-| `RFC3-18` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:420 |
-| `RFC3-19` | .syzygy/work/ | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:427 |
-| `RFC3-20` | .syzygy/cache/ is rebuildable projection, nothing else | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:440 |
-| `RFC3-21` | .syzygy/local/ is personal presentation state | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:453 |
-| `RFC3-22` | Version stamps | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:466 |
-| `RFC3-23` | Migrations are identity-preserving | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:473 |
-| `RFC3-24` | Migration is an explicit, reviewed, revertable act | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:482 |
-| `RFC3-25` | Forward and backward behavior | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:494 |
-| `RFC3-26` | openspec/ | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:505 |
-| `RFC3-27` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:513 |
-| `RFC3-28` | Spec anchors (SDR-32) | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:525 |
-| `RFC3-29` | One plane per repository; one root per Project — upheld | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:538 |
-| `RFC3-30` | Dual roles are lawful and per-pair | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:543 |
-| `RFC3-31` | Nesting is composition by declaration | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:599 |
-| `RFC3-32` | What a parent may never do | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:611 |
-| `RFC3-33` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:635 |
+| `RFC3-18` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:423 |
+| `RFC3-19` | .syzygy/work/ | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:430 |
+| `RFC3-20` | .syzygy/cache/ is rebuildable projection, nothing else | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:443 |
+| `RFC3-21` | .syzygy/local/ is personal presentation state | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:456 |
+| `RFC3-22` | Version stamps | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:469 |
+| `RFC3-23` | Migrations are identity-preserving | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:476 |
+| `RFC3-24` | Migration is an explicit, reviewed, revertable act | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:485 |
+| `RFC3-25` | Forward and backward behavior | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:497 |
+| `RFC3-26` | openspec/ | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:508 |
+| `RFC3-27` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:516 |
+| `RFC3-28` | Spec anchors (SDR-32) | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:528 |
+| `RFC3-29` | One plane per repository; one root per Project — upheld | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:541 |
+| `RFC3-30` | Dual roles are lawful and per-pair | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:546 |
+| `RFC3-31` | Nesting is composition by declaration | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:602 |
+| `RFC3-32` | What a parent may never do | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:614 |
+| `RFC3-33` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:638 |
 | `RFC4-1` | Two roles, one discipline | `.syzygy/governance/contracts/candidates/rfcs/RFC-0004/general-contract.md`:69 |
 | `RFC4-2` | Mandatory declaration set | `.syzygy/governance/contracts/candidates/rfcs/RFC-0004/general-contract.md`:77 |
 | `RFC4-3` | Emission obligations | `.syzygy/governance/contracts/candidates/rfcs/RFC-0004/general-contract.md`:100 |

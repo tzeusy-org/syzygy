@@ -401,7 +401,8 @@ export type RootDesignationResult =
       readonly status: 'contradiction';
       readonly kind: 'multiple-roots';
       readonly roots: readonly RepositoryId[];
-      readonly routedTo: 'owner';
+      readonly routedTo: 'adjudication';
+      readonly reason: 'contradicted-pending-adjudication';
     }
   | {
       readonly status: 'unknown';
@@ -410,11 +411,10 @@ export type RootDesignationResult =
     };
 
 // Governance-root designation by declaration location (RFC3-4). Exactly
-// one declaring repository is the root; two or more is a contradiction
-// routed to the owner with no winner picked and nothing repaired; zero
-// renders Unknown (`missing-declaration`) at the workspace level, never
-// dropped, never guessed, and mints no contradiction (CAP1-REQ-006;
-// RFC1-1).
+// one declaring repository is the root. Two or more yield a contradiction
+// on the adjudication route (RFC1-21; RFC2-24 reason 8) with no root picked.
+// Zero yields workspace-level Unknown with `missing-declaration`
+// (CAP1-REQ-006; RFC1-1).
 export function designateRoots(
   candidates: readonly RootCandidate[],
 ): RootDesignationResult {
@@ -433,7 +433,8 @@ export function designateRoots(
       status: 'contradiction',
       kind: 'multiple-roots',
       roots: declaring,
-      routedTo: 'owner',
+      routedTo: 'adjudication',
+      reason: UNKNOWN_REASONS[7],
     };
   }
   return {

@@ -147,6 +147,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -160,7 +161,12 @@ REQ_HEADER_RE = re.compile(r"^### Requirement: (.+?)[ \t]*$", re.M)
 SCENARIO_RE = re.compile(r"^#### Scenario:", re.M)
 RENAME_FROM_RE = re.compile(r"^-\s*FROM:\s*`### Requirement:\s*(.+?)`\s*$", re.M)
 RENAME_TO_RE = re.compile(r"^-\s*TO:\s*`### Requirement:\s*(.+?)`\s*$", re.M)
-STATUS_FIGURE_RE = re.compile(rb"(\d+) requirements and (\d+) scenarios in the effective composition")
+STATUS_FIGURE_RE = re.compile(r"([0-9]+) requirements and ([0-9]+) scenarios in the effective composition")
+SCREENING_STATUS_PREFIXES = (
+    "Before the derived-base screening version is effective, Polaris has ",
+    "With the derived-base screening version effective, Polaris has ",
+)
+SCREENING_STATUS_TOTALS = re.compile(r"([0-9]+) requirements and ([0-9]+) scenarios\.")
 
 
 class ScenarioCountError(RuntimeError):
@@ -466,6 +472,8 @@ class CompositionResult:
     per_file: list[tuple[str, FileDelta, FileDelta]]  # label, method-1 delta, method-2 delta
     per_requirement: dict[str, tuple[str, int]]
     total: int
+    screening_state: str
+    source_example_state: str
 
 
 def declared_source_amendment(root: Path) -> str | None:
@@ -762,6 +770,38 @@ def figplan_amendment(root: Path) -> str | None:
     return text
 
 
+def screening_amendment(root: Path) -> tuple[str, str | None]:
+    """Return only a Git-bound, effective derived-base screening subject."""
+    import check_spec_reconciliation as adoption
+
+    state, text, records, subjects = adoption.vbase_screening_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("derived-base screening adoption findings:\n" + "\n".join(records + subjects))
+    if state == "effective" and text:
+        return state, text
+    if state in {"candidate", "staged", "reverted"} and text is None:
+        return state, None
+    raise ScenarioCountError(f"derived-base screening returned an invalid binding result ({state})")
+
+
+def source_example_amendment(root: Path) -> tuple[str, str | None]:
+    import check_spec_reconciliation as adoption
+
+    state, text, records, subjects = adoption.p5_advice_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("source-example advice adoption findings:\n" + "\n".join(records + subjects))
+    return state, text
+
+
+def screening_inputs() -> tuple[str, ...]:
+    """Inputs a hypothetical source patch may not change while reusing Git proof."""
+    import check_spec_reconciliation as adoption
+
+    union = Path(adoption.VBASE_SCREENING_SPEC).parents[2] / "GOVERNING-DEPENDENCIES.json"
+    return (adoption.AGENT_ADOPTIONS, adoption.FIGPLAN_SPEC, adoption.VBASE_SPEC,
+            adoption.VBASE_SCREENING_SPEC, union.as_posix(), *adoption.P5_ADVICE_SUBJECTS)
+
+
 def covhold_amendment(root: Path) -> str | None:
     """Verified text, a pending or retired amendment, or a counting refusal."""
     import check_spec_reconciliation as adoption
@@ -782,8 +822,17 @@ def term_brief_amendment(root: Path) -> str | None:
     return text
 
 
-def build_composition(root: Path) -> CompositionResult:
+def build_composition(root: Path, *, screening_authority: Path | None = None) -> CompositionResult:
     import check_spec_reconciliation as adoption
+    if screening_authority is not None:
+        for rel in screening_inputs():
+            copied, authority = root / rel, screening_authority / rel
+            if (copied.is_file() != authority.is_file()
+                    or (copied.is_file() and copied.read_bytes() != authority.read_bytes())):
+                raise ScenarioCountError(f"proposed patch changes derived-base screening binding input {rel}")
+    authority = screening_authority if screening_authority is not None else root
+    screening_state, screening = screening_amendment(authority)
+    source_example_state, source_example = source_example_amendment(authority)
     sources = [(path.relative_to(root).as_posix(), path.read_text(encoding="utf-8"))
                for path in discover_composition_files(root)]
     for label, text in ((adoption.DECLARED_SOURCE_SPEC, declared_source_amendment(root)),
@@ -819,7 +868,9 @@ def build_composition(root: Path) -> CompositionResult:
                         (adoption.WORTH_SPEC, worth_amendment(root)),
                         (adoption.TERM_BRIEF_SPEC, term_brief_amendment(root)),
                         (adoption.QKIND_SPEC, qkind_amendment(root)),
-                        (adoption.FIGPLAN_SPEC, figplan_amendment(root))):
+                        (adoption.FIGPLAN_SPEC, figplan_amendment(root)),
+                        (adoption.VBASE_SCREENING_SPEC, screening),
+                        (adoption.P5_ADVICE_SPEC, source_example)):
         if text is not None:
             sources.append((label, text))
 
@@ -846,6 +897,8 @@ def build_composition(root: Path) -> CompositionResult:
         per_file=per_file,
         per_requirement=composed_1,
         total=total,
+        screening_state=screening_state,
+        source_example_state=source_example_state,
     )
 
 
@@ -886,6 +939,8 @@ def composition_inputs(root: Path) -> list[Path]:
     term_brief_amendment(root)
     qkind_amendment(root)
     figplan_amendment(root)
+    screening_amendment(root)
+    source_example_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
         adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
         *adoption.URL_SOURCE_RFC_PATHS, *adoption.FIGURE_SUBJECTS, *adoption.DERIVED_SUBJECTS,
@@ -894,25 +949,67 @@ def composition_inputs(root: Path) -> list[Path]:
         *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.FINDPAGES_SUBJECTS, *adoption.SUBSEC_SUBJECTS, *adoption.RELTYPE_SUBJECTS, *adoption.HERO_SUBJECTS, *adoption.READERS_SUBJECTS, *adoption.CONT_SUBJECTS, *adoption.MODEL_SUBJECTS, *adoption.WORTH_SUBJECTS,
         *adoption.REACH_SUBJECTS, *adoption.READMIT_SUBJECTS, *adoption.RAW_READ_SUBJECTS, *adoption.TREEREAD_SUBJECTS,
         *adoption.VERIFY_SUBJECTS, *adoption.QFILE_SUBJECTS, *adoption.SCRIPTED_GRADE_SUBJECTS, *adoption.STEP_MEASURES_SUBJECTS, *adoption.COVHOLD_SUBJECTS, *adoption.EDIT_ACCOUNT_SUBJECTS,
-        *adoption.TERM_BRIEF_SUBJECTS, *adoption.QKIND_SUBJECTS, *adoption.FIGPLAN_SUBJECTS,
+        *adoption.TERM_BRIEF_SUBJECTS, *adoption.QKIND_SUBJECTS, *adoption.FIGPLAN_SUBJECTS, *screening_inputs(),
     }
     files = discover_composition_files(root)
     files += [root / rel for rel in sorted(paths) if (root / rel).is_file()]
     return list(dict.fromkeys(files))
 
 
-def read_status_assertion(root: Path) -> tuple[int, int]:
+def read_status_assertion(root: Path, *, screening_state: str,
+                          source_example_state: str) -> tuple[int, int]:
+    import check_spec_reconciliation as adoption
+
     path = root / STATUS_PAGE_REL
     if not path.is_file():
         raise ScenarioCountError(f"missing {STATUS_PAGE_REL} at {root}")
-    data = path.read_bytes()
-    m = STATUS_FIGURE_RE.search(data)
-    if not m:
-        raise ScenarioCountError(
-            f"could not find 'N requirements and N scenarios in the effective composition' "
-            f"sentence in {path}"
-        )
-    return int(m.group(1)), int(m.group(2))
+    lines = [line.strip() for line in adoption.visible_route_lines(path.read_text(encoding="utf-8"))]
+    legacy = STATUS_FIGURE_RE.findall("\n".join(lines))
+    phase_lines = [[line for line in lines if line.startswith(prefix)]
+                   for prefix in adoption.VBASE_PHASE_PREFIXES]
+    if screening_state != "candidate" or (root / adoption.VBASE_SCREENING_SPEC).exists() or any(phase_lines):
+        figures = []
+        for prefix, values in zip(SCREENING_STATUS_PREFIXES, phase_lines, strict=True):
+            match = SCREENING_STATUS_TOTALS.fullmatch(
+                values[0].removeprefix(prefix)
+            ) if len(values) == 1 else None
+            if match is None:
+                raise ScenarioCountError(f"{path} needs exactly one complete screening count starting with {prefix!r}")
+            figures.append((int(match[1]), int(match[2])))
+        if legacy:
+            raise ScenarioCountError(f"{path} has an unconditional composition count beside the screening counts")
+        screening_figure = figures[screening_state == "effective"]
+        if source_example_state not in {"staged", "effective"}:
+            return screening_figure
+        if screening_state != "effective":
+            raise ScenarioCountError("source-example advice requires effective screening")
+        candidates = [line for line in lines if line.startswith(adoption.P5_ADVICE_COUNT_SCOPE)]
+        advisory = adoption.P5_ADVICE_COUNT.fullmatch(candidates[0]) if len(candidates) == 1 else None
+        if advisory is None:
+            raise ScenarioCountError(f"{path} needs one complete source-example advice count")
+        advisory_figure = int(advisory[1]), int(advisory[2])
+        old_count, new_count = source_example_member_counts(root)
+        if advisory_figure != (screening_figure[0], screening_figure[1] + new_count - old_count):
+            raise ScenarioCountError(f"{path} source-example advice count differs from its two source members")
+        return advisory_figure if source_example_state == "effective" else screening_figure
+
+    if len(legacy) != 1:
+        raise ScenarioCountError(f"{path} needs exactly one historical effective composition count")
+    return int(legacy[0][0]), int(legacy[0][1])
+
+
+def source_example_member_counts(root: Path) -> tuple[int, int]:
+    import check_spec_reconciliation as adoption
+
+    counts = []
+    for rel in (adoption.VBASE_SCREENING_SPEC, adoption.P5_ADVICE_SPEC):
+        text = (root / rel).read_text(encoding="utf-8")
+        by_regex = parse_regex(text, rel).modified
+        by_lines = parse_manual(text, rel).modified
+        if len(by_regex) != 1 or by_regex != by_lines:
+            raise ScenarioCountError(f"{rel} source-example advice member counts disagree")
+        counts.append(by_regex[0].scenario_count)
+    return counts[0], counts[1]
 
 
 # --------------------------------------------------------------------------
@@ -1130,7 +1227,8 @@ def _check_totals(result: CompositionResult, status_reqs: int, status_scenarios:
 
 def _run_check(root: Path, *, expect: int | None = None) -> tuple[CompositionResult, int, int]:
     result = build_composition(root)
-    status_reqs, status_scenarios = read_status_assertion(root)
+    status_reqs, status_scenarios = read_status_assertion(
+        root, screening_state=result.screening_state, source_example_state=result.source_example_state)
     _check_totals(result, status_reqs, status_scenarios, expect=expect)
     return result, status_reqs, status_scenarios
 
@@ -1151,7 +1249,7 @@ def _copy_composition_inputs(root: Path, dest: Path) -> None:
         target.write_bytes(source.read_bytes())
 
 
-def _later_row_predicates(adoption, keep: tuple[str, ...]) -> list[tuple[str, object, str]]:
+def _later_row_predicates(adoption, keep: tuple[str, ...]) -> list[tuple[str, Callable[[str], bool], str]]:
     """Every Polaris amendment row predicate the adoption module defines, but those named in `keep`,
     each as `(name, predicate, tag)`.
 
@@ -1176,23 +1274,34 @@ def _later_row_predicates(adoption, keep: tuple[str, ...]) -> list[tuple[str, ob
     return [(name, getattr(adoption, name), getattr(adoption, paired[name])) for name in names if name not in keep]
 
 
-def _project_ledger(ledger: Path, predicates: list[tuple[str, object, str]]) -> None:
-    """Remove from `ledger` every row any of `predicates` claims, refusing a projection that cannot be trusted.
-
-    Each predicate must remove every row that names its amendment's tag. A predicate may remove no row
-    only when no row names its tag: that amendment is pending, so nothing of it is in force to project
-    away (a drafted package carries its predicate before its row lands).
-    """
+def _project_ledger(ledger: Path, predicates: list[tuple[str, Callable[[str], bool], str]]) -> None:
+    """Remove later adoption claims without treating references in prose as claims."""
     lines = ledger.read_text(encoding="utf-8").splitlines(keepends=True)
+    removed = set()
     for name, claims, tag in predicates:
-        tagged = [line for line in lines if tag in line]
-        removed = [line for line in lines if claims(line.rstrip("\n"))]
-        if any(line not in removed for line in tagged):
-            raise ScenarioCountError(f"selftest setup error: `{name}` misses a ledger row naming `{tag}`")
-    kept = [line for line in lines if not any(claims(line.rstrip("\n")) for _name, claims, _tag in predicates)]
-    if len(kept) == len(lines):
+        tag_cells = {tag, f"`{tag}`"}
+        for line in lines:
+            cells = [cell.strip() for cell in line.split("|")[1:-1]]
+            tagged = tag_cells.intersection(cells[6:] if len(cells) == 7 else cells)
+            claimed = claims(line.rstrip("\n"))
+            if tagged and not claimed:
+                raise ScenarioCountError(f"selftest setup error: `{name}` misses a ledger row claiming `{tag}`")
+            if claimed:
+                removed.add(line)
+    if not removed:
         raise ScenarioCountError("selftest setup error: the ledger projection removed no row")
-    ledger.write_text("".join(kept), encoding="utf-8")
+    ledger.write_text("".join(line for line in lines if line not in removed), encoding="utf-8")
+
+
+def _write_historical_status(root: Path, requirements: int, scenarios: int) -> None:
+    import check_spec_reconciliation as adoption
+
+    for path in (adoption.VBASE_SCREENING_SPEC, *adoption.P5_ADVICE_SUBJECTS):
+        (root / path).unlink(missing_ok=True)
+    (root / STATUS_PAGE_REL).write_text(
+        f"{requirements} requirements and {scenarios} scenarios in the effective composition.\n",
+        encoding="utf-8",
+    )
 
 
 def _declared_source_selftest(base: Path) -> None:
@@ -1203,9 +1312,7 @@ def _declared_source_selftest(base: Path) -> None:
     fixture = base / "declared-source"
     _copy_composition_inputs(ROOT, fixture)
     _project_ledger(fixture / adoption.AGENT_ADOPTIONS, _later_row_predicates(adoption, keep=()))
-    status = fixture / STATUS_PAGE_REL
-    status.write_bytes(STATUS_FIGURE_RE.sub(
-        b"38 requirements and 277 scenarios in the effective composition", status.read_bytes(), count=1))
+    _write_historical_status(fixture, 38, 277)
     result, _reqs, _scenarios = _run_check(fixture)
     expected = {"Operator-agent authoring mode": 5,
                 "Agent brief and mechanically checked draft": 28,
@@ -1247,9 +1354,7 @@ def _url_source_selftest(base: Path) -> None:
     _copy_composition_inputs(ROOT, fixture)
     _project_ledger(fixture / adoption.AGENT_ADOPTIONS,
                     _later_row_predicates(adoption, keep=("is_url_source_row",)))
-    status = fixture / STATUS_PAGE_REL
-    status.write_bytes(STATUS_FIGURE_RE.sub(
-        b"39 requirements and 333 scenarios in the effective composition", status.read_bytes(), count=1))
+    _write_historical_status(fixture, 39, 333)
     result, _reqs, _scenarios = _run_check(fixture)
     expected = {"Provenance-bound source policy": 14,
                 "Operator-agent authoring mode": 6,
@@ -1273,6 +1378,47 @@ def _url_source_selftest(base: Path) -> None:
                  lambda: build_composition(projected))
 
 
+def _screening_status_selftest(base: Path) -> None:
+    import check_spec_reconciliation as adoption
+
+    fixture = base / "screening-status"
+    fixture.mkdir()
+    status = fixture / STATUS_PAGE_REL
+    holding = "Before the derived-base screening version is effective, Polaris has 39 requirements and 579 scenarios."
+    active = "With the derived-base screening version effective, Polaris has 39 requirements and 603 scenarios."
+    pair = f"{holding}\n\n{active}\n"
+    status.write_text(f"```md\n{active}\n```\n<!-- {holding} -->\n{pair}", encoding="utf-8")
+    for state, expected in (("candidate", (39, 579)), ("staged", (39, 579)),
+                            ("reverted", (39, 579)), ("effective", (39, 603))):
+        if read_status_assertion(fixture, screening_state=state, source_example_state="candidate") != expected:
+            raise ScenarioCountError(f"screening status did not select the expected {state} total")
+    print("  [ok] screening status: candidate, staged and reverted use 39/579 and effective uses 39/603")
+    for label, text in (
+        ("missing visible holding count", f"<!-- {holding} -->\n{active}\n"),
+        ("missing visible effective count", f"{holding}\n```md\n{active}\n```\n"),
+        ("duplicate visible effective count", f"{pair}{active}\n"),
+        ("malformed visible effective count", pair.replace("603 scenarios.", "603 or more scenarios.")),
+        ("unconditional legacy count beside phase counts", f"{pair}39 requirements and 597 scenarios in the effective composition.\n"),
+    ):
+        status.write_text(text, encoding="utf-8")
+        _expect_fail(label, lambda: read_status_assertion(
+            fixture, screening_state="staged", source_example_state="candidate"))
+
+    ledger = fixture / "projected-ledger.md"
+    tag = adoption.VBASE_SCREENING_TAG
+    neutral = f"| A-1 | date | hash | History | Mentions `{tag}` | revert | — |\n"
+    claim = f"| A-2 | date | hash | Version | Why | revert | `{tag}` |\n"
+    ledger.write_text(neutral + claim, encoding="utf-8")
+    _project_ledger(ledger, [("is_vbase_screening_row", adoption.is_vbase_screening_row, tag)])
+    if ledger.read_text(encoding="utf-8") != neutral:
+        raise ScenarioCountError("screening projection removed a neutral historical tag mention")
+    print("  [ok] screening projection retains a neutral tag mention while removing the tagged claim")
+
+    ledger.write_text(neutral + claim, encoding="utf-8")
+    _expect_fail("screening projection with an unrecognized real Tag cell",
+                 lambda: _project_ledger(ledger, [("broken_predicate", lambda _line: False, tag)]))
+
+
 def selftest() -> None:
     print("Running rule-6 mutation fixtures (each must make the check fail closed)...")
 
@@ -1280,6 +1426,7 @@ def selftest() -> None:
         base = Path(tmp)
         _declared_source_selftest(base)
         _url_source_selftest(base)
+        _screening_status_selftest(base)
 
         # Sanity: the good fixture itself must pass, with the exact literal
         # totals hard-coded above (never imported from the module).
@@ -1439,15 +1586,17 @@ def main() -> int:
             if not package_dir.is_absolute():
                 package_dir = (ROOT / package_dir).resolve()
             with with_proposed_scratch(ROOT, package_dir) as scratch:
-                result = build_composition(scratch)
-                status_reqs, status_scenarios = read_status_assertion(scratch)
+                result = build_composition(scratch, screening_authority=ROOT)
+                status_reqs, status_scenarios = read_status_assertion(
+                    scratch, screening_state=result.screening_state, source_example_state=result.source_example_state)
                 label = f"scratch copy with {package_dir.relative_to(ROOT) if package_dir.is_relative_to(ROOT) else package_dir}'s proposed patches applied"
                 print(render_report(result, label))
                 print()
                 print(f"(scratch) PROJECT-STATUS.md asserts: {status_reqs} requirements, {status_scenarios} scenarios")
         else:
             result = build_composition(ROOT)
-            status_reqs, status_scenarios = read_status_assertion(ROOT)
+            status_reqs, status_scenarios = read_status_assertion(
+                ROOT, screening_state=result.screening_state, source_example_state=result.source_example_state)
             print(render_report(result, "tracked tree (HEAD)"))
             print()
             print(f"PROJECT-STATUS.md asserts: {status_reqs} requirements, {status_scenarios} scenarios")

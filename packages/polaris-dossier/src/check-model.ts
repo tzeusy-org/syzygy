@@ -191,6 +191,12 @@ export interface CheckRecord {
   readonly label: 'Inferred';
 }
 
+export interface SourceExampleAdvice {
+  readonly code: 'no-source-example';
+  readonly label: 'Inferred';
+  readonly detail: string;
+}
+
 /** Check's report: the record it wrote, full or bounded (version 2.10), and the advice beside it. */
 export type CheckReport = (CheckRecord | BoundedCheckRecord<CheckRecord>) & CheckReportMembers;
 
@@ -233,6 +239,8 @@ export interface CheckReportMembers {
   /** The kinds of newcomer question no declared block answers per major unit (`question-kinds.ts`, syzygy-5dhm.135, version 2.32); on
    * the report, never the record, and never a finding. */
   readonly questionKindAdvice?: QuestionKindAdvice;
+  /** The advice for a supported draft with an available structure and no selected code example. */
+  readonly sourceExampleAdvice?: SourceExampleAdvice;
 }
 
 /** `file` is null where the run file could not be written, `inRun` then the count this check computed for it. */
