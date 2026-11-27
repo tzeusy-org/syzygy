@@ -1,0 +1,232 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-26T07:08:37.219Z",
+  "commit": "69848195910d5cf1e8245fe480942f4e79230959",
+  "subject": {
+    "packages/polaris-dossier/src/reader-advice.ts": "cee86e433400d847e0d7589699cc1359839a37d5d8f7e3a3ca66dc929fddcac7"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --testTimeout=120000 --reporter=json --outputFile=<scratch>/mutation-<id>.json; for a Python or JSON source, python3 <each listed command> (a non-zero exit is a failure)",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 900 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/reader-advice.ts": [
+      "packages/polaris-dossier/src/reader-standards.test.ts",
+      "packages/polaris-dossier/src/check.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "exitCode": 0,
+      "tests": 396,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "v13-gate-dropped",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "export function choiceFloorAdvice(doc: Readonly<Record<string, unknown>>): readonly ChoiceFloorAdvisory[] | undefined {\n  if (!hasWorthKnowingForm(doc['schemaVersion'])) return undefined;",
+      "new": "export function choiceFloorAdvice(doc: Readonly<Record<string, unknown>>): readonly ChoiceFloorAdvisory[] | undefined {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 396,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards gives no advice on a draft that meets every counted standard, and none on a draft that is not an object",
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the worth-knowing count (version 2.26) gives an earlier draft no worth-knowing member at all, so its advice keeps its bytes",
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) gives an earlier draft no choice-floor member at all",
+        "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) advises on its report a Pole with two choices or trade-offs on record, and none at three, writing neither into the check record"
+      ],
+      "seconds": 33
+    },
+    {
+      "id": "any-label-counts",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "isRecord(entry) && entry['label'] === 'inferred')",
+      "new": "isRecord(entry))",
+      "killed": false,
+      "killedBy": null,
+      "tests": 396,
+      "failedTests": [],
+      "seconds": 41
+    },
+    {
+      "id": "trade-offs-dropped",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "(['choices', 'tradeOffs'] as const)",
+      "new": "(['choices'] as const)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 396,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) advises on its report a Pole with two choices or trade-offs on record, and none at three, writing neither into the check record",
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) advises a Pole with two choices or trade-offs on record and not one with three",
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) counts every Inferred item for a draft with no Poles"
+      ],
+      "seconds": 43
+    },
+    {
+      "id": "choices-dropped",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "(['choices', 'tradeOffs'] as const)",
+      "new": "(['tradeOffs'] as const)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 396,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) advises on its report a Pole with two choices or trade-offs on record, and none at three, writing neither into the check record",
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) advises a Pole with two choices or trade-offs on record and not one with three",
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) counts only Inferred items, by a file the Pole's sections cite, each section in the first Pole naming it",
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) counts every Inferred item for a draft with no Poles"
+      ],
+      "seconds": 46
+    },
+    {
+      "id": "floor-inclusive",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "if (onRecord >= CHOICE_FLOOR) continue;",
+      "new": "if (onRecord > CHOICE_FLOOR) continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 396,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) advises a Pole with two choices or trade-offs on record and not one with three",
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) counts every Inferred item for a draft with no Poles",
+        "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) advises on its report a Pole with two choices or trade-offs on record, and none at three, writing neither into the check record"
+      ],
+      "seconds": 37
+    },
+    {
+      "id": "floor-dropped",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "if (onRecord >= CHOICE_FLOOR) continue;",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 396,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) advises a Pole with two choices or trade-offs on record and not one with three",
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) counts every Inferred item for a draft with no Poles",
+        "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) advises on its report a Pole with two choices or trade-offs on record, and none at three, writing neither into the check record"
+      ],
+      "seconds": 34
+    },
+    {
+      "id": "section-counted-again",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "typeof id === 'string' && !counted.has(id) && (counted.add(id), true)",
+      "new": "typeof id === 'string'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 396,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) counts only Inferred items, by a file the Pole's sections cite, each section in the first Pole naming it"
+      ],
+      "seconds": 49
+    },
+    {
+      "id": "pole-attribution-dropped",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "const onRecord = group.pole === undefined ? items.length : items.filter((paths) => [...paths].some((path) => cited.has(path))).length;",
+      "new": "const onRecord = items.length;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 396,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) advises a Pole with two choices or trade-offs on record and not one with three",
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) counts only Inferred items, by a file the Pole's sections cite, each section in the first Pole naming it"
+      ],
+      "seconds": 35
+    },
+    {
+      "id": "no-pole-attributed",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "const onRecord = group.pole === undefined ? items.length :",
+      "new": "const onRecord =",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 396,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) counts every Inferred item for a draft with no Poles"
+      ],
+      "seconds": 31
+    },
+    {
+      "id": "excerpt-citation-ignored",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "else if (key === 'citation' && isRecord(member)) { const path = text(member['path']); if (path !== undefined) into.add(path); }",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 396,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) advises a Pole with two choices or trade-offs on record and not one with three"
+      ],
+      "seconds": 34
+    },
+    {
+      "id": "nested-citations-ignored",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "    else citedPathsIn(member, into);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 396,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) advises a Pole with two choices or trade-offs on record and not one with three",
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) counts only Inferred items, by a file the Pole's sections cite, each section in the first Pole naming it",
+        "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) advises on its report a Pole with two choices or trade-offs on record, and none at three, writing neither into the check record"
+      ],
+      "seconds": 84
+    },
+    {
+      "id": "singular-dropped",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "${onRecord === 1 ? 'choice or trade-off' : 'choices or trade-offs'}",
+      "new": "choices or trade-offs",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 396,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) counts only Inferred items, by a file the Pole's sections cite, each section in the first Pole naming it"
+      ],
+      "seconds": 80
+    },
+    {
+      "id": "no-pole-clause-kept",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "${group.pole === undefined ? '' : ' citing a file its sections cite'}",
+      "new": " citing a file its sections cite",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 396,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) counts every Inferred item for a draft with no Poles"
+      ],
+      "seconds": 39
+    },
+    {
+      "id": "wiring-dropped",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "    ...(choiceFloor === undefined ? {} : { choiceFloor }) };",
+      "new": "    };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 396,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) advises a Pole with two choices or trade-offs on record and not one with three",
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) counts only Inferred items, by a file the Pole's sections cite, each section in the first Pole naming it",
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) counts every Inferred item for a draft with no Poles",
+        "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) advises on its report a Pole with two choices or trade-offs on record, and none at three, writing neither into the check record"
+      ],
+      "seconds": 42
+    }
+  ],
+  "equivalent": [],
+  "summary": {
+    "mutants": 14,
+    "killed": 13,
+    "survived": 1,
+    "byTimeout": 0,
+    "equivalentNotRun": 0
+  }
+}
