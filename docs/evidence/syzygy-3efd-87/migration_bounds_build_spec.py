@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Build the version 2.41 MODIFIED REQ-polaris-generation-034 (migration bounds) from the version 2.40 bytes by anchored edits (syzygy-3efd.87).
+"""Build the version 2.43 MODIFIED REQ-polaris-generation-034 (migration bounds) from the version 2.42 bytes by anchored edits (syzygy-3efd.87).
 
 Every edit asserts its anchor occurs exactly once. Usage: migration_bounds_build_spec.py <worktree> <out>.
 
-The predecessor is figure walks 2.40. The v10 and v11 migration's parity claim (version 2.24, narrowed by 2.38) is narrowed again to the
+The predecessor is test-name recognizers 2.42 (first built over figure walks 2.40 as 2.41, a number that never landed). The v10 and v11 migration's parity claim (version 2.24, narrowed by 2.38) is narrowed again to the
 drafts whose migrated model fits the v12 model bounds; the rule and the bounds are kept (design.md D1, D2).
 """
 import pathlib
@@ -11,7 +11,7 @@ import sys
 
 W = pathlib.Path(sys.argv[1])
 out = pathlib.Path(sys.argv[2])
-PREDECESSOR = 'openspec/changes/dossier-figure-walks/proposed/polaris-generation/spec.md'
+PREDECESSOR = 'openspec/changes/dossier-test-names/proposed/polaris-generation/spec.md'
 src = (W / PREDECESSOR).read_text(encoding='utf-8')
 text = src
 
@@ -24,12 +24,12 @@ def replace(old, new):
 
 
 lines = text.split('\n')
-assert lines[0].startswith('# Dossier figure walks'), lines[0]
-assert lines[2].startswith('Candidate version 2.40;'), lines[2][:40]
+assert lines[0].startswith('# Dossier test-name recognizers'), lines[0]
+assert lines[2].startswith('Candidate version 2.42.'), lines[2][:40]
 lines[0] = '# Dossier migration bounds: the v10 and v11 migration keeps parity only where the migrated model fits its bounds'
-lines[2] = ("Candidate version 2.41; binds nothing until its agent adoption row in AGENT-ADOPTIONS.md and its version tag. One MODIFIED "
-            "requirement, REQ-polaris-generation-034, whose complete text below replaces the effective text that figure walks version 2.40 "
-            "gave it. It narrows the parity version 2.24 states for the migration of a draft of schema v10 or v11 to schema v12: a draft "
+lines[2] = ("Candidate version 2.43; binds nothing until its agent adoption row in AGENT-ADOPTIONS.md and its version tag. One MODIFIED "
+            "requirement, REQ-polaris-generation-034, whose complete text below replaces the effective text that test-name recognizers version "
+            "2.42 gave it. It narrows the parity version 2.24 states for the migration of a draft of schema v10 or v11 to schema v12: a draft "
             "that check passes migrates to a draft that check passes only where its graph nodes and containment groups number at most 200 "
             "in all and its graph edges at most 400 in all, the bounds of the v12 model; a larger draft, which check passes in its own "
             "schema since those schemas bound each diagram and not the draft, migrates to a draft check refuses with a `schema` finding, and "
@@ -83,15 +83,15 @@ def extend(end, addition):
 
 
 extend("and drafts of schema v15 and earlier with and without `walk`.",
-       "; and, for version 2.41, schema-v10 and v11 drafts that check passes whose graph nodes and containment groups number 200 and "
+       "; and, for version 2.43, schema-v10 and v11 drafts that check passes whose graph nodes and containment groups number 200 and "
        "201 in all and whose graph edges number 400 and 401 in all, spread over several diagrams, migrated to schema v12.")
-extend("and the brief v24 walk paragraph.",
-       "; for version 2.41, each migrated draft's element and relationship counts and check's findings on it.")
-extend("compared with the citation link the list of the figure carrying the node's claim carries.",
-       "; for version 2.41, each fixture's node, group and edge totals counted by hand from the fixture, and the expected `schema` finding "
+extend("and `machine.json`'s `testNames`.",
+       "; for version 2.43, each migrated draft's element and relationship counts and check's findings on it.")
+extend("as literals written from the fixture text, outside the recognizer code.",
+       "; for version 2.43, each fixture's node, group and edge totals counted by hand from the fixture, and the expected `schema` finding "
        "written before check runs.")
-extend("changes any finding but the `field-version` one at a walk, or any byte.",
-       "; for version 2.41, check derives a finding from the migrated value of a draft whose nodes and groups number at most 200 and "
+extend("or a render without the member changes a byte.",
+       "; for version 2.43, check derives a finding from the migrated value of a draft whose nodes and groups number at most 200 and "
        "edges at most 400, or none from that of a draft past either bound, a nesting is counted as a relationship, or the migration "
        "yields no draft for it.")
 

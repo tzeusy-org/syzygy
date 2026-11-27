@@ -1,11 +1,13 @@
-# Design — migration parity bounded by the v12 model (version 2.41)
+# Design — migration parity bounded by the v12 model (version 2.43)
 
-[Inferred] Version 2.41 of REQ-polaris-generation-034, for syzygy-3efd.87. It is drafted on `agent/syzygy-3efd.87` over the version 2.40 text (`dossier-figure-walks`, row A-271, tag `polaris-dossier-figure-walks-v2.40`), the newest REQ-034 version when it was drafted.
+[Inferred] Version 2.43 of REQ-polaris-generation-034, for syzygy-3efd.87. It was drafted on `agent/syzygy-3efd.87` over the version 2.40 text (`dossier-figure-walks`, row A-271) as 2.41, and is rebuilt over the version 2.42 text (`dossier-test-names`, row A-337, tag `polaris-dossier-test-names-v2.42`), the newest REQ-034 on main.
 
 ## D1. The version label and the predecessor
 
 - [Observed] At drafting, 2.38 (migration parity, A-269) is in force on main, 2.39 (import facts, A-270) is in PR #1038 and 2.40 (figure walks, A-271) is on `agent/syzygy-3efd.32`, built on 2.39. This change is built on 2.40 and takes 2.41 and the tag `polaris-dossier-migration-bounds-v2.41`.
+- [Observed] Version 2.41 was claimed by this change's first build and never landed; test-name recognizers 2.42 (A-337, PR #1037) reached main over 2.40 first, so this change takes 2.43 and the tag `polaris-dossier-migration-bounds-v2.43`.
 - [Observed] The build script (`docs/evidence/syzygy-3efd-87/migration_bounds_build_spec.py`) edits the 2.40 bytes at anchors it asserts occur exactly once: the parity sentence and the sentence ending the migration paragraph (line 142, unchanged since 2.38), and the four Form lines, each extended after its 2.40 sentence. The new scenario precedes the one Form line. If another REQ-034 version lands first, the same script is re-run over it with the predecessor path changed.
+- [Observed] The rebuild over 2.42 runs the same script with the predecessor path, the file-head assertions and three Form anchors changed. 2.42 appends one sentence ("For the test-name recognizers, …") to the Observable, Oracle and Falsifier lines, so 2.43's sentence now follows it; the Case line, line 142, line 252 and the place before the Form line are as in 2.40. The spec hashes to `bbc1ab4794a9748de88350b2c7cc9ffbeec5dd6d74231739860789aa724acf02`; REQ-034 goes from 297 to 298 scenarios.
 
 ## D2. Narrow the claim, keep the bounds
 
@@ -28,7 +30,7 @@
 ## D3. Scenario
 
 - [Inferred] One scenario, "A migrated model past the v12 bounds keeps no parity". It states the reviewer's case (six graphs, 222 nodes; 37 per graph is one layout of it) and the two edges of the bound: 200 nodes and groups with 400 edges keeps parity, and 401 edges draws the finding at `$.model.relationships`.
-- [Inferred] The Form lines name the fixtures, what is observed, the hand-counted oracle and the falsifier for 2.41.
+- [Inferred] The Form lines name the fixtures, what is observed, the hand-counted oracle and the falsifier for 2.43.
 
 ## D3a. The parity is over the migrated value (review finding 1)
 
@@ -37,8 +39,8 @@
 
 ## D3b. The schema the migration yields (from the code lane)
 
-- [Observed] Versions 2.33 to 2.40 said, in the figure-plan paragraph (line 252), "The migration of version 2.24 is unchanged and yields a schema-v13 draft". The 2.24 migration paragraph (line 142) and the code (`migrateDraft`) yield schema v12.
-- [Inferred] 2.41 corrects that one sentence to v12. Line 142 governs, so the correction moves no rule. A sweep of the 2.41 text for "yields a" finds no other schema claim about this migration.
+- [Observed] Versions 2.33 to 2.42 said, in the figure-plan paragraph (line 252 in 2.40), "The migration of version 2.24 is unchanged and yields a schema-v13 draft". The 2.24 migration paragraph (line 142) and the code (`migrateDraft`) yield schema v12.
+- [Inferred] This version corrects that one sentence to v12. Line 142 governs, so the correction moves no rule. A sweep of this version's text for "yields a" finds no other schema claim about this migration.
 
 ## D4. Bytes that move
 
@@ -48,13 +50,14 @@
 
 - [Observed] The bead says the syzygy-3efd.37 code pins the current behaviour in a test labelled with this bead. [Inferred] The code needs no change. The test should assert the `schema` finding on the migrated draft at both bounds, 200 and 201 elements and 400 and 401 relationships. It should state its totals by hand.
 
-## D6. Composition with versions 2.35 to 2.40
+## D6. Composition with versions 2.35 to 2.42
 
-- [Inferred] Version 2.41 adds no finding, no detail and no draft-supplied value that reaches a sink, so the 2.35 screening rules are untouched. The finding it names is check's existing `schema` finding, whose detail names a count, not draft text.
+- [Inferred] Version 2.43 adds no finding, no detail and no draft-supplied value that reaches a sink, so the 2.35 screening rules are untouched. The finding it names is check's existing `schema` finding, whose detail names a count, not draft text.
 - [Inferred] The edits fall on line 142 and on the Form lines.
   - 2.36 (source-example advice), 2.37 (choice floor), 2.39 (import facts) and 2.40 (figure walks) do not touch line 142.
-  - 2.38 narrowed the same parity sentence for withheld-end edges. 2.41 narrows who the sentence covers, at its opening words, and leaves 2.38's exception intact. A draft must fit the bounds to keep the parity, and then the withheld-end exception still applies.
+  - 2.38 narrowed the same parity sentence for withheld-end edges. 2.43 narrows who the sentence covers, at its opening words, and leaves 2.38's exception intact. A draft must fit the bounds to keep the parity, and then the withheld-end exception still applies.
   - 2.40's walks are a v16 member, and a migration yields only v12 drafts, so no walk is involved.
+  - 2.42 (test-name recognizers) reads test files at render into a member of its own and touches no figure, migration or model; its only shared lines are the Form lines, which 2.43 extends after 2.42's sentences.
 
 ## Review
 

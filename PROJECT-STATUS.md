@@ -318,17 +318,17 @@ or deep dive may walk one graph figure in numbered steps, linking each step to i
 
 With the figure walks version effective, Polaris has 39 requirements and 638 scenarios.
 
-[Migration bounds amendment 2.41](openspec/changes/dossier-migration-bounds) is agent-adopted in A-272.
-It replaces REQ-polaris-generation-034 from version 2.40, the figure walks (291 to 292 scenarios): the v10 and v11
-migration keeps its parity only where the migrated model fits the v12 bounds of 200 elements and 400 relationships.
+[Test-name recognizers amendment 2.42](openspec/changes/dossier-test-names) is agent-adopted in A-337.
+It replaces REQ-polaris-generation-034 from version 2.40, the figure walks (291 to 297 scenarios): each operator-agent
+render reads declared test names lexically and publishes them per unit on `reference/test-names.html`.
 
-With the migration bounds version effective, Polaris has 39 requirements and 639 scenarios.
+With the test-name recognizers version effective, Polaris has 39 requirements and 644 scenarios.
 
-[Imports corroboration amendment 2.42](openspec/changes/dossier-imports-corroboration) is agent-adopted in A-273.
-It replaces REQ-polaris-generation-034 from version 2.41, the migration bounds (292 to 295 scenarios): an `imports`
-arrow that a stored lexical import fact joins is corroborated, never Observed, and every other one stays Unknown.
+[Migration bounds amendment 2.43](openspec/changes/dossier-migration-bounds) is agent-adopted in A-272.
+It replaces REQ-polaris-generation-034 from version 2.42, the test-name recognizers (297 to 298 scenarios): the v10
+and v11 migration keeps its parity only where the migrated model fits the v12 bounds of 200 elements and 400 relationships.
 
-With the imports corroboration version effective, Polaris has 39 requirements and 642 scenarios.
+With the migration bounds version effective, Polaris has 39 requirements and 645 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
