@@ -67,6 +67,38 @@ function closeOf(text: string, from: number, quote: string, singleLine: boolean)
   return -1;
 }
 
+/** The offset of the backtick closing a template literal whose interior starts at `from`, honouring backslash escapes and reading each
+ * `${ }` substitution through `substitutionEnd`; -1 when the body ends first. */
+function templateEnd(text: string, from: number): number {
+  for (let i = from; i < text.length; i++) {
+    const c = text[i]!;
+    if (c === '\\') { i++; continue; }
+    if (c === '`') return i;
+    if (c === '$' && text[i + 1] === '{') {
+      const end = substitutionEnd(text, i + 2);
+      if (end < 0) return -1;
+      i = end - 1;
+    }
+  }
+  return -1;
+}
+
+/** The offset one past the `}` closing a substitution whose expression starts at `from`: braces are counted, and quoted strings, nested
+ * templates and comments inside it are skipped whole, so none of their characters closes it; -1 when the body ends first. */
+function substitutionEnd(text: string, from: number): number {
+  let depth = 1;
+  for (let i = from; i < text.length; i++) {
+    const c = text[i]!;
+    if (c === '{') depth++;
+    else if (c === '}') { if (--depth === 0) return i + 1; }
+    else if (c === '"' || c === '\'') { const end = closeOf(text, i + 1, c, true); if (end < 0) return -1; i = end; }
+    else if (c === '`') { const end = templateEnd(text, i + 1); if (end < 0) return -1; i = end; }
+    else if (c === '/' && text[i + 1] === '/') { while (i < text.length && text[i] !== '\n' && text[i] !== '\r') i++; }
+    else if (c === '/' && text[i + 1] === '*') { const end = text.indexOf('*/', i + 2); if (end < 0) return -1; i = end + 1; }
+  }
+  return -1;
+}
+
 export interface CLikeOptions {
   /** JavaScript and TypeScript: template literals and regular-expression literals. */
   readonly javascript?: boolean;
@@ -151,8 +183,9 @@ export function scanCLike(text: string, options: CLikeOptions = {}): Scanned {
         i = codeStart = end + 1;
         continue;
       }
-      // A template literal may span lines; its substitutions are left blank with it, so a call inside one is never read.
-      const end = closeOf(text, i + 1, c, c !== '`');
+      // A template literal may span lines; its substitutions are left blank with it, so a call inside one is never read. Its end is
+      // found past every substitution, so a template nested in one never ends it (R-ROUGH-EDGES-1 F1).
+      const end = c === '`' ? templateEnd(text, i + 1) : closeOf(text, i + 1, c, true);
       if (end < 0) return { ok: false, fault: 'unterminated' };
       out.string(c, text.slice(i + 1, end), c, i);
       i = codeStart = end + 1;

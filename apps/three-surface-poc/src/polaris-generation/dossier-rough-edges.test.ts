@@ -47,7 +47,7 @@ const site = (roughEdges: LocalRoughEdges | undefined, structure: LocalDerivedSt
 };
 
 describe('the rough-edges reference page (version 2.43)', () => {
-  it('renders a per-unit table, what is going away, every other marker with its quoted line and evidence, and the Unknown files', () => {
+  it('renders a per-unit table, the deprecation markers, every other marker with its quoted line and evidence, and the Unknown files', () => {
     const page = site(MEMBER).get(PAGE)!;
     expect(page).toContain('<caption>Markers per unit, as counts of what the rule read: 2 units with a source file read</caption>');
     expect(page).toContain('<tr><th scope="col">Unit</th><th scope="col">Files read</th><th scope="col">TODO</th><th scope="col">FIXME</th><th scope="col">HACK</th><th scope="col">Deprecation</th><th scope="col">Issue references</th><th scope="col">All markers</th></tr>');
@@ -59,13 +59,14 @@ describe('the rough-edges reference page (version 2.43)', () => {
     expect(page).not.toContain('<versions>');
     expect(page).toContain('Issue reference #7, in web/a.ts at line 2: <q>// HACK: around #7</q>');
     expect(page).toContain('<span class="reference-unknown" data-epistemic="unknown" data-unknown-reason="source-uncaptured-or-unreachable"><span class="not-established">Not established.</span> What #7 names is Unknown: it lies outside the clone, and Syzygy fetched nothing.</span>');
-    const away = page.slice(page.indexOf('<h2>What is going away</h2>'), page.indexOf('<h2>Every other marker, by unit</h2>'));
+    const away = page.slice(page.indexOf('<h2>Deprecation markers</h2>'), page.indexOf('<h2>Every other marker, by unit</h2>'));
+    expect(away).toContain('<p>What may be going away: each is a line that writes a deprecation form, never a claim that anything is deprecated; a Python line may handle or silence a deprecation warning rather than raise one.</p>');
     expect(away).toContain('Deprecation marker @deprecated, in web/a.ts at line 5:');
     expect(away).not.toContain('_marker-2');
     expect(page.slice(page.indexOf('<h2>Every other marker, by unit</h2>'))).not.toContain('_marker-4');
     expect(page).toContain('<li data-epistemic="unknown" data-unknown-reason="mapping-coverage-absent" data-rough-edges-path="web/open.ts" data-rough-edges-file-reason="unparsed, unterminated"><span class="not-established">Not established.</span> web/open.ts: which markers it writes is Unknown (unparsed, unterminated).</li>');
     expect(page).toContain('rough-edge-marker: 4 candidate files; 2 read for markers, 1 Unknown with no markers taken; 0 left out and not named, because a secret detector matches their path; 1 set apart as vendored or generated paths; 0 markers left out because the value checks refuse its line; 4 markers.');
-    expect(page).toContain('<p class="rough-edges-floor" data-epistemic="unknown" data-unknown-reason="mapping-coverage-absent"><span class="not-established">Not established.</span> What 1 candidate file whose markers are Unknown writes is counted in no row, so each count is of the files read and never a total: a unit with no row may hold markers.</p>');
+    expect(page).toContain('<p class="rough-edges-floor" data-epistemic="unknown" data-unknown-reason="mapping-coverage-absent"><span class="not-established">Not established.</span> What 1 candidate file whose markers are Unknown or left out writes is counted in no row, so each count is of the files read and never a total: a unit with no row may hold markers.</p>');
     expect(page).toContain('nothing is fetched');
     expect(page).toContain('Show the evidence view');
     expect(page).not.toContain('<script');
@@ -75,8 +76,23 @@ describe('the rough-edges reference page (version 2.43)', () => {
   it('links the page from the contents page and names the member in the machine view', () => {
     const files = site(MEMBER);
     expect(files.get('contents.html')).toContain(`<li><a href="${PAGE}">Rough edges</a></li>`);
+    // The last of the reference items: here, with no computed maps and no test-names page, right after Sources (R-ROUGH-EDGES-1 F7).
+    expect(files.get('contents.html')).toContain(`<li><a href="sources/index.html">Sources</a></li><li><a href="${PAGE}">Rough edges</a></li>`);
     const machine = JSON.parse(files.get('machine.json')!) as { roughEdges: { page: string; state: string; markers: unknown[] } };
     expect([machine.roughEdges.page, machine.roughEdges.state, machine.roughEdges.markers.length]).toEqual([PAGE, 'derived', 4]);
+  });
+
+  it('follows the test-names page when that is published (R-ROUGH-EDGES-1 F7)', () => {
+    const input = readingInput();
+    const testNames = { format: 'polaris-dossier-test-names/1', state: 'unknown', why: 'the pinned tree could not be listed (corrupt-object)' } as const;
+    const files = renderLocalDossier({ ...input, local: { ...input.local, derivedStructure: derived, testNames, roughEdges: MEMBER } }).files;
+    expect(files.get('contents.html')).toContain('<li><a href="reference/test-names.html">Test names</a></li><li><a href="reference/rough-edges.html">Rough edges</a></li>');
+  });
+
+  it('says counts are never a total when files are left out for a secret path and none is Unknown (R-ROUGH-EDGES-1 F10)', () => {
+    if (MEMBER.state !== 'derived') throw new Error('fixture');
+    const page = site({ ...MEMBER, recognizer: { ...MEMBER.recognizer, unknown: 0, secretPathsLeftOut: 2, files: MEMBER.recognizer.files.filter(f => f.epistemic !== 'unknown') } }).get(PAGE)!;
+    expect(page).toContain('What 2 candidate files whose markers are Unknown or left out write is counted in no row, so each count is of the files read and never a total');
   });
 
   it('states the member Unknown in words when the tree could not be listed', () => {

@@ -3,7 +3,7 @@ import { escapeHtml as escape } from './draft-preview.js';
 
 /** The rough-edges reference page (REQ-polaris-generation-034 version 2.43, syzygy-5dhm.46): the TODO, FIXME, HACK, deprecation and
  * issue-reference markers recognizer `rough-edge-marker` v1 read in the admitted source files of the pinned tree, a table of them per unit,
- * what is going away (the deprecation markers), every other listed marker with its quoted line, and the files whose markers are Unknown.
+ * the deprecation markers (what may be going away), every other listed marker with its quoted line, and the files whose markers are Unknown.
  * Every marker is Observed and carries its label and evidence in the DOM text; an issue reference also says that what it names is
  * Unknown and was never fetched. No quoted line or reference is a link. Pure; no script. */
 
@@ -85,13 +85,16 @@ export function roughEdgesPage(member: LocalRoughEdges, revision: string): strin
   const table = member.units.length === 0
     ? '<p>No source file was read for markers, so no unit has a row.</p>'
     : `<div class="table-scroll"><table class="rough-edges-units"><caption>${escape(`Markers per unit, as counts of what the rule read: ${counted(member.units.length, 'unit', 'units')} with a source file read`)}${member.unitsNotListed === 0 ? '' : escape(`; ${counted(member.unitsNotListed, 'more unit', 'more units')} counted and not listed`)}</caption><thead>${head}</thead><tbody>${rows}</tbody></table></div>`;
-  // The table counts only files read for markers, so the Unknown files are named beside it as missing from every row, never as zero.
-  const floor = r.unknown === 0 ? ''
-    : `<p class="rough-edges-floor" data-epistemic="unknown" data-unknown-reason="mapping-coverage-absent"><span class="not-established">Not established.</span> ${escape(`What ${counted(r.unknown, 'candidate file whose markers are Unknown writes', 'candidate files whose markers are Unknown write')} is counted in no row, so each count is of the files read and never a total: a unit with no row may hold markers.`)}</p>`;
+  // The table counts only files read for markers, so the Unknown files, and the files left out for a secret path, are named beside it as
+  // missing from every row, never as zero (R-ROUGH-EDGES-1 F10).
+  const unread = r.unknown + r.secretPathsLeftOut;
+  const floor = unread === 0 ? ''
+    : `<p class="rough-edges-floor" data-epistemic="unknown" data-unknown-reason="mapping-coverage-absent"><span class="not-established">Not established.</span> ${escape(`What ${counted(unread, 'candidate file whose markers are Unknown or left out writes', 'candidate files whose markers are Unknown or left out write')} is counted in no row, so each count is of the files read and never a total: a unit with no row may hold markers.`)}</p>`;
 
   const going = member.markers.filter(m => m.kind === 'deprecation');
   const rest = member.markers.filter(m => m.kind !== 'deprecation');
-  const away = `<h2>What is going away</h2>${going.length === 0 ? '<p>No listed marker is a deprecation marker.</p>' : byUnit(going, revision)}`;
+  // A row is a line that writes a deprecation form, never a claim that anything is deprecated (R-ROUGH-EDGES-1 F5).
+  const away = `<h2>Deprecation markers</h2><p>${escape('What may be going away: each is a line that writes a deprecation form, never a claim that anything is deprecated; a Python line may handle or silence a deprecation warning rather than raise one.')}</p>${going.length === 0 ? '<p>No listed marker is a deprecation marker.</p>' : byUnit(going, revision)}`;
   const notListed = member.markersNotListed === 0 ? '' : `<p>${escape(`${counted(member.markersNotListed, 'more marker is', 'more markers are')} counted in the table and not listed.`)}</p>`;
   const every = `<h2>Every other marker, by unit</h2>${rest.length === 0 ? '<p>No other marker is listed.</p>' : byUnit(rest, revision)}${notListed}`;
 

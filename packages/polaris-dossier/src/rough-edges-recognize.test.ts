@@ -82,8 +82,37 @@ describe('rough-edge-marker v1: issue references', () => {
     ]);
   });
 
+  it('never takes a comment delimiter for part of a reference, and reads a reference opening a comment\'s content', () => {
+    expect(rows(recognizeMarkers('x = 1  #42\ny = 2  //3\n', 'python'))).toEqual([]);
+    expect(rows(recognizeMarkers('x := 1 //#5\n/*#6*/\n', 'go')).map((r) => r[1])).toEqual(['#5', '#6']);
+  });
+
   it('reads none in a string', () => {
     expect(rows(recognizeMarkers('x := "see #1"\n', 'go'))).toEqual([]);
+  });
+});
+
+describe('rough-edge-marker v1: what the lexer reads as a comment', () => {
+  it('reads nothing inside a template nested in a substitution (R-ROUGH-EDGES-1 F1)', () => {
+    const text = 'const a = `${b ? `see https://github.com/o/r/issues/1 // TODO` : ""}`;\nconst c = `${d ? `/* HACK */` : ""}`;\nconst e = `x ${f(`y`)} z`; // FIXME\n';
+    expect(rows(recognizeMarkers(text, 'javascript'))).toEqual([['fixme', 'FIXME', 3, 'const e = `x ${f(`y`)} z`; // FIXME']]);
+  });
+
+  it('reads a comment and a brace inside a substitution as the substitution\'s, never as the end of the template', () => {
+    const text = 'const a = `${ { k: "}" } /* } */ }`; // TODO after\n';
+    expect(rows(recognizeMarkers(text, 'javascript'))).toEqual([['todo', 'TODO', 1, 'const a = `${ { k: "}" } /* } */ }`; // TODO after']]);
+  });
+
+  it('reads JSX text holding // as a comment, as the spec discloses (R-ROUGH-EDGES-1 F4)', () => {
+    expect(rows(recognizeMarkers('const a = <p>// TODO not a comment</p>;\n', 'javascript'))).toEqual([['todo', 'TODO', 1, 'const a = <p>// TODO not a comment</p>;']]);
+  });
+
+  it('drops a byte-order mark opening the body from line 1\'s quote (R-ROUGH-EDGES-1 F9)', () => {
+    expect(rows(recognizeMarkers('\uFEFF// TODO first\n// FIXME second\n', 'javascript'))).toEqual([['todo', 'TODO', 1, '// TODO first'], ['fixme', 'FIXME', 2, '// FIXME second']]);
+  });
+
+  it('reads a path anchor of the owner/repo#N form as an issue reference, as the spec discloses (R-ROUGH-EDGES-1 F6)', () => {
+    expect(rows(recognizeMarkers('# see docs/x#12\n', 'python')).map((r) => r[1])).toEqual(['docs/x#12']);
   });
 });
 

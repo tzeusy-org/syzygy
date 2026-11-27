@@ -135,6 +135,40 @@ describe('roughEdges: rough-edge-marker v1 under declared-source policy 2.0.0', 
     expect(m.units).toEqual([{ unit: null, files: 1, markers: 1, byKind: { todo: 0, fixme: 0, hack: 1, deprecation: 0, 'issue-reference': 0 } }]);
   });
 
+  it('names a path past the path limit and an over-large body Unknown (R-ROUGH-EDGES-1 F7)', async () => {
+    const long = `src/${'p'.repeat(520)}.py`;
+    const f = fixture({ [long]: '# TODO\n', 'src/big.py': '# TODO\n' }, ['src/big.py']);
+    f.read = ((inner) => async (p: string) => (p === 'src/big.py' ? { path: p, mode: '100644', id: '0'.repeat(40), bytes: new Uint8Array(1_048_577) } : inner(p)))(f.read);
+    const m = derived(await derive(f));
+    expect(m.recognizer.files.map((file) => [file.unknownReason, file.path.length > 512 ? 'long' : file.path])).toEqual([['too-large', 'src/big.py'], ['path-not-citable', 'long']]);
+    expect([m.recognizer.observed, m.recognizer.unknown, m.markers.length]).toEqual([0, 2, 0]);
+  });
+
+  it('reads at most 1000 files and lists at most 1000 file entries (R-ROUGH-EDGES-1 F3)', async () => {
+    const tree: Tree = {};
+    for (let k = 0; k < 1001; k++) tree[`f${String(k).padStart(4, '0')}.py`] = '# TODO\n';
+    const f = fixture(tree, Object.keys(tree).slice(0, 1000));
+    const m = derived(await derive(f));
+    const r = m.recognizer;
+    expect([r.candidates, r.observed, r.unknown, r.markers, r.files.length, r.filesNotListed]).toEqual([1001, 1000, 1, 1000, 1000, 1]);
+    expect(f.asked.length).toBe(1000);
+    expect(f.asked).not.toContain('f1000.py');
+    expect(m.units).toEqual([{ unit: null, files: 1000, markers: 1000, byKind: { todo: 1000, fixme: 0, hack: 0, deprecation: 0, 'issue-reference': 0 } }]);
+  });
+
+  it('lists the first 2000 markers and counts every one (R-ROUGH-EDGES-1 F3)', async () => {
+    const f = fixture({ 'a.py': '# TODO\n'.repeat(2001) }, ['a.py']);
+    const m = derived(await derive(f));
+    expect([m.markers.length, m.markersNotListed, m.markers.at(-1)!.id, m.markers.at(-1)!.line, m.units[0]!.markers]).toEqual([2000, 1, '_marker-2000', 2000, 2001]);
+  });
+
+  it('lists the first 250 units and counts the rest (R-ROUGH-EDGES-1 F3)', async () => {
+    const tree: Tree = {};
+    for (let k = 0; k < 251; k++) tree[`d${String(k).padStart(3, '0')}/a.py`] = '# HACK\n';
+    const m = derived(await derive(fixture(tree, Object.keys(tree))));
+    expect([m.units.length, m.unitsNotListed, m.units.at(-1)!.unit, m.recognizer.markers]).toEqual([250, 1, 'd249', 251]);
+  });
+
   it('states the member Unknown when the tree cannot be listed', () => {
     expect(roughEdgesUnknown('tree-refused')).toEqual({ format: 'polaris-dossier-rough-edges/1', state: 'unknown', why: 'the pinned tree could not be listed (tree-refused)' });
   });

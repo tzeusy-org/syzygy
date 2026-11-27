@@ -18,7 +18,7 @@ export interface RawMarker {
   /** The matched text exactly, for example `TODO`, `@deprecated` or `#123`. */
   readonly marker: string;
   readonly line: number;
-  /** The line's text with its terminator and its leading and trailing spaces and tabs removed. */
+  /** The line's text with its terminator, its leading and trailing spaces and tabs, and on line 1 a leading byte-order mark removed. */
   readonly quote: string;
 }
 export type RecognizedMarkers = { readonly ok: true; readonly markers: readonly RawMarker[] } | { readonly ok: false; readonly parseFault: 'unterminated' };
@@ -101,7 +101,8 @@ export function recognizeMarkers(text: string, language: MarkerLanguage): Recogn
   const markers: RawMarker[] = [];
   for (const hit of hits) {
     const index = lineOf(hit.start);
-    const raw = text.slice(starts[index]!, index + 1 < starts.length ? starts[index + 1]! : text.length).replace(/(?:\r\n|\r|\n)$/u, '');
+    // A byte-order mark opening the body is no part of line 1's text (R-ROUGH-EDGES-1 F9).
+    const raw = text.slice(index === 0 && text.startsWith('\uFEFF') ? 1 : starts[index]!, index + 1 < starts.length ? starts[index + 1]! : text.length).replace(/(?:\r\n|\r|\n)$/u, '');
     markers.push({ kind: hit.kind, marker: text.slice(hit.start, hit.end), line: index + 1, quote: raw.replace(/^[ \t]+|[ \t]+$/gu, '') });
   }
   return { ok: true, markers };
