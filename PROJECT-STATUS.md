@@ -293,6 +293,12 @@ authority and no model yet called on the current path.
 [Source-example advice](openspec/changes/polaris-source-example-advice) records A-334. The advisory applies when its protected adoption and exact version tag are verified.
 
 With the source-example advice version effective, Polaris has 39 requirements and 610 scenarios.
+
+[Migration parity amendment 2.38](openspec/changes/dossier-migration-parity) is agent-adopted in A-269.
+It replaces REQ-polaris-generation-034 from version 2.36, the source-example advice (263 to 264 scenarios): the byte parity
+of the v10 and v11 migration excludes a figure that draws a witnessed edge to a withheld node; the 2.24 rule is kept.
+
+With the migration parity version effective, Polaris has 39 requirements and 611 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
