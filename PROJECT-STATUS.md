@@ -311,6 +311,12 @@ It replaces REQ-polaris-generation-034 from version 2.38, the migration parity (
 lexical import facts of every TypeScript file the bound screen admits whole as the check record's `importFacts`, read by nothing else.
 
 With the import facts version effective, Polaris has 39 requirements and 625 scenarios.
+
+[Figure walks amendment 2.40](openspec/changes/dossier-figure-walks) is agent-adopted in A-271.
+It replaces REQ-polaris-generation-034 from version 2.39, the import facts (278 to 291 scenarios): a schema-v16 section
+or deep dive may walk one graph figure in numbered steps, linking each step to its element and paragraph with no script.
+
+With the figure walks version effective, Polaris has 39 requirements and 638 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
