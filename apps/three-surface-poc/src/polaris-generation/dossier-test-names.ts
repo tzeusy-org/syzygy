@@ -1,7 +1,7 @@
 import type { LocalTestName, LocalTestNames, LocalTestNamesFile } from '@syzygy/polaris-generation-core/live';
 import { escapeHtml as escape } from './draft-preview.js';
 
-/** The test-names reference page (REQ-polaris-generation-034 version 2.35, syzygy-5dhm.45): the names four lexical recognizers read in
+/** The test-names reference page (REQ-polaris-generation-034 version 2.38, syzygy-5dhm.45): the names four lexical recognizers read in
  * the admitted test files of the pinned tree, a table of them per unit, every listed name with its file and line, and the files whose
  * names are Unknown. Every name is Inferred and carries its label and evidence in the DOM text; the table states counts in words beside
  * its numbers. Pure; no script. */
@@ -66,7 +66,7 @@ export function testNamesPage(member: LocalTestNames, revision: string): string 
     ? '<p>No test file was read for names, so no unit has a row.</p>'
     : `<div class="table-scroll"><table class="test-names-units"><caption>${escape(`Test names per unit, as counts of names each rule read: ${counted(member.units.length, 'unit', 'units')} with a test file read`)}${member.unitsNotListed === 0 ? '' : escape(`; ${counted(member.unitsNotListed, 'more unit', 'more units')} counted and not listed`)}</caption><thead>${head}</thead><tbody>${rows}</tbody></table></div>`;
 
-  // Version 2.35: the table counts only files read for names, so the Unknown files are named beside it as missing from every row,
+  // Version 2.38: the table counts only files read for names, so the Unknown files are named beside it as missing from every row,
   // never as zero names.
   const unknownTotal = member.recognizers.reduce((sum, r) => sum + r.unknown, 0);
   const floor = unknownTotal === 0 ? ''

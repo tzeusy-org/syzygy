@@ -131,6 +131,15 @@ for needle in ('== 222)', '== 228\n', 'if is_choice_row(line))', 'choice_binding
     assert needle in mine, needle
 s = after(s, case, '\n\n' + mine)
 s = after(s, '    choice_cases(tmp, base, witnesses, failures)\n', '    tnames_cases(tmp, base, witnesses, failures)\n')
+
+# 11b. The absent-amendment control subtracts this row's records and subjects, as it does the choice floor's (.43's d208c6135).
+s = after(s, '    choice_subjects = CHOICE_BOUND_PARTS if choice_rows_now and not choice_retired else 0\n',
+          '    tnames_rows_now = tnames_rows(tree)\n'
+          '    tnames_retired = tnames_disposition(tree, tnames_rows_now)\n'
+          '    tnames_records = 2 if tnames_retired else int(bool(tnames_rows_now))\n'
+          '    tnames_subjects = TNAMES_BOUND_PARTS if tnames_rows_now and not tnames_retired else 0\n')
+s = after(s, ' - qkind_records - choice_records', ' - tnames_records')
+s = after(s, ' - qkind_subjects - choice_subjects', ' - tnames_subjects')
 recon.write_text(s, encoding='utf-8')
 
 # 12. The scenario counter's composition.

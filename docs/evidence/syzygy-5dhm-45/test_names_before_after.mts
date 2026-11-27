@@ -20,7 +20,7 @@ const member = await deriveTestNames({ entries, screen: load.screen, consented: 
 if (member.state !== 'derived') throw new Error(member.why);
 console.log(JSON.stringify({
   subject: { tree: 'syzygy (this repository)', commit, policy: `${load.screen.policyId} ${load.screen.policyVersion}`, policySha256: load.screen.policySha256 },
-  before: { testNamesRead: 0, pagesListingTestNames: 0, basis: 'no rule before REQ-polaris-generation-034 version 2.35 read a test name' },
+  before: { testNamesRead: 0, pagesListingTestNames: 0, basis: 'no rule before REQ-polaris-generation-034 version 2.38 read a test name' },
   after: {
     format: member.format,
     recognizers: member.recognizers.map(({ files: _files, ...rest }) => rest),

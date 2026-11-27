@@ -260,7 +260,7 @@ export type LocalManifestFacts =
   }
   | { readonly format: string; readonly state: 'unknown'; readonly why: string };
 
-/** The declared test names this render derived itself (REQ-polaris-generation-034 version 2.35): four lexical recognizers' names in the
+/** The declared test names this render derived itself (REQ-polaris-generation-034 version 2.38): four lexical recognizers' names in the
  * admitted test files of the pinned tree, each Inferred, mapped to its unit by rule `top-level-unit`. */
 export interface LocalTestNamesFile {
   readonly path: string;
@@ -362,7 +362,7 @@ export interface LocalRenderInput {
   /** The declared manifest facts this render derived itself (version 2.9), from which the unit map and the CI pipeline map are drawn. The
    * three computed map pages render only where this and `derivedStructure` are both present; `syzygy dossier render` always supplies both. */
   readonly manifestFacts?: LocalManifestFacts;
-  /** The declared test names this render derived itself (version 2.35), from which the test-names reference page is drawn. The page
+  /** The declared test names this render derived itself (version 2.38), from which the test-names reference page is drawn. The page
    * renders only where this and `derivedStructure` are both present, so an input without it keeps its pages and machine view. */
   readonly testNames?: LocalTestNames;
   /** A schema-v9 draft's graph edges (REQ-polaris-generation-034 version 2.19), by edge id: each edge's relation and the witness state rule

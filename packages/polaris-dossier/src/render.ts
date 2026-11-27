@@ -210,7 +210,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   // Version 2.19 (syzygy-3efd.28): a v9 draft's edges, each decided again by rule `relation-witness` from the facts this render derives itself.
   const edgeRelations = hasRelationForm(doc['schemaVersion'])
     ? edgeRelationsAt({ doc, derivedStructure, manifestFacts, screen, withheld: input.local.withheldElements ?? new Map(), listTree: () => reader.listTree() }) : undefined;
-  // Version 2.35 (syzygy-5dhm.45): the declared test names, derived here the same way, for the test-names reference page.
+  // Version 2.38 (syzygy-5dhm.45): the declared test names, derived here the same way, for the test-names reference page.
   const testNames = await renderTestNames(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
   const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }) } };
 
@@ -343,7 +343,7 @@ export async function renderManifestFacts(clonePath: string, pinned: string, dep
   return deriveManifestFacts({ entries, screen, consented, read: async (manifestPath) => (await manifestReader.readBlobs([manifestPath]))[0]! });
 }
 
-/** The render's own test-names member (version 2.35): as `renderManifestFacts`, each test file read alone through its own pinned reader
+/** The render's own test-names member (version 2.38): as `renderManifestFacts`, each test file read alone through its own pinned reader
  * whose object bound is `MANIFEST_BLOB_LIMIT`; `unknown` where the tree cannot be listed. */
 export async function renderTestNames(clonePath: string, pinned: string, deps: Pick<RenderDeps, 'openReader'>, screen: DossierScreen,
   consented: readonly string[] | null, reader: { readonly listTree: () => Promise<readonly TreeEntry[]> }): Promise<TestNames> {

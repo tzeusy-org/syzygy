@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""syzygy-5dhm.45: check that version 2.35's text, less the builder's own additions, is the predecessor's.
+"""syzygy-5dhm.45: check that version 2.38's text, less the builder's own additions, is the predecessor's.
 
 Usage: test_names_inverse.py <worktree> <predecessor spec.md>. Loads the builder's literals, removes each addition (each found exactly
-once) from the 2.35 file, restores the predecessor's title and banner, and compares with the predecessor; then compares the predecessor's
-scenario headings with the first ones of 2.35. It shares the builder's literals, so it checks the builder's arithmetic, not its intent.
+once) from the 2.38 file, restores the predecessor's title and banner, and compares with the predecessor; then compares the predecessor's
+scenario headings with the first ones of 2.38. It shares the builder's literals, so it checks the builder's arithmetic, not its intent.
 """
 import importlib.util
 import pathlib

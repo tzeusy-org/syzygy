@@ -2,7 +2,7 @@ import { GO_TEST_FUNCTION, JS_TEST_CALL, JUNIT_TEST_METHOD, PYTEST_TEST_NAME } f
 import { lineIndex } from './manifest-model.js';
 import { scanCLike, scanPython, type Scanned } from './test-names-lexer.js';
 
-/** The four test-name recognizers (REQ-polaris-generation-034 version 2.35, syzygy-5dhm.45), each version 1: a path rule saying which
+/** The four test-name recognizers (REQ-polaris-generation-034 version 2.38, syzygy-5dhm.45), each version 1: a path rule saying which
  * blobs are its candidates, and a lexical reading of one body that returns the test names it declares, each with its line. Pure.
  *
  * Every reading runs over the lexer's code text (`test-names-lexer.ts`), in which comments and string interiors are blanks, so a name
