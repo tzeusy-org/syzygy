@@ -83,7 +83,7 @@ PARAGRAPHS = [
     'at line <n>.` or `Suite <name>, in <path> at line <n>.`, marked `Derived by Syzygy` and carrying in its DOM text its label Inferred, its '
     'path and line, its rule and version, the revision, and that it is a declared name, never a claim that the test runs or passes; and '
     'under `<h2>Files whose names are Unknown</h2>` each listed Unknown file, opened by `Not established.`, with its reason and the RFC2-24 '
-    'reason the manifest maps give that reason. Where the member is `unknown` the section holds only a `Not established.` sentence saying '
+    'reason the manifest maps give that reason. Where the member is `unknown` the section holds only its heading and a `Not established.` sentence saying '
     'that which test names the test files at that revision declare is Unknown at this render because the pinned tree could not be listed. '
     '`machine.json` SHALL carry, outside `reviewStatus`, a member `testNames` holding `"page": "reference/test-names.html"` and the member\'s '
     'own members exactly. A render without the member or the derived structure, and every provider-mode render, publishes no such page, link '
