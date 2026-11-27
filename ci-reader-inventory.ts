@@ -14,7 +14,9 @@ const readerAdapter = ts.createSourceFile('dossier-reader-adapter.ts', `
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { corpusRefusals, mechanismVersion, type MechanismTree } from './corpus.js';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
+let corpus: Json;
 const readJson = (file: string): Json => JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8')) as Json;
 const checkoutTree: MechanismTree = { list: (dir) => fs.readdirSync(path.join(ROOT, dir)), read: (file) => fs.readFileSync(path.join(ROOT, file)) };
 `, ts.ScriptTarget.Latest);
@@ -49,25 +51,40 @@ function importsCorpus(source: ts.SourceFile): boolean {
   });
 }
 
-// This is an audit of the corpus reader's local readJson calls. Helpers outside that binding and other reader families
+function isReviewedMechanismUse(tree: ts.Identifier, parent?: ts.Node): boolean {
+  if (!parent || !ts.isCallExpression(parent) || parent.questionDotToken || parent.arguments.length !== 2 ||
+      parent.arguments[1] !== tree || !ts.isIdentifier(parent.expression) || parent.expression.text !== 'mechanismVersion') {
+    return false;
+  }
+  const definition = parent.arguments[0]!;
+  return ts.isElementAccessExpression(definition) && ts.isIdentifier(definition.expression) &&
+    definition.expression.text === 'corpus' && ts.isStringLiteralLike(definition.argumentExpression) &&
+    definition.argumentExpression.text === 'mechanismVersion';
+}
+
+// This audits the corpus test's known JSON reader and its declared mechanism adapter use. Other reader families
 // are still covered by the existing graph heuristics and the whole merge-group run.
 function directReadInputs(source: ts.SourceFile): ReadonlySet<string> | undefined {
   const constants = new Map<string, string>();
   const topLevel = new Map<string, ts.Identifier>();
   for (const statement of source.statements) {
-    if (!ts.isVariableStatement(statement) || !(statement.declarationList.flags & ts.NodeFlags.Const)) continue;
+    if (!ts.isVariableStatement(statement)) continue;
+    const isConst = (statement.declarationList.flags & ts.NodeFlags.Const) !== 0;
     for (const { name, initializer } of statement.declarationList.declarations) {
       if (!ts.isIdentifier(name)) continue;
       topLevel.set(name.text, name);
-      if (initializer && ts.isStringLiteralLike(initializer)) constants.set(name.text, initializer.text);
+      if (isConst && initializer && ts.isStringLiteralLike(initializer)) constants.set(name.text, initializer.text);
     }
   }
-  if (!topLevel.has('readJson')) return undefined;
+  const readJsonBinding = topLevel.get('readJson');
+  const checkoutTreeBinding = topLevel.get('checkoutTree');
+  if (!readJsonBinding || !checkoutTreeBinding) return undefined;
 
   const inputs = new Set<string>();
-  const referencedBindings = new Set(['readJson']);
+  const referencedBindings = new Set(['readJson', 'checkoutTree', 'mechanismVersion', 'corpus']);
   const otherBindings = new Set<string>();
   let unresolved = false;
+  let mechanismUses = 0;
   function recordBinding(name: ts.BindingName): void {
     if (ts.isIdentifier(name)) {
       if (topLevel.get(name.text) !== name) otherBindings.add(name.text);
@@ -75,7 +92,16 @@ function directReadInputs(source: ts.SourceFile): ReadonlySet<string> | undefine
       for (const element of name.elements) if (ts.isBindingElement(element)) recordBinding(element.name);
     }
   }
-  function visit(node: ts.Node): void {
+  function visit(node: ts.Node, parent?: ts.Node): void {
+    // Taking the function as a value can hide its subsequent arguments from this direct-call audit.
+    if (ts.isIdentifier(node) && node.text === 'readJson' && node !== readJsonBinding &&
+        !(parent && ts.isCallExpression(parent) && parent.expression === node && parent.questionDotToken === undefined)) {
+      unresolved = true;
+    }
+    if (ts.isIdentifier(node) && node.text === 'checkoutTree' && node !== checkoutTreeBinding) {
+      if (isReviewedMechanismUse(node, parent)) mechanismUses++;
+      else unresolved = true;
+    }
     if (ts.isVariableDeclaration(node) || ts.isParameter(node)) recordBinding(node.name);
     if ((ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isClassDeclaration(node) ||
         ts.isClassExpression(node) || ts.isEnumDeclaration(node)) && node.name) recordBinding(node.name);
@@ -90,11 +116,11 @@ function directReadInputs(source: ts.SourceFile): ReadonlySet<string> | undefine
       if (path === undefined) unresolved = true;
       else inputs.add(path);
     }
-    ts.forEachChild(node, visit);
+    ts.forEachChild(node, (child) => visit(child, node));
   }
   visit(source);
   // An accepted identifier must be unambiguous in this file. A shadowed binding exceeds the supported audit.
-  if (unresolved || [...referencedBindings].some((name) => otherBindings.has(name))) return undefined;
+  if (unresolved || mechanismUses !== 1 || [...referencedBindings].some((name) => otherBindings.has(name))) return undefined;
   return inputs;
 }
 

@@ -191,17 +191,19 @@ describe('tracked dossier corpus reader inputs', () => {
   const reader = 'packages/polaris-dossier/src/corpus.test.ts';
   const costs = 'docs/evidence/pursuit-2026-11-21b/measure-now.json';
   const references = '.claude/skills/polaris-dossier/references';
-  const trackedReader = `import { mechanismVersion } from './corpus.js';
+  const trackedReader = `import { corpusRefusals, mechanismVersion, type MechanismTree } from './corpus.js';
     import * as fs from 'node:fs';
     import * as path from 'node:path';
     import { fileURLToPath } from 'node:url';
     const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
     const MANIFEST = '${DOSSIER_CORPUS_MANIFEST}';
     const COSTS = '${costs}';
+    let corpus: Json;
     const readJson = (file: string): Json => JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8')) as Json;
     const checkoutTree: MechanismTree = { list: (dir) => fs.readdirSync(path.join(ROOT, dir)), read: (file) => fs.readFileSync(path.join(ROOT, file)) };
     readJson(MANIFEST);
-    readJson(COSTS);`;
+    readJson(COSTS);
+    mechanismVersion(corpus['mechanismVersion'], checkoutTree);`;
   const manifest = {
     format: 'polaris-dossier-corpus/1',
     mechanismVersion: {
@@ -258,6 +260,36 @@ describe('tracked dossier corpus reader inputs', () => {
     }
     const ordinary = "{ const local = 'x'; use(local); readJson(MANIFEST); }";
     expect(withInventory(changed, new Map([[reader, trackedReader + ordinary]])).mode).toBe('selected');
+  });
+
+  it('refuses escapes of the audited JSON reader while allowing another direct known read', () => {
+    const changed = [M('M', 'docs/unrelated.md')];
+    for (const use of [
+      "const readAgain = readJson; readAgain(join('docs', 'other.json'));",
+      'runWith(readJson);',
+      "readJson.call(null, 'docs/other.json');",
+    ]) {
+      expect(withInventory(changed, new Map([[reader, trackedReader + use]])).reasons, use)
+        .toEqual([`Tracked dossier corpus test reader inputs drifted: ${reader}`]);
+    }
+    const direct = 'expect(readJson(MANIFEST)).toBeDefined();';
+    expect(withInventory(changed, new Map([[reader, trackedReader + direct]])).mode).toBe('selected');
+  });
+
+  it('requires the reviewed mechanism adapter use and refuses additional references', () => {
+    const changed = [M('M', 'docs/unrelated.md')];
+    for (const use of [
+      "checkoutTree.read(join('docs', 'other.json'));",
+      'const otherTree = checkoutTree;',
+      'mechanismVersion(otherDefinition, checkoutTree);',
+      "mechanismVersion(corpus['mechanismVersion'], checkoutTree);",
+    ]) {
+      expect(withInventory(changed, new Map([[reader, trackedReader + use]])).reasons, use)
+        .toEqual([`Tracked dossier corpus test reader inputs drifted: ${reader}`]);
+    }
+    const missing = trackedReader.replace("mechanismVersion(corpus['mechanismVersion'], checkoutTree);", '');
+    expect(withInventory(changed, new Map([[reader, missing]])).reasons)
+      .toEqual([`Tracked dossier corpus test reader inputs drifted: ${reader}`]);
   });
 
   it('refuses alternate read paths while preserving comments and spacing in the reviewed adapter', () => {
