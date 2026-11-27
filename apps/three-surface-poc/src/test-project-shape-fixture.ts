@@ -139,6 +139,10 @@ export const PROJECT_SHAPE_FIXTURE_TEXTS: Readonly<Record<string, string>> = {
   'roster/bishop/butler.toml': '[butler]\nname = "bishop"\n',
 };
 
+export const PROJECT_SHAPE_FIXTURE_TEXTS_WITHOUT_BASELINE_SPEC: Readonly<Record<string, string>> = Object.fromEntries(
+  Object.entries(PROJECT_SHAPE_FIXTURE_TEXTS).filter(([path]) => path !== 'openspec/specs/alpha/spec.md'),
+);
+
 /** The same tree with the root index carrying the stated summary but no
  * precedence table, so the one-against-zero staffer count has no row to
  * decide it and stays contradicted with both anchors kept. */

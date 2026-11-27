@@ -25,7 +25,7 @@ import { questionKindAdvice, type QuestionKindAdvice } from './question-kinds.js
 import { derivedRecordFile, encodeDerivedRecord, secretPathOf } from './derived-record.js';
 import { CHECK_RECORD_LIMITS, NotARegularFileError, readBoundedFile } from './check-record-read.js';
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
-import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type BoundedCheckRecord, type RecordMeasure, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type MechanismAdvice, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
+import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type BoundedCheckRecord, type RecordMeasure, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type MechanismAdvice, type ReviewVisibility, type SourceExampleAdvice, STEP_LOG_FORMAT, type VerifiedQuotation, errno, list, reviewVisibility, text } from './check-model.js';
 import { type Derived, type SubjectRules, applyHeroFindings, containmentRelationFindings, deriveFindings, draftRules, relationDecisions, relationFindings, type RelationDecisions } from './check-derive.js';
 import { applyContainmentFindings, containmentStructuralFindings, undecidedContainments } from './containment.js';
 import { expandModel, modelDecisions, modelFindings, modelIndex, modelRelationFindings, modelUndecided, undecidedViews } from './system-model.js';
@@ -104,7 +104,7 @@ export interface SubjectPlan<R extends object, G> {
 /** `screenCensus` (`census.ts`), `structureRecord` (`derive.ts`), `readerAdvice` (`reader-advice.ts`), `reviewReach` (`review-reach.ts`) and `inventoryCoverageAdvice` (`inventory-coverage.ts`) and `questionKindAdvice` (`question-kinds.ts`) are on `check`'s report only: advice to the author, never written
  * to the check record and never a finding. */
 /** The record part is the record written: the full record, or its bounded form (version 2.10), whose report adds `findingsLeftOut`. */
-export type SubjectReport<R extends object> = (R | BoundedCheckRecord<R>) & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly readingLedger?: ReadingLedger; readonly readingDifference?: ReadingDifference; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility; readonly mechanismAdvice?: MechanismAdvice; readonly findingsLeftOut?: readonly CheckFinding[]; readonly inventoryCoverageAdvice?: InventoryCoverageAdvice; readonly questionKindAdvice?: QuestionKindAdvice };
+export type SubjectReport<R extends object> = (R | BoundedCheckRecord<R>) & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly readingLedger?: ReadingLedger; readonly readingDifference?: ReadingDifference; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility; readonly mechanismAdvice?: MechanismAdvice; readonly findingsLeftOut?: readonly CheckFinding[]; readonly inventoryCoverageAdvice?: InventoryCoverageAdvice; readonly questionKindAdvice?: QuestionKindAdvice; readonly sourceExampleAdvice?: SourceExampleAdvice };
 export type SubjectResult<R extends object> = Outcome<SubjectReport<R>, CheckRefusal>;
 
 const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
@@ -219,6 +219,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   const findings: CheckFinding[] = [];
   let quotations: VerifiedQuotation[] = [], excludedContent: ExcludedQuotation[] = [], citedBlobs: CitedBlob[] = [];
   let admitted: Derived['admitted'] = new Map();
+  let shapeValid = false;
   if (parseFault !== null) findings.push({ kind: 'not-json', at: '$', detail: parseFault });
   else {
     let derived: Derived;
@@ -229,7 +230,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
       throw cause;
     }
     findings.push(...derived.findings);
-    ({ quotations, excludedContent, citedBlobs, admitted } = derived);
+    ({ quotations, excludedContent, citedBlobs, admitted, shapeValid } = derived);
   }
   // The author's path-only census of what the review will not see (syzygy-mea.3, lead ruling): every blob of the pinned tree, through the
   // same screen and the class gate, on every check from the first. The reader re-lists the tree it listed for the derivation.
@@ -438,6 +439,8 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // The kinds of newcomer question no block answers per major unit (syzygy-5dhm.135), from the draft's own declarations and the units of
   // the tree this check listed.
   const kinds = plan.command === 'check' && parseFault === null ? questionKindAdvice(doc, treeFacts, secretPathOf(screen)) : undefined;
+  const sourceExample = full && plan.command === 'check' && shapeValid && isRecord(doc)
+    ? sourceExampleAdvice(doc) : undefined;
   return { ok: true, report: {
     command: plan.command, run, checkFile, ...written, ...reportFit, ...leftOut, ...(mechanismAdvice === undefined ? {} : { mechanismAdvice }), disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
     ...(structureRecord === undefined ? {} : { structureRecord }),
@@ -445,7 +448,31 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     ...(visibility === null ? {} : { reviewVisibility: visibility }),
     ...(coverage === undefined ? {} : { inventoryCoverageAdvice: coverage }),
     ...(kinds === undefined ? {} : { questionKindAdvice: kinds }),
+    ...(sourceExample === undefined ? {} : { sourceExampleAdvice: sourceExample }),
   } };
+}
+
+/** The existing shape check has established the eligible lists before we look for a selection. */
+function sourceExampleAdvice(doc: Readonly<Record<string, unknown>>): SourceExampleAdvice | undefined {
+  const version = doc['schemaVersion'];
+  if (version !== 'polaris-dossier-local-draft-v13' && version !== 'polaris-dossier-local-draft-v14') return;
+  const isCode = (item: unknown): boolean => isRecord(item) && item['kind'] === 'code';
+  const selectsCode = (part: unknown): boolean => isRecord(part) && list(part['paragraphs']).some(item =>
+    isCode(item) || (isRecord(item) && item['kind'] === 'details' && list(item['elements']).some(isCode)));
+  const isProduced = (part: unknown): part is Readonly<Record<string, unknown>> => {
+    if (!isRecord(part)) return false;
+    const disposition = part['disposition'];
+    return isRecord(disposition) && disposition['kind'] === 'produced';
+  };
+  const sectionExample = list(doc['sections']).filter(isProduced).some(section =>
+    selectsCode(section) || list(section['subsections']).some(selectsCode));
+  const diveExample = list(doc['deepDives']).filter(isProduced).some(selectsCode);
+  if (sectionExample || diveExample) return;
+  return {
+    code: 'no-source-example',
+    label: 'Inferred',
+    detail: 'Consider a cited source example that shows what the project does.',
+  };
 }
 
 /** A check record's encoded text measured as `parseBoundedJson` measures it (version 2.10): its UTF-8 bytes, its values (the root and every

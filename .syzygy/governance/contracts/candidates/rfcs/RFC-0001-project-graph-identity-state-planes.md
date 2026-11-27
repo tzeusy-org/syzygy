@@ -929,8 +929,9 @@ RFC10-16, RFC11-12.)
 Recognizable, not rhetorical:
 
 1. *(RFC1-1/3)* A declaration lists two governance roots and the kernel picks
-   the first — must be a contradiction routed to the owner; likewise rendering
-   any graph content for a repository with no consent record.
+   the first. The declaration must yield a Contradiction routed under
+   RFC1-21 and RFC2-24 reason 8, with no root picked. Rendering graph
+   content for a repository with no consent record also violates this rule.
 2. *(RFC1-5/6)* An implementation adds a `Commit` node type "because the
    adapter had the data" — V0-core is closed; commits are evidence at V0.
 3. *(RFC1-10/11)* A capability rename mints a new identifier and the map

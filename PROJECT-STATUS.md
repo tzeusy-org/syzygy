@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 579 scenarios in the effective composition with it and with the signed-off
+    its signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -283,6 +283,22 @@ authority and no model yet called on the current path.
     worth-knowing mark and requires a figure plan; check advises, gating nothing, on figures that carry too little, repeat another
     or mix levels; brief v22 asks for the plan. No review has read the 2.33 rebuild.
     *(2026-11-26: the predecessor figure of 567 scenarios is superseded.)*
+    [Derived-base views amendment 2.34](openspec/changes/dossier-derived-base-views) records the untagged A-267 proposal, retired by A-332.
+    Figure plan 2.33 supplies the fallback REQ-polaris-generation-034 until a corrected version takes effect. The A-267 source retains its 250-scenario proposed
+    replacement and the independent screening findings explain why the version was withheld.
+    [Derived-base screening 2.35](openspec/changes/dossier-derived-base-screening) records A-333. The correction applies when its protected adoption and exact version tag are verified.
+    Before the derived-base screening version is effective, Polaris has 39 requirements and 579 scenarios.
+    With the derived-base screening version effective, Polaris has 39 requirements and 603 scenarios.
+
+[Source-example advice](openspec/changes/polaris-source-example-advice) records A-334. The advisory applies when its protected adoption and exact version tag are verified.
+
+With the source-example advice version effective, Polaris has 39 requirements and 610 scenarios.
+
+[Choice floor amendment 2.37](openspec/changes/dossier-choice-floor) is agent-adopted in A-336.
+It replaces REQ-polaris-generation-034 from version 2.36, the source-example advice (263 to 265 scenarios): check advises each Pole
+of a v13, v14 or v15 draft with fewer than three choices or trade-offs on record in the understanding record.
+
+With the choice floor version effective, Polaris has 39 requirements and 612 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
@@ -504,6 +520,8 @@ visibility**. Its contract prerequisite is **Waves A + B only**.
 | OpenSpec (`openspec/`) | **Capability 1 remains ADOPTED: `project-registration-and-honest-shape-visibility`** (schema `spec-driven`, OpenSpec pinned 1.9.0). The owner adopted seven artifacts on 2026-08-20; the 2026-09-01 transaction superseded `CONTRACT-COVERAGE.md`'s digest and the 2026-09-29 readability successor superseded `proposal.md`'s and `design.md`'s, leaving `spec.md`, the other three artifacts and all required behavior unchanged. *(Marked 2026-10-15: "all required behavior unchanged" no longer holds for CAP1-REQ-011 and CAP1-REQ-046, which the adopted overlay `cap1-trusted-bootstrap-consent` v1.0 fully replaces; the bound bytes stay unedited and the effective specification is the composition in that change's `ADOPTION.md`, row above.)* The accepted specification supersedes the Capability 1 charter for required behaviour. Four further changes are in force (POC, PWB, Polaris generator base and understanding amendment); `openspec/README.md` names each one's acts. *(Marked 2026-10-15: a fifth, the CAP1 consent overlay `cap1-trusted-bootstrap-consent`, is in force since its v1.0 adoption.)* | `decisions/CAPABILITY-1-SPECIFICATION-ADOPTION-ACT.md` (original act); `decisions/CAPABILITY-1-READABILITY-SUCCESSOR-ACT.md` (current bytes); `decisions/ACCEPTANCE-ACT-RECORD.md`; `openspec/README.md` |
 | Implementation | **AUTHORIZED for Capability 1 — act dated 2026-08-21.** Plan first (stack, layout, slices→CAP1-REQ mapping, testing/evidence, review classes), then a bounded Beads backlog and code in ordinary root paths (`apps/**`, `packages/**`, tooling) — never in the governed plane. Capability 1 only; production deployment, onboarding, and release stay separate future decisions. *(Marked 2026-10-15: that act escalates specification amendments, so it does not cover the amended CAP1-REQ-011/046; their bounded implementation is authorized separately by `decisions/OWNER-DIRECTION-CAP1-CONSENT-IMPLEMENTATION-2026-10-15.md`.)* | `decisions/CAPABILITY-1-IMPLEMENTATION-AUTHORIZATION-ACT.md` |
 | Three-Surface POC | **AUTHORIZED 2026-08-29, non-release and bounded.** One live Butlers proving project; WIP one for shared-model changes. The runnable implementation exposes human-triggered Bead materialization, worker-change observation, and separate file-backed test-artifact capture/ingestion/verification; availability of those paths is not a positive evidence claim for the current run. The original eight items completed 2026-08-30: all three product assumptions NOT FALSIFIED (`docs/reviews/R-POC-PRODUCT-REVIEW.md`), PRF-1 repair CONFIRMED. The owner's 2026-08-30 direction extends the experiment with **improvement cycles** (review → finding-derived repairs → confirmation, owner-reported per cycle), lifting the eight-item cap and one-review budget; every other bound stands. | `decisions/THREE-SURFACE-POC-MODE-DIRECTION.md`; `decisions/THREE-SURFACE-POC-IMPROVEMENT-CYCLES-DIRECTION.md`; `docs/THREE-SURFACE-POC.md` |
+
+[CAP1 root adjudication 1.0](openspec/changes/cap1-root-adjudication) has conditional activation under the [agent adoption ledger](.syzygy/governance/decisions/AGENT-ADOPTIONS.md). `cap1-root-adjudication-v1.0` must annotate the exact protected source before the checker selects its CAP1-REQ-006 text and coverage. The signed P-109 consent overlay remains part of both compositions. Served multiple-root conformance remains Unknown.
 
 **Four original foundational owner acts were performed on 2026-08-17:** Wave
 A, Wave B, and craft acts 6 + 7.
@@ -734,6 +752,7 @@ python3 scripts/build_polaris_dependency_unions.py --check   # both Polaris depe
 python3 scripts/build_polaris_dependency_unions.py --selftest
 python3 scripts/check_spec_reconciliation.py --check   # five readability outcomes terminal and binding; populations by two methods; routes and generated rows
 python3 scripts/check_spec_reconciliation.py --selftest
+python3 scripts/test_reconciliation_pool.py   # the selftest's family pool and per-run scope: order, failures, exits, dead workers, fresh forks
 python3 scripts/build_three_surface_poc_spec_dependencies.py --check
 python3 scripts/build_directive_register.py --check     # every identifier -> its definition site
 python3 scripts/build_directive_register.py --selftest
@@ -765,7 +784,7 @@ python3 scripts/dossier_pilot_runs.py --selftest   # page classes and one mutati
 python3 scripts/test_dossier_pilot.py   # the pilot harness tests, literal expectations; needs node and git for the screened-tree cases
 ```
 
-The one hundred and thirty-eight checks above are the same one hundred and thirty-eight the hosted workflow runs
+The one hundred and thirty-nine checks above are the same one hundred and thirty-nine the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.

@@ -8,6 +8,9 @@
 # fresh-clone demonstration, automated on every pull request and merge-queue run). The tiers are
 # defined in vitest.tiers.ts and documented in CONTRIBUTING.md.
 #
+# Pull requests run, in each tier, the test files their change can reach (syzygy-qu5j; ci-selection.ts says how);
+# merge-group runs run every tier whole, so main only ever moves to a tree that passed the full suite.
+#
 # Required check: the branch protection and the merge queue require a
 # check named `node`. The last job, `node`, reports it and passes only
 # when the unit, integration and e2e jobs all passed; a skipped or
@@ -112,10 +115,23 @@ jobs:
       - name: redis-observation --check
         run: python3 scripts/record_public_repo_admission_acts.py --check redis-observation a733220dcbc4276d396e32f51c39dcc4665e07579ecca3f0074e7e6e5a1916a4 --date 2026-10-07 --question-opening 'Do you sign the Redis observation consent, redis/OBSERVATION-CONSENT.md at its row of the public-repo admission manifest?' --selection-label 'Sign it' --selection-description 'Syzygy may read the Git objects of the four consented Redis commits and nothing else of Redis.'
 
+      # Pull requests run the tests their change can reach (syzygy-qu5j): scripts/select_ci_tests.mjs prints what it
+      # chose and why before any test runs, and a change it cannot bound (manifests, lockfile, test or type
+      # configuration, this workflow, the selector) chooses every file. Merge-group runs skip this step and run the
+      # whole tier: the tree that lands is always tested whole.
+      - name: select tests (pull requests only)
+        if: github.event_name == 'pull_request'
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/select_ci_tests.mjs --base "${{ github.event.pull_request.base.sha }}" --out "$RUNNER_TEMP/ci-selection.json"
+
       # Unit tier: hermetic. The unit setup refuses a process or a socket at
       # the call, so this tier cannot grow a git, node or network dependency.
       - name: unit tests (npm test)
+        if: github.event_name != 'pull_request'
         run: npm test
+
+      - name: unit tests, selected (pull requests)
+        if: github.event_name == 'pull_request'
+        run: node scripts/check_unit_tmpdir.mjs --selection "$RUNNER_TEMP/ci-selection.json"
 
   # Integration tier: git, a real tree, loopback servers, python recorders.
   # Parallel with e2e; both wait for the unit job.
@@ -136,8 +152,21 @@ jobs:
       - name: install (npm ci)
         run: npm ci
 
+      # Pull requests run the tests their change can reach (syzygy-qu5j): scripts/select_ci_tests.mjs prints what it
+      # chose and why before any test runs, and a change it cannot bound (manifests, lockfile, test or type
+      # configuration, this workflow, the selector) chooses every file. Merge-group runs skip this step and run the
+      # whole tier: the tree that lands is always tested whole.
+      - name: select tests (pull requests only)
+        if: github.event_name == 'pull_request'
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/select_ci_tests.mjs --base "${{ github.event.pull_request.base.sha }}" --out "$RUNNER_TEMP/ci-selection.json"
+
       - name: integration tests (npm run test:integration)
+        if: github.event_name != 'pull_request'
         run: npm run test:integration
+
+      - name: integration tests, selected (pull requests)
+        if: github.event_name == 'pull_request'
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/run_ci_tier.mjs integration "$RUNNER_TEMP/ci-selection.json"
 
   # e2e tier: a browser, a build and `npm ci` in clones, strace, and the
   # compiled daemon of the system-test suite. The job runs as the default
@@ -200,8 +229,23 @@ jobs:
       # disk, and exercise the machine and human endpoints over HTTP
       # (`test:system` builds first; the tests run the compiled daemon).
       # SYZYGY_FRESH_CLONE=1 enables the guarded fresh-clone test.
+      # Pull requests run the tests their change can reach (syzygy-qu5j): scripts/select_ci_tests.mjs prints what it
+      # chose and why before any test runs, and a change it cannot bound (manifests, lockfile, test or type
+      # configuration, this workflow, the selector) chooses every file. Merge-group runs skip this step and run the
+      # whole tier: the tree that lands is always tested whole.
+      - name: select tests (pull requests only)
+        if: github.event_name == 'pull_request'
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/select_ci_tests.mjs --base "${{ github.event.pull_request.base.sha }}" --out "$RUNNER_TEMP/ci-selection.json"
+
       - name: e2e tests (npm run test:e2e)
+        if: github.event_name != 'pull_request'
         run: npm run test:e2e
+        env:
+          SYZYGY_FRESH_CLONE: '1'
+
+      - name: e2e tests, selected (pull requests)
+        if: github.event_name == 'pull_request'
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/run_ci_tier.mjs e2e "$RUNNER_TEMP/ci-selection.json"
         env:
           SYZYGY_FRESH_CLONE: '1'
 

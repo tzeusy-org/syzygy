@@ -60,6 +60,8 @@ const LABEL_QUOTATION = /["\u201C\u201D\u201E\u00AB\u00BB]|\bstates:/iu;
 export function labelQuotation(value: string): boolean { return LABEL_QUOTATION.test(value); }
 
 export interface Derived {
+  /** Whether the submitted shape passed the selected schema before findings were reclassified. */
+  readonly shapeValid: boolean;
   readonly findings: CheckFinding[];
   readonly quotations: VerifiedQuotation[];
   readonly excludedContent: ExcludedQuotation[];
@@ -129,7 +131,8 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
   const add = (finding: CheckFinding): void => { findings.push(finding); };
   const { noun } = rules;
   const earlier = rules.earlier?.(subject);
-  for (const error of checkDraftShape(earlier?.schema ?? rules.schema, subject)) {
+  const shapeErrors = checkDraftShape(earlier?.schema ?? rules.schema, subject);
+  for (const error of shapeErrors) {
     for (const fault of earlier?.replaced?.(error) ?? [error]) {
       if (earlier === undefined || !earlier.reported.test(fault.path)) add({ kind: 'schema', at: fault.path, detail: fault.detail });
     }
@@ -359,7 +362,7 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
     ? [[cited, { objectId: state.entry.id, raw: state.raw, ...(state.withheld === undefined ? {} : { withheld: state.withheld, detectorIds: state.detectorIds!,
       retainedLines: state.retainedLines!, lineByteOffsets: state.lineByteOffsets!, originalBytes: state.originalBytes!, contentSha256: state.contentSha256!, projection: state.projection!,
       activeContentAsBefore: state.activeContentAsBefore! }) }] as const] : [])));
-  return { findings, quotations, excludedContent, citedBlobs, admitted };
+  return { shapeValid: shapeErrors.length === 0, findings, quotations, excludedContent, citedBlobs, admitted };
 }
 
 /** The thesis basis (REQ-polaris-generation-034 version 2.4, syzygy-3efd.56). A v6 draft's `thesisBasis` must fit its introduction:
