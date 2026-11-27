@@ -3813,11 +3813,13 @@ def p5_advice_binding(root):
                 or body != read_bytes(root, path) or entry != local_git(git_root, "ls-tree", "-z", head, "--", path)
                 or (tag and entry != local_git(git_root, "ls-tree", "-z", protected, "--", path))):
             return invalid(f"the worktree and exact Git subjects disagree at {path}")
-    scopes = {STATUS: (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_SCOPE),
-              OPENSPEC_README: (P5_ADVICE_INDEX_PREFIX,)}
+    scopes = {STATUS: (P5_ADVICE_STATUS_PREFIX,), OPENSPEC_README: (P5_ADVICE_INDEX_PREFIX,)}
+    counts = {STATUS: (P5_ADVICE_COUNT_SCOPE,)}
+    stale = tag and local_git(git_root, "merge-base", "--is-ancestor", protected, head) is None
     if (not p5_advice_authority(root, identity) or not git_routes_match(root, git_root, source, scopes)
             or not git_routes_match(root, git_root, head, scopes)
-            or (tag and not git_routes_match(root, git_root, protected, scopes))):
+            or (tag and not git_routes_match(root, git_root, protected, scopes))
+            or (stale and not git_routes_match(root, git_root, protected, counts))):
         return invalid("the exact adoption authority routes disagree")
     return ("effective", read_text(root, P5_ADVICE_SPEC), [], []) if tag else ("staged", None, [], [])
 
@@ -13800,6 +13802,8 @@ def vbase_screening_git_cases(tmp, witnesses, failures):
 
 def source_example_git_cases(tmp, witnesses, failures):
     """Replay the source-example version against actual bound predecessor objects."""
+    import build_polaris_dossier_local_agent_mode as legacy_dossier
+
     global _VBASE_SELFTEST_GIT_ROOT
     repo = Path(tmp) / "source-example-git"
     subprocess.run(["git", "clone", "--quiet", "--shared", "--no-checkout", str(ROOT), str(repo)],
@@ -13814,7 +13818,7 @@ def source_example_git_cases(tmp, witnesses, failures):
         )
         return result.stdout.strip()
 
-    def check(name, path, old, new, expected, total=None, clue=None):
+    def check(name, path, old, new, expected, figure=None, clue=None):
         state, text, records, subjects = p5_advice_binding(repo)
         report = run(repo)
         counter = subprocess.run(
@@ -13836,11 +13840,13 @@ def source_example_git_cases(tmp, witnesses, failures):
             held = held and any(clue.lower() in item.lower() for item in found) and counter.returncode != 0
             held = held and clue.lower() in counter_output.lower()
         else:
+            _, total = figure
             held = held and not report.failed and counter.returncode == 0
             held = held and f"CHECK PASS: recomputed total {total} matches expected {total}." in counter_output
+            held = held and legacy_dossier.status_figure(repo) == figure
         mutant = "source-example-git-" + name
         witnesses.append({"mutant": mutant, "path": path, "old": old, "new": new,
-                          "expected": clue or f"{expected} {total}", "failed": found,
+                          "expected": clue or f"{expected} {figure}", "failed": found,
                           "counterDiagnostic": counter.stderr.strip(),
                           "outcome": ("killed" if clue else "held") if held else "SURVIVED"})
         if not held:
@@ -13877,12 +13883,12 @@ def source_example_git_cases(tmp, witnesses, failures):
     saved = _VBASE_SELFTEST_GIT_ROOT
     _VBASE_SELFTEST_GIT_ROOT = None
     try:
-        check("staged", tag, "", "", "staged", 603)
+        check("staged", tag, "", "", "staged", (39, 603))
         git("tag", "-a", SOURCE_EXAMPLE_TAG, source, "-m", "Synthetic exact annotation")
         check("tag-before-protection", protected, authored, before_source, "invalid",
               clue="outside protected main")
         git("update-ref", protected, authored)
-        check("active", tag, "", source, "effective", 610)
+        check("active", tag, "", source, "effective", (39, 610))
 
         git("tag", "-d", SOURCE_EXAMPLE_TAG)
         git("tag", SOURCE_EXAMPLE_TAG, source)
@@ -13897,13 +13903,14 @@ def source_example_git_cases(tmp, witnesses, failures):
         fault = count.replace("610 scenarios.", "611 scenarios.")
         assert before.count(count) == 1 and fault != count
         status.write_text(before.replace(count, fault), encoding="utf-8")
-        check("wrong-count", STATUS, count, fault, "invalid", clue="authority routes disagree")
+        check("wrong-count", STATUS, count, fault, "effective", clue="source-example advice")
         competing = "\nWith the source-example advice effective, Polaris has 39 requirements and 611 scenarios.\n"
         status.write_text(before + competing, encoding="utf-8")
-        check("competing-count", STATUS, "", competing, "invalid", clue="authority routes disagree")
+        check("competing-count", STATUS, "", competing, "effective", clue="source-example advice")
         git("add", STATUS)
         git("commit", "-m", "Record a conflicting protected advice count")
         git("update-ref", protected, git("rev-parse", "HEAD"))
+        check("authored-competing-count", STATUS, "", competing, "effective", clue="source-example advice")
         git("checkout", "--quiet", "--detach", authored)
         check("stale-count", STATUS, "", competing, "invalid", clue="authority routes disagree")
         git("update-ref", protected, authored)
@@ -13917,6 +13924,17 @@ def source_example_git_cases(tmp, witnesses, failures):
               clue="worktree and exact Git subjects disagree")
         spec.write_text(prior, encoding="utf-8")
 
+        _propose_candidate(repo)
+        _install_addition(repo)
+        expanded = count.replace("39 requirements and 610 scenarios.", "40 requirements and 612 scenarios.")
+        assert expanded != count
+        status.write_text(status.read_text(encoding="utf-8").replace(count, expanded), encoding="utf-8")
+        assert not regenerate(repo)
+        git("add", "-A")
+        git("commit", "-m", "Install a later signed addition with refreshed advice counts")
+        check("later-addition", STATUS, count, expanded, "effective", (40, 612))
+        git("checkout", "--quiet", "--detach", authored)
+
         later = "\nUnrelated fixture note after source-example adoption.\n"
         status.write_text(before + later, encoding="utf-8")
         git("add", STATUS)
@@ -13929,7 +13947,7 @@ def source_example_git_cases(tmp, witnesses, failures):
         row = record_inverse(inverse)
         withdrawn = git("rev-parse", "HEAD")
         assert later in status.read_text(encoding="utf-8")
-        check("recorded-inverse", AGENT_ADOPTIONS, "", row, "reverted", 603)
+        check("recorded-inverse", AGENT_ADOPTIONS, "", row, "reverted", (39, 603))
 
         git("checkout", "--quiet", "--detach", prior_inverse)
         git("revert", "--no-commit", source)

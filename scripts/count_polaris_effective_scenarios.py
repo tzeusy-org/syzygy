@@ -957,7 +957,7 @@ def composition_inputs(root: Path) -> list[Path]:
 
 
 def read_status_assertion(root: Path, *, screening_state: str,
-                          source_example_state: str = "candidate") -> tuple[int, int]:
+                          source_example_state: str) -> tuple[int, int]:
     import check_spec_reconciliation as adoption
 
     path = root / STATUS_PAGE_REL
@@ -1392,7 +1392,7 @@ def _screening_status_selftest(base: Path) -> None:
     status.write_text(f"```md\n{active}\n```\n<!-- {holding} -->\n{pair}", encoding="utf-8")
     for state, expected in (("candidate", (39, 579)), ("staged", (39, 579)),
                             ("reverted", (39, 579)), ("effective", (39, 603))):
-        if read_status_assertion(fixture, screening_state=state) != expected:
+        if read_status_assertion(fixture, screening_state=state, source_example_state="candidate") != expected:
             raise ScenarioCountError(f"screening status did not select the expected {state} total")
     print("  [ok] screening status: candidate, staged and reverted use 39/579 and effective uses 39/603")
     for label, text in (
@@ -1403,7 +1403,8 @@ def _screening_status_selftest(base: Path) -> None:
         ("unconditional legacy count beside phase counts", f"{pair}39 requirements and 597 scenarios in the effective composition.\n"),
     ):
         status.write_text(text, encoding="utf-8")
-        _expect_fail(label, lambda: read_status_assertion(fixture, screening_state="staged"))
+        _expect_fail(label, lambda: read_status_assertion(
+            fixture, screening_state="staged", source_example_state="candidate"))
 
     ledger = fixture / "projected-ledger.md"
     tag = adoption.VBASE_SCREENING_TAG
