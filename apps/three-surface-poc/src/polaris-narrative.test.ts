@@ -318,7 +318,6 @@ describe('Polaris narrative claim blocks (PWB-REQ-014; RFC7-2, RFC7-3, RFC7-9)',
   const catalogChildIds = ['claim:class:catalog-entry', 'claim:item:catalog-entry:Bus', 'claim:item:catalog-entry:Atlas', 'claim:item:catalog-entry:Bishop'];
   const catalogHosts = ['127.0.0.1:1', 'tzeusy.parrot-hen.ts.net'];
   const catalogReason = 'contradicted-pending-adjudication';
-  const catalogGap = `polaris-gap-${catalogReason}`;
 
   async function catalogResponses(input: PocModel, host: string) {
     const routes = pocRoutes(() => input);
@@ -357,7 +356,7 @@ describe('Polaris narrative claim blocks (PWB-REQ-014; RFC7-2, RFC7-3, RFC7-9)',
     }
   });
 
-  it('retains each Unknown populated catalog child and routes only to its exact existing remedy', async () => {
+  it('keeps native Unknown item disclosures without using the shared reason row as their opening destination', async () => {
     const base = shared.get('observed');
     const shape = base.projectShape;
     if (shape.kind !== 'observed') throw new Error('synthetic project shape unavailable');
@@ -377,22 +376,23 @@ describe('Polaris narrative claim blocks (PWB-REQ-014; RFC7-2, RFC7-3, RFC7-9)',
       },
     });
     for (const host of catalogHosts) {
-      const { html, group, openings } = await catalogResponses(makeAdverse('Owner adjudication'), host);
-      expect(openings, host).toEqual([expect.objectContaining({ label: 'Unknown', childIds: catalogChildIds })]);
-      expect(group, host).toMatch(/data-claim-role="epistemic-claim"[^>]*>This catalog lists its entries and shows their source status\.<\/p>\s*<p><span[^>]*>Unknown<\/span>/);
-      const targets = [...group.matchAll(/<a href="#([^"]+)" data-opening-child="([^"]+)"[^>]*data-copy-role="action-label"/g)];
-      expect(targets.map((match) => [match[1], match[2]]), host).toEqual(unknownIds.map((id) => [catalogGap, id]));
-      const gaps = [...html.matchAll(/<li id="polaris-gap-contradicted-pending-adjudication"[^>]*>([\s\S]*?)<\/li>/g)];
-      expect(gaps, host).toHaveLength(1);
-      expect(gaps[0]?.[1], host).toContain('Route: Owner adjudication.');
-      for (const id of unknownIds) {
-        expect(group, host).toContain(`data-unknown-disclosure="${id}"`);
-      }
+      for (const route of ['Owner adjudication', 'Owner adjudication for this item only']) {
+        const { html, group, openings } = await catalogResponses(makeAdverse(route), host);
+        expect(openings, host).toEqual([]);
+        expect(group, host).not.toContain('data-polaris-group-opening=');
+        expect(group, host).not.toContain('data-opening-child=');
+        expect([...group.matchAll(/data-polaris-item="([^"]+)"/g)].map((match) => match[1]), host).toEqual(catalogChildIds.slice(1));
 
-      const differentRemedy = await catalogResponses(makeAdverse('Owner adjudication for this item only'), host);
-      expect(differentRemedy.openings, host).toEqual([]);
-      expect(differentRemedy.group, host).not.toContain('data-polaris-group-opening=');
-      expect(differentRemedy.group, host).toContain('Owner adjudication for this item only');
+        const gaps = [...html.matchAll(/<li id="polaris-gap-contradicted-pending-adjudication"[^>]*>([\s\S]*?)<\/li>/g)];
+        expect(gaps, host).toHaveLength(1);
+        expect(gaps[0]?.[1], host).toContain('Route: Owner adjudication.');
+        for (const id of unknownIds) {
+          expect(gaps[0]?.[1], host).not.toContain(id);
+          const disclosure = group.match(new RegExp(`data-unknown-disclosure="${id}"[^>]*>([\\s\\S]*?)<\\/div>`));
+          expect(disclosure?.[1], `${host} ${id}`).toContain('data-unknown-reason="contradicted-pending-adjudication"');
+          expect(disclosure?.[1], `${host} ${id}`).toContain(`Route: ${route}.`);
+        }
+      }
     }
   });
 

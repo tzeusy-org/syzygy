@@ -849,28 +849,16 @@ function groupOpeningHtml(groupId: string, lede: PolarisCopyId, label: ProjectSh
 }
 
 function populatedCatalogOpening(groupId: string, aggregate: ProjectShapeClaim, items: readonly ProjectShapeItem[], aggregateTarget: string): string {
-  let label = aggregate.epistemic.label;
-  const routes: string[] = [];
-  if (label === 'Unknown') {
-    routes.push(`<a href="#${aggregateTarget}" data-opening-child="${escapeHtml(aggregate.claimId)}"${copyAttr('label.source-remedies')}>${copy('label.source-remedies')} — ${copy('class.catalog-entry')}</a>`);
-  }
-  for (const item of items) {
-    const { claim, key } = item;
-    const state = claim.epistemic;
-    if (state.label === 'Inferred' && label === 'Observed') label = 'Inferred';
-    if (state.label !== 'Unknown') continue;
-    label = 'Unknown';
+  // Item disclosures are inside the collapsed population. An opening cannot
+  // use a page-wide reason row as the destination for an individual item.
+  if (items.some((item) => item.claim.epistemic.label !== 'Observed')) return '';
 
-    // Item disclosures stay inside their existing population. Only link an
-    // item to a page-level gap when it offers that item's exact remedy.
-    if (!('reasons' in state)) return '';
-    for (const reason of [state.reasons.primary, ...state.reasons.secondary]) {
-      if (!activeTargets.gapReasons.has(reason) || routeOf(claim, reason) !== UNKNOWN_REASON_ROUTES[reason]) return '';
-      routes.push(`<a href="#${gapId(reason)}" data-opening-child="${escapeHtml(claim.claimId)}"${copyAttr('label.source-remedies')}>${copy('label.source-remedies')} — ${escapeHtml(key)} (${escapeHtml(reason)})</a>`);
-    }
-  }
+  const label = aggregate.epistemic.label;
+  const route = label === 'Unknown'
+    ? ` <a href="#${aggregateTarget}" data-opening-child="${escapeHtml(aggregate.claimId)}"${copyAttr('label.source-remedies')}>${copy('label.source-remedies')} — ${copy('class.catalog-entry')}</a>`
+    : '';
   registry().registerOpening({ groupId, groupClass: 'catalog', label, childIds: [aggregate.claimId, ...items.map((item) => item.claim.claimId)] });
-  return groupOpeningHtml(groupId, 'opening.populated-catalog', label, routes.length === 0 ? '' : ` ${routes.join(' ')}`);
+  return groupOpeningHtml(groupId, 'opening.populated-catalog', label, route);
 }
 
 function shapeUnknownBlock(shape: Exclude<ProjectShape, { kind: 'observed' }>, group: ProjectGroup, preface: string): string {
