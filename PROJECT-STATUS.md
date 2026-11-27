@@ -317,6 +317,12 @@ It replaces REQ-polaris-generation-034 from version 2.39, the import facts (278 
 or deep dive may walk one graph figure in numbered steps, linking each step to its element and paragraph with no script.
 
 With the figure walks version effective, Polaris has 39 requirements and 638 scenarios.
+
+[Migration bounds amendment 2.41](openspec/changes/dossier-migration-bounds) is agent-adopted in A-272.
+It replaces REQ-polaris-generation-034 from version 2.40, the figure walks (291 to 292 scenarios): the v10 and v11
+migration keeps its parity only where the migrated model fits the v12 bounds of 200 elements and 400 relationships.
+
+With the migration bounds version effective, Polaris has 39 requirements and 639 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
