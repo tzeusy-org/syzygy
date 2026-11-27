@@ -14,5 +14,12 @@ Evidence for check's advice on a Pole with fewer than three choices or trade-off
   - `choice-floor-mutation-repairs-2026-11-26.json`: four mutants for the R-CHOICE-FLOOR-1 repairs (deep dives ignored, a deep dive of
     any Pole counted, the first citation only, nesting ignored), three killed; the survivor got a test.
   - `choice-floor-mutation-repairs-survivor-2026-11-26.json`: that mutant re-run, killed.
+- The rebuild as 2.37 over the source-example advice 2.36 (2026-11-27):
+  - `choice_floor_build_spec.py` and `choice_floor_inverse.py` now build from and invert to the 2.36 bytes; the two scenarios are appended
+    after the last one, and the 263 predecessor scenarios keep their bytes and order.
+  - `choice_floor_reconcile_mutation.py` and `choice-floor-reconcile-mutation-2026-11-27.json`: ten mutants of the reconciler and counter
+    wiring and of the routes, spec and row they read, each run with `--check` (or the counter) on the delivered tree, ten killed. The
+    selftest base is projected before the 2.36 advice, whose effectiveness needs its protected tag, so the selftest's `choice_cases`
+    witness only the pending and refused states; these mutants witness the effective one.
 - [Observed] The comprehension-regression rule of `CONTRIBUTING.md` applies to the brief, the draft schema and the renderers; this
   change touches none of them, and no rendered byte changes.
