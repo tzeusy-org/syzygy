@@ -5,5 +5,5 @@
 - [x] Wire the overlay into `scripts/check_spec_reconciliation.py` (pending until its row) and `scripts/count_polaris_effective_scenarios.py`, with selftest cases (`impwit_cases`).
 - [x] Append the agent-adoption row naming the installing commit, with its revert command (A-273).
 - [ ] Create the version tag `polaris-dossier-imports-corroboration-v2.44` at the installing commit once it is on the default branch.
-- [ ] One independent fresh-context review (CC-REV-4), arranged by the lead; raw retained, findings dispositioned in `design.md`.
-- [ ] The code change (`design.md` D6): `relation-witness.ts`, the renderer and `machine.json`, literal conformance tests and a rule-6 mutation record.
+- [x] One independent fresh-context review (CC-REV-4), arranged by the lead; raw retained (`docs/reviews/syzygy-3efd-86/`), findings dispositioned in `design.md` and repaired.
+- [ ] The code change (`design.md` D6), after the 2.39 `importFacts` derivation lands (syzygy-3efd.60 code): `relation-witness.ts`, the renderer and `machine.json`, literal conformance tests and a rule-6 mutation record.

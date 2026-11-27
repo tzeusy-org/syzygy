@@ -14,13 +14,15 @@
 - Rule `relation-witness` becomes version 2, with a fifth relation row, `imports`. It reads `edge` import facts of rules `typescript-relative-import` and `typescript-package-import` version 1, from a `package-manifest` unit to a `package-manifest` unit.
 - A new witness state, `corroborated`, is given in place of `witnessed` for that row.
   - A corroborated arrow keeps the draft's marking, label and citations, and is never solid or Observed.
-  - It carries `data-witness-*` attributes, including `data-witness-state="corroborated"`, and hidden evidence text naming the fact, its rule, the revision and the check record's digest.
+  - It carries `data-witness-*` attributes, including `data-witness-state="corroborated"`, and hidden evidence text naming the fact, its form, its rule, the revision and the digest of the `importFacts` member.
+  - In a v12 draft's later figures it takes 2.24's "as shown in" item, with the attributes and no evidence text.
   - `machine.json` carries `witness.state` `corroborated`.
 - The import rules stay out of the eligibility table. An `imports` arrow becomes Observed only by a later version, under the existing reservation.
 - An `imports` arrow that no fact joins is `unknown` (`coverage-partial`), never `challenged`, whatever the coverage. A missing or Unknown member gives `facts-unknown`. No `relation-challenged` finding is ever drawn for `imports`.
 - Check reads the member it derives. A render reads the member of the rendered revision's check record and never scans a body.
 - 2.39's sentence that nothing reads the member is dated. One carried scenario's `imports` case now reads `endpoint-kind-mismatch`.
-- Three scenarios are added, and the four Form lines are extended.
+- Four scenarios are added, one of them a v12 relationship drawn in two views, and the four Form lines are extended.
+- The evidence text names the fact's form and cites the digest of the `importFacts` member, never of the check record, so the 2.24 migration parity holds.
 
 ## Non-goals
 
