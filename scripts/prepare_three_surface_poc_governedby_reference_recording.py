@@ -2872,16 +2872,17 @@ def selftest(root: Path) -> int:
     current_tools = (
         Path(__file__).name, "record_versioned_signoff.py",
         "record_pwb_behavior_amendment_acts.py", "check_spec_reconciliation.py",
-        "d10_supersession.py",
+        "d10_supersession.py", "p111_supervisor_binding.py",
         "build_three_surface_poc_readability_successor.py",
         "build_three_surface_poc_vocabulary_epistemic_amendment.py",
     ) + tuple(name + ".py" for name in LATER_SIGNED_INPUT_BUILDERS)
 
     def checkout_core_fixture(tree):
         git(tree, "checkout", "--quiet", "--detach", CORE_COMMIT)
-        # The frozen P115 fixture predates these two Polaris bindings. A local
-        # clone copies their current tags but the frozen ledger has neither row.
-        for tag in (reconciliation.VBASE_SCREENING_TAG, reconciliation.SOURCE_EXAMPLE_TAG):
+        # A local clone inherits current tags, but the frozen P115 fixture
+        # predates these Polaris bindings and has none of their ledger rows.
+        for tag in (reconciliation.VBASE_SCREENING_TAG, reconciliation.SOURCE_EXAMPLE_TAG,
+                    reconciliation.SUPERVISOR_COMPOSITION_TAG):
             if git(tree, "tag", "--list", tag):
                 git(tree, "tag", "-d", tag)
 
