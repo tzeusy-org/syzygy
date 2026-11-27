@@ -11,7 +11,7 @@
   - the end of 2.40's earlier-schema paragraph ("No migration yields a v16 draft."), after which the six new paragraphs go;
   - the four Form lines, each extended after its 2.44 sentence.
   The scenarios precede the one Form line. If another REQ-034 version lands first, the script is re-run over it with the predecessor path changed.
-- [Observed] Predecessor sha256 `5b13a3998bfa9b2b05361ef5f7523b8a7ae58a3d074a440b22e870571d933955`; this spec `056638dfccb49622ca16da990ec10d3d0876734750040b8f3e0d0ef465e7f8e5`. REQ-034 goes from 301 to 310 scenarios.
+- [Observed] First built over the 2.44 text that review 1 of 2.44 read (sha256 `5b13a399…3955`; this spec then `056638df…f8e5`). Rebuilt by the same script, unchanged, over 2.44 as repaired after that review (sha256 `d60afad88bc72dde63ad597d2b9a5fa646143e4b68f89202ffcaff8742068c4d`): every anchor still occurs once. This spec hashes to `208252fd2094fd5ad725c6d03b0c51884d2017a7fdb5f8217ffeb53720ab45f4`; REQ-034 goes from 302 to 311 scenarios.
 
 ## D2. The level is a type table
 
