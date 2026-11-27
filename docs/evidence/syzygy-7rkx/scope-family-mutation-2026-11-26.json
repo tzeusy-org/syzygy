@@ -1,0 +1,91 @@
+{
+ "format": "mutation-run/1",
+ "ranAt": "2026-11-26T15:50:30.834876+00:00",
+ "commit": "c9da8e56beae76aaf6554e50bb9e2dc63b568862",
+ "subject": {
+  "scripts/check_spec_reconciliation.py": "dda3c14e0813a1b7a27b723d67441f67c826be71e4d5bb5fd9b3acffeb1ad4ea"
+ },
+ "method": "Rule-6 run over the per-run scope and the family pool (syzygy-7rkx).\n\nUsage: python3 scope_family_mutation.py <checkout root> <out.json> [--selftest]\n\nEach mutant replaces fragments that each occur exactly once in\nscripts/check_spec_reconciliation.py, runs scope_family_harness.py (and, with\n--selftest, `check_spec_reconciliation.py --selftest`, SELFTEST_WORKERS from\nthe environment), and restores the file in `finally`. A mutant is killed when\nthe harness exits 1 (or the selftest exits non-zero); the record keeps each\nmutant's fragments, the harness's FAILED lines and verdict, and the commit and\nsubject digest it ran at. The unmutated baseline runs first and must pass.",
+ "withSelftest": false,
+ "baseline": {
+  "harnessExit": 0,
+  "harnessFailed": [],
+  "harnessVerdict": "HARNESS PASS: 4 of 4 controls held",
+  "harnessSeconds": 3
+ },
+ "mutants": [
+  {
+   "id": "scope-keeps-memo",
+   "what": "the scope does not reset the memo between runs",
+   "fragments": [
+    {
+     "old": "    global _SIGNED_MEMO, _RUN_MEMO\n    _SIGNED_MEMO = {}\n    _RUN_MEMO = {}\n    import d10_supersession",
+     "new": "    global _SIGNED_MEMO, _RUN_MEMO\n    _SIGNED_MEMO = {} if _SIGNED_MEMO is None else _SIGNED_MEMO\n    _RUN_MEMO = {} if _RUN_MEMO is None else _RUN_MEMO\n    import d10_supersession"
+    },
+    {
+     "old": "    finally:\n        _SIGNED_MEMO = None\n        _RUN_MEMO = None\n        d10_supersession.state = d10_state",
+     "new": "    finally:\n        d10_supersession.state = d10_state"
+    }
+   ],
+   "harnessExit": 1,
+   "harnessFailed": [
+    "FAILED scope-resets: answers 'first', 'first', outside 'first'; memos after exit ({'/home/orca/.tmp/offm/tmp/7rkx-harness-_zwfma23': 'first'}, {})",
+    "FAILED families-fresh: pids distinct 3 of 3, parent excluded True; saw [\"{'/home/orca/.tmp/offm/tmp/7rkx-harness-_zwfma23': 'first'}\", \"{'/home/orca/.tmp/offm/tmp/7rkx-harness-_zwfma23': 'first'}\", \"{'/home/orca/.tmp/offm/tmp/7rkx-harness-_zwfma23': 'first'}\"]"
+   ],
+   "harnessVerdict": "HARNESS FAIL: 2 of 4 controls held",
+   "harnessSeconds": 3,
+   "outcome": "killed"
+  },
+  {
+   "id": "families-share-worker",
+   "what": "state leaks across families in a worker (no fresh fork per family)",
+   "fragments": [
+    {
+     "old": "            workers, maxtasksperchild=1 if fresh else None) as pool:",
+     "new": "            workers, maxtasksperchild=None) as pool:"
+    }
+   ],
+   "harnessExit": 1,
+   "harnessFailed": [
+    "FAILED families-fresh: pids distinct 2 of 3, parent excluded True; saw ['None', 'None', \"{'left-behind': True}\"]"
+   ],
+   "harnessVerdict": "HARNESS FAIL: 3 of 4 controls held",
+   "harnessSeconds": 3,
+   "outcome": "killed"
+  },
+  {
+   "id": "merge-out-of-order",
+   "what": "results are merged in completion order",
+   "fragments": [
+    {
+     "old": "        return pool.map(function, range(count), chunksize=1)",
+     "new": "        return list(pool.imap_unordered(function, range(count), chunksize=1))"
+    }
+   ],
+   "harnessExit": 1,
+   "harnessFailed": [
+    "FAILED families-order: witness order [1, 0, 3, 2, 5, 4, 7, 6]; printed ['1', '0', '3', '2', '5', '4', '7', '6']"
+   ],
+   "harnessVerdict": "HARNESS FAIL: 3 of 4 controls held",
+   "harnessSeconds": 3,
+   "outcome": "killed"
+  },
+  {
+   "id": "drop-family-failures",
+   "what": "a family's failures are dropped when it records no witness",
+   "fragments": [
+    {
+     "old": "        failures.extend(failed)",
+     "new": "        if found:\n            failures.extend(failed)"
+    }
+   ],
+   "harnessExit": 1,
+   "harnessFailed": [
+    "FAILED families-failures: failures ['both: a failure']"
+   ],
+   "harnessVerdict": "HARNESS FAIL: 3 of 4 controls held",
+   "harnessSeconds": 3,
+   "outcome": "killed"
+  }
+ ]
+}
