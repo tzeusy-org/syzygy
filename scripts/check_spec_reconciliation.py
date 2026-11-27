@@ -3728,6 +3728,9 @@ def p5_advice_binding(root):
 
     tag = local_git(git_root, "for-each-ref",
                     "--format=%(refname) %(objecttype) %(tag) %(*objecttype) %(*objectname)", ref)
+    if _VBASE_SELFTEST_GIT_ROOT is not None:
+        # The shared copied-history selftest predates this version.
+        tag = b""
     if not claims:
         if tag:
             return invalid("a version tag has no canonical adoption")
@@ -3844,13 +3847,24 @@ def p5_advice_inverse_verified(root, git_root, source, identity, protected_rows)
             or not p5_advice_authority(root, None, candidate_only=True)
             or scoped_route_lines(read_text(root, STATUS) or "", (P5_ADVICE_COUNT_PREFIX,))):
         return False
-    for path in (*P5_ADVICE_SUBJECTS, STATUS, OPENSPEC_README):
-        if local_git(git_root, "ls-tree", "-z", f"{source}^", "--", path) != local_git(
-                git_root, "ls-tree", "-z", commit, "--", path):
-            return False
     for path in P5_ADVICE_SUBJECTS:
         if read_bytes(root, path) is not None or any(
-                local_git(git_root, "ls-tree", "-z", ref, "--", path) != b"" for ref in ("HEAD", protected)):
+                local_git(git_root, "ls-tree", "-z", ref, "--", path) != b""
+                for ref in (f"{source}^", commit, "HEAD", protected)):
+            return False
+    for path, prefixes in (
+        (STATUS, (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_PREFIX)),
+        (OPENSPEC_README, (P5_ADVICE_INDEX_PREFIX,)),
+    ):
+        bodies = [local_git(git_root, "show", f"{ref}:{path}")
+                  for ref in (f"{source}^", commit, "HEAD", protected)]
+        try:
+            scopes = [scoped_route_lines(body.decode("utf-8"), prefixes) if body is not None else None
+                      for body in bodies]
+        except UnicodeDecodeError:
+            return False
+        expected = [] if path == STATUS else [P5_ADVICE_CANDIDATE_INDEX]
+        if any(scope != expected for scope in scopes):
             return False
     return True
 
@@ -13508,6 +13522,26 @@ def adopted_mutants():
     )
 
 
+def project_source_example_history(root):
+    """Keep the established screening mutants on the earlier advisory-free history."""
+    ledger = root / AGENT_ADOPTIONS
+    body = ledger.read_text(encoding="utf-8")
+    ledger.write_text("".join(line for line in body.splitlines(keepends=True)
+                              if not is_source_example_row(line.rstrip("\n"))), encoding="utf-8")
+    for path in P5_ADVICE_SUBJECTS:
+        (root / path).unlink(missing_ok=True)
+    status = root / STATUS
+    prefixes = (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_PREFIX)
+    status.write_text("".join(line for line in status.read_text(encoding="utf-8").splitlines(keepends=True)
+                              if not line.strip().startswith(prefixes)), encoding="utf-8")
+    index = root / OPENSPEC_README
+    lines = index.read_text(encoding="utf-8").splitlines(keepends=True)
+    index.write_text("".join(
+        P5_ADVICE_CANDIDATE_INDEX + "\n" if line.strip().startswith(P5_ADVICE_INDEX_PREFIX) else line
+        for line in lines
+    ), encoding="utf-8")
+
+
 def project_vbase_screening_history(root):
     """Keep the older amendment fixtures on their own tagged history."""
     retirement = vbase_disposition(root, vbase_rows(root))
@@ -13635,6 +13669,13 @@ def vbase_screening_git_cases(tmp, witnesses, failures):
     assert head is not None
     head = head.decode("ascii").strip()
     git("checkout", "--quiet", "--detach", head)
+    if p5_advice_claims(adoption_table_rows(repo)):
+        project_source_example_history(repo)
+        if git("tag", "--list", SOURCE_EXAMPLE_TAG):
+            git("tag", "-d", SOURCE_EXAMPLE_TAG)
+        git("add", "-A")
+        git("commit", "-m", "Project the inherited screening history")
+        head = git("rev-parse", "HEAD")
     ledger = repo / AGENT_ADOPTIONS
     initial = ledger.read_text()
     row = vbase_screening_rows(adoption_table_rows(repo))[0]
@@ -13738,6 +13779,119 @@ def vbase_screening_git_cases(tmp, witnesses, failures):
         _VBASE_SELFTEST_GIT_ROOT = saved
 
 
+def source_example_git_cases(tmp, witnesses, failures):
+    """Replay the source-example version against actual bound predecessor objects."""
+    global _VBASE_SELFTEST_GIT_ROOT
+    repo = Path(tmp) / "source-example-git"
+    subprocess.run(["git", "clone", "--quiet", "--shared", "--no-checkout", str(ROOT), str(repo)],
+                   check=True, capture_output=True)
+
+    def git(*args):
+        result = subprocess.run(
+            ["git", "-c", "commit.gpgsign=false", "-c", "tag.gpgsign=false",
+             "-c", "user.name=Reconciliation selftest",
+             "-c", "user.email=reconciliation-selftest@example.invalid", *args],
+            cwd=repo, check=True, capture_output=True, text=True,
+        )
+        return result.stdout.strip()
+
+    def check(name, path, old, new, expected, total=None, clue=None):
+        state, text, records, subjects = p5_advice_binding(repo)
+        report = run(repo)
+        counter = subprocess.run(
+            [sys.executable, "-B", "scripts/count_polaris_effective_scenarios.py", "--check"],
+            cwd=repo, capture_output=True, text=True,
+        )
+        found = [*records, *subjects, *(item for rows in report.findings.values() for item in rows)]
+        counter_output = counter.stdout + counter.stderr
+        held = state == expected and (text is not None) == (expected == "effective")
+        if clue:
+            held = held and any(clue.lower() in item.lower() for item in found) and counter.returncode != 0
+            held = held and clue.lower() in counter_output.lower()
+        else:
+            held = held and not report.failed and counter.returncode == 0
+            held = held and f"CHECK PASS: recomputed total {total} matches expected {total}." in counter_output
+        mutant = "source-example-git-" + name
+        witnesses.append({"mutant": mutant, "path": path, "old": old, "new": new,
+                          "expected": clue or f"{expected} {total}", "failed": found,
+                          "counterDiagnostic": counter.stderr.strip(),
+                          "outcome": ("killed" if clue else "held") if held else "SURVIVED"})
+        if not held:
+            failures.append(mutant)
+
+    base = local_git(ROOT, "rev-parse", "refs/remotes/origin/main").decode("ascii").strip()
+    authored = local_git(ROOT, "rev-parse", "HEAD").decode("ascii").strip()
+    git("remote", "set-url", "origin", str(Path(tmp) / "no-source-example-remote"))
+    git("remote", "set-url", "--push", "origin", str(Path(tmp) / "no-source-example-push"))
+    git("checkout", "--quiet", "--detach", authored)
+    ledger = repo / AGENT_ADOPTIONS
+    line, = p5_advice_claims(adoption_table_rows(repo))
+    source = line.split("|")[3].strip().strip("`")
+    protected = "refs/remotes/origin/main"
+    tag = f"refs/tags/{SOURCE_EXAMPLE_TAG}"
+    if git("tag", "--list", SOURCE_EXAMPLE_TAG):
+        git("tag", "-d", SOURCE_EXAMPLE_TAG)
+    git("update-ref", protected, base)
+    saved = _VBASE_SELFTEST_GIT_ROOT
+    _VBASE_SELFTEST_GIT_ROOT = None
+    try:
+        check("staged", tag, "", "", "staged", 603)
+        git("tag", "-a", SOURCE_EXAMPLE_TAG, source, "-m", "Synthetic exact annotation")
+        before_source = git("rev-parse", f"{source}^^")
+        git("update-ref", protected, before_source)
+        check("tag-before-protection", protected, authored, before_source, "invalid",
+              clue="outside protected main")
+        git("update-ref", protected, authored)
+        check("active", tag, "", source, "effective", 610)
+
+        git("tag", "-d", SOURCE_EXAMPLE_TAG)
+        git("tag", SOURCE_EXAMPLE_TAG, source)
+        check("lightweight", tag, "annotated", "lightweight", "invalid", clue="not annotated directly")
+        git("tag", "-d", SOURCE_EXAMPLE_TAG)
+        git("tag", "-a", SOURCE_EXAMPLE_TAG, source, "-m", "Synthetic exact annotation")
+
+        status = repo / STATUS
+        before = status.read_text(encoding="utf-8")
+        count = next(row.strip() for row in visible_route_lines(before)
+                     if row.strip().startswith(P5_ADVICE_COUNT_PREFIX))
+        fault = count.replace("610 scenarios.", "611 scenarios.")
+        assert before.count(count) == 1 and fault != count
+        status.write_text(before.replace(count, fault), encoding="utf-8")
+        check("wrong-count", STATUS, count, fault, "effective", clue="source-example advice")
+        status.write_text(before, encoding="utf-8")
+
+        spec = repo / P5_ADVICE_SPEC
+        prior = spec.read_text(encoding="utf-8")
+        addition = "\nSynthetic unexpected body.\n"
+        spec.write_text(prior + addition, encoding="utf-8")
+        check("dirty-source", P5_ADVICE_SPEC, "", addition, "invalid",
+              clue="worktree and exact Git subjects disagree")
+        spec.write_text(prior, encoding="utf-8")
+
+        later = "\nUnrelated fixture note after source-example adoption.\n"
+        status.write_text(before + later, encoding="utf-8")
+        git("add", STATUS)
+        git("commit", "-m", "Retain unrelated later status text")
+        git("revert", "--no-edit", source)
+        inverse = git("rev-parse", "HEAD")
+        check("unrecorded-inverse", P5_ADVICE_SPEC, source, inverse, "invalid",
+              clue="worktree and exact Git subjects disagree")
+        row = (f"| A-99999 | 2026-11-27 | `{inverse}` | Reverted {line.split('|')[1].strip()} | "
+               f"Fixture withdrawal. | `git revert {inverse}` | — |")
+        content = ledger.read_text(encoding="utf-8")
+        assert content.count(line) == 1
+        ledger.write_text(content.replace(line, line + "\n" + row), encoding="utf-8")
+        git("add", AGENT_ADOPTIONS)
+        git("commit", "-m", "Record the synthetic protected source-only withdrawal")
+        git("update-ref", protected, git("rev-parse", "HEAD"))
+        assert later in status.read_text(encoding="utf-8")
+        check("recorded-inverse", AGENT_ADOPTIONS, "", row, "reverted", 603)
+        git("checkout", "--quiet", "--detach", authored)
+        check("stale-inverse", protected, authored, inverse, "invalid", clue="dispositions disagree")
+    finally:
+        _VBASE_SELFTEST_GIT_ROOT = saved
+
+
 # The case workers fork after the parent warms this invocation's cache.
 @_reverse_cache_scope()
 def selftest(witness_path=None):
@@ -13747,6 +13901,9 @@ def selftest(witness_path=None):
     with tempfile.TemporaryDirectory() as tmp:
         base = Path(tmp) / "base"
         scratch(ROOT, base)
+        if p5_advice_claims(adoption_table_rows(base)):
+            source_example_git_cases(tmp, witnesses, failures)
+            project_source_example_history(base)
         _propose_candidate(base)
         clean = run(base)
         if clean.failed:
