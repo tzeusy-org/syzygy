@@ -116,7 +116,8 @@ const EQUIVALENT = [
 
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const files = [...new Set(MUTANTS.map(([, file]) => file))].sort();
-const originals = new Map(files.map((file) => [file, fs.readFileSync(path.join(root, file), 'utf8')]));
+// The equivalent mutants' files too, so `--only` can still check their fragments.
+const originals = new Map([...new Set([...files, ...EQUIVALENT.map((m) => m.file)])].map((file) => [file, fs.readFileSync(path.join(root, file), 'utf8')]));
 const wrong = [];
 for (const [id, file, old] of [...MUTANTS, ...EQUIVALENT.map((m) => [m.id, m.file, m.old])]) {
   const count = originals.get(file).split(old).length - 1;

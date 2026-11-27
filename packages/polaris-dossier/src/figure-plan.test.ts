@@ -261,6 +261,7 @@ describe('figure advice: duplicates', () => {
 
   it('keys a label by trimming the six white-space characters, folding their runs and lowercasing A to Z alone', () => {
     expect(labelKey(' \t Auth\n\r Service\u000b ')).toBe('auth service');
+    expect(labelKey('\u00a0\u00c9COLE \u00c0B\u00a0')).toBe('\u00a0\u00c9cole \u00c0b\u00a0');
   });
 });
 
