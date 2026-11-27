@@ -103,6 +103,11 @@ const MUTANTS = [
   ['model-form-without-v14', SCHEMA, "version === LOCAL_DRAFT_SCHEMA_VERSION_V12 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14;", "version === LOCAL_DRAFT_SCHEMA_VERSION_V12;"],
   ['worth-knowing-form-without-v14', SCHEMA, "version === LOCAL_DRAFT_SCHEMA_VERSION_V13 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14;", "version === LOCAL_DRAFT_SCHEMA_VERSION_V13;"],
   ['document-plan-dropped', SCHEMA, ", [FIGURE_PLAN_FIELD]: { description: FIGURE_PLAN_DESCRIPTION } }", " }"],
+  // --- the migration parity's bound (version 2.41, syzygy-3efd.87 design D5)
+  ['model-elements-199', SCHEMA, "elements: [0, 200] as const, relationships: [0, 400] as const", "elements: [0, 199] as const, relationships: [0, 400] as const"],
+  ['model-elements-201', SCHEMA, "elements: [0, 200] as const, relationships: [0, 400] as const", "elements: [0, 201] as const, relationships: [0, 400] as const"],
+  ['model-relationships-399', SCHEMA, "elements: [0, 200] as const, relationships: [0, 400] as const", "elements: [0, 200] as const, relationships: [0, 399] as const"],
+  ['model-relationships-401', SCHEMA, "elements: [0, 200] as const, relationships: [0, 400] as const", "elements: [0, 200] as const, relationships: [0, 401] as const"],
   // --- brief v22
   ['brief-plan-paragraph-dropped', BRIEF, "    FIGURE_PLAN_PARAGRAPH,\n    '',\n", ""],
   ['brief-containment-after-model', BRIEF, "    CONTAINMENT_PARAGRAPH,\n    '',\n    MODEL_PARAGRAPH,\n", "    MODEL_PARAGRAPH,\n    '',\n    CONTAINMENT_PARAGRAPH,\n"],

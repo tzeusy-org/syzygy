@@ -437,6 +437,33 @@ describe('system model: migration', () => {
     ], { elements: ['repo', 'src', 'api'], relationships: ['repo-src', 'src-api'] }]);
     await keepsParity(v10);
   });
+
+  // Version 2.41 (syzygy-3efd.87, design D5): parity holds for a v10 or v11 draft whose nodes and groups number at most 200 and whose edges
+  // number at most 400; past either bound the migrated draft gets check's schema finding at that list.
+  /** Graph figures of these node and edge counts, every identity distinct, each edge a distinct ordered pair of its figure's nodes. */
+  const sized = (counts: readonly (readonly [number, number])[]): Doc => draftOf(counts.map(([nodes, edges], d) => {
+    const pairs: [number, number][] = [];
+    for (let step = 1; pairs.length < edges; step++) for (let k = 0; k < nodes && pairs.length < edges; k++) pairs.push([k, (k + step) % nodes]);
+    return figure(`f${d}`, Array.from({ length: nodes }, (_, k) => node(`n${d}-${k}`, `Node ${d}.${k}`)),
+      pairs.map(([from, to], j) => edge(`e${d}-${j}`, `n${d}-${from}`, `n${d}-${to}`, 'calls', 'calls')));
+  }), V11);
+
+  it('keeps parity for a v11 draft of exactly 200 nodes and 400 edges (version 2.41)', async () => {
+    const v11 = sized([[40, 80], [40, 80], [40, 80], [40, 80], [40, 80]]);
+    const model = migrateDraft(v11)!['model'] as Doc;
+    expect([model['elements'].length, model['relationships'].length]).toEqual([200, 400]);
+    await keepsParity(v11);
+  }, 120_000);
+
+  it('gives the migrated draft check\'s schema finding at 201 nodes, and at 401 edges, though each v11 draft passes (version 2.41)', async () => {
+    const nodes = sized([[40, 80], [40, 80], [40, 80], [40, 80], [39, 79], [2, 1]]);
+    const edges = sized([[40, 80], [40, 80], [40, 80], [40, 80], [38, 80], [2, 1]]);
+    for (const v11 of [nodes, edges]) expect(await findingsOf(A, v11)).toEqual(PASSED);
+    expect((await findingsOf(A, migrateDraft(nodes)!)).findings.filter((finding) => finding.kind === 'schema')).toEqual([
+      { kind: 'schema', at: '$.model.elements', detail: 'must hold 0 to 200 items; holds 201' }]);
+    expect((await findingsOf(A, migrateDraft(edges)!)).findings.filter((finding) => finding.kind === 'schema')).toEqual([
+      { kind: 'schema', at: '$.model.relationships', detail: 'must hold 0 to 400 items; holds 401' }]);
+  }, 120_000);
 });
 
 describe('system model: the brief paragraph', () => {
@@ -672,11 +699,11 @@ describe('system model: scenarios and bounds the first tests left out (R37 findi
   });
 });
 
-describe('system model: the migration parity\'s bound exception (a spec defect, spec bead syzygy-3efd.87)', () => {
-  // R37 finding 2: v11 allows up to 20 diagrams of 40 nodes (800 nodes), while 2.24 line 134 bounds the model to 200 elements, so line 142's
-  // claim that check passes every migrated draft d that check passes fails for a large d. The code follows line 134; bead syzygy-3efd.87
-  // repairs the spec. Pinned here so it is never silent.
-  it('refuses a migrated v11 draft of 222 nodes at the model bound, though the v11 draft passes', async () => {
+describe('system model: the migration parity\'s bound (version 2.41)', () => {
+  // R37 finding 2: v11 allows up to 20 diagrams of 40 nodes (800 nodes), while the model holds at most 200 elements. Version 2.41
+  // (syzygy-3efd.87) narrows parity to drafts of at most 200 nodes and groups and 400 edges; past either bound the migrated draft gets
+  // check's schema finding. The boundary cases are in 'system model: migration'.
+  it('gives a migrated v11 draft of 222 nodes check\'s schema finding at the model\'s elements, though the v11 draft passes', async () => {
     const diagrams = Array.from({ length: 6 }, (_, d) => figure(`f${d}`, Array.from({ length: 37 }, (_, k) => node(`n${d}-${k}`, `Node ${d}.${k}`)),
       [edge(`e${d}`, `n${d}-0`, `n${d}-1`, 'calls', 'calls')]));
     const v11 = draftOf(diagrams, V11);
