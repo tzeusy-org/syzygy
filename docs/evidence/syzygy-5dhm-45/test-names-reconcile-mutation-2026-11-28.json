@@ -1,0 +1,124 @@
+{
+  "commit": "bf4a7eb9f2cd8150d25a24e79de3f46fda59efdd",
+  "script": "docs/evidence/syzygy-5dhm-45/test_names_reconcile_mutation.py",
+  "baseline": {
+    "python3 scripts/check_spec_reconciliation.py --check": {
+      "exit": 0
+    },
+    "python3 scripts/count_polaris_effective_scenarios.py": {
+      "exit": 0
+    }
+  },
+  "mutants": [
+    {
+      "mutant": "status-count-off",
+      "path": "PROJECT-STATUS.md",
+      "old": "Polaris has 39 requirements and 618 scenarios.",
+      "new": "Polaris has 39 requirements and 617 scenarios.",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "does not declare the exact test-name recognizers census",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "status-count-off-counter",
+      "path": "PROJECT-STATUS.md",
+      "old": "Polaris has 39 requirements and 618 scenarios.",
+      "new": "Polaris has 39 requirements and 617 scenarios.",
+      "command": "python3 scripts/count_polaris_effective_scenarios.py",
+      "expected": "test-name recognizers count differs",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "status-route-old-id",
+      "path": "PROJECT-STATUS.md",
+      "old": "is agent-adopted in A-337.",
+      "new": "is agent-adopted in A-336.",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "does not route test-name recognizers v2.38",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "index-old-tag",
+      "path": "openspec/README.md",
+      "old": "`polaris-dossier-test-names-v2.38`",
+      "new": "`polaris-dossier-test-names-v2.37`",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "does not route test-name recognizers v2.38",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "spec-one-byte",
+      "path": "openspec/changes/dossier-test-names/proposed/polaris-generation/spec.md",
+      "old": "# Dossier test-name recognizers",
+      "new": "# Dossier test-name recognisers",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "differs from the reviewed v2.38 subject",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "row-old-tag",
+      "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+      "old": "| `polaris-dossier-test-names-v2.38` |",
+      "new": "| `polaris-dossier-test-names-v2.37` |",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "calls test-name recognizers v2.38 adopted while it is not in force",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "row-test-is-choice",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "for line in adoption_table_rows(root) if is_tnames_row(line)]",
+      "new": "for line in adoption_table_rows(root) if is_choice_row(line)]",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "test-name recognizers: malformed adoption identity",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "census-skips-tnames",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "                a, extra_a = compose_figure_by_id(a, tnames_amendment, TNAMES_REPLACES)\n                b, extra_b = compose_figure_by_name(b, tnames_amendment, TNAMES_REPLACES)\n",
+      "new": "                extra_a = extra_b = []\n",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "FAIL  R3",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "expected-skips-tnames",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "        n_scen += tnames_delta(root, findings)\n",
+      "new": "        pass\n",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "FAIL  R3",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "projection-skips-tnames",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "                findings.append(\"POLARIS test-name recognizers: selected census projections disagree\")\n            selected_population = by_id\n",
+      "new": "                findings.append(\"POLARIS test-name recognizers: selected census projections disagree\")\n",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "selected census differs",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "status-want-unadjusted",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "            want = (want[0], str(int(want[1]) - tnames_delta(root, findings)))\n",
+      "new": "",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "FAIL  R5",
+      "exit": 1,
+      "outcome": "killed"
+    }
+  ]
+}
