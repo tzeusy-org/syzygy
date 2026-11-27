@@ -62,12 +62,23 @@ describe('RT6 — honest degradation over real disk state', () => {
 
     // The entry document is not read at all: with no declaration there is
     // no consented governance root (CAP1-REQ-016; syzygy-u2a.2). It is
-    // served as Unknown with that reason, never a fabricated page.
+    // served as Unknown with that reason, never a fabricated page, and in
+    // its own not-read state rather than as unreadable (syzygy-s6cp).
     const entryResponse = await fetch(`${daemon.baseUrl}/entry`);
     expect(entryResponse.status).toBe(200);
     const entryHtml = await entryResponse.text();
-    expect(entryHtml).toContain('data-entry-state="unreadable"');
-    expect(entryHtml).toContain('Unknown — reason: unconsented-source-or-provider');
+    expect(entryHtml).toContain('data-entry-state="not-read"');
+    expect(entryHtml).not.toContain('data-entry-state="unreadable"');
+    // Round-1 F5, round-2 N4/N5: the stated cause is the true one — the
+    // declaration is missing — never a refused consent, and the RFC2-24
+    // reason is #1 missing-declaration, whose route is drafting.
+    expect(entryHtml).toContain('data-not-read-reason="declaration-missing"');
+    expect(entryHtml).toContain(
+      'The entry document was not read: the project declaration is missing, so no governance root is declared (declaration-missing). ' +
+        'Unknown — reason: missing-declaration. Nothing is shown in its place.',
+    );
+    expect(entryHtml).not.toContain('consent is not admitted');
+    expect(entryHtml).not.toContain('unconsented-source-or-provider');
   });
 
   it('breaking the declaration between runs changes the served facts to the named invalid arms', async () => {
