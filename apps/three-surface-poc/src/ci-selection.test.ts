@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { DOSSIER_CORPUS_MANIFEST, dossierCorpusReaders } from '../../../ci-reader-inventory.js';
 import {
-  FULL_RUN_TRIGGERS, ROOTED, WALKS, matchesPullRequestCheckout, namesPath, parseGitPathList, parseNameStatus,
+  DECLARED_READERS, FULL_RUN_TRIGGERS, ROOTED, WALKS, matchesPullRequestCheckout, namesPath, parseGitPathList, parseNameStatus,
   planSelection as select, readerTokens, type ChangedPath,
 } from '../../../ci-selection.js';
 
@@ -53,7 +53,7 @@ describe('the pull-request selection plan', () => {
   it('runs every tier for a change the graph cannot bound, naming each trigger', () => {
     const triggers = ['package.json', 'apps/a/package.json', 'package-lock.json', '.npmrc', 'vitest.config.ts', 'vitest.tiers.ts', 'vitest.setup.ts',
       'packages/cap1-system/vitest.config.ts', 'tsconfig.json', 'packages/p/tsconfig.build.json', 'ci-selection.ts', 'ci-reader-inventory.ts', 'scripts/select_ci_tests.mjs',
-      'scripts/run_ci_tier.mjs', 'scripts/check_unit_tmpdir.mjs', '.github/workflows/node-ci.yml',
+      'scripts/run_ci_tier.mjs', 'scripts/check_unit_tmpdir.mjs', 'scripts/check_read_census.mjs', 'vitest.read-census.setup.ts', '.github/workflows/node-ci.yml',
       '.github/workflows/governance-docs.yml', '.github/workflows/generation-mutation-gate.yml'];
     for (const path of triggers) {
       const plan = planSelection([M('M', 'apps/a/src/trajectory.ts'), M('M', path)], MODULES);
@@ -113,6 +113,24 @@ describe('the pull-request selection plan', () => {
   });
 });
 
+describe('declared readers', () => {
+  it('selects each declared reader for a change to a path it declares, and not otherwise', () => {
+    const modules = new Map(DECLARED_READERS.map(({ reader }) => [reader, 'no path literal here']));
+    const reached = (path: string) => planSelection([M('M', path)], modules).documents[0]!.readers;
+    expect(reached('packages/support/src/sha256.ts')).toEqual([
+      'apps/three-surface-poc/src/product-build.test.ts',
+      'packages/polaris-generation-core/src/island-boundary.test.ts',
+      'packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts',
+    ]);
+    expect(reached('packages/polaris-dossier/src/render.ts')).toEqual([
+      'apps/three-surface-poc/src/product-build.test.ts',
+      'packages/polaris-generation-core/src/island-boundary.test.ts',
+    ]);
+    expect(reached('docs/README.md')).toEqual([]);
+    expect(reached('packages/support/src/fixtures/a.json')).toEqual([]);
+  });
+});
+
 describe('its parts', () => {
   it('finds a path literal only between quotes, backticks or slashes', () => {
     expect(namesPath("join(ROOT, 'AGENT-ADOPTIONS.md')", 'AGENT-ADOPTIONS.md')).toBe(true);
@@ -130,10 +148,10 @@ describe('its parts', () => {
   });
 
   it('recognises the ways a module locates the repository', () => {
-    for (const text of ["new URL('../../../', import.meta.url)", 'new URL("../..", import.meta.url)', 'process.cwd()', "['rev-parse', 'HEAD']", 'git rev-parse --show-toplevel']) {
+    for (const text of ["new URL('../../../', import.meta.url)", 'new URL("../..", import.meta.url)', "path.resolve(HERE, '../../..')", "'../../'", 'process.cwd()', "['rev-parse', 'HEAD']", 'git rev-parse --show-toplevel']) {
       expect(ROOTED.test(text), text).toBe(true);
     }
-    for (const text of ["join(HERE, '..')", "new URL('./x.ts', import.meta.url)", 'cwd'] as const) expect(ROOTED.test(text), text).toBe(false);
+    for (const text of ["join(HERE, '..')", "join(HERE, '../x')", "new URL('./x.ts', import.meta.url)", 'cwd'] as const) expect(ROOTED.test(text), text).toBe(false);
   });
 
   it('recognises a module that lists a directory', () => {

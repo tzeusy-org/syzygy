@@ -128,6 +128,14 @@ jobs:
       - name: unit tests (npm test)
         if: github.event_name != 'pull_request'
         run: npm test
+        env:
+          SYZYGY_READ_CENSUS: ${{ runner.temp }}/read-census
+
+      # Merge-group runs record what every test file reads (vitest.read-census.setup.ts) and fail when pull-request
+      # selection would not pick a test for a change to a file it read (syzygy-qu5j).
+      - name: read census check (merge group)
+        if: github.event_name != 'pull_request'
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check_read_census.mjs "$RUNNER_TEMP/read-census"
 
       - name: unit tests, selected (pull requests)
         if: github.event_name == 'pull_request'
@@ -163,6 +171,14 @@ jobs:
       - name: integration tests (npm run test:integration)
         if: github.event_name != 'pull_request'
         run: npm run test:integration
+        env:
+          SYZYGY_READ_CENSUS: ${{ runner.temp }}/read-census
+
+      # Merge-group runs record what every test file reads (vitest.read-census.setup.ts) and fail when pull-request
+      # selection would not pick a test for a change to a file it read (syzygy-qu5j).
+      - name: read census check (merge group)
+        if: github.event_name != 'pull_request'
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check_read_census.mjs "$RUNNER_TEMP/read-census"
 
       - name: integration tests, selected (pull requests)
         if: github.event_name == 'pull_request'
@@ -242,6 +258,13 @@ jobs:
         run: npm run test:e2e
         env:
           SYZYGY_FRESH_CLONE: '1'
+          SYZYGY_READ_CENSUS: ${{ runner.temp }}/read-census
+
+      # Merge-group runs record what every test file reads (vitest.read-census.setup.ts) and fail when pull-request
+      # selection would not pick a test for a change to a file it read (syzygy-qu5j).
+      - name: read census check (merge group)
+        if: github.event_name != 'pull_request'
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check_read_census.mjs "$RUNNER_TEMP/read-census"
 
       - name: e2e tests, selected (pull requests)
         if: github.event_name == 'pull_request'

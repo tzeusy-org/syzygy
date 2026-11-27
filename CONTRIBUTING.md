@@ -155,6 +155,16 @@ See [repository scripts](scripts/README.md) for the Python governance tools.
   deleted workspace module runs everything. The rule and its known blind spot
   are in `ci-selection.ts`. To see a choice locally:
   `node scripts/select_ci_tests.mjs --base origin/main --out /tmp/sel.json`.
+- **The read census keeps selection honest.** Every merge-group run records,
+  per test file, each tracked file whose content it read in-process
+  (`vitest.read-census.setup.ts`, on when `SYZYGY_READ_CENSUS` names a
+  directory), and `scripts/check_read_census.mjs` fails the run when the
+  selection for a change to that file alone would not pick the test. Repair a
+  failure by making the reader visible to the rules in `ci-selection.ts`, or by
+  a row in its `DECLARED_READERS`. Locally: `SYZYGY_READ_CENSUS=/tmp/rc npx
+  vitest run --project unit`, then `node scripts/check_read_census.mjs /tmp/rc`.
+  Reads made by a child process (git, a spawned script) and directory listings
+  are not recorded.
 - **Where a test goes.** A new test file is a unit test until
   `vitest.tiers.ts` lists it under `INTEGRATION_TESTS`, `E2E_TESTS` or
   `LIVE_TESTS`; list it under the lowest tier that holds what it uses. The

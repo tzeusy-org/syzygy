@@ -56,7 +56,7 @@ export const FULL_RUN_TRIGGERS: ReadonlyArray<{ readonly rule: string; readonly 
   { rule: 'package test configuration', test: /^(apps|packages)\/[^/]+\/vitest[^/]*\.(ts|mts|js|mjs)$/u },
   { rule: 'type configuration', test: /(^|\/)tsconfig[^/]*\.json$/u },
   { rule: 'selector', test: /^ci-(selection|reader-inventory)\.ts$/u },
-  { rule: 'selector', test: /^scripts\/(select_ci_tests|run_ci_tier|check_unit_tmpdir)\.mjs$/u },
+  { rule: 'selector', test: /^scripts\/(select_ci_tests|run_ci_tier|check_unit_tmpdir|check_read_census)\.mjs$/u },
   { rule: 'workflow', test: /^\.github\/workflows\//u },
 ];
 
@@ -65,7 +65,30 @@ const WORKSPACE = /^(apps|packages)\/[^/]+\//u;
 const MODULE = /\.(ts|mts|cts|tsx|js|mjs|cjs)$/u;
 
 /** A module that finds the real repository from where it sits, or from the process; see the head comment. */
-export const ROOTED = /new URL\(\s*['"`](\.\.\/?)+['"`]|process\.cwd\(\)|['"`]rev-parse['"`]|--show-toplevel/u;
+export const ROOTED = /new URL\(\s*['"`](\.\.\/?)+['"`]|['"`]\.\.(\/\.\.)+\/?['"`]|process\.cwd\(\)|['"`]rev-parse['"`]|--show-toplevel/u;
+
+/**
+ * Tests that read files the rules above cannot see them read, each with the paths it reads. The read census
+ * (`vitest.read-census.setup.ts`, checked by `scripts/check_read_census.mjs` on every merge-group run) records what every
+ * test reads; a pair the plan would miss fails that run until the rule covers it or a row here names it.
+ */
+export const DECLARED_READERS: ReadonlyArray<{ readonly reader: string; readonly reads: RegExp; readonly why: string }> = [
+  {
+    reader: 'packages/polaris-generation-core/src/island-boundary.test.ts',
+    reads: /^(apps|packages)\/[^/]+\/src\/.+\.(ts|mts|cts|tsx|js|mjs|cjs)$/u,
+    why: 'parses every workspace source module it reaches from the production entries',
+  },
+  {
+    reader: 'apps/three-surface-poc/src/product-build.test.ts',
+    reads: /^(apps|packages)\/[^/]+\/src\/.+\.(ts|mts|cts|tsx|js|mjs|cjs)$/u,
+    why: 'builds every tracked workspace module in a clone and compares the emitted files',
+  },
+  {
+    reader: 'packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts',
+    reads: /^packages\/(cap1-core|support)\/src\/.+\.ts$/u,
+    why: 'parses the source of the cap1-core closure it verifies, resolved from the imports',
+  },
+];
 
 /** A module that lists a directory, and so may read a file no one names to it; see the head comment. */
 export const WALKS = /\b(readdir|opendir|glob)(Sync)?\(|['"`]ls-files['"`]/u;
@@ -135,6 +158,7 @@ export function planSelection(
     const tokens = [...new Set(names.flatMap(readerTokens))];
     const workspace = workspaceOf(change.path);
     const reads = (module: string, text: string): boolean => {
+      if (DECLARED_READERS.some(({ reader, reads: paths }) => reader === module && names.some((name) => paths.test(name)))) return true;
       if (tokens.some((token) => namesPath(text, token))) return true;
       if (workspace === undefined) return ROOTED.test(text);
       return module.endsWith('.test.ts') && WALKS.test(text) && (workspaceOf(module) === workspace || ROOTED.test(text));
