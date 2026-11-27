@@ -1,0 +1,480 @@
+{
+  "subject": "REQ-polaris-generation-034 version 2.34 test-name recognizers (syzygy-5dhm.45)",
+  "rule": "AGENTS.md verification rule 6",
+  "commit": "7885f2e6fee0ad612756592d79e3b6216549c024",
+  "files": [
+    "packages/polaris-dossier/src/test-names-lexer.ts",
+    "packages/polaris-dossier/src/test-names-recognize.ts",
+    "packages/polaris-dossier/src/derive-rules.ts",
+    "packages/polaris-dossier/src/test-names.ts",
+    "apps/three-surface-poc/src/polaris-generation/dossier-test-names.ts",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts"
+  ],
+  "tests": [
+    "packages/polaris-dossier/src/test-names-recognize.test.ts",
+    "packages/polaris-dossier/src/test-names.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/dossier-test-names.test.ts"
+  ],
+  "command": "npx vitest run packages/polaris-dossier/src/test-names-recognize.test.ts packages/polaris-dossier/src/test-names.test.ts apps/three-surface-poc/src/polaris-generation/dossier-test-names.test.ts",
+  "baseline": {
+    "exit": 0,
+    "failed": 0,
+    "passed": 22,
+    "fileFailures": 0
+  },
+  "restored": {
+    "exit": 0,
+    "failed": 0,
+    "passed": 22,
+    "fileFailures": 0
+  },
+  "mutants": 34,
+  "killed": 30,
+  "survived": [
+    "lexer-go-raw-string-as-quoted",
+    "pytest-any-class",
+    "js-first-extension",
+    "junit-annotation-prefix"
+  ],
+  "notApplied": [],
+  "byLayer": {
+    "lexer": {
+      "mutants": 9,
+      "killed": 8
+    },
+    "pytest-test-name": {
+      "mutants": 4,
+      "killed": 3
+    },
+    "js-test-call": {
+      "mutants": 5,
+      "killed": 4
+    },
+    "go-test-function": {
+      "mutants": 3,
+      "killed": 3
+    },
+    "junit-test-method": {
+      "mutants": 3,
+      "killed": 2
+    },
+    "member": {
+      "mutants": 6,
+      "killed": 6
+    },
+    "page": {
+      "mutants": 4,
+      "killed": 4
+    }
+  },
+  "results": [
+    {
+      "id": "lexer-line-comment-kept",
+      "layer": "lexer",
+      "file": "packages/polaris-dossier/src/test-names-lexer.ts",
+      "old": "if (c === '/' && next === '/') {",
+      "new": "if (false) {",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 3,
+      "passed": 19,
+      "fileFailures": 2
+    },
+    {
+      "id": "lexer-block-comment-kept",
+      "layer": "lexer",
+      "file": "packages/polaris-dossier/src/test-names-lexer.ts",
+      "old": "if (c === '/' && next === '*') {",
+      "new": "if (false) {",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 2,
+      "passed": 20,
+      "fileFailures": 1
+    },
+    {
+      "id": "lexer-string-interior-kept",
+      "layer": "lexer",
+      "file": "packages/polaris-dossier/src/test-names-lexer.ts",
+      "old": "this.parts.push(open + blank(inner) + close);",
+      "new": "this.parts.push(open + inner + close);",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 4,
+      "passed": 18,
+      "fileFailures": 1
+    },
+    {
+      "id": "lexer-escape-ignored",
+      "layer": "lexer",
+      "file": "packages/polaris-dossier/src/test-names-lexer.ts",
+      "old": "if (c === '\\\\') { i++; continue; }\n    if (singleLine",
+      "new": "if (singleLine",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 2,
+      "passed": 20,
+      "fileFailures": 1
+    },
+    {
+      "id": "lexer-regex-literal-kept",
+      "layer": "lexer",
+      "file": "packages/polaris-dossier/src/test-names-lexer.ts",
+      "old": "if (c === '/' && options.javascript === true && opensRegex(text, i)) {",
+      "new": "if (false) {",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "lexer-python-comment-kept",
+      "layer": "lexer",
+      "file": "packages/polaris-dossier/src/test-names-lexer.ts",
+      "old": "if (c === '#') {",
+      "new": "if (false) {",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "lexer-python-triple-as-single",
+      "layer": "lexer",
+      "file": "packages/polaris-dossier/src/test-names-lexer.ts",
+      "old": "text.startsWith(text[q]!.repeat(3), q) ? text[q]!.repeat(3) : text[q]!",
+      "new": "text[q]!",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 2,
+      "passed": 20,
+      "fileFailures": 1
+    },
+    {
+      "id": "lexer-java-text-block-kept",
+      "layer": "lexer",
+      "file": "packages/polaris-dossier/src/test-names-lexer.ts",
+      "old": "if (options.java === true && text.startsWith('\"\"\"', i)) {",
+      "new": "if (false) {",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "lexer-go-raw-string-as-quoted",
+      "layer": "lexer",
+      "file": "packages/polaris-dossier/src/test-names-lexer.ts",
+      "old": "if (c === '`' && options.go === true) {",
+      "new": "if (false) {",
+      "outcome": "survived",
+      "exit": 0,
+      "failed": 0,
+      "passed": 22,
+      "fileFailures": 0
+    },
+    {
+      "id": "pytest-any-def",
+      "layer": "pytest-test-name",
+      "file": "packages/polaris-dossier/src/test-names-recognize.ts",
+      "old": "def[ \\t]+(test[A-Za-z0-9_]*)",
+      "new": "def[ \\t]+([A-Za-z0-9_]*)",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "pytest-any-class",
+      "layer": "pytest-test-name",
+      "file": "packages/polaris-dossier/src/test-names-recognize.ts",
+      "old": "class[ \\t]+(Test[A-Za-z0-9_]*)",
+      "new": "class[ \\t]+([A-Za-z0-9_]*)",
+      "outcome": "survived",
+      "exit": 0,
+      "failed": 0,
+      "passed": 22,
+      "fileFailures": 0
+    },
+    {
+      "id": "pytest-no-async",
+      "layer": "pytest-test-name",
+      "file": "packages/polaris-dossier/src/test-names-recognize.ts",
+      "old": "(?:(?:async[ \\t]+)?def",
+      "new": "(?:def",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "pytest-suffix-path-dropped",
+      "layer": "pytest-test-name",
+      "file": "packages/polaris-dossier/src/test-names-recognize.ts",
+      "old": " || PYTEST_TEST_NAME.suffixes.some((s) => base.endsWith(s))",
+      "new": "",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "js-member-call-read",
+      "layer": "js-test-call",
+      "file": "packages/polaris-dossier/src/test-names-recognize.ts",
+      "old": "(?<![\\\\w$.])",
+      "new": "",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "js-modifiers-dropped",
+      "layer": "js-test-call",
+      "file": "packages/polaris-dossier/src/test-names-recognize.ts",
+      "old": "((?:\\\\s*\\\\.\\\\s*(?:${JS_TEST_CALL.modifiers.join('|')}))*)",
+      "new": "()",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "js-substitution-read",
+      "layer": "js-test-call",
+      "file": "packages/polaris-dossier/src/test-names-recognize.ts",
+      "old": "if (literal === undefined || literal.value === null) continue;",
+      "new": "if (literal === undefined) continue;",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "js-suite-as-test",
+      "layer": "js-test-call",
+      "file": "packages/polaris-dossier/src/test-names-recognize.ts",
+      "old": "? 'suite' : 'test';",
+      "new": "? 'test' : 'test';",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 2,
+      "passed": 20,
+      "fileFailures": 2
+    },
+    {
+      "id": "js-first-extension",
+      "layer": "js-test-call",
+      "file": "packages/polaris-dossier/src/test-names-recognize.ts",
+      "old": "[...JS_TEST_CALL.extensions].sort((a, b) => b.length - a.length)",
+      "new": "[...JS_TEST_CALL.extensions]",
+      "outcome": "survived",
+      "exit": 0,
+      "failed": 0,
+      "passed": 22,
+      "fileFailures": 0
+    },
+    {
+      "id": "go-any-testing-type",
+      "layer": "go-test-function",
+      "file": "packages/polaris-dossier/src/test-names-recognize.ts",
+      "old": "[ \\t]+\\*testing\\.T[ \\t]*\\)",
+      "new": "[ \\t]+\\*testing\\.[A-Z][ \\t]*\\)",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "go-lowercase-after-test",
+      "layer": "go-test-function",
+      "file": "packages/polaris-dossier/src/test-names-recognize.ts",
+      "old": "(Test(?![a-z])",
+      "new": "(Test",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "go-bare-suffix-path",
+      "layer": "go-test-function",
+      "file": "packages/polaris-dossier/src/test-names-recognize.ts",
+      "old": "basenameOf(path).endsWith(s) && basenameOf(path).length > s.length",
+      "new": "basenameOf(path).endsWith(s)",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "junit-annotation-prefix",
+      "layer": "junit-test-method",
+      "file": "packages/polaris-dossier/src/test-names-recognize.ts",
+      "old": "(?:${JUNIT_TEST_METHOD.annotations.join('|')})\\\\b",
+      "new": "(?:${JUNIT_TEST_METHOD.annotations.join('|')})",
+      "outcome": "survived",
+      "exit": 0,
+      "failed": 0,
+      "passed": 22,
+      "fileFailures": 0
+    },
+    {
+      "id": "junit-no-annotation-arguments",
+      "layer": "junit-test-method",
+      "file": "packages/polaris-dossier/src/test-names-recognize.ts",
+      "old": "\\\\b(?:\\\\s*\\\\([^()]*\\\\))?`;",
+      "new": "\\\\b`;",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "junit-tests-stem-dropped",
+      "layer": "junit-test-method",
+      "file": "packages/polaris-dossier/src/derive-rules.ts",
+      "old": "stemSuffixes: ['Test', 'Tests'],",
+      "new": "stemSuffixes: ['Test'],",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "member-secret-path-read",
+      "layer": "member",
+      "file": "packages/polaris-dossier/src/test-names.ts",
+      "old": "if (secretOrUnder(path.split('/'), isSecretPath)) { secretPathsLeftOut++; continue; }",
+      "new": "",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "member-vendored-read",
+      "layer": "member",
+      "file": "packages/polaris-dossier/src/test-names.ts",
+      "old": "if (vendoredOrGeneratedPath(path)) { setApart++; continue; }",
+      "new": "",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "member-class-gate-off",
+      "layer": "member",
+      "file": "packages/polaris-dossier/src/test-names.ts",
+      "old": "if (unconsentedClass(screen.contentClass(path), inputs.consented) !== undefined) { outcomes.push(unknownFile(path, 'class-not-consented', false)); continue; }",
+      "new": "",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "member-body-screen-off",
+      "layer": "member",
+      "file": "packages/polaris-dossier/src/test-names.ts",
+      "old": "if (screened.kind === 'excluded') {",
+      "new": "if (false) {",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "member-value-checks-off",
+      "layer": "member",
+      "file": "packages/polaris-dossier/src/test-names.ts",
+      "old": "value.length === 0 || value.length > MANIFEST_VALUE_LIMIT || ",
+      "new": "",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "member-root-unit-named",
+      "layer": "member",
+      "file": "packages/polaris-dossier/src/test-names.ts",
+      "old": "return slash < 0 ? null : path.slice(0, slash);",
+      "new": "return slash < 0 ? '.' : path.slice(0, slash);",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "page-label-observed",
+      "layer": "page",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-test-names.ts",
+      "old": "`Evidence: label Inferred; declared in ${name.path}",
+      "new": "`Evidence: label Observed; declared in ${name.path}",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "page-name-unescaped",
+      "layer": "page",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-test-names.ts",
+      "old": "${escape(`${what} ${name.name}, in ${name.path} at line ${name.line}.`)}",
+      "new": "${what} ${name.name}, in ${name.path} at line ${name.line}.",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "page-unknown-member-drawn",
+      "layer": "page",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-test-names.ts",
+      "old": "if (member.state !== 'derived') {",
+      "new": "if (false) {",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    },
+    {
+      "id": "site-page-without-record",
+      "layer": "page",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const testNames = local?.derivedStructure !== undefined && local.testNames !== undefined ?",
+      "new": "const testNames = local?.testNames !== undefined ?",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 21,
+      "fileFailures": 1
+    }
+  ]
+}

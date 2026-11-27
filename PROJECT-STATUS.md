@@ -317,6 +317,12 @@ It replaces REQ-polaris-generation-034 from version 2.39, the import facts (278 
 or deep dive may walk one graph figure in numbered steps, linking each step to its element and paragraph with no script.
 
 With the figure walks version effective, Polaris has 39 requirements and 638 scenarios.
+
+[Test-name recognizers amendment 2.42](openspec/changes/dossier-test-names) is agent-adopted in A-337.
+It replaces REQ-polaris-generation-034 from version 2.40, the figure walks (291 to 297 scenarios): each operator-agent
+render reads declared test names lexically and publishes them per unit on `reference/test-names.html`.
+
+With the test-name recognizers version effective, Polaris has 39 requirements and 644 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
