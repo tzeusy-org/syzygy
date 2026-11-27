@@ -15,7 +15,10 @@ export interface StringToken {
    * line break, which the recognizers do not read. */
   readonly value: string | null;
 }
-export type Scanned = { readonly ok: true; readonly code: string; readonly strings: readonly StringToken[] } | { readonly ok: false; readonly fault: 'unterminated' };
+/** A comment's span (version 2.43, syzygy-5dhm.46): the whole comment, and its content between the delimiters (`#`, `//`, or `/*` and
+ * `*\/`). A regular-expression literal is blanked in the code text and is no comment. */
+export interface CommentToken { readonly start: number; readonly end: number; readonly contentStart: number; readonly contentEnd: number }
+export type Scanned = { readonly ok: true; readonly code: string; readonly strings: readonly StringToken[]; readonly comments: readonly CommentToken[] } | { readonly ok: false; readonly fault: 'unterminated' };
 
 /** Every UTF-16 code unit but a line break becomes one space, so the code text keeps every offset of the body: no `u` flag, which
  * would turn a surrogate pair into one space and move every later offset (R-TEST-NAMES-1 F1). */
@@ -38,13 +41,18 @@ function plainValue(inner: string): string | null {
 class Builder {
   readonly parts: string[] = [];
   readonly strings: StringToken[] = [];
+  readonly comments: CommentToken[] = [];
   code(text: string): void { this.parts.push(text); }
-  comment(text: string): void { this.parts.push(blank(text)); }
+  comment(text: string, start: number, open: number, close: number): void {
+    this.parts.push(blank(text));
+    this.comments.push({ start, end: start + text.length, contentStart: start + open, contentEnd: start + text.length - close });
+  }
+  regex(text: string): void { this.parts.push(blank(text)); }
   string(open: string, inner: string, close: string, start: number, raw = false): void {
     this.parts.push(open + blank(inner) + close);
     this.strings.push({ start, end: start + open.length + inner.length + close.length, value: raw ? (/[\r\n]/u.test(inner) ? null : inner) : plainValue(inner) });
   }
-  done(): Scanned { return { ok: true, code: this.parts.join(''), strings: this.strings }; }
+  done(): Scanned { return { ok: true, code: this.parts.join(''), strings: this.strings, comments: this.comments }; }
 }
 
 /** The end of a quoted literal opened at `from` (after its opening quote) by `quote`, honouring backslash escapes; -1 when the body ends
@@ -114,7 +122,7 @@ export function scanCLike(text: string, options: CLikeOptions = {}): Scanned {
       flush(i);
       let end = i;
       while (end < text.length && text[end] !== '\n' && text[end] !== '\r') end++;
-      out.comment(text.slice(i, end));
+      out.comment(text.slice(i, end), i, 2, 0);
       i = codeStart = end;
       continue;
     }
@@ -122,7 +130,7 @@ export function scanCLike(text: string, options: CLikeOptions = {}): Scanned {
       flush(i);
       const end = text.indexOf('*/', i + 2);
       if (end < 0) return { ok: false, fault: 'unterminated' };
-      out.comment(text.slice(i, end + 2));
+      out.comment(text.slice(i, end + 2), i, 2, 2);
       i = codeStart = end + 2;
       continue;
     }
@@ -154,7 +162,7 @@ export function scanCLike(text: string, options: CLikeOptions = {}): Scanned {
       const end = regexEnd(text, i);
       if (end > 0) {
         flush(i);
-        out.comment(text.slice(i, end));
+        out.regex(text.slice(i, end));
         i = codeStart = end;
         continue;
       }
@@ -177,7 +185,7 @@ export function scanPython(text: string): Scanned {
       flush(i);
       let end = i;
       while (end < text.length && text[end] !== '\n' && text[end] !== '\r') end++;
-      out.comment(text.slice(i, end));
+      out.comment(text.slice(i, end), i, 1, 0);
       i = codeStart = end;
       continue;
     }
