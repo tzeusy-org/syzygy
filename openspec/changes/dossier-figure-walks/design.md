@@ -1,12 +1,16 @@
 # Design: a figure read in numbered steps, its boxes linked to their sources
 
-[Inferred] Version 2.NN of REQ-polaris-generation-034, for syzygy-3efd.32, drafted on `origin/main` at `4b86e428` over the figure plan text, version 2.33 (`dossier-figure-plan`). Every code site named in D8 is re-located on the base the implementation starts from.
+[Inferred] Version 2.40 of REQ-polaris-generation-034, for syzygy-3efd.32, drafted on `origin/main` at `4b86e428` over the figure plan text, version 2.33 (`dossier-figure-plan`), as 2.NN, and rebuilt for adoption over the import facts text, version 2.39 (`dossier-import-facts`, row A-270), with schema v16 and brief v24 (D1, D10, D11). Every code site named in D8 is re-located on the base the implementation starts from.
 
 ## D1. Sequencing, the predecessor and the symbolic numbers
 
 - [Observed] At drafting, the effective REQ-034 on `main` is version 2.33 (figure plan; schema v14, brief v22). A concurrent candidate, derived-base views (syzygy-3efd.38, branch `agent/syzygy-3efd.38`), is still drafted over 2.24 and is to be rebuilt and adopted first, at about 2.34.
 - [Inferred] So this text is drafted over 2.33 and keeps every number that a later adoption could take as a placeholder: the label `2.NN`, the schema `vSS` and the brief `vBB`. The build script (`docs/evidence/syzygy-3efd-32/walk_build_spec.py`) holds them as `NUMS` and its predecessor as `PREDECESSOR`; at adoption it is rebuilt over the version .38 adopts by changing those constants and, where that version moved one, an anchor. Nothing in this design depends on what .38 adds, beyond the predecessor's own accepted-schema list and brief list, which the script extends at their ends.
 - [Inferred] If .38 adds a schema, this one becomes its successor (`<PS>`) and brief `<PB>`; the walk paragraphs say "every rule ... for a schema-v<PS> draft holds for a schema-v<S> draft", so they need no other change.
+- [Observed] At adoption (2026-11-28) the newest REQ-034 is import facts 2.39 (A-270), over migration parity 2.38 (A-269), choice floor 2.37 (A-336), source-example advice 2.36 (A-334) and screened derived base 2.35 (A-333), which replaced .38's retired 2.34 and brought schema v15 and brief v23. So `NUMS` became `<S>` = 16, `<PS>` = 15, `<B>` = 24, `<PB>` = 23, `<PV>` = 2.39, and the label 2.40.
+- [Observed] Three anchors moved, as D1 foresaw: the brief list and the accepted-schema list now end at brief v23 and schema v15; the walk paragraphs follow 2.35's earlier-schema paragraph, the last of the schema line, rather than 2.33's; and the four Form lines now end in the 2.35, 2.37 and 2.38 additions. The scenarios still go before the one Form line, now after migration parity's and import facts' scenarios (2.35 placed its own after the Form block). Brief v24's paragraph follows brief v23's computed-map paragraph, which brief v23 placed after the figure-plan paragraph.
+- [Observed] The rebuilt spec hashes to `ea18e7d7c1c6281929a974b1e6d0cd7cf935c06851b22efa4e4c167595da75cf` (the reviewed repaired bytes over 2.33: `751807232cddbe0980c77173aa6d9dac026c4b2ca74cfb47ac2ef1b0d501cc63`). `docs/evidence/syzygy-3efd-32/walk_rebuild_diff.py` prints every word-level difference between the two edit sets once the labels are relabelled: the moved anchors, the base-element rule (D10) and its scenario, and the Form lines, whose whole changed lines also carry the predecessors' own text. REQ-034 goes from 278 to 291 scenarios: the twelve reviewed and one for D10.
+- [Observed] `GOVERNING-DEPENDENCIES.json` is 2.33's, which is 2.39's byte for byte.
 
 ## D2. The walk lives on the place, not on the diagram
 
@@ -44,8 +48,8 @@
 ## D7. Bytes that move
 
 [Inferred]
-- A draft of schema v14 or earlier keeps every finding and byte version 2.33 gives it, but for a `field-version` finding at a walk in place of the `schema` finding there.
-- A schema-vSS draft without a walk renders as the same draft in schema v14, apart from bytes naming the schema or digest.
+- A draft of schema v15 or earlier keeps every finding and byte version 2.39 gives it, but for a `field-version` finding at a walk in place of the `schema` finding there.
+- A schema-v16 draft without a walk renders as the same draft in schema v15, apart from bytes naming the schema or digest.
 - A walk moves only the page that draws its figure (wrapper, layer, list, the walk style rules), that page's measures in the size report and the rendered-design packet. No byte of a paragraph, of the drawing, `machine.json`, `dossier.json`, check record, `run-advice.json`, reading ledger, figure fit or figure advice moves.
 - The provider mode is unaffected and its golden does not change: the provider's draft schema is closed and gains no `walk`.
 - The walk's style rules are carried only by a page that holds a walk, the pattern of the figure-kind rules (2.5).
@@ -54,11 +58,11 @@
 ## D8. What the code change must do
 
 [Inferred] For the implementing session, on a base where the predecessor version has landed:
-- `packages/polaris-dossier/src/draft-schema.ts`: schema vSS, the v14 schema with `walk` admitted as any value on a section and a deep dive.
+- `packages/polaris-dossier/src/draft-schema.ts`: schema v16, the v15 schema with `walk` admitted as any value on a section and a deep dive.
 - `packages/polaris-dossier/src/check-derive.ts` (or a module it calls): the walk findings in the stated order, after every finding of the predecessor, and the `field-version` finding.
 - `apps/three-surface-poc/src/polaris-generation/dossier-site.ts`: the wrapper, layer, badges, source links and step list, with no change to any paragraph; the per-page style rules; no walk over a 1048 px drawing. Box geometry from `diagram-layout.ts`, the same record the drawing uses.
-- `packages/polaris-dossier/src/brief.ts`: brief vBB.
-- Tests: every scenario with literal expected values, a browser test with scripts off for `:target` and Tab order, stored drafts of v14 and earlier byte-identical, `svg-inert` tests unchanged, the provider golden unchanged, and a rule-6 mutation run over the new findings and the layer's geometry and links.
+- `packages/polaris-dossier/src/brief.ts`: brief v24.
+- Tests: every scenario with literal expected values, a browser test with scripts off for `:target` and Tab order, stored drafts of v15 and earlier byte-identical, `svg-inert` tests unchanged, the provider golden unchanged, and a rule-6 mutation run over the new findings and the layer's geometry and links.
 
 ## D9. Residuals
 
@@ -69,6 +73,22 @@
 - [Inferred] A step's paragraph needs a citation but not an admitted one: a block whose citations are all withheld, or which renders Unknown, may be a step's paragraph, and the step's link lands on the block as it renders. That is honest, since the block renders so anyway, and refusing it would let a render-time screening decision reject a draft at check (review 1, note 14).
 - [Inferred] Box links have no visible mark at rest; only the cursor and focus outline show them (note 9).
 - [Inferred] Whether walks help a newcomer read a figure is for a later review of rendered dossiers; no gain is claimed.
+
+## D10. A step may name a base element
+
+- [Inferred] Agreed with the previous lane at hand-over: a 2.35 view with a `base` draws Syzygy's elements of the directory or unit map beside the draft's, and a walk through such a figure should be able to stop on one, since the prose often explains a package or a directory the map supplies. So a step's `element` may be a base end `{"map", "path"}`, the form a cited relationship already uses to join a base element, resolved by the same derivation; an element identity stays a string.
+- [Inferred] The box of a base element takes the step's id and badge, and the `:target` outline marks it as any box. It takes no `walk-source` link: a base element carries no citation (2.35: "No base element is ever a claim of the draft"), so there is no cited line to land on, and the map's own page is already one link away through the figure's chip. Its label in the walk's list is Syzygy's label (`Repository root`, `<path>/ (<count> files)`, or the package's or module's name), never a display name from `names`, which is the draft's claim drawn outside the box; the box covers the double-bordered box, not the `called` line.
+- [Inferred] Naming a base element adds nothing to it: the walk stays presentation, and the base element stays Syzygy's (2.35's narrow exception is not widened: no draft member gives a base element a label, mark, identity or link).
+- [Inferred] A base end resolves at check against the base elements the figure shows, as the view's own base ends do. Where the base map is not established at check, 2.35 lets the render compute the base findings; the walk follows it: check reports no element finding for such a step, and where the render finds one that names no shown base element, or one an earlier step names, the walk renders nowhere and that page's bytes are those without it. Where the figure itself becomes a notice, the walk already renders nowhere (the render paragraph's first sentence).
+- [Inferred] A finding about a base-end step never echoes the draft's path: `<element>` is written as `` `walk.steps[<k>].element` `` there (D11).
+- [Observed] One scenario, "A step names a base element", pins the id, badge, absent link, label and `:target` highlight and the two findings with their index-only details; the Case and Falsifier lines name the fixtures and the failures.
+
+## D11. Composition with versions 2.35 to 2.39
+
+- [Observed] Version 2.35 (screened derived base) says: "Apply the existing SEC-5 output screening to any diagnostic detail introduced by the preceding derived-base rules or computed specifically because those rules expand the figure", admitting "every draft-supplied value used in it" before a detail reaches the check record or any form of the check report, and "Read no additional source and disclose no unadmitted value or population count." It also screens each `hide.reason` and `restReason` before either rendered output.
+- [Inferred] The walk agrees with that rule. Its findings' details name only identities that resolve to the draft's own checked handles (a diagram, an element of the model, a block), fixed words and step indexes; a base-end step, the one place a walk touches the derived base, is named by its index, so no base path the draft wrote reaches a detail, and a detail needs no screening result to be written. On the page, the walk writes element labels the figure's own lists already show, Syzygy's words for a base element, step numbers, ids built from a diagram handle and a number, and `href`s copied from citation links the figure already carries; it writes no `reason`, `restReason`, display name, path or population count, and reads no source. So no draft-supplied walk value reaches a sink that 2.35 screens, and the walk widens no screen and no fail-closed rule.
+- [Inferred] A walked base view keeps every byte 2.35 gives its figure, chip, hidden items, note and `machine.json` entry: the drawing is unchanged and the layer is beside it, and a base element's box gets no link (D10).
+- [Observed] Version 2.36 (source-example advice) and 2.37 (choice floor) add check-report advice only, read from the draft's selected code elements and understanding record; 2.38 narrows the v10 and v11 migration's parity claim; 2.39 adds the check record's `importFacts`, read by nothing else. A walk reads none of them, moves no check record or report member (D7), and no migration yields a v16 draft, so each composes unchanged: their text is carried byte for byte, and their advice and facts for a v16 draft are those of the same draft in v15, since every rule for a v15 draft holds for a v16 one.
 
 ## Review
 
@@ -94,3 +114,5 @@
 | 16 (note) layer placement | Repaired: the layer is laid over the drawing "with its top-left corner at the drawing's top-left corner", and the stylesheet sentence positions it so. |
 
 [Observed] After the repairs the requirement gains twelve scenarios, not nine (232 to 244 on REQ-034); the checker's subject digest and `walk_cases` counts follow.
+
+[Observed] No review has read the repaired bytes, the rebuild over 2.39 or the base-element step (D1, D10); under D10 of the governance simplification none is dispatched.

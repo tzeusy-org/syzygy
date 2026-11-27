@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Generate SEMANTIC-DELTA.md for version 2.NN (figure walks) from the bytes of the predecessor and the new text. Usage: delta.py <worktree>."""
+"""Generate SEMANTIC-DELTA.md for version 2.40 (figure walks; drafted as 2.NN over 2.33, rebuilt over 2.39) from the bytes of the predecessor and the new text. Usage: delta.py <worktree>."""
 import difflib
 import hashlib
 import pathlib
 import sys
 
 W = pathlib.Path(sys.argv[1])
-PRED = 'openspec/changes/dossier-figure-plan/proposed/polaris-generation/spec.md'
+PRED = 'openspec/changes/dossier-import-facts/proposed/polaris-generation/spec.md'
 NEW = 'openspec/changes/dossier-figure-walks/proposed/polaris-generation/spec.md'
 pb, nb_ = (W / PRED).read_bytes(), (W / NEW).read_bytes()
 old, new = pb.decode('utf-8').split('\n'), nb_.decode('utf-8').split('\n')
@@ -51,7 +51,7 @@ prev = next(nb[k] for k in range(para_at - 1, -1, -1) if nb[k].strip())
 lead_words = ' '.join(prev.split(' ')[:14])
 sha = lambda b: hashlib.sha256(b).hexdigest()
 
-out = f'''# Version 2.NN semantic delta
+out = f'''# Version 2.40 semantic delta
 
 [Inferred] Candidate agent-decided amendment under VIS-4. No adoption is claimed; this file states exactly what changes so the change is reviewable as one delta (`NORMATIVE-CHANGE-WORKFLOW.md`). Every quoted text and count below was extracted from the bytes by script (a line diff of the requirement block and a word diff of each changed line), not transcribed: `docs/evidence/syzygy-3efd-32/walk_delta.py` writes this file.
 
@@ -61,7 +61,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor at drafting is the MODIFIED text in `{PRED}` (dossier figure plan version 2.33; sha256 `{sha(pb)}`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces the effective text. Derived-base views (syzygy-3efd.38) is to be adopted first; this text is then rebuilt over that version by the build script, and its schema and brief numbers, written here as the placeholders `vSS` and `vBB`, and its label `2.NN` are fixed then (`design.md` D1). Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.33's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `{PRED}` (dossier lexical import facts version 2.39, row A-270, tag `polaris-dossier-import-facts-v2.39`; sha256 `{sha(pb)}`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces that text, composed after version 2.39. It was drafted and reviewed over figure plan 2.33 with the placeholders `2.NN`, `vSS` and `vBB`, and is rebuilt over 2.39 by the build script as version 2.40, schema v16 and brief v24, with one rule added, the base-element step (`design.md` D1, D10). Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.39's, byte for byte.
 
 ## Carried unchanged
 
@@ -69,7 +69,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Amended in place
 
-[Observed] The title and preamble (file head, not requirement text) name version 2.NN. In the requirement, each changed line, with the displaced words and the words that replace them:
+[Observed] The title and preamble (file head, not requirement text) name version 2.40. In the requirement, each changed line, with the displaced words and the words that replace them:
 
 {chr(10).join(amend)}
 
@@ -79,7 +79,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ''' + '\n'.join(f'- "{" ".join(p.split(" ")[:16])} …"' for p in added_paras) + f'''
 
-[Observed] {len(scen)} scenarios, after the predecessor's last scenario and before the Form line: {", ".join(f'"{s}"' for s in scen)}.
+[Observed] {len(scen)} scenarios, after the predecessor's last scenario that precedes the Form line, and before that line: {", ".join(f'"{s}"' for s in scen)}.
 
 ## Removed
 
@@ -87,7 +87,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Effect on bytes
 
-[Inferred] As `design.md` D7 states: a draft of schema v14 or earlier keeps every finding and byte but for a `field-version` finding at a walk; a schema-vSS draft without a walk renders as the same draft in schema v14. A walk moves only the page that draws its figure (a wrapper, an HTML layer, a list and the walk style rules), that page's measures in the size report and the rendered-design packet. No paragraph's bytes, the drawing's bytes, `machine.json`, every check record, the reading ledger and every provider-mode byte move.
+[Inferred] As `design.md` D7 states: a draft of schema v15 or earlier keeps every finding and byte but for a `field-version` finding at a walk; a schema-v16 draft without a walk renders as the same draft in schema v15. A walk moves only the page that draws its figure (a wrapper, an HTML layer, a list and the walk style rules), that page's measures in the size report and the rendered-design packet. No paragraph's bytes, the drawing's bytes, `machine.json`, every check record, the reading ledger and every provider-mode byte move.
 '''
 (W / 'openspec/changes/dossier-figure-walks/SEMANTIC-DELTA.md').write_text(out, encoding='utf-8')
 print('changed', len(changed), 'kept', kept, 'paras', len(added_paras), 'scenarios', len(scen))

@@ -5,22 +5,28 @@ Every edit asserts its anchor occurs exactly once. Usage: walk_build_spec.py <wo
 
 The predecessor at drafting is figure plan 2.33. Derived-base views (syzygy-3efd.38) adopts first; at adoption this text is rebuilt over
 that version by changing PREDECESSOR, NUMS and, where that version moved one, an anchor, and the label 2.NN is written by LABEL.
+
+Rebuilt for adoption (2026-11-28) over import facts 2.39, the newest REQ-034, as version 2.40 with schema v16 and brief v24. Besides the
+constants, three anchors moved (the brief list, the paragraph the walk paragraphs follow, the Form line ends) and the scenarios go before
+the one Form line. One rule is added: a step may name a base element of a version 2.35 view with a `base`, which takes the badge and the
+`:target` highlight but no source link, a base element having no citation, and no finding's detail names the base path the draft wrote.
+`walk_rebuild_diff.py` lists every difference from the reviewed edits over 2.33.
 """
 import pathlib
 import sys
 
 W = pathlib.Path(sys.argv[1])
 out = pathlib.Path(sys.argv[2])
-PREDECESSOR = 'openspec/changes/dossier-figure-plan/proposed/polaris-generation/spec.md'
-PREDECESSOR_TITLE = '# Dossier figure plan'
-PREDECESSOR_LABEL = 'Candidate version 2.33;'
-LABEL = '2.NN'
+PREDECESSOR = 'openspec/changes/dossier-import-facts/proposed/polaris-generation/spec.md'
+PREDECESSOR_TITLE = '# Dossier lexical import facts'
+PREDECESSOR_LABEL = 'Candidate version 2.39;'
+LABEL = '2.40'
 src = (W / PREDECESSOR).read_text(encoding='utf-8')
 text = src
 
 # The successor's numbers, kept symbolic so that a rebuild over a later predecessor is a change of these constants and the anchors alone.
 # <S> and <B> stay placeholders until adoption, as the version label does.
-NUMS = {'<S>': 'SS', '<PS>': '14', '<B>': 'BB', '<PB>': '22', '<PV>': '2.33'}
+NUMS = {'<S>': '16', '<PS>': '15', '<B>': '24', '<PB>': '23', '<PV>': '2.39'}
 
 
 def sym(s):
@@ -45,30 +51,31 @@ assert lines[0].startswith(PREDECESSOR_TITLE), lines[0]
 assert lines[2].startswith(PREDECESSOR_LABEL), lines[2][:40]
 lines[0] = '# Dossier figure walks: a figure read in numbered steps, each element linked to the lines it cites'
 lines[2] = ("Candidate version 2.NN; binds nothing until its agent adoption row in AGENT-ADOPTIONS.md and its version tag. One MODIFIED "
-            "requirement, REQ-polaris-generation-034, whose complete text below replaces the effective text that figure plan version <PV> "
+            "requirement, REQ-polaris-generation-034, whose complete text below replaces the effective text that import facts version <PV> "
             "gave it. Draft schema v<S> is schema v<PS> with one optional member more: a section or deep dive MAY carry one walk, an "
             "ordered list of steps through one graph figure drawn in that place, each step tying one of the place's cited paragraphs to "
-            "one element of the figure. Check refuses a walk whose figure is not drawn there or not of a graph kind, or whose steps name "
+            "one element of the figure, which may be a base element of a view with a `base`. Check refuses a walk whose figure is not drawn there or not of a graph kind, or whose steps name "
             "an element the figure does not draw, an element twice, or a paragraph that is not the place's own or cites nothing. On the "
             "page, with no script, the figure shows each step's number on its element, an ordered list beside the drawing links each "
             "step to its element, which the pages' stylesheet then highlights by `:target`, and to its paragraph, and every box whose "
             "element is not withheld and has a linked citation links to the lines its first citation cites, through an HTML layer over "
-            "the drawing, which stays inert and keeps its bytes. Brief v<B> is brief v<PB> with one paragraph offering the walk. A draft "
+            "the drawing, which stays inert and keeps its bytes; a base element's box takes the number and the highlight and no link. Brief v<B> is brief v<PB> with one paragraph offering the walk. A draft "
             "without a walk renders as it did; the provider mode keeps its bytes. Every other sentence and scenario of the predecessor is "
             "carried unchanged; the exact changes are in SEMANTIC-DELTA.md. Unmentioned effective requirements are unchanged.")
 text = '\n'.join(lines[:2] + [sym(lines[2])] + lines[3:])
 
 # The brief-version list, the schema each brief issues and the schemas accepted (the v5 paragraph).
-replace('from version 2.32 as `polaris-dossier-brief-v21` and from version 2.33 as `polaris-dossier-brief-v22`,',
-        'from version 2.32 as `polaris-dossier-brief-v21`, from version 2.33 as `polaris-dossier-brief-v22` and from version 2.NN as '
+replace('from version 2.33 as `polaris-dossier-brief-v22` and from version 2.35 as `polaris-dossier-brief-v23`,',
+        'from version 2.33 as `polaris-dossier-brief-v22`, from version 2.35 as `polaris-dossier-brief-v23` and from version 2.NN as '
         '`polaris-dossier-brief-v<B>`,')
-replace('briefs v19, v20 and v21 issue schema v13 and brief v22 issues schema v14 (below), and a draft in v2, v3, v4, v5, v6, v7, v8, v9, '
-        'v10, v11, v12, v13 or v14 is accepted.',
-        'briefs v19, v20 and v21 issue schema v13, brief v22 issues schema v14 and brief v<B> issues schema v<S> (below), and a draft in '
-        'v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 or v<S> is accepted.')
+replace('brief v22 issues schema v14 and brief v23 issues schema v15 (below), and a draft in v2, v3, v4, v5, v6, v7, v8, v9, '
+        'v10, v11, v12, v13, v14 or v15 is accepted.',
+        'brief v22 issues schema v14, brief v23 issues schema v15 and brief v<B> issues schema v<S> (below), and a draft in '
+        'v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 or v<S> is accepted.')
 
-# The walk paragraphs, after the figure plan's last paragraph (version 2.33).
-ANCHOR = "a figure plan being the authoring session's to write."
+# The walk paragraphs, after version 2.35's last paragraph of the schema line (the earlier-schema paragraph of the derived base).
+ANCHOR = ("and so SHALL every sequence and swimlane diagram. The provider mode is unaffected: the provider stages' closed draft schema "
+          "gains no member, and the rendered bytes the provider golden pins do not change.")
 GRAPH_KINDS = '`flow`, `lifecycle`, `state-machine`, `boundary`, `dependency` and `placement`'
 PLACE = '`$.sections[<i>].walk` or `$.deepDives[<i>].walk`'
 PARAGRAPHS = [
@@ -79,9 +86,13 @@ PARAGRAPHS = [
     "`{\"figure\": <a diagram's identity>, \"steps\": [<step>, ...]}`. `figure` names a diagram whose `home` names the section or deep "
     f"dive that carries the walk and whose `kind` is one of the six graph kinds, {GRAPH_KINDS}; since a diagram has one home and a "
     "place one walk, no diagram is the figure of two walks that pass check. `steps` is a list of 2 to 12 steps in reading order, each "
-    "`{\"element\": <identity>, \"block\": <identity>}`; a step names one element, never several. A step's `element` names an element the "
+    "`{\"element\": <identity or base end>, \"block\": <identity>}`; a step names one element, never several. A step's `element` names an element the "
     "figure draws: a node of the diagram, which for a diagram that carries the `view` of version 2.24 is an element of the model that "
-    "the view selects, a node of the view's expansion; no element is named by two steps of one walk. A step's `block` names one of the "
+    "the view selects, a node of the view's expansion, or, for a view that carries a `base` (version 2.35), a base element the figure "
+    "shows, which the step names, in place of an identity, by a base end `{\"map\", \"path\"}` as a cited relationship's `from` or "
+    "`to` names one, its `map` the view's base map and its `path` naming exactly one base element the figure shows; no element is "
+    "named by two steps of one walk. A base element stays Syzygy's and never the draft's claim: a step that names one ties the step's "
+    "paragraph to it as every step ties its paragraph to its element, and gives its box nothing but the step's id and badge. A step's `block` names one of the "
     "place's paragraphs, a claim block that the section's or deep dive's `paragraphs` list holds or, for a section with subsections, "
     "one that a subsection's `paragraphs` list holds, never a block inside a presentation element or a subsection's `answer`; and that "
     "block carries at least one citation. A citation suffices whatever becomes of it at render: a block whose citations are all "
@@ -101,7 +112,8 @@ PARAGRAPHS = [
     f"the walk's path, {PLACE} with the place's index, or below it, with the literal detail given; in a path or detail `<k>` is a "
     "step's index in `steps`, counting from 0. At the walk's path, for a walk that is not an object carrying exactly the members "
     "`figure` and `steps`, whose `figure` is not a string, whose `steps` is not a list of 2 to 12 entries, or one of whose steps is "
-    "not an object carrying exactly the members `element` and `block`, each a string, with the detail "
+    "not an object carrying exactly the members `element` and `block`, `block` a string and `element` a string or a base end, an "
+    "object carrying exactly the members `map` and `path`, each a string, with the detail "
     "`` a walk is {\"figure\", \"steps\"}, its steps a list of 2 to 12 {\"element\", \"block\"} ``; a walk with this finding is "
     "not well formed, and no other finding of this paragraph reads it. For a well-formed walk: a finding of kind `unresolved-reference` "
     "at `<walk>.figure` where `figure` names no diagram of the draft, with the detail `` no diagram has the identity named by "
@@ -110,11 +122,19 @@ PARAGRAPHS = [
     "graph kinds, with the detail `` <identity>: a walk's figure is of a graph kind ``, `<identity>` being the diagram's identity and "
     "the two, where both hold, in that order. Then, for each step in order: where the figure names a diagram of a graph kind, one at "
     "`<walk>.steps[<k>].element` where `element` names no element that diagram draws, with the detail "
-    "`` `walk.steps[<k>].element` names no element drawn in <identity> ``, and, where it names one that an earlier step of the walk "
+    "`` `walk.steps[<k>].element` names no element drawn in <identity> ``, a base end that names no base element the figure shows, or "
+    "names one in a figure whose view carries no `base` or another map, being such a step, and, where it names one that an earlier "
+    "step of the walk "
     "names, with the detail `` <element>: a second step for this element ``; then one at `<walk>.steps[<k>].block` where `block` names "
     "no paragraph of the walk's place as the paragraph above defines one, with the detail `` `walk.steps[<k>].block` names no paragraph "
     "of this section or deep dive ``, and, where it names one that carries no citation, with the detail `` <block>: a step's paragraph "
-    "cites its sources ``; `<k>` written as the step's index, `<element>` and `<block>` as the identities named. The walks are taken "
+    "cites its sources ``; `<k>` written as the step's index, `<element>` and `<block>` as the identities named, and `<element>`, for a "
+    "step whose `element` is a base end, written as `` `walk.steps[<k>].element` `` with that step's index, so that no path the draft "
+    "writes in a base end enters a finding's detail. A base end resolves against the base elements the figure shows by the derivation "
+    "version 2.35 states for the view's own base ends at check; where the view's base map is not established at check, a step naming "
+    "a base end takes no finding of this paragraph for its `element`, and the render resolves it as check would: where the render "
+    "finds such a step that names no base element the figure shows, or one an earlier step names, the walk renders nowhere and no "
+    "byte of that page moves for it. The walks are taken "
     "in draft order, the sections' before the deep dives', each walk's findings in the order stated here, and all of them follow every "
     "finding version <PV> reports for the draft. A draft with such a finding does not proceed to review until a resubmitted revision "
     "passes. A walk whose figure has a disposition other than `produced`, or whose place has one, raises no finding for that "
@@ -137,12 +157,16 @@ PARAGRAPHS = [
     "`<span class=\"walk-badge\" aria-hidden=\"true\"><n></span>`. A node's label, here and in the walk's list, is its label as the "
     "figure's list of every component and relationship shows it, or, for an element version 2.24 renders in an earlier figure, as "
     "that first figure renders it; it is that text alone, escaped as HTML text, never a link the list item carries, and a withheld "
-    "element's label is the Syzygy words its list item shows for it. The box of a node that is not withheld and whose first citation "
+    "element's label is the Syzygy words its list item shows for it; a base element's label is Syzygy's label for it as its box "
+    "shows it (`Repository root`, `<path>/ (<count> files)`, or a package's or module's `<name>`), never a display name a `names` "
+    "entry gives it, and its box is the double-bordered box the layout draws, without the `called` line below it. The box of a node that is not withheld and whose first citation "
     "has a link among the citation links of the figure that carries the node's claim (the figure itself, or for such an element its "
     "first figure) holds, after any badge, `<a class=\"walk-source\" href=\"<href>\"><span class=\"visually-hidden\"><label>: cited "
     "lines</span></a>`, `<href>` being the address that citation's link carries there, resolved against the page that holds that "
     "figure and written relative to the page that holds this one, so that it lands where that link lands, on the cited lines of the "
-    "source page. A withheld node, or one whose first citation has no such link, holds no link. Second, immediately after the "
+    "source page. A withheld node, or one whose first citation has no such link, holds no link, and so does a base element's box, "
+    "since a base element carries no citation: a step naming one gives its box the id and the badge, and the `:target` outline marks "
+    "it as it marks every other box. Second, immediately after the "
     "`diagram-scroll` div, before the legend, the walk's list, "
     "`<ol class=\"figure-walk\" aria-label=\"Walk through this figure\">`, with one item per step in step order, "
     "`<li><a href=\"#walk-<diagram>-<n>\"><label></a> <a class=\"walk-text\" href=\"#block-<block>\">Read step <n></a></li>`, "
@@ -166,12 +190,15 @@ PARAGRAPHS = [
     "lists already show.",
     # P4: the brief.
     "Brief v<B> SHALL issue schema v<S>; it is brief v<PB> changed only in its version line, its draft-schema line, which names schema "
-    "v<S> and that schema's digest, and one paragraph placed immediately after the figure-plan paragraph brief v<PB> carries, which "
+    "v<S> and that schema's digest, and one paragraph placed immediately after the computed-map paragraph brief v<PB> carries after "
+    "its figure-plan paragraph, which "
     "reads: \"Where a section or deep dive explains a graph figure drawn there step by step, you may give it one `walk`: "
-    "`{\\\"figure\\\": <that diagram's id>, \\\"steps\\\": [{\\\"element\\\": <a node's id, or for a view an element it shows>, "
+    "`{\\\"figure\\\": <that diagram's id>, \\\"steps\\\": [{\\\"element\\\": <a node's id, for a view an element it shows, or for "
+    "a view with a `base` a base element it shows as {\\\"map\\\", \\\"path\\\"}>, "
     "\\\"block\\\": <the id of one of that place's paragraphs, which cites its sources>}, ...]}`, two to twelve steps in reading order, "
     "each element once. The page then shows each step's number on its element, lists the steps beside the figure, highlights an "
-    "element when its step is chosen, and links each box whose element is not withheld to the lines its first citation cites. The "
+    "element when its step is chosen, and links each box whose element is not withheld to the lines its first citation cites; a "
+    "base element's box takes the number and the highlight, never a link. The "
     "walk states nothing itself: each step's paragraph is what the reader reads about that element.\" Every statement above of what "
     "brief v<PB> carries, equals or differs by holds of brief v<B> apart from those three differences. The success report and the "
     "brief record SHALL name brief v<B>.",
@@ -192,11 +219,10 @@ PARAGRAPHS = [
 ]
 replace(ANCHOR, ANCHOR + '\n\n' + '\n\n'.join(PARAGRAPHS))
 
-# Scenarios, after version 2.33's last scenario and before the Form block that follows it.
-LAST = '#### Scenario: Brief v22 asks for the figure plan'
-once(LAST)
-head, tail = text.split(LAST, 1)
-form_at = tail.index('\nForm: event-response.\n')
+# Scenarios, after the predecessor's last scenario before the one Form line, and before that line.
+FORM = '\nForm: event-response.\n'
+once(FORM)
+form_at = text.index(FORM)
 SCENARIOS = r'''
 #### Scenario: A walk ties a section's paragraphs to its figure's elements
 
@@ -227,6 +253,12 @@ SCENARIOS = r'''
 - **WHEN** a schema-v<S> draft's views `v1`, on `index.html`, and `v2`, homed in the section `s` on a Pole page, both select the element `log`, which cites line 40 of `src/log.c`, `v1` coming first in diagram order, and `s` walks `v2` with a step naming `log`
 - **THEN** `v2`'s list item for `log` reads, as version 2.24 states, `log`'s label followed by `, as shown in` and a link to `v1`, and the walk's item for that step links `#walk-v2-<n>` with `log`'s label as `v1` renders it as its only text, holding no nested link
 - **AND** the box over `log` in `v2` holds a `walk-source` link to line 40 of the source page of `src/log.c`, its address written relative to the Pole page, and the walk adds no claim anchor, citation or fidelity entry for `log`
+
+#### Scenario: A step names a base element
+
+- **WHEN** a schema-v<S> section `s` walks the `dependency` view `d`, homed in `s`, which carries `base` `{"map": "units"}` and shows the element `api` and the unit `@x/core`, the one base path `libs/core/package.json#1` names, to which a `names` entry gives the display name `Core`, and the walk's steps name `{"map": "units", "path": "libs/core/package.json#1"}` with the paragraph `p1` and `api` with `p2`
+- **THEN** check reports no walk finding; the box over `@x/core` carries `id="walk-d-1"` and the badge `1` and holds no `walk-source` link, its position and size those of the double-bordered box without the `called Core` line, the walk's first item is `<li><a href="#walk-d-1">@x/core</a> <a class="walk-text" href="#block-p1">Read step 1</a></li>`, and following `#walk-d-1` makes that box the page's target, drawn with the `:target` outline
+- **AND** with a third step naming `{"map": "units", "path": "libs/gone/package.json"}`, which names no base element the figure shows, check reports at `$.sections[<i>].walk.steps[2].element` the detail ``` `walk.steps[2].element` names no element drawn in d ```, and with a third step naming the first step's base element again it reports there the detail ``` `walk.steps[2].element`: a second step for this element ```, and no finding's detail holds a path the draft wrote
 
 #### Scenario: Malformed walk refused
 
@@ -267,10 +299,10 @@ SCENARIOS = r'''
 #### Scenario: Brief v<B> offers the walk
 
 - **WHEN** a run is briefed under this version
-- **THEN** the brief is `polaris-dossier-brief-v<B>`, issuing schema `polaris-dossier-local-draft-v<S>`, and equals brief v<PB> for the same run except its version line, its draft-schema line and the walk paragraph placed immediately after the figure-plan paragraph
+- **THEN** the brief is `polaris-dossier-brief-v<B>`, issuing schema `polaris-dossier-local-draft-v<S>`, and equals brief v<PB> for the same run except its version line, its draft-schema line and the walk paragraph placed immediately after the computed-map paragraph
 - **AND** the success report and the brief record name brief v<B>
 '''
-text = head + LAST + tail[:form_at] + '\n' + sym(SCENARIOS).strip('\n') + '\n' + tail[form_at:]
+text = text[:form_at] + '\n\n' + sym(SCENARIOS).strip('\n') + '\n' + text[form_at:]
 
 
 # The four Form lines of the last Form block, each extended at its end.
@@ -278,28 +310,31 @@ def extend(end, addition):
     replace(end, end[:-1] + addition)
 
 
-extend("with and without `figurePlan`, `model` and `view`.",
+extend("migrated to schema v12.",
        "; and, for version 2.NN, schema-v<S> drafts with well-formed and malformed walks in sections, subsections and deep dives; walks "
        "whose figure is unresolved, homed elsewhere, of a non-graph kind, both, not produced, withheld, rendered as the inertness notice "
        "or drawn 1048 px wide; steps naming a node, a view's element, an element a later view shares with an earlier one, an element "
        "the view does not show, an element twice, a paragraph of the place, of a subsection, of another place, inside a presentation "
        "element, one citing nothing and one whose citations are withheld; nodes that are withheld, cite no file with a source page, or "
-       "cite several spans; pages holding several walked figures whose identities share a prefix; and drafts of schema v<PS> and "
+       "cite several spans; steps naming a base element of a view with a `base`, one it hides, one of another map and one it does not "
+    "list, over a base map established and not established at check; pages holding several walked figures whose identities share a "
+    "prefix; and drafts of schema v<PS> and "
        "earlier with and without `walk`.")
-extend("beside the same members' in a v13 draft.",
+extend("record check's `readerAdvice.choiceFloor` and the check record beside it.",
        "; for version 2.NN, the walk findings with their paths, details and order, the walked figure's page (its layer, boxes, badges, "
        "source links and their accessible names, list and the paragraphs' unchanged ids) beside the same draft rendered without the "
        "walk, the uniqueness of every id on each page, the walk's style rules on each page, and the browser's `:target` highlight, "
        "focus after a step's link and Tab order with scripts off, and the brief v<B> walk paragraph.")
-extend("rendered without `figurePlan`.",
+extend("as literals from the fixture's Poles, sections and understanding record, outside the advice code.",
        "; for version 2.NN, each fixture's expected walk findings and each box's position, size and `href` written as literals before "
        "check and render run, each box's position taken by hand from the layout's literal constants, and each `href` compared with the "
        "citation link the list of the figure carrying the node's claim carries.")
-extend("counts a diagram or a plan entry.",
+extend("or a v14 or v15 draft is counted otherwise than a v13 draft.",
        "; for version 2.NN, a walk whose figure, element or paragraph does not resolve as stated proceeds to review; a box lies off its "
        "node; a walk renders over a drawing 1048 px wide; an id is carried twice on a page; a step's link does not highlight its "
        "element, or highlights it by script or by colour alone; a box's link lands anywhere but the cited lines its first citation's "
-       "link lands on; a step's item nests a link; a fragment target lies in a collapsible section; a paragraph's bytes, the drawing's "
+       "link lands on; a base element's box takes a link, or a finding's detail holds a base path the draft wrote; a step's item nests "
+    "a link; a fragment target lies in a collapsible section; a paragraph's bytes, the drawing's "
        "bytes, `machine.json`, a check record, the reading ledger or the provider golden move; a page without a walk changes; or a "
        "draft of schema v<PS> or earlier changes any finding but the `field-version` one at a walk, or any byte.")
 

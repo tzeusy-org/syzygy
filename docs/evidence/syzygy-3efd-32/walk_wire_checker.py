@@ -3,6 +3,10 @@
 
 Each edit asserts its anchor occurs the stated number of times. Usage: walk_wire_checker.py <worktree> <spec sha256>.
 Modelled on the figure-plan wiring (commit 1c35aed09); the walk is composed after the figure plan.
+
+Superseded at the rebuild over import facts 2.39 (2026-11-28): the wiring installed with version 2.40 chains WALK_* after
+IMPFACTS_* on the checker as it stands after 2.35 to 2.39, and this script no longer applies to that tree; it is kept as the
+record of the pending 2.NN wiring that review 1 read.
 """
 import pathlib
 import sys
