@@ -52,4 +52,3 @@ it('retains only fixed verdict phase timings on the issuing invocation and prese
   for (const excluded of ['OWN_PRIVATE_VERDICT_PHASE_BODY', 'OWN_PRIVATE_VERDICT_PHASE_ERROR', 'body'])
     expect(retained).not.toContain(excluded);
 });
-
