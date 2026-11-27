@@ -1,5 +1,5 @@
 {
-  "commit": "53c2490fdc2b789919b8abffc63adf4ec4200a0e",
+  "commit": "63ee91b2c5adc5be7bd465d928dd41b6a9eb816e",
   "script": "docs/evidence/syzygy-5dhm-46/rough_edges_reconcile_mutation.py",
   "baseline": {
     "python3 scripts/check_spec_reconciliation.py --check": {
