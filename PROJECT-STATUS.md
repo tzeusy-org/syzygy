@@ -299,6 +299,12 @@ It replaces REQ-polaris-generation-034 from version 2.36, the source-example adv
 of the v10 and v11 migration excludes a figure that draws a witnessed edge to a withheld node; the 2.24 rule is kept.
 
 With the migration parity version effective, Polaris has 39 requirements and 611 scenarios.
+
+[Import facts amendment 2.39](openspec/changes/dossier-import-facts) is agent-adopted in A-270.
+It replaces REQ-polaris-generation-034 from version 2.38, the migration parity (264 to 276 scenarios): check stores the
+lexical import facts of every TypeScript file the bound screen admits whole as the check record's `importFacts`, read by nothing else.
+
+With the import facts version effective, Polaris has 39 requirements and 623 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
