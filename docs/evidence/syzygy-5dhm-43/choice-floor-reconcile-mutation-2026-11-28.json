@@ -1,0 +1,114 @@
+{
+  "commit": "9974c1d73ceed3c9dacd83265badd47a6bd43c9f",
+  "script": "docs/evidence/syzygy-5dhm-43/choice_floor_reconcile_mutation.py",
+  "baseline": {
+    "python3 scripts/check_spec_reconciliation.py --check": {
+      "exit": 0
+    },
+    "python3 scripts/count_polaris_effective_scenarios.py": {
+      "exit": 0
+    }
+  },
+  "mutants": [
+    {
+      "mutant": "status-count-off",
+      "path": "PROJECT-STATUS.md",
+      "old": "Polaris has 39 requirements and 612 scenarios.",
+      "new": "Polaris has 39 requirements and 611 scenarios.",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "does not declare the exact choice floor census",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "status-count-off-counter",
+      "path": "PROJECT-STATUS.md",
+      "old": "Polaris has 39 requirements and 612 scenarios.",
+      "new": "Polaris has 39 requirements and 611 scenarios.",
+      "command": "python3 scripts/count_polaris_effective_scenarios.py",
+      "expected": "choice floor count differs",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "status-route-old-id",
+      "path": "PROJECT-STATUS.md",
+      "old": "is agent-adopted in A-336.",
+      "new": "is agent-adopted in A-321.",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "does not route choice floor v2.37",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "index-old-tag",
+      "path": "openspec/README.md",
+      "old": "`polaris-dossier-choice-floor-v2.37`",
+      "new": "`polaris-dossier-choice-floor-v2.33`",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "does not route choice floor v2.37",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "spec-floor-four",
+      "path": "openspec/changes/dossier-choice-floor/proposed/polaris-generation/spec.md",
+      "old": "A group with fewer than three items on record is one advisory",
+      "new": "A group with fewer than four items on record is one advisory",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "differs from the reviewed v2.37 subject",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "row-old-tag",
+      "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+      "old": "| `polaris-dossier-choice-floor-v2.37` |",
+      "new": "| `polaris-dossier-choice-floor-v2.33` |",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "calls choice floor v2.37 adopted while it is not in force",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "census-skips-choice",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "                a, extra_a = compose_figure_by_id(a, choice_amendment, CHOICE_REPLACES)\n                b, extra_b = compose_figure_by_name(b, choice_amendment, CHOICE_REPLACES)\n",
+      "new": "                extra_a = extra_b = []\n",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "FAIL  R3",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "expected-skips-choice",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "        n_scen += choice_delta(root, findings)\n",
+      "new": "        pass\n",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "FAIL  R3",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "projection-skips-choice",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "            selected_population = by_id\n    if selected_population != current:",
+      "new": "    if selected_population != current:",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "selected census differs",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "status-want-unadjusted",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "            want = (want[0], str(int(want[1]) - choice_delta(root, findings)))\n",
+      "new": "",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "FAIL  R5",
+      "exit": 1,
+      "outcome": "killed"
+    }
+  ]
+}
