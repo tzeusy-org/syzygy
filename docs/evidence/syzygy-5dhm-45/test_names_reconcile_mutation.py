@@ -4,7 +4,7 @@
 Usage: choice_floor_reconcile_mutation.py <worktree> <out.json>. The tree must be clean. Each mutant replaces one
 fragment (found exactly once) in one file, runs `scripts/check_spec_reconciliation.py --check` (or the counter),
 records whether the expected finding appears, and restores the file with `git checkout`. The selftest base is
-projected before the v2.36 advice, so v2.38 is effective only here, on the delivered tree.
+projected before the v2.36 advice, so v2.40 is effective only here, on the delivered tree.
 """
 import json
 import pathlib
@@ -22,18 +22,18 @@ CHECK_RUN = ['python3', CHECK, '--check']
 COUNT_RUN = ['python3', COUNT]
 
 MUTANTS = [
-    ('status-count-off', STATUS, 'Polaris has 39 requirements and 618 scenarios.', 'Polaris has 39 requirements and 617 scenarios.',
+    ('status-count-off', STATUS, 'Polaris has 39 requirements and 619 scenarios.', 'Polaris has 39 requirements and 618 scenarios.',
      CHECK_RUN, 'does not declare the exact test-name recognizers census'),
-    ('status-count-off-counter', STATUS, 'Polaris has 39 requirements and 618 scenarios.', 'Polaris has 39 requirements and 617 scenarios.',
+    ('status-count-off-counter', STATUS, 'Polaris has 39 requirements and 619 scenarios.', 'Polaris has 39 requirements and 618 scenarios.',
      COUNT_RUN, 'test-name recognizers count differs'),
     ('status-route-old-id', STATUS, 'is agent-adopted in A-337.', 'is agent-adopted in A-336.',
-     CHECK_RUN, 'does not route test-name recognizers v2.38'),
-    ('index-old-tag', README, '`polaris-dossier-test-names-v2.38`', '`polaris-dossier-test-names-v2.37`',
-     CHECK_RUN, 'does not route test-name recognizers v2.38'),
+     CHECK_RUN, 'does not route test-name recognizers v2.40'),
+    ('index-old-tag', README, '`polaris-dossier-test-names-v2.40`', '`polaris-dossier-test-names-v2.39`',
+     CHECK_RUN, 'does not route test-name recognizers v2.40'),
     ('spec-one-byte', SPEC, '# Dossier test-name recognizers', '# Dossier test-name recognisers',
-     CHECK_RUN, 'differs from the reviewed v2.38 subject'),
-    ('row-old-tag', LEDGER, '| `polaris-dossier-test-names-v2.38` |', '| `polaris-dossier-test-names-v2.37` |',
-     CHECK_RUN, 'calls test-name recognizers v2.38 adopted while it is not in force'),
+     CHECK_RUN, 'differs from the reviewed v2.40 subject'),
+    ('row-old-tag', LEDGER, '| `polaris-dossier-test-names-v2.40` |', '| `polaris-dossier-test-names-v2.39` |',
+     CHECK_RUN, 'calls test-name recognizers v2.40 adopted while it is not in force'),
     ('row-test-is-choice', CHECK, 'for line in adoption_table_rows(root) if is_tnames_row(line)]',
      'for line in adoption_table_rows(root) if is_choice_row(line)]', CHECK_RUN, 'test-name recognizers: malformed adoption identity'),
     ('census-skips-tnames', CHECK, '                a, extra_a = compose_figure_by_id(a, tnames_amendment, TNAMES_REPLACES)\n'
