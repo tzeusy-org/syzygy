@@ -2,7 +2,7 @@
 
 ## Patterns
 
-- `syzygy-k54o-3/f3-(ordered-preflight-gap-be93-R1-review|ordered-gap-owning-operator-(initial|review)|ordinary-3bd8-R1-operator-review)-RAW\\.md`
+- `syzygy-k54o-3/f3-(ordered-preflight-gap-be93-R1-review|ordered-gap-owning-operator-(initial|review)|ordinary-3bd8-R1-operator-review)-RAW\.md`
 
 - `syzygy-k54o-3/f3-(supervisor-idle-microdiagnostic-1ef-R[12]-review|supervisor-pidfd-1ef-R1-review|supervisor-pidfd-1ef-R2-documentation-review|supervisor-pidfd-owning-1ef-R[234]-review|ordinary-recovery-f51-R[123]-operator-review|final-render-1ef234-attribution-independent-review)-RAW\.md`
 
