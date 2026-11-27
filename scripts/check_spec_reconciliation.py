@@ -3543,6 +3543,7 @@ P5_ADVICE_CHANGE = "polaris-source-example-advice"
 P5_ADVICE_HOME = f"{CHANGES}/{P5_ADVICE_CHANGE}"
 P5_ADVICE_SPEC = f"{P5_ADVICE_HOME}/proposed/polaris-generation/spec.md"
 SOURCE_EXAMPLE_TAG = "polaris-dossier-source-example-advice-v2.36"
+SUPERVISOR_COMPOSITION_TAG = "polaris-dossier-p111-supervisor-composition-v2.37"
 P5_ADVICE_PREDECESSOR = "b7d3324969101e742b2592869d8761f680fe8615"
 P5_ADVICE_STATUS_PREFIX = "[Source-example advice]("
 P5_ADVICE_INDEX_PREFIX = f"| [`{P5_ADVICE_CHANGE}`]("
@@ -3854,6 +3855,18 @@ def p5_advice_member_delta(predecessor, successor):
     return counts[1] - counts[0]
 
 
+def normalized_source_diff(git_root, before, after):
+    diff = local_git(git_root, "diff", "--binary", "--no-color", "--no-ext-diff", "--no-textconv",
+                     "--no-renames", "--no-indent-heuristic", "--diff-algorithm=myers",
+                     "--src-prefix=a/", "--dst-prefix=b/", "--unified=0", before, after, "--")
+    if not diff:
+        return None
+    # Later changes can shift hunks and blob identities. Compare the paths,
+    # modes, hunk boundaries and exact added or removed bytes.
+    return [b"@@" if line.startswith(b"@@ ") else line
+            for line in diff.split(b"\n") if not line.startswith(b"index ")]
+
+
 def p5_advice_inverse_verified(root, git_root, source, identity, protected_rows, added):
     withdrawal = [row for row in protected_rows if row.split("|")[1].strip() == identity]
     if len(withdrawal) != 1:
@@ -3868,17 +3881,6 @@ def p5_advice_inverse_verified(root, git_root, source, identity, protected_rows,
             or not p5_advice_authority(root, None, candidate_only=True)
             or scoped_route_lines(read_text(root, STATUS) or "", (P5_ADVICE_COUNT_SCOPE,))):
         return False
-
-    def changed_lines(before, after):
-        diff = local_git(git_root, "diff", "--binary", "--no-color", "--no-ext-diff", "--no-textconv",
-                         "--no-renames", "--no-indent-heuristic", "--diff-algorithm=myers",
-                         "--src-prefix=a/", "--dst-prefix=b/", "--unified=0", before, after, "--")
-        if not diff:
-            return None
-        # Later changes can shift hunks and blob identities. Compare the paths,
-        # modes, hunk boundaries and exact added or removed bytes.
-        return [b"@@" if line.startswith(b"@@ ") else line
-                for line in diff.split(b"\n") if not line.startswith(b"index ")]
 
     def count_deletion(revision):
         raw = local_git(git_root, "show", f"{revision}:{STATUS}")
@@ -3896,7 +3898,7 @@ def p5_advice_inverse_verified(root, git_root, source, identity, protected_rows,
             return None
         return b"-" + counts[0].encode("utf-8")
 
-    reverse = changed_lines(source, f"{source}^")
+    reverse = normalized_source_diff(git_root, source, f"{source}^")
     source_count = count_deletion(source)
     current_count = count_deletion(f"{commit}^")
     if reverse is None or source_count is None or current_count is None or reverse.count(source_count) != 1:
@@ -3904,7 +3906,7 @@ def p5_advice_inverse_verified(root, git_root, source, identity, protected_rows,
     # An authorized later addition can update the derived count before this
     # inverse. It is the only substituted line in the exact reverse patch.
     expected = [current_count if line == source_count else line for line in reverse]
-    if changed_lines(f"{commit}^", commit) != expected:
+    if normalized_source_diff(git_root, f"{commit}^", commit) != expected:
         return False
     for path in P5_ADVICE_SUBJECTS:
         if read_bytes(root, path) is not None or any(
@@ -5797,7 +5799,7 @@ def cap1_root_projection(root):
     }
 
 
-def census(root):
+def census(root, *, include_p111=True):
     """Return ({family: {id: {name, scenarios}}}, findings)."""
     out, findings = {}, []
     for family, rel in FAMILY_SPECS.items():
@@ -6195,7 +6197,59 @@ def census(root):
             findings.append("POLARIS: ID-keyed and name-keyed compositions "
                             "disagree")
         out["POLARIS"] = a
+        if include_p111:
+            out["POLARIS"], _ = p111_current(root, a, findings)
     return out, findings
+
+
+def is_supervisor_composition_row(line):
+    from p111_supervisor_binding import SPEC
+
+    return _is_reviewed_version_row(line, SUPERVISOR_COMPOSITION_TAG, (SPEC,))
+
+
+def p111_selection(root):
+    from p111_supervisor_binding import select
+    return select(root)
+
+
+def p111_current(root, predecessor, findings):
+    """Select only the current REQ-048 member and leave history in predecessor."""
+    from p111_supervisor_binding import KEY, Refusal
+    try:
+        binding = p111_selection(root)
+    except Refusal as error:
+        findings.append(f"POLARIS P111: {error}")
+        return predecessor, "invalid"
+    if binding.text is None:
+        return predecessor, binding.state
+    by_id, errors_a = compose_figure_by_id(predecessor, binding.text, (KEY,))
+    by_name, errors_b = compose_figure_by_name(predecessor, binding.text, (KEY,))
+    if (errors_a or errors_b or by_id != by_name
+            or {ident for ident in predecessor if by_id.get(ident) != predecessor[ident]} != {KEY}):
+        findings.append("POLARIS P111: current REQ-048 compositions disagree")
+        return predecessor, "invalid"
+    return by_id, binding.state
+
+
+def check_p111_status(root, predecessor, findings):
+    from p111_supervisor_binding import KEY, SPEC, Refusal, assert_count
+    selected, state = p111_current(root, predecessor, findings)
+    if state not in {"staged", "effective"}:
+        return
+    historical_total = len(predecessor), sum(len(row["scenarios"]) for row in predecessor.values())
+    current_total = len(selected), sum(len(row["scenarios"]) for row in selected.values())
+    blocks = [len(block["scenarios"]) for block in _polaris_blocks_manual(read_text(root, SPEC) or "")
+              if block["section"] == "MODIFIED" and tuple(block["ids"]) == (KEY,)]
+    if len(blocks) != 1 or KEY not in predecessor:
+        findings.append("POLARIS P111: cannot count the reviewed REQ-048 successor")
+        return
+    delta = blocks[0] - len(predecessor[KEY]["scenarios"])
+    try:
+        if assert_count(root, state, historical_total, delta) != current_total:
+            findings.append("POLARIS P111: independently counted current projection differs")
+    except Refusal as error:
+        findings.append(f"POLARIS P111: {error}")
 
 
 def census_json(pop):
@@ -6645,7 +6699,7 @@ def poc_scenarios_added(root):
 
 
 def check_census(root, report):
-    pop, findings = census(root)
+    pop, findings = census(root, include_p111=False)
     examined = 0
     p_req, p_scen, p_ids = polaris_expected(root, findings)
     signed_reference = reference_signed(root)
@@ -7756,6 +7810,7 @@ def check_routes(root, pop, report):
     elif figures != [want]:
         findings.append(f"`{STATUS}`: Polaris composition figure {figures} "
                         f"!= census {want}")
+    check_p111_status(root, reqs, findings)
     report.add("R5", "default routes name the terminal records", examined,
                findings, f"{len(changes)} tracked change directories")
 
@@ -13581,6 +13636,30 @@ def adopted_mutants():
     )
 
 
+def project_supervisor_composition_history(root):
+    """Leave the preceding spec fixtures on their own authored inputs."""
+    from p111_supervisor_binding import (
+        DEPENDENCIES, INDEX_PREFIX, REVIEWED_SUBJECTS, SPEC, STATUS_COUNT_SCOPE, STATUS_PREFIX,
+    )
+
+    rows = adoption_table_rows(root)
+    claim, = (row for row in rows if is_supervisor_composition_row(row))
+    cells = [cell.strip() for cell in claim.split("|")[1:-1]]
+    identity, source = cells[0], cells[2].strip("`")
+    withdrawal = recorded_disposition(root, identity, source, SUPERVISOR_COMPOSITION_TAG,
+                                      (SPEC, DEPENDENCIES), plain_revert=True, ledger_rows=rows)
+    removed = {claim, *(row for row in rows if withdrawal and row.split("|")[1].strip() == withdrawal)}
+    ledger = root / AGENT_ADOPTIONS
+    ledger.write_text("".join(line for line in ledger.read_text(encoding="utf-8").splitlines(keepends=True)
+                              if line.rstrip("\n") not in removed), encoding="utf-8")
+    for rel, prefixes in ((STATUS, (STATUS_PREFIX, STATUS_COUNT_SCOPE)), (OPENSPEC_README, (INDEX_PREFIX,))):
+        path = root / rel
+        path.write_text("".join(line for line in path.read_text(encoding="utf-8").splitlines(keepends=True)
+                                if not line.strip().startswith(prefixes)), encoding="utf-8")
+    for rel in REVIEWED_SUBJECTS:
+        (root / rel).unlink(missing_ok=True)
+
+
 def project_source_example_history(root):
     """Keep the established screening mutants on the earlier advisory-free history."""
     ledger = root / AGENT_ADOPTIONS
@@ -13735,6 +13814,7 @@ def vbase_screening_git_cases(tmp, witnesses, failures):
         if git("tag", "--list", SOURCE_EXAMPLE_TAG):
             git("tag", "-d", SOURCE_EXAMPLE_TAG)
     git("checkout", "--quiet", "--detach", head)
+    git("update-ref", "-d", f"refs/tags/{SUPERVISOR_COMPOSITION_TAG}")
     ledger = repo / AGENT_ADOPTIONS
     initial = ledger.read_text()
     row = vbase_screening_rows(adoption_table_rows(repo))[0]
@@ -13929,6 +14009,7 @@ def source_example_git_cases(tmp, witnesses, failures):
                    f"{source}..{current}", "--", AGENT_ADOPTIONS).splitlines()[0]
     before_source = git("rev-parse", f"{source}^")
     git("checkout", "--quiet", "--detach", authored)
+    git("update-ref", "-d", f"refs/tags/{SUPERVISOR_COMPOSITION_TAG}")
     ledger = repo / AGENT_ADOPTIONS
     protected = "refs/remotes/origin/main"
     tag = f"refs/tags/{SOURCE_EXAMPLE_TAG}"
@@ -14046,6 +14127,8 @@ def selftest(witness_path=None):
     with tempfile.TemporaryDirectory() as tmp:
         base = Path(tmp) / "base"
         scratch(ROOT, base)
+        if any(is_supervisor_composition_row(row) for row in adoption_table_rows(base)):
+            project_supervisor_composition_history(base)
         if p5_advice_claims(adoption_table_rows(base)):
             source_example_git_cases(tmp, witnesses, failures)
             project_source_example_history(base)
@@ -14864,7 +14947,8 @@ def regenerate(root):
     """
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import build_polaris_dependency_unions as unions
-    pop, findings = census(root)
+    pop, findings = census(root, include_p111=False)
+    check_p111_status(root, pop.get("POLARIS", {}), findings)
     if findings:
         raise SystemExit("census refused:\n" + "\n".join(findings))
     baseline, projection = vbase_screening_projects(root, pop, findings)

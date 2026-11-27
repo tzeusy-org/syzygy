@@ -474,6 +474,7 @@ class CompositionResult:
     total: int
     screening_state: str
     source_example_state: str
+    p111_state: str
 
 
 def declared_source_amendment(root: Path) -> str | None:
@@ -802,6 +803,35 @@ def screening_inputs() -> tuple[str, ...]:
             adoption.VBASE_SCREENING_SPEC, union.as_posix(), *adoption.P5_ADVICE_SUBJECTS)
 
 
+def p111_amendment(root: Path) -> tuple[str, str | None]:
+    from p111_supervisor_binding import Refusal, select
+
+    try:
+        binding = select(root)
+    except Refusal as error:
+        raise ScenarioCountError(f"P111 binding: {error}") from error
+    return binding.state, binding.text
+
+
+def p111_proposed_inputs() -> tuple[str, ...]:
+    import check_spec_reconciliation as adoption
+    from p111_supervisor_binding import REVIEWED_SUBJECTS
+
+    return (*REVIEWED_SUBJECTS, *adoption.TREEREAD_SUBJECTS, *adoption.COVHOLD_SUBJECTS)
+
+
+def verify_proposed_inputs(root: Path, authority: Path, paths: tuple[str, ...],
+                           binding: str, *, preserve_git_modes: bool = False) -> None:
+    for rel in paths:
+        copied, original = root / rel, authority / rel
+        present = copied.is_file()
+        if (present != original.is_file()
+                or (present and copied.read_bytes() != original.read_bytes())
+                or (preserve_git_modes and (copied.is_symlink()
+                                            or (present and copied.stat().st_mode & 0o111)))):
+            raise ScenarioCountError(f"proposed patch changes {binding} binding input {rel}")
+
+
 def covhold_amendment(root: Path) -> str | None:
     """Verified text, a pending or retired amendment, or a counting refusal."""
     import check_spec_reconciliation as adoption
@@ -824,15 +854,26 @@ def term_brief_amendment(root: Path) -> str | None:
 
 def build_composition(root: Path, *, screening_authority: Path | None = None) -> CompositionResult:
     import check_spec_reconciliation as adoption
+    from p111_supervisor_binding import (
+        INDEX, INDEX_PREFIX, SPEC, STATUS, STATUS_COUNT_SCOPE, STATUS_PREFIX, route_lines,
+    )
+
     if screening_authority is not None:
-        for rel in screening_inputs():
-            copied, authority = root / rel, screening_authority / rel
-            if (copied.is_file() != authority.is_file()
-                    or (copied.is_file() and copied.read_bytes() != authority.read_bytes())):
-                raise ScenarioCountError(f"proposed patch changes derived-base screening binding input {rel}")
+        verify_proposed_inputs(root, screening_authority, screening_inputs(), "derived-base screening")
     authority = screening_authority if screening_authority is not None else root
     screening_state, screening = screening_amendment(authority)
     source_example_state, source_example = source_example_amendment(authority)
+    p111_state, p111 = p111_amendment(authority)
+    if screening_authority is not None and p111_state in {"staged", "effective"}:
+        verify_proposed_inputs(root, authority, p111_proposed_inputs(), "P111", preserve_git_modes=True)
+        for rel, prefixes in ((INDEX, (INDEX_PREFIX,)), (STATUS, (STATUS_PREFIX, STATUS_COUNT_SCOPE))):
+            copied, original = root / rel, authority / rel
+            error = f"proposed patch changes P111 binding route in {rel}"
+            if not copied.is_file() or copied.is_symlink():
+                raise ScenarioCountError(error)
+            copied_text, original_text = copied.read_bytes(), original.read_bytes()
+            if any(route_lines(copied_text, prefix) != route_lines(original_text, prefix) for prefix in prefixes):
+                raise ScenarioCountError(error)
     sources = [(path.relative_to(root).as_posix(), path.read_text(encoding="utf-8"))
                for path in discover_composition_files(root)]
     for label, text in ((adoption.DECLARED_SOURCE_SPEC, declared_source_amendment(root)),
@@ -870,7 +911,8 @@ def build_composition(root: Path, *, screening_authority: Path | None = None) ->
                         (adoption.QKIND_SPEC, qkind_amendment(root)),
                         (adoption.FIGPLAN_SPEC, figplan_amendment(root)),
                         (adoption.VBASE_SCREENING_SPEC, screening),
-                        (adoption.P5_ADVICE_SPEC, source_example)):
+                        (adoption.P5_ADVICE_SPEC, source_example),
+                        (SPEC, p111)):
         if text is not None:
             sources.append((label, text))
 
@@ -899,6 +941,7 @@ def build_composition(root: Path, *, screening_authority: Path | None = None) ->
         total=total,
         screening_state=screening_state,
         source_example_state=source_example_state,
+        p111_state=p111_state,
     )
 
 
@@ -1012,6 +1055,39 @@ def source_example_member_counts(root: Path) -> tuple[int, int]:
     return counts[0], counts[1]
 
 
+def effective_status_assertion(root: Path, result: CompositionResult | None = None) -> tuple[int, int]:
+    import check_spec_reconciliation as adoption
+    from p111_supervisor_binding import SPEC, Refusal, assert_count
+
+    if result is None:
+        screening_state, _ = screening_amendment(root)
+        source_example_state, _ = source_example_amendment(root)
+        p111_state, _ = p111_amendment(root)
+    else:
+        screening_state = result.screening_state
+        source_example_state = result.source_example_state
+        p111_state = result.p111_state
+    predecessor = read_status_assertion(root, screening_state=screening_state,
+                                        source_example_state=source_example_state)
+    if p111_state not in {"staged", "effective"}:
+        return predecessor
+    members = []
+    for relative in (adoption.TREEREAD_SPEC, SPEC):
+        text = (root / relative).read_text(encoding="utf-8")
+        name = normalize_name("Declared URL dossier supervisor")
+        regex = [e.scenario_count for e in parse_regex(text, relative).modified
+                 if normalize_name(e.name) == name]
+        manual = [e.scenario_count for e in parse_manual(text, relative).modified
+                  if normalize_name(e.name) == name]
+        if len(regex) != 1 or regex != manual:
+            raise ScenarioCountError(f"{relative} P111 member counts disagree")
+        members.append(regex[0])
+    try:
+        return assert_count(root, p111_state, predecessor, members[1] - members[0])
+    except Refusal as error:
+        raise ScenarioCountError(f"P111 status: {error}") from error
+
+
 # --------------------------------------------------------------------------
 # --with-proposed: apply a candidate package's proposed/*.patch files in a
 # scratch copy. The tracked tree is never touched.
@@ -1042,6 +1118,8 @@ def _patch_target_path(patch_file: Path) -> str:
 
 @contextlib.contextmanager
 def with_proposed_scratch(root: Path, package_dir: Path):
+    from p111_supervisor_binding import INDEX
+
     proposed = package_dir / "proposed"
     if not proposed.is_dir():
         raise ScenarioCountError(f"no 'proposed' directory under {package_dir}")
@@ -1051,6 +1129,9 @@ def with_proposed_scratch(root: Path, package_dir: Path):
     comp_files = composition_inputs(root)
     targets = {_patch_target_path(p) for p in patch_files}
     needed = {f.relative_to(root).as_posix() for f in comp_files} | {STATUS_PAGE_REL} | targets
+    p111_state, _ = p111_amendment(root)
+    if p111_state in {"staged", "effective"}:
+        needed.update((INDEX, *p111_proposed_inputs()))
     with tempfile.TemporaryDirectory(prefix="polaris-scenario-recount-") as tmp:
         scratch = Path(tmp)
         for rel in sorted(needed):
@@ -1227,8 +1308,7 @@ def _check_totals(result: CompositionResult, status_reqs: int, status_scenarios:
 
 def _run_check(root: Path, *, expect: int | None = None) -> tuple[CompositionResult, int, int]:
     result = build_composition(root)
-    status_reqs, status_scenarios = read_status_assertion(
-        root, screening_state=result.screening_state, source_example_state=result.source_example_state)
+    status_reqs, status_scenarios = effective_status_assertion(root, result)
     _check_totals(result, status_reqs, status_scenarios, expect=expect)
     return result, status_reqs, status_scenarios
 
@@ -1587,16 +1667,14 @@ def main() -> int:
                 package_dir = (ROOT / package_dir).resolve()
             with with_proposed_scratch(ROOT, package_dir) as scratch:
                 result = build_composition(scratch, screening_authority=ROOT)
-                status_reqs, status_scenarios = read_status_assertion(
-                    scratch, screening_state=result.screening_state, source_example_state=result.source_example_state)
+                status_reqs, status_scenarios = effective_status_assertion(scratch, result)
                 label = f"scratch copy with {package_dir.relative_to(ROOT) if package_dir.is_relative_to(ROOT) else package_dir}'s proposed patches applied"
                 print(render_report(result, label))
                 print()
                 print(f"(scratch) PROJECT-STATUS.md asserts: {status_reqs} requirements, {status_scenarios} scenarios")
         else:
             result = build_composition(ROOT)
-            status_reqs, status_scenarios = read_status_assertion(
-                ROOT, screening_state=result.screening_state, source_example_state=result.source_example_state)
+            status_reqs, status_scenarios = effective_status_assertion(ROOT, result)
             print(render_report(result, "tracked tree (HEAD)"))
             print()
             print(f"PROJECT-STATUS.md asserts: {status_reqs} requirements, {status_scenarios} scenarios")
