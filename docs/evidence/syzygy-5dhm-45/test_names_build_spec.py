@@ -4,7 +4,7 @@
 Usage: test_names_build_spec.py <predecessor spec.md> <predecessor label> <out>
 <predecessor label> is the banner's words for the predecessor, for example 'version 2.32 (A-321)'. The script replaces the title (line 1)
 and the banner (the one line starting 'Candidate version '), places three paragraphs immediately after the `computedMaps` paragraph,
-six scenarios immediately before the line 'Form: event-response.', and appends one sentence to each of the oracle's Observable, Oracle
+six scenarios immediately after the last scenario (the end of the file), and appends one sentence to each of the oracle's Observable, Oracle
 and Falsifier lines. Every other byte is the predecessor's; removing these additions and restoring the title and banner recovers it.
 Rebuilding over a later predecessor is a re-run.
 """
@@ -88,7 +88,7 @@ PARAGRAPHS = [
     'or member, so its bytes are those the replaced version renders.',
 ]
 
-SCENARIO_ANCHOR = '\n\nForm: event-response.\n'
+SCENARIO_ANCHOR = '\n\nForm: event-response.\n'  # checked present once; the scenarios no longer go before it
 SCENARIOS = '''
 
 #### Scenario: Test names read from code, never from comments or strings
@@ -155,7 +155,10 @@ assert len(at) == 1, 'computedMaps anchor'
 for k, paragraph in enumerate(PARAGRAPHS):
     lines[at[0] + 1 + 2 * k:at[0] + 1 + 2 * k] = ['', paragraph]
 spec = '\n'.join(lines)
-spec = once(spec, SCENARIO_ANCHOR, SCENARIOS + SCENARIO_ANCHOR)
+# The six scenarios go after the last one, at the end of the file, as each version since 2.35 places its own.
+assert spec.endswith('\n') and not spec.endswith('\n\n') and spec.count(SCENARIO_ANCHOR) == 1, 'predecessor end'
+assert spec.rindex('\n#### Scenario: ') > spec.index(SCENARIO_ANCHOR), 'last scenario after the form line'
+spec = spec[:-1] + SCENARIOS + '\n'
 spec = line_end(spec, '- **Observable:**', OBSERVABLE_ADD)
 spec = line_end(spec, '- **Oracle:**', ORACLE_ADD)
 spec = line_end(spec, '- **Falsifier:**', FALSIFIER_ADD)
