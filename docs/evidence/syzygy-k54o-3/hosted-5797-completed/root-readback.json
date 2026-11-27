@@ -1,0 +1,124 @@
+{
+  "asOf": "2026-11-27T03:20:19.143675+00:00",
+  "subject": "5797a5a4b59c1e4238412216f976cfbe8c0050ec",
+  "archiveSha256": "9d2c21d049dba8f5ebcfa8492492d5276d7d88640ee502fd41127b21fafbb9fe",
+  "membersVerified": 15,
+  "sourcesDualVerified": 11,
+  "jobs": [
+    {
+      "workflow": "node",
+      "name": "node (unit)",
+      "seconds": 281.0,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "node",
+      "name": "node (e2e)",
+      "seconds": 174.0,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "node",
+      "name": "node (integration, core-3)",
+      "seconds": 355.0,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "node",
+      "name": "node (integration, core-2)",
+      "seconds": 159.0,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "node",
+      "name": "node (integration, eligible-stop-resume)",
+      "seconds": 198.0,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "node",
+      "name": "node (integration, stop-resume)",
+      "seconds": 484.0,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "node",
+      "name": "node (integration, delivery-stop)",
+      "seconds": 104.0,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "node",
+      "name": "node (integration, complete)",
+      "seconds": 160.0,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "node",
+      "name": "node (integration, core-1)",
+      "seconds": 203.0,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "node",
+      "name": "node",
+      "seconds": 20.0,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "governance",
+      "name": "checks (governance continuation)",
+      "seconds": 283.0,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "governance",
+      "name": "checks (P115 recording selftest)",
+      "seconds": 206.0,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "governance",
+      "name": "checks (governance)",
+      "seconds": 309.0,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "governance",
+      "name": "checks (readability selftest)",
+      "seconds": 340.0,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "governance",
+      "name": "checks (reconciliation selftest)",
+      "seconds": 327.0,
+      "conclusion": "success"
+    },
+    {
+      "workflow": "governance",
+      "name": "checks",
+      "seconds": 2.0,
+      "conclusion": "success"
+    }
+  ],
+  "successJobs": 16,
+  "over420Seconds": [
+    {
+      "workflow": "node",
+      "name": "node (integration, stop-resume)",
+      "seconds": 484.0,
+      "conclusion": "success"
+    }
+  ],
+  "treeEquivalent": true,
+  "scopedRootAcceptance": true,
+  "scope": "historical hosted5797 only; later local source not covered",
+  "rawDualHash": [
+    {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/hosted-5797-proof-final-R1/proof.tar.gz",
+      "bytes": 103512,
+      "sha256": "9d2c21d049dba8f5ebcfa8492492d5276d7d88640ee502fd41127b21fafbb9fe"
+    }
+  ]
+}

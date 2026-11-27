@@ -1,0 +1,86 @@
+{
+  "subject": "5797a5a4b59c1e4238412216f976cfbe8c0050ec",
+  "archiveSha256": "9d2c21d049dba8f5ebcfa8492492d5276d7d88640ee502fd41127b21fafbb9fe",
+  "archiveBytes": 103512,
+  "memberCount": 15,
+  "memberReadbackHashes": 15,
+  "sourceDualHashCount": 11,
+  "deterministicRebuildEqual": true,
+  "members": [
+    {
+      "path": "ASSESSMENT.json",
+      "bytes": 1174,
+      "sha256": "b9acdeba52f4582ecaf05d0acaff7d2929e6725cb05f5dd16e7c685431bf6821"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2498,
+      "sha256": "8639fc7637e47fa9a98e460be2bae5440298a0f35de2aca37d3eb0ff137b0257"
+    },
+    {
+      "path": "SOURCE-INDEX.json",
+      "bytes": 2921,
+      "sha256": "ea8c9cbbad09989a6cf117b0d6b7fd391ef271463fdaab2688288362d266b5e5"
+    },
+    {
+      "path": "TREE-IDENTITY.json",
+      "bytes": 927,
+      "sha256": "8b90150d39c132fbb79fe1452f312ac82a0fb5b9dc21e0a616a99056290f3fa2"
+    },
+    {
+      "path": "assembly/assemble-hosted-5797-proof-R1.py",
+      "bytes": 10676,
+      "sha256": "a53b88fbbe941630bfe883436f7d639648b472a40ca5ee3f4390002c36ea45a1"
+    },
+    {
+      "path": "binding-records/d10-main-f4bb-proof-checkpoint-actual-commit.json",
+      "bytes": 1240,
+      "sha256": "6dfde704cc37ced49536eeb3dd2dd8fcf0d60f605466eb6fc4ac51942b2c9d49"
+    },
+    {
+      "path": "binding-records/hosted-5797-selected-log-readback.json",
+      "bytes": 2225,
+      "sha256": "6ba871107828c09099246f707bf76379a8b0c4a84acc10a9eda5147cccd455c7"
+    },
+    {
+      "path": "binding-records/hosted-5797-synthetic-commit-api.json",
+      "bytes": 2595,
+      "sha256": "2098e226e9e6adf82f11f65bd14ed5065aba55399196bdc422a61b55bc267339"
+    },
+    {
+      "path": "completed-hosted/SHA256SUMS",
+      "bytes": 499,
+      "sha256": "968d210df1b05f4ad003101a9d32261cf77d91ffeb639631877249a8f9548fab"
+    },
+    {
+      "path": "completed-hosted/governance-jobs.json",
+      "bytes": 37936,
+      "sha256": "9884ba77bbe2334695d838497284bb4b93717c255f47772746ab28f1367313f8"
+    },
+    {
+      "path": "completed-hosted/governance-run.json",
+      "bytes": 12324,
+      "sha256": "1968e9e45528df91033db5dab364f04ef1bf65ce443605c2d3491dba212e61ee"
+    },
+    {
+      "path": "completed-hosted/node-jobs.json",
+      "bytes": 31107,
+      "sha256": "4c88be2c328d6e565ad12070cf414a5c03692ccceded72aa18ade29020e26baa"
+    },
+    {
+      "path": "completed-hosted/node-run.json",
+      "bytes": 12308,
+      "sha256": "f45f6a6016dcd18feb4f13da41b326f17515ebd33522f8fa89a42ddb65d326c5"
+    },
+    {
+      "path": "completed-hosted/stop-resume-job.log",
+      "bytes": 630955,
+      "sha256": "e0292416897090817ed64cd85fbd532cb7f255ec0488394b085360082536271b"
+    },
+    {
+      "path": "completed-hosted/summary.json",
+      "bytes": 3009,
+      "sha256": "8dce5b43a325acbf3e32e77a75bc8f2195837eea2209f9a1099263c51c64fdf3"
+    }
+  ]
+}

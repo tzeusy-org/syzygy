@@ -1,0 +1,868 @@
+{
+  "logicalInputs": [
+    {
+      "bytes": 797,
+      "logical": "actual/source-R2-commit.json",
+      "member": "objects/f4e69781812447bb027618d011cd75972d15b3dca3bfc700845a7470c4b7eb07.txt",
+      "sha256": "f4e69781812447bb027618d011cd75972d15b3dca3bfc700845a7470c4b7eb07",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-actual-commit.json"
+    },
+    {
+      "bytes": 1016,
+      "logical": "actual/source-R3-commit.json",
+      "member": "objects/35ead04b9845b074ad5683244fcf84a2e1944e2d39440723f37e3932f761f9a9.txt",
+      "sha256": "35ead04b9845b074ad5683244fcf84a2e1944e2d39440723f37e3932f761f9a9",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-typefix-actual-commit.json"
+    },
+    {
+      "bytes": 1069,
+      "logical": "actual/source-R4-commit.json",
+      "member": "objects/910399b035e3b2732497b0a50ed2e6795002129c69479d55da4d76178e324382.txt",
+      "sha256": "910399b035e3b2732497b0a50ed2e6795002129c69479d55da4d76178e324382",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-comment-actual-commit.json"
+    },
+    {
+      "bytes": 1162,
+      "logical": "admission/4b6d.json",
+      "member": "objects/bac1c93731a1db522e8de6fa6d81eb52744d2cb34f7c5c60de6cf0c23dabf7b1.txt",
+      "sha256": "bac1c93731a1db522e8de6fa6d81eb52744d2cb34f7c5c60de6cf0c23dabf7b1",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-typefix-admission.json"
+    },
+    {
+      "bytes": 1141,
+      "logical": "admission/52fb.json",
+      "member": "objects/e949eee953ec392ac1a348c1248e3caeb825f6cc0a675ee45631bc8fdf637d4b.txt",
+      "sha256": "e949eee953ec392ac1a348c1248e3caeb825f6cc0a675ee45631bc8fdf637d4b",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-52fb-admission.json"
+    },
+    {
+      "bytes": 1160,
+      "logical": "admission/f822.json",
+      "member": "objects/22fecf6c8dac7276e355eaf0d6bb06cc21a3b825951fe1497ce8a7c87fca5214.txt",
+      "sha256": "22fecf6c8dac7276e355eaf0d6bb06cc21a3b825951fe1497ce8a7c87fca5214",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-comment-admission.json"
+    },
+    {
+      "bytes": 2272,
+      "logical": "assembly/README.md",
+      "member": "objects/cc5d99f4b02c5a300b3b546cb2c9161f667457ec7a06496a1e9bc28046fa9795.txt",
+      "sha256": "cc5d99f4b02c5a300b3b546cb2c9161f667457ec7a06496a1e9bc28046fa9795",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-proof-assembler-R1/README.md"
+    },
+    {
+      "bytes": 14105,
+      "logical": "assembly/assemble.py.txt",
+      "member": "objects/bfbc3e6ba1e8faff437f16e8ecd0958097ed011cf916f3d7306dd02c0832396a.txt",
+      "sha256": "bfbc3e6ba1e8faff437f16e8ecd0958097ed011cf916f3d7306dd02c0832396a",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-proof-assembler-R1/assemble.py"
+    },
+    {
+      "bytes": 29749,
+      "logical": "assembly/definition.json",
+      "member": "objects/364a20fec4eaa388fc15f7ce239fa7417641910aa196d389339eabeea8e5ac64.txt",
+      "sha256": "364a20fec4eaa388fc15f7ce239fa7417641910aa196d389339eabeea8e5ac64",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-proof-assembler-R1/definition.json"
+    },
+    {
+      "bytes": 1944904,
+      "logical": "failed-52fb/after.json",
+      "member": "objects/754c5dea5af90d817016232ae6d609aa7456418c1af10341824501dc05ed1a6c.txt",
+      "sha256": "754c5dea5af90d817016232ae6d609aa7456418c1af10341824501dc05ed1a6c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-52fb31-1/after.json"
+    },
+    {
+      "bytes": 1944904,
+      "logical": "failed-52fb/before.json",
+      "member": "objects/754c5dea5af90d817016232ae6d609aa7456418c1af10341824501dc05ed1a6c.txt",
+      "sha256": "754c5dea5af90d817016232ae6d609aa7456418c1af10341824501dc05ed1a6c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-52fb31-1/before.json"
+    },
+    {
+      "bytes": 1786,
+      "logical": "failed-52fb/mutants.json",
+      "member": "objects/26b1fabc7eaa79227c86314881e4dec51bf31a8bd90e23f0a7d35cff263b1060.txt",
+      "sha256": "26b1fabc7eaa79227c86314881e4dec51bf31a8bd90e23f0a7d35cff263b1060",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-52fb31-1/mutants.json"
+    },
+    {
+      "bytes": 2292,
+      "logical": "failed-52fb/progress.json",
+      "member": "objects/bb147e2c9cba7c3dd71772a97251435293dc6025eacb0c6cec92ba24c4bf908a.txt",
+      "sha256": "bb147e2c9cba7c3dd71772a97251435293dc6025eacb0c6cec92ba24c4bf908a",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-52fb31-1/progress.json"
+    },
+    {
+      "bytes": 2914,
+      "logical": "failed-52fb/root-reconciliation.json",
+      "member": "objects/c1a997f6d34bcf8c87741f65b7ca3354830df0a0f94aad4bb613b2332993a876.txt",
+      "sha256": "c1a997f6d34bcf8c87741f65b7ca3354830df0a0f94aad4bb613b2332993a876",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/root-current-policy-summary-52fb-failed-owning-reconciliation.json"
+    },
+    {
+      "bytes": 465,
+      "logical": "failed-52fb/selection.json",
+      "member": "objects/ca4984da959fba2998f185c22df39a0203e6e4a656fa7d04dd08a93fd9a639c4.txt",
+      "sha256": "ca4984da959fba2998f185c22df39a0203e6e4a656fa7d04dd08a93fd9a639c4",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-52fb31-1/selection.json"
+    },
+    {
+      "bytes": 2608,
+      "logical": "failed-52fb/terminal.json",
+      "member": "objects/b5c45c862c22c9178d8aafee1943b0e0c08a5f38882989367a9aa07462bf1a1c.txt",
+      "sha256": "b5c45c862c22c9178d8aafee1943b0e0c08a5f38882989367a9aa07462bf1a1c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-52fb31-1/terminal.json"
+    },
+    {
+      "bytes": 7369,
+      "logical": "failed-52fb/typecheck.log",
+      "member": "objects/588bbcfc7794a6ee1a20869e14e75f3510aebcde9aee633ce018dcee1607d98b.txt",
+      "sha256": "588bbcfc7794a6ee1a20869e14e75f3510aebcde9aee633ce018dcee1607d98b",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-52fb31-1/typecheck.log"
+    },
+    {
+      "bytes": 1944904,
+      "logical": "focused-final/after.json",
+      "member": "objects/d2fd72b1bac6342d1718baa36dadf00ea1f76a2c2270590d9bfeac9280bd399b.txt",
+      "sha256": "d2fd72b1bac6342d1718baa36dadf00ea1f76a2c2270590d9bfeac9280bd399b",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/after.json"
+    },
+    {
+      "bytes": 486,
+      "logical": "focused-final/baseline.log",
+      "member": "objects/d1d4f09874a46819f5feeed98247175deafb71ac85e852a94e44848734c1a65b.txt",
+      "sha256": "d1d4f09874a46819f5feeed98247175deafb71ac85e852a94e44848734c1a65b",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/baseline.log"
+    },
+    {
+      "bytes": 3141,
+      "logical": "focused-final/baseline.vitest.json",
+      "member": "objects/1f41c5df28a2aacc042abc2b5310edb798b4d708c50f20b33bcd4af57e52923d.txt",
+      "sha256": "1f41c5df28a2aacc042abc2b5310edb798b4d708c50f20b33bcd4af57e52923d",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/baseline.vitest.json"
+    },
+    {
+      "bytes": 1944904,
+      "logical": "focused-final/before.json",
+      "member": "objects/a2faf0a87b0f0bfd30e693339514e31dea45d14a6f66c537ce0b403d6ab41d5d.txt",
+      "sha256": "a2faf0a87b0f0bfd30e693339514e31dea45d14a6f66c537ce0b403d6ab41d5d",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/before.json"
+    },
+    {
+      "bytes": 639,
+      "logical": "focused-final/drop-rejection-classification-definition.json",
+      "member": "objects/bd0bd25f3520c360c6ab8bbf499c2b865ffc499409e6f6016b8e8507e74bad48.txt",
+      "sha256": "bd0bd25f3520c360c6ab8bbf499c2b865ffc499409e6f6016b8e8507e74bad48",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/drop-rejection-classification-definition.json"
+    },
+    {
+      "bytes": 2684,
+      "logical": "focused-final/drop-rejection-classification.log",
+      "member": "objects/24952c81a4b3b5beb78a35828cdf42267ed42467c95ec5c2668a336ac11e8137.txt",
+      "sha256": "24952c81a4b3b5beb78a35828cdf42267ed42467c95ec5c2668a336ac11e8137",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/drop-rejection-classification.log"
+    },
+    {
+      "bytes": 3504,
+      "logical": "focused-final/drop-rejection-classification.vitest.json",
+      "member": "objects/646e19a0e7a93e996f06c4e041d63ae185018d2913edb1e8b7a4cefd9a49ead4.txt",
+      "sha256": "646e19a0e7a93e996f06c4e041d63ae185018d2913edb1e8b7a4cefd9a49ead4",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/drop-rejection-classification.vitest.json"
+    },
+    {
+      "bytes": 671,
+      "logical": "focused-final/lost-prior-observer-after-pause-definition.json",
+      "member": "objects/f4fe0367f7e713f321e80a71d7d66b5b0be69cf86ff23f8fee2bc2e8cd4443a7.txt",
+      "sha256": "f4fe0367f7e713f321e80a71d7d66b5b0be69cf86ff23f8fee2bc2e8cd4443a7",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/lost-prior-observer-after-pause-definition.json"
+    },
+    {
+      "bytes": 2658,
+      "logical": "focused-final/lost-prior-observer-after-pause.log",
+      "member": "objects/c631c92cc515e01419ad4abc3bf0f28a85adf2db3ab3643a2ea797704f973bbf.txt",
+      "sha256": "c631c92cc515e01419ad4abc3bf0f28a85adf2db3ab3643a2ea797704f973bbf",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/lost-prior-observer-after-pause.log"
+    },
+    {
+      "bytes": 3526,
+      "logical": "focused-final/lost-prior-observer-after-pause.vitest.json",
+      "member": "objects/df8ff74c22dfccf30edfcada3a8e2adb372b73636cf45bfaaced5f3b57ae829c.txt",
+      "sha256": "df8ff74c22dfccf30edfcada3a8e2adb372b73636cf45bfaaced5f3b57ae829c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/lost-prior-observer-after-pause.vitest.json"
+    },
+    {
+      "bytes": 1845,
+      "logical": "focused-final/mutants.json",
+      "member": "objects/901fbfa4e722053988bfccf2b5033635a348eb0fee92b0b9fd8aa894a85d0d64.txt",
+      "sha256": "901fbfa4e722053988bfccf2b5033635a348eb0fee92b0b9fd8aa894a85d0d64",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/mutants.json"
+    },
+    {
+      "bytes": 660,
+      "logical": "focused-final/outside-scope-clock-definition.json",
+      "member": "objects/c23d2ed5f919776cc99db712e07bf26410fa49f8b23d0a3b2b5c05616ad03dbf.txt",
+      "sha256": "c23d2ed5f919776cc99db712e07bf26410fa49f8b23d0a3b2b5c05616ad03dbf",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/outside-scope-clock-definition.json"
+    },
+    {
+      "bytes": 2416,
+      "logical": "focused-final/outside-scope-clock.log",
+      "member": "objects/b744d290454c53fb9953ac658ee16778fbf8848d7fc9efe3f28af3ec3f18d202.txt",
+      "sha256": "b744d290454c53fb9953ac658ee16778fbf8848d7fc9efe3f28af3ec3f18d202",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/outside-scope-clock.log"
+    },
+    {
+      "bytes": 3441,
+      "logical": "focused-final/outside-scope-clock.vitest.json",
+      "member": "objects/28b06d4f3e52007b05e79b973b6c1903a328f40543b81cb03ea5404ad6cb34e1.txt",
+      "sha256": "28b06d4f3e52007b05e79b973b6c1903a328f40543b81cb03ea5404ad6cb34e1",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/outside-scope-clock.vitest.json"
+    },
+    {
+      "bytes": 17985,
+      "logical": "focused-final/progress.json",
+      "member": "objects/82daec5c38be3a404357c7443a84bc9949092cbbaba43773fe7feb4c404e2312.txt",
+      "sha256": "82daec5c38be3a404357c7443a84bc9949092cbbaba43773fe7feb4c404e2312",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/progress.json"
+    },
+    {
+      "bytes": 747,
+      "logical": "focused-final/replace-original-promise-definition.json",
+      "member": "objects/c29d447940f7c211af9a4272a4e32903d903accc7834992ea6ae94d032b04622.txt",
+      "sha256": "c29d447940f7c211af9a4272a4e32903d903accc7834992ea6ae94d032b04622",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/replace-original-promise-definition.json"
+    },
+    {
+      "bytes": 2815,
+      "logical": "focused-final/replace-original-promise.log",
+      "member": "objects/dddd4a72b643dbb6bf9f2e2908a1838c85a6d780b8d865ef2b7f314afb391975.txt",
+      "sha256": "dddd4a72b643dbb6bf9f2e2908a1838c85a6d780b8d865ef2b7f314afb391975",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/replace-original-promise.log"
+    },
+    {
+      "bytes": 3614,
+      "logical": "focused-final/replace-original-promise.vitest.json",
+      "member": "objects/9b44d1b8282422720e0fb4104c98686252c4a6f40a4bb9a797512b110d02edb9.txt",
+      "sha256": "9b44d1b8282422720e0fb4104c98686252c4a6f40a4bb9a797512b110d02edb9",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/replace-original-promise.vitest.json"
+    },
+    {
+      "bytes": 4976,
+      "logical": "focused-final/root-reconciliation-script.py.txt",
+      "member": "objects/4e694436400036b949d449d953d373220714922037adbba158d929e2928780a2.txt",
+      "sha256": "4e694436400036b949d449d953d373220714922037adbba158d929e2928780a2",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/reconcile-policy-summary-focused-f8225e.py"
+    },
+    {
+      "bytes": 7290,
+      "logical": "focused-final/root-reconciliation.json",
+      "member": "objects/60f8b6ac22d1ddaf71c41cd950a4ac848d41f5b995aa64f4b44344b225217059.txt",
+      "sha256": "60f8b6ac22d1ddaf71c41cd950a4ac848d41f5b995aa64f4b44344b225217059",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/root-current-policy-summary-f8225e-focused-reconciliation.json"
+    },
+    {
+      "bytes": 465,
+      "logical": "focused-final/selection.json",
+      "member": "objects/ca4984da959fba2998f185c22df39a0203e6e4a656fa7d04dd08a93fd9a639c4.txt",
+      "sha256": "ca4984da959fba2998f185c22df39a0203e6e4a656fa7d04dd08a93fd9a639c4",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/selection.json"
+    },
+    {
+      "bytes": 18233,
+      "logical": "focused-final/terminal.json",
+      "member": "objects/430b8c1820a0bb8199fa9798ef60f6620bb834ef9ea8ec9365d44211c63cc04a.txt",
+      "sha256": "430b8c1820a0bb8199fa9798ef60f6620bb834ef9ea8ec9365d44211c63cc04a",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/terminal.json"
+    },
+    {
+      "bytes": 37,
+      "logical": "focused-final/typecheck.log",
+      "member": "objects/396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696.txt",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-f8225e-3/typecheck.log"
+    },
+    {
+      "bytes": 4983,
+      "logical": "operator-R1/README.md",
+      "member": "objects/dc16391ec476b7add83ee0be594189a71dff0b9816b1e6b68f1aeec8145829e8.txt",
+      "sha256": "dc16391ec476b7add83ee0be594189a71dff0b9816b1e6b68f1aeec8145829e8",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R1/README.md"
+    },
+    {
+      "bytes": 229,
+      "logical": "operator-R1/SHA256SUMS",
+      "member": "objects/411c480393491df047b0dafb944c2859c370693bb7d3ed3cda7bd7afcd013d54.txt",
+      "sha256": "411c480393491df047b0dafb944c2859c370693bb7d3ed3cda7bd7afcd013d54",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R1/SHA256SUMS"
+    },
+    {
+      "bytes": 569,
+      "logical": "operator-R1/manifest.json",
+      "member": "objects/fee286f4b5489e18a0aeb0e6085cd134a7da8bed8a2b05e499b072e16bebf0ec.txt",
+      "sha256": "fee286f4b5489e18a0aeb0e6085cd134a7da8bed8a2b05e499b072e16bebf0ec",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R1/manifest.json"
+    },
+    {
+      "bytes": 21186,
+      "logical": "operator-R1/run.py",
+      "member": "objects/6022e37705d0cae73b47983c958ae8a6c234e0b0c92411fa4a3226adad35a155.txt",
+      "sha256": "6022e37705d0cae73b47983c958ae8a6c234e0b0c92411fa4a3226adad35a155",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R1/run.py"
+    },
+    {
+      "bytes": 5505,
+      "logical": "operator-R2/README.md",
+      "member": "objects/25872d1c5c43a5a951ee238ee26337cff2d1421f6369d6370284f32ef2806b10.txt",
+      "sha256": "25872d1c5c43a5a951ee238ee26337cff2d1421f6369d6370284f32ef2806b10",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R2/README.md"
+    },
+    {
+      "bytes": 309,
+      "logical": "operator-R2/SHA256SUMS",
+      "member": "objects/842a8b06526a56e26f2fb0fcae312e16a042a509311b718c3b5b4343cddb6b3b.txt",
+      "sha256": "842a8b06526a56e26f2fb0fcae312e16a042a509311b718c3b5b4343cddb6b3b",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R2/SHA256SUMS"
+    },
+    {
+      "bytes": 11809,
+      "logical": "operator-R2/from-R1.patch",
+      "member": "objects/90354316888e67e725ab527525e074de1dd6df5da3607a3828324239dd9cb58e.txt",
+      "sha256": "90354316888e67e725ab527525e074de1dd6df5da3607a3828324239dd9cb58e",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R2/from-R1.patch"
+    },
+    {
+      "bytes": 1264,
+      "logical": "operator-R2/manifest.json",
+      "member": "objects/0ce232b795fa996d519f2c62c581633bf85e474a6652903ce86934b176cafa92.txt",
+      "sha256": "0ce232b795fa996d519f2c62c581633bf85e474a6652903ce86934b176cafa92",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R2/manifest.json"
+    },
+    {
+      "bytes": 25705,
+      "logical": "operator-R2/run.py",
+      "member": "objects/e8fa6e9a0a29c8d843956308e909967773953e2a1f9d41b7e8b85928e2b0af6f.txt",
+      "sha256": "e8fa6e9a0a29c8d843956308e909967773953e2a1f9d41b7e8b85928e2b0af6f",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R2/run.py"
+    },
+    {
+      "bytes": 4058,
+      "logical": "operator-R3/README.md",
+      "member": "objects/21eee9aaf481703158c2b9467461095109f5f71d7de8051276a9c73bff03b910.txt",
+      "sha256": "21eee9aaf481703158c2b9467461095109f5f71d7de8051276a9c73bff03b910",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R3/README.md"
+    },
+    {
+      "bytes": 398,
+      "logical": "operator-R3/SHA256SUMS",
+      "member": "objects/f5bada521d29a9bcbe0dcea00c55d2055fc311b6abf38bfe671ccc88cfe5dca6.txt",
+      "sha256": "f5bada521d29a9bcbe0dcea00c55d2055fc311b6abf38bfe671ccc88cfe5dca6",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R3/SHA256SUMS"
+    },
+    {
+      "bytes": 2690,
+      "logical": "operator-R3/from-R2.patch",
+      "member": "objects/12d8c3ed52bbc76f56a6c51acf80a86bd6cc517968e9850f6e4b43816653a2e7.txt",
+      "sha256": "12d8c3ed52bbc76f56a6c51acf80a86bd6cc517968e9850f6e4b43816653a2e7",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R3/from-R2.patch"
+    },
+    {
+      "bytes": 1663,
+      "logical": "operator-R3/manifest.json",
+      "member": "objects/3b8fb33a7c52508b131dedd75faf1258191bd47f422815ac297e448a38344600.txt",
+      "sha256": "3b8fb33a7c52508b131dedd75faf1258191bd47f422815ac297e448a38344600",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R3/manifest.json"
+    },
+    {
+      "bytes": 8817,
+      "logical": "operator-R3/reporter-evidence.json",
+      "member": "objects/9395d888389974d927ee233f3da14b862b9c29b8e8f4ebca3197da4fd388d1a6.txt",
+      "sha256": "9395d888389974d927ee233f3da14b862b9c29b8e8f4ebca3197da4fd388d1a6",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R3/reporter-evidence.json"
+    },
+    {
+      "bytes": 26359,
+      "logical": "operator-R3/run.py",
+      "member": "objects/c011a5b6fde2655d199499593fd2901aab8faff6a4819476b7d89b0511195abf.txt",
+      "sha256": "c011a5b6fde2655d199499593fd2901aab8faff6a4819476b7d89b0511195abf",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R3/run.py"
+    },
+    {
+      "bytes": 7483,
+      "logical": "review/operator-R1-RAW.md",
+      "member": "reviews/review--operator-R1-RAW.md",
+      "sha256": "663dd88ce8703fdb6865722bf71d2a90e800db235ee9f4f43535d9b0ad7103bd",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R1-review-operator-RAW.md"
+    },
+    {
+      "bytes": 5156,
+      "logical": "review/operator-R1-receipt.json",
+      "member": "objects/7c0c08cd17a567311e0bb8d274133f93fcd024d62ae45709d88df50f6122535b.txt",
+      "sha256": "7c0c08cd17a567311e0bb8d274133f93fcd024d62ae45709d88df50f6122535b",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R1-review-operator-receipt.json"
+    },
+    {
+      "bytes": 6402,
+      "logical": "review/operator-R2-RAW.md",
+      "member": "reviews/review--operator-R2-RAW.md",
+      "sha256": "ccdaee3bfcc414dff1e8a7f34261c766edefe0bb4bc9e9ebe7a9c689d6a665a4",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R2-review-operator-RAW.md"
+    },
+    {
+      "bytes": 8623,
+      "logical": "review/operator-R2-receipt.json",
+      "member": "objects/b676ac3dec58036bd7af8af6cb9512503fac504e415a2420312b83471d15ff33.txt",
+      "sha256": "b676ac3dec58036bd7af8af6cb9512503fac504e415a2420312b83471d15ff33",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R2-review-operator-receipt.json"
+    },
+    {
+      "bytes": 5281,
+      "logical": "review/operator-R3-RAW.md",
+      "member": "reviews/review--operator-R3-RAW.md",
+      "sha256": "bca321b4445c2739c458e19f606f0882dcd9fdc1317541e25a934ce7d8eb576d",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R3-review-operator-RAW.md"
+    },
+    {
+      "bytes": 4364,
+      "logical": "review/operator-R3-receipt.json",
+      "member": "objects/1e6bb234a4ee91df1e1d630b6ff6d9a04c5063bd3e374763836f13641642603a.txt",
+      "sha256": "1e6bb234a4ee91df1e1d630b6ff6d9a04c5063bd3e374763836f13641642603a",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-operator-R3-review-operator-receipt.json"
+    },
+    {
+      "bytes": 8471,
+      "logical": "review/source-R1-independent-RAW.md",
+      "member": "reviews/review--source-R1-independent-RAW.md",
+      "sha256": "f4dd9db910e1833e428c94320f9204327318af963ce92bc137149a28afcceaa5",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/reviews/current-policy-summary-04cc28f-R1-independent-review-20261127-RAW.md"
+    },
+    {
+      "bytes": 3962,
+      "logical": "review/source-R1-independent-receipt.json",
+      "member": "objects/00f22b333d95b386ec54ef4c0fd71bc521b9ca9a7f4bd98343bd3ee8f240c515.txt",
+      "sha256": "00f22b333d95b386ec54ef4c0fd71bc521b9ca9a7f4bd98343bd3ee8f240c515",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/reviews/current-policy-summary-04cc28f-R1-independent-review-20261127-receipt.json"
+    },
+    {
+      "bytes": 4454,
+      "logical": "review/source-R1-lifecycle-addendum-RAW.md",
+      "member": "reviews/review--source-R1-lifecycle-addendum-RAW.md",
+      "sha256": "8e5fa8f4efa67f7d91e9f0f48a3dd6bfe8e839cacad0653e279189ab0b4c91fb",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/reviews/current-policy-summary-04cc28f-R1-independent-review-lifecycle-addendum-20261127-RAW.md"
+    },
+    {
+      "bytes": 1794,
+      "logical": "review/source-R1-lifecycle-addendum-receipt.json",
+      "member": "objects/510fdbd78b5ff0233e7eb200bf81238873df8bb92743b2b11c166ee061b64886.txt",
+      "sha256": "510fdbd78b5ff0233e7eb200bf81238873df8bb92743b2b11c166ee061b64886",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/reviews/current-policy-summary-04cc28f-R1-independent-review-lifecycle-addendum-20261127-receipt.json"
+    },
+    {
+      "bytes": 8790,
+      "logical": "review/source-R1-primary-RAW.md",
+      "member": "reviews/review--source-R1-primary-RAW.md",
+      "sha256": "bd6b5a20a05314bf73b609f56d9594036fff631b01e96caa458256506ae0c834",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-R1-review-RAW.md"
+    },
+    {
+      "bytes": 6496,
+      "logical": "review/source-R1-primary-receipt.json",
+      "member": "objects/873c029818284c6e3b3181567ae61fae15533ad8639da1532bf701f2878220e0.txt",
+      "sha256": "873c029818284c6e3b3181567ae61fae15533ad8639da1532bf701f2878220e0",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-R1-review-receipt.json"
+    },
+    {
+      "bytes": 7378,
+      "logical": "review/source-R2-RAW.md",
+      "member": "reviews/review--source-R2-RAW.md",
+      "sha256": "02b76144a2c908b3175e0fdfe9e974787474c91554c102204779581a7d2940d0",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-04cc28f-R2-independent-source-review-RAW.md"
+    },
+    {
+      "bytes": 4963,
+      "logical": "review/source-R2-receipt.json",
+      "member": "objects/972217aab2d1da6dd441f3019d899c7ace47509cfeead2d996fe217592af1957.txt",
+      "sha256": "972217aab2d1da6dd441f3019d899c7ace47509cfeead2d996fe217592af1957",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-04cc28f-R2-independent-review-receipt.json"
+    },
+    {
+      "bytes": 10225,
+      "logical": "review/source-R3-RAW.md",
+      "member": "reviews/review--source-R3-RAW.md",
+      "sha256": "58af353f8ccfcfb8734f92a3abe2eaff26830e86de072ad5e68827c59dca9666",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-52fb312-R3-review-policy-summary-source-r3-RAW.md"
+    },
+    {
+      "bytes": 11685,
+      "logical": "review/source-R3-evidence.json",
+      "member": "objects/ee00ca1e67f8d6e351e271650bc0db8b333b44d664031e59182dd3ea30c43868.txt",
+      "sha256": "ee00ca1e67f8d6e351e271650bc0db8b333b44d664031e59182dd3ea30c43868",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-52fb312-R3-source-review-evidence.json"
+    },
+    {
+      "bytes": 13148,
+      "logical": "review/source-R3-receipt.json",
+      "member": "objects/da683e5916dd454d64b954757021c817c63a0319140b7090533bcd2ef461f348.txt",
+      "sha256": "da683e5916dd454d64b954757021c817c63a0319140b7090533bcd2ef461f348",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-52fb312-R3-review-policy-summary-source-r3-receipt.json"
+    },
+    {
+      "bytes": 4450,
+      "logical": "review/source-R4-RAW.md",
+      "member": "reviews/review--source-R4-RAW.md",
+      "sha256": "f8ec20b4e019fef018882aa026eddfd9026d66e2d89a999e3c8776bcaf5d3439",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-4b6d6d-R4-review-policy-summary-source-r3-RAW.md"
+    },
+    {
+      "bytes": 20775,
+      "logical": "review/source-R4-evidence.json",
+      "member": "objects/dbf84e7df592cbbeada3056c2c3a0db9648683c61ab4ce602582b25572f2dc74.txt",
+      "sha256": "dbf84e7df592cbbeada3056c2c3a0db9648683c61ab4ce602582b25572f2dc74",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-4b6d6d-R4-review-policy-summary-source-r3-evidence.json"
+    },
+    {
+      "bytes": 21794,
+      "logical": "review/source-R4-receipt.json",
+      "member": "objects/c63ae2cf6af084c6d91ee6a833b6c4cab565e166d4ef1ead4d63ce798f4cee24.txt",
+      "sha256": "c63ae2cf6af084c6d91ee6a833b6c4cab565e166d4ef1ead4d63ce798f4cee24",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-4b6d6d-R4-review-policy-summary-source-r3-receipt.json"
+    },
+    {
+      "bytes": 1263,
+      "logical": "source-R1-reference/bundle-manifest.json",
+      "member": "objects/5fb4007c69c9bd66e8a954de8c8b24e88381a621c54cec20a21e9a587ce90047.txt",
+      "sha256": "5fb4007c69c9bd66e8a954de8c8b24e88381a621c54cec20a21e9a587ce90047",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-04cc28f-R1/bundle-manifest.json"
+    },
+    {
+      "bytes": 7966,
+      "logical": "source-R2/README.md",
+      "member": "objects/43440131640a5de3eadede035d97d74fb359f51cfe806f5e9f5f1f39185ea0e0.txt",
+      "sha256": "43440131640a5de3eadede035d97d74fb359f51cfe806f5e9f5f1f39185ea0e0",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-04cc28f-R2/README.md"
+    },
+    {
+      "bytes": 665,
+      "logical": "source-R2/SHA256SUMS",
+      "member": "objects/89c0b59411b7b33d11c5fb294fd888569b391b9d0716662eabfb3bea369876fb.txt",
+      "sha256": "89c0b59411b7b33d11c5fb294fd888569b391b9d0716662eabfb3bea369876fb",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-04cc28f-R2/SHA256SUMS"
+    },
+    {
+      "bytes": 1282,
+      "logical": "source-R2/bundle-manifest.json",
+      "member": "objects/981463e8735f09fd65009ba7625b7c1ff67a6f2367e3c29404171dc96b748d17.txt",
+      "sha256": "981463e8735f09fd65009ba7625b7c1ff67a6f2367e3c29404171dc96b748d17",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-04cc28f-R2/bundle-manifest.json"
+    },
+    {
+      "bytes": 13209,
+      "logical": "source-R2/minimal.patch",
+      "member": "objects/b81d2133d779283c0eae0b5d3e1f6f908bf6014a97194d437a06714b12605431.txt",
+      "sha256": "b81d2133d779283c0eae0b5d3e1f6f908bf6014a97194d437a06714b12605431",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-04cc28f-R2/minimal.patch"
+    },
+    {
+      "bytes": 1786,
+      "logical": "source-R2/mutants.json",
+      "member": "objects/26b1fabc7eaa79227c86314881e4dec51bf31a8bd90e23f0a7d35cff263b1060.txt",
+      "sha256": "26b1fabc7eaa79227c86314881e4dec51bf31a8bd90e23f0a7d35cff263b1060",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-04cc28f-R2/mutants.json"
+    },
+    {
+      "bytes": 239189,
+      "logical": "source-R2/original/packages/polaris-dossier/src/url-run-composed.test.ts",
+      "member": "objects/3b816f6d963758b8bf9c1af58a25bc12a97678ab861d25fa0f5a036b56b56974.txt",
+      "sha256": "3b816f6d963758b8bf9c1af58a25bc12a97678ab861d25fa0f5a036b56b56974",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-04cc28f-R2/original/packages/polaris-dossier/src/url-run-composed.test.ts"
+    },
+    {
+      "bytes": 250066,
+      "logical": "source-R2/resolved/packages/polaris-dossier/src/url-run-composed.test.ts",
+      "member": "objects/2641df695162f6f8f9122cf458ebc09ed22fb0f45c8b756c6c15ed5a3400a8fe.txt",
+      "sha256": "2641df695162f6f8f9122cf458ebc09ed22fb0f45c8b756c6c15ed5a3400a8fe",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-04cc28f-R2/resolved/packages/polaris-dossier/src/url-run-composed.test.ts"
+    },
+    {
+      "bytes": 1357,
+      "logical": "source-R2/source-census.json",
+      "member": "objects/218a4d6cb742cd809513434d1a23b25b0892e0c8c96b637f59a6f90b06bb13b1.txt",
+      "sha256": "218a4d6cb742cd809513434d1a23b25b0892e0c8c96b637f59a6f90b06bb13b1",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-04cc28f-R2/source-census.json"
+    },
+    {
+      "bytes": 4543,
+      "logical": "source-R3/README.md",
+      "member": "objects/481384ca45348f64faa8ce06a2c5197a8c2485e0aa68b4a5c745f2baaf342f04.txt",
+      "sha256": "481384ca45348f64faa8ce06a2c5197a8c2485e0aa68b4a5c745f2baaf342f04",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-52fb312-R3/README.md"
+    },
+    {
+      "bytes": 764,
+      "logical": "source-R3/SHA256SUMS",
+      "member": "objects/aeabeb5d98869d4297a9a4300d42c143dd6c09c555b50f99c2f455d3bd65f904.txt",
+      "sha256": "aeabeb5d98869d4297a9a4300d42c143dd6c09c555b50f99c2f455d3bd65f904",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-52fb312-R3/SHA256SUMS"
+    },
+    {
+      "bytes": 2796,
+      "logical": "source-R3/bundle-manifest.json",
+      "member": "objects/ea6e6cad6706828fd52e8d20dcf034c241c9f42b5572ff346d4b6a9f1826c796.txt",
+      "sha256": "ea6e6cad6706828fd52e8d20dcf034c241c9f42b5572ff346d4b6a9f1826c796",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-52fb312-R3/bundle-manifest.json"
+    },
+    {
+      "bytes": 2519,
+      "logical": "source-R3/failed-typecheck-bindings.json",
+      "member": "objects/e8cbbdc21e1dd25830978c5530832405915fdb9c1f02f8653e368d65bae62720.txt",
+      "sha256": "e8cbbdc21e1dd25830978c5530832405915fdb9c1f02f8653e368d65bae62720",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-52fb312-R3/failed-typecheck-bindings.json"
+    },
+    {
+      "bytes": 13161,
+      "logical": "source-R3/full-from-f4bb.patch",
+      "member": "objects/9592ef3c10eeed6a6590ac4d031e05251233e7072b94d2d1fee45a607993a3dd.txt",
+      "sha256": "9592ef3c10eeed6a6590ac4d031e05251233e7072b94d2d1fee45a607993a3dd",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-52fb312-R3/full-from-f4bb.patch"
+    },
+    {
+      "bytes": 817,
+      "logical": "source-R3/minimal.patch",
+      "member": "objects/bf74e67c963952b1355d2a7655daa1b39a369bb4ea141d0665f46ff6826afcd8.txt",
+      "sha256": "bf74e67c963952b1355d2a7655daa1b39a369bb4ea141d0665f46ff6826afcd8",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-52fb312-R3/minimal.patch"
+    },
+    {
+      "bytes": 1786,
+      "logical": "source-R3/mutants.json",
+      "member": "objects/0cb29ec0242da642d512e17c91c15c32dc4e0479008013dab3607df699af6a4b.txt",
+      "sha256": "0cb29ec0242da642d512e17c91c15c32dc4e0479008013dab3607df699af6a4b",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-52fb312-R3/mutants.json"
+    },
+    {
+      "bytes": 250066,
+      "logical": "source-R3/original/packages/polaris-dossier/src/url-run-composed.test.ts",
+      "member": "objects/2641df695162f6f8f9122cf458ebc09ed22fb0f45c8b756c6c15ed5a3400a8fe.txt",
+      "sha256": "2641df695162f6f8f9122cf458ebc09ed22fb0f45c8b756c6c15ed5a3400a8fe",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-52fb312-R3/original/packages/polaris-dossier/src/url-run-composed.test.ts"
+    },
+    {
+      "bytes": 250018,
+      "logical": "source-R3/resolved/packages/polaris-dossier/src/url-run-composed.test.ts",
+      "member": "objects/ddf774831e7db90c00b08db496ff791dc209744c3bf0b6eb095968a8a3578d4f.txt",
+      "sha256": "ddf774831e7db90c00b08db496ff791dc209744c3bf0b6eb095968a8a3578d4f",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-52fb312-R3/resolved/packages/polaris-dossier/src/url-run-composed.test.ts"
+    },
+    {
+      "bytes": 4395,
+      "logical": "source-R4/README.md",
+      "member": "objects/506eb5fc74838f351078fdd5984dcdc835943b45b6a338bd1b77e7dbd257d87c.txt",
+      "sha256": "506eb5fc74838f351078fdd5984dcdc835943b45b6a338bd1b77e7dbd257d87c",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-4b6d6d-R4/README.md"
+    },
+    {
+      "bytes": 676,
+      "logical": "source-R4/SHA256SUMS",
+      "member": "objects/b4cede762b5ca77388ee6e6b75e1b114428eaffe63b930828dd453e4a0fd33c9.txt",
+      "sha256": "b4cede762b5ca77388ee6e6b75e1b114428eaffe63b930828dd453e4a0fd33c9",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-4b6d6d-R4/SHA256SUMS"
+    },
+    {
+      "bytes": 2324,
+      "logical": "source-R4/bundle-manifest.json",
+      "member": "objects/7a49173484e2ba9bb07441e89fa32e19a4a770f106141fa2f0895e11fcdf8af5.txt",
+      "sha256": "7a49173484e2ba9bb07441e89fa32e19a4a770f106141fa2f0895e11fcdf8af5",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-4b6d6d-R4/bundle-manifest.json"
+    },
+    {
+      "bytes": 706,
+      "logical": "source-R4/minimal.patch",
+      "member": "objects/d6be58e1b7ad63a4629e1718ae33d0cdd908cf7f3231f364e29d8d958fd54901.txt",
+      "sha256": "d6be58e1b7ad63a4629e1718ae33d0cdd908cf7f3231f364e29d8d958fd54901",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-4b6d6d-R4/minimal.patch"
+    },
+    {
+      "bytes": 1845,
+      "logical": "source-R4/mutants.json",
+      "member": "objects/901fbfa4e722053988bfccf2b5033635a348eb0fee92b0b9fd8aa894a85d0d64.txt",
+      "sha256": "901fbfa4e722053988bfccf2b5033635a348eb0fee92b0b9fd8aa894a85d0d64",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-4b6d6d-R4/mutants.json"
+    },
+    {
+      "bytes": 250018,
+      "logical": "source-R4/original/packages/polaris-dossier/src/url-run-composed.test.ts",
+      "member": "objects/ddf774831e7db90c00b08db496ff791dc209744c3bf0b6eb095968a8a3578d4f.txt",
+      "sha256": "ddf774831e7db90c00b08db496ff791dc209744c3bf0b6eb095968a8a3578d4f",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-4b6d6d-R4/original/packages/polaris-dossier/src/url-run-composed.test.ts"
+    },
+    {
+      "bytes": 250013,
+      "logical": "source-R4/resolved/packages/polaris-dossier/src/url-run-composed.test.ts",
+      "member": "objects/33ef69ecc93cea5b68699c960e954582d3c3dea924a74de5a60df882e5f657be.txt",
+      "sha256": "33ef69ecc93cea5b68699c960e954582d3c3dea924a74de5a60df882e5f657be",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-4b6d6d-R4/resolved/packages/polaris-dossier/src/url-run-composed.test.ts"
+    },
+    {
+      "bytes": 2579,
+      "logical": "source-R4/survived-mutant-bindings.json",
+      "member": "objects/f441c22265a05c36099f46494df1018889683dd25885442877f7b912eaa1e5bf.txt",
+      "sha256": "f441c22265a05c36099f46494df1018889683dd25885442877f7b912eaa1e5bf",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-4b6d6d-R4/survived-mutant-bindings.json"
+    },
+    {
+      "bytes": 1944904,
+      "logical": "survived-4b6d/after.json",
+      "member": "objects/251fe9680ae46fcb21a609ea1715972abc79dfc7f410759c088f3f36b74abd3a.txt",
+      "sha256": "251fe9680ae46fcb21a609ea1715972abc79dfc7f410759c088f3f36b74abd3a",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/after.json"
+    },
+    {
+      "bytes": 485,
+      "logical": "survived-4b6d/baseline.log",
+      "member": "objects/ff33aa8d0efa191340c3bfb257cfc82873381bf0c8c575e156c8ed2370b8aa36.txt",
+      "sha256": "ff33aa8d0efa191340c3bfb257cfc82873381bf0c8c575e156c8ed2370b8aa36",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/baseline.log"
+    },
+    {
+      "bytes": 3142,
+      "logical": "survived-4b6d/baseline.vitest.json",
+      "member": "objects/be4aac4c569c79199390598317bb16518ded27fb913269b1cf73783b1331ce5e.txt",
+      "sha256": "be4aac4c569c79199390598317bb16518ded27fb913269b1cf73783b1331ce5e",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/baseline.vitest.json"
+    },
+    {
+      "bytes": 1944904,
+      "logical": "survived-4b6d/before.json",
+      "member": "objects/eb8da83d6f302e3d302cc40ee8a4d91fe61a9cd6c30d0db69cfcd59dd6841e41.txt",
+      "sha256": "eb8da83d6f302e3d302cc40ee8a4d91fe61a9cd6c30d0db69cfcd59dd6841e41",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/before.json"
+    },
+    {
+      "bytes": 639,
+      "logical": "survived-4b6d/drop-rejection-classification-definition.json",
+      "member": "objects/567ee3744d5fbec9ecfe51e07014ddd1bb2de997297c857e837d709b99233bcd.txt",
+      "sha256": "567ee3744d5fbec9ecfe51e07014ddd1bb2de997297c857e837d709b99233bcd",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/drop-rejection-classification-definition.json"
+    },
+    {
+      "bytes": 2685,
+      "logical": "survived-4b6d/drop-rejection-classification.log",
+      "member": "objects/88e8879e7a663cfda4060b7c576dd071ef0d31eb7976361570a7aa7e9b4bc694.txt",
+      "sha256": "88e8879e7a663cfda4060b7c576dd071ef0d31eb7976361570a7aa7e9b4bc694",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/drop-rejection-classification.log"
+    },
+    {
+      "bytes": 3502,
+      "logical": "survived-4b6d/drop-rejection-classification.vitest.json",
+      "member": "objects/ded2fe8eb849f76bbcfff63a572f843de2fbb3c238caf19a8fd0a8d88672fb1b.txt",
+      "sha256": "ded2fe8eb849f76bbcfff63a572f843de2fbb3c238caf19a8fd0a8d88672fb1b",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/drop-rejection-classification.vitest.json"
+    },
+    {
+      "bytes": 612,
+      "logical": "survived-4b6d/lost-prior-observer-after-pause-definition.json",
+      "member": "objects/95e1294dfbb2b48ed2ff021ea70079ac219b96c68b147fceafbe0642e09499ac.txt",
+      "sha256": "95e1294dfbb2b48ed2ff021ea70079ac219b96c68b147fceafbe0642e09499ac",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/lost-prior-observer-after-pause-definition.json"
+    },
+    {
+      "bytes": 509,
+      "logical": "survived-4b6d/lost-prior-observer-after-pause.log",
+      "member": "objects/a904e6cd96696dbd4ed5f6321ac08068455ca408d05f52da36909f01045efe76.txt",
+      "sha256": "a904e6cd96696dbd4ed5f6321ac08068455ca408d05f52da36909f01045efe76",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/lost-prior-observer-after-pause.log"
+    },
+    {
+      "bytes": 3140,
+      "logical": "survived-4b6d/lost-prior-observer-after-pause.vitest.json",
+      "member": "objects/06b19a39307c9dd52f7a4866cf19638685d182297060d4d868b74d27f4953d45.txt",
+      "sha256": "06b19a39307c9dd52f7a4866cf19638685d182297060d4d868b74d27f4953d45",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/lost-prior-observer-after-pause.vitest.json"
+    },
+    {
+      "bytes": 1786,
+      "logical": "survived-4b6d/mutants.json",
+      "member": "objects/0cb29ec0242da642d512e17c91c15c32dc4e0479008013dab3607df699af6a4b.txt",
+      "sha256": "0cb29ec0242da642d512e17c91c15c32dc4e0479008013dab3607df699af6a4b",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/mutants.json"
+    },
+    {
+      "bytes": 660,
+      "logical": "survived-4b6d/outside-scope-clock-definition.json",
+      "member": "objects/df4b04fbcd124cc635cc97122e432a8c0714fd324389a041542e406f853ba94a.txt",
+      "sha256": "df4b04fbcd124cc635cc97122e432a8c0714fd324389a041542e406f853ba94a",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/outside-scope-clock-definition.json"
+    },
+    {
+      "bytes": 2416,
+      "logical": "survived-4b6d/outside-scope-clock.log",
+      "member": "objects/8f77bdd9b82dc099515f8608ce98a878636fd00332da39b904886036c58c2a01.txt",
+      "sha256": "8f77bdd9b82dc099515f8608ce98a878636fd00332da39b904886036c58c2a01",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/outside-scope-clock.log"
+    },
+    {
+      "bytes": 3441,
+      "logical": "survived-4b6d/outside-scope-clock.vitest.json",
+      "member": "objects/7af92d3d52b533b8618e06c01f21c81522d6774093a050384c8912117aba1e75.txt",
+      "sha256": "7af92d3d52b533b8618e06c01f21c81522d6774093a050384c8912117aba1e75",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/outside-scope-clock.vitest.json"
+    },
+    {
+      "bytes": 15825,
+      "logical": "survived-4b6d/progress.json",
+      "member": "objects/7409982a607724af35651a404088310cd8bb76a628c996bfda3dfd96694bbb3b.txt",
+      "sha256": "7409982a607724af35651a404088310cd8bb76a628c996bfda3dfd96694bbb3b",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/progress.json"
+    },
+    {
+      "bytes": 747,
+      "logical": "survived-4b6d/replace-original-promise-definition.json",
+      "member": "objects/42f0d9332a595cf9b25a456d5b2e1c827dbd9657f00af489948839064d2c944f.txt",
+      "sha256": "42f0d9332a595cf9b25a456d5b2e1c827dbd9657f00af489948839064d2c944f",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/replace-original-promise-definition.json"
+    },
+    {
+      "bytes": 2813,
+      "logical": "survived-4b6d/replace-original-promise.log",
+      "member": "objects/a6032287f0253d0d3e68c242953b6b707c8dfae285bdc7543882fc320e63d303.txt",
+      "sha256": "a6032287f0253d0d3e68c242953b6b707c8dfae285bdc7543882fc320e63d303",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/replace-original-promise.log"
+    },
+    {
+      "bytes": 3612,
+      "logical": "survived-4b6d/replace-original-promise.vitest.json",
+      "member": "objects/588d451943fb0e56e09d54fe25c50898d93f18244fa263a019014ab0fce8c775.txt",
+      "sha256": "588d451943fb0e56e09d54fe25c50898d93f18244fa263a019014ab0fce8c775",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/replace-original-promise.vitest.json"
+    },
+    {
+      "bytes": 6623,
+      "logical": "survived-4b6d/root-reconciliation.json",
+      "member": "objects/31e5fb5fef679750c67f11ab96391d5dbff40b36e04e58141dde6a07f116ee2f.txt",
+      "sha256": "31e5fb5fef679750c67f11ab96391d5dbff40b36e04e58141dde6a07f116ee2f",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/root-current-policy-summary-4b6d-focused-reconciliation.json"
+    },
+    {
+      "bytes": 465,
+      "logical": "survived-4b6d/selection.json",
+      "member": "objects/ca4984da959fba2998f185c22df39a0203e6e4a656fa7d04dd08a93fd9a639c4.txt",
+      "sha256": "ca4984da959fba2998f185c22df39a0203e6e4a656fa7d04dd08a93fd9a639c4",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/selection.json"
+    },
+    {
+      "bytes": 16210,
+      "logical": "survived-4b6d/terminal.json",
+      "member": "objects/1861b68940e5ea1e80b0fc86d0b0d355141b261019174f83ba79b3f907dc016b.txt",
+      "sha256": "1861b68940e5ea1e80b0fc86d0b0d355141b261019174f83ba79b3f907dc016b",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/terminal.json"
+    },
+    {
+      "bytes": 37,
+      "logical": "survived-4b6d/typecheck.log",
+      "member": "objects/396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696.txt",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+      "source": "/home/orca/.tmp/f3-native-admission-fixes/current-policy-summary-focused-4b6d6d-2/typecheck.log"
+    }
+  ],
+  "scopedDiagnosticAcceptance": true,
+  "subject": "f8225eff440d618349464d31f83f0231eed10f71",
+  "tree": "cfb4cf64f254fa7737fade99b0a92216a1a1db40"
+}

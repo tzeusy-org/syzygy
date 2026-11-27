@@ -1,0 +1,11 @@
+{
+  "asOf": "2026-11-27T03:35:22.117817+00:00",
+  "subject": "f8225eff440d618349464d31f83f0231eed10f71",
+  "archiveSha256": "4245418420021281a644e62007cc11355496135809a55bca4682b727bb8bb7c6",
+  "archiveBytes": 1626987,
+  "memberCount": 117,
+  "membersRootVerified": 117,
+  "logicalInputsDualVerified": 123,
+  "scopedRootAcceptance": true,
+  "scope": "Diagnostic evidence preservation and actual focused PASS only; original F3 local acceptance Unknown"
+}
