@@ -12645,7 +12645,7 @@ def migpar_cases(tmp, base, witnesses, failures):
         return
 
     def record(name, rel, old, new, expected, found, held, baseline=False):
-        mutant = f"migpar-floor-{name}"
+        mutant = f"migration-parity-{name}"
         witnesses.append({"mutant": mutant, "path": rel, "old": old, "new": new,
                           "expected": expected, "failed": found,
                           "outcome": ("held" if baseline else "killed") if held else "SURVIVED"})
