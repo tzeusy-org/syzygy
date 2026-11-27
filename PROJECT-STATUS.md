@@ -329,6 +329,12 @@ It replaces REQ-polaris-generation-034 from version 2.42, the test-name recogniz
 and v11 migration keeps its parity only where the migrated model fits the v12 bounds of 200 elements and 400 relationships.
 
 With the migration bounds version effective, Polaris has 39 requirements and 645 scenarios.
+
+[Imports corroboration amendment 2.44](openspec/changes/dossier-imports-corroboration) is agent-adopted in A-273.
+It replaces REQ-polaris-generation-034 from version 2.43, the migration bounds (298 to 301 scenarios): an `imports`
+arrow that a stored lexical import fact joins is corroborated, never Observed, and every other one stays Unknown.
+
+With the imports corroboration version effective, Polaris has 39 requirements and 648 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
