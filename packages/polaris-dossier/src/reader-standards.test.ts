@@ -225,3 +225,68 @@ describe('reader advice: the worth-knowing count (version 2.26)', () => {
     }
   });
 });
+
+// Version 2.37 (syzygy-5dhm.43): the choice floor, on a draft with the worth-knowing form (schema v13 today). Literals from the specification.
+describe('reader advice: the choice floor (version 2.37)', () => {
+  const V13 = 'polaris-dossier-local-draft-v13';
+  const cite = (path: string) => ({ id: `c-${path}`, path, startLine: 1, endLine: 1 });
+  const claim = (id: string, path: string) => ({ id, label: 'inferred', text: 'w', citations: [cite(path)] });
+  const sec = (id: string, path: string) => ({ id, title: id, paragraphs: [claim(`${id}-p`, path)] });
+  const item = (id: string, path: string, label = 'inferred') => (label === 'inferred'
+    ? { id, label, statement: 's', scope: 'here', citations: [cite(path)] } : { id, label, reason: 'not-found', statement: 's', scope: 'here', citations: [] });
+  const doc = (choices: unknown[], tradeOffs: unknown[], poles?: unknown[], schemaVersion = V13) => ({
+    schemaVersion, deepDives: [], diagrams: [], understanding: { choices, tradeOffs },
+    sections: [sec('a', 'src/a.c'), sec('b', 'src/b.c'), { id: 'c', title: 'c', paragraphs: [{ kind: 'code', id: 'x', citation: cite('src/c.c') }] }],
+    ...(poles === undefined ? {} : { poles, whySection: 'a' }) });
+  const POLES = [{ label: 'Core', sections: ['a'] }, { label: 'Edge', sections: ['b', 'c'] }];
+  const TWO = 'the Pole "Core" has 2 choices or trade-offs on record, fewer than 3: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s `choices` or `tradeOffs` citing a file its sections cite; never record one its source does not show';
+
+  it('advises a Pole with two choices or trade-offs on record and not one with three', () => {
+    const advice = readerAdvice(doc([item('ch1', 'src/a.c'), item('ch2', 'src/b.c')], [item('t1', 'src/a.c'), item('t2', 'src/b.c'), item('t3', 'src/c.c')], POLES));
+    expect(advice.choiceFloor).toEqual([{ at: '$.poles[0]', onRecord: 2, detail: TWO }]);
+    expect(advice.advisories).toEqual(readerAdvice(doc([], [], POLES, 'polaris-dossier-local-draft-v10')).advisories);
+  });
+
+  it('counts only Inferred items, by a file the Pole\'s sections cite, each section in the first Pole naming it', () => {
+    const one = readerAdvice(doc([item('ch1', 'src/a.c'), item('u1', '', 'unknown'), item('o1', 'docs/other.md')], [], [{ label: 'Core', sections: ['a'] }, { label: 'Again', sections: ['a'] }]));
+    expect(one.choiceFloor).toEqual([
+      { at: '$.poles[0]', onRecord: 1, detail: 'the Pole "Core" has 1 choice or trade-off on record, fewer than 3: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s `choices` or `tradeOffs` citing a file its sections cite; never record one its source does not show' },
+      { at: '$.poles[1]', onRecord: 0, detail: 'the Pole "Again" has 0 choices or trade-offs on record, fewer than 3: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s `choices` or `tradeOffs` citing a file its sections cite; never record one its source does not show' },
+    ]);
+  });
+
+  it('attributes by any citation of an item, by a citation at any depth of a section, and by the Pole\'s deep dives', () => {
+    const twoCites = { ...item('ch1', 'docs/x.md'), citations: [cite('docs/x.md'), cite('src/a.c')] };
+    const nested = { id: 'n', title: 'n', paragraphs: [{ ...claim('n-p', 'docs/y.md'), children: [claim('n-c', 'src/nested.c')] },
+      { kind: 'steps', id: 'st', items: [claim('st-1', 'src/steps.c'), claim('st-2', 'docs/y.md')] }] };
+    // Each of the three is needed: the second citation of ch1, the nested child citing src/nested.c, and the deep dive citing src/dive.c.
+    const base = doc([twoCites, item('ch2', 'src/nested.c')], [item('t1', 'src/dive.c')], [{ label: 'Core', sections: ['a', 'n'] }]);
+    const sections: unknown[] = [...base.sections, nested];
+    const draft = { ...base, sections,
+      deepDives: [{ id: 'dd', title: 'dd', sectionId: 'a', paragraphs: [claim('dd-p', 'src/dive.c')] }, { id: 'other', title: 'o', sectionId: 'b', paragraphs: [claim('o-p', 'src/other.c')] }] };
+    expect(readerAdvice(draft).choiceFloor).toEqual([]);
+    const TWO_CORE = 'the Pole "Core" has 2 choices or trade-offs on record, fewer than 3: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s `choices` or `tradeOffs` citing a file its sections cite; never record one its source does not show';
+    expect(readerAdvice({ ...draft, deepDives: [draft.deepDives[1]] }).choiceFloor).toEqual([{ at: '$.poles[0]', onRecord: 2, detail: TWO_CORE }]);
+    expect(readerAdvice({ ...draft, understanding: { choices: [item('ch1', 'docs/x.md'), item('ch2', 'src/nested.c')], tradeOffs: [item('t1', 'src/dive.c')] } }).choiceFloor)
+      .toEqual([{ at: '$.poles[0]', onRecord: 2, detail: TWO_CORE }]);
+    expect(readerAdvice({ ...draft, sections: draft.sections.slice(0, 3) }).choiceFloor).toEqual([{ at: '$.poles[0]', onRecord: 2, detail: TWO_CORE }]);
+    // A deep dive of a section outside the Pole attributes nothing to it.
+    expect(readerAdvice({ ...draft, understanding: { choices: [twoCites, item('ch2', 'src/nested.c')], tradeOffs: [item('t9', 'src/other.c')] } }).choiceFloor)
+      .toEqual([{ at: '$.poles[0]', onRecord: 2, detail: TWO_CORE }]);
+    // A steps item is nested too.
+    expect(readerAdvice({ ...draft, understanding: { choices: [twoCites, item('ch3', 'src/steps.c')], tradeOffs: [item('t1', 'src/dive.c')] } }).choiceFloor).toEqual([]);
+  });
+
+  it('counts every Inferred item for a draft with no Poles', () => {
+    // An Unknown item is not on record even where nothing attributes it: a draft with no Poles counts the Inferred items alone.
+    expect(readerAdvice(doc([item('ch1', 'x/1'), item('ch2', 'x/2'), item('u1', '', 'unknown')], [])).choiceFloor).toEqual([{ at: '$.sections', onRecord: 2,
+      detail: 'the draft has 2 choices or trade-offs on record, fewer than 3: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s `choices` or `tradeOffs`; never record one its source does not show' }]);
+    expect(readerAdvice(doc([item('ch1', 'x/1'), item('ch2', 'x/2')], [item('t1', 'x/3')])).choiceFloor).toEqual([]);
+  });
+
+  it('gives an earlier draft no choice-floor member at all', () => {
+    for (const version of ['polaris-dossier-local-draft-v12', 'polaris-dossier-local-draft-v10', 'polaris-dossier-local-draft-v2']) {
+      expect(Object.keys(readerAdvice(doc([], [], POLES, version))), version).toEqual(['standards', 'note', 'advisories']);
+    }
+  });
+});
