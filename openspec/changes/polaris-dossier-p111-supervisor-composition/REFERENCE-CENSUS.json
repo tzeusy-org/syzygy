@@ -1865,5 +1865,33 @@
       "openspec/specs/README.md"
     ],
     "settlement": "A reference or its absence does not settle consumption. Review each unresolved path using its effective requirement or consumer contract against the exact version binding before claiming full reverse dependency coverage."
-  }
+  },
+  "sweepActor": "syzygy-zwja specification author",
+  "namedConsumers": [
+    {
+      "consumer": "REQ-polaris-generation-033",
+      "actor": "syzygy-zwja specification author",
+      "evidence": "Inspect the actual A-51 channel and A-304 question-file predicates for effect. Preserve both through the proposed 048 projection."
+    },
+    {
+      "consumer": "REQ-polaris-generation-035",
+      "actor": "syzygy-zwja specification author",
+      "evidence": "Compare A-305 scoped coverage and role-specific staged and terminal eligibility with each new attended outcome."
+    },
+    {
+      "consumer": "REQ-polaris-generation-047",
+      "actor": "syzygy-zwja specification author",
+      "evidence": "The attended projection receives the already selected exact pin; acquisition gates and retained supported forms carry forward."
+    },
+    {
+      "consumer": "OpenSpec route, current status and dependency projection",
+      "actor": "syzygy-zwja integration author",
+      "evidence": "Re-run record, index and dependency consumers on the actual protected version. The candidate projection does not publish an effective scope."
+    },
+    {
+      "consumer": "syzygy-iq01 and syzygy-bc0g",
+      "actor": "Each record holder after syzygy-zwja supplies the protected exact scope",
+      "evidence": "Resolve remaining gate and implementation requirements independently against the actual effective version."
+    }
+  ]
 }
