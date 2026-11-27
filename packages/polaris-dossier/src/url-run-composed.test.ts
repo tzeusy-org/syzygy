@@ -1227,8 +1227,8 @@ function observeCurrentPolicy<S extends CurrentPolicyTrace, T extends boolean | 
   } catch (error) { settle(true); throw error; }
 }
 
-/** Nested Vitest spies restore the underlying original, not the prior spy.
- * Reinstall that exact prior descriptor only while this pause still owns it. */
+/** Preserve this pause's exact prior export descriptor while it still owns it.
+ * Vitest's SSR accessor restore already preserves its prior getter. */
 function restorePausedPolicyCurrent(pause: { mockRestore(): unknown },
   previous: PropertyDescriptor): void {
   if (!Object.is(policySnapshot.committedUrlPoliciesCurrentAsync, pause)) return;
