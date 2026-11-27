@@ -1,12 +1,13 @@
 import * as fs from 'node:fs';
 import { groupsOf } from './containment.js';
+import { modelIndex } from './system-model.js';
 import * as path from 'node:path';
 import { BoundedJsonError, bodyLines, parseBoundedJson, retainedWithMarkers, spanTouchesWithheld } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectCitations, declaredSessionId, nextRevision } from './check.js';
 import { NotARegularFileError, isCheckRecordOf, readBoundedFile, readCheckRecord } from './check-record-read.js';
 import { DRAFT_MAX_BYTES } from './check-model.js';
-import { DEFICIENT_SUBJECTS, GROUPS_FIELD, UNIT_FIELD, VERDICT_QUOTATION_FORM, hasHeroForm, hasRelationForm, hasWithheldHeroIdentity, membersOfKind, verdictSchemaDocument } from './draft-schema.js';
+import { DEFICIENT_SUBJECTS, GROUPS_FIELD, UNIT_FIELD, VERDICT_QUOTATION_FORM, hasHeroForm, hasModelForm, hasRelationForm, hasWithheldHeroIdentity, membersOfKind, verdictSchemaDocument } from './draft-schema.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { BLOB_MODES, GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { INVENTORY_INFERRED, errno, inventoryOfRecord, type OpenedRun } from './inventory.js';
@@ -75,6 +76,13 @@ function withheldDiagramUnits(draft: Readonly<Record<string, unknown>>, screen: 
     // A v11 containment's groups carry a node's unit at every level (version 2.23).
     const kind = membersOfKind(diagram['kind'], draft['schemaVersion'])?.[0];
     const holders = kind === 'nodes' ? list(diagram['nodes']) : kind === GROUPS_FIELD ? groupsOf(diagram, i).map(({ group }) => group) : [];
+    screenUnits(holders);
+  });
+  // A v12 model's elements carry a node's unit (version 2.24).
+  if (hasModelForm(draft['schemaVersion'])) screenUnits(modelIndex(draft).elements.map(({ element }) => element));
+  return withheld;
+
+  function screenUnits(holders: readonly unknown[]): void {
     for (const node of holders) {
       if (!isRecord(node) || !Object.hasOwn(node, UNIT_FIELD)) continue;
       const unit = unitOf(node[UNIT_FIELD]);
@@ -83,8 +91,7 @@ function withheldDiagramUnits(draft: Readonly<Record<string, unknown>>, screen: 
         withheld.add(node);
       }
     }
-  });
-  return withheld;
+  }
 }
 
 /** Build the fidelity packet from the current frozen subject, reading every cited span now. Pure of the stored packet: a packet on disk

@@ -2,7 +2,7 @@
 
 ## Predecessor
 
-[Observed] REQ-polaris-generation-034 v2.38, the migration parity (syzygy-3efd.85), at `a74a738b565ed0971371649d077a521b0914c779`, `openspec/changes/dossier-migration-parity/proposed/polaris-generation/spec.md`, SHA-256 `e37ca0fc3053302a13ccb0c2ad87c990cdb887fe275568eb9a707425396682f4`, 266 scenario headings. It succeeds v2.37, the choice floor (A-336), and is the effective REQ-034 on `origin/main`. This change was first built as v2.38 over the choice floor; migration parity took that number first, so it was rebuilt as v2.40 (v2.39 is held by the session-usage change to REQ-033).
+[Observed] REQ-polaris-generation-034 v2.39, the import facts (syzygy-3efd.60), at `79073f82f505783b28b045c8134702e7bdabbacf`, `openspec/changes/dossier-import-facts/proposed/polaris-generation/spec.md`, SHA-256 `9502229052a3b7da3880b4062e54141681a2d01e09163b8df24c2aab20e479fb`, 278 scenario headings. It succeeds v2.38, the migration parity (A-269), and is the effective REQ-034 on `origin/main`. This change was first built as v2.38 over the choice floor; migration parity took 2.38 and import facts 2.39 first, so it was rebuilt by its scripts as v2.40 over import facts.
 
 ## Amended in place
 

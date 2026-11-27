@@ -933,6 +933,33 @@ it('screens a v11 containment\'s group units as a graph node\'s, at every level'
   expect([groups[0].unit, groups[0].children[0].unit, groups[0].children[0].children[0].unit]).toEqual([{ kind: 'top-level-directory', path: 'src' }, undefined, undefined]);
 });
 
+it('screens a v12 model\'s element units as a graph node\'s', async () => {
+  const hiddenPath = `${BOTH_PATH}/package.json`;
+  const hiddenName = BOTH_PATH.split('/')[1]!;
+  const element = (id: string, type: string, unit: Doc, parent?: string): Doc =>
+    ({ id, label: `Element ${id}`, type, epistemic: 'inferred', citations: [cite(`c-${id}`)], unit, ...(parent === undefined ? {} : { parent }) });
+  const run = await prepared(undefined, (d) => {
+    d.schemaVersion = 'polaris-dossier-local-draft-v12';
+    d.thesisBasis = 'stated';
+    d.hero = { omitted: { id: 'hero-why', label: 'inferred', basis: 'source', text: 'No one figure leads.', citations: [cite('c-hero')], quotations: [] } };
+    d.model = { elements: [
+      element('g0', 'directory', { kind: 'top-level-directory', path: 'src' }),
+      element('g1', 'package', { kind: 'package-manifest', path: hiddenPath }, 'g0'),
+      element('g2', 'external', { kind: 'dependency-name', name: hiddenName }, 'g1'),
+    ], relationships: [] };
+    d.diagrams = [{
+      id: 'parts', title: 'Project parts', kind: 'containment', relationship: 'What sits inside what.',
+      home: { kind: 'section', target: 'core-ideas' }, disposition: { kind: 'produced', assetIds: ['parts'] }, view: { elements: ['g0', 'g1', 'g2'] },
+    }];
+  });
+  const built = await buildFidelityPacket(await opened(run), deps());
+  if (!built.ok) throw new Error(built.reason);
+  expect(built.bytes.includes(hiddenName)).toBe(false);
+  const packet = JSON.parse(built.bytes);
+  expect(packet.draft.withheldDiagramUnits).toBe(2);
+  expect(packet.draft.document.model.elements.map((e: Doc) => e.unit)).toEqual([{ kind: 'top-level-directory', path: 'src' }, undefined, undefined]);
+});
+
 describe('a cited path both denied and secret-matching in the fidelity packet', () => {
   it('withholds the path in both the span and the copy of the draft, preserving the denied-path outcome', async () => {
     const run = await prepared(undefined, (d) => { d['unresolved'] = [{ id: 'q0', question: 'Why?', reason: 'Not stated.', citations: [cite('c-q0', BOTH_PATH, 1, 1)] }]; });
