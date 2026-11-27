@@ -1,0 +1,111 @@
+{
+  "composed_spec_sha256": "a7596452f408d0f29efe7375e4c8e6a870010f0bdace58025642d4db942691a7",
+  "coverage": {
+    "accepted_clauses": 325,
+    "accepted_clauses_sha256": "be108a07d6bead5d880a08988803be95c940c38b2abe7e7f8d2fa806c166dbef",
+    "predecessor": {
+      "consequences": 86,
+      "covered": 82,
+      "mapped_contracts": 40,
+      "other": 1,
+      "unknown": 3,
+      "unmapped_contracts": 285
+    },
+    "retained_consent_rows": 21,
+    "signed_baseline_literal": {
+      "consequences": 66,
+      "covered": 63,
+      "other": 0,
+      "unknown": 3
+    },
+    "successor": {
+      "consequences": 87,
+      "covered": 83,
+      "mapped_contracts": 41,
+      "other": 1,
+      "unknown": 3,
+      "unmapped_contracts": 284
+    }
+  },
+  "dependencies": {
+    "contracts": [
+      "RFC1-1",
+      "RFC1-10",
+      "RFC1-2",
+      "RFC1-21",
+      "RFC1-22",
+      "RFC1-27",
+      "RFC1-3",
+      "RFC1-4",
+      "RFC1-9",
+      "RFC2-19(a)",
+      "RFC2-23",
+      "RFC2-24",
+      "RFC3-1",
+      "RFC3-16",
+      "RFC3-16(a)",
+      "RFC3-16(b)",
+      "RFC3-16(c)",
+      "RFC3-2",
+      "RFC3-3",
+      "RFC3-30",
+      "RFC3-4",
+      "RFC3-5",
+      "RFC3-6",
+      "RFC3-7",
+      "RFC3-9",
+      "RFC5-3",
+      "RFC6-13",
+      "RFC6-14",
+      "RFC6-15",
+      "RFC6-16",
+      "RFC6-17",
+      "RFC6-18",
+      "RFC6-19",
+      "RFC6-22",
+      "RFC6-23",
+      "RFC6-26",
+      "RFC6-7",
+      "RFC7-33",
+      "RFC7-34",
+      "RFC7-39",
+      "RFC7-40"
+    ],
+    "decisions": [
+      "P-38-ruling-2026-08-16 (decisions/HUMAN-ENTRY-DECISION.md)",
+      "SDR-12",
+      "SDR-34",
+      "SDR-35",
+      "SDR-36"
+    ],
+    "doctrine": [
+      "SEC-4",
+      "VIS-1",
+      "VIS-2",
+      "VIS-3",
+      "VIS-4",
+      "VIS-5",
+      "VIS-7"
+    ],
+    "parent_requirements": [],
+    "policies": [],
+    "topology": []
+  },
+  "kind": "prospective-cap1-root-adjudication",
+  "predecessor_sha256": "33a3e8d3a5e4ad427aa93cb350a557dd746ce527a946306e7e89b4c65e390ddb",
+  "requirement_count": 42,
+  "scenario_count": 57,
+  "source_files": {
+    ".syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md": "edf7538687997c9199f5155973332247d6a44ddce356480329c0886e3375d3be",
+    ".syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md": "84350c1fc0d066fb7f1d41f0e07e959ff55329a799273e10d4c71debfc05de20",
+    ".syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md": "edf7538687997c9199f5155973332247d6a44ddce356480329c0886e3375d3be",
+    ".syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md": "84350c1fc0d066fb7f1d41f0e07e959ff55329a799273e10d4c71debfc05de20",
+    "openspec/changes/cap1-root-adjudication/CONTRACT-COVERAGE.md": "480abb4ea4796e19ff38ecda02596aeafe13e784c8480e7ea6f83eb2d322fa14",
+    "openspec/changes/cap1-root-adjudication/proposed/project-registration-and-honest-shape-visibility/spec.md": "493c6a8c4dbb27a9c04c1fca3b6c07e9de0df74e68912829d205ed9a01accd4e",
+    "openspec/changes/cap1-trusted-bootstrap-consent/CONTRACT-COVERAGE.md": "972ab4b306999104327de27e1af3a2ee5e94fb38c08e75c25e68c3d9065dae45",
+    "openspec/changes/cap1-trusted-bootstrap-consent/GOVERNING-DEPENDENCIES.json": "fb96db1a5e04167bfd8d25f4580be96ad506d556f70ed2f34f1900ccc2df02d8",
+    "openspec/changes/cap1-trusted-bootstrap-consent/specs/project-registration-and-honest-shape-visibility/spec.md": "359ff741742902f0b07bbf1b4ec9aa997d17145cd56805fb49d6e683a12776e7",
+    "openspec/changes/project-registration-and-honest-shape-visibility/CONTRACT-COVERAGE.md": "15431d8ba1fe25a61e4dc2713c4d51fad1cf6d25ef7a9103cc616265102289c9",
+    "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md": "65b66c913cd2650881a9df8cb34a3c63b3f518041e83f45d2451980d9f1d0448"
+  }
+}
