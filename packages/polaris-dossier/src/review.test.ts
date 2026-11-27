@@ -908,6 +908,31 @@ it('screens graph units and citation paths together while preserving frozen bind
   expect(frozenNode.citations[0].path === BOTH_PATH).toBe(true);
 });
 
+it('screens a v11 containment\'s group units as a graph node\'s, at every level', async () => {
+  const hiddenPath = `${BOTH_PATH}/package.json`;
+  const hiddenName = BOTH_PATH.split('/')[1]!;
+  const group = (id: string, unit: Doc, children: Doc[]): Doc => ({ id, label: `Group ${id}`, epistemic: 'inferred', citations: [cite(`c-${id}`)], unit, children });
+  const run = await prepared(undefined, (d) => {
+    d.schemaVersion = 'polaris-dossier-local-draft-v11';
+    d.thesisBasis = 'stated';
+    d.hero = { omitted: { id: 'hero-why', label: 'inferred', basis: 'source', text: 'No one figure leads.', citations: [cite('c-hero')], quotations: [] } };
+    d.diagrams = [{
+      id: 'parts', title: 'Project parts', kind: 'containment', relationship: 'What sits inside what.',
+      home: { kind: 'section', target: 'core-ideas' }, disposition: { kind: 'produced', assetIds: ['parts'] },
+      groups: [group('g0', { kind: 'top-level-directory', path: 'src' }, [
+        group('g1', { kind: 'package-manifest', path: hiddenPath }, [group('g2', { kind: 'dependency-name', name: hiddenName }, [])]),
+      ])],
+    }];
+  });
+  const built = await buildFidelityPacket(await opened(run), deps());
+  if (!built.ok) throw new Error(built.reason);
+  expect(built.bytes.includes(hiddenName)).toBe(false);
+  const packet = JSON.parse(built.bytes);
+  expect(packet.draft.withheldDiagramUnits).toBe(2);
+  const groups = packet.draft.document.diagrams[0].groups;
+  expect([groups[0].unit, groups[0].children[0].unit, groups[0].children[0].children[0].unit]).toEqual([{ kind: 'top-level-directory', path: 'src' }, undefined, undefined]);
+});
+
 describe('a cited path both denied and secret-matching in the fidelity packet', () => {
   it('withholds the path in both the span and the copy of the draft, preserving the denied-path outcome', async () => {
     const run = await prepared(undefined, (d) => { d['unresolved'] = [{ id: 'q0', question: 'Why?', reason: 'Not stated.', citations: [cite('c-q0', BOTH_PATH, 1, 1)] }]; });

@@ -1,5 +1,5 @@
 import { isRecord } from '@syzygy/support';
-import { FIGURE_BOUNDS, FIGURE_MEMBERS, hasFigureKindForm, membersOfKind } from './draft-schema.js';
+import { CONTAINMENT_BOUNDS, CONTAINMENT_KIND, FIGURE_BOUNDS, figureMembersOf, hasContainmentForm, hasFigureKindForm, membersOfKind } from './draft-schema.js';
 
 /**
  * Figure fit (REQ-polaris-generation-034, dossier figure homes and fit 2.2; syzygy-3efd.20): whether each produced figure of a draft
@@ -26,7 +26,10 @@ interface ShapeElement { readonly id: string; readonly label: string; readonly e
 export type FigureShape =
   | { readonly kind?: undefined; readonly nodes: readonly ShapeElement[]; readonly edges: readonly (ShapeElement & { readonly from: string; readonly to: string })[] }
   | { readonly kind: 'sequence'; readonly participants: readonly ShapeElement[]; readonly messages: readonly (ShapeElement & { readonly from: string; readonly to: string })[] }
-  | { readonly kind: 'swimlane'; readonly lanes: readonly ShapeElement[]; readonly steps: readonly (ShapeElement & { readonly lane: string })[] };
+  | { readonly kind: 'swimlane'; readonly lanes: readonly ShapeElement[]; readonly steps: readonly (ShapeElement & { readonly lane: string })[] }
+  | { readonly kind: typeof CONTAINMENT_KIND; readonly groups: readonly ShapeGroup[] };
+/** A v11 containment's group (version 2.23): an element with the groups drawn inside it. */
+export interface ShapeGroup extends ShapeElement { readonly children: readonly ShapeGroup[] }
 /** The laid-out width of a figure, in CSS pixels, as the renderer would draw it; throws when the layout cannot be computed. A sequence's or
  * swimlane's throws too where a reference names nothing in its own diagram, a participant or lane is named by nothing, or a count is out of
  * its bounds. */
@@ -55,9 +58,10 @@ const element = (value: Readonly<Record<string, unknown>>): ShapeElement => ({ i
 
 /** A v7 sequence's or swimlane's shape, or undefined where its members do not fit its kind (a `figure-kind` finding) or a count is out of its
  * bounds (a schema finding): such a figure's layout cannot be computed, so its fit is Unknown. */
-function figureShape(diagram: Readonly<Record<string, unknown>>): FigureShape | undefined {
-  const takes = membersOfKind(diagram['kind'])!;
-  if (FIGURE_MEMBERS.some((member) => Object.hasOwn(diagram, member) !== takes.includes(member))) return undefined;
+function figureShape(diagram: Readonly<Record<string, unknown>>, version: unknown): FigureShape | undefined {
+  const takes = membersOfKind(diagram['kind'], version)!;
+  if (figureMembersOf(version).some((member) => Object.hasOwn(diagram, member) !== takes.includes(member))) return undefined;
+  if (diagram['kind'] === CONTAINMENT_KIND) return containmentShape(diagram['groups']);
   const records = (member: keyof typeof FIGURE_BOUNDS): readonly Readonly<Record<string, unknown>>[] | undefined => {
     const value = diagram[member];
     const [least, most] = FIGURE_BOUNDS[member];
@@ -71,6 +75,22 @@ function figureShape(diagram: Readonly<Record<string, unknown>>): FigureShape | 
   const lanes = records('lanes'), steps = records('steps');
   if (lanes === undefined || steps === undefined) return undefined;
   return { kind: 'swimlane', lanes: lanes.map(element), steps: steps.map((step) => ({ ...element(step), lane: str(step['lane']) })) };
+}
+
+/** A v11 containment's shape (version 2.23), or undefined where its layout cannot be computed: a `groups` or `children` list out of its
+ * bounds or holding a non-record (schema findings), or a group at level 4, more than 40 groups or none nested in another (the
+ * `containment-depth`, `-size` and `-flat` findings). */
+function containmentShape(groups: unknown): FigureShape | undefined {
+  let total = 0, nested = false, fault = false;
+  const shape = (values: unknown, level: number, [least, most]: readonly [number, number]): ShapeGroup[] => {
+    if (!Array.isArray(values) || values.length < least || values.length > most || !values.every(isRecord)) { fault = true; return []; }
+    if (level > CONTAINMENT_BOUNDS.levels && values.length > 0) { fault = true; return []; }
+    if (level > 1 && values.length > 0) nested = true;
+    total += values.length;
+    return values.map((group) => ({ ...element(group), children: shape(group['children'], level + 1, CONTAINMENT_BOUNDS.children) }));
+  };
+  const top = shape(groups, 1, CONTAINMENT_BOUNDS.groups);
+  return fault || !nested || total > CONTAINMENT_BOUNDS.total ? undefined : { kind: CONTAINMENT_KIND, groups: top };
 }
 
 /** Rounded half away from zero to two places; the fit itself compares the unrounded size. The product is first cut to twelve significant
@@ -88,14 +108,16 @@ export function figureFit(doc: unknown, layout: FigureLayout | undefined): Figur
   const entries: FigureFitEntry[] = [];
   let examined = 0;
   // Only a v7 or later draft has the figure kinds; in any other draft every diagram is laid out as a graph, as version 2.4 lays it out.
-  const v7 = isRecord(doc) && hasFigureKindForm(doc['schemaVersion']);
+  const version = isRecord(doc) ? doc['schemaVersion'] : undefined;
+  const v7 = hasFigureKindForm(version);
   for (const diagram of list(isRecord(doc) ? doc['diagrams'] : undefined)) {
     if (!isRecord(diagram) || !isRecord(diagram['disposition']) || diagram['disposition']['kind'] !== 'produced') continue;
     examined += 1;
     const id = str(diagram['id']);
     if (layout === undefined) { entries.push({ diagram: id, unknown: NO_LAYOUT }); continue; }
-    const kinded = v7 && (diagram['kind'] === 'sequence' || diagram['kind'] === 'swimlane');
-    const shape: FigureShape | undefined = kinded ? figureShape(diagram) : {
+    // A v11 containment (version 2.23) is examined as a sequence or swimlane is: its drawing or its phone form.
+    const kinded = v7 && (diagram['kind'] === 'sequence' || diagram['kind'] === 'swimlane' || (hasContainmentForm(version) && diagram['kind'] === CONTAINMENT_KIND));
+    const shape: FigureShape | undefined = kinded ? figureShape(diagram, version) : {
       nodes: list(diagram['nodes']).filter(isRecord).map((node) => ({ id: str(node['id']), label: str(node['label']), epistemic: marking(node['epistemic']) })),
       edges: list(diagram['edges']).filter(isRecord).map((edge) => ({ id: str(edge['id']), from: str(edge['from']), to: str(edge['to']), label: str(edge['label']), epistemic: marking(edge['epistemic']) })),
     };
