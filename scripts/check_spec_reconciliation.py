@@ -375,6 +375,57 @@ CAP1_OVERLAY_DEPS = f"{CHANGES}/{CAP1_OVERLAY_CHANGE}/GOVERNING-DEPENDENCIES.jso
 CAP1_OVERLAY_ADOPTION = f"{CHANGES}/{CAP1_OVERLAY_CHANGE}/ADOPTION.md"
 CAP1_OVERLAY_REPLACES = ("CAP1-REQ-011", "CAP1-REQ-046")
 CAP1_OVERLAY_SECTION = "## MODIFIED Requirements"
+CAP1_ROOT_CHANGE = "cap1-root-adjudication"
+CAP1_ROOT_HOME = f"{CHANGES}/{CAP1_ROOT_CHANGE}"
+CAP1_ROOT_SPEC = f"{CAP1_ROOT_HOME}/proposed/{CAP1_CHANGE}/spec.md"
+CAP1_ROOT_COVERAGE = f"{CAP1_ROOT_HOME}/CONTRACT-COVERAGE.md"
+CAP1_ROOT_PROJECTION = f"{CAP1_ROOT_HOME}/CAP1-PROSPECTIVE-PROJECTION.json"
+CAP1_ROOT_REPLACES = ("CAP1-REQ-006",)
+CAP1_ROOT_VERSION = "1.0"
+CAP1_ROOT_VERSION_NAME = f"{CAP1_ROOT_CHANGE}-v{CAP1_ROOT_VERSION}"
+CAP1_ROOT_VERSION_MARKER = f"Candidate version {CAP1_ROOT_VERSION}."
+CAP1_ROOT_CANDIDATE_MARKER = "Candidate version unallocated."
+CAP1_ROOT_RFC_FILES = tuple(
+    f"{directory}/rfcs/{path}"
+    for directory in (CANDIDATES, ".syzygy/governance/contracts")
+    for path in ("RFC-0001-project-graph-identity-state-planes.md",
+                 "RFC-0003/manifests-and-namespace.md")
+)
+CAP1_ROOT_RFC_DIGESTS = dict(zip(CAP1_ROOT_RFC_FILES, (
+    "edf7538687997c9199f5155973332247d6a44ddce356480329c0886e3375d3be",
+    "84350c1fc0d066fb7f1d41f0e07e959ff55329a799273e10d4c71debfc05de20",
+) * 2))
+CAP1_ROOT_SUCCESSOR_DIGEST = "a7596452f408d0f29efe7375e4c8e6a870010f0bdace58025642d4db942691a7"
+CAP1_ROOT_SUBJECTS = {
+    CAP1_ROOT_SPEC: "185af92ae6eed07aae21f6b285ff980e9fd106d43f0f814bd2a30afe7e4d96bd",
+    CAP1_ROOT_COVERAGE: "480abb4ea4796e19ff38ecda02596aeafe13e784c8480e7ea6f83eb2d322fa14",
+}
+CAP1_ROOT_BOUND_PATHS = (*CAP1_ROOT_SUBJECTS, CAP1_ROOT_PROJECTION, *CAP1_ROOT_RFC_FILES)
+CAP1_ROOT_STATUS_RECORD = f"[CAP1 root adjudication {CAP1_ROOT_VERSION}]({CAP1_ROOT_HOME})"
+CAP1_ROOT_INDEX_STAGE = "**Conditional activation.**"
+_CAP1_SELFTEST_GIT_ROOT = None
+CAP1_ROOT_INDEX = f"{CANDIDATES}/05-CONTRACT-INDEX.yaml"
+CAP1_HISTORIC_COVERAGE = f"{CHANGES}/{CAP1_CHANGE}/CONTRACT-COVERAGE.md"
+CAP1_CONSENT_COVERAGE = f"{CHANGES}/{CAP1_OVERLAY_CHANGE}/CONTRACT-COVERAGE.md"
+# The CAP1 readability act and the annotated P-109 v1.0 source bind
+# these inputs. Regeneration cannot independently replace their bytes.
+CAP1_ROOT_PREDECESSORS = {
+    FAMILY_SPECS["CAP1"]: "65b66c913cd2650881a9df8cb34a3c63b3f518041e83f45d2451980d9f1d0448",
+    CAP1_OVERLAY_SPEC: "359ff741742902f0b07bbf1b4ec9aa997d17145cd56805fb49d6e683a12776e7",
+    CAP1_OVERLAY_DEPS: "fb96db1a5e04167bfd8d25f4580be96ad506d556f70ed2f34f1900ccc2df02d8",
+    CAP1_HISTORIC_COVERAGE: "15431d8ba1fe25a61e4dc2713c4d51fad1cf6d25ef7a9103cc616265102289c9",
+    CAP1_CONSENT_COVERAGE: "972ab4b306999104327de27e1af3a2ee5e94fb38c08e75c25e68c3d9065dae45",
+}
+CAP1_ROOT_TAG_CLAIM = re.compile(rf"`{CAP1_ROOT_CHANGE}-v[0-9]+(?:\.[0-9]+)+`")
+CAP1_ROOT_STATUS_SUBJECT = rf"\[[^\]]+\]\((?:\./)?{CAP1_ROOT_HOME}(?:/[^)\s]*)?\)"
+CAP1_ROOT_ACTIVE_STATE = r"(?:agent[- ]adopted|adopted|effective|in force)\b"
+CAP1_ROOT_STATUS_CLAIM = re.compile(
+    rf"{CAP1_ROOT_STATUS_SUBJECT} (?:\*\*)?is (?:now )?(?:\*\*)?{CAP1_ROOT_ACTIVE_STATE}",
+    re.IGNORECASE)
+CAP1_ROOT_STATUS_LINK = re.compile(CAP1_ROOT_STATUS_SUBJECT)
+CAP1_ROOT_STATUS_CELL = re.compile(
+    rf"(?:\[(?:Observed|Inferred|Unknown)\][ \t]+)?(?:\*\*)?{CAP1_ROOT_ACTIVE_STATE}",
+    re.IGNORECASE)
 POLARIS_BASE_SPEC = spec_path(BASE_CHANGE, "polaris-generation")
 POLARIS_OVERLAY_SPEC = spec_path(UNDERSTANDING_CHANGE, "polaris-generation")
 POLARIS_ID = "REQ-polaris-generation-"
@@ -915,7 +966,11 @@ def valid_adoption_date(value):
 
 def adoption_table_rows(root):
     """Read only the unique canonical ledger table outside Markdown fences."""
-    title, *lines = (read_text(root, AGENT_ADOPTIONS) or "").split("\n")
+    return _adoption_table_rows(read_text(root, AGENT_ADOPTIONS) or "")
+
+
+def _adoption_table_rows(text):
+    title, *lines = text.split("\n")
     if title != ADOPTION_LEDGER_TITLE:
         return []
     rows = None
@@ -967,7 +1022,8 @@ def is_url_source_row(line):
     return all(f"]({snapshot}{path})" in cells[3] for path in URL_SOURCE_SUBJECTS)
 
 
-def recorded_disposition(root, identity, commit, tag, paths, plain_revert=False, also_reverts=None):
+def recorded_disposition(root, identity, commit, tag, paths, plain_revert=False, also_reverts=None,
+                         *, ledger_rows=None):
     """Read an explicit later veto/revert/retirement in the ledger's change cell.
 
     The ledger uses prose. Recognize an action with an exact immediate
@@ -981,7 +1037,7 @@ def recorded_disposition(root, identity, commit, tag, paths, plain_revert=False,
     if plain_revert and also_reverts:
         reverts += (f"`git revert {commit} {also_reverts}`",)
     adopted_date = None
-    for line in adoption_table_rows(root):
+    for line in adoption_table_rows(root) if ledger_rows is None else ledger_rows:
         cells = [cell.strip() for cell in line.split("|")[1:-1]]
         if len(cells) != 7:
             continue
@@ -4775,10 +4831,10 @@ def _cap1_overlay_guard_manual(text):
     return out + [p for p in _header_problems_manual(text)]
 
 
-def compose_cap1_by_id(base, overlay):
+def compose_cap1_by_id(base, overlay, replaces=CAP1_OVERLAY_REPLACES):
     """Method A: parse both files by regex, then replace by identifier.
 
-    The overlay must carry exactly `CAP1_OVERLAY_REPLACES`, in that order,
+    The overlay must carry exactly the expected IDs in order,
     and each must already be a base requirement (a full replacement, never
     an addition).
     """
@@ -4787,9 +4843,9 @@ def compose_cap1_by_id(base, overlay):
     problems = [f"base: duplicate or orphan {p}" for p in pb]
     problems += [f"overlay: duplicate or orphan {p}" for p in po]
     problems += [f"overlay: {p}" for p in _cap1_overlay_guard_regex(overlay)]
-    if tuple(over) != CAP1_OVERLAY_REPLACES:
+    if tuple(over) != replaces:
         problems.append(f"overlay replaces {list(over)}, expected exactly "
-                        f"{list(CAP1_OVERLAY_REPLACES)}")
+                        f"{list(replaces)}")
     for ident, req in over.items():
         if ident not in comp:
             problems.append(f"overlay: {ident} is dangling (not in the base)")
@@ -4820,7 +4876,7 @@ def _cap1_spans_manual(lines):
     return spans
 
 
-def compose_cap1_by_text(base, overlay):
+def compose_cap1_by_text(base, overlay, replaces=CAP1_OVERLAY_REPLACES):
     """Method B: splice the overlay's blocks into the base text, then parse.
 
     No regular expression: the composed bytes come from a line splice, are
@@ -4830,9 +4886,9 @@ def compose_cap1_by_text(base, overlay):
     problems = [f"overlay: {p}" for p in _cap1_overlay_guard_manual(overlay)]
     b_lines, o_lines = _lines_keep(base), _lines_keep(overlay)
     b_spans, o_spans = _cap1_spans_manual(b_lines), _cap1_spans_manual(o_lines)
-    if tuple(o_spans) != CAP1_OVERLAY_REPLACES:
+    if tuple(o_spans) != replaces:
         problems.append(f"overlay replaces {list(o_spans)}, expected exactly "
-                        f"{list(CAP1_OVERLAY_REPLACES)}")
+                        f"{list(replaces)}")
     composed = b_lines
     for ident in o_spans:
         if len(o_spans[ident]) != 1:
@@ -4864,14 +4920,14 @@ def cap1_overlay_signed(root):
     return []
 
 
-def compose_cap1(root, text):
-    """(population, findings): the bound CAP1 file with the overlay applied."""
+def compose_cap1_consent(root, text):
+    """Verify the historical P-109 composition before any later overlay."""
     overlay = read_text(root, CAP1_OVERLAY_SPEC)
     unsigned = cap1_overlay_signed(root)
     if overlay is None or unsigned:
         a, pa = parse_regex(text, "CAP1")
         return a, unsigned or [f"CAP1: overlay `{CAP1_OVERLAY_SPEC}` missing; "
-                               "the bound file alone is counted"]
+                               "the bound file alone is counted"], None
     a, pa = compose_cap1_by_id(text, overlay)
     b, pb, composed = compose_cap1_by_text(text, overlay)
     findings = [f"CAP1 method A: {p}" for p in pa]
@@ -4887,7 +4943,295 @@ def compose_cap1(root, text):
     if sha(composed.encode("utf-8")) != recorded:
         findings.append(f"CAP1 method B: composed bytes do not hash to "
                         f"`{CAP1_OVERLAY_DEPS}` composed_spec_sha256")
-    return a, findings
+    return a, findings, composed
+
+
+def cap1_root_row_claims_version(row):
+    """Recognize an attempted binding even if the review packet is incomplete."""
+    cells = [cell.strip() for cell in row.split("|")[1:-1]]
+    tag_cells = cells[6:] if len(cells) == 7 else cells
+    return (any(CAP1_ROOT_TAG_CLAIM.fullmatch(cell) for cell in tag_cells)
+            or _is_reviewed_version_row(row, None, (CAP1_ROOT_SPEC,)))
+
+
+def cap1_root_git(root, *args):
+    """Read local Git objects without replacement objects or lazy network reads."""
+    if _CAP1_SELFTEST_GIT_ROOT is not None and args[0] == "for-each-ref":
+        # The existing rule-6 fixtures exercise the authored, pre-tag state.
+        return b""
+    result = subprocess.run(
+        ["git", *args], cwd=_CAP1_SELFTEST_GIT_ROOT or root, capture_output=True,
+        env={**os.environ, "GIT_NO_REPLACE_OBJECTS": "1", "GIT_NO_LAZY_FETCH": "1",
+             "GIT_OPTIONAL_LOCKS": "0"}, check=False,
+    )
+    return result.stdout if result.returncode == 0 else None
+
+
+def cap1_root_tree_entry(root, commit, path):
+    entry = cap1_root_git(root, "ls-tree", "-z", commit, "--", path)
+    return entry if entry and entry.startswith(b"100644 blob ") else None
+
+
+def cap1_root_ledger_at(root, commit):
+    if cap1_root_tree_entry(root, commit, AGENT_ADOPTIONS) is None:
+        return []
+    body = cap1_root_git(root, "show", f"{commit}:{AGENT_ADOPTIONS}")
+    try:
+        return _adoption_table_rows(body.decode("utf-8")) if body is not None else []
+    except UnicodeDecodeError:
+        return []
+
+
+def cap1_root_binding(root):
+    """Classify the reviewed overlay from its current row and local Git evidence."""
+    ledger = adoption_table_rows(root)
+    claims = [row for row in ledger if cap1_root_row_claims_version(row)]
+    versioned = CAP1_ROOT_VERSION_MARKER in (read_text(root, CAP1_ROOT_SPEC) or "")
+    if not claims and not versioned:
+        return "candidate", []
+
+    def invalid(reason):
+        return "invalid", [f"CAP1 root adjudication: {reason}"]
+
+    if len(claims) != 1:
+        return invalid("expected exactly one version record")
+    cells = [cell.strip() for cell in claims[0].split("|")[1:-1]]
+    if len(cells) != 7 or not all(cells):
+        return invalid("expected seven nonempty adoption cells")
+    identity, date, commit, what, why, inverse, tag = cells
+    if (not versioned or tag != f"`{CAP1_ROOT_VERSION_NAME}`"
+            or not valid_adoption_date(date) or not re.fullmatch(r"A-[1-9][0-9]*", identity)
+            or not re.fullmatch(r"`[0-9a-f]{40}`", commit)):
+        return invalid("invalid adoption identity, source, date or version")
+    if sum(row.split("|")[1].strip() == identity for row in ledger) != 1:
+        return invalid("adoption identity is not globally unique")
+    source = commit[1:-1]
+    prefix = f"https://github.com/tzeusy-org/syzygy/blob/{source}/"
+    links = re.findall(r"\]\(([^)]+)\)", what)
+    if any(links.count(prefix + path) != 1 for path in CAP1_ROOT_BOUND_PATHS):
+        return invalid("adoption lacks a unique own-source snapshot for each subject")
+
+    if cap1_root_git(root, "cat-file", "-t", source) != b"commit\n":
+        return invalid("source is not an exact commit object")
+    parents = cap1_root_git(root, "rev-list", "--parents", "-n", "1", source)
+    if not parents or len(parents.split()) not in (2, 3):
+        return invalid("exact source commit and its parents are unavailable")
+    mainline = " -m 1" if len(parents.split()) == 3 else ""
+    if inverse != f"`git revert{mainline} {source}`":
+        return invalid("revert does not name the exact source and mainline")
+    authored = cap1_root_git(root, "rev-parse", "--verify", "HEAD^{commit}")
+    if not authored:
+        return invalid("exact authored commit is unavailable")
+    authored = authored.decode("ascii").strip()
+    if cap1_root_git(root, "merge-base", "--is-ancestor", source, authored) is None:
+        return invalid("exact source commit is outside the authored history")
+    authored_rows = cap1_root_ledger_at(root, authored)
+    if [row for row in authored_rows if cap1_root_row_claims_version(row)] != claims:
+        return invalid("adoption row is absent from the exact authored commit")
+    snapshots = {}
+    for path in CAP1_ROOT_BOUND_PATHS:
+        current = read_bytes(root, path)
+        entry = cap1_root_tree_entry(root, source, path)
+        snapshot = cap1_root_git(root, "show", f"{source}:{path}")
+        if current is None or snapshot != current:
+            return invalid(f"`{path}` differs from the exact source snapshot")
+        if entry is None or cap1_root_tree_entry(root, authored, path) != entry:
+            return invalid(f"`{path}` differs at the exact authored commit")
+        snapshots[path] = entry
+    annotation = f"refs/tags/{CAP1_ROOT_VERSION_NAME}"
+    refs = cap1_root_git(
+        root, "for-each-ref", "--format=%(refname) %(objecttype) %(tag) %(*objecttype) %(*objectname)",
+        annotation,
+    )
+    if refs is None:
+        return invalid("version tag inventory is unreadable")
+    rows = [row.split() for row in refs.splitlines()
+            if row.split(maxsplit=1)[0] == annotation.encode("ascii")]
+    if not rows:
+        return "staged", []
+    if rows != [[annotation.encode("ascii"), b"tag", CAP1_ROOT_VERSION_NAME.encode("ascii"),
+                 b"commit", source.encode("ascii")]]:
+        return invalid("tag is not a direct annotation of the exact source")
+    protected = cap1_root_git(root, "rev-parse", "--verify", "refs/remotes/origin/main^{commit}")
+    if not protected:
+        return invalid("protected main is unavailable")
+    protected = protected.decode("ascii").strip()
+    protected_rows = cap1_root_ledger_at(root, protected)
+    if (cap1_root_git(root, "merge-base", "--is-ancestor", source, protected) is None
+            or [row for row in protected_rows if cap1_root_row_claims_version(row)] != claims
+            or sum(row.split("|")[1].strip() == identity for row in protected_rows) != 1):
+        return invalid("annotated source and binding row are not both on protected main")
+
+    def disposition(rows):
+        identity_to_find = recorded_disposition(
+            root, identity, source, CAP1_ROOT_VERSION_NAME, CAP1_ROOT_BOUND_PATHS,
+            plain_revert=not mainline, ledger_rows=rows,
+        )
+        return [row for row in rows if row.split("|")[1].strip() == identity_to_find]
+
+    proposed_disposition = disposition(ledger)
+    authored_disposition = disposition(authored_rows)
+    protected_disposition = disposition(protected_rows)
+    if any(len(matches) > 1 for matches in
+           (proposed_disposition, authored_disposition, protected_disposition)):
+        return invalid("disposition identity is not unique")
+    if proposed_disposition != authored_disposition:
+        return invalid("authored and worktree disposition evidence disagree")
+    if authored_disposition and authored_disposition != protected_disposition:
+        return invalid("authored disposition is not recorded on protected main")
+    if protected_disposition:
+        return "reverted", []
+    for path, entry in snapshots.items():
+        if cap1_root_tree_entry(root, protected, path) != entry:
+            return invalid(f"`{path}` differs on protected main from the exact source snapshot")
+    return "effective", []
+
+
+def cap1_root_effective(root, text):
+    """Return the selected CAP1 bytes as well as the census."""
+    population, findings, effective = compose_cap1_consent(root, text)
+    state, binding = cap1_root_binding(root)
+    findings.extend(binding)
+    if state == "effective" and not findings:
+        overlay = read_text(root, CAP1_ROOT_SPEC)
+        by_id, problems_a = compose_cap1_by_id(effective, overlay, CAP1_ROOT_REPLACES)
+        by_text, problems_b, successor = compose_cap1_by_text(effective, overlay, CAP1_ROOT_REPLACES)
+        if (problems_a or problems_b or by_id != by_text or by_id != population
+                or sha(successor.encode("utf-8")) != CAP1_ROOT_SUCCESSOR_DIGEST):
+            findings.append("CAP1 root adjudication: exact successor census does not compose")
+        else:
+            population, effective = by_id, successor
+    return population, findings, effective
+
+
+def compose_cap1(root, text):
+    population, findings, _ = cap1_root_effective(root, text)
+    return population, findings
+
+
+def _cap1_coverage_rows(text):
+    return [line for line in text.splitlines() if line.startswith("| RFC")]
+
+
+def _cap1_coverage_states(rows, column):
+    counts = {"covered": 0, "unknown": 0, "other": 0}
+    for row in rows:
+        cells = row.split("|")[1:-1]
+        if len(cells) != 4:
+            raise ValueError("expected four cells in each coverage row")
+        words = cells[column].split(maxsplit=1)
+        state = words[0].strip("*;").lower() if words else ""
+        counts[state if state in ("covered", "unknown") else "other"] += 1
+    return counts
+
+
+def cap1_root_projection(root):
+    """Derive the dormant 006 warrant and coverage projection from exact inputs."""
+    from build_capability_1_spec_dependencies import CLASSES, parse as parse_warrants
+
+    inputs = {path: read_bytes(root, path)
+              for path in (*CAP1_ROOT_PREDECESSORS, *CAP1_ROOT_SUBJECTS,
+                           *CAP1_ROOT_RFC_FILES, CAP1_ROOT_INDEX)}
+    if any(data is None for data in inputs.values()):
+        raise ValueError("CAP1 composition input is missing")
+    for path, expected in CAP1_ROOT_PREDECESSORS.items():
+        if sha(inputs[path]) != expected:
+            raise ValueError(f"`{path}` differs from the signed predecessor")
+    for path, expected in CAP1_ROOT_RFC_DIGESTS.items():
+        if sha(inputs[path]) != expected:
+            raise ValueError(f"`{path}` differs from the reviewed RFC collateral")
+    for path, expected in CAP1_ROOT_SUBJECTS.items():
+        body = inputs[path]
+        if path == CAP1_ROOT_SPEC:
+            old = f"\n{CAP1_ROOT_CANDIDATE_MARKER} ".encode("utf-8")
+            new = f"\n{CAP1_ROOT_VERSION_MARKER} ".encode("utf-8")
+            body = body.replace(new, old, 1)
+        if sha(body) != expected:
+            raise ValueError(f"`{path}` differs from the reviewed candidate")
+    base, p109, historical = compose_cap1_consent(
+        root, inputs[FAMILY_SPECS["CAP1"]].decode("utf-8"))
+    if p109:
+        raise ValueError("P-109 predecessor did not bind: " + "; ".join(p109))
+    proposal = inputs[CAP1_ROOT_SPEC].decode("utf-8")
+    a, pa = compose_cap1_by_id(historical, proposal, CAP1_ROOT_REPLACES)
+    b, pb, successor = compose_cap1_by_text(historical, proposal, CAP1_ROOT_REPLACES)
+    if pa or pb or a != b or a != base:
+        raise ValueError("006 replacement does not preserve the CAP1 population")
+
+    def warrants(text):
+        requirements, errors = parse_warrants(text)
+        if errors:
+            raise ValueError("; ".join(errors))
+        return {key: sorted({item for _, fields in requirements for item in fields[key]})
+                for key in CLASSES}
+
+    previous_warrants = warrants(historical)
+    next_warrants = warrants(successor)
+    signed = json.loads(inputs[CAP1_OVERLAY_DEPS])["dependencies"]
+    if previous_warrants != {key: sorted(signed[key]) for key in CLASSES}:
+        raise ValueError("P-109 warrants disagree with the signed union")
+    expected_warrants = {**previous_warrants,
+                         "contracts": sorted(set(previous_warrants["contracts"]) | {"RFC1-21"})}
+    if "RFC1-21" in previous_warrants["contracts"] or next_warrants != expected_warrants:
+        raise ValueError("expected RFC1-21 as the sole warrant change")
+
+    source = inputs[CAP1_HISTORIC_COVERAGE].decode("utf-8")
+    part_a = source.partition("## Part A — ")[2].partition("## Part B — ")[0]
+    old_rows = _cap1_coverage_rows(part_a)
+    consent_source = inputs[CAP1_CONSENT_COVERAGE].decode("utf-8")
+    before_consent, _, after_consent = consent_source.partition("## Proposed scoped replacement")
+    removed = _cap1_coverage_rows(before_consent)
+    consent = _cap1_coverage_rows(after_consent)
+    if len(removed) != 1 or old_rows.count(removed[0]) != 1 or not consent:
+        raise ValueError("P-109 coverage preimage must occur exactly once")
+    prior = [row for row in old_rows if row != removed[0]]
+    delta = inputs[CAP1_ROOT_COVERAGE].decode("utf-8")
+
+    def coverage_fragment(name):
+        pattern = rf"^```text {name}-coverage\n((?:[^\n]*\n)+?)^```$"
+        match = re.findall(pattern, delta, re.M)
+        if len(match) != 1:
+            raise ValueError(f"expected exactly one {name} coverage block")
+        return _cap1_coverage_rows(match[0])
+
+    removed = coverage_fragment("predecessor")
+    replacement = coverage_fragment("proposed")
+    if len(removed) != 1 or prior.count(removed[0]) != 1 or len(replacement) != 2:
+        raise ValueError("006 coverage must replace exactly one prior row with two")
+    index = prior.index(removed[0])
+    future = prior[:index] + replacement + prior[index + 1:]
+    clauses = re.findall(r"^      - \{id: (RFC[1-9]-[^,]+),",
+                         inputs[CAP1_ROOT_INDEX].decode("utf-8"), re.M)
+    if len(clauses) != len(set(clauses)) or not set(next_warrants["contracts"]) <= set(clauses):
+        raise ValueError("invalid Wave A/B clause population")
+    clause_digest = sha("".join(f"{clause}\n" for clause in sorted(clauses)).encode("utf-8"))
+
+    def coverage(rows, mapped):
+        mapped = len(mapped)
+        states = _cap1_coverage_states(rows, 2)
+        for key, count in _cap1_coverage_states(consent, 3).items():
+            states[key] += count
+        return {"consequences": len(rows) + len(consent), **states,
+                "mapped_contracts": mapped, "unmapped_contracts": len(clauses) - mapped}
+
+    return {
+        "kind": "prospective-cap1-root-adjudication",
+        "requirement_count": len(a),
+        "scenario_count": sum(len(req["scenarios"]) for req in a.values()),
+        "predecessor_sha256": sha(historical.encode("utf-8")),
+        "composed_spec_sha256": sha(successor.encode("utf-8")),
+        "source_files": {path: sha(data) for path, data in inputs.items()
+                         if path != CAP1_ROOT_INDEX},
+        "dependencies": next_warrants,
+        "coverage": {
+            "accepted_clauses": len(clauses),
+            "accepted_clauses_sha256": clause_digest,
+            "retained_consent_rows": len(consent),
+            "signed_baseline_literal": {"consequences": len(old_rows), **_cap1_coverage_states(old_rows, 2)},
+            "predecessor": coverage(prior, previous_warrants["contracts"]),
+            "successor": coverage(future, next_warrants["contracts"]),
+        },
+    }
 
 
 def census(root):
@@ -5729,9 +6073,10 @@ def check_census(root, report):
     elif committed != census_json(pop):
         findings.append(f"`{CENSUS}` differs from regeneration "
                         "(a name or scenario title moved)")
+    state, _ = cap1_root_binding(root)
     report.add("R3", "populations agree by two methods and match the census",
-               examined, findings,
-               "requirements examined across CAP1, POC, PWB and Polaris")
+               examined, findings, "requirements examined across CAP1, POC, PWB and Polaris"
+               f". CAP1 root adjudication: {state}")
     return pop
 
 
@@ -5799,6 +6144,12 @@ def check_generated(root, pop, report):
     if stated != [(str(len(cap1)), str(cap1_scen))]:
         findings.append(f"`{CAP1_OVERLAY_ADOPTION}`: states {stated}, census "
                         f"composes {len(cap1)} / {cap1_scen}")
+    examined += 1
+    try:
+        if json.loads(read_text(root, CAP1_ROOT_PROJECTION) or "null") != cap1_root_projection(root):
+            findings.append(f"`{CAP1_ROOT_PROJECTION}`: stale prospective CAP1 projection")
+    except (ValueError, KeyError, TypeError) as exc:
+        findings.append(f"`{CAP1_ROOT_PROJECTION}`: {exc}")
     numbers = {fam: {k[-3:] for k in reqs} for fam, reqs in pop.items()}
     files = []
     for child in CHILDREN:
@@ -6007,7 +6358,38 @@ def check_generated(root, pop, report):
 # R5: default routes.
 # --------------------------------------------------------------------------
 
-def visible_route_lines(text):
+def cap1_root_status_claimed(status):
+    """Check the linked CAP1 subject's own predicate in prose and status tables."""
+    from check_governance import _gfm_data_row, _gfm_row_cells, _gfm_table_start
+
+    lines = list(visible_route_lines(status, keep_fence_breaks=True))
+    outside_fences = [False] * len(lines)
+    prose = []
+    index = 0
+    while index < len(lines):
+        if _gfm_table_start(lines, index, outside_fences) is None:
+            line = lines[index]
+            prose.append("" if line.lstrip().startswith(("#", "|")) else line)
+            index += 1
+            continue
+
+        header = _gfm_row_cells(lines[index])
+        state_column = header.index("State", 1) if "State" in header[1:] else None
+        prose.append("")
+        index += 2
+        while index < len(lines) and _gfm_data_row(lines[index]):
+            cells = _gfm_row_cells(lines[index])
+            index += 1
+            if (state_column is not None and cells and state_column < len(cells)
+                    and CAP1_ROOT_STATUS_LINK.fullmatch(cells[0])
+                    and CAP1_ROOT_STATUS_CELL.match(cells[state_column])):
+                return True
+
+    paragraphs = re.split(r"\n[ \t]*\n", "\n".join(prose))
+    return any(CAP1_ROOT_STATUS_CLAIM.search(" ".join(block.split())) for block in paragraphs)
+
+
+def visible_route_lines(text, *, keep_fence_breaks=False):
     """Yield route prose outside HTML comments and fenced examples."""
     fence = None
     for line in re.sub(r"<!--.*?(?:-->|\Z)", "", text, flags=re.S).splitlines():
@@ -6018,6 +6400,8 @@ def visible_route_lines(text):
             continue
         if marker and (marker[1][0] == "~" or "`" not in marker[2]):
             fence = marker[1]
+            if keep_fence_breaks:
+                yield ""
             continue
         yield line
 
@@ -6068,6 +6452,28 @@ def check_routes(root, pop, report):
                         f"does not name its terminal record `{name}`")
     if CAP1_OVERLAY_RECORD not in status and name not in status:
         findings.append(f"`{STATUS}` cites no terminal record `{name}`")
+    examined += 2
+    root_route = rows.get(CAP1_ROOT_CHANGE, [])
+    cap1_state, _ = cap1_root_binding(root)
+    root_versioned = CAP1_ROOT_VERSION_MARKER in (read_text(root, CAP1_ROOT_SPEC) or "")
+    if len(root_route) == 1:
+        cells = [cell.strip() for cell in root_route[0].split("|")[1:-1]]
+        route = f"[`{CAP1_ROOT_CHANGE}`](changes/{CAP1_ROOT_CHANGE})"
+        state_marker = CAP1_ROOT_INDEX_STAGE if root_versioned else "**Candidate.**"
+        if (len(cells) != 4 or cells[0] != route
+                or not cells[2].startswith(state_marker)
+                or (root_versioned and (f"`{CAP1_ROOT_VERSION_NAME}`" not in cells[2]
+                                       or Path(AGENT_ADOPTIONS).name not in cells[3]))):
+            findings.append(f"`{OPENSPEC_README}`: the `{CAP1_ROOT_CHANGE}` row "
+                            "must route the CAP1 candidate or exact conditional record")
+    cap1_status = [line.strip() for line in visible_route_lines(status)
+                   if line.strip().startswith(CAP1_ROOT_STATUS_RECORD)]
+    if root_versioned and (len(cap1_status) != 1 or
+                           f"`{CAP1_ROOT_VERSION_NAME}`" not in cap1_status[0] or
+                           AGENT_ADOPTIONS not in cap1_status[0]):
+        findings.append(f"`{STATUS}` does not route the conditional CAP1 binding")
+    if cap1_state != "effective" and cap1_root_status_claimed(status):
+        findings.append(f"`{STATUS}` must keep CAP1 root-adjudication pending until effective")
     amendment, _records, _subjects = declared_source_binding(root)
     if amendment is not None:
         examined += 2
@@ -6947,7 +7353,8 @@ def inputs(root):
         manifest = read_text(root, child["manifest"]) or ""
         paths |= {p for _d, p in ROW.findall(manifest)}
         paths |= set(tracked(root, f"{CHANGES}/{child['change']}"))
-    paths |= set(tracked(root, CHANGES)) | {CAP1_OVERLAY_RECORD}
+    paths |= set(tracked(root, CHANGES)) | {CAP1_OVERLAY_RECORD, CAP1_ROOT_INDEX,
+                                          *CAP1_ROOT_RFC_FILES}
     for change, rel in polaris_additions(root):
         paths |= {rel} | {r for r, _t, _v in addition_records(root, change)}
         paths |= {r for r, _t, _v in addition_terminals(root, change)}
@@ -12068,6 +12475,190 @@ def cap1_overlay_mutants():
     )
 
 
+def cap1_root_mutants():
+    """Refuse source drift and premature CAP1 candidate binding or routing."""
+    oid = "a" * 40
+    repo = "https://github.com/tzeusy-org/syzygy/blob/"
+    links = " ".join(f"[candidate]({repo}{oid}/{path})" for path in CAP1_ROOT_SUBJECTS)
+
+    def row(text, source, changed=links, tag="—"):
+        return text.rstrip("\n") + (
+            f"\n| A-9999 | 2026-11-27 | `{source}` | {changed} | Why | "
+            f"`git revert {source}` | {tag} |\n")
+
+    def status_route(text, state, separator=" ", suffix=""):
+        return text.rstrip("\n") + (
+            f"\n\n[CAP1 root adjudication]({CAP1_ROOT_HOME}/)"
+            f"{separator}is {state}.{suffix}\n")
+
+    def status_table(text, state, *, outer_pipes=True, other_row=""):
+        row = f"[CAP1 root adjudication]({CAP1_ROOT_HOME}/) | {state} | Review packet"
+        if outer_pipes:
+            row = f"| {row} |"
+        return text.rstrip("\n") + (
+            f"\n\n| Step | State | Owning record |\n| --- | --- | --- |\n{row}\n{other_row}")
+
+    def premature_route(text):
+        return "".join(line.replace("**Candidate.**", "**Adopted.**")
+                       .replace(CAP1_ROOT_INDEX_STAGE, "**Adopted.**")
+                       if f"`{CAP1_ROOT_CHANGE}`" in line else line
+                       for line in text.splitlines(keepends=True))
+
+    return (
+        ("cap1-root-candidate-spec-drift", CAP1_ROOT_SPEC,
+         _replace(" SHALL ", "  SHALL "), "R4:differs from the reviewed candidate"),
+        ("cap1-root-candidate-coverage-drift", CAP1_ROOT_COVERAGE,
+         lambda text: text + "\n", "R4:differs from the reviewed candidate"),
+        ("cap1-root-stale-projection-count", CAP1_ROOT_PROJECTION,
+         _replace('"consequences": 87', '"consequences": 88'),
+         "R4:stale prospective CAP1 projection"),
+        ("cap1-root-candidate-premature-adoption", AGENT_ADOPTIONS,
+         lambda text: row(text, oid), "R3:root adjudication: expected exactly one version record"),
+        ("cap1-root-candidate-partial-own-snapshot", AGENT_ADOPTIONS,
+         lambda text: row(text, oid, f"[006]({repo}{oid}/{CAP1_ROOT_SPEC})"),
+         "R3:root adjudication: expected exactly one version record"),
+        ("cap1-root-candidate-tag-without-own-snapshot", AGENT_ADOPTIONS,
+         lambda text: row(text, "b" * 40, tag=f"`{CAP1_ROOT_CHANGE}-v999.999`"),
+         "R3:root adjudication: expected exactly one version record"),
+        ("cap1-root-candidate-citation-only", AGENT_ADOPTIONS,
+         lambda text: row(text, "b" * 40), "R3=0"),
+        ("cap1-root-candidate-premature-route", OPENSPEC_README,
+         premature_route, "R5:route the CAP1 candidate or exact conditional record"),
+        ("cap1-root-candidate-wrong-index-target", OPENSPEC_README,
+         _replace(f"`](changes/{CAP1_ROOT_CHANGE})", f"`](changes/{CAP1_OVERLAY_CHANGE})"),
+         "R5:route the CAP1 candidate or exact conditional record"),
+        ("cap1-root-candidate-premature-status", STATUS,
+         lambda text: status_route(
+             text, "adopted. CAP1-REQ-006 now routes under RFC1-21"),
+         "R5:keep CAP1 root-adjudication pending until effective"),
+        ("cap1-root-candidate-wrapped-premature-status", STATUS,
+         lambda text: status_route(
+             text, "adopted. CAP1-REQ-006 now routes under RFC1-21", separator="\n"),
+         "R5:keep CAP1 root-adjudication pending until effective"),
+        ("cap1-root-candidate-neutral-status-citation", STATUS,
+         lambda text: status_route(text, "a candidate"), "R5=0"),
+        ("cap1-root-candidate-status-other-sentence", STATUS,
+         lambda text: status_route(
+             text, "a historical candidate",
+             suffix=" The prior P-109 version is adopted; its CAP1-REQ-046 stays effective."),
+         "R5=0"),
+        ("cap1-root-candidate-status-block-boundary", STATUS,
+         lambda text: status_route(text, "adopted", separator="\n\n"), "R5=0"),
+        ("cap1-root-candidate-premature-status-row", STATUS,
+         lambda text: status_table(text, "**Adopted.**"),
+         "R5:keep CAP1 root-adjudication pending until effective"),
+        ("cap1-root-candidate-premature-status-epistemic-row", STATUS,
+         lambda text: status_table(text, "[Observed] **Adopted.**"),
+         "R5:keep CAP1 root-adjudication pending until effective"),
+        ("cap1-root-candidate-premature-status-borderless-row", STATUS,
+         lambda text: status_table(text, "**Adopted.**", outer_pipes=False),
+         "R5:keep CAP1 root-adjudication pending until effective"),
+        ("cap1-root-candidate-neutral-status-row-with-adopted-sibling", STATUS,
+         lambda text: status_table(
+             text, "[Observed] **Candidate.**", outer_pipes=False,
+             other_row=f"| [Prior P-109]({CHANGES}/{CAP1_OVERLAY_CHANGE}/) | "
+             "[Observed] **Adopted.** | P-109 owning record |\n"), "R5=0"),
+        ("cap1-root-signed-base-coverage-drift", CAP1_HISTORIC_COVERAGE,
+         _replace("| covered |", "| Unknown |"), "R4:differs from the signed predecessor"),
+        ("cap1-root-signed-consent-coverage-drift", CAP1_CONSENT_COVERAGE,
+         _replace("| covered |", "| Unknown |"), "R4:differs from the signed predecessor"),
+    )
+
+
+def cap1_root_binding_cases(tmp, witnesses, failures):
+    """Exercise the binding seam with real Git refs and a minimal fixture."""
+    root = Path(tmp) / "cap1-binding"
+    root.mkdir()
+
+    def git(*args):
+        options = ("core.hooksPath=/dev/null", "user.name=CAP1 fixture",
+                   "user.email=fixture@example.invalid", "commit.gpgsign=false",
+                   "tag.gpgsign=false", "init.templateDir=")
+        config = [arg for option in options for arg in ("-c", option)]
+        fixture_time = "2026-11-27T00:00:00Z"
+        env = {**os.environ, "GIT_AUTHOR_DATE": fixture_time, "GIT_COMMITTER_DATE": fixture_time}
+        return subprocess.check_output(["git", *config, *args], cwd=root, env=env, text=True).strip()
+
+    def commit(message):
+        git("add", "--all")
+        git("commit", "--quiet", "-m", message)
+        return git("rev-parse", "HEAD")
+
+    def write(path, text):
+        target = root / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(text, encoding="utf-8")
+
+    def check(name, path, old, new, expected, reason=None):
+        global _CAP1_SELFTEST_GIT_ROOT
+        saved = _CAP1_SELFTEST_GIT_ROOT
+        try:
+            _CAP1_SELFTEST_GIT_ROOT = None
+            state, findings = cap1_root_binding(root)
+        finally:
+            _CAP1_SELFTEST_GIT_ROOT = saved
+        expected_findings = [] if reason is None else [f"CAP1 root adjudication: {reason}"]
+        matches = (state, findings) == (expected, expected_findings)
+        outcome = "killed" if expected == "invalid" or name == "stale-head-sees-veto" else "held"
+        expect = f"{expected}: {reason}" if reason else expected
+        witnesses.append({"mutant": f"cap1-binding-{name}", "path": path,
+                          "old": old, "new": new, "expected": expect,
+                          "failed": findings, "outcome": outcome if matches else "SURVIVED"})
+        if not matches:
+            failures.append(f"{name}: expected {(expected, expected_findings)}, got {(state, findings)}")
+
+    git("init", "--quiet", "--object-format=sha1")
+    ledger = (f"{ADOPTION_LEDGER_TITLE}\n\n{ADOPTION_TABLE_HEADER}\n"
+              f"{ADOPTION_TABLE_DIVIDER}\n")
+    write(AGENT_ADOPTIONS, ledger)
+    predecessor = commit("Synthetic predecessor")
+    for path in CAP1_ROOT_BOUND_PATHS:
+        value = CAP1_ROOT_VERSION_MARKER if path == CAP1_ROOT_SPEC else "Synthetic CAP1 subject"
+        write(path, value + "\n")
+    source = commit("Synthetic CAP1 source")
+    version = "cap1-root-adjudication-v1.0"
+    date = "2026-11-27"
+    links = " ".join(f"[subject](https://github.com/tzeusy-org/syzygy/blob/{source}/{path})"
+                     for path in CAP1_ROOT_BOUND_PATHS)
+    row = f"| A-401 | {date} | `{source}` | {links} | Fixture | `git revert {source}` | `{version}` |\n"
+    write(AGENT_ADOPTIONS, ledger + row)
+    tip = commit("Synthetic binding row")
+    protected = "refs/remotes/origin/main"
+    git("update-ref", protected, tip)
+    check("pretag", AGENT_ADOPTIONS, "", row, "staged")
+    git("tag", "-a", version, "-m", "Synthetic CAP1 version", source)
+    check("matched-protected", AGENT_ADOPTIONS, row, row, "effective")
+
+    fenced_row = f"\n```md\n{row}```\n"
+    write(AGENT_ADOPTIONS, ledger + fenced_row)
+    git("update-ref", protected, commit("Fence only the protected row"))
+    git("checkout", "--quiet", "--detach", tip)
+    check("protected-fenced-row", AGENT_ADOPTIONS, row, fenced_row, "invalid",
+          "annotated source and binding row are not both on protected main")
+
+    projection = root / CAP1_ROOT_PROJECTION
+    projection_before = projection.read_text()
+    projection_after = projection_before + "\n"
+    projection.write_text(projection_after)
+    git("update-ref", protected, commit("Drift only the protected projection"))
+    git("checkout", "--quiet", "--detach", tip)
+    check("protected-projection-drift", CAP1_ROOT_PROJECTION, projection_before, projection_after,
+          "invalid", f"`{CAP1_ROOT_PROJECTION}` differs on protected main from the exact source snapshot")
+
+    veto = f"| A-402 | {date} | `{predecessor}` | Veto A-401. | Fixture | `git revert {predecessor}` | — |\n"
+    write(AGENT_ADOPTIONS, ledger + row + veto)
+    veto_tip = commit("Record the protected veto")
+    git("update-ref", protected, veto_tip)
+    check("matched-veto", AGENT_ADOPTIONS, "", veto, "reverted")
+    write(AGENT_ADOPTIONS, ledger + row)
+    check("worktree-omits-veto", AGENT_ADOPTIONS, veto, "", "invalid",
+          "authored and worktree disposition evidence disagree")
+    git("restore", "--worktree", AGENT_ADOPTIONS)
+    git("checkout", "--quiet", "--detach", tip)
+    check("stale-head-sees-veto", AGENT_ADOPTIONS, "", veto, "reverted")
+
+
+
 def _status_figure_moved(text):
     """The PROJECT-STATUS Polaris figure, five scenarios short."""
     m = STATUS_FIGURE.search(text)
@@ -12403,6 +12994,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
                     added, with_addition, adopted, with_adopted):
     cases = ([(base, clean, m) for m in mutants(ROOT)]
              + [(base, clean, m) for m in cap1_overlay_mutants()]
+             + [(base, clean, m) for m in cap1_root_mutants()]
              + [(base, clean, m) for m in declared_source_mutants()]
              + [(added, with_addition, m)
                 for m in addition_mutants()]
@@ -12449,6 +13041,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         lambda w, f: _entry_kind_cases(tmp, base, w, f),
         lambda w, f: declared_source_historical_cases(tmp, base, clean, w, f),
         lambda w, f: declared_source_composition_cases(w, f),
+        functools.partial(cap1_root_binding_cases, tmp),
         lambda w, f: url_source_cases(tmp, base, w, f),
     ]
     families += [functools.partial(case, tmp, figure_base) for case in (
@@ -13172,14 +13765,20 @@ def main(argv):
     mode.add_argument("--census", action="store_true")
     mode.add_argument("--selftest", action="store_true")
     mode.add_argument("--regenerate", action="store_true")
+    mode.add_argument("--cap1-root-projection", action="store_true",
+                      help="print the prospective CAP1 candidate projection")
+    mode.add_argument("--cap1-effective", action="store_true",
+                      help="print the bound CAP1 composition and coverage census")
     parser.add_argument("--witnesses", help="selftest: write rule-6 JSON here")
     args = parser.parse_args(argv)
-    global _COLLECT_REFUSALS
+    global _COLLECT_REFUSALS, _CAP1_SELFTEST_GIT_ROOT
     saved = _COLLECT_REFUSALS
+    saved_git_root = _CAP1_SELFTEST_GIT_ROOT
     try:
         if args.selftest:
             # Its fixtures drive the library path, which must raise each
             # entry's own read error, so it never collects.
+            _CAP1_SELFTEST_GIT_ROOT = ROOT
             return selftest(args.witnesses)
         _COLLECT_REFUSALS = True
         return _main(args)
@@ -13188,9 +13787,43 @@ def main(argv):
         return 1
     finally:
         _COLLECT_REFUSALS = saved
+        _CAP1_SELFTEST_GIT_ROOT = saved_git_root
 
 
 def _main(args):
+    if args.cap1_effective:
+        base = read_text(ROOT, FAMILY_SPECS["CAP1"])
+        if base is None:
+            print("CAP1 predecessor specification is unavailable", file=sys.stderr)
+            return 1
+        population, findings, selected = cap1_root_effective(ROOT, base)
+        try:
+            projection = cap1_root_projection(ROOT)
+            if json.loads(read_text(ROOT, CAP1_ROOT_PROJECTION) or "null") != projection:
+                findings.append("stale prospective CAP1 projection")
+        except (ValueError, KeyError, TypeError) as exc:
+            findings.append(str(exc))
+        if findings or selected is None:
+            print("\n".join(findings), file=sys.stderr)
+            return 1
+        state, _ = cap1_root_binding(ROOT)
+        coverage = "successor" if state == "effective" else "predecessor"
+        print(json.dumps({
+            "state": state,
+            "effective_spec_sha256": sha(selected.encode("utf-8")),
+            "requirements": len(population),
+            "scenarios": sum(len(req["scenarios"]) for req in population.values()),
+            "coverage": projection["coverage"][coverage],
+        }, indent=2, sort_keys=True))
+        return 0
+    if args.cap1_root_projection:
+        try:
+            projection = cap1_root_projection(ROOT)
+        except (ValueError, KeyError, TypeError) as exc:
+            print(str(exc), file=sys.stderr)
+            return 1
+        print(json.dumps(projection, indent=2, sort_keys=True))
+        return 0
     if args.census:
         pop, findings = census(ROOT)
         if findings:
