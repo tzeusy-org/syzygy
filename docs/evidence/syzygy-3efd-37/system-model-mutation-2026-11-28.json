@@ -1,0 +1,793 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-27T16:26:12.237Z",
+  "commit": "2d57e980172f4432c254831aea0bb5f9c33e5a35",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "e2f4f98c96af2a0438941cfdaaa8760e854c70290f31b02facf8fe3139a4aad8",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "6f2a14b13228223f516b345ab92fb34cb54b29e4c13984d43a283274784dcff2",
+    "apps/three-surface-poc/src/polaris-generation/svg-inert.ts": "c153e7efe79f7d81bbcb1fb7d852836c6644ce2e6282db42c569bfb1507fdafd",
+    "packages/polaris-dossier/src/check-derive.ts": "14fa7941ecf4a05a4f9e552b3e034ad63be9f9fc3b14b465cc5a3fb58983626b",
+    "packages/polaris-dossier/src/check.ts": "99ce699affe5c3560650eccb4b34a5f9409e8ba13f7595d2677d54d39fa9171a",
+    "packages/polaris-dossier/src/render.ts": "3c1d230c3ab297512657ec8e13953bca7a680efb1a5c9eb8ddb63c79661c5edf",
+    "packages/polaris-dossier/src/review-packet.ts": "75fcd17c802ffee1128d81a536f7cc2591091b7106f7df8f9ae1949b13438c93",
+    "packages/polaris-dossier/src/review-reach.ts": "554cb067c9a8a54fefbeda9645ffe70d4a1ee8f906c177ab170d3c585598a817",
+    "packages/polaris-dossier/src/system-model.ts": "92a195093defbf69e7eba4fe982e4e8142476f5c928adf656e72ef2357a9584b"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 600 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/system-model.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts"
+    ],
+    "packages/polaris-dossier/src/check.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts"
+    ],
+    "packages/polaris-dossier/src/draft-schema.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts",
+      "packages/polaris-dossier/src/draft-schema.test.ts"
+    ],
+    "packages/polaris-dossier/src/render.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts"
+    ],
+    "packages/polaris-dossier/src/review-reach.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts"
+    ],
+    "packages/polaris-dossier/src/review-packet.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts",
+      "packages/polaris-dossier/src/review.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/svg-inert.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/svg-inert.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "exitCode": 0,
+      "tests": 29,
+      "failedTests": []
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "exitCode": 0,
+      "tests": 29,
+      "failedTests": []
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/svg-inert.ts",
+      "exitCode": 0,
+      "tests": 60,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "exitCode": 0,
+      "tests": 29,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.ts",
+      "exitCode": 0,
+      "tests": 29,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.ts",
+      "exitCode": 0,
+      "tests": 29,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "exitCode": 0,
+      "tests": 113,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "exitCode": 0,
+      "tests": 29,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "exitCode": 0,
+      "tests": 29,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "parent-unresolved-skipped",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "if (parent !== undefined && clean(`${at}.parent`) && !index.elementById.has(parent)) parentFaults.add(j);",
+      "new": "if (false) parentFaults.add(j);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate refuses a parent and a relationship end naming no element"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "type-module-store-person",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "if (type === 'module' || type === 'store' || type === 'person') out.push",
+      "new": "if (type === 'module' || type === 'store') out.push",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate refuses a unit on a store and on a person, as on a module"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "type-mismatch-dropped",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "else if (standsFor !== type) out.push",
+      "new": "else if (false) out.push",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses an element type its unit disagrees with, and a unit on a type that has none"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "parent-chain-two-to-three",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "if (reached.has(next) || steps > 2) return true;",
+      "new": "if (reached.has(next) || steps > 3) return true;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses a chain of three parents above an element, and passes one of two"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "derivable-ignored",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "if (from === undefined || to === undefined || !derivable(relationship['relation'] as RelationType, from, to)) {",
+      "new": "if (from === undefined || to === undefined) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses a derived relationship no row could derive"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "relationship-end-unresolved-skipped",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "if (named !== undefined && !index.elementById.has(named)) { resolved = false;",
+      "new": "if (false) { resolved = false;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate refuses a parent and a relationship end naming no element"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "view-duplicate-dropped",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "if (seen.has(value)) out.push({ kind: 'view-duplicate'",
+      "new": "if (false) out.push({ kind: 'view-duplicate'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses an element no view shows, and a view naming an entry twice"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "view-relationship-one-end",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "if (!selected.has(text(entry.relationship['from']) ?? '') || !selected.has(text(entry.relationship['to']) ?? '')) {",
+      "new": "if (!selected.has(text(entry.relationship['from']) ?? '')) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses a view naming a missing element, and a view showing a relationship without its ends"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "view-entry-unresolved-skipped",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "if (!known) unresolvedHere.push(",
+      "new": "if (false) unresolvedHere.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses a view naming a missing element, and a view showing a relationship without its ends"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "model-unviewed-elements-dropped",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "if (id !== undefined && !shown.elements.has(id)) out.push",
+      "new": "if (false) out.push",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses an element no view shows, and a view naming an entry twice"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "undecided-ignores-parent",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "|| finding.kind === 'element-type' || finding.kind === 'element-parent' ||",
+      "new": "|| finding.kind === 'element-type' ||",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate decides no relationship or parent beside an element-parent finding"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "expand-derived-label-raw",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "label: derivedWords(relationship['relation']), epistemic: 'inferred'",
+      "new": "label: String(relationship['relation']), epistemic: 'inferred'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: a derived relationship not witnessed, in Syzygy's words expands a derived relationship of each relation with the words version 2.19 gives a witnessed edge, no citation"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "expand-edge-without-both-ends",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "if (entry === undefined || !chosen.has(text(entry.relationship['from']) ?? '') || !chosen.has(text(entry.relationship['to']) ?? '')) return [];",
+      "new": "if (entry === undefined) return [];",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses a view naming a missing element, and a view showing a relationship without its ends"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "expand-move-dropped",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "return best === undefined ? at : `${moves.get(best)!}${at.slice(best.length)}`;",
+      "new": "return at;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate advises a relationship two views share once, at its model path"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "expand-top-ignores-unselected-parent",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "return parent === undefined || !chosen.has(parent) || parent === entry.id;",
+      "new": "return parent === undefined || parent === entry.id;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate nests a selected element whose parent the view does not select at the top"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "migrate-type-default",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "return unit === undefined ? 'module' : UNIT_KIND_TYPES[unit.kind]!;",
+      "new": "return unit === undefined ? 'system' : UNIT_KIND_TYPES[unit.kind]!;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration turns a v11 draft into the v12 model and views its figures stand for"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "migrate-parent-dropped",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "...(parent === undefined ? {} : { parent }),",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration turns a v11 draft into the v12 model and views its figures stand for",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration keeps check and every figure byte for byte"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "migrate-group-preorder",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "if (id !== undefined) ids.push(id);\n        for (const child of list(group['children'])) visit(child, id);",
+      "new": "for (const child of list(group['children'])) visit(child, id);\n        if (id !== undefined) ids.push(id);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration turns a v11 draft into the v12 model and views its figures stand for"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "local-model-views-empty",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "return { id, type: text(element['type']) ?? '', parent: text(element['parent']) ?? null, views: selecting((lists) => lists.elements, id) };",
+      "new": "return { id, type: text(element['type']) ?? '', parent: text(element['parent']) ?? null, views: [] };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a shared element in each figure that selects it, its claim once in the first, and lists it as shown there in a later one",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render states a witnessed derived relationship Observed in Syzygy's words, with no claim anchor",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render links a later figure on another page to the first figure by a page-relative path, and a later one on the same page by its fragment",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate nests a selected element whose parent the view does not select at the top",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: a derived relationship not witnessed, in Syzygy's words gives a challenged derived relationship the reason challenged"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "check-model-findings-dropped",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "findings.push(...modelFindings(doc, new Set(findings.filter((finding) => finding.kind === 'schema').map((finding) => finding.at)), tree));",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses a view naming a missing element, and a view showing a relationship without its ends",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses parents that loop, and a chain that runs into a loop it is not on",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses a chain of three parents above an element, and passes one of two",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses an element type its unit disagrees with, and a unit on a type that has none",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses a derived relationship no row could derive",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses an element no view shows, and a view naming an entry twice",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate refuses a parent and a relationship end naming no element",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate refuses a unit on a store and on a person, as on a module",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate decides no relationship or parent beside an element-parent finding",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate refuses at a render a draft whose check record was altered to passed, from its model finding found again"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "check-relation-findings-dropped",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "findings.push(...modelRelationFindings(modelDecisions(doc, decisions.edges, decisions.nestings)));",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check challenges a derived relationship and a parent of an absent directory where coverage is complete, relationships first"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "check-end-held-ignored",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "&& !endHeld(edge['from']) && !endHeld(edge['to'])",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate leaves unasserted, and so unchallenged, a relationship whose element renders as a withheld item"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "derive-v12-schema-as-v11",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "hasModelForm(version) ? v12 : hasContainmentForm(version) ? v11 :",
+      "new": "hasContainmentForm(version) ? v11 :",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check passes a model whose views show every element and relationship",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses a view naming a missing element, and a view showing a relationship without its ends",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses parents that loop, and a chain that runs into a loop it is not on",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses a chain of three parents above an element, and passes one of two",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses an element type its unit disagrees with, and a unit on a type that has none",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses a derived relationship no row could derive",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check refuses an element no view shows, and a view naming an entry twice",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check challenges a derived relationship and a parent of an absent directory where coverage is complete, relationships first",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check computes no finding beside a schema finding on the members it reads",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a shared element in each figure that selects it, its claim once in the first, and lists it as shown there in a later one",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render states a witnessed derived relationship Observed in Syzygy's words, with no claim anchor",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a derived relationship to a withheld element Unknown in Syzygy's words, unasserted, with no claim anchor or citation",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render links a later figure on another page to the first figure by a page-relative path, and a later one on the same page by its fragment",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render takes the first figure that renders: a notice in a figure's place does not hold the claim",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration keeps check and every figure byte for byte",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate refuses a parent and a relationship end naming no element",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate refuses a unit on a store and on a person, as on a module",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate decides no relationship or parent beside an element-parent finding",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate leaves unasserted, and so unchallenged, a relationship whose element renders as a withheld item",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate reads a produced disposition naming its view's elements from the expansion",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate nests a selected element whose parent the view does not select at the top",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate refuses at a render a draft whose check record was altered to passed, from its model finding found again",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: the migration parity's one exception (a spec defect, spec bead syzygy-3efd.85) renders a v11 witnessed edge to a withheld node as the draft's own edge once migrated, edge-not-inferred in machine.json alone",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: a derived relationship not witnessed, in Syzygy's words gives a challenged derived relationship the reason challenged"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "derive-structural-unexpanded",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (hasModelForm(doc['schemaVersion'])) { const { doc: expanded, move } = expandModel(doc);",
+      "new": "if (false) { const { doc: expanded, move } = expandModel(doc);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate reads a produced disposition naming its view's elements from the expansion"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "render-figures-unexpanded",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "const figureDoc = hasModelForm(doc['schemaVersion']) ? { ...expandModel(doc).doc, schemaVersion: doc['schemaVersion'] } : doc;",
+      "new": "const figureDoc = doc;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a shared element in each figure that selects it, its claim once in the first, and lists it as shown there in a later one",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render states a witnessed derived relationship Observed in Syzygy's words, with no claim anchor",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a derived relationship to a withheld element Unknown in Syzygy's words, unasserted, with no claim anchor or citation",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render links a later figure on another page to the first figure by a page-relative path, and a later one on the same page by its fragment",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render takes the first figure that renders: a notice in a figure's place does not hold the claim",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration keeps check and every figure byte for byte",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate nests a selected element whose parent the view does not select at the top",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: the migration parity's one exception (a spec defect, spec bead syzygy-3efd.85) renders a v11 witnessed edge to a withheld node as the draft's own edge once migrated, edge-not-inferred in machine.json alone",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: a derived relationship not witnessed, in Syzygy's words gives a challenged derived relationship the reason challenged"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "render-end-held-ignored",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "const endHeld = (id: unknown): boolean => hasModelForm(doc['schemaVersion']) && withheld.has(text(id) ?? '');",
+      "new": "const endHeld = (id: unknown): boolean => false;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a derived relationship to a withheld element Unknown in Syzygy's words, unasserted, with no claim anchor or citation",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: the migration parity's one exception (a spec defect, spec bead syzygy-3efd.85) renders a v11 witnessed edge to a withheld node as the draft's own edge once migrated, edge-not-inferred in machine.json alone"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "render-model-absent",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "const model = hasModelForm(doc['schemaVersion']) ? localModelOf(doc) : undefined;",
+      "new": "const model = undefined;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a shared element in each figure that selects it, its claim once in the first, and lists it as shown there in a later one",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render states a witnessed derived relationship Observed in Syzygy's words, with no claim anchor",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a derived relationship to a withheld element Unknown in Syzygy's words, unasserted, with no claim anchor or citation",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render links a later figure on another page to the first figure by a page-relative path, and a later one on the same page by its fragment",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate nests a selected element whose parent the view does not select at the top",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: a derived relationship not witnessed, in Syzygy's words gives a challenged derived relationship the reason challenged"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "render-rederive-model-dropped",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "if (hasModelForm(doc['schemaVersion'])) findings.push(...modelFindings(",
+      "new": "if (false) findings.push(...modelFindings(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate refuses at a render a draft whose check record was altered to passed, from its model finding found again"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "site-derived-not-unknown",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": ": derivedIds.has(e.id) ? { ...e, epistemic: 'unknown' as const, sourceIds: [] } : e; })",
+      "new": ": e; })",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a derived relationship to a withheld element Unknown in Syzygy's words, unasserted, with no claim anchor or citation"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "site-shared-two-to-one",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const shared = (id: string): boolean => (viewsOf.get(id)?.length ?? 0) > 1;",
+      "new": "const shared = (id: string): boolean => (viewsOf.get(id)?.length ?? 0) > 0;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a shared element in each figure that selects it, its claim once in the first, and lists it as shown there in a later one",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render links a later figure on another page to the first figure by a page-relative path, and a later one on the same page by its fragment",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration keeps check and every figure byte for byte",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: the migration parity's one exception (a spec defect, spec bead syzygy-3efd.85) renders a v11 witnessed edge to a withheld node as the draft's own edge once migrated, edge-not-inferred in machine.json alone"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "site-first-ignores-notice",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (d.disposition.kind !== 'produced') return undefined;",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render takes the first figure that renders: a notice in a figure's place does not hold the claim"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "site-same-page-full-path",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const link = first.page === from ? `#figure-${target.id}` : href(from, first.page, `figure-${target.id}`);",
+      "new": "const link = href(from, first.page, `figure-${target.id}`);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a shared element in each figure that selects it, its claim once in the first, and lists it as shown there in a later one",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render links a later figure on another page to the first figure by a page-relative path, and a later one on the same page by its fragment",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate nests a selected element whose parent the view does not select at the top"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "site-shown-words",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "return `, as shown in <a href=",
+      "new": "return `, see <a href=",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a shared element in each figure that selects it, its claim once in the first, and lists it as shown there in a later one",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render links a later figure on another page to the first figure by a page-relative path, and a later one on the same page by its fragment",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate nests a selected element whose parent the view does not select at the top"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "site-containment-parent-words",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "? `<li>${escape(group.label)}${parent === undefined ? '' : ` (in ${escape(parent.label)})`}${shown}</li>`",
+      "new": "? `<li>${escape(group.label)}${shown}</li>`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a shared element in each figure that selects it, its claim once in the first, and lists it as shown there in a later one",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render links a later figure on another page to the first figure by a page-relative path, and a later one on the same page by its fragment"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "site-derived-claimed",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (derivedIds.has(e.id)) {\n        const reason",
+      "new": "if (false) {\n        const reason",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a derived relationship to a withheld element Unknown in Syzygy's words, unasserted, with no claim anchor or citation",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: a derived relationship not witnessed, in Syzygy's words gives a challenged derived relationship the reason challenged"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "site-derived-reason-challenged-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "relation.witness.state === 'challenged' ? 'challenged' : relation.witness.reason ?? 'unknown'",
+      "new": "relation.witness.reason ?? 'unknown'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: a derived relationship not witnessed, in Syzygy's words gives a challenged derived relationship the reason challenged"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "site-derived-words",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": ": Syzygy could not derive this relation (${escape(reason)})</li>`;",
+      "new": ": ${escape(e.label)} (${escape(reason)})</li>`;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a derived relationship to a withheld element Unknown in Syzygy's words, unasserted, with no claim anchor or citation",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: a derived relationship not witnessed, in Syzygy's words gives a challenged derived relationship the reason challenged"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "site-derived-reason-attr-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": " data-unknown-reason=\"${escape(reason)}\">${ends}",
+      "new": ">${ends}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a derived relationship to a withheld element Unknown in Syzygy's words, unasserted, with no claim anchor or citation",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: a derived relationship not witnessed, in Syzygy's words gives a challenged derived relationship the reason challenged"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "site-derived-basis-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "...(derivedIds.has(e.id) ? { basis: 'derived' } : {}), ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render states a witnessed derived relationship Observed in Syzygy's words, with no claim anchor",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a derived relationship to a withheld element Unknown in Syzygy's words, unasserted, with no claim anchor or citation"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "site-derived-arrow-unmarked",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": ": derivedIds.has(e.id) ? ' data-epistemic=\"unknown\"' : '';",
+      "new": ": '';",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a derived relationship to a withheld element Unknown in Syzygy's words, unasserted, with no claim anchor or citation"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "site-relationship-attr-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const attrs = `${sharedAttr(e.id, 'relationship')}${relation",
+      "new": "const attrs = `${relation",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render links a later figure on another page to the first figure by a page-relative path, and a later one on the same page by its fragment"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "site-model-witness-null",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "witness: local.edgeRelations?.get(r.id)?.witness ?? null",
+      "new": "witness: null",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a shared element in each figure that selects it, its claim once in the first, and lists it as shown there in a later one"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "layout-containment-attr-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "return `<g class=\"node ${group.epistemic}\"${elementAttributes(group.id)}>",
+      "new": "return `<g class=\"node ${group.epistemic}\">",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a shared element in each figure that selects it, its claim once in the first, and lists it as shown there in a later one"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "inert-element-refused",
+      "file": "apps/three-surface-poc/src/polaris-generation/svg-inert.ts",
+      "old": "'data-element', 'data-relationship',",
+      "new": "'data-relationship',",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 60,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render draws a shared element in each figure that selects it, its claim once in the first, and lists it as shown there in a later one",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render states a witnessed derived relationship Observed in Syzygy's words, with no claim anchor",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render links a later figure on another page to the first figure by a page-relative path, and a later one on the same page by its fragment",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: render takes the first figure that renders: a notice in a figure's place does not hold the claim",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate nests a selected element whose parent the view does not select at the top",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: a derived relationship not witnessed, in Syzygy's words gives a challenged derived relationship the reason challenged"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "reach-model-elements-dropped",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "for (const { element: value, at } of modelElements) element(at, 'diagram-node', value);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 29,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: check, each finding and gate leaves unasserted, and so unchallenged, a relationship whose element renders as a withheld item"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "packet-model-units-dropped",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "old": "if (hasModelForm(draft['schemaVersion'])) screenUnits(",
+      "new": "if (false) screenUnits(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 113,
+      "failedTests": [
+        "packages/polaris-dossier/src/review.test.ts > screens a v12 model's element units as a graph node's"
+      ],
+      "seconds": 11
+    }
+  ],
+  "equivalent": [
+    {
+      "id": "parent-loop-ignored",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "if (reached.has(next) || steps > 2) return true;",
+      "new": "if (steps > 2) return true;",
+      "reason": "Every chain that reaches an element already reached keeps following parents, so it takes a third step and returns true by the step bound alone: a loop of one (an element naming itself) returns at step 3 where the original returns at step 1, a loop of two at step 3 where the original returns at step 2, and a chain into a longer loop exceeds two steps before it closes. The function returns a boolean, so the outcome is the same for every input; the reached test states the clause's wording and bounds no work the step bound does not."
+    }
+  ],
+  "summary": {
+    "mutants": 46,
+    "killed": 46,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 1
+  }
+}
