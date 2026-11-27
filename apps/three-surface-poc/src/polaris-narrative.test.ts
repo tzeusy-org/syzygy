@@ -8,6 +8,7 @@ import { renderPolarisPage, renderPolarisPresentation } from './polaris.js';
 import { SHARED_FIXTURE_TIMEOUT_MS, buildFixtureModel, sharedFixtureModels } from './test-model-fixture.js';
 import {
   ADMITTING_AUTHORITY,
+  PROJECT_SHAPE_FIXTURE_TEXTS_WITHOUT_BASELINE_SPEC,
   PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC,
   PROJECT_SHAPE_FIXTURE_TEXTS_WITH_SECRET,
   REJECTING_AUTHORITY,
@@ -165,10 +166,94 @@ describe('Polaris narrative claim blocks (PWB-REQ-014; RFC7-2, RFC7-3, RFC7-9)',
           // Only anchored blocks state project facts with provenance.
           expect(unit.inner.split('data-claim-provenance=').length - 1, `${variant}: provenance outside an anchored block: <${unit.tag}${unit.attrs}>`).toBe(0 + (unit.inner.match(/data-claim-role="anchored-project-fact"/g)?.length ?? 0) * 0 + countNested(unit.inner));
         }
-        if (roles[0] === 'epistemic-claim') expect(unit.attrs).toContain('data-copy-role="epistemic-disclosure"');
+        if (roles[0] === 'epistemic-claim') {
+          const copyRole = attr(unit.attrs, 'data-polaris-group-opening') === undefined ? 'epistemic-disclosure' : 'project-fact';
+          expect(attr(unit.attrs, 'data-copy-role')).toBe(copyRole);
+        }
       }
     }
     expect(anchored).toBeGreaterThan(40);
+  });
+
+  it('pairs each unavailable project opening with its own visible disclosure and keeps it out of the resolved anchor counts', () => {
+    const expected = [
+      ['overview', 'project-category', 'Butlers\u2019 purpose and promises are unknown.'],
+      ['boundaries', 'project-category', 'The scope and principles are unknown.'],
+      ['v1', 'project-category', 'The declared V1 scope is unknown.'],
+      ['architecture', 'project-category', 'The declared architecture is unknown.'],
+      ['catalog', 'catalog', 'The project catalog is unknown.'],
+    ] as const;
+    for (const variant of ['unevaluated', 'rejected'] as const) {
+      const { html, narrative } = renderPolarisPresentation(shared.get(variant));
+      expect(narrative.openings).toEqual(expected.map(([group, groupClass]) => ({
+        kind: 'group-opening',
+        groupId: `polaris-group-${group}`,
+        groupClass,
+        label: 'Unknown',
+        childIds: ['claim:project-shape'],
+        role: 'epistemic-claim',
+        presentation: 'presentation-artifact',
+        citable: false,
+      })));
+      for (const opening of narrative.openings) {
+        expect(opening).not.toHaveProperty('anchors');
+        expect(opening).not.toHaveProperty('anchorsResolved');
+      }
+      const ledes = narrativeUnits(html).filter((unit) => attr(unit.attrs, 'data-polaris-group-opening') !== undefined);
+      expect(ledes.map((unit) => [attr(unit.attrs, 'data-polaris-group-opening'), unit.inner]))
+        .toEqual(expected.map(([group, , sentence]) => [`polaris-group-${group}`, sentence]));
+      for (const [group] of expected) {
+        const target = `polaris-shape-status-${group}`;
+        expect(html.match(new RegExp(`id="${target}"`, 'g'))).toHaveLength(1);
+        expect(html).toContain(`href="#${target}" data-opening-child="claim:project-shape"`);
+        expect(html).toContain(`<section class="claim-section" id="${target}" data-polaris-section="shape:${group}">`);
+      }
+      expect(narrative.blocks.flatMap((block) => block.anchors).some((anchor) => anchor.supports.includes('claim:project-shape'))).toBe(false);
+    }
+  });
+
+  it('reads the empty baseline catalog from its existing claim without promoting a withheld aggregate', () => {
+    const model = buildFixtureModel(cleanups, {
+      projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITHOUT_BASELINE_SPEC) },
+    });
+    const shape = model.projectShape;
+    expect(shape.kind).toBe('observed');
+    if (shape.kind !== 'observed') throw new Error('synthetic project shape unavailable');
+    expect(shape.items.some((item) => item.class === 'baseline-spec')).toBe(false);
+
+    const groupId = 'polaris-class-baseline-spec';
+    const group = (input: PocModel) => {
+      const { html, narrative } = renderPolarisPresentation(input);
+      return { html, opening: narrative.openings.find((opening) => opening.groupId === groupId) };
+    };
+    const empty = group(model);
+    expect(empty.opening).toMatchObject({ groupClass: 'catalog', label: 'Observed', childIds: ['claim:class:baseline-spec'] });
+    expect(empty.html).toMatch(/data-polaris-group-opening="polaris-class-baseline-spec"[^>]*>No items were declared by admitted sources\.<\/p>/);
+    expect(empty.html).not.toContain('href="#polaris-class-status-baseline-spec"');
+
+    const aggregate = shape.classes['baseline-spec'];
+    const unavailable = shared.get('rejected').projectShape.claim;
+    const withheld: PocModel = {
+      ...model,
+      projectShape: {
+        ...shape,
+        classes: {
+          ...shape.classes,
+          'baseline-spec': {
+            ...aggregate,
+            claim: { ...aggregate.claim, epistemic: unavailable.epistemic, resolutionRoutes: unavailable.resolutionRoutes },
+          },
+        },
+      },
+    };
+    const unknown = group(withheld);
+    expect(unknown.opening).toMatchObject({ label: 'Unknown', childIds: ['claim:class:baseline-spec'] });
+    expect(unknown.html).toMatch(/data-polaris-group-opening="polaris-class-baseline-spec"[^>]*>The declarations for this class are unknown[.]<\/p>/);
+    expect(unknown.html).toContain('href="#polaris-class-status-baseline-spec" data-opening-child="claim:class:baseline-spec"');
+    expect(unknown.html).toContain('<div id="polaris-class-status-baseline-spec"><div class="unknown-disclosure" data-unknown-disclosure="claim:class:baseline-spec"');
+    expect(unknown.html).toContain('data-unknown-reason="unconsented-source-or-provider"');
+    const populated = group(shared.get('observed-with-baseline'));
+    expect(populated.html).not.toMatch(/data-polaris-group-opening="polaris-class-baseline-spec"[^>]*>No items were declared/);
   });
 
   it('binds every named diagram element to its source declaration anchor', () => {

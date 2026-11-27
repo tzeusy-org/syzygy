@@ -89,6 +89,13 @@ export const POLARIS_COPY = [
   { id: 'group.architecture', role: 'project-fact', kind: 'heading', text: 'How Butlers is built' },
   { id: 'group.v1', role: 'project-fact', kind: 'heading', text: 'What V1 ships' },
   { id: 'group.catalog', role: 'project-fact', kind: 'heading', text: 'Project catalog' },
+  { id: 'opening.unavailable.overview', role: 'project-fact', kind: 'lede', text: 'Butlers\u2019 purpose and promises are unknown.' },
+  { id: 'opening.unavailable.boundaries', role: 'project-fact', kind: 'lede', text: 'The scope and principles are unknown.' },
+  { id: 'opening.unavailable.architecture', role: 'project-fact', kind: 'lede', text: 'The declared architecture is unknown.' },
+  { id: 'opening.unavailable.v1', role: 'project-fact', kind: 'lede', text: 'The declared V1 scope is unknown.' },
+  { id: 'opening.unavailable.catalog', role: 'project-fact', kind: 'lede', text: 'The project catalog is unknown.' },
+  { id: 'opening.empty-catalog', role: 'project-fact', kind: 'lede', text: 'No items were declared by admitted sources.' },
+  { id: 'opening.unknown-catalog', role: 'project-fact', kind: 'lede', text: 'The declarations for this class are unknown.' },
   { id: 'group.capability-detail', role: 'project-fact', kind: 'heading', text: 'One capability in depth' },
   { id: 'group.evidence-and-gaps', role: 'project-fact', kind: 'heading', text: 'Evidence and gaps' },
 
