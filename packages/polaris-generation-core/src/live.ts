@@ -21,8 +21,8 @@ export {
 } from './prompts.js';
 export { check, checkShape, choice, handle, list, object, one, ref, refs, text, type Schema, type SchemaError, type SchemaWithDefs } from './closed-schema.js';
 export { SOURCE_ID_PATTERN, SOURCE_ID_MIN_LENGTH, SOURCE_ID_MAX_LENGTH, SOURCE_TEXT_MAX_LENGTH } from './source-model.js';
-export { validateDraftRecord, validateRequestedAssets, reviewVerdict, diagramToMermaid, figureToMermaid, DIAGRAM_KINDS, FIGURE_KINDS } from './draft-model.js';
-export type { DossierDraft, DraftParagraph, DraftBlock, DraftSubsection, DraftElement, DraftDiagram, DraftDiagramHome, DraftDiagramNode, DraftDiagramEdge, DiagramKind, EpistemicMarking, RequestedAsset, FigureKind, DraftFigure, DraftFigureElement, DraftSequenceMessage, DraftSwimlaneStep } from './draft-model.js';
+export { validateDraftRecord, validateRequestedAssets, reviewVerdict, diagramToMermaid, figureToMermaid, DIAGRAM_KINDS, FIGURE_KINDS, CONTAINMENT_KIND } from './draft-model.js';
+export type { DossierDraft, DraftParagraph, DraftBlock, DraftSubsection, DraftElement, DraftDiagram, DraftDiagramHome, DraftDiagramNode, DraftDiagramEdge, DiagramKind, EpistemicMarking, RequestedAsset, FigureKind, DraftFigure, DraftFigureElement, DraftSequenceMessage, DraftSwimlaneStep, DraftContainmentGroup } from './draft-model.js';
 export {
   evaluateDossier, scanDossierPage, readerCost, fidelity, resolveQuote, runReaderTest, topicCoverage, scriptedAnswers, admittedSourcesDigest,
   parseDossierManifest, parseReaderQuestions, parsePageBudget, decodeHtmlText, isDossierPagePath,

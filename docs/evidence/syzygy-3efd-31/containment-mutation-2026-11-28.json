@@ -1,0 +1,1124 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-27T16:54:23.385Z",
+  "commit": "31d50bd7a245458e2963607bfeca1cccff8dc9b6",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "7b257f0d38be61246366204fd5bc1a4f60176c1ee18db647ebe588d3c9e53007",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "281c3bce5afccc846fbddd577b40e00646c3687f65a5c9ed5ecb86574edb9d25",
+    "packages/polaris-dossier/src/brief.ts": "478f79845a3f8fb1977fca88603205d4ae9de9fe2b6e5c5cc10c0d0cc44013ef",
+    "packages/polaris-dossier/src/check-derive.ts": "e6db8e7c72cc224ebdfb0275bd3413a339a3c275076b88b410cd9bd96fc620ab",
+    "packages/polaris-dossier/src/check.ts": "d4385ed6c14dc8e7cc1c7075d032a85a3e25091a45d01a3adb18c4cecdb467cc",
+    "packages/polaris-dossier/src/containment.ts": "d4fca3a110002341b2564fc19c1352728faa1f9436fc054a4bc0fa741574b921",
+    "packages/polaris-dossier/src/draft-schema.ts": "9f1e3bdc35c51e321e6e209d6433d1cdf793fa4553ba2313f7946016ea4209fb",
+    "packages/polaris-dossier/src/figure-fit.ts": "39429f1b78426031fce9ea5e1178d48ed5cf7de0bd46afb22fa68a203e25b9f0",
+    "packages/polaris-dossier/src/render.ts": "6734b45cacb59f1fc300f83b6822a1bc65ab57fd7bda4be27fd64283dfe750f1",
+    "packages/polaris-dossier/src/review-packet.ts": "2e71e5d4277251e171b900f6e5544a77cf1e2337b02dc3b3b3bae233c56db8bc",
+    "packages/polaris-dossier/src/review-reach.ts": "ecb5ca7d90ec476ccb5465ed0fe0b7a137cd7659ca2e36f54857268d1c263998",
+    "packages/polaris-generation-core/src/draft-model.ts": "7700d14b4f02ae1c3ff09b25d02c560ff38f1280cfc38103ac47a5b3d3835f66"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 600 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/containment.ts": [
+      "packages/polaris-dossier/src/containment-figure.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/containment-figure.test.ts"
+    ],
+    "packages/polaris-dossier/src/check.ts": [
+      "packages/polaris-dossier/src/containment-figure.test.ts"
+    ],
+    "packages/polaris-dossier/src/draft-schema.ts": [
+      "packages/polaris-dossier/src/containment-figure.test.ts",
+      "packages/polaris-dossier/src/draft-schema.test.ts",
+      "packages/polaris-dossier/src/figure-fit.test.ts"
+    ],
+    "packages/polaris-dossier/src/render.ts": [
+      "packages/polaris-dossier/src/containment-figure.test.ts"
+    ],
+    "packages/polaris-dossier/src/figure-fit.ts": [
+      "packages/polaris-dossier/src/figure-fit.test.ts",
+      "packages/polaris-dossier/src/containment-figure.test.ts"
+    ],
+    "packages/polaris-dossier/src/review-reach.ts": [
+      "packages/polaris-dossier/src/containment-figure.test.ts"
+    ],
+    "packages/polaris-dossier/src/review-packet.ts": [
+      "packages/polaris-dossier/src/containment-figure.test.ts",
+      "packages/polaris-dossier/src/review.test.ts"
+    ],
+    "packages/polaris-dossier/src/brief.ts": [
+      "packages/polaris-dossier/src/containment-figure.test.ts"
+    ],
+    "packages/polaris-generation-core/src/draft-model.ts": [
+      "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts",
+      "packages/polaris-dossier/src/containment-figure.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": [
+      "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts",
+      "packages/polaris-dossier/src/containment-figure.test.ts",
+      "packages/polaris-dossier/src/figure-fit.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": [
+      "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts",
+      "packages/polaris-dossier/src/containment-figure.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "exitCode": 0,
+      "tests": 52,
+      "failedTests": []
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "exitCode": 0,
+      "tests": 34,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "exitCode": 0,
+      "tests": 27,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "exitCode": 0,
+      "tests": 27,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.ts",
+      "exitCode": 0,
+      "tests": 27,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/containment.ts",
+      "exitCode": 0,
+      "tests": 27,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "exitCode": 0,
+      "tests": 107,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/figure-fit.ts",
+      "exitCode": 0,
+      "tests": 45,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.ts",
+      "exitCode": 0,
+      "tests": 27,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "exitCode": 0,
+      "tests": 110,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "exitCode": 0,
+      "tests": 27,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-generation-core/src/draft-model.ts",
+      "exitCode": 0,
+      "tests": 34,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "depth-level-off-by-one",
+      "file": "packages/polaris-dossier/src/containment.ts",
+      "old": "if (level === CONTAINMENT_BOUNDS.levels + 1) depth.push",
+      "new": "if (level === CONTAINMENT_BOUNDS.levels + 2) depth.push",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-depth at the level-4 group alone, with no unit-reference or relation-challenged finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings orders depth, size, flat, unit-reference and relation-challenged after every other finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings refuses at a render a draft whose check record was altered to passed, from its containment finding found again"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "size-bound-loosened",
+      "file": "packages/polaris-dossier/src/containment.ts",
+      "old": "if (groups.length > CONTAINMENT_BOUNDS.total) size.push",
+      "new": "if (groups.length > CONTAINMENT_BOUNDS.total + 1) size.push",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-size at a containment of 41 groups and containment-flat at one with no nesting, in that order",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a containment-size finding, so raises no relation-challenged"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "flat-every-to-some",
+      "file": "packages/polaris-dossier/src/containment.ts",
+      "old": "if (groups.every(({ level }) => level === 1)) flat.push",
+      "new": "if (groups.some(({ level }) => level === 1)) flat.push",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes passes check with no finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes carries the outline rules and no stepper rule on a page whose only two-form figure is a containment, and no script",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-depth at the level-4 group alone, with no unit-reference or relation-challenged finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-size at a containment of 41 groups and containment-flat at one with no nesting, in that order",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a containment-size finding, so raises no relation-challenged",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings orders depth, size, flat, unit-reference and relation-challenged after every other finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports figure-kind for a containment carrying edges and a graph carrying groups, with no schema finding at either path",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a figure-kind finding, and reads no unit of its stray nodes",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports a group unit's text past 256 code units as one schema finding at the unit, and decides no nesting beside it",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings refuses at a render a draft whose check record was altered to passed, from its containment finding found again",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings refuses a containment as the hero: a hero is a graph figure",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows witnesses a top-level directory nested in the repository root, in Syzygy's words and in none of the draft's marks",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows challenges a nesting of an absent top-level directory where coverage is complete, naming the child group and never its unit",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows decides no nesting where the draft has a schema finding anywhere",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose parent group renders as a withheld item unknown, at check and at the render",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose child group renders as a withheld item unknown, at check and at the render",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows decides a nesting of other unit kinds, or without units, unknown, and reports nothing for either"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "list-fault-ignored",
+      "file": "packages/polaris-dossier/src/containment.ts",
+      "old": "if (!Array.isArray(diagram[GROUPS_FIELD]) || listFault(i, schemaPaths)) continue;",
+      "new": "if (!Array.isArray(diagram[GROUPS_FIELD])) continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports a list bound as a schema finding alone, with no structural finding for that figure",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings gates the structural findings on a schema finding at a children list below the top level"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "structural-order-reversed",
+      "file": "packages/polaris-dossier/src/containment.ts",
+      "old": "return [...depth, ...size, ...flat];",
+      "new": "return [...flat, ...size, ...depth];",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-size at a containment of 41 groups and containment-flat at one with no nesting, in that order",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings orders depth, size, flat, unit-reference and relation-challenged after every other finding"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "undecided-ignores-depth",
+      "file": "packages/polaris-dossier/src/containment.ts",
+      "old": "kind !== 'figure-kind' && kind !== 'containment-depth' && ",
+      "new": "kind !== 'figure-kind' && ",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-depth at the level-4 group alone, with no unit-reference or relation-challenged finding"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "undecided-ignores-figure-kind",
+      "file": "packages/polaris-dossier/src/containment.ts",
+      "old": "if (kind !== 'figure-kind' && kind !== 'containment-depth'",
+      "new": "if (kind !== 'containment-depth'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a figure-kind finding, and reads no unit of its stray nodes"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "field-version-kind-dropped",
+      "file": "packages/polaris-dossier/src/containment.ts",
+      "old": "...(diagram['kind'] === CONTAINMENT_KIND ? [{ kind: 'field-version' as const",
+      "new": "...(false ? [{ kind: 'field-version' as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: earlier schemas keep their findings reports a v10 containment kind and its groups as field-version in place of the schema findings at those paths",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: earlier schemas keep their findings reports a v6 containment the same way"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "field-version-groups-dropped",
+      "file": "packages/polaris-dossier/src/containment.ts",
+      "old": "...(Object.hasOwn(diagram, GROUPS_FIELD) ? [",
+      "new": "...(false ? [",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: earlier schemas keep their findings reports a v10 containment kind and its groups as field-version in place of the schema findings at those paths",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: earlier schemas keep their findings reports a v6 containment the same way"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "field-version-ungated",
+      "file": "packages/polaris-dossier/src/containment.ts",
+      "old": "if (!precedesContainment(doc['schemaVersion'])) return [];\n  return list(doc['diagrams']).flatMap((diagram, i): CheckFinding[] => {",
+      "new": "return list(doc['diagrams']).flatMap((diagram, i): CheckFinding[] => {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes passes check with no finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes carries the outline rules and no stepper rule on a page whose only two-form figure is a containment, and no script",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-depth at the level-4 group alone, with no unit-reference or relation-challenged finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-size at a containment of 41 groups and containment-flat at one with no nesting, in that order",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports a list bound as a schema finding alone, with no structural finding for that figure",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings gates the structural findings on a schema finding at a children list below the top level",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a containment-size finding, so raises no relation-challenged",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings orders depth, size, flat, unit-reference and relation-challenged after every other finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports figure-kind for a containment carrying edges and a graph carrying groups, with no schema finding at either path",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a figure-kind finding, and reads no unit of its stray nodes",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports a group unit's text past 256 code units as one schema finding at the unit, and decides no nesting beside it",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings refuses at a render a draft whose check record was altered to passed, from its containment finding found again",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings refuses a containment as the hero: a hero is a graph figure",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows witnesses a top-level directory nested in the repository root, in Syzygy's words and in none of the draft's marks",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows challenges a nesting of an absent top-level directory where coverage is complete, naming the child group and never its unit",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows decides no nesting where the draft has a schema finding anywhere",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose parent group renders as a withheld item unknown, at check and at the render",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose child group renders as a withheld item unknown, at check and at the render",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows decides a nesting of other unit kinds, or without units, unknown, and reports nothing for either",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: earlier schemas keep their findings reports a v13 containment by v13's schema findings, never field-version: v13 descends from v10 and is no earlier schema"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "field-version-paths-not-reported",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "for (const at of containmentFieldVersionPaths(doc)) subsectionPaths.add(at);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: earlier schemas keep their findings reports a v10 containment kind and its groups as field-version in place of the schema findings at those paths",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: earlier schemas keep their findings reports a v6 containment the same way"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "schema-groups-bound",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "groups: [1, 5] as const",
+      "new": "groups: [1, 6] as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 107,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports a list bound as a schema finding alone, with no structural finding for that figure"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "schema-children-bound",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "children: [0, 8] as const",
+      "new": "children: [0, 9] as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 107,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports a list bound as a schema finding alone, with no structural finding for that figure",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings gates the structural findings on a schema finding at a children list below the top level"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "schema-total-bound",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "total: 40, levels: 3",
+      "new": "total: 41, levels: 3",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 107,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-fit.test.ts > figure fit: sequence and swimlane (syzygy-3efd.30) with a layout that lays out anything: a containment with no nesting, a level-4 group or more than 40 groups is Unknown before layout",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-size at a containment of 41 groups and containment-flat at one with no nesting, in that order",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a containment-size finding, so raises no relation-challenged"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "schema-enum-names-v11",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "choice(containment === 'taken' ? LOCAL_DRAFT_SCHEMA_VERSIONS : NAMED_SCHEMA_VERSIONS)",
+      "new": "choice(LOCAL_DRAFT_SCHEMA_VERSIONS)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 107,
+      "failedTests": [
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema refuses a draft where the draft names another schema version",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema: the worth-knowing mark (v13) names neither v11, which no brief issues, nor v12, which this code does not implement, so neither reads as v13"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "members-unversioned",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "kind === CONTAINMENT_KIND && hasContainmentForm(version) ? [GROUPS_FIELD]",
+      "new": "kind === CONTAINMENT_KIND ? [GROUPS_FIELD]",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 107,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: earlier schemas keep their findings reports a v10 containment kind and its groups as field-version in place of the schema findings at those paths",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: earlier schemas keep their findings reports a v13 containment by v13's schema findings, never field-version: v13 descends from v10 and is no earlier schema"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "figure-members-without-groups",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "(hasContainmentForm(version) ? [...FIGURE_MEMBERS, GROUPS_FIELD] : FIGURE_MEMBERS)",
+      "new": "(FIGURE_MEMBERS)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 107,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports figure-kind for a containment carrying edges and a graph carrying groups, with no schema finding at either path"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "precedes-takes-v13",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "boolean => !hasContainmentForm(version) && !hasWorthKnowingForm(version)",
+      "new": "boolean => !hasContainmentForm(version)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 107,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: earlier schemas keep their findings reports a v13 containment by v13's schema findings, never field-version: v13 descends from v10 and is no earlier schema"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "hero-form-without-v11",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "version === LOCAL_DRAFT_SCHEMA_VERSION_V10 || hasContainmentForm(version) || hasWorthKnowingForm(version)",
+      "new": "version === LOCAL_DRAFT_SCHEMA_VERSION_V10 || hasWorthKnowingForm(version)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 107,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-fit.test.ts > figure fit: sequence and swimlane (syzygy-3efd.30) with the site's layout: a three-level containment fits both viewports",
+        "packages/polaris-dossier/src/figure-fit.test.ts > figure fit: sequence and swimlane (syzygy-3efd.30) with a layout that lays out anything: a containment with no nesting, a level-4 group or more than 40 groups is Unknown before layout",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes passes check with no finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes carries the outline rules and no stepper rule on a page whose only two-form figure is a containment, and no script",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes carries the stepper rules and no outline rule on a page whose only two-form figure is a swimlane",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-depth at the level-4 group alone, with no unit-reference or relation-challenged finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-size at a containment of 41 groups and containment-flat at one with no nesting, in that order",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports a list bound as a schema finding alone, with no structural finding for that figure",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings gates the structural findings on a schema finding at a children list below the top level",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a containment-size finding, so raises no relation-challenged",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings orders depth, size, flat, unit-reference and relation-challenged after every other finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports figure-kind for a containment carrying edges and a graph carrying groups, with no schema finding at either path",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a figure-kind finding, and reads no unit of its stray nodes",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports a group unit's text past 256 code units as one schema finding at the unit, and decides no nesting beside it",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings refuses at a render a draft whose check record was altered to passed, from its containment finding found again",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings refuses a containment as the hero: a hero is a graph figure",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows witnesses a top-level directory nested in the repository root, in Syzygy's words and in none of the draft's marks",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows challenges a nesting of an absent top-level directory where coverage is complete, naming the child group and never its unit",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows decides no nesting where the draft has a schema finding anywhere",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose parent group renders as a withheld item unknown, at check and at the render",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose child group renders as a withheld item unknown, at check and at the render",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows decides a nesting of other unit kinds, or without units, unknown, and reports nothing for either",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: a v11 draft's other figures keep their v10 bytes draws a graph and a sequence figure of a v11 draft byte for byte as the same figures of a v10 draft"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "group-unit-required",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "...CONTAINMENT_BOUNDS.children), unit: ref('unit') }, ['unit'])",
+      "new": "...CONTAINMENT_BOUNDS.children), unit: ref('unit') })",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 107,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes passes check with no finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes carries the outline rules and no stepper rule on a page whose only two-form figure is a containment, and no script",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-depth at the level-4 group alone, with no unit-reference or relation-challenged finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-size at a containment of 41 groups and containment-flat at one with no nesting, in that order",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports a list bound as a schema finding alone, with no structural finding for that figure",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings gates the structural findings on a schema finding at a children list below the top level",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a containment-size finding, so raises no relation-challenged",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings orders depth, size, flat, unit-reference and relation-challenged after every other finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports figure-kind for a containment carrying edges and a graph carrying groups, with no schema finding at either path",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings refuses at a render a draft whose check record was altered to passed, from its containment finding found again",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings refuses a containment as the hero: a hero is a graph figure",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows decides a nesting of other unit kinds, or without units, unknown, and reports nothing for either"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "draft-rules-v11-as-v10",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "hasContainmentForm(version) ? v11 : ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes passes check with no finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes carries the outline rules and no stepper rule on a page whose only two-form figure is a containment, and no script",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes carries the stepper rules and no outline rule on a page whose only two-form figure is a swimlane",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-depth at the level-4 group alone, with no unit-reference or relation-challenged finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-size at a containment of 41 groups and containment-flat at one with no nesting, in that order",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports a list bound as a schema finding alone, with no structural finding for that figure",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings gates the structural findings on a schema finding at a children list below the top level",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a containment-size finding, so raises no relation-challenged",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings orders depth, size, flat, unit-reference and relation-challenged after every other finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports figure-kind for a containment carrying edges and a graph carrying groups, with no schema finding at either path",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a figure-kind finding, and reads no unit of its stray nodes",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports a group unit's text past 256 code units as one schema finding at the unit, and decides no nesting beside it",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings refuses at a render a draft whose check record was altered to passed, from its containment finding found again",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings refuses a containment as the hero: a hero is a graph figure",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows witnesses a top-level directory nested in the repository root, in Syzygy's words and in none of the draft's marks",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows challenges a nesting of an absent top-level directory where coverage is complete, naming the child group and never its unit",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows decides no nesting where the draft has a schema finding anywhere",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose parent group renders as a withheld item unknown, at check and at the render",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose child group renders as a withheld item unknown, at check and at the render",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows decides a nesting of other unit kinds, or without units, unknown, and reports nothing for either",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: a v11 draft's other figures keep their v10 bytes draws a graph and a sequence figure of a v11 draft byte for byte as the same figures of a v10 draft"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "graph-takes-containment",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "\n    && !(hasContainmentForm(doc['schemaVersion']) && diagram['kind'] === CONTAINMENT_KIND));",
+      "new": ");",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a figure-kind finding, and reads no unit of its stray nodes"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "group-units-unbounded",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "for (const { diagram, i } of containmentDiagrams(doc)) for (const { group, at } of groupsOf(diagram, i)) bounded(group, at);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports a group unit's text past 256 code units as one schema finding at the unit, and decides no nesting beside it"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "group-unit-level-gate-loosened",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "level > CONTAINMENT_BOUNDS.levels ? undefined",
+      "new": "level > CONTAINMENT_BOUNDS.levels + 1 ? undefined",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-depth at the level-4 group alone, with no unit-reference or relation-challenged finding"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "undecided-gate-dropped",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "|| undecided.has(i)) continue;",
+      "new": ") continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-depth at the level-4 group alone, with no unit-reference or relation-challenged finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a containment-size finding, so raises no relation-challenged",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a figure-kind finding, and reads no unit of its stray nodes"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "withheld-parent-asserted",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "asserted: asserted(group) && !withheld(parent.group)",
+      "new": "asserted: asserted(group)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose parent group renders as a withheld item unknown, at check and at the render"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "nesting-relation-swapped",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "relation: 'contains', from: ends.get(parent.group)",
+      "new": "relation: 'depends-on', from: ends.get(parent.group)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings orders depth, size, flat, unit-reference and relation-challenged after every other finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows witnesses a top-level directory nested in the repository root, in Syzygy's words and in none of the draft's marks",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows challenges a nesting of an absent top-level directory where coverage is complete, naming the child group and never its unit",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows decides a nesting of other unit kinds, or without units, unknown, and reports nothing for either"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "nesting-direction-reversed",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "from: ends.get(parent.group), to: ends.get(group) }",
+      "new": "from: ends.get(group), to: ends.get(parent.group) }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings orders depth, size, flat, unit-reference and relation-challenged after every other finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows witnesses a top-level directory nested in the repository root, in Syzygy's words and in none of the draft's marks",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows challenges a nesting of an absent top-level directory where coverage is complete, naming the child group and never its unit"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "nesting-unknown-reported",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "diagramName, decision }): CheckFinding[] => (decision.state !== 'challenged' ? []",
+      "new": "diagramName, decision }): CheckFinding[] => (decision.state === 'witnessed' ? []",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes passes check with no finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes carries the outline rules and no stepper rule on a page whose only two-form figure is a containment, and no script",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings orders depth, size, flat, unit-reference and relation-challenged after every other finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings refuses a containment as the hero: a hero is a graph figure",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose parent group renders as a withheld item unknown, at check and at the render",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose child group renders as a withheld item unknown, at check and at the render",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows decides a nesting of other unit kinds, or without units, unknown, and reports nothing for either"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "schema-fault-keeps-nestings",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "containmentDecisions = schemaFault ? { ...decisions, nestings: [] } : decisions;",
+      "new": "containmentDecisions = decisions;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports a group unit's text past 256 code units as one schema finding at the unit, and decides no nesting beside it",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows decides no nesting where the draft has a schema finding anywhere"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "undecided-without-structural",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "undecidedContainments([...findings, ...containmentStructuralFindings(doc, new Set())])",
+      "new": "undecidedContainments(findings)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings reports containment-depth at the level-4 group alone, with no unit-reference or relation-challenged finding",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a containment-size finding, so raises no relation-challenged"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "relation-before-structural",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "applyContainmentFindings(doc, findings);\n    if (containmentDecisions !== undefined) findings.push(...containmentRelationFindings(containmentDecisions));",
+      "new": "if (containmentDecisions !== undefined) findings.push(...containmentRelationFindings(containmentDecisions));\n    applyContainmentFindings(doc, findings);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings orders depth, size, flat, unit-reference and relation-challenged after every other finding"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "render-skips-structural",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "  applyContainmentFindings(doc, findings);\n",
+      "new": "\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings refuses at a render a draft whose check record was altered to passed, from its containment finding found again"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "render-drops-nestings",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "...decisions.nestings.map(({ id, decision })",
+      "new": "...[].map(({ id, decision })",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows witnesses a top-level directory nested in the repository root, in Syzygy's words and in none of the draft's marks",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose parent group renders as a withheld item unknown, at check and at the render",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose child group renders as a withheld item unknown, at check and at the render",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows decides a nesting of other unit kinds, or without units, unknown, and reports nothing for either"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "render-ignores-withheld",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "}, (element) => withheld.has(text(element['id']) ?? ''));",
+      "new": "}, () => false);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose parent group renders as a withheld item unknown, at check and at the render"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "reach-skips-groups",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "for (const { group, at } of groupsOf(diagram, i)) element(at, 'diagram-node', group);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 0,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts (file failed: Transform failed with 1 error:\n/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-3efd.37/packages/polaris-dossier/src/review-reach.ts:166:4: ERROR: Unexpected \"}\")"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "packet-skips-group-units",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "old": "kind === GROUPS_FIELD ? groupsOf(diagram, i).map(({ group }) => group) : []",
+      "new": "[]",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 110,
+      "failedTests": [
+        "packages/polaris-dossier/src/review.test.ts > screens a v11 containment's group units as a graph node's, at every level"
+      ],
+      "seconds": 11
+    },
+    {
+      "id": "fit-leaf-list-faults",
+      "file": "packages/polaris-dossier/src/figure-fit.ts",
+      "old": "if (level > CONTAINMENT_BOUNDS.levels && values.length > 0)",
+      "new": "if (level > CONTAINMENT_BOUNDS.levels)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 45,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-fit.test.ts > figure fit: sequence and swimlane (syzygy-3efd.30) with the site's layout: a three-level containment fits both viewports"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "fit-flat-fits",
+      "file": "packages/polaris-dossier/src/figure-fit.ts",
+      "old": "return fault || !nested || total > CONTAINMENT_BOUNDS.total ?",
+      "new": "return fault || total > CONTAINMENT_BOUNDS.total ?",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 45,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-fit.test.ts > figure fit: sequence and swimlane (syzygy-3efd.30) with a layout that lays out anything: a containment with no nesting, a level-4 group or more than 40 groups is Unknown before layout"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "fit-containment-unkinded",
+      "file": "packages/polaris-dossier/src/figure-fit.ts",
+      "old": " || (hasContainmentForm(version) && diagram['kind'] === CONTAINMENT_KIND))",
+      "new": ")",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 45,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-fit.test.ts > figure fit: sequence and swimlane (syzygy-3efd.30) with the site's layout: a three-level containment fits both viewports",
+        "packages/polaris-dossier/src/figure-fit.test.ts > figure fit: sequence and swimlane (syzygy-3efd.30) with a layout that lays out anything: a containment with no nesting, a level-4 group or more than 40 groups is Unknown before layout"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "brief-paragraph-word",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "Use it to show parts inside parts",
+      "new": "Use it to show parts within parts",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: the brief paragraph is kept verbatim for the brief that will issue it"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "mermaid-indent-flat",
+      "file": "packages/polaris-generation-core/src/draft-model.ts",
+      "old": "pad = '  '.repeat(level)",
+      "new": "pad = '  '",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 34,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts > containment source writes the record by position, nested two spaces a level, marks inferred then unknown",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "mermaid-leaf-as-subgraph",
+      "file": "packages/polaris-generation-core/src/draft-model.ts",
+      "old": "if (group.children.length === 0) {\n      lines.push(`${pad}${name}[\"${figureLabel(group)}\"]`);",
+      "new": "if (group.children.length === 0) {\n      lines.push(`${pad}subgraph ${name}[\"${figureLabel(group)}\"]`);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 34,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts > containment source writes the record by position, nested two spaces a level, marks inferred then unknown",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "layout-leaf-height",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "const CONTAINMENT_LEAF = 48;",
+      "new": "const CONTAINMENT_LEAF = 52;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 52,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts > containment layout lays out the three-level scenario at 408 x 256",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "layout-head",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "const CONTAINMENT_HEAD = 40;",
+      "new": "const CONTAINMENT_HEAD = 36;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 52,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts > containment layout lays out the three-level scenario at 408 x 256",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "layout-gap",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "const CONTAINMENT_GAP = 8;",
+      "new": "const CONTAINMENT_GAP = 12;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 52,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts > containment layout lays out the three-level scenario at 408 x 256",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "layout-foot",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "const CONTAINMENT_FOOT = 12;",
+      "new": "const CONTAINMENT_FOOT = 8;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 52,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts > containment layout lays out the three-level scenario at 408 x 256",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "layout-indent",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "const CONTAINMENT_INDENT = 12;",
+      "new": "const CONTAINMENT_INDENT = 16;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 52,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts > containment layout lays out the three-level scenario at 408 x 256",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "layout-narrowing",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "const CONTAINMENT_NARROWING = 24;",
+      "new": "const CONTAINMENT_NARROWING = 20;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 52,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts > containment layout lays out the three-level scenario at 408 x 256",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "layout-chars",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "const CONTAINMENT_CHARS = [19, 16, 13] as const;",
+      "new": "const CONTAINMENT_CHARS = [19, 16, 16] as const;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 52,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts > containment layout fills a line to 19, 16 and 13 characters by level, no further"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "layout-total-bound",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "if (seen.size > 40 || levels < 2)",
+      "new": "if (seen.size > 41 || levels < 2)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 52,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts > containment layout throws where a count is out of its bounds, an identity repeats or nothing nests"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "layout-flat-allowed",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "if (seen.size > 40 || levels < 2)",
+      "new": "if (seen.size > 40)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 52,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts > containment layout throws where a count is out of its bounds, an identity repeats or nothing nests"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "layout-depth-bound",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "if (level > 3 || group.children.length > 8)",
+      "new": "if (level > 4 || group.children.length > 8)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 52,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts > containment layout throws where a count is out of its bounds, an identity repeats or nothing nests"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "layout-height-margin",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "height: 48 + tallest",
+      "new": "height: 40 + tallest",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 52,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts > containment layout lays out the three-level scenario at 408 x 256",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "css-mixed-without-queries",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "return stepper ? `${FIGURE_KINDS_CSS}${CONTAINMENT_OUTLINE_CSS}${CONTAINMENT_QUERY_CSS}`",
+      "new": "return stepper ? `${FIGURE_KINDS_CSS}${CONTAINMENT_OUTLINE_CSS}`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 34,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts > containment stylesheet carries the stepper rules alone, the outline rules alone, both, or neither, by the figures a page renders"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "css-stepper-always",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (!containment) return stepper ? FIGURE_KINDS_CSS : '';",
+      "new": "if (!containment) return FIGURE_KINDS_CSS;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 34,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/containment-layout.test.ts > containment stylesheet carries the stepper rules alone, the outline rules alone, both, or neither, by the figures a page renders"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "css-containment-adds-stepper",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "containmentPages.add(from);",
+      "new": "containmentPages.add(from); figurePages.add(from);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 34,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes carries the outline rules and no stepper rule on a page whose only two-form figure is a containment, and no script"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "site-parent-words",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "` (in ${escape(parent.label)})`",
+      "new": "` (inside ${escape(parent.label)})`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 34,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "site-tally-nestings",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "` ${counted(witnesses, 'nesting', 'nestings')} witnessed by Syzygy.</p>`",
+      "new": "` ${counted(witnesses, 'nesting', 'nestings')} witnessed.</p>`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 34,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows witnesses a top-level directory nested in the repository root, in Syzygy's words and in none of the draft's marks"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "site-outline-unknown-mark",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${group.epistemic === 'unknown' ? ' ?' : ''}${group.children.length === 0",
+      "new": "${group.children.length === 0",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 34,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows decides a nesting of other unit kinds, or without units, unknown, and reports nothing for either"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "site-structure-witness-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "witness: relationOf(group.id)?.witness ?? null",
+      "new": "witness: null",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 34,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: three levels laid out as boxes within boxes draws each box at its place, no connector, curated, with its tally, outline, list and source",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows witnesses a top-level directory nested in the repository root, in Syzygy's words and in none of the draft's marks",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose parent group renders as a withheld item unknown, at check and at the render",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose child group renders as a withheld item unknown, at check and at the render",
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows decides a nesting of other unit kinds, or without units, unknown, and reports nothing for either"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "review-r3-withheld-child-asserted",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "asserted: asserted(group) && !withheld(parent.group)",
+      "new": "asserted: group['epistemic'] === 'inferred' && !withheld(parent.group)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: nestings read as contains arrows leaves a nesting whose child group renders as a withheld item unknown, at check and at the render"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "review-r1-children-list-fault-ignored",
+      "file": "packages/polaris-dossier/src/containment.ts",
+      "old": "GROUPS_FIELD}(?:\\\\[\\\\d+\\\\]\\\\.children)*$",
+      "new": "GROUPS_FIELD}$",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings gates the structural findings on a schema finding at a children list below the top level"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "review-r2-undecided-ignores-size",
+      "file": "packages/polaris-dossier/src/containment.ts",
+      "old": "kind !== 'containment-size' && ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 27,
+      "failedTests": [
+        "packages/polaris-dossier/src/containment-figure.test.ts > containment: repair findings decides no nesting of a containment with a containment-size finding, so raises no relation-challenged"
+      ],
+      "seconds": 4
+    }
+  ],
+  "equivalent": [],
+  "summary": {
+    "mutants": 64,
+    "killed": 64,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 0
+  }
+}

@@ -1,0 +1,59 @@
+
+// syzygy-3efd.31 byte-identity dumper (scratch, appended to render.test.ts in two trees and removed): every file a check and a render
+// write for drafts of schema v2 to v10 and v13, by sha256, so the trees before and after the version 2.23 code can be compared byte for byte.
+describe.skipIf(process.env['CONTAIN_DUMP'] === undefined)('containment byte-identity dump', () => {
+  const versions = ['v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8', 'v9', 'v10', 'v13'].map((v) => `polaris-dossier-local-draft-${v}`);
+  const el = (id: string, label: string, file = 'docs/notes.txt') => ({ id, label, epistemic: 'inferred', citations: [cite(`c-${id}`, file, 2, 2)] });
+  const variant = (version: string, extra: string): Doc => {
+    const doc = draft();
+    doc.schemaVersion = version;
+    const n = Number(version.replace(/^.*-v/u, ''));
+    if (n >= 3) doc.sections[0].paragraphs.push({ kind: 'callout', id: 'call-1', tone: 'note', title: 'Note', children: [{ id: 'cb1', label: 'unknown', reason: 'missing-evidence', text: 'Not known.', citations: [], children: [] }] });
+    if (n >= 4) { doc.sections.push({ id: 'second', title: 'Second', paragraphs: [{ id: 's2p', label: 'inferred', basis: 'source', text: 'It runs.', citations: [cite('c-s2p', 'src/kestrel.c', 4, 4)], quotations: [], children: [] }], disposition: { kind: 'produced', assetIds: ['second'] } }); doc.poles = [{ label: 'Why', sections: ['core-ideas'] }, { label: 'How', sections: ['second'] }]; doc.whySection = 'core-ideas'; }
+    if (n >= 5) doc.diagrams = [{ id: 'flow-1', title: 'Flow', home: { kind: 'section', target: 'second' }, kind: 'flow', relationship: 'Order.', disposition: { kind: 'produced', assetIds: ['flow-1'] }, nodes: [el('n1', 'Client'), el('n2', 'Server')], edges: [{ ...el('x1', 'sends'), from: 'n1', to: 'n2' }] }];
+    if (n === 4) doc.diagrams = [{ id: 'flow-1', title: 'Flow', sectionId: 'second', kind: 'flow', relationship: 'Order.', disposition: { kind: 'produced', assetIds: ['flow-1'] }, nodes: [el('n1', 'Client'), el('n2', 'Server')], edges: [{ ...el('x1', 'sends'), from: 'n1', to: 'n2' }] }];
+    if (n >= 6) doc.thesisBasis = 'stated';
+    if (n >= 7) doc.diagrams.push({ id: 'seq-1', title: 'Handshake', home: { kind: 'section', target: 'second' }, kind: 'sequence', relationship: 'Who asks whom.', disposition: { kind: 'produced', assetIds: ['seq-1'] }, participants: [el('pt1', 'Client'), el('pt2', 'Server')], messages: [{ ...el('msg1', 'asks'), from: 'pt1', to: 'pt2' }, { ...el('msg2', 'answers'), from: 'pt2', to: 'pt1' }] });
+    if (n >= 8) doc.sections[0].subsections = [{ id: 'q1', title: 'What runs?', answer: { id: 'q1a', label: 'unknown', reason: 'missing-evidence', text: 'Not known.', citations: [] }, paragraphs: [] }, { id: 'q2', title: 'Why?', answer: { id: 'q2a', label: 'inferred', basis: 'source', text: 'It is fast.', citations: [cite('c-q2a', 'src/kestrel.c', 4, 4)], quotations: [] }, paragraphs: [] }];
+    if (n >= 9) for (const diagram of doc.diagrams) for (const edge of diagram.edges ?? []) edge.relation = 'relates-to';
+    if (n >= 10) doc.hero = { omitted: { id: 'hero-why', label: 'inferred', basis: 'source', text: 'No one figure leads.', citations: [cite('c-hero', 'src/kestrel.c', 4, 4)], quotations: [] } };
+    // Version 2.23's kind in a draft of an earlier schema, or of v13: a containment diagram carrying `groups`.
+    if (extra === 'containment') {
+      const target = n >= 5 ? { home: { kind: 'section', target: 'core-ideas' } } : { sectionId: 'core-ideas' };
+      doc.diagrams.push({ id: 'parts', title: 'Parts', ...target, kind: 'containment', relationship: 'What holds what.', disposition: { kind: 'produced', assetIds: ['parts'] },
+        groups: [{ ...el('ga', 'Outer'), children: [{ ...el('gb', 'Inner'), children: [] }] }] });
+    }
+    return doc;
+  };
+  const hashTree = (dir: string): Record<string, string> => {
+    const out: Record<string, string> = {};
+    const walk = (at: string): void => {
+      for (const entry of fs.readdirSync(at, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : 1))) {
+        const full = path.join(at, entry.name);
+        if (entry.isDirectory()) walk(full);
+        else out[path.relative(dir, full)] = createHash('sha256').update(fs.readFileSync(full)).digest('hex');
+      }
+    };
+    walk(dir);
+    return out;
+  };
+  it('dumps', async () => {
+    const out: Record<string, unknown> = {};
+    for (const version of versions) {
+      for (const extra of ['plain', 'containment']) {
+        const doc = variant(version, extra);
+        const { run, checked } = await started(doc);
+        const entry: Record<string, unknown> = { outcome: checked.ok ? checked.report.outcome : 'refused', findings: checked.ok ? checked.report.findings : null };
+        if (checked.ok && checked.report.outcome === 'passed') {
+          const result = await renderRun(run, renderDeps());
+          entry['render'] = result.ok ? 'ok' : result.refusal.reason;
+        }
+        const files = hashTree(run);
+        delete files['run.json'];
+        entry['files'] = files;
+        out[`${version}/${extra}`] = entry;
+      }
+    }
+    fs.writeFileSync(process.env['CONTAIN_DUMP']!, JSON.stringify(out, null, 1));
+  }, 600_000);
+});
