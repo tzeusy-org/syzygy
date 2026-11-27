@@ -1,4 +1,4 @@
-// Which tests a pull request runs (syzygy-qu5j). Pure: the caller supplies the changed paths and the module texts, and
+// Which tests a pull request runs (syzygy-qu5j). The caller supplies the changed paths and reads module texts on demand, and
 // `scripts/select_ci_tests.mjs` turns the plan into test files through Vitest's own module graph. Merge-group runs never
 // read this: the tree that lands is always tested whole.
 //
@@ -18,7 +18,7 @@
 //         `sync-child-process-guard.test.ts` walks the repository) are walkers, so a new module is checked by them.
 //         Only test files count: a product module that lists a directory reads the input its caller hands it, and
 //         counting those selected every dossier browser test for a Trajectory change (measured on PR #1007's diff).
-//       - a renamed path is looked up by its old name as well as its new one.
+//       - a renamed or copied path is looked up by its old name as well as its new one.
 //     The rule over-selects on purpose. A reader it cannot see (a path assembled from parts that never name a token, a
 //     directory read from a root handed in by a caller it does not import, a walk that names no listing call) is the
 //     residual: no unit test fails when a new test escapes the rule, and the full merge-group run is what catches it,
@@ -26,7 +26,7 @@
 // A change the graph cannot bound runs every tier in full: manifests, the lockfile, test and type configuration, the
 // workflow, this selector and its runners, and a deleted or renamed workspace module.
 
-/** One changed path, as `git diff --name-status` reports it (`A`, `M`, `D`, `R100`, …; a rename lists its old path too). */
+/** One changed path, as `git diff --name-status` reports it. Renames and copies also list the source path. */
 export interface ChangedPath {
   readonly status: string;
   readonly path: string;
@@ -55,7 +55,7 @@ export const FULL_RUN_TRIGGERS: ReadonlyArray<{ readonly rule: string; readonly 
   { rule: 'type configuration', test: /(^|\/)tsconfig[^/]*\.json$/u },
   { rule: 'selector', test: /^ci-selection\.ts$/u },
   { rule: 'selector', test: /^scripts\/(select_ci_tests|run_ci_tier|check_unit_tmpdir)\.mjs$/u },
-  { rule: 'workflow', test: /^\.github\/workflows\/node-ci\.yml$/u },
+  { rule: 'workflow', test: /^\.github\/workflows\//u },
 ];
 
 const WORKSPACE = /^(apps|packages)\/[^/]+\//u;
@@ -85,22 +85,36 @@ export function namesPath(text: string, token: string): boolean {
   return new RegExp(`['"\`/]${escaped}['"\`/]`, 'u').test(text);
 }
 
+export function fullSelection(reasons: readonly string[]): SelectionPlan {
+  return { mode: 'full', reasons, code: [], documents: [], related: [] };
+}
+
 /**
- * The plan for one pull request. `modules` maps each tracked workspace module (repository-relative) to its text; only
- * modules are readers, so a document naming another document selects nothing by itself.
+ * Only changes eligible for selection need the module inventory. The reader returns undefined when it cannot supply
+ * every tracked workspace module (repository-relative) and its exact text.
  */
-export function planSelection(changed: readonly ChangedPath[], modules: ReadonlyMap<string, string>): SelectionPlan {
-  const reasons: string[] = [];
-  const code = new Set<string>();
-  const documents: Array<{ path: string; tokens: string[]; readers: string[] }> = [];
+export function planSelection(
+  changed: readonly ChangedPath[],
+  readModules: () => ReadonlyMap<string, string> | undefined,
+): SelectionPlan {
+  if (changed.length === 0) return { mode: 'selected', reasons: [], code: [], documents: [], related: [] };
+  const reasons = new Set<string>();
   for (const change of changed) {
     for (const path of change.previous === undefined ? [change.path] : [change.previous, change.path]) {
       const trigger = FULL_RUN_TRIGGERS.find(({ test }) => test.test(path));
-      if (trigger !== undefined) reasons.push(`${trigger.rule}: ${path}`);
+      if (trigger !== undefined) reasons.add(`${trigger.rule}: ${path}`);
     }
     const removed = change.status.startsWith('D') || change.status.startsWith('R');
     const removedPath = change.status.startsWith('R') ? change.previous ?? change.path : change.path;
-    if (removed && WORKSPACE.test(removedPath)) reasons.push(`workspace module removed or renamed: ${removedPath}`);
+    if (removed && WORKSPACE.test(removedPath)) reasons.add(`workspace module removed or renamed: ${removedPath}`);
+  }
+  if (reasons.size > 0) return fullSelection([...reasons]);
+  const modules = readModules();
+  if (modules === undefined) return fullSelection(['Tracked workspace modules could not be read exactly']);
+
+  const code = new Set<string>();
+  const documents: Array<{ path: string; tokens: string[]; readers: string[] }> = [];
+  for (const change of changed) {
     if (MODULE.test(change.path) && !change.status.startsWith('D')) code.add(change.path); // a removed workspace one has already made the run full
     const names = change.previous === undefined ? [change.path] : [change.previous, change.path];
     const tokens = [...new Set(names.flatMap(readerTokens))];
@@ -113,17 +127,53 @@ export function planSelection(changed: readonly ChangedPath[], modules: Readonly
     const readers = [...modules].filter(([module, text]) => module !== change.path && reads(module, text)).map(([module]) => module).sort();
     documents.push({ path: change.path, tokens, readers });
   }
-  if (reasons.length > 0) return { mode: 'full', reasons: [...new Set(reasons)], code: [], documents: [], related: [] };
   const related = new Set<string>(code);
   for (const { readers } of documents) for (const reader of readers) related.add(reader);
   return { mode: 'selected', reasons: [], code: [...code].sort(), documents, related: [...related].sort() };
 }
 
-/** Reads `git diff --name-status -M` output (tab-separated) into changed paths. */
-export function parseNameStatus(output: string): ChangedPath[] {
-  return output.split('\n').filter((line) => line.length > 0).map((line) => {
-    const [status, first, second] = line.split('\t');
-    if (status === undefined || first === undefined) throw new Error(`unreadable name-status row: ${JSON.stringify(line)}`);
-    return /^[RC]/u.test(status) && second !== undefined ? { status, path: second, previous: first } : { status, path: first };
-  });
+const GITHUB_SHA = /^[0-9a-f]{40}$/u;
+
+/** Tie the diff to GitHub's event merge commit and its ordered base and head. */
+export function matchesPullRequestCheckout(
+  base: string,
+  merge: string | undefined,
+  checkout: readonly string[],
+  eventBase: unknown,
+  eventHead: unknown,
+): boolean {
+  const [actual, first, second] = checkout;
+  return checkout.length === 3 && new Set(checkout).size === 3 &&
+    GITHUB_SHA.test(base) && base === eventBase &&
+    typeof merge === 'string' && GITHUB_SHA.test(merge) && actual === merge &&
+    typeof eventHead === 'string' && GITHUB_SHA.test(eventHead) && first === base && second === eventHead;
+}
+
+/** Read complete NUL-delimited Git fields without quoting or replacing pathname bytes. */
+export function parseGitPathList(output: Uint8Array): string[] {
+  if (output.length === 0) return [];
+  const fields = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(output).split('\0');
+  if (fields.pop() !== '' || fields.includes('')) throw new Error('unreadable Git path records');
+  return fields;
+}
+
+/** Read Git's NUL-delimited status and pathname fields, including the extra name for copies and renames. */
+export function parseNameStatus(output: Uint8Array): ChangedPath[] {
+  const fields = parseGitPathList(output);
+  const paths: ChangedPath[] = [];
+  for (let at = 0; at < fields.length;) {
+    const status = fields[at++];
+    const first = fields[at++];
+    if (first === undefined || status === undefined) throw new Error('unreadable Git name-status records');
+    if (/^[RC](?:0\d\d|100)$/u.test(status)) {
+      const second = fields[at++];
+      if (second === undefined) throw new Error('unreadable Git name-status records');
+      paths.push({ status, path: second, previous: first });
+    } else if (/^(?:[ADT]|M(?:0\d\d|100)?)$/u.test(status)) {
+      paths.push({ status, path: first });
+    } else {
+      throw new Error('unreadable Git name-status records');
+    }
+  }
+  return paths;
 }

@@ -3,13 +3,16 @@
 // The plan comes from ci-selection.ts (what changed, which triggers force a full run, which modules read a changed
 // document); the files come from Vitest's own module graph, the one `vitest related` uses. The selection is printed
 // before any test runs, so a narrow run is visibly narrow. Merge-group runs never call this.
+// On Actions the event must attest the exact checked-out PR merge and its ordered parents. Outside Actions
+// the explicit base is enough for a local comparison.
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const { planSelection, parseNameStatus } = await import(join(ROOT, 'ci-selection.ts'));
+const { fullSelection, matchesPullRequestCheckout, parseGitPathList, parseNameStatus, planSelection } =
+  await import(join(ROOT, 'ci-selection.ts'));
 const { TIERS, testFiles, filesOfTier } = await import(join(ROOT, 'vitest.tiers.ts'));
 
 function argument(name) {
@@ -20,13 +23,68 @@ function argument(name) {
 
 const base = argument('--base');
 const out = argument('--out');
-const git = (...args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
-const changed = parseNameStatus(git('diff', '--name-status', '-M', base, 'HEAD'));
-const modules = new Map();
-for (const path of git('ls-files', '-z', '--', 'apps/*/src/**', 'packages/*/src/**', 'packages/*/test-support/**').split('\0')) {
-  if (/\.(ts|mts|cts|tsx|js|mjs|cjs)$/u.test(path)) modules.set(path, readFileSync(join(ROOT, path), 'utf8'));
+const git = (...args) => execFileSync('git', args, {
+  cwd: ROOT, maxBuffer: 256 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe'],
+});
+const gitText = (...args) => git(...args).toString('utf8');
+const utf8 = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
+
+function changeInputs() {
+  let head;
+  try {
+    head = gitText('rev-parse', '--verify', 'HEAD^{commit}').trim();
+  } catch {
+    return { head: null, changed: [], fallbackReason: 'Git checkout identity unavailable' };
+  }
+
+  const { GITHUB_ACTIONS, GITHUB_EVENT_NAME, GITHUB_EVENT_PATH, GITHUB_SHA } = process.env;
+  const hosted = GITHUB_ACTIONS === 'true' ||
+    GITHUB_EVENT_NAME !== undefined || GITHUB_EVENT_PATH !== undefined || GITHUB_SHA !== undefined;
+  let comparisonBase = base;
+  if (hosted) {
+    const unbound = { head, changed: [], fallbackReason: 'GitHub pull request checkout could not be verified' };
+    if (GITHUB_EVENT_NAME !== 'pull_request' || !GITHUB_EVENT_PATH) return unbound;
+    try {
+      const request = JSON.parse(utf8.decode(readFileSync(GITHUB_EVENT_PATH)))?.pull_request;
+      const checkout = gitText('rev-list', '--parents', '-n', '1', head).trim().split(/\s+/u);
+      if (!matchesPullRequestCheckout(base, GITHUB_SHA, checkout, request?.base?.sha, request?.head?.sha)) {
+        return unbound;
+      }
+    } catch {
+      return unbound;
+    }
+  } else {
+    try {
+      comparisonBase = gitText('rev-parse', '--verify', '--end-of-options', `${base}^{commit}`).trim();
+    } catch {
+      return { head, changed: [], fallbackReason: 'Git comparison base unavailable' };
+    }
+  }
+
+  try {
+    const changed = parseNameStatus(git('diff', '--name-status', '-z', '--no-ext-diff',
+      '-M', '-C', '--find-copies-harder', comparisonBase, head, '--'));
+    return { head, changed, fallbackReason: null };
+  } catch {
+    return { head, changed: [], fallbackReason: 'Git change list could not be read exactly' };
+  }
 }
-const plan = planSelection(changed, modules);
+
+function readTrackedModules() {
+  try {
+    const modules = new Map();
+    const paths = parseGitPathList(git('ls-files', '-z', '--', 'apps/*/src/**', 'packages/*/src/**', 'packages/*/test-support/**'));
+    for (const path of paths) {
+      if (/\.(ts|mts|cts|tsx|js|mjs|cjs)$/u.test(path)) modules.set(path, utf8.decode(readFileSync(join(ROOT, path))));
+    }
+    return modules;
+  } catch {
+    return undefined;
+  }
+}
+
+const { head, changed, fallbackReason } = changeInputs();
+const plan = fallbackReason === null ? planSelection(changed, readTrackedModules) : fullSelection([fallbackReason]);
 const population = testFiles(ROOT);
 const tiers = Object.fromEntries(TIERS.map((tier) => [tier, filesOfTier(population, tier)]));
 
@@ -50,7 +108,7 @@ else {
 
 const selection = {
   base,
-  head: git('rev-parse', 'HEAD').trim(),
+  head,
   mode: plan.mode,
   reasons: plan.reasons,
   changed,
@@ -61,6 +119,9 @@ const selection = {
 };
 writeFileSync(out, `${JSON.stringify(selection, null, 2)}\n`);
 console.log(`ci-selection mode=${plan.mode} changed=${changed.length} related=${plan.related.length}`);
-for (const reason of plan.reasons) console.log(`  full run: ${reason}`);
-for (const { path, tokens, readers } of plan.documents) console.log(`  ${path} [${tokens.join(', ')}]: ${readers.length} reader module(s)`);
+for (const reason of plan.reasons) console.log(`  full run: ${JSON.stringify(reason)}`);
+if (plan.mode === 'selected' && changed.length === 0) console.log('  no changes in the checked range');
+for (const { path, tokens, readers } of plan.documents) {
+  console.log(`  ${JSON.stringify(path)} ${JSON.stringify(tokens)}: ${readers.length} reader module(s)`);
+}
 for (const tier of TIERS) console.log(`  ${tier}: ${selected[tier].length} of ${tiers[tier].length}`);

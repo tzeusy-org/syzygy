@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { FULL_RUN_TRIGGERS, ROOTED, WALKS, namesPath, parseNameStatus, planSelection, readerTokens, type ChangedPath } from '../../../ci-selection.js';
+import {
+  FULL_RUN_TRIGGERS, ROOTED, WALKS, matchesPullRequestCheckout, namesPath, parseGitPathList, parseNameStatus,
+  planSelection as select, readerTokens, type ChangedPath,
+} from '../../../ci-selection.js';
 
 // syzygy-qu5j: which tests a pull request runs. The module graph itself is Vitest's; these pin the plan handed to it.
 const M = (status: string, path: string, previous?: string): ChangedPath => (previous === undefined ? { status, path } : { status, path, previous });
+const planSelection = (changed: readonly ChangedPath[], modules: ReadonlyMap<string, string>) => select(changed, () => modules);
 const MODULES = new Map<string, string>([
   ['apps/a/src/trajectory.ts', "export const trajectory = 1;"],
   ['apps/a/src/rooted.testkit.ts', "export const ROOT = fileURLToPath(new URL('../../../', import.meta.url));"],
@@ -47,7 +51,8 @@ describe('the pull-request selection plan', () => {
   it('runs every tier for a change the graph cannot bound, naming each trigger', () => {
     const triggers = ['package.json', 'apps/a/package.json', 'package-lock.json', '.npmrc', 'vitest.config.ts', 'vitest.tiers.ts', 'vitest.setup.ts',
       'packages/cap1-system/vitest.config.ts', 'tsconfig.json', 'packages/p/tsconfig.build.json', 'ci-selection.ts', 'scripts/select_ci_tests.mjs',
-      'scripts/run_ci_tier.mjs', 'scripts/check_unit_tmpdir.mjs', '.github/workflows/node-ci.yml'];
+      'scripts/run_ci_tier.mjs', 'scripts/check_unit_tmpdir.mjs', '.github/workflows/node-ci.yml',
+      '.github/workflows/governance-docs.yml', '.github/workflows/generation-mutation-gate.yml'];
     for (const path of triggers) {
       const plan = planSelection([M('M', 'apps/a/src/trajectory.ts'), M('M', path)], MODULES);
       expect(plan, path).toMatchObject({ mode: 'full', code: [], documents: [], related: [] });
@@ -55,6 +60,8 @@ describe('the pull-request selection plan', () => {
       expect(plan.reasons[0], path).toMatch(new RegExp(`: ${path.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&')}$`, 'u'));
     }
     expect(FULL_RUN_TRIGGERS.map(({ rule }) => rule)).toContain('workflow');
+    expect(planSelection([M('R100', 'docs/former-workflow.yml', '.github/workflows/governance-docs.yml')], MODULES).reasons)
+      .toEqual(['workflow: .github/workflows/governance-docs.yml']);
   });
 
   it('runs every tier when a workspace module is deleted or renamed, and only then', () => {
@@ -87,6 +94,21 @@ describe('the pull-request selection plan', () => {
   it('selects nothing for an empty diff', () => {
     expect(planSelection([], MODULES)).toEqual({ mode: 'selected', reasons: [], code: [], documents: [], related: [] });
   });
+
+  it('uses the exact full trigger or empty diff without reading the module inventory', () => {
+    const unreadable = () => { throw new Error('unexpected module read'); };
+    expect(select([M('M', '.github/workflows/synthetic.yml')], unreadable).reasons)
+      .toEqual(['workflow: .github/workflows/synthetic.yml']);
+    expect(select([], unreadable)).toMatchObject({ mode: 'selected', related: [] });
+  });
+
+  it('runs every tier when an otherwise selectable diff has no exact module inventory', () => {
+    const change = [M('M', 'apps/a/src/trajectory.ts')];
+    expect(select(change, () => undefined)).toEqual({
+      mode: 'full', reasons: ['Tracked workspace modules could not be read exactly'], code: [], documents: [], related: [],
+    });
+    expect(select(change, () => MODULES).mode).toBe('selected');
+  });
 });
 
 describe('its parts', () => {
@@ -117,10 +139,48 @@ describe('its parts', () => {
     for (const text of ['readFileSync(path)', 'const readdirs = 1;', 'ls-files in prose']) expect(WALKS.test(text), text).toBe(false);
   });
 
-  it('reads git name-status rows, renames with both paths', () => {
-    expect(parseNameStatus('M\ta.ts\nR087\told.ts\tnew.ts\nD\tgone.md\n')).toEqual([
-      { status: 'M', path: 'a.ts' }, { status: 'R087', path: 'new.ts', previous: 'old.ts' }, { status: 'D', path: 'gone.md' },
+  it('binds selection to the PR merge and its ordered distinct parents', () => {
+    const base = 'a'.repeat(40);
+    const head = 'b'.repeat(40);
+    const merge = 'c'.repeat(40);
+    const checkout = [merge, base, head];
+    expect(matchesPullRequestCheckout(base, merge, checkout, base, head)).toBe(true);
+    expect(matchesPullRequestCheckout(merge, merge, checkout, base, head)).toBe(false);
+    expect(matchesPullRequestCheckout(base, head, checkout, base, head)).toBe(false);
+    expect(matchesPullRequestCheckout(base, merge, [merge, head, base], base, head)).toBe(false);
+    expect(matchesPullRequestCheckout(base, merge, [merge, base], base, head)).toBe(false);
+    expect(matchesPullRequestCheckout(base, merge, [merge, base, head, 'd'.repeat(40)], base, head)).toBe(false);
+    expect(matchesPullRequestCheckout(base, merge, checkout, base, undefined)).toBe(false);
+    expect(matchesPullRequestCheckout(base, merge, [merge, base, base], base, base)).toBe(false);
+    expect(matchesPullRequestCheckout(base, merge, [merge, base, 'HEAD'], base, 'HEAD')).toBe(false);
+  });
+
+  it('reads complete Git records without rewriting whitespace or Unicode', () => {
+    const paths = ['M', ' a.ts', 'R087', 'old\tname.ts', 'new\nname-\u00e9.ts',
+      'C100', 'source.md', 'copy.md', 'D', 'gone.md', ''];
+    expect(parseNameStatus(new TextEncoder().encode(paths.join('\0')))).toEqual([
+      { status: 'M', path: ' a.ts' },
+      { status: 'R087', path: 'new\nname-\u00e9.ts', previous: 'old\tname.ts' },
+      { status: 'C100', path: 'copy.md', previous: 'source.md' },
+      { status: 'D', path: 'gone.md' },
     ]);
-    expect(() => parseNameStatus('M')).toThrow(/unreadable name-status row/u);
+    expect(parseNameStatus(new Uint8Array())).toEqual([]);
+  });
+
+  it('preserves every listed pathname and refuses ambiguous inventory bytes', () => {
+    const paths = ['first\u00e9.ts', ' \tsecond\n.ts'];
+    const encoder = new TextEncoder();
+    expect(parseGitPathList(encoder.encode(`${paths.join('\0')}\0`))).toEqual(paths);
+    expect(parseGitPathList(new Uint8Array())).toEqual([]);
+    expect(() => parseGitPathList(encoder.encode('unterminated.ts'))).toThrow();
+    expect(() => parseGitPathList(encoder.encode('extra.ts\0\0'))).toThrow();
+    expect(() => parseGitPathList(Uint8Array.of(0xff, 0))).toThrow();
+  });
+
+  it('refuses malformed or unrepresentable Git records', () => {
+    for (const record of ['M', 'M\0a.ts', 'M\0\0', 'R099\0old.ts\0', 'C101\0old.md\0new.md\0', '?\0a.ts\0']) {
+      expect(() => parseNameStatus(new TextEncoder().encode(record))).toThrow(/unreadable Git (?:path|name-status)/u);
+    }
+    expect(() => parseNameStatus(Uint8Array.of(77, 0, 0xff, 0))).toThrow();
   });
 });
