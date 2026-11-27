@@ -24,4 +24,4 @@
 - F10 (no "never a total" sentence when files are left out for a secret path and none is Unknown): the floor sentence counts both.
 - F11 (the evidence scripts check less than their names suggest): the publication check now binds each pattern's kind and the code's order, and a kind mutant fails it. Recorded, not repaired: the selftest's row-shape mutants are killed by the predecessor's unavailability, as the v2.42 cases are; making the predecessor effective in the selftest scratch is a change to the shared selftest projection.
 
-[Observed] The spec was rebuilt by its script for F1, F4 to F7, F9 and F10, so the adopted digest differs from the reviewed one; no review has read the repaired bytes.
+[Observed] The spec was rebuilt by its script for F1, F4 to F7, F9 and F10, then rebuilt as 2.44 over the migration bounds, and one scenario's example file `core.py` is named by its directory `pkg` rather than as a slashed path span, which CG-1b would read as a path in this repository; so the adopted digest differs from the reviewed one, and no review has read the repaired bytes.

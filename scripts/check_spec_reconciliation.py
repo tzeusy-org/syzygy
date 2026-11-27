@@ -3671,7 +3671,7 @@ ROUGH_REPLACES = (POLARIS_ID + "034",)
 ROUGH_COUNT_SCOPE = "With the rough-edge markers"
 ROUGH_COUNT_PREFIX = "With the rough-edge markers version effective, Polaris has "
 ROUGH_SUBJECTS = {
-    ROUGH_SPEC: "873b79267a81468e7653d5763885ff89fb5c2ba39a517a1fa81b262586d56a51",
+    ROUGH_SPEC: "3c03ebff0f05c791fed0ddcd3a6cec5d259db64a8fcb7eb47b3b661c4e5661c1",
 }
 ROUGH_BOUND_PARTS = len(ROUGH_SUBJECTS)
 

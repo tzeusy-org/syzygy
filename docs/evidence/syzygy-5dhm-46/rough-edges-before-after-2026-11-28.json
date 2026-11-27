@@ -8,7 +8,7 @@
   "before": {
     "markersRead": 0,
     "pagesListingMarkers": 0,
-    "basis": "no rule before REQ-polaris-generation-034 version 2.43 read a rough-edge marker"
+    "basis": "no rule before REQ-polaris-generation-034 version 2.44 read a rough-edge marker"
   },
   "after": {
     "format": "polaris-dossier-rough-edges/1",
@@ -94,6 +94,6 @@
     "unitsNotListed": 0,
     "markersListed": 21,
     "markersNotListed": 0,
-    "deriveElapsedMs": 14184
+    "deriveElapsedMs": 14742
   }
 }
