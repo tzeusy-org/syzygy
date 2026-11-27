@@ -264,6 +264,25 @@ describe('containment: repair findings', () => {
     ] });
   });
 
+  it('gates the structural findings on a schema finding at a children list below the top level', async () => {
+    // A level-3 group with nine children: a schema finding at its `children`, and nine level-4 groups that would each be containment-depth.
+    const nine = Array.from({ length: 9 }, (_, k) => group(`n${k}`, `N ${k}`));
+    const deep = containment('parts', [group('d1', 'One', [group('d2', 'Two', [group('d3', 'Three', nine)])])]);
+    expect(await findingsOf(A, draftOf([deep]))).toEqual({ outcome: 'findings', findings: [
+      { kind: 'schema', at: '$.diagrams[0].groups[0].children[0].children[0].children', detail: 'must hold 0 to 8 items; holds 9' },
+    ] });
+  });
+
+  it('decides no nesting of a containment with a containment-size finding, so raises no relation-challenged', async () => {
+    // The first top-level group is the repository root and its first child an absent top-level directory: decided, it would be challenged.
+    const counts = [8, 8, 8, 8, 4];
+    const big = containment('parts', counts.map((n, i) => group(`t${i}`, `Top ${i}`, Array.from({ length: n }, (_, k) =>
+      group(`t${i}c${k}`, `Child ${i}.${k}`, [], i === 0 && k === 0 ? tld('missing') : undefined)), i === 0 ? ROOT : undefined)));
+    expect(await findingsOf(A, draftOf([big]))).toEqual({ outcome: 'findings', findings: [
+      { kind: 'containment-size', at: '$.diagrams[0].groups', detail: 'parts: a containment holds at most 40 groups; this one holds 41' },
+    ] });
+  });
+
   it('orders depth, size, flat, unit-reference and relation-challenged after every other finding', async () => {
     const deep = containment('deep', [group('d1', 'One', [group('d2', 'Two', [group('d3', 'Three', [group('d4', 'Four')])])])]);
     const flat = containment('flat', [group('x1', 'X one')]);
@@ -358,6 +377,19 @@ describe('containment: nestings read as contains arrows', () => {
     const held = (child: Record<string, unknown>): Doc => containment('parts', [group('root', 'Repository', [group('src', 'Source', [], child)], ROOT,
       { citations: [{ id: 'c-root', path: '.env', startLine: 1, endLine: 1 }] })]);
     // Not challenged, though no `missing` directory exists: the parent is no claim Syzygy can test.
+    expect(await findingsOf(B, draftOf([held(tld('missing'))]))).toEqual(PASSED);
+    // Not witnessed, though the tree has `src`.
+    const { files, machine } = await rendered(B, draftOf([held(tld('src'))]));
+    expect(machine['figureStructures'][0]['nestings']).toEqual([{ parent: 'root', child: 'src', witness: witness('unknown', 'edge-not-inferred') }]);
+    const fig = figureOf(files.get('index.html')!, 'parts');
+    expect(fig).toContain('data-unknown-reason="excluded-content"');
+    expect(fig).not.toContain('Witnessed by Syzygy');
+  });
+
+  it('leaves a nesting whose child group renders as a withheld item unknown, at check and at the render', async () => {
+    const held = (child: Record<string, unknown>): Doc => containment('parts', [group('root', 'Repository', [group('src', 'Source', [], child,
+      { citations: [{ id: 'c-src', path: '.env', startLine: 1, endLine: 1 }] })], ROOT)]);
+    // Not challenged, though no `missing` directory exists: the child is no claim Syzygy can test.
     expect(await findingsOf(B, draftOf([held(tld('missing'))]))).toEqual(PASSED);
     // Not witnessed, though the tree has `src`.
     const { files, machine } = await rendered(B, draftOf([held(tld('src'))]));

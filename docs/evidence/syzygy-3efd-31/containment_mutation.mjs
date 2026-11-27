@@ -126,6 +126,10 @@ const MUTANTS = [
   ['site-tally-nestings', SITE, "` ${counted(witnesses, 'nesting', 'nestings')} witnessed by Syzygy.</p>`", "` ${counted(witnesses, 'nesting', 'nestings')} witnessed.</p>`"],
   ['site-outline-unknown-mark', SITE, "${group.epistemic === 'unknown' ? ' ?' : ''}${group.children.length === 0", "${group.children.length === 0"],
   ['site-structure-witness-dropped', SITE, 'witness: relationOf(group.id)?.witness ?? null', 'witness: null'],
+  // --- the three mutants of the code review (docs/reviews/syzygy-3efd-31/R31-CODE-REVIEW-RAW.md, findings 1-3), each surviving at 4812826d
+  ['review-r3-withheld-child-asserted', DERIVE, "asserted: asserted(group) && !withheld(parent.group)", "asserted: group['epistemic'] === 'inferred' && !withheld(parent.group)"],
+  ['review-r1-children-list-fault-ignored', CONTAIN, String.raw`GROUPS_FIELD}(?:\\[\\d+\\]\\.children)*$`, String.raw`GROUPS_FIELD}$`],
+  ['review-r2-undecided-ignores-size', CONTAIN, "kind !== 'containment-size' && ", ""],
 ].filter(([id]) => only === null || only.has(id));
 
 // A mutant no test can kill, with the reason; recorded, never run and never counted as killed.
