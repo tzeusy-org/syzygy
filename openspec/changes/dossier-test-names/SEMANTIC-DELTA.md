@@ -2,7 +2,7 @@
 
 ## Predecessor
 
-[Observed] REQ-polaris-generation-034 v2.39, the import facts (syzygy-3efd.60), at `79073f82f505783b28b045c8134702e7bdabbacf`, `openspec/changes/dossier-import-facts/proposed/polaris-generation/spec.md`, SHA-256 `9502229052a3b7da3880b4062e54141681a2d01e09163b8df24c2aab20e479fb`, 278 scenario headings. It succeeds v2.38, the migration parity (A-269), and is the effective REQ-034 on `origin/main`. This change was first built as v2.38 over the choice floor; migration parity took 2.38 and import facts 2.39 first, so it was rebuilt by its scripts as v2.42 over import facts.
+[Observed] REQ-polaris-generation-034 v2.40, the figure walks (syzygy-3efd.32), at `ae4c02b46a4b2b4f05e51acf46517a05118fdcb5`, `openspec/changes/dossier-figure-walks/proposed/polaris-generation/spec.md`, SHA-256 `ea18e7d7c1c6281929a974b1e6d0cd7cf935c06851b22efa4e4c167595da75cf`, 291 scenario headings. It succeeds v2.39, the import facts (A-270), and is the effective REQ-034 on `origin/main`. This change was first built as v2.38 over the choice floor; migration parity, import facts and figure walks took 2.38, 2.39 and 2.40 first, and the session-usage change to REQ-033 holds 2.41, so it was rebuilt by its scripts as v2.42 over figure walks.
 
 ## Amended in place
 
