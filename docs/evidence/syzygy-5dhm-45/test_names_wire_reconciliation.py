@@ -77,7 +77,11 @@ s = after(s, consts, '\n' + mine)
 
 # 2. Row, rows, disposition, binding and delta.
 funcs = block(s, 'def is_choice_row(line):\n', '    return None\n')
-s = after(s, funcs, '\n\n' + rename(funcs))
+# rename() keeps `is_choice_row` for predecessor references; here the cloned row test is this version's own.
+mine_funcs = rename(funcs)
+assert mine_funcs.count('def is_choice_row(line):') == 1 and mine_funcs.count('if is_choice_row(line)') == 1, mine_funcs
+mine_funcs = mine_funcs.replace('def is_choice_row(line):', 'def is_tnames_row(line):').replace('if is_choice_row(line)', 'if is_tnames_row(line)')
+s = after(s, funcs, '\n\n' + mine_funcs)
 binding = block(s, 'def choice_binding(root):\n', '    )\n')
 delta = block(s, 'def choice_delta(root, findings):\n', '    return added\n')
 mine = rename(binding).replace('only over the effective v2.36 source-example advice REQ-034.', 'only over the effective v2.37 choice floor REQ-034.')

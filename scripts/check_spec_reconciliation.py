@@ -3573,6 +3573,23 @@ CHOICE_SUBJECTS = {
 }
 CHOICE_BOUND_PARTS = len(CHOICE_SUBJECTS)
 
+# The v2.38 test-name recognizers (syzygy-5dhm.45): one MODIFIED REQ-polaris-generation-034 after
+# the v2.37 choice floor, adopted by an agent row and its version tag.
+TNAMES_CHANGE = "dossier-test-names"
+TNAMES_HOME = f"{CHANGES}/{TNAMES_CHANGE}"
+TNAMES_SPEC = f"{TNAMES_HOME}/proposed/polaris-generation/spec.md"
+TNAMES_UNION = f"{TNAMES_HOME}/GOVERNING-DEPENDENCIES.json"
+TNAMES_TAG = "polaris-dossier-test-names-v2.38"
+TNAMES_STATUS_PREFIX = f"[Test-name recognizers amendment 2.38]({TNAMES_HOME})"
+TNAMES_INDEX_PREFIX = f"| [`{TNAMES_CHANGE}`]("
+TNAMES_REPLACES = (POLARIS_ID + "034",)
+TNAMES_COUNT_SCOPE = "With the test-name recognizers"
+TNAMES_COUNT_PREFIX = "With the test-name recognizers version effective, Polaris has "
+TNAMES_SUBJECTS = {
+    TNAMES_SPEC: "7db850c28bc14fa2d18cb52a888f8617afff17d85f1730c1c7a8432e5dbaab40",
+}
+TNAMES_BOUND_PARTS = len(TNAMES_SUBJECTS)
+
 
 def is_vbase_screening_row(row):
     return _is_reviewed_version_row(row, VBASE_SCREENING_TAG, VBASE_SCREENING_SUBJECTS)
@@ -3962,6 +3979,23 @@ def choice_disposition(root, rows):
     return None
 
 
+def is_tnames_row(line):
+    return _is_reviewed_version_row(line, TNAMES_TAG, TNAMES_SUBJECTS)
+
+
+def tnames_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_tnames_row(line)]
+
+
+def tnames_disposition(root, rows):
+    if TNAMES_TAG is not None and len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), TNAMES_TAG,
+                                    TNAMES_SUBJECTS, plain_revert=True)
+    return None
+
+
 def p5_advice_effective(root):
     """The v2.36 source-example advice text only while that version is effective."""
     state, text, records, subjects = p5_advice_binding(root)
@@ -3983,6 +4017,25 @@ def choice_delta(root, findings):
     added = p5_advice_member_delta(read_text(root, P5_ADVICE_SPEC) or "", read_text(root, CHOICE_SPEC) or "")
     if added is None:
         findings.append("POLARIS choice floor: cannot count predecessor and successor for 034")
+        return 0
+    return added
+
+
+def tnames_binding(root):
+    """Apply the test-name recognizers only over the effective v2.37 choice floor REQ-034."""
+    return _reviewed_version_binding(
+        root, tnames_rows(root), tnames_disposition,
+        version_tag=TNAMES_TAG, subjects_map=TNAMES_SUBJECTS, spec=TNAMES_SPEC,
+        predecessor=choice_binding, predecessor_label="v2.37 choice floor", version="v2.38",
+        label="test-name recognizers",
+    )
+
+
+def tnames_delta(root, findings):
+    """Scenarios the test-name recognizers add to REQ-034 over the choice floor, counted from both texts."""
+    added = p5_advice_member_delta(read_text(root, CHOICE_SPEC) or "", read_text(root, TNAMES_SPEC) or "")
+    if added is None:
+        findings.append("POLARIS test-name recognizers: cannot count predecessor and successor for 034")
         return 0
     return added
 
@@ -4852,6 +4905,15 @@ def check_outcomes(root, report):
         subjects_seen += CHOICE_BOUND_PARTS
     r1 += choice_records
     r2 += choice_subjects
+    tnames_retired_by = tnames_disposition(root, tnames_rows(root))
+    tnames_amendment, tnames_records, tnames_subjects = tnames_binding(root)
+    if tnames_retired_by:
+        records += 2
+    elif tnames_amendment is not None or tnames_records or tnames_subjects:
+        records += 1
+        subjects_seen += TNAMES_BOUND_PARTS
+    r1 += tnames_records
+    r2 += tnames_subjects
     retirement = ""
     if declared_retired_by:
         retirement += f"; v2.0 inactive by {declared_retired_by}"
@@ -4909,6 +4971,8 @@ def check_outcomes(root, report):
         retirement += f"; v2.33 inactive by {figplan_retired_by}"
     if choice_retired_by:
         retirement += f"; v2.37 inactive by {choice_retired_by}"
+    if tnames_retired_by:
+        retirement += f"; v2.38 inactive by {tnames_retired_by}"
     if vbase_retired_by:
         retirement += f"; v2.34 inactive by {vbase_retired_by}"
     if qfile_retired_by:
@@ -6269,6 +6333,16 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, choice_amendment, CHOICE_REPLACES)
                 pa += extra_a
                 pb += extra_b
+        tnames_amendment, tnames_records, tnames_subjects = tnames_binding(root)
+        findings += tnames_records + tnames_subjects
+        if tnames_amendment is not None:
+            if choice_amendment is None:
+                findings.append("POLARIS: test-name recognizers requires effective choice floor v2.37")
+            else:
+                a, extra_a = compose_figure_by_id(a, tnames_amendment, TNAMES_REPLACES)
+                b, extra_b = compose_figure_by_name(b, tnames_amendment, TNAMES_REPLACES)
+                pa += extra_a
+                pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
         findings += [f"POLARIS method B: {p}" for p in pb]
         if a != b:
@@ -6325,6 +6399,13 @@ def vbase_screening_projects(root, pop, findings):
             by_name, errors_b = compose_figure_by_name(selected_population, choice_amendment, CHOICE_REPLACES)
             if errors_a or errors_b or by_id != by_name:
                 findings.append("POLARIS choice floor: selected census projections disagree")
+            selected_population = by_id
+        tnames_amendment, _records, _subjects = tnames_binding(root)
+        if tnames_amendment is not None:
+            by_id, errors_a = compose_figure_by_id(selected_population, tnames_amendment, TNAMES_REPLACES)
+            by_name, errors_b = compose_figure_by_name(selected_population, tnames_amendment, TNAMES_REPLACES)
+            if errors_a or errors_b or by_id != by_name:
+                findings.append("POLARIS test-name recognizers: selected census projections disagree")
             selected_population = by_id
     if selected_population != current:
         findings.append("POLARIS: selected census differs from the separately verified screening transition")
@@ -6717,6 +6798,8 @@ def polaris_expected(root, findings):
         n_scen += p5_advice_delta(root, findings)
     if choice_binding(root)[0] is not None:
         n_scen += choice_delta(root, findings)
+    if tnames_binding(root)[0] is not None:
+        n_scen += tnames_delta(root, findings)
     return n_req, n_scen, ids
 
 
@@ -6972,6 +7055,9 @@ def check_generated(root, pop, report):
     choice_amendment, _records, _subjects = choice_binding(root)
     if choice_amendment is not None:
         files += tracked(root, CHOICE_HOME)
+    tnames_amendment, _records, _subjects = tnames_binding(root)
+    if tnames_amendment is not None:
+        files += tracked(root, TNAMES_HOME)
     candidate_ref_dirs = addition_dirs + (URL_SOURCE_HOME + "/",)
     files += list(ROUTE_PAGES)
     # An addition may cite a candidate Polaris requirement still under
@@ -7042,7 +7128,8 @@ def check_generated(root, pop, report):
                         (qkind_amendment, QKIND_UNION),
                         (figplan_amendment, FIGPLAN_UNION),
                         (vbase_amendment, VBASE_SCREENING_UNION),
-                        (choice_amendment, CHOICE_UNION)):
+                        (choice_amendment, CHOICE_UNION),
+                        (tnames_amendment, TNAMES_UNION)):
         if delta is None:
             continue
         examined += 1
@@ -7654,6 +7741,24 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls choice floor v2.37 adopted while it is not in force")
         if any("Agent adoption" in line for line in rows.get(CHOICE_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls choice floor v2.37 adopted while it is not in force")
+    tnames_amendment, _records, _subjects = tnames_binding(root)
+    tnames_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(TNAMES_STATUS_PREFIX)]
+    if tnames_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and TNAMES_TAG in line
+                   for line in rows.get(TNAMES_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route test-name recognizers v2.38 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = tnames_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or tnames_fields != [f"{TNAMES_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route test-name recognizers v2.38 and its adoption {identity}")
+    elif TNAMES_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in tnames_fields):
+            findings.append(f"`{STATUS}` calls test-name recognizers v2.38 adopted while it is not in force")
+        if any("Agent adoption" in line for line in rows.get(TNAMES_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls test-name recognizers v2.38 adopted while it is not in force")
     vbase_retired_by = vbase_disposition(root, vbase_rows(root))
     vbase_fields = [line.strip() for line in visible_route_lines(status)
                     if line.strip().startswith(VBASE_STATUS_PREFIX)]
@@ -7851,6 +7956,14 @@ def check_routes(root, pop, report):
             declarations.append(match.groups() if match else None)
         selected = 1 if screening_state == "effective" else 0
         advice_state, _advice, _records, _subjects = p5_advice_binding(root)
+        if tnames_binding(root)[0] is not None:
+            # The test-name recognizers' own sentence states the current total; the earlier sentences state theirs.
+            if scoped_route_lines(status, (TNAMES_COUNT_SCOPE,)) != [
+                    f"{TNAMES_COUNT_PREFIX}{want[0]} requirements and {want[1]} scenarios."]:
+                findings.append(f"`{STATUS}` does not declare the exact test-name recognizers census")
+            want = (want[0], str(int(want[1]) - tnames_delta(root, findings)))
+        elif scoped_route_lines(status, (TNAMES_COUNT_SCOPE,)):
+            findings.append(f"`{STATUS}` declares a test-name recognizers census while it is not in force")
         if choice_binding(root)[0] is not None:
             # The choice floor's own sentence states the current total; the earlier sentences state theirs.
             if scoped_route_lines(status, (CHOICE_COUNT_SCOPE,)) != [
@@ -8161,6 +8274,7 @@ def inputs(root):
     paths |= {VBASE_UNION, *VBASE_SUBJECTS}
     paths |= {VBASE_SCREENING_PROJECTION, *VBASE_SCREENING_SUBJECTS, *P5_ADVICE_SUBJECTS}
     paths |= {CHOICE_UNION, *CHOICE_SUBJECTS}
+    paths |= {TNAMES_UNION, *TNAMES_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -8565,6 +8679,10 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     choice_retired = choice_disposition(tree, choice_rows_now)
     choice_records = 2 if choice_retired else int(bool(choice_rows_now))
     choice_subjects = CHOICE_BOUND_PARTS if choice_rows_now and not choice_retired else 0
+    tnames_rows_now = tnames_rows(tree)
+    tnames_retired = tnames_disposition(tree, tnames_rows_now)
+    tnames_records = 2 if tnames_retired else int(bool(tnames_rows_now))
+    tnames_subjects = TNAMES_BOUND_PARTS if tnames_rows_now and not tnames_retired else 0
     vbase_rows_now = vbase_rows(tree)
     vbase_retired = vbase_disposition(tree, vbase_rows_now)
     vbase_records = 2 if vbase_retired else int(bool(vbase_rows_now))
@@ -8581,7 +8699,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                             and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_readmit_row(line) and not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line)
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_tnames_row(line)
                       and not is_infra_row(line)
                       and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line) and not is_worth_row(line)
                       and not is_edit_account_row(line))
@@ -8597,8 +8715,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records - step_records - qkind_records - figplan_records - vbase_records - choice_records
-            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects - step_subjects - qkind_subjects - figplan_subjects - vbase_subjects - choice_subjects
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records - step_records - qkind_records - figplan_records - vbase_records - choice_records - tnames_records
+            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects - step_subjects - qkind_subjects - figplan_subjects - vbase_subjects - choice_subjects - tnames_subjects
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
             - (DERIVED_BOUND_PARTS if had_derived else 0)
@@ -8756,7 +8874,7 @@ def url_source_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_url_source_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -11737,7 +11855,7 @@ def reach_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_reach_row(line) and not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -11857,7 +11975,7 @@ def raw_read_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "01234567"
@@ -11929,7 +12047,7 @@ def treeread_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "89abcdef"
@@ -12464,7 +12582,7 @@ def qkind_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line))
+                      if not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -12557,7 +12675,7 @@ def figplan_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line))
+                      if not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -12656,7 +12774,7 @@ def choice_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_choice_row(line))
+                      if not is_choice_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -12719,6 +12837,93 @@ def choice_cases(tmp, base, witnesses, failures):
     record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 034", found, held, baseline=True)
 
 
+def tnames_cases(tmp, base, witnesses, failures):
+    """Guard the test-name recognizers' row, its predecessor, its checked spec bytes and its retirement.
+
+    The selftest base is projected onto the history before the v2.36 source-example advice, whose
+    effectiveness needs its protected Git tag; the v2.37 choice floor leaves with it, so the test-name recognizers can only be
+    pending or refused here;
+    `--check` on the delivered tree witnesses it effective.
+    """
+    original = read_text(base, TNAMES_SPEC)
+    if original is None or TNAMES_TAG is None:
+        return
+
+    def record(name, rel, old, new, expected, found, held, baseline=False):
+        mutant = f"test-names-{name}"
+        witnesses.append({"mutant": mutant, "path": rel, "old": old, "new": new,
+                          "expected": expected, "failed": found,
+                          "outcome": ("held" if baseline else "killed") if held else "SURVIVED"})
+        if not held:
+            failures.append(mutant)
+
+    tree = Path(tmp) / "dossier-test-names"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_choice_row(line) and not is_tnames_row(line))
+    ledger.write_text(pending)
+    before, before_findings = census(tree)
+    prior = before["POLARIS"]
+    held = tnames_binding(tree) == (None, [], []) and not before_findings
+    record("pending", AGENT_ADOPTIONS, "<no row>", "<unchanged>", "no test-name recognizers binding and a clean census",
+           before_findings, held, baseline=True)
+
+    oid = "0123456789abcdef0123456789abcdef01234567"
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{TNAMES_SPEC}"
+    row = (f"| A-999 | 2026-11-25 | `{oid}` | [spec]({snapshot}) | Selftest | "
+           f"`git revert -m 1 {oid}` | `{TNAMES_TAG}` |\n")
+    later = "f" * 40
+    unrelated = f"| A-1001 | 2026-11-25 | `{later}` | "
+    for name, citation in (
+        ("prior-snapshot", unrelated + f"[prior spec]({snapshot}) | Other work | `git revert {later}` | — |\n"),
+        ("tag-in-reason", unrelated + f"Other work | `{TNAMES_TAG}` | `git revert {later}` | — |\n"),
+    ):
+        ledger.write_text(pending + citation)
+        text, r1, r2 = tnames_binding(tree)
+        record(f"pending-{name}", AGENT_ADOPTIONS, "<no citation>", citation,
+               "an unrelated row does not claim this adoption", r1 + r2,
+               text is None and not r1 and not r2, baseline=True)
+
+    # The row without an effective v2.37 predecessor is refused, and the census keeps the predecessor.
+    ledger.write_text(pending + row)
+    text, r1, r2 = tnames_binding(tree)
+    after, after_findings = census(tree)
+    record("prior-unavailable", AGENT_ADOPTIONS, "<no row>", row, "R1 requires effective v2.37", r1 + r2,
+           text is None and not r2 and any("prior v2.37 choice floor" in finding for finding in r1)
+           and after["POLARIS"] == prior)
+
+    for name, old, new, detail in (
+        ("malformed-tagged", "| Selftest | ", "| ", "seven-column"),
+        ("wrong-tag", TNAMES_TAG, TNAMES_TAG + "-wrong", "malformed"),
+        ("wrong-snapshot", snapshot, snapshot.replace("/blob/", "/tree/"), "does not name"),
+        ("wrong-revert", f"git revert -m 1 {oid}", f"git revert {'0' * 40}", "revert"),
+    ):
+        assert row.count(old) == 1 and old != new
+        ledger.write_text(pending + row.replace(old, new, 1))
+        text, r1, r2 = tnames_binding(tree)
+        record(name, AGENT_ADOPTIONS, old, new, f"R1 refusal mentioning {detail}", r1 + r2,
+               text is None and not r2 and any(detail in finding for finding in r1))
+
+    ledger.write_text(pending + row)
+    spec = tree / TNAMES_SPEC
+    changed = "each recognizer reads and lists at most 251 files"
+    current_capacity = "each recognizer reads and lists at most 250 files"
+    assert original.count(current_capacity) == 1
+    spec.write_text(original.replace(current_capacity, changed, 1))
+    text, r1, r2 = tnames_binding(tree)
+    record("modified-limit", TNAMES_SPEC, current_capacity, changed, "R2 bound-subject refusal",
+           r1 + r2, text is None and len(r2) == 1 and TNAMES_SPEC in r2[0])
+    spec.write_text(original)
+
+    veto = "| A-1000 | 2026-11-25 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n"
+    ledger.write_text(pending + row + veto)
+    retired, found = census(tree)
+    held = (tnames_disposition(tree, tnames_rows(tree)) == "A-1000"
+            and tnames_binding(tree) == (None, [], []) and not found and retired["POLARIS"] == prior)
+    record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 034", found, held, baseline=True)
+
+
 def vbase_cases(tmp, base, witnesses, failures):
     """Guard the REQ034 succession over the figure plan, the checked spec bytes and retirement."""
     original = read_text(base, VBASE_SPEC)
@@ -12737,7 +12942,7 @@ def vbase_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_vbase_row(line) and not is_choice_row(line))
+                      if not is_vbase_row(line) and not is_choice_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -12956,7 +13161,7 @@ def term_brief_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line))
+                      if not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before_pop, before_findings = census(tree)
     before = before_pop["POLARIS"]
@@ -13160,7 +13365,7 @@ def readmit_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -13798,19 +14003,20 @@ def project_source_example_history(root):
     body = ledger.read_text(encoding="utf-8")
     ledger.write_text("".join(line for line in body.splitlines(keepends=True)
                               if not is_source_example_row(line.rstrip("\n"))
-                              and not is_choice_row(line.rstrip("\n"))), encoding="utf-8")
+                              and not is_choice_row(line.rstrip("\n")) and not is_tnames_row(line.rstrip("\n"))), encoding="utf-8")
     for path in P5_ADVICE_SUBJECTS:
         (root / path).unlink(missing_ok=True)
     status = root / STATUS
     # The v2.37 choice floor stands on v2.36, so its routes leave with it.
-    prefixes = (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_SCOPE, CHOICE_STATUS_PREFIX, CHOICE_COUNT_SCOPE)
+    prefixes = (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_SCOPE, CHOICE_STATUS_PREFIX, CHOICE_COUNT_SCOPE,
+                TNAMES_STATUS_PREFIX, TNAMES_COUNT_SCOPE)
     status.write_text("".join(line for line in status.read_text(encoding="utf-8").splitlines(keepends=True)
                               if not line.strip().startswith(prefixes)), encoding="utf-8")
     index = root / OPENSPEC_README
     lines = index.read_text(encoding="utf-8").splitlines(keepends=True)
     index.write_text("".join(
         P5_ADVICE_CANDIDATE_INDEX + "\n" if line.strip().startswith(P5_ADVICE_INDEX_PREFIX)
-        else _candidate_index_row(line) if line.strip().startswith(CHOICE_INDEX_PREFIX) else line
+        else _candidate_index_row(line) if line.strip().startswith((CHOICE_INDEX_PREFIX, TNAMES_INDEX_PREFIX)) else line
         for line in lines
     ), encoding="utf-8")
 
@@ -14360,7 +14566,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         ledger = figure_base / AGENT_ADOPTIONS
         rows = ledger.read_text().splitlines(keepends=True)
         ledger.write_text("".join(line for line in rows
-                                  if not is_edit_account_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line)))
+                                  if not is_edit_account_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_tnames_row(line)))
     # The families below run side by side, each in its own fresh fork, and
     # their witnesses, failures and printed lines are merged in this order
     # (syzygy-7rkx). A family added here must keep three rules, or a
@@ -14399,6 +14605,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         lambda w, f: qkind_cases(tmp, base, w, f),
         lambda w, f: figplan_cases(tmp, base, w, f),
         lambda w, f: choice_cases(tmp, base, w, f),
+        lambda w, f: tnames_cases(tmp, base, w, f),
         lambda w, f: vbase_cases(tmp, base, w, f),
     ]
     _run_families(families, witnesses, failures)
