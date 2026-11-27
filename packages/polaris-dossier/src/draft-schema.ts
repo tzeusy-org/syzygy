@@ -1,6 +1,6 @@
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import {
-  DIAGRAM_KINDS, FIGURE_KINDS, QUOTE_LEAD_IN, checkShape, choice, handle, list, object, one, ref, refs, text, type Schema, type SchemaError, type SchemaWithDefs,
+  CONTAINMENT_KIND, DIAGRAM_KINDS, FIGURE_KINDS, QUOTE_LEAD_IN, checkShape, choice, handle, list, object, one, ref, refs, text, type Schema, type SchemaError, type SchemaWithDefs,
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
 import { EXECUTION_SCOPES } from './execution-flags.js';
@@ -50,13 +50,24 @@ export const LOCAL_DRAFT_SCHEMA_VERSION_V8 = 'polaris-dossier-local-draft-v8';
 export const LOCAL_DRAFT_SCHEMA_VERSION_V9 = 'polaris-dossier-local-draft-v9';
 /** v10 (REQ-polaris-generation-034 version 2.20): one overview hero figure or a reasoned omission. */
 export const LOCAL_DRAFT_SCHEMA_VERSION_V10 = 'polaris-dossier-local-draft-v10';
+/** v11 (REQ-polaris-generation-034 version 2.23, syzygy-3efd.31): a diagram's `kind` may also be `containment`, whose `groups` (groups
+ * nested in groups) take the place of `nodes` and `edges`. Everything else is v10; a v10 or earlier draft still checks and renders as
+ * before, and the kind and `groups` in one are field-version. No brief issues v11: the brief issues v13 (version 2.26 descends from v10),
+ * and the brief that issues a schema with containment is brief v22 (version 2.33, schema v14), so `CONTAINMENT_PARAGRAPH` (brief.ts) is
+ * kept for it and issued by no brief yet. */
+export const LOCAL_DRAFT_SCHEMA_VERSION_V11 = 'polaris-dossier-local-draft-v11';
 /** v13 (REQ-polaris-generation-034 version 2.26, syzygy-5dhm.41): an Inferred block may carry `worthKnowing: true`, the worth-knowing mark,
  * and a Pole may say in `worthKnowingNone` why it holds no block so marked. Everything else is v10; a v10 or earlier draft still checks and
- * renders as before, and either member in one is field-version. v11 and v12 are the numbers adopted version 2.23 (containment figure)
- * and the open version 2.24 (system model) give their schemas; neither is implemented here, so this code knows no v11 or v12 draft and
- * refuses either as an unknown version. Each slots into the chain below when its implementation lands. */
+ * renders as before, and either member in one is field-version. v13 descends from v10, not from v11: a v13 draft has no containment and a
+ * v11 draft no worth-knowing mark. v12 is the number version 2.24 (system model) gives its schema; it is not implemented here, so this code
+ * knows no v12 draft and refuses one as an unknown version. */
 export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v13';
-export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION] as const);
+export { CONTAINMENT_KIND };
+/** Every draft schema version `check` reads. */
+export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION_V11, LOCAL_DRAFT_SCHEMA_VERSION] as const);
+/** The versions every schema but v11's names in `schemaVersion`: all but v11, which no brief issues (see its constant), so the document
+ * the brief publishes, and every record that carries it, keeps the bytes it had before v11 was implemented. */
+const NAMED_SCHEMA_VERSIONS: readonly string[] = Object.freeze(LOCAL_DRAFT_SCHEMA_VERSIONS.filter((version) => version !== LOCAL_DRAFT_SCHEMA_VERSION_V11));
 /** Whether a draft's version has the v4 forms: v4 and every later version. */
 export const hasV4Forms = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V4 || hasHomeForm(version);
 /** Whether a draft's version names a diagram's page in `home`: v5 and every later version. */
@@ -70,7 +81,13 @@ export const hasSubsectionForm = (version: unknown): boolean => version === LOCA
 /** Whether a draft's graph edges carry `relation` and its graph nodes may carry `unit`: v9 (version 2.19). */
 export const hasRelationForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V9 || hasHeroForm(version);
 /** Whether a draft carries the overview `hero`: v10 (version 2.20) and every later version. */
-export const hasHeroForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V10 || hasWorthKnowingForm(version);
+export const hasHeroForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V10 || hasContainmentForm(version) || hasWorthKnowingForm(version);
+/** Whether a draft's version has the containment figure kind: v11 (version 2.23). v13 has none. */
+export const hasContainmentForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V11;
+/** Whether a draft is of a known version before v11 that has no containment, so a containment kind or `groups` in it is field-version
+ * (version 2.23). v13 is not one: it reports either as v13 did before. */
+export const precedesContainment = (version: unknown): boolean => !hasContainmentForm(version) && !hasWorthKnowingForm(version)
+  && LOCAL_DRAFT_SCHEMA_VERSIONS.some((known) => known === version);
 /** Whether a draft's version has the worth-knowing mark and a Pole's `worthKnowingNone`: v13 (version 2.26). */
 export const hasWorthKnowingForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION;
 /** The worth-knowing mark (v13) on a claim block, and the member in which a v13 Pole says why it holds no block so marked. */
@@ -118,13 +135,22 @@ export const SUBSECTIONS_FIELD = 'subsections';
 /** The members each diagram kind takes (v7): a graph kind `nodes` and `edges`, a sequence `participants` and `messages`, a swimlane
  * `lanes` and `steps`; every other diagram member is shared. */
 export const FIGURE_MEMBERS = Object.freeze(['nodes', 'edges', 'participants', 'messages', 'lanes', 'steps'] as const);
-export type FigureMember = typeof FIGURE_MEMBERS[number];
+/** The containment kind's one member (v11, version 2.23). */
+export const GROUPS_FIELD = 'groups';
+export type FigureMember = typeof FIGURE_MEMBERS[number] | typeof GROUPS_FIELD;
+/** The members a diagram of a draft's version may carry by its kind: v11 adds `groups` to v7's six. */
+export const figureMembersOf = (version: unknown): readonly FigureMember[] => (hasContainmentForm(version) ? [...FIGURE_MEMBERS, GROUPS_FIELD] : FIGURE_MEMBERS);
 /** The members only a v7 draft's diagram may carry, each a field-version finding in an earlier draft. */
 export const V7_FIGURE_MEMBERS = Object.freeze(['participants', 'messages', 'lanes', 'steps'] as const);
-export const membersOfKind = (kind: unknown): readonly FigureMember[] | undefined => (kind === 'sequence' ? ['participants', 'messages']
-  : kind === 'swimlane' ? ['lanes', 'steps'] : (DIAGRAM_KINDS as readonly unknown[]).includes(kind) ? ['nodes', 'edges'] : undefined);
+/** The members a kind takes at a draft's version: `containment` is a kind only in v11, so in any other version it takes nothing known. */
+export const membersOfKind = (kind: unknown, version?: unknown): readonly FigureMember[] | undefined => (kind === 'sequence' ? ['participants', 'messages']
+  : kind === 'swimlane' ? ['lanes', 'steps'] : kind === CONTAINMENT_KIND && hasContainmentForm(version) ? [GROUPS_FIELD]
+  : (DIAGRAM_KINDS as readonly unknown[]).includes(kind) ? ['nodes', 'edges'] : undefined);
+/** The bounds of a v11 containment (version 2.23): one to five top-level groups, zero to eight children of a group, at most 40 groups in
+ * all and at most three levels. `children` is recursive in the schema with no bound on depth, so depth and the total are check's. */
+export const CONTAINMENT_BOUNDS = Object.freeze({ groups: [1, 5] as const, children: [0, 8] as const, total: 40, levels: 3 });
 /** The bounds of the v7 figure kinds' lists. */
-export const FIGURE_BOUNDS: Readonly<Record<Exclude<FigureMember, 'nodes' | 'edges'>, readonly [number, number]>> = Object.freeze({
+export const FIGURE_BOUNDS: Readonly<Record<Exclude<FigureMember, 'nodes' | 'edges' | 'groups'>, readonly [number, number]>> = Object.freeze({
   participants: [2, 5], messages: [1, 30], lanes: [2, 5], steps: [2, 20],
 });
 /** What a v6 draft's introduction rests on. */
@@ -295,6 +321,12 @@ const defsOf = (marked: boolean): Readonly<Record<string, DraftSchema>> => Objec
 });
 const DEFS = defsOf(true);
 const DEFS_UNMARKED = defsOf(false);
+/** v11's definitions: v10's and the recursive containment group (version 2.23), which no other version's document carries, so their bytes
+ * stay as they were. A group is a node's claim, with the groups drawn inside it. */
+const DEFS_CONTAINMENT: Readonly<Record<string, DraftSchema>> = Object.freeze({
+  ...DEFS_UNMARKED,
+  group: object({ id: handle, label: text, epistemic, citations: citations(1), children: list(ref('group'), ...CONTAINMENT_BOUNDS.children), unit: ref('unit') }, ['unit']),
+});
 
 export interface DraftSchemaParameters {
   /** The run's pinned revision; the draft must name it. */
@@ -314,10 +346,13 @@ export interface DraftSchemaParameters {
  * `subsections` (schema v8 and later; version 2.16) or has no such member (schema v7 and earlier). `relations` says whether a graph edge
  * carries its required `relation` and a graph node may carry `unit` (schema v9 and later; version 2.19) or neither (schema
  * v8 and earlier). `worthKnowing` says whether a claim block may carry the worth-knowing mark and a Pole `worthKnowingNone` (schema v13,
- * what the brief publishes; version 2.26) or neither member exists (schema v10 and earlier). */
+ * what the brief publishes; version 2.26) or neither member exists (schema v10 and earlier). `containment` says whether a diagram may also be a
+ * `containment` of `groups` (schema v11; version 2.23), whose definitions then hold the recursive `group`; it is never taken with
+ * `worthKnowing`. */
 export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm: 'home' | 'sectionId' = 'home', thesisBasis: 'required' | 'absent' = 'required',
   figureKinds: 'taken' | 'absent' | 'unnamed' = 'taken', subsections: 'taken' | 'absent' = 'taken', relations: 'taken' | 'absent' = 'taken',
-  worthKnowing: 'taken' | 'absent' = 'taken'): DraftSchemaWithDefs {
+  worthKnowing: 'taken' | 'absent' = 'taken', containment: 'taken' | 'absent' = 'absent'): DraftSchemaWithDefs {
+  if (containment === 'taken' && worthKnowing === 'taken') throw new Error('draft-schema: no schema has both containment and the worth-knowing mark');
   requirePinnedRevision(parameters.pinnedRevision);
   if (!Number.isSafeInteger(parameters.maxQuestions) || parameters.maxQuestions < 0) throw new Error('draft-schema: the question limit is not a nonnegative integer');
   const graph = (kind: Schema): Record<string, Schema> => ({
@@ -346,13 +381,18 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
       : { lanes: list(object(element), ...FIGURE_BOUNDS.lanes), steps: list(object({ id: handle, lane: handle, label: text, epistemic, citations: citations(1) }), ...FIGURE_BOUNDS.steps) };
     return object({ ...shared, ...own, disposition: disposition! });
   };
+  // v11 (version 2.23): a containment shares every member but `nodes` and `edges`, which its `groups` replace.
+  const contained = (): Schema => {
+    const { nodes: _nodes, edges: _edges, disposition, ...shared } = graph(one(CONTAINMENT_KIND));
+    return object({ ...shared, [GROUPS_FIELD]: list(ref('group'), ...CONTAINMENT_BOUNDS.groups), disposition: disposition! });
+  };
   // 'unnamed' is never published: `check` reads a v7 diagram that names none of the eight kinds against it, the v6 graph form with
   // every v7 kind permitted, so that diagram's faults are each reported as v6 reports them (version 2.5).
   const diagram: Schema = figureKinds === 'absent' ? object(graph(choice(DIAGRAM_KINDS)))
     : figureKinds === 'unnamed' ? object(graph(choice([...DIAGRAM_KINDS, ...FIGURE_KINDS])))
-    : { oneOf: [...DIAGRAM_KINDS.map((kind) => object(graph(one(kind)))), figure('sequence'), figure('swimlane')] };
-  return { defs: worthKnowing === 'taken' ? DEFS : DEFS_UNMARKED, root: object({
-    schemaVersion: choice(LOCAL_DRAFT_SCHEMA_VERSIONS),
+    : { oneOf: [...DIAGRAM_KINDS.map((kind) => object(graph(one(kind)))), figure('sequence'), figure('swimlane'), ...(containment === 'taken' ? [contained()] : [])] };
+  return { defs: worthKnowing === 'taken' ? DEFS : containment === 'taken' ? DEFS_CONTAINMENT : DEFS_UNMARKED, root: object({
+    schemaVersion: choice(containment === 'taken' ? LOCAL_DRAFT_SCHEMA_VERSIONS : NAMED_SCHEMA_VERSIONS),
     pinnedRevision: one(parameters.pinnedRevision),
     sessionId,
     title: text,

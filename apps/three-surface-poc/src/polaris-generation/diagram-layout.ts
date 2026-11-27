@@ -721,3 +721,80 @@ export function renderSwimlaneSvg(figure: { readonly lanes: readonly FigureClaim
   const steps = figure.steps.map((step, k) => figureBox(step, layout.steps[k]!, escape)).join('');
   return figureSvg(index, layout.width, layout.height, `${bands}${order}${heads}${steps}`, true);
 }
+
+/**
+ * A containment (REQ-polaris-generation-034 version 2.23, schema v11): groups drawn as boxes within boxes, read from the tree and its counts
+ * alone, never from a label's width. With n top-level groups, column i is 176 px wide at x = 24 + 184 i and W = 40 + 184 n. A group at level
+ * l is 176 - 24 (l - 1) px wide, 12 (l - 1) px right of its column's left edge; a leaf is 48 px high, a group with k children
+ * 40 + h1 + ... + hk + 8 (k - 1) + 12 px. A top-level group's top is at y = 24, a first child's 40 px below its parent's top, and each further
+ * child's 8 px below the foot of the one before. H = 48 + the tallest top-level group. The layout throws where a count is outside its bounds
+ * (one to five top-level groups, at most eight children, at most 40 groups, at most three levels, at least one nesting) or an identity
+ * repeats: the figure is then not drawn, and its fit is Unknown.
+ */
+const CONTAINMENT_LEAF = 48;
+const CONTAINMENT_HEAD = 40;
+const CONTAINMENT_GAP = 8;
+const CONTAINMENT_FOOT = 12;
+const CONTAINMENT_INDENT = 12;
+const CONTAINMENT_NARROWING = 24;
+/** A group's label wraps at 19, 16 or 13 characters at level 1, 2 or 3. */
+const CONTAINMENT_CHARS = [19, 16, 13] as const;
+
+export interface ContainmentGroupInput { readonly id: string; readonly children: readonly ContainmentGroupInput[] }
+export interface ContainmentBox { readonly id: string; readonly level: number; readonly x: number; readonly y: number; readonly width: number; readonly height: number; readonly leaf: boolean }
+export interface ContainmentLayout { readonly width: number; readonly height: number; readonly levels: number; readonly boxes: readonly ContainmentBox[] }
+
+// Test seam: exported for the tests; production code reaches it only inside this file and `dossier-site.ts`.
+export function layoutContainment(groups: readonly ContainmentGroupInput[]): ContainmentLayout {
+  if (groups.length < 1 || groups.length > 5) throw new Error('figure-count');
+  const seen = new Set<string>();
+  let levels = 0;
+  const heightOf = (group: ContainmentGroupInput, level: number): number => {
+    if (level > 3 || group.children.length > 8) throw new Error('figure-count');
+    if (seen.has(group.id)) throw new Error('duplicate-node');
+    seen.add(group.id);
+    levels = Math.max(levels, level);
+    if (group.children.length === 0) return CONTAINMENT_LEAF;
+    const inner = group.children.reduce((sum, child) => sum + heightOf(child, level + 1), 0);
+    return CONTAINMENT_HEAD + inner + CONTAINMENT_GAP * (group.children.length - 1) + CONTAINMENT_FOOT;
+  };
+  const heights = new Map<ContainmentGroupInput, number>();
+  const tallest = Math.max(...groups.map(group => {
+    const height = heightOf(group, 1);
+    heights.set(group, height);
+    return height;
+  }));
+  if (seen.size > 40 || levels < 2) throw new Error('figure-count');
+  const boxes: ContainmentBox[] = [];
+  const place = (group: ContainmentGroupInput, level: number, column: number, y: number): number => {
+    const box = { id: group.id, level, x: columnX(column) + CONTAINMENT_INDENT * (level - 1), y, width: FIGURE_COLUMN - CONTAINMENT_NARROWING * (level - 1), height: 0, leaf: group.children.length === 0 };
+    boxes.push(box);
+    let top = y + CONTAINMENT_HEAD;
+    for (const child of group.children) top = place(child, level + 1, column, top) + CONTAINMENT_GAP;
+    const height = group.children.length === 0 ? CONTAINMENT_LEAF : top - CONTAINMENT_GAP + CONTAINMENT_FOOT - y;
+    boxes[boxes.indexOf(box)] = { ...box, height };
+    return y + height;
+  };
+  groups.forEach((group, i) => place(group, 1, i, MARGIN));
+  return { width: figureWidth(groups.length), height: 48 + tallest, levels, boxes };
+}
+
+/** A containment as static SVG: each group's box in preorder, a parent before the groups drawn inside it, each in its marking's line style,
+ * its label in its first 40 px (or its whole box where it has no children). No line, arrow or connector. Every text passes through
+ * `escape`; the caller must still pass the result through `assertInertSvg`. */
+export function renderContainmentSvg(roots: readonly ContainmentClaim[], index: number | string, escape: (value: string) => string): string {
+  const layout = layoutContainment(roots);
+  const claims: ContainmentClaim[] = [];
+  const visit = (group: ContainmentClaim): void => { claims.push(group); group.children.forEach(visit); };
+  roots.forEach(visit);
+  const body = claims.map((group, k) => {
+    const at = layout.boxes[k]!;
+    const lines = figureLines(group, CONTAINMENT_CHARS[at.level - 1]!);
+    const band = at.leaf ? CONTAINMENT_LEAF : CONTAINMENT_HEAD;
+    const baseline = at.y + band / 2 + 5 - (lines.length - 1) * 8;
+    return `<g class="node ${group.epistemic}"><title>${escape(group.label)} (${group.epistemic})</title><rect x="${num(at.x)}" y="${num(at.y)}" width="${at.width}" height="${at.height}" rx="6"/>${figureText(lines, at.x + at.width / 2, baseline, 16, escape)}</g>`;
+  }).join('');
+  // No marker is defined: the drawing has no arrow to head.
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${layout.width} ${layout.height}" width="${layout.width}" height="${layout.height}" role="img" aria-labelledby="diagram-title-${index}" aria-describedby="diagram-text-${index}">${body}</svg>`;
+}
+export interface ContainmentClaim extends FigureClaim { readonly children: readonly ContainmentClaim[] }

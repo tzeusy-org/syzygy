@@ -121,6 +121,19 @@ export function figureKindsInput(): { readonly local: LocalRenderInput; readonly
   }] } as unknown as LocalRenderInput['draft'] } };
 }
 
+/** A containment (REQ-polaris-generation-034 version 2.23, syzygy-3efd.31) on the reading dossier's first section: two top-level groups, the
+ * first holding two (one of them holding one more, Unknown), so its drawing is 408 px wide and three levels deep. */
+export function containmentInput(): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {
+  const { local, sources } = readingInput();
+  const sourceIds = [READING_SOURCE.sourceId];
+  const g = (id: string, label: string, children: unknown[] = [], epistemic = 'inferred') => ({ id, label, sourceIds, epistemic, children });
+  const draft = local.draft as unknown as Record<string, unknown>;
+  return { sources, local: { ...local, draft: { ...draft, diagrams: [{
+    id: 'workspace', sectionId: 'one', kind: 'containment', title: 'Workspace', relationship: 'what sits inside what', disposition: { kind: 'produced', assetIds: [] }, nodes: [], edges: [],
+    figure: { kind: 'containment', groups: [g('apps', 'Applications', [g('web', 'Web front end', [g('router', 'Router', [], 'unknown')]), g('cli', 'Command line')]), g('packages', 'Packages')] },
+  }] } as unknown as LocalRenderInput['draft'] } };
+}
+
 /** The computed map pages (REQ-polaris-generation-034 version 2.9, syzygy-3efd.70): the reading dossier with a derived structure of one
  * top-level directory and manifest facts of one package and one workflow, so `maps/directories.html`, `maps/units.html` and `maps/ci.html`
  * each draw one figure (the CI map: `test` needs `build`). */
