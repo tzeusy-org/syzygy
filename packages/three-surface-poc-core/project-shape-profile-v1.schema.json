@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:syzygy:project-shape-profile:v1",
+  "title": "Project shape profile, version 1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profileVersion", "rootIndex", "indexDepth", "pillars", "sourceRules",
+    "treePopulations", "extractionClasses", "grammarRows", "projectAccountKeys",
+    "catalogKeys", "rootSummary", "precedence"
+  ],
+  "properties": {
+    "profileVersion": { "const": "project-shape-profile-v1" },
+    "rootIndex": { "$ref": "#/$defs/relativePath" },
+    "indexDepth": { "type": "integer", "minimum": 1 },
+    "pillars": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/pillar" }
+    },
+    "sourceRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root-index", "pillar-index", "pillar-named-file", "baseline-spec-tree", "roster-tree"],
+      "properties": {
+        "root-index": { "type": "boolean" },
+        "pillar-index": { "type": "boolean" },
+        "pillar-named-file": { "type": "boolean" },
+        "baseline-spec-tree": { "type": "boolean" },
+        "roster-tree": { "type": "boolean" }
+      }
+    },
+    "treePopulations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/treePopulation" }
+    },
+    "extractionClasses": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/extractionClass" }
+    },
+    "grammarRows": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/grammarRow" }
+    },
+    "projectAccountKeys": { "$ref": "#/$defs/keys" },
+    "catalogKeys": { "$ref": "#/$defs/keys" },
+    "rootSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["heading", "statedCountFacts"],
+      "properties": {
+        "heading": { "$ref": "#/$defs/heading" },
+        "statedCountFacts": { "$ref": "#/$defs/keys" }
+      }
+    },
+    "precedence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["heading", "columns", "rows"],
+      "properties": {
+        "heading": { "$ref": "#/$defs/heading" },
+        "columns": { "$ref": "#/$defs/keys" },
+        "rows": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/precedenceRow" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "text": { "type": "string", "minLength": 1 },
+    "relativePath": {
+      "type": "string",
+      "pattern": "^(?!-)(?!.*(?:^|/)\\.{1,2}(?:/|$))[^/<>\\\\\\u0000-\\u001f]+(?:/[^/<>\\\\\\u0000-\\u001f]+)*(?![\\s\\S])"
+    },
+    "keys": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/text" }
+    },
+    "pillarKey": {
+      "enum": ["heart-and-soul", "legends-and-lore", "spec-and-spine", "lay-and-land", "craft-and-care"]
+    },
+    "pillar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "label"],
+      "properties": {
+        "key": { "$ref": "#/$defs/pillarKey" },
+        "label": { "$ref": "#/$defs/text" }
+      }
+    },
+    "treeRule": { "enum": ["baseline-spec-tree", "roster-tree"] },
+    "treePopulation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule", "pathPattern"],
+      "properties": {
+        "rule": { "$ref": "#/$defs/treeRule" },
+        "pathPattern": {
+          "type": "string",
+          "pattern": "^(?!-)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?:[^/<>\\\\\\u0000-\\u001f]+/)*<key>(?:/[^/<>\\\\\\u0000-\\u001f]+)+(?![\\s\\S])"
+        },
+        "companion": { "$ref": "#/$defs/relativePath" }
+      }
+    },
+    "extractionClass": {
+      "enum": [
+        "project-account-section", "principle", "success-criterion", "catalog-entry",
+        "design-contract", "baseline-spec", "topology-component", "craft-policy", "roster-identity"
+      ]
+    },
+    "heading": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": { "$ref": "#/$defs/text" },
+        "level": { "type": "integer", "minimum": 1, "maximum": 6 }
+      }
+    },
+    "headings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/heading" }
+    },
+    "grammarSource": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rule", "pillar"],
+          "properties": {
+            "rule": { "const": "pillar-index" },
+            "pillar": { "$ref": "#/$defs/pillarKey" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rule", "pillar", "relativePath"],
+          "properties": {
+            "rule": { "const": "pillar-named-file" },
+            "pillar": { "$ref": "#/$defs/pillarKey" },
+            "relativePath": { "$ref": "#/$defs/relativePath" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rule"],
+          "properties": { "rule": { "$ref": "#/$defs/treeRule" } }
+        }
+      ]
+    },
+    "container": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "headings"],
+          "properties": {
+            "kind": { "const": "heading-section" },
+            "headings": { "$ref": "#/$defs/headings", "maxItems": 2 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "headings"],
+          "properties": {
+            "kind": { "enum": ["top-level-decimal-list", "top-level-list", "top-level-bulleted-list", "first-table-rows"] },
+            "headings": { "$ref": "#/$defs/headings" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": {
+            "kind": { "enum": ["every-level-2-section", "ordinal-section-table-rows", "tree-path"] }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "table", "field"],
+          "properties": {
+            "kind": { "const": "toml-table-field" },
+            "table": { "$ref": "#/$defs/text" },
+            "field": { "$ref": "#/$defs/text" }
+          }
+        }
+      ]
+    },
+    "itemKey": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "key"],
+          "properties": { "kind": { "const": "fixed" }, "key": { "$ref": "#/$defs/text" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "prefix"],
+          "properties": { "kind": { "const": "prefixed-ordinal" }, "prefix": { "$ref": "#/$defs/text" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "column"],
+          "properties": { "kind": { "const": "link-target-basename" }, "column": { "$ref": "#/$defs/text" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": {
+            "kind": { "enum": ["leading-bold", "leading-bold-or-code", "first-cell-link-text", "tree-key", "ordinal-and-label"] }
+          }
+        }
+      ]
+    },
+    "grammarRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class", "source", "container", "itemKey"],
+      "properties": {
+        "class": { "$ref": "#/$defs/extractionClass" },
+        "source": { "$ref": "#/$defs/grammarSource" },
+        "container": { "$ref": "#/$defs/container" },
+        "itemKey": { "$ref": "#/$defs/itemKey" }
+      }
+    },
+    "precedenceRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ordinal", "layer", "owns", "home"],
+      "properties": {
+        "ordinal": { "type": "integer", "minimum": 1, "maximum": 7 },
+        "layer": { "$ref": "#/$defs/text" },
+        "owns": { "$ref": "#/$defs/text" },
+        "home": { "$ref": "#/$defs/text" }
+      }
+    }
+  }
+}

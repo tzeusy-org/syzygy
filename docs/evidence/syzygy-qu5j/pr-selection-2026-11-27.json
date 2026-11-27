@@ -1,0 +1,216 @@
+{
+  "subject": {
+    "commit": "129e89babd2bdc323d1f07bc810adf72e9eaff0f",
+    "sha256": {
+      "ci-selection.ts": "778c958cb87b47ec5e59d63cdfa683b04adcfdee1141818d69cee2a976972d8d",
+      "scripts/select_ci_tests.mjs": "f5c25dd0e61a732890250423757e97a9d3507f44491a0457461949106d393ee6",
+      "scripts/run_ci_tier.mjs": "936f4b118726c056a1cb77923d3ab57c60301001b782fbac6bc11726eb4ece98",
+      "scripts/check_unit_tmpdir.mjs": "c41d8147124a694c90272275871a0720c8131417159885860873a282c91a934c",
+      ".github/workflows/node-ci.yml": "407b6d2f1e7fd53701724b56e22e29e6d168d9ce2b6e60a65ddcb3adfbe67e1a",
+      "apps/three-surface-poc/src/ci-selection.test.ts": "576bc537d8f77b9333b296523931d9ecc3dffb9bd901be7b170e863ef4edd741"
+    }
+  },
+  "date": "2026-11-27",
+  "measurement": {
+    "case": "PR #1007 (syzygy-t3jk.26, Trajectory closed landings): the selector and ci-selection.ts at the subject commit, run in a detached checkout of e08d5fdc9 with --base e08d5fdc9^1",
+    "command": "node scripts/select_ci_tests.mjs --base e08d5fdc9^1 --out <file>",
+    "counts": {
+      "unit": {
+        "selected": 96,
+        "population": 227
+      },
+      "integration": {
+        "selected": 98,
+        "population": 107
+      },
+      "e2e": {
+        "selected": 12,
+        "population": 29
+      },
+      "live": {
+        "selected": 3,
+        "population": 3
+      }
+    },
+    "dossierBrowserTestsSelected": [],
+    "e2eSelected": [
+      "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+      "apps/three-surface-poc/src/orrery.browser.test.ts",
+      "apps/three-surface-poc/src/polaris-accessibility.browser.test.ts",
+      "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/pipeline-demo.test.ts",
+      "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+      "apps/three-surface-poc/src/product-build.test.ts",
+      "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+      "apps/three-surface-poc/src/surface-routes.test.ts",
+      "apps/three-surface-poc/src/trajectory-narrowing.browser.test.ts",
+      "apps/three-surface-poc/src/tuple-encoding.test.ts",
+      "packages/polaris-dossier/src/no-egress.test.ts"
+    ],
+    "before": "Every pull request ran every file of every tier.",
+    "rejectedRules": [
+      {
+        "rule": "a reader names the changed path's top segment ('docs', '.syzygy', 'openspec')",
+        "selected": "unit 171 of 227, integration 99 of 107, e2e 18 of 29"
+      },
+      {
+        "rule": "a reader names any segment below the top",
+        "selected": "unit 164 of 227, integration 100 of 107, e2e 18 of 29"
+      },
+      {
+        "rule": "a bare '..' path literal counts as locating the repository",
+        "selected": "unit 182 of 227, integration 106 of 107, e2e 17 of 29"
+      },
+      {
+        "rule": "any module (not only test files) that lists a directory reads every change in its workspace",
+        "selected": "unit 96 of 227, integration 98 of 107, e2e 18 of 29, every dossier browser test among them"
+      }
+    ],
+    "polarisDossierPackageFilesSelected": {
+      "selected": 77,
+      "note": "Most packages/polaris-dossier test files stay selected for a Trajectory change: they locate the repository or import a module that does, and the PR's governed documents make those readers. The bead's 'excludes the Polaris dossier tests' is met for the dossier browser tests only."
+    }
+  },
+  "notes": [
+    "[Observed] Integration stays near whole for a Trajectory change (97 of 107): almost every integration test locates and reads the real repository, and a Trajectory PR always carries governed documents.",
+    "[Observed] No Polaris dossier browser test is selected for PR #1007's diff; the flaky dossier hover case (syzygy-jetr) would not have run there. Most polaris-dossier package tests still are (see polarisDossierPackageFilesSelected).",
+    "[Inferred] A test that reads the repository through a root handed in by a module it does not import, a path assembled from parts naming no token, or a walk the WALKS pattern does not name, can be missed on a pull request. No unit test fails when a new test escapes the rule; the merge-group run is always whole, so such a miss fails in the queue, never on main."
+  ],
+  "mutants": {
+    "command": "npx vitest run --project unit apps/three-surface-poc/src/ci-selection.test.ts",
+    "file": "ci-selection.ts",
+    "results": [
+      {
+        "id": "rooted-readers-dropped",
+        "mutation": "a governed document no longer selects the modules that locate the repository",
+        "old": "if (workspace === undefined) return ROOTED.test(text);",
+        "new": "if (workspace === undefined) return false;",
+        "exit": 1
+      },
+      {
+        "id": "walkers-dropped",
+        "mutation": "no source-walking guard reads a workspace change",
+        "old": "return module.endsWith('.test.ts') && WALKS.test(text) && (workspaceOf(module) === workspace || ROOTED.test(text));",
+        "new": "return false;",
+        "exit": 1
+      },
+      {
+        "id": "rooted-walkers-dropped",
+        "mutation": "a repository-wide guard no longer reads other workspaces' changes",
+        "old": "(workspaceOf(module) === workspace || ROOTED.test(text))",
+        "new": "workspaceOf(module) === workspace",
+        "exit": 1
+      },
+      {
+        "id": "walkers-any-module",
+        "mutation": "product modules that list a directory count as readers",
+        "old": "return module.endsWith('.test.ts') && WALKS.test(text)",
+        "new": "return WALKS.test(text)",
+        "exit": 1
+      },
+      {
+        "id": "rename-old-name-dropped",
+        "mutation": "a renamed path is looked up by its new name only",
+        "old": "const names = change.previous === undefined ? [change.path] : [change.previous, change.path];",
+        "new": "const names = [change.path];",
+        "exit": 1
+      },
+      {
+        "id": "scripts-not-to-graph",
+        "mutation": "a changed script module is not handed to the graph",
+        "old": "if (MODULE.test(change.path) && !change.status.startsWith('D')) code.add",
+        "new": "if (WORKSPACE.test(change.path) && MODULE.test(change.path) && !change.status.startsWith('D')) code.add",
+        "exit": 1
+      },
+      {
+        "id": "basename-readers-dropped",
+        "mutation": "no module is a reader by naming the path",
+        "old": "if (tokens.some((token) => namesPath(text, token))) return true;",
+        "new": "",
+        "exit": 1
+      },
+      {
+        "id": "workflow-trigger-dropped",
+        "mutation": "the workflow no longer forces a full run",
+        "old": "  { rule: 'workflow', test: /^\\.github\\/workflows\\/node-ci\\.yml$/u },\n",
+        "new": "",
+        "exit": 1
+      },
+      {
+        "id": "lockfile-trigger-dropped",
+        "mutation": "the lockfile no longer forces a full run",
+        "old": "  { rule: 'lockfile', test: /^package-lock\\.json$/u },\n",
+        "new": "",
+        "exit": 1
+      },
+      {
+        "id": "removal-rule-dropped",
+        "mutation": "deleting a workspace module no longer forces a full run",
+        "old": "    if (removed && WORKSPACE.test(removedPath)) reasons.push(`workspace module removed or renamed: ${removedPath}`);\n",
+        "new": "",
+        "exit": 1
+      },
+      {
+        "id": "open-closer-only",
+        "mutation": "a name in prose counts as a path literal",
+        "old": "['\"\\`/]${escaped}['\"\\`/]",
+        "new": "${escaped}",
+        "exit": 1
+      },
+      {
+        "id": "non-module-directory-dropped",
+        "mutation": "a workspace fixture is no longer read by its directory",
+        "old": "return [...new Set([basename, parts[parts.length - 2]!])];",
+        "new": "return [basename];",
+        "exit": 1
+      }
+    ]
+  },
+  "reviewRepairs": {
+    "F1": "The reviewer's two reproductions, re-run through planSelection over the tracked modules at the subject: a new packages/support/src/clock.ts now selects support-purity.test.ts; a changed packages/polaris-dossier/src/figure-fit.ts now selects sync-child-process-guard.test.ts.",
+    "F3": "The bead's design (a script-derived list of read paths, with a unit test failing when a new fs-reading test escapes it) was replaced by the reader rule; no test fails when a new reader escapes the rule. The full merge-group run is the backstop.",
+    "F9": "The workflow trigger is node-ci.yml alone, not .github/workflows/**: the other two workflows run no vitest tier."
+  },
+  "runnerChecks": [
+    {
+      "case": "unit runner, two chosen unit files",
+      "exit": 0,
+      "lines": [
+        "unit-selection {\"projects\":[\"unit\"],\"mode\":\"selected\",\"fileCount\":2,\"population\":229,\"expected\":[{\"project\":\"unit\",\"path\":\"apps/three-surface-poc/src/ci-selection.test.ts\"},{\"project\":\"unit\",\"path\":\"apps/three-surface-poc/src/test-tiers.test.ts\"}]}",
+        "      Tests  18 passed (18)"
+      ]
+    },
+    {
+      "case": "unit runner, nothing chosen",
+      "exit": 0,
+      "lines": [
+        "unit-selection {\"projects\":[\"unit\"],\"mode\":\"selected\",\"fileCount\":0,\"population\":229,\"expected\":[]}",
+        "unit-selected-none {\"mode\":\"selected\",\"population\":229}"
+      ]
+    },
+    {
+      "case": "unit runner, a chosen file outside the unit tier",
+      "exit": 1,
+      "lines": [
+        "Error: selection-not-unit-files: [\"apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts\"]"
+      ]
+    },
+    {
+      "case": "integration runner, a chosen file that does not exist",
+      "exit": 1,
+      "lines": []
+    },
+    {
+      "case": "integration runner, nothing chosen",
+      "exit": 0,
+      "lines": [
+        "ci-tier integration mode=selected selected=0 of 108",
+        "⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯",
+        "      Tests  1 failed (1)",
+        "      Tests  no tests",
+        "⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯",
+        "      Tests  1 failed (1)"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "format": "selftest-profile/1",
+  "bead": "syzygy-0yit",
+  "commit": "1c42a078e4bf07d0b49c110db2638f1a1af694a2",
+  "subject": {
+    "scripts/check_spec_reconciliation.py": "3408e908055dce7360111df23bfb9568bacb407ae314856b019b9ce9bc1328be"
+  },
+  "workers": 4,
+  "method": "Fresh `git clone --shared` at the commit; TMPDIR under ~/.tmp; SELFTEST_WORKERS=4. Two runs of docs/evidence/syzygy-0yit/profile_selftest.py, which calls `selftest()` in-process with phase and per-case timers and edits nothing in scripts/: a timing-only run (the wall figures here) and a cProfile run (parent profile plus one profile per pooled case; cProfile inflated the wall 1.45x, so its seconds are used for attribution only). Both runs: SELFTEST PASS, 632 of 632 mutants killed, 146 of 146 controls held, identical witness files. Host shared with other lanes [Observed: load average 1.2-2.4 at the end of each run]. measure_scope.py measured proposal 1 on one scratch copy without editing scripts/. The timing run used profile_selftest.py before one later edit, which only changed the --cprofile branch (a worker now disables the parent profiler it inherits through fork; without it the first cProfile attempt failed with 'Another profiling tool is already active'); the recorded digest is of the file both the cProfile run and this record used.",
+  "wallSeconds": {
+    "timingRun": 855.7,
+    "cprofileRun": 1243.6
+  },
+  "phases": {
+    "setupBeforeCases": 15.1,
+    "pool_map_cases": {
+      "wall": 114.7,
+      "cases": 118,
+      "workerSeconds": 451.7,
+      "meanCaseSeconds": 3.83,
+      "slowest": [
+        {
+          "name": "pins-after-repin-acts",
+          "seconds": 8.072
+        },
+        {
+          "name": "declared-revert-mainline-wrong",
+          "seconds": 4.682
+        },
+        {
+          "name": "declared-why-missing",
+          "seconds": 4.68
+        }
+      ]
+    },
+    "_entry_kind_cases_serial": 443.7,
+    "otherSerialFamilies": {
+      "count": 35,
+      "wallTotal": 274.1,
+      "largest": {
+        "url_source_cases": 29.4,
+        "edit_account_cases": 19.6,
+        "term_brief_cases": 17.5,
+        "declared_source_historical_cases": 13.7,
+        "covhold_cases": 11.3,
+        "qfile_cases": 10.3
+      }
+    }
+  },
+  "findings": [
+    "[Observed] 115 of 856 s run in the forked pool (118 cases, 452 worker-seconds, 3.83 s mean, so about 98% of 4 workers); the remaining ~725 s run serially in the parent after the pool.",
+    "[Observed] _entry_kind_cases alone is 444 s serial (52% of the wall). In the parent profile, 8 calls to its `lambda t: check_outcomes(t, Report())` arm (check_spec_reconciliation.py:12413, through _library_error) are 472.8 of its 498.4 profiled seconds.",
+    "[Observed] That arm calls check_outcomes outside run(), so `_SIGNED_MEMO` is None and every reference_signed reaches is_signed: 211 is_signed calls in the parent against about one per run() in the workers (120 for 118 cases). measure_scope.py: one bare check_outcomes call is 49.4 s with 22 is_signed calls; the same call inside run()'s per-run scope is 3.0 s with 1 call, and the findings are equal.",
+    "[Observed] The other 35 serial families total 274 s, each 4-29 s (url_source_cases 29.4, edit_account_cases 19.6, term_brief_cases 17.5, declared_source_historical_cases 13.7). declared_source_historical_cases makes the same bare check_outcomes call (check_spec_reconciliation.py:7188).",
+    "[Inferred] Growth: a pooled case adds ~3.8 worker-seconds, about 1 s of wall at 4 workers; a new serial family (one per recent specification amendment, 19 of them from figure_cases to worth_cases at 4-10 s each) adds its whole wall. The serial families, not the case count, set the slope."
+  ],
+  "proposal": [
+    {
+      "id": "P1",
+      "change": "Give the bare check_outcomes calls the per-run scope run() already sets up: factor run()'s `_SIGNED_MEMO`/`_RUN_MEMO`/memoized-D10-state setup into one context manager, enter it in run() and around the two bare check_outcomes calls (_entry_kind_cases' check_outcomes arm, declared_source_historical_cases). Removes repeated work; adds no cache.",
+      "estimatedSavingSeconds": "300-370 at 4 workers (8 calls x ~46 s measured, minus attribution error; plus ~10 s from line 7188)",
+      "codeSize": "~15 lines changed in check_spec_reconciliation.py, net about +5",
+      "risk": "None to verdicts if the scope is the run() scope exactly: findings measured equal on the clean copy; the selftest witness must stay byte-identical."
+    },
+    {
+      "id": "P2",
+      "change": "Run the serial `*_cases` families (and the inline two-case block) through the existing fork pool, one family per task, each returning its witnesses and failures, merged in the current order. Forks already isolate the families' global patches (poc_d10_cases' amendment, _cli_exits' ROOT).",
+      "estimatedSavingSeconds": "~190 at 4 workers after P1 (274 s of families plus the ~70 s left of _entry_kind_cases spread over 4 workers, bounded below by the largest, 29 s)",
+      "codeSize": "~40 lines in check_spec_reconciliation.py (a family table and a second _map_cases-style call); families' printed SKIPPED/note lines move to worker stdout and must be re-emitted in order",
+      "risk": "Witness order and stdout order must be preserved; families that read a shared tree must not write it (each already copies its own)."
+    }
+  ],
+  "projectedWallSeconds": "[Inferred] ~855 -> ~330 with both",
+  "files": {
+    "profile_selftest.py": "d5852cf81cf48dee82591396c371e4a773668d423af32e020329e151c64af65a",
+    "summarize_profile.py": "88164883d84dec2741b91e277e9ead45b74d01ce60799e3873ffd32cdf289d3a",
+    "measure_scope.py": "2007d14b41d391ece8d9d4c09c95b2f1648e34f7800aaaf662e56278efd3ba32",
+    "phases-1c42a078.jsonl": "711b3a1524e3d005d3fae9093cf392690bed54ffb9c1edb0dcc27889ee193ca5",
+    "pool-cases-1c42a078.jsonl": "2210c1ccac383f2c04479d0f0bfba58d627c78ca5797bd834673fb097c92f6b1",
+    "parent-cprofile-1c42a078.prof.gz": "688d595de8c22a98e84d7a2b41cdbf2c729f68cd92adfca2749e3f09382c9561",
+    "summary-1c42a078.txt": "e122809364ff5d4814425efc6c6296617804ca89a326c2a670aae9934030b6aa",
+    "measure-scope-1c42a078.json": "5cbc4e83d14ffdf62e1cde881696c0deb1a6322b4382c863df63aaa81e28453a"
+  },
+  "notKept": "the 118 per-case cProfile files (9.3 MB compressed); their sums are in summary-1c42a078.txt.",
+  "measureScope": {
+    "bare": {
+      "seconds": 50.34,
+      "isSignedCalls": 22
+    },
+    "scoped": {
+      "seconds": 2.99,
+      "isSignedCalls": 1
+    },
+    "bare-again": {
+      "seconds": 49.14,
+      "isSignedCalls": 22
+    },
+    "findingsEqual": true
+  }
+}

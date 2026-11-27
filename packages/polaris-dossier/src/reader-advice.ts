@@ -22,6 +22,74 @@ export interface ReaderAdvice {
   readonly advisories: readonly ReaderAdvisory[];
   /** The worth-knowing count advice (version 2.26): on a schema-v13 draft only, so an earlier draft's advice keeps its bytes. */
   readonly worthKnowing?: readonly WorthKnowingAdvisory[];
+  /** The choice floor (version 2.37): on a draft with the worth-knowing form (schema v13 today), like `worthKnowing`. */
+  readonly choiceFloor?: readonly ChoiceFloorAdvisory[];
+}
+
+/** One item of the choice floor (REQ-polaris-generation-034 version 2.37, syzygy-5dhm.43): a Pole (or, in a draft with no Poles, the
+ * draft) with fewer than `CHOICE_FLOOR` choices or trade-offs on record. Advice like the rest: it sets no outcome. */
+export interface ChoiceFloorAdvisory {
+  /** A JSON path into the draft: the Pole, or `$.sections` for a draft with no Poles. */
+  readonly at: string;
+  /** The Inferred items of the understanding record's `choices` and `tradeOffs` counted for this Pole. */
+  readonly onRecord: number;
+  readonly detail: string;
+}
+
+/** A Pole with fewer than this many choices or trade-offs on record is advised (version 2.37). */
+export const CHOICE_FLOOR = 3;
+
+/** The groups the per-Pole counts run over: each Pole with the sections it names, each section in the first Pole naming it; or, for a
+ * draft that declares no Poles, the whole draft at `$.sections`. */
+function poleGroups(doc: Readonly<Record<string, unknown>>, sectionIds: readonly string[]): { at: string; sections: readonly string[]; pole: Readonly<Record<string, unknown>> | undefined; name: string }[] {
+  const counted = new Set<string>();
+  return Array.isArray(doc['poles'])
+    ? doc['poles'].flatMap((pole, i) => (isRecord(pole) ? [{
+      at: `$.poles[${i}]`, pole, name: `the Pole ${JSON.stringify(text(pole['label']) ?? '')}`,
+      sections: list(pole['sections']).filter((id): id is string => typeof id === 'string' && !counted.has(id) && (counted.add(id), true)),
+    }] : []))
+    : [{ at: '$.sections', sections: sectionIds, pole: undefined, name: 'the draft' }];
+}
+
+/** Every path a citation names anywhere inside `value`: a claim's `citations` and a code excerpt's `citation`. */
+function citedPathsIn(value: unknown, into: Set<string>): Set<string> {
+  if (Array.isArray(value)) { for (const entry of value) citedPathsIn(entry, into); return into; }
+  if (!isRecord(value)) return into;
+  for (const [key, member] of Object.entries(value)) {
+    if (key === 'citations') for (const citation of list(member)) { const path = isRecord(citation) ? text(citation['path']) : undefined; if (path !== undefined) into.add(path); }
+    else if (key === 'citation' && isRecord(member)) { const path = text(member['path']); if (path !== undefined) into.add(path); }
+    else citedPathsIn(member, into);
+  }
+  return into;
+}
+
+/** The choice floor (REQ-polaris-generation-034 version 2.37, rule `choice-floor` version 1). On record are the items of the understanding
+ * record's `choices` and `tradeOffs` labelled Inferred. An item is on record for a Pole when a file it cites is a file some claim, element
+ * or excerpt of the Pole's sections, or of a deep dive whose `sectionId` is one of them, cites (each section counted in the first Pole
+ * naming it); for a draft with no Poles every such item is
+ * on record for the draft. A Pole with fewer than `CHOICE_FLOOR` is one advisory. Undefined for a draft before v13. */
+export function choiceFloorAdvice(doc: Readonly<Record<string, unknown>>): readonly ChoiceFloorAdvisory[] | undefined {
+  if (!hasWorthKnowingForm(doc['schemaVersion'])) return undefined;
+  const understanding = isRecord(doc['understanding']) ? doc['understanding'] : {};
+  const items = (['choices', 'tradeOffs'] as const).flatMap((item) => list(understanding[item]))
+    .filter((entry): entry is Readonly<Record<string, unknown>> => isRecord(entry) && entry['label'] === 'inferred')
+    .map((entry) => citedPathsIn(entry['citations'] === undefined ? [] : { citations: entry['citations'] }, new Set()));
+  const sections = new Map<string, unknown>();
+  for (const section of list(doc['sections'])) if (isRecord(section) && text(section['id']) !== undefined && !sections.has(text(section['id'])!)) sections.set(text(section['id'])!, section);
+  const out: ChoiceFloorAdvisory[] = [];
+  for (const group of poleGroups(doc, [...sections.keys()])) {
+    const cited = new Set<string>();
+    if (group.pole !== undefined) {
+      const counted = new Set(group.sections);
+      for (const id of group.sections) citedPathsIn(sections.get(id), cited);
+      // A deep dive belongs to the Pole of its section (version 2.37).
+      for (const dive of list(doc['deepDives'])) if (isRecord(dive) && counted.has(text(dive['sectionId']) ?? '')) citedPathsIn(dive, cited);
+    }
+    const onRecord = group.pole === undefined ? items.length : items.filter((paths) => [...paths].some((path) => cited.has(path))).length;
+    if (onRecord >= CHOICE_FLOOR) continue;
+    out.push({ at: group.at, onRecord, detail: `${group.name} has ${onRecord} ${onRecord === 1 ? 'choice or trade-off' : 'choices or trade-offs'} on record, fewer than ${CHOICE_FLOOR}: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record's \`choices\` or \`tradeOffs\`${group.pole === undefined ? '' : ' citing a file its sections cite'}; never record one its source does not show` });
+  }
+  return out;
 }
 
 /** One item of the worth-knowing count advice: a Pole (or, in a draft with no Poles, the draft) with no marked block and no reason why, or
@@ -248,5 +316,7 @@ export function readerAdvice(doc: unknown): ReaderAdvice {
     });
   }
   const worthKnowing = isRecord(doc) ? worthKnowingAdvice(doc) : undefined;
-  return { standards: READER_STANDARDS_VERSION, note: NOTE, advisories, ...(worthKnowing === undefined ? {} : { worthKnowing }) };
+  const choiceFloor = isRecord(doc) ? choiceFloorAdvice(doc) : undefined;
+  return { standards: READER_STANDARDS_VERSION, note: NOTE, advisories, ...(worthKnowing === undefined ? {} : { worthKnowing }),
+    ...(choiceFloor === undefined ? {} : { choiceFloor }) };
 }

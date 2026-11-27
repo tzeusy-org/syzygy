@@ -766,7 +766,7 @@ def expected_code_lines(body: bytes) -> list[tuple[str, str]]:
          + "] as const;"),
     ]
     for p in g["pillars"]:
-        out.append(("project-shape-manifest.ts", f"  '{p['key']}': '{p['label']}',"))
+        out.append(("project-shape-profile-vocabulary.ts", f"  '{p['key']}': '{p['label']}',"))
     for b in g["sourcePopulation"]["extractionBindings"]:
         classes = "[" + ", ".join(f"'{c}'" for c in b["classes"]) + "]"
         if b["rule"] == "pillar-named-file" and b["pillar"] != "heart-and-soul":

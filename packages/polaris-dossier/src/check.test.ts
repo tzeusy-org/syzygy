@@ -2315,6 +2315,21 @@ describe('check: the worth-knowing mark (schema v13)', () => {
       expect(listed(result).filter(({ at }) => at === '$.schemaVersion'), version).toEqual([{ kind: 'schema', at: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13' }]);
     }
   });
+  // Version 2.37 (syzygy-5dhm.43): the choice floor on check's report, from the understanding record, never in the check record.
+  it('advises on its report a Pole with two choices or trade-offs on record, and none at three, writing neither into the check record', async () => {
+    const advised = await briefedRun();
+    writeDraft(advised, drafted(V13, (d) => { poles(d); }));
+    const two = report(await checkDraft(advised, {}, deps()));
+    expect(two.outcome).toBe('passed');
+    expect(read(advised, 'checks/rev-0.json')).not.toContain('choiceFloor');
+    expect(two.readerAdvice?.choiceFloor).toEqual([{ at: '$.poles[0]', onRecord: 2, detail: 'the Pole "Ideas" has 2 choices or trade-offs on record, fewer than 3: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s `choices` or `tradeOffs` citing a file its sections cite; never record one its source does not show' }]);
+    const run = await briefedRun();
+    writeDraft(run, drafted(V13, (d) => { poles(d); d.understanding.tradeOffs.push({ id: 'u-trade-2', label: 'inferred', statement: 'A cost.', scope: 'The server.', citations: [cite('u-trade-2-c')] }); }));
+    const three = report(await checkDraft(run, {}, deps()));
+    expect(three.readerAdvice?.choiceFloor).toEqual([]);
+    expect(read(run, 'checks/rev-0.json')).not.toContain('choiceFloor');
+    expect((await findingsOf(drafted('polaris-dossier-local-draft-v10', () => {}))).readerAdvice).not.toHaveProperty('choiceFloor');
+  });
 });
 
 // REQ-polaris-generation-034 version 2.32 (syzygy-5dhm.135): the per-kind floor on check's report. Expected values are literals written
@@ -2371,5 +2386,163 @@ describe('check: question-kind advice per major unit (version 2.32)', () => {
   it('reports a malformed row in a v13 draft as a schema finding', async () => {
     const { result } = await checked(drafted('polaris-dossier-local-draft-v13', (d) => { d.questionKinds = [{ blockId: 'p1', kinds: ['change', 'change'] }, { blockId: 'p2', kinds: ['why'] }]; }));
     expect(result.findings.map(({ kind, at }) => `${kind} ${at}`)).toEqual(['schema $.questionKinds[0].kinds', 'schema $.questionKinds[1].kinds[0]']);
+  });
+});
+
+// REQ-polaris-generation-034 version 2.36. These are ordinary check invocations over the pinned fixture.
+describe('check: source-example advice', () => {
+  const v13 = 'polaris-dossier-local-draft-v13';
+  const advice = {
+    code: 'no-source-example',
+    label: 'Inferred',
+    detail: 'Consider a cited source example that shows what the project does.',
+  };
+  const citedCode = (file = 'src/kestrel.c') => ({ kind: 'code', id: 'example', citation: cite('c-example', file, 1, 1) });
+  const plain = { id: 'example-prose', label: 'non-normative', text: 'Read the code for the sequence.', children: [] };
+  const drafted = (change: (draft: Draft) => void = () => {}) => mutate(draft => {
+    draft.schemaVersion = v13;
+    draft.thesisBasis = 'stated';
+    draft.hero = { omitted: { id: 'hero-reason', label: 'inferred', basis: 'source', text: 'The project describes one runtime process.',
+      citations: [cite('c-hero-reason')], quotations: [] } };
+    change(draft);
+  });
+  const runCheck = async (draft: Draft, over: Partial<CheckDeps> = {}) => {
+    const run = await briefedRun();
+    writeDraft(run, draft);
+    return checkDraft(run, {}, deps(over));
+  };
+  const places = ['section', 'subsection', 'deep dive'] as const;
+  type Place = typeof places[number];
+  const put = (draft: Draft, place: Place, block: unknown) => {
+    if (place === 'section') draft.sections[0].paragraphs.push(block);
+    else if (place === 'subsection') {
+      draft.sections[0].subsections = [
+        {
+          id: 'startup', title: 'What starts the runtime?',
+          answer: { id: 'startup-answer', label: 'unknown', reason: 'missing-evidence', text: 'The starter is not stated.', citations: [] },
+          paragraphs: [block],
+        },
+        {
+          id: 'shutdown', title: 'What stops the runtime?',
+          answer: { id: 'shutdown-answer', label: 'unknown', reason: 'missing-evidence', text: 'The stopper is not stated.', citations: [] },
+          paragraphs: [],
+        },
+      ];
+    } else {
+      draft.deepDives.push({
+        id: 'setup', sectionId: 'core-ideas', title: 'Runtime setup', paragraphs: [block], disposition: { kind: 'produced', assetIds: ['setup'] },
+      });
+    }
+  };
+  const placements = places.flatMap(place => [{ place, nested: false }, { place, nested: true }]);
+  const details = (part: unknown) => ({ kind: 'details', id: 'example-details', summary: 'Example selection', elements: [part] });
+
+  it('advises once in both ordinary CLI reports with the question-kind assessment and no recorded advice', async () => {
+    const draft = drafted(d => { d.questionKinds = [{ blockId: 'intro', kinds: ['purpose'] }]; });
+    const outputs = [];
+    for (const flags of [['--json'], []]) {
+      const run = await briefedRun();
+      writeDraft(run, draft);
+      const out: string[] = [], err: string[] = [];
+      const stdout = (value: string) => out.push(value);
+      const stderr = (value: string) => err.push(value);
+      expect(await runDossierCli(['check', run, ...flags], { stdout, stderr }, { sources: sources(), now: () => LATER, loadScreen: async () => SCREEN })).toBe(0);
+      expect(err).toEqual([]);
+      const output = out.join('');
+      const stored = read(run, 'checks/rev-0.json');
+      const steps = read(run, 'steps.jsonl');
+      for (const bytes of [stored, steps, ...fs.readdirSync(path.join(run, 'derived')).map(file => read(run, 'derived/' + file))]) {
+        expect(bytes).not.toContain('sourceExampleAdvice');
+        expect(bytes).not.toContain(advice.detail);
+      }
+      expect(latestPassedDraft(run).ok).toBe(true);
+      expect(output.split(advice.detail)).toHaveLength(2);
+      outputs.push({ output, stored, steps: steps.replaceAll(run, '<run>') });
+    }
+    const [json, human] = outputs;
+    expect(JSON.parse(json!.output)).toMatchObject({
+      outcome: 'passed', findings: [], sourceExampleAdvice: advice,
+      questionKindAdvice: { state: 'compared', declarations: { rows: 1, counted: 1, unmatched: [], duplicated: [] } },
+    });
+    expect(Object.keys(JSON.parse(json!.output).sourceExampleAdvice)).toEqual(['code', 'label', 'detail']);
+    expect(human!.output.split('\n')).toContain('sourceExampleAdvice.detail: ' + advice.detail);
+    expect(human!.output.split('\n')).toContain('questionKindAdvice.state: compared');
+    expect(human!.stored).toBe(json!.stored);
+    expect(human!.steps).toBe(json!.steps);
+  });
+
+  it.each(placements)('recognizes only the selected code in a $place (immediate details child $nested)', async ({ place, nested }) => {
+    for (const [block, expected] of [[citedCode(), undefined], [plain, advice]] as const) {
+      const result = report(await runCheck(drafted(draft => put(draft, place, nested ? details(block) : block))));
+      expect(result.findings).toEqual([]);
+      expect(result.sourceExampleAdvice).toEqual(expected);
+    }
+  });
+
+  it.each(places)('disregards code in a non-produced %s', async place => {
+    const result = report(await runCheck(drafted(draft => {
+      put(draft, place, citedCode());
+      const part = place === 'deep dive' ? draft.deepDives[0] : draft.sections[0];
+      part.disposition = { kind: 'omitted', reason: 'This part has no useful detail.', citations: [] };
+    })));
+    expect(result.findings).toEqual([]);
+    expect(result.sourceExampleAdvice).toEqual(advice);
+  });
+
+  it('advises for a graph hero with no qualifying element, as for a reasoned graph omission', async () => {
+    const result = report(await runCheck(drafted(draft => {
+      const figure = homed({ kind: 'overview' });
+      draft.diagrams = [{ ...figure, edges: figure.edges.map(edge => ({ ...edge, relation: 'sends-to' })) }];
+      draft.hero = { figure: figure.id };
+    })));
+    expect(result.findings).toEqual([]);
+    expect(result.sourceExampleAdvice).toEqual(advice);
+  });
+
+  it('recognizes a selection with a withheld citation without asking the reader for the withheld body', async () => {
+    const check = async (draft: Draft) => {
+      const trace: Array<readonly string[]> = [];
+      const result = report(await runCheck(draft, { openReader: options => {
+        const reader = openPinnedObjectReader(options);
+        return {
+          ...reader,
+          listTree: () => { trace.push(['tree']); return reader.listTree(); },
+          readBlobs: files => { trace.push(['blobs', ...files]); return reader.readBlobs(files); },
+        };
+      } }));
+      return { result, trace };
+    };
+    const empty = await check(drafted());
+    const withheld = await check(drafted(draft => put(draft, 'section', citedCode('.env'))));
+    expect(empty.result.sourceExampleAdvice).toEqual(advice);
+    expect(withheld.result.findings).toEqual([]);
+    expect(withheld.result).not.toHaveProperty('sourceExampleAdvice');
+    expect(withheld.result.citedBlobs).toContainEqual(expect.objectContaining({ path: '.env', outcome: 'denied-path', read: false }));
+    expect(withheld.trace).toEqual(empty.trace);
+    expect(withheld.trace.flat()).not.toContain('.env');
+  });
+
+  it('omits advice when a relevant list cannot be classified or the screening step refuses', async () => {
+    const malformed = report(await runCheck(drafted(draft => { draft.sections[0].paragraphs = { item: plain }; })));
+    expect(malformed.findings).toContainEqual(expect.objectContaining({ kind: 'schema', at: '$.sections[0].paragraphs' }));
+    expect(malformed).not.toHaveProperty('sourceExampleAdvice');
+    const refused = await runCheck(drafted(), { loadScreen: async () => ({ ok: false, why: 'Fixture screening unavailable' }) });
+    expect(refused).toMatchObject({ ok: false, refusal: { stage: 'screen' } });
+    expect(JSON.stringify(refused)).not.toContain('sourceExampleAdvice');
+  });
+
+  it('omits advice for an earlier schema, unsupported v14 and the bounded check', async () => {
+    const earlier = report(await runCheck(drafted(draft => { draft.schemaVersion = 'polaris-dossier-local-draft-v10'; })));
+    expect(earlier.findings).toEqual([]);
+    expect(earlier).not.toHaveProperty('sourceExampleAdvice');
+    const unsupported = report(await runCheck(drafted(draft => { draft.schemaVersion = 'polaris-dossier-local-draft-v14'; })));
+    expect(unsupported.findings).toContainEqual(expect.objectContaining({ kind: 'schema', at: '$.schemaVersion' }));
+    expect(unsupported).not.toHaveProperty('sourceExampleAdvice');
+
+    const bounded = await runCheck(drafted(), { measureRecord: bytes => ({ ...measureCheckRecord(bytes), bytes: 16_777_217 }) });
+    expect(bounded).toMatchObject({ ok: true, report: { outcome: 'findings', findingsLeftOut: [],
+      findings: [expect.objectContaining({ kind: 'check-record-bound' })], readingDifference: { state: 'unknown' } } });
+    if (!bounded.ok) throw new Error(bounded.refusal.reason);
+    expect(bounded.report).not.toHaveProperty('sourceExampleAdvice');
   });
 });
