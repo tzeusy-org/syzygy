@@ -22,11 +22,11 @@ export interface ReaderAdvice {
   readonly advisories: readonly ReaderAdvisory[];
   /** The worth-knowing count advice (version 2.26): on a schema-v13 draft only, so an earlier draft's advice keeps its bytes. */
   readonly worthKnowing?: readonly WorthKnowingAdvisory[];
-  /** The choice floor (version 2.33): on a schema-v13 draft only, like `worthKnowing`. */
+  /** The choice floor (version 2.37): on a draft with the worth-knowing form (schema v13 and later), like `worthKnowing`. */
   readonly choiceFloor?: readonly ChoiceFloorAdvisory[];
 }
 
-/** One item of the choice floor (REQ-polaris-generation-034 version 2.33, syzygy-5dhm.43): a Pole (or, in a draft with no Poles, the
+/** One item of the choice floor (REQ-polaris-generation-034 version 2.37, syzygy-5dhm.43): a Pole (or, in a draft with no Poles, the
  * draft) with fewer than `CHOICE_FLOOR` choices or trade-offs on record. Advice like the rest: it sets no outcome. */
 export interface ChoiceFloorAdvisory {
   /** A JSON path into the draft: the Pole, or `$.sections` for a draft with no Poles. */
@@ -36,7 +36,7 @@ export interface ChoiceFloorAdvisory {
   readonly detail: string;
 }
 
-/** A Pole with fewer than this many choices or trade-offs on record is advised (version 2.33). */
+/** A Pole with fewer than this many choices or trade-offs on record is advised (version 2.37). */
 export const CHOICE_FLOOR = 3;
 
 /** The groups the per-Pole counts run over: each Pole with the sections it names, each section in the first Pole naming it; or, for a
@@ -63,7 +63,7 @@ function citedPathsIn(value: unknown, into: Set<string>): Set<string> {
   return into;
 }
 
-/** The choice floor (REQ-polaris-generation-034 version 2.33, rule `choice-floor` version 1). On record are the items of the understanding
+/** The choice floor (REQ-polaris-generation-034 version 2.37, rule `choice-floor` version 1). On record are the items of the understanding
  * record's `choices` and `tradeOffs` labelled Inferred. An item is on record for a Pole when a file it cites is a file some claim, element
  * or excerpt of the Pole's sections, or of a deep dive whose `sectionId` is one of them, cites (each section counted in the first Pole
  * naming it); for a draft with no Poles every such item is
@@ -82,7 +82,7 @@ export function choiceFloorAdvice(doc: Readonly<Record<string, unknown>>): reado
     if (group.pole !== undefined) {
       const counted = new Set(group.sections);
       for (const id of group.sections) citedPathsIn(sections.get(id), cited);
-      // A deep dive belongs to the Pole of its section (version 2.33).
+      // A deep dive belongs to the Pole of its section (version 2.37).
       for (const dive of list(doc['deepDives'])) if (isRecord(dive) && counted.has(text(dive['sectionId']) ?? '')) citedPathsIn(dive, cited);
     }
     const onRecord = group.pole === undefined ? items.length : items.filter((paths) => [...paths].some((path) => cited.has(path))).length;

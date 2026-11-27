@@ -2309,7 +2309,7 @@ describe('check: the worth-knowing mark (schema v13)', () => {
       expect(listed(result).filter(({ at }) => at === '$.schemaVersion'), version).toEqual([{ kind: 'schema', at: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13' }]);
     }
   });
-  // Version 2.33 (syzygy-5dhm.43): the choice floor on check's report, from the understanding record, never in the check record.
+  // Version 2.37 (syzygy-5dhm.43): the choice floor on check's report, from the understanding record, never in the check record.
   it('advises on its report a Pole with two choices or trade-offs on record, and none at three, writing neither into the check record', async () => {
     const advised = await briefedRun();
     writeDraft(advised, drafted(V13, (d) => { poles(d); }));

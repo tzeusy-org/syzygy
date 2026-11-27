@@ -44,8 +44,15 @@ MUTANTS = [
      CHECK_RUN, 'FAIL  R5'),
 ]
 
+baseline = {}
+for command in (CHECK_RUN, COUNT_RUN):
+    run = subprocess.run(command, cwd=root, capture_output=True, text=True)
+    baseline[' '.join(command)] = {'exit': run.returncode, 'output': run.stdout + run.stderr}
+    assert run.returncode == 0, f"baseline {' '.join(command)} is not green (exit {run.returncode}); a kill would prove nothing"
+
 results = []
 for name, rel, old, new, command, expect in MUTANTS:
+    assert expect not in baseline[' '.join(command)]['output'], f"{name}: expected string already on the green baseline"
     path = root / rel
     body = path.read_text(encoding='utf-8')
     assert body.count(old) == 1, (name, body.count(old))
@@ -62,5 +69,6 @@ for name, rel, old, new, command, expect in MUTANTS:
 
 commit = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=root, capture_output=True, text=True).stdout.strip()
 out.write_text(json.dumps({'commit': commit, 'script': 'docs/evidence/syzygy-5dhm-43/choice_floor_reconcile_mutation.py',
+                           'baseline': {k: {'exit': v['exit']} for k, v in baseline.items()},
                            'mutants': results}, indent=2) + '\n', encoding='utf-8')
 print(sum(r['outcome'] == 'killed' for r in results), 'of', len(results), 'killed')
