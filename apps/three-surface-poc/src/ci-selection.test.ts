@@ -192,9 +192,14 @@ describe('tracked dossier corpus reader inputs', () => {
   const costs = 'docs/evidence/pursuit-2026-11-21b/measure-now.json';
   const references = '.claude/skills/polaris-dossier/references';
   const trackedReader = `import { mechanismVersion } from './corpus.js';
+    import * as fs from 'node:fs';
+    import * as path from 'node:path';
+    import { fileURLToPath } from 'node:url';
+    const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
     const MANIFEST = '${DOSSIER_CORPUS_MANIFEST}';
     const COSTS = '${costs}';
-    const readJson = (file) => readRepoFixture(file);
+    const readJson = (file: string): Json => JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8')) as Json;
+    const checkoutTree: MechanismTree = { list: (dir) => fs.readdirSync(path.join(ROOT, dir)), read: (file) => fs.readFileSync(path.join(ROOT, file)) };
     readJson(MANIFEST);
     readJson(COSTS);`;
   const manifest = {
@@ -253,6 +258,23 @@ describe('tracked dossier corpus reader inputs', () => {
     }
     const ordinary = "{ const local = 'x'; use(local); readJson(MANIFEST); }";
     expect(withInventory(changed, new Map([[reader, trackedReader + ordinary]])).mode).toBe('selected');
+  });
+
+  it('refuses alternate read paths while preserving comments and spacing in the reviewed adapter', () => {
+    const changed = [M('M', 'docs/unrelated.md')];
+    for (const [before, after] of [
+      ["path.join(ROOT, file), 'utf8'", "path.join(ROOT, file === COSTS ? 'docs/other.json' : file), 'utf8'"],
+      ["'../../..'", "'../..'"],
+      ['fs.readdirSync(path.join(ROOT, dir))', 'fs.readdirSync(path.join(ROOT, alternative(dir)))'],
+      ["from 'node:fs'", "from './other-filesystem.js'"],
+    ] as const) {
+      const source = trackedReader.replace(before, after);
+      expect(source).not.toBe(trackedReader);
+      expect(withInventory(changed, new Map([[reader, source]])).reasons, after)
+        .toEqual([`Tracked dossier corpus test reader inputs drifted: ${reader}`]);
+    }
+    const whitespace = trackedReader.replace('path.join(ROOT, file)', 'path.join( ROOT, /* repo-relative */ file )');
+    expect(withInventory(changed, new Map([[reader, whitespace]])).mode).toBe('selected');
   });
 
   it('names a malformed declaration or an absent known consumer rather than choosing a narrow plan', () => {

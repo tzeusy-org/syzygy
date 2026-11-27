@@ -8,6 +8,27 @@ const DOSSIER_CORPUS_MODULE = 'packages/polaris-dossier/src/corpus';
 const DOSSIER_CORPUS_DIRECT_INPUTS = [DOSSIER_CORPUS_MANIFEST, 'docs/evidence/pursuit-2026-11-21b/measure-now.json'];
 const MECHANISM_MEMBER = /^(?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]*\*?[A-Za-z0-9._-]*$/u;
 
+// The path interpretation below is valid only with these repository-relative reader adapters. An unfamiliar adapter
+// selects full until its path semantics can be reviewed. Use TS printing so comments and layout are immaterial.
+const readerAdapter = ts.createSourceFile('dossier-reader-adapter.ts', `
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
+const readJson = (file: string): Json => JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8')) as Json;
+const checkoutTree: MechanismTree = { list: (dir) => fs.readdirSync(path.join(ROOT, dir)), read: (file) => fs.readFileSync(path.join(ROOT, file)) };
+`, ts.ScriptTarget.Latest);
+const adapterPrinter = ts.createPrinter({ removeComments: true });
+const adapterStatements = readerAdapter.statements.map((statement) =>
+  adapterPrinter.printNode(ts.EmitHint.Unspecified, statement, readerAdapter));
+
+function hasExpectedReaderAdapter(source: ts.SourceFile): boolean {
+  const actual = new Set(source.statements
+    .filter((statement) => ts.isImportDeclaration(statement) || ts.isVariableStatement(statement))
+    .map((statement) => adapterPrinter.printNode(ts.EmitHint.Unspecified, statement, source)));
+  return adapterStatements.every((statement) => actual.has(statement));
+}
+
 export type ReaderInventory =
   | { readonly reader: string; readonly matches: (path: string) => boolean }
   | { readonly issue: string }
@@ -132,7 +153,7 @@ export function dossierCorpusReaders(modules: ReadonlyMap<string, string>, manif
   const undeclared = readers.find(({ fileName }) => fileName !== DOSSIER_CORPUS_READER);
   if (undeclared) return { issue: `Unregistered dossier corpus test reader: ${undeclared.fileName}` };
   const reader = readers[0];
-  const inputs = reader && directReadInputs(reader);
+  const inputs = reader && hasExpectedReaderAdapter(reader) && directReadInputs(reader);
   if (!inputs || inputs.size !== DOSSIER_CORPUS_DIRECT_INPUTS.length ||
       !DOSSIER_CORPUS_DIRECT_INPUTS.every((path) => inputs.has(path))) {
     return { issue: `Tracked dossier corpus test reader inputs drifted: ${DOSSIER_CORPUS_READER}` };
