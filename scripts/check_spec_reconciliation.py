@@ -404,6 +404,7 @@ CAP1_ROOT_BOUND_PATHS = (*CAP1_ROOT_SUBJECTS, CAP1_ROOT_PROJECTION, *CAP1_ROOT_R
 CAP1_ROOT_STATUS_RECORD = f"[CAP1 root adjudication {CAP1_ROOT_VERSION}]({CAP1_ROOT_HOME})"
 CAP1_ROOT_INDEX_STAGE = "**Conditional activation.**"
 _CAP1_SELFTEST_GIT_ROOT = None
+_VBASE_SELFTEST_GIT_ROOT = None
 CAP1_ROOT_INDEX = f"{CANDIDATES}/05-CONTRACT-INDEX.yaml"
 CAP1_HISTORIC_COVERAGE = f"{CHANGES}/{CAP1_CHANGE}/CONTRACT-COVERAGE.md"
 CAP1_CONSENT_COVERAGE = f"{CHANGES}/{CAP1_OVERLAY_CHANGE}/CONTRACT-COVERAGE.md"
@@ -942,6 +943,34 @@ VBASE_SUBJECTS = {
     VBASE_SPEC: "a404fa70e788f7ca20761f5a30f1d840604706cb811fcf50664f3e2942592c45",
 }
 VBASE_BOUND_PARTS = len(VBASE_SUBJECTS)
+
+# Corrected derived bases replace the historical, untagged v2.34 claim.
+VBASE_SCREENING_CHANGE = "dossier-derived-base-screening"
+VBASE_SCREENING_HOME = f"{CHANGES}/{VBASE_SCREENING_CHANGE}"
+VBASE_SCREENING_SPEC = f"{VBASE_SCREENING_HOME}/proposed/polaris-generation/spec.md"
+VBASE_SCREENING_UNION = f"{VBASE_SCREENING_HOME}/GOVERNING-DEPENDENCIES.json"
+VBASE_SCREENING_REPLACES = VBASE_REPLACES
+VBASE_SCREENING_PROJECTION = f"{VBASE_SCREENING_HOME}/POLARIS-CENSUS-PROJECTION.json"
+VBASE_SCREENING_VERSION = "2.35"
+VBASE_SCREENING_TAG = f"polaris-dossier-derived-base-screening-v{VBASE_SCREENING_VERSION}"
+VBASE_SCREENING_STATUS_PREFIX = f"[Derived-base screening {VBASE_SCREENING_VERSION}]("
+VBASE_PHASE_PREFIXES = (
+    "Before the derived-base screening version is effective,",
+    "With the derived-base screening version effective,",
+)
+VBASE_SCREENING_PREDECESSOR = "1c35aed0961b709ffd33c49eb9586bb66c8b8121"
+VBASE_SCREENING_HISTORICAL_SOURCE = "e9eaf3e4601e997996186a57670defc62fd65591"
+VBASE_SCREENING_RETIREMENT_SUBJECTS = {
+    "PROJECT-STATUS.md": "c8e60c56820ce05d383e659bae5a1a16ac510e504bbbd9274c063126b8bbe829",
+    "docs/evidence/spec-readability-reconciliation-2026-10-02/census.json": "0e6773a58477242d09050bae3b48bada4feed03dae05764736a087a50a3251f8",
+    "openspec/README.md": "a88cd64f2d327b636f27b33a2620b067a835675400a66334d21cf4f8409a9a7c",
+    "openspec/changes/dossier-derived-base-views/README.md": "20b2a3b4529f31e98617f9ebae0d985d543e9b5a1d0366928909cc80832c423e",
+    "openspec/changes/dossier-derived-base-views/tasks.md": "59cb16d0b2369264c3d76d3b59d207fb547df8324c41c9854a6969e507be80da",
+}
+VBASE_SCREENING_SUBJECTS = {
+    VBASE_SCREENING_SPEC: "a784c6712ce31a9b72136be27d49a535465a8637a2493d2ef1305a28fcdbc698",
+    VBASE_SCREENING_UNION: "3f6c2b317bf01c0d940f7ee7b41ce73ddb2b0cfd5aa4efe2afbfb26c4ae3efef",
+}
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
 ADOPTION_TABLE_HEADER = "| Id | Date | Commit | What changed | Why | Revert | Tag |"
 ADOPTION_TABLE_DIVIDER = "|---|---|---|---|---|---|---|"
@@ -1970,6 +1999,10 @@ ID_MENTION = re.compile(
     r"((?:[ \t]*(?:/|,|–|\.\.|…|and)[ \t]*\d{3}\b)*)")
 STATUS_FIGURE = re.compile(
     r"(\d+) requirements and (\d+) scenarios in the effective composition")
+VBASE_STATUS_PRETAG = re.compile(
+    r"Before the derived-base screening version is effective, Polaris has (\d+) requirements and (\d+) scenarios\.")
+VBASE_STATUS_ACTIVE = re.compile(
+    r"With the derived-base screening version effective, Polaris has (\d+) requirements and (\d+) scenarios\.")
 
 
 class Report:
@@ -3506,6 +3539,257 @@ def vbase_binding(root):
     )
 
 
+def is_vbase_screening_row(row):
+    return _is_reviewed_version_row(row, VBASE_SCREENING_TAG, VBASE_SCREENING_SUBJECTS)
+
+
+def vbase_screening_rows(rows):
+    return [row for row in rows if is_vbase_screening_row(row)]
+
+
+def vbase_screening_binding(root):
+    """Select the corrected derived-base spec from an exact protected version."""
+    ledger = adoption_table_rows(root)
+    claims = vbase_screening_rows(ledger)
+    ref = f"refs/tags/{VBASE_SCREENING_TAG}"
+
+    git_root = _VBASE_SELFTEST_GIT_ROOT or root
+
+    def invalid(reason):
+        return "invalid", None, [f"Derived-base screening: {reason}"], []
+
+    if not claims:
+        if (root / ".git").exists() and local_git(git_root, "rev-parse", "--verify", ref) is not None:
+            return invalid("the successor tag has no canonical adoption row")
+        return "candidate", None, [], []
+
+    rows = [[cell.strip() for cell in row.split("|")[1:-1]] for row in claims]
+    text, records, subjects = _reviewed_version_binding(
+        root, rows, lambda _root, _rows: None,
+        version_tag=VBASE_SCREENING_TAG, subjects_map=VBASE_SCREENING_SUBJECTS,
+        spec=VBASE_SCREENING_SPEC, predecessor=figplan_binding,
+        predecessor_label="v2.33 figure plan", version=VBASE_SCREENING_VERSION,
+        label="Derived-base screening",
+    )
+    if text is None:
+        return "invalid", None, records, subjects
+    identity, _date, recorded_source, _what, _why, inverse, _tag = rows[0]
+    source = recorded_source[1:-1]
+    if sum(row.split("|")[1].strip() == identity for row in ledger) != 1:
+        return invalid("the adoption identity is not globally unique")
+    historical = [row for row in ledger if is_vbase_row(row)]
+    old_rows = vbase_rows(root)
+    if (len(old_rows) != 1 or len(old_rows[0]) != 7
+            or old_rows[0][0] != "A-267"
+            or old_rows[0][2] != f"`{VBASE_SCREENING_HISTORICAL_SOURCE}`"):
+        return invalid("the exact historical A-267 claim is unavailable")
+    retired_by = vbase_disposition(root, old_rows)
+    retirements = [row for row in ledger if row.split("|")[1].strip() == retired_by]
+    if len(retirements) != 1 or int(retired_by[2:]) >= int(identity[2:]):
+        return invalid("A-267 has no distinct prior retirement")
+    retirement = retirements[0]
+    retirement_fields = [cell.strip() for cell in retirement.split("|")[1:-1]]
+    retired_source = retirement_fields[2][1:-1]
+    if not re.fullmatch(r"[0-9a-f]{40}", retired_source):
+        return invalid("the A-267 retirement does not identify an exact revision")
+
+    authored = local_git(git_root, "rev-parse", "--verify", "HEAD^{commit}")
+    authored = authored.decode("ascii").strip() if authored else None
+    if authored is None or local_git(git_root, "merge-base", "--is-ancestor", source, authored) is None:
+        return invalid("the exact source is outside authored history")
+    parent_line = local_git(git_root, "rev-list", "--parents", "-n", "1", source)
+    parts = parent_line.split() if parent_line else []
+    if (parts != [source.encode("ascii"), retired_source.encode("ascii")]
+            or inverse != f"`git revert {source}`"):
+        return invalid("the correction cannot be reverted to its exact previously retired state")
+    if not vbase_retirement_verified(git_root, retired_source):
+        return invalid("the exact retired predecessor would not survive the inverse")
+    historical_routes = {
+        STATUS: (VBASE_STATUS_PREFIX,),
+        OPENSPEC_README: (f"| [`{VBASE_CHANGE}`](",),
+    }
+    if not git_routes_match(root, git_root, retired_source, historical_routes):
+        return invalid("the archived status and index routes differ from the exact retirement")
+    if not vbase_screening_git_matches(root, git_root, claims, historical, retirement, source, authored):
+        return invalid("the row and reviewed subjects do not match authored Git")
+    route_error = vbase_screening_authority_route_error(root, identity)
+    if route_error:
+        return invalid(route_error)
+    predecessor_rows = [row for row in ledger if is_figplan_row(row)]
+    if (local_git(git_root, "rev-parse", "--verify", f"refs/tags/{FIGPLAN_TAG}^{{commit}}")
+            != VBASE_SCREENING_PREDECESSOR.encode("ascii") + b"\n"
+            or not vbase_figplan_verified(git_root, authored, predecessor_rows)):
+        return invalid("the exact v2.33 predecessor is unavailable in authored Git")
+
+    refs = local_git(
+        git_root, "for-each-ref", "--format=%(refname) %(objecttype) %(tag) %(*objecttype) %(*objectname)",
+        ref, f"refs/tags/{VBASE_TAG}",
+    )
+    if refs is None:
+        return invalid("the local version tag inventory is unavailable")
+    by_name = {row.split(maxsplit=1)[0].decode("ascii"): row.split()
+               for row in refs.splitlines()}
+    if _VBASE_SELFTEST_GIT_ROOT is not None:
+        # The copied mutation fixtures exercise the pre-tag source shape.
+        by_name.pop(ref, None)
+    if f"refs/tags/{VBASE_TAG}" in by_name:
+        return invalid("a tag attempts to bind the retired A-267 claim")
+    if ref not in by_name:
+        return "staged", None, [], []
+    if by_name[ref] != [ref.encode("ascii"), b"tag", VBASE_SCREENING_TAG.encode("ascii"),
+                        b"commit", source.encode("ascii")]:
+        return invalid("the version is not annotated directly on its exact source")
+
+    protected = local_git(git_root, "rev-parse", "--verify", "refs/remotes/origin/main^{commit}")
+    protected = protected.decode("ascii").strip() if protected else None
+    if protected is None or not vbase_screening_git_matches(
+        root, git_root, claims, historical, retirement, source, protected
+    ):
+        return invalid("the row and reviewed subjects are absent from protected main")
+    if not vbase_figplan_verified(git_root, protected, predecessor_rows):
+        return invalid("the exact v2.33 predecessor row or subject is unavailable on protected main")
+    # Authority routes stay bound to protected main. A checkout containing
+    # protected main may have a later adoption that changes census totals.
+    # R3 and R5 verify the later checkout against its own composition.
+    stale = local_git(git_root, "merge-base", "--is-ancestor", protected, authored) is None
+    if not vbase_screening_routes_match(root, git_root, protected, compare_census=stale):
+        return invalid("the scoped census or status routes differ from protected main")
+
+    def disposition(rows_at_ref):
+        return recorded_disposition(
+            root, identity, source, VBASE_SCREENING_TAG, VBASE_SCREENING_SUBJECTS,
+            plain_revert=True, ledger_rows=rows_at_ref,
+        )
+
+    current_disposition = disposition(ledger)
+    authored_disposition = disposition(git_adoption_rows(git_root, authored))
+    protected_disposition = disposition(git_adoption_rows(git_root, protected))
+    if current_disposition != authored_disposition or authored_disposition != protected_disposition:
+        return invalid("worktree, authored and protected dispositions disagree")
+    if protected_disposition:
+        return "reverted", None, [], []
+    return "effective", text, [], []
+
+
+def vbase_screening_git_matches(root, git_root, claims, historical, retirement, source, commit):
+    rows = git_adoption_rows(git_root, commit)
+    if (vbase_screening_rows(rows) != claims
+            or [row for row in rows if is_vbase_row(row)] != historical
+            or local_git(git_root, "merge-base", "--is-ancestor", source, commit) is None):
+        return False
+    for required in (*claims, *historical, retirement):
+        identity = required.split("|")[1].strip()
+        if [row for row in rows if row.split("|")[1].strip() == identity] != [required]:
+            return False
+    historical_body = local_git(git_root, "show", f"{commit}:{VBASE_SPEC}")
+    if historical_body is None or sha(historical_body) != VBASE_SUBJECTS[VBASE_SPEC]:
+        return False
+    for path in VBASE_SCREENING_SUBJECTS:
+        source_entry = local_git(git_root, "ls-tree", "-z", source, "--", path)
+        if (not source_entry or not source_entry.startswith(b"100644 blob ")
+                or local_git(git_root, "ls-tree", "-z", commit, "--", path) != source_entry
+                or local_git(git_root, "show", f"{source}:{path}") != read_bytes(root, path)):
+            return False
+    return True
+
+
+def vbase_screening_authority_route_error(root, identity):
+    status = read_text(root, STATUS) or ""
+    route = f"changes/{VBASE_SCREENING_CHANGE}"
+    activation = (
+        f"{VBASE_SCREENING_STATUS_PREFIX}{VBASE_SCREENING_HOME}) records {identity}. "
+        "The correction applies when its protected adoption and exact version tag are verified."
+    )
+    if scoped_route_lines(status, (VBASE_SCREENING_STATUS_PREFIX,)) != [activation]:
+        return f"`{STATUS}` does not route the exact screening adoption and activation condition"
+
+    index = read_text(root, OPENSPEC_README) or ""
+    prefix = f"| [`{VBASE_SCREENING_CHANGE}`]("
+    expected_row = (
+        f"{prefix}{route}) | Qualifies the diagnostic details and reasons emitted by a derived-base view | "
+        f"`{identity}` in [AGENT-ADOPTIONS.md](../{AGENT_ADOPTIONS}) applies when the exact version tag "
+        f"is verified, `{VBASE_SCREENING_TAG}` | [Semantic delta]({route}/SEMANTIC-DELTA.md) |"
+    )
+    if scoped_route_lines(index, (prefix,)) != [expected_row]:
+        return f"`{OPENSPEC_README}` does not route the exact screening row and tag"
+    return None
+
+
+def scoped_route_lines(body, prefixes):
+    return [line.strip() for line in visible_route_lines(body) if line.strip().startswith(prefixes)]
+
+
+def vbase_screening_routes_match(root, git_root, commit, *, compare_census):
+    scopes = {
+        STATUS: (VBASE_STATUS_PREFIX, VBASE_SCREENING_STATUS_PREFIX),
+        OPENSPEC_README: (f"| [`{VBASE_CHANGE}`](", f"| [`{VBASE_SCREENING_CHANGE}`]("),
+    }
+    if compare_census:
+        projection = read_bytes(root, VBASE_SCREENING_PROJECTION)
+        if projection is None or projection != local_git(
+            git_root, "show", f"{commit}:{VBASE_SCREENING_PROJECTION}"
+        ):
+            return False
+        scopes[STATUS] += VBASE_PHASE_PREFIXES
+    return git_routes_match(root, git_root, commit, scopes)
+
+
+def git_routes_match(root, git_root, commit, scopes):
+    for rel, prefixes in scopes.items():
+        authored = read_text(root, rel)
+        protected = local_git(git_root, "show", f"{commit}:{rel}")
+        if authored is None or protected is None:
+            return False
+        try:
+            protected = protected.decode("utf-8")
+        except UnicodeDecodeError:
+            return False
+        present = scoped_route_lines(authored, prefixes)
+        if not present or present != scoped_route_lines(protected, prefixes):
+            return False
+    return True
+
+
+def vbase_figplan_verified(git_root, commit, expected_rows):
+    rows = git_adoption_rows(git_root, commit)
+    if (len(expected_rows) != 1
+            or [row for row in rows if is_figplan_row(row)] != expected_rows
+            or local_git(git_root, "merge-base", "--is-ancestor",
+                         VBASE_SCREENING_PREDECESSOR, commit) is None):
+        return False
+    identity, _date, source, _what, _why, _inverse, _tag = [
+        cell.strip() for cell in expected_rows[0].split("|")[1:-1]
+    ]
+    if identity != "A-65" or source != f"`{VBASE_SCREENING_PREDECESSOR}`":
+        return False
+    if (sum(row.split("|")[1].strip() == identity for row in rows) != 1
+            or recorded_disposition(
+                git_root, identity, VBASE_SCREENING_PREDECESSOR, FIGPLAN_TAG,
+                FIGPLAN_SUBJECTS, plain_revert=True, ledger_rows=rows,
+            )):
+        return False
+    for rel, digest in FIGPLAN_SUBJECTS.items():
+        mode = local_git(git_root, "ls-tree", "-z", commit, "--", rel)
+        body = local_git(git_root, "show", f"{commit}:{rel}")
+        if body is None or not mode or not mode.startswith(b"100644 blob ") or sha(body) != digest:
+            return False
+    return True
+
+
+def vbase_retirement_verified(git_root, commit):
+    changes = local_git(git_root, "diff-tree", "--no-commit-id", "--name-only", "-z", "-r", commit)
+    if changes is None or set(changes.split(b"\0")) - {b""} != {
+        rel.encode("ascii") for rel in VBASE_SCREENING_RETIREMENT_SUBJECTS
+    }:
+        return False
+    for rel, digest in VBASE_SCREENING_RETIREMENT_SUBJECTS.items():
+        body = local_git(git_root, "show", f"{commit}:{rel}")
+        mode = local_git(git_root, "ls-tree", "-z", commit, "--", rel)
+        if body is None or not mode or not mode.startswith(b"100644 blob ") or sha(body) != digest:
+            return False
+    return True
+
+
 def url_source_contract_findings(root):
     """Verify the reviewed amendment in its actual contract homes."""
     body = read_bytes(root, URL_SOURCE_REPLACEMENTS)
@@ -4237,6 +4521,12 @@ def check_outcomes(root, report):
         subjects_seen += VBASE_BOUND_PARTS
     r1 += vbase_records
     r2 += vbase_subjects
+    vbase_state, _vbase, screening_records, screening_subjects = vbase_screening_binding(root)
+    if vbase_state != "candidate":
+        records += 1
+        subjects_seen += len(VBASE_SCREENING_SUBJECTS)
+    r1 += screening_records
+    r2 += screening_subjects
     retirement = ""
     if declared_retired_by:
         retirement += f"; v2.0 inactive by {declared_retired_by}"
@@ -4959,8 +5249,13 @@ def cap1_root_git(root, *args):
     if _CAP1_SELFTEST_GIT_ROOT is not None and args[0] == "for-each-ref":
         # The existing rule-6 fixtures exercise the authored, pre-tag state.
         return b""
+    return local_git(_CAP1_SELFTEST_GIT_ROOT or root, *args)
+
+
+def local_git(root, *args):
+    """Read an exact local Git object without replacements or network fetches."""
     result = subprocess.run(
-        ["git", *args], cwd=_CAP1_SELFTEST_GIT_ROOT or root, capture_output=True,
+        ["git", *args], cwd=root, capture_output=True,
         env={**os.environ, "GIT_NO_REPLACE_OBJECTS": "1", "GIT_NO_LAZY_FETCH": "1",
              "GIT_OPTIONAL_LOCKS": "0"}, check=False,
     )
@@ -4976,6 +5271,17 @@ def cap1_root_ledger_at(root, commit):
     if cap1_root_tree_entry(root, commit, AGENT_ADOPTIONS) is None:
         return []
     body = cap1_root_git(root, "show", f"{commit}:{AGENT_ADOPTIONS}")
+    return decode_git_adoption_rows(body)
+
+
+def git_adoption_rows(root, commit):
+    entry = local_git(root, "ls-tree", "-z", commit, "--", AGENT_ADOPTIONS)
+    if not entry or not entry.startswith(b"100644 blob "):
+        return []
+    return decode_git_adoption_rows(local_git(root, "show", f"{commit}:{AGENT_ADOPTIONS}"))
+
+
+def decode_git_adoption_rows(body):
     try:
         return _adoption_table_rows(body.decode("utf-8")) if body is not None else []
     except UnicodeDecodeError:
@@ -5609,14 +5915,14 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, figplan_amendment, FIGPLAN_REPLACES)
                 pa += extra_a
                 pb += extra_b
-        vbase_amendment, vbase_records, vbase_subjects = vbase_binding(root)
+        _vbase_state, vbase_amendment, vbase_records, vbase_subjects = vbase_screening_binding(root)
         findings += vbase_records + vbase_subjects
         if vbase_amendment is not None:
             if figplan_amendment is None:
                 findings.append("POLARIS: derived base requires effective figure plan v2.33")
             else:
-                a, extra_a = compose_figure_by_id(a, vbase_amendment, VBASE_REPLACES)
-                b, extra_b = compose_figure_by_name(b, vbase_amendment, VBASE_REPLACES)
+                a, extra_a = compose_figure_by_id(a, vbase_amendment, VBASE_SCREENING_REPLACES)
+                b, extra_b = compose_figure_by_name(b, vbase_amendment, VBASE_SCREENING_REPLACES)
                 pa += extra_a
                 pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
@@ -5642,6 +5948,37 @@ def census_json(pop):
             "members": {k: reqs[k] for k in sorted(reqs)},
         }
     return json.dumps(doc, indent=2, ensure_ascii=False, sort_keys=False) + "\n"
+
+
+def vbase_screening_projects(root, pop, findings):
+    """Regenerate both sides of the tag transition using independent parsers."""
+    state, _text, _records, _subjects = vbase_screening_binding(root)
+    if state not in {"staged", "effective"}:
+        return pop, None
+    antecedent, _records, _subjects = figplan_binding(root)
+    amendment = read_text(root, VBASE_SCREENING_SPEC)
+    current = pop.get("POLARIS", {})
+    projections = {}
+    for label, source in (("pretag", antecedent), ("active", amendment)):
+        by_id, errors_a = compose_figure_by_id(current, source or "", VBASE_SCREENING_REPLACES)
+        by_name, errors_b = compose_figure_by_name(current, source or "", VBASE_SCREENING_REPLACES)
+        if errors_a or errors_b or by_id != by_name:
+            findings.append(f"POLARIS derived-base screening {label}: census projections disagree")
+            return pop, None
+        projections[label] = by_id
+    selected = "active" if state == "effective" else "pretag"
+    if projections[selected] != current:
+        findings.append("POLARIS derived-base screening: selected census differs from its projection")
+    ident = VBASE_SCREENING_REPLACES[0]
+    ledger = {"requirement": ident, "tag": VBASE_SCREENING_TAG, "populations": {}}
+    for label, requirements in projections.items():
+        ledger["populations"][label] = {
+            "requirements": len(requirements),
+            "scenarios": sum(len(row["scenarios"]) for row in requirements.values()),
+            "member": requirements[ident],
+        }
+    baseline = {**pop, "POLARIS": projections["pretag"]}
+    return baseline, json.dumps(ledger, indent=2, ensure_ascii=False) + "\n"
 
 
 def polaris_expected(root, findings):
@@ -6005,10 +6342,10 @@ def polaris_expected(root, findings):
             findings.append("POLARIS figure plan: cannot count predecessor and successor for 034")
         else:
             n_scen += replacement[0] - previous[0]
-    vbase_amendment, _records, _subjects = vbase_binding(root)
+    _state, vbase_amendment, _records, _subjects = vbase_screening_binding(root)
     if vbase_amendment is not None:
         # Only 034 moves, after the figure plan v2.33.
-        ident = VBASE_REPLACES[0]
+        ident = VBASE_SCREENING_REPLACES[0]
         previous = [len(block["scenarios"]) for block in _polaris_blocks_manual(figplan_amendment or "")
                     if block["section"] == "MODIFIED" and tuple(block["ids"]) == (ident,)]
         replacement = [len(block["scenarios"]) for block in _polaris_blocks_manual(vbase_amendment)
@@ -6067,12 +6404,15 @@ def check_census(root, report):
             if set(reqs) != p_ids:
                 findings.append("POLARIS: identities differ from the effective composition "
                                 f"(off by {sorted(set(reqs) ^ p_ids)[:6]})")
+    baseline, projection = vbase_screening_projects(root, pop, findings)
     committed = read_text(root, CENSUS)
     if committed is None:
         findings.append(f"`{CENSUS}` missing")
-    elif committed != census_json(pop):
+    elif committed != census_json(baseline):
         findings.append(f"`{CENSUS}` differs from regeneration "
                         "(a name or scenario title moved)")
+    if projection is not None and projection != read_text(root, VBASE_SCREENING_PROJECTION):
+        findings.append(f"`{VBASE_SCREENING_PROJECTION}` differs from regeneration")
     state, _ = cap1_root_binding(root)
     report.add("R3", "populations agree by two methods and match the census",
                examined, findings, "requirements examined across CAP1, POC, PWB and Polaris"
@@ -6261,9 +6601,11 @@ def check_generated(root, pop, report):
     figplan_amendment, _records, _subjects = figplan_binding(root)
     if figplan_amendment is not None:
         files += tracked(root, FIGPLAN_HOME)
-    vbase_amendment, _records, _subjects = vbase_binding(root)
-    if vbase_amendment is not None:
-        files += tracked(root, VBASE_HOME)
+    vbase_state, vbase_amendment, _records, _subjects = vbase_screening_binding(root)
+    if vbase_state in {"staged", "effective"}:
+        files += tracked(root, VBASE_SCREENING_HOME)
+        if vbase_amendment is None:
+            vbase_amendment = read_text(root, VBASE_SCREENING_SPEC)
     candidate_ref_dirs = addition_dirs + (URL_SOURCE_HOME + "/",)
     files += list(ROUTE_PAGES)
     # An addition may cite a candidate Polaris requirement still under
@@ -6333,7 +6675,7 @@ def check_generated(root, pop, report):
                         (term_brief_amendment, TERM_BRIEF_UNION),
                         (qkind_amendment, QKIND_UNION),
                         (figplan_amendment, FIGPLAN_UNION),
-                        (vbase_amendment, VBASE_UNION)):
+                        (vbase_amendment, VBASE_SCREENING_UNION)):
         if delta is None:
             continue
         examined += 1
@@ -6927,24 +7269,23 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls figure plan v2.33 adopted while it is not in force")
         if any("Agent adoption" in line for line in rows.get(FIGPLAN_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls figure plan v2.33 adopted while it is not in force")
-    vbase_amendment, _records, _subjects = vbase_binding(root)
+    vbase_retired_by = vbase_disposition(root, vbase_rows(root))
     vbase_fields = [line.strip() for line in visible_route_lines(status)
                     if line.strip().startswith(VBASE_STATUS_PREFIX)]
-    if vbase_amendment is not None:
+    if VBASE_CHANGE in changes:
         examined += 2
-        if not any(Path(AGENT_ADOPTIONS).name in line and VBASE_TAG in line
-                   for line in rows.get(VBASE_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` does not route derived base v2.34 "
-                            f"to `{AGENT_ADOPTIONS}` and its version tag")
-        identity = vbase_rows(root)[0][0]
-        if AGENT_ADOPTIONS not in status or vbase_fields != [f"{VBASE_STATUS_PREFIX} is agent-adopted in {identity}."]:
-            findings.append(f"`{STATUS}` does not route derived base v2.34 and its adoption {identity}")
-    elif VBASE_CHANGE in changes:
-        examined += 2
-        if any("is agent-adopted" in field for field in vbase_fields):
-            findings.append(f"`{STATUS}` calls derived base v2.34 adopted while it is not in force")
-        if any("Agent adoption" in line for line in rows.get(VBASE_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` calls derived base v2.34 adopted while it is not in force")
+        old_rows = rows.get(VBASE_CHANGE, [])
+        if any("is agent-adopted" in line for line in vbase_fields):
+            findings.append(f"`{STATUS}` calls untagged A-267 derived-base views effective")
+        if any("Agent adoption" in line for line in old_rows):
+            findings.append(f"`{OPENSPEC_README}` routes untagged A-267 as an adoption")
+        if vbase_retired_by:
+            historical_line = f"{VBASE_STATUS_PREFIX} records the untagged A-267 proposal, retired by {vbase_retired_by}."
+            if vbase_fields != [historical_line] or not any(
+                f"`{vbase_retired_by}`" in line and 'retired' in line for line in old_rows
+            ):
+                findings.append("the historical derived-base routes do not name the exact retirement")
+    screening_state, _text, _records, _subjects = vbase_screening_binding(root)
     reltype_amendment, _records, _subjects = reltype_binding(root)
     reltype_fields = [line.strip() for line in visible_route_lines(status)
                     if line.strip().startswith(RELTYPE_STATUS_PREFIX)]
@@ -7107,7 +7448,28 @@ def check_routes(root, pop, report):
     examined += 1
     reqs = pop.get("POLARIS", {})
     want = (str(len(reqs)), str(sum(len(r["scenarios"]) for r in reqs.values())))
-    if figures != [want]:
+    if screening_state in {"staged", "effective"}:
+        try:
+            projection = json.loads(read_text(root, VBASE_SCREENING_PROJECTION) or "null")
+            populations = projection["populations"]
+            expected_figures = [
+                (str(populations[phase]["requirements"]), str(populations[phase]["scenarios"]))
+                for phase in ("pretag", "active")
+            ]
+        except (ValueError, TypeError, KeyError):
+            expected_figures = []
+        declarations = []
+        visible = [line.strip() for line in visible_route_lines(status)]
+        for prefix, pattern in zip(VBASE_PHASE_PREFIXES, (VBASE_STATUS_PRETAG, VBASE_STATUS_ACTIVE), strict=True):
+            candidates = [line for line in visible if line.startswith(prefix)]
+            match = pattern.fullmatch(candidates[0]) if len(candidates) == 1 else None
+            declarations.append(match.groups() if match else None)
+        selected = 1 if screening_state == "effective" else 0
+        if (figures or len(expected_figures) != 2
+                or declarations != expected_figures
+                or expected_figures[selected] != want):
+            findings.append(f"`{STATUS}` does not declare both exact Polaris census states")
+    elif figures != [want]:
         findings.append(f"`{STATUS}`: Polaris composition figure {figures} "
                         f"!= census {want}")
     report.add("R5", "default routes name the terminal records", examined,
@@ -7394,6 +7756,7 @@ def inputs(root):
     paths |= {QKIND_UNION, *QKIND_SUBJECTS}
     paths |= {FIGPLAN_UNION, *FIGPLAN_SUBJECTS}
     paths |= {VBASE_UNION, *VBASE_SUBJECTS}
+    paths |= {VBASE_SCREENING_PROJECTION, *VBASE_SCREENING_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -11879,7 +12242,7 @@ def vbase_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_vbase_row(line) and not is_vbase_row(line))
+                      if not is_vbase_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -11911,11 +12274,9 @@ def vbase_cases(tmp, base, witnesses, failures):
     after, after_findings = census(tree)
     effective = after["POLARIS"]
     held = (vbase_binding(tree) == (original, [], []) and not after_findings
-            and len(effective[requirement]["scenarios"]) == 250
-            and set(prior) == set(effective)
-            and all(prior[other] == body for other, body in effective.items() if other != requirement))
-    record("adopted", AGENT_ADOPTIONS, "<no row>", row, "only 034 moves from 232 to 250 scenarios",
-           after_findings, held, baseline=True)
+            and effective == prior and len(effective[requirement]["scenarios"]) == 232)
+    record("historical-row", AGENT_ADOPTIONS, "<no row>", row,
+           "structural A-267 validation keeps tagged v2.33 selected", after_findings, held, baseline=True)
 
     for name, old, new, detail in (
         ("duplicate-row", row, row + row, "seven-column"),
@@ -12756,10 +13117,14 @@ def _install_addition(tree, change=ADDITION, ident=ADDITION_ID,
         fh.write(f"\n| [`{change}`](changes/{change}) | Selftest | "
                  f"Signed: `{name}` | — |\n")
     status = (tree / STATUS).read_text(encoding="utf-8")
-    m = STATUS_FIGURE.search(status)
-    status = (status[:m.start()] + f"{int(m.group(1)) + 1} requirements and "
-              f"{int(m.group(2)) + 2} scenarios in the effective composition"
-              + status[m.end():] + f"\nSelftest addition: `{name}`.\n")
+    def add_to_figure(match):
+        return (match[0][:match.start(1) - match.start()]
+                + f"{int(match[1]) + 1} requirements and {int(match[2]) + 2}"
+                + match[0][match.end(2) - match.start():])
+
+    for pattern in (STATUS_FIGURE, VBASE_STATUS_PRETAG, VBASE_STATUS_ACTIVE):
+        status = pattern.sub(add_to_figure, status)
+    status += f"\nSelftest addition: `{name}`.\n"
     (tree / STATUS).write_text(status, encoding="utf-8")
     regenerate(tree)
 
@@ -12932,6 +13297,236 @@ def adopted_mutants():
     )
 
 
+def project_vbase_screening_history(root):
+    """Keep the older amendment fixtures on their own tagged history."""
+    retirement = vbase_disposition(root, vbase_rows(root))
+    ledger = root / AGENT_ADOPTIONS
+    rows = ledger.read_text().splitlines(keepends=True)
+    ledger.write_text("".join(
+        row for row in rows
+        if not is_vbase_screening_row(row)
+        and (not row.startswith("| A-") or row.split("|")[1].strip() != retirement)
+    ))
+    status = root / STATUS
+    lines = []
+    for line in status.read_text().splitlines(keepends=True):
+        body = line.strip()
+        phase = VBASE_STATUS_PRETAG.fullmatch(body)
+        if phase:
+            indent = line[:len(line) - len(line.lstrip())]
+            lines.append(f"{indent}{phase[1]} requirements and {phase[2]} scenarios in the effective composition\n")
+        elif not VBASE_STATUS_ACTIVE.fullmatch(body) and not body.startswith("[Derived-base screening "):
+            lines.append(line)
+    status.write_text("".join(lines))
+    index = root / OPENSPEC_README
+    index.write_text("".join(
+        line for line in index.read_text().splitlines(keepends=True)
+        if not line.startswith(f"| [`{VBASE_SCREENING_CHANGE}`](")
+    ))
+    shutil.rmtree(root / VBASE_SCREENING_HOME)
+
+
+def vbase_screening_document_cases(root, witnesses, failures):
+    """Exercise current staged projections separately from the historical cases."""
+    ledger = read_text(root, AGENT_ADOPTIONS) or ""
+    retirement = vbase_disposition(root, vbase_rows(root))
+    row = next(line for line in ledger.splitlines(keepends=True)
+               if line.startswith(f"| {retirement} |"))
+    status = read_text(root, STATUS) or ""
+    active = next(match for line in visible_route_lines(status)
+                  if (match := VBASE_STATUS_ACTIVE.fullmatch(line.strip())))
+    shifted = active[0][:active.start(2)] + str(int(active[2]) + 1) + active[0][active.end(2):]
+    activation = next(line for line in visible_route_lines(status)
+                      if line.strip().startswith(VBASE_SCREENING_STATUS_PREFIX))
+    competing = activation.replace(VBASE_SCREENING_HOME, FIGPLAN_HOME)
+    assert competing != activation
+    projection = read_text(root, VBASE_SCREENING_PROJECTION) or ""
+    title = json.loads(projection)["populations"]["active"]["member"]["scenarios"][-1]
+    quoted = json.dumps(title, ensure_ascii=False)
+    index = read_text(root, OPENSPEC_README) or ""
+    index_row = next(line for line in visible_route_lines(index)
+                     if line.strip().startswith(f"| [`{VBASE_SCREENING_CHANGE}`]("))
+    occupied = (
+        ("missing-retirement", AGENT_ADOPTIONS, row, "", "R1", "no distinct prior retirement"),
+        ("unsafe-projected-title", VBASE_SCREENING_PROJECTION, quoted,
+         json.dumps(title + " changed", ensure_ascii=False), "R3", "differs from regeneration"),
+        ("one-false-phase-figure", STATUS, active[0], shifted,
+         "R5", "does not declare both exact Polaris census states"),
+        ("competing-authority-route", STATUS, activation, activation + "\n" + competing,
+         "R1", "does not route the exact screening adoption and activation condition"),
+        ("conflicting-tag-index", OPENSPEC_README, index_row,
+         index_row.replace("version tag is verified,", "version tag is verified, and before,"),
+         "R1", "does not route the exact screening row and tag"),
+        ("conflicting-delta-index", OPENSPEC_README, index_row,
+         index_row.replace("SEMANTIC-DELTA.md) |",
+                           "SEMANTIC-DELTA.md) v2.35 also applies before tag verification. |"),
+         "R1", "does not route the exact screening row and tag"),
+        ("competing-phase-figure", STATUS, active[0],
+         active[0] + "\n" + VBASE_PHASE_PREFIXES[1] + " see the old projection.",
+         "R5", "does not declare both exact Polaris census states"),
+        ("conflicting-historical-route", STATUS, VBASE_STATUS_PREFIX,
+         VBASE_STATUS_PREFIX + " is still effective.",
+         "R1", "archived status and index routes differ from the exact retirement"),
+    )
+    for name, rel, old, new, rule, claim in occupied:
+        file = root / rel
+        original = file.read_text()
+        assert original.count(old) >= 1 and old != new, name
+        try:
+            file.write_text(original.replace(old, new, 1))
+            findings = run(root).findings.get(rule, [])
+        finally:
+            file.write_text(original)
+        held = any(claim in message for message in findings)
+        mutant = "derived-base-screening-" + name
+        witnesses.append({
+            "mutant": mutant, "path": rel, "old": old, "new": new,
+            "expected": f"{rule}: {claim}", "failed": findings,
+            "outcome": "killed" if held else "SURVIVED",
+        })
+        if not held:
+            failures.append(mutant)
+
+
+def vbase_screening_git_cases(tmp, witnesses, failures):
+    """Exercise protected state with real objects in a disposable local Git store."""
+    global _VBASE_SELFTEST_GIT_ROOT
+    repo = Path(tmp) / "derived-base-screening-git"
+    subprocess.run(
+        ["git", "clone", "--quiet", "--shared", "--no-checkout", str(ROOT), str(repo)],
+        check=True, capture_output=True,
+    )
+
+    def git(*args):
+        result = subprocess.run(
+            ["git", "-c", "commit.gpgsign=false", "-c", "tag.gpgsign=false",
+             "-c", "user.name=Reconciliation selftest", "-c",
+             "user.email=reconciliation-selftest@example.invalid", *args],
+            cwd=repo, check=True, capture_output=True, text=True,
+        )
+        return result.stdout.strip()
+
+    def check(name, rel, old, new, expected, clue=None):
+        state, overlay, records, subjects = vbase_screening_binding(repo)
+        found = records + subjects
+        held = (state == expected and (overlay is not None) == (expected == "effective")
+                and (clue is None or any(clue in finding for finding in found)))
+        mutant = "derived-base-screening-git-" + name
+        witnesses.append({
+            "mutant": mutant, "path": rel, "old": old, "new": new,
+            "expected": f"{expected}" + (f": {clue}" if clue else ""),
+            "failed": found, "outcome": ("killed" if clue else "held") if held else "SURVIVED",
+        })
+        if not held:
+            failures.append(mutant)
+
+    head = local_git(ROOT, "rev-parse", "HEAD^{commit}")
+    assert head is not None
+    head = head.decode("ascii").strip()
+    git("checkout", "--quiet", "--detach", head)
+    ledger = repo / AGENT_ADOPTIONS
+    initial = ledger.read_text()
+    row = vbase_screening_rows(adoption_table_rows(repo))[0]
+    source = row.split("|")[3].strip().strip("`")
+    retirement = git("rev-parse", f"{source}^")
+    base = git("rev-parse", f"{retirement}^")
+    protected = "refs/remotes/origin/main"
+    tag = f"refs/tags/{VBASE_SCREENING_TAG}"
+    if git("tag", "--list", VBASE_SCREENING_TAG):
+        git("tag", "-d", VBASE_SCREENING_TAG)
+
+    saved = _VBASE_SELFTEST_GIT_ROOT
+    _VBASE_SELFTEST_GIT_ROOT = None
+    try:
+        git("update-ref", protected, head)
+        check("staged", tag, "", "", "staged")
+        git("tag", "-a", VBASE_SCREENING_TAG, source, "-m", "Synthetic exact annotation")
+        check("exact-annotation", tag, "", source, "effective")
+
+        projection = repo / VBASE_SCREENING_PROJECTION
+        before_projection = projection.read_text()
+        _propose_candidate(repo)
+        _install_addition(repo)
+        expanded_projection = projection.read_text()
+        git("add", "-A")
+        git("commit", "-m", "Install a later synthetic signed addition")
+        check("later-authored-addition", VBASE_SCREENING_PROJECTION,
+              before_projection, expanded_projection, "effective")
+        expected = json.loads(before_projection)
+        for population in expected["populations"].values():
+            population["requirements"] += 1
+            population["scenarios"] += 2
+        if (json.loads(expanded_projection) != expected or regenerate(repo)
+                or run(repo).failed):
+            failures.append("derived-base-screening-git-expanded-census")
+
+        status = repo / STATUS
+        before_status = status.read_text()
+        authority = next(line for line in visible_route_lines(before_status)
+                         if line.strip().startswith(VBASE_SCREENING_STATUS_PREFIX))
+        competing = authority.replace(VBASE_SCREENING_HOME, FIGPLAN_HOME)
+        assert competing != authority
+        status.write_text(before_status + "\n" + competing + "\n")
+        git("add", STATUS)
+        git("commit", "-m", "Add a competing authority route")
+        check("descendant-competing-route", STATUS, "", competing, "invalid",
+              "does not route the exact screening adoption")
+        git("checkout", "--quiet", "--detach", head)
+        status.write_text(status.read_text() + "\n" + competing + "\n")
+        check("same-head-competing-route", STATUS, "", competing, "invalid",
+              "does not route the exact screening adoption")
+        git("restore", STATUS)
+
+        git("update-ref", protected, base)
+        check("before-protected", protected, head, base, "invalid", "absent from protected main")
+        git("update-ref", protected, head)
+
+        git("tag", "-d", VBASE_SCREENING_TAG)
+        git("tag", VBASE_SCREENING_TAG, source)
+        check("lightweight", tag, "annotated", "lightweight", "invalid", "not annotated directly")
+        git("tag", "-d", VBASE_SCREENING_TAG)
+        git("tag", "-a", VBASE_SCREENING_TAG, source, "-m", "Synthetic exact annotation")
+
+        figure_row = next(line for line in initial.splitlines(keepends=True) if is_figplan_row(line))
+        ledger.write_text(initial.replace(figure_row, "", 1))
+        git("add", AGENT_ADOPTIONS)
+        git("commit", "-m", "Remove the exact predecessor on simulated protected main")
+        protected_without_predecessor = git("rev-parse", "HEAD")
+        git("checkout", "--quiet", "--detach", head)
+        git("update-ref", protected, protected_without_predecessor)
+        check("stale-predecessor", AGENT_ADOPTIONS, figure_row, "", "invalid", "predecessor row or subject")
+
+        projection = repo / VBASE_SCREENING_PROJECTION
+        before_projection = projection.read_text()
+        changed_projection = json.loads(before_projection)
+        changed_projection["populations"]["active"]["scenarios"] += 1
+        damaged = json.dumps(changed_projection, ensure_ascii=False, indent=2) + "\n"
+        projection.write_text(damaged)
+        git("add", VBASE_SCREENING_PROJECTION)
+        git("commit", "-m", "Change the scoped protected census")
+        protected_with_drift = git("rev-parse", "HEAD")
+        git("checkout", "--quiet", "--detach", head)
+        git("update-ref", protected, protected_with_drift)
+        check("stale-projection", VBASE_SCREENING_PROJECTION, before_projection, damaged,
+              "invalid", "census or status routes differ")
+
+        tree = git("rev-parse", f"{base}^{{tree}}")
+        empty_retirement = git("commit-tree", tree, "-p", base, "-m", "Synthetic empty retirement")
+        tree = git("rev-parse", f"{source}^{{tree}}")
+        changed_source = git("commit-tree", tree, "-p", empty_retirement, "-m", "Synthetic source history")
+        git("checkout", "--quiet", "--detach", changed_source)
+        ledger.write_text(initial.replace(retirement, empty_retirement).replace(source, changed_source))
+        git("add", AGENT_ADOPTIONS)
+        git("commit", "-m", "Stage a synthetic successor on an empty retirement")
+        git("update-ref", protected, git("rev-parse", "HEAD"))
+        git("tag", "-d", VBASE_SCREENING_TAG)
+        git("tag", "-a", VBASE_SCREENING_TAG, changed_source, "-m", "Synthetic selected annotation")
+        check("empty-retirement", AGENT_ADOPTIONS, retirement, empty_retirement,
+              "invalid", "retired predecessor would not survive the inverse")
+    finally:
+        _VBASE_SELFTEST_GIT_ROOT = saved
+
+
 # The case workers fork after the parent warms this invocation's cache.
 @_reverse_cache_scope()
 def selftest(witness_path=None):
@@ -12947,6 +13542,15 @@ def selftest(witness_path=None):
             print("\n".join(clean.lines))
             print("SELFTEST FAIL: the unmutated scratch copy does not pass")
             return 1
+        if vbase_screening_binding(base)[0] == "staged":
+            vbase_screening_document_cases(base, witnesses, failures)
+            vbase_screening_git_cases(tmp, witnesses, failures)
+            project_vbase_screening_history(base)
+            clean = run(base)
+            if clean.failed:
+                print("\n".join(clean.lines))
+                print("SELFTEST FAIL: the historical derived-base projection does not pass")
+                return 1
         # The signed-addition hook: a synthetic addition, signed and
         # regenerated, must pass, and each of its mutants must fail.
         added = Path(tmp) / "with-signed-addition"
@@ -13750,11 +14354,17 @@ def regenerate(root):
     pop, findings = census(root)
     if findings:
         raise SystemExit("census refused:\n" + "\n".join(findings))
+    baseline, projection = vbase_screening_projects(root, pop, findings)
+    if findings:
+        raise SystemExit("derived-base projection refused:\n" + "\n".join(findings))
     written = unions.write_additions(root)
-    body = census_json(pop)
-    if read_text(root, CENSUS) != body:
-        (root / CENSUS).write_text(body, encoding="utf-8")
-        written.append(CENSUS)
+    outputs = [(CENSUS, census_json(baseline))]
+    if projection is not None:
+        outputs.append((VBASE_SCREENING_PROJECTION, projection))
+    for target, body in outputs:
+        if read_text(root, target) != body:
+            (root / target).write_text(body, encoding="utf-8")
+            written.append(target)
     return written
 
 
@@ -13771,14 +14381,16 @@ def main(argv):
                       help="print the bound CAP1 composition and coverage census")
     parser.add_argument("--witnesses", help="selftest: write rule-6 JSON here")
     args = parser.parse_args(argv)
-    global _COLLECT_REFUSALS, _CAP1_SELFTEST_GIT_ROOT
+    global _COLLECT_REFUSALS, _CAP1_SELFTEST_GIT_ROOT, _VBASE_SELFTEST_GIT_ROOT
     saved = _COLLECT_REFUSALS
     saved_git_root = _CAP1_SELFTEST_GIT_ROOT
+    saved_vbase_git_root = _VBASE_SELFTEST_GIT_ROOT
     try:
         if args.selftest:
             # Its fixtures drive the library path, which must raise each
             # entry's own read error, so it never collects.
             _CAP1_SELFTEST_GIT_ROOT = ROOT
+            _VBASE_SELFTEST_GIT_ROOT = ROOT
             return selftest(args.witnesses)
         _COLLECT_REFUSALS = True
         return _main(args)
@@ -13788,6 +14400,7 @@ def main(argv):
     finally:
         _COLLECT_REFUSALS = saved
         _CAP1_SELFTEST_GIT_ROOT = saved_git_root
+        _VBASE_SELFTEST_GIT_ROOT = saved_vbase_git_root
 
 
 def _main(args):
