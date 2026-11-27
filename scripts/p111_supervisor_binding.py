@@ -58,7 +58,7 @@ INDEX_ROUTE = (f"{INDEX_PREFIX}changes/polaris-dossier-p111-supervisor-compositi
 STATUS_COUNT_PREFIX = "With the P111 supervisor version effective, Polaris has "
 STATUS_COUNT_SCOPE = "With the P111 supervisor version"
 STATUS_COUNT = re.compile(re.escape(STATUS_COUNT_PREFIX) + r"(\d+) requirements and (\d+) scenarios\.")
-HTML_COMMENT = re.compile(r"<!--.*?(?:-->|\Z)", re.S)
+HTML_NON_PROSE = re.compile(r"<!--.*?(?:-->|\Z)|^ {0,3}<!\[CDATA\[.*?(?:\]\]>|\Z)", re.M | re.S)
 
 
 class Refusal(RuntimeError):
@@ -114,9 +114,9 @@ def claims(rows):
 
 
 def route_lines(data, prefix):
-    # Preserve placement. Removing a raw HTML comment can create an
-    # apparent top-level route that GitHub cannot render as Markdown.
-    text = HTML_COMMENT.sub(lambda match: re.sub(r"[^\r\n]", " ", match[0]), data.decode())
+    # Preserve line breaks and columns. Removing a comment could create a
+    # false top-level route, and CDATA contents do not render as Markdown.
+    text = HTML_NON_PROSE.sub(lambda match: re.sub(r"[^\r\n]", " ", match[0]), data.decode())
     return [line for line in recon.visible_route_lines(text) if line.startswith(prefix)]
 
 
