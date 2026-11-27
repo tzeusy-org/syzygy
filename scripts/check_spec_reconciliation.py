@@ -13668,14 +13668,14 @@ def vbase_screening_git_cases(tmp, witnesses, failures):
     head = local_git(ROOT, "rev-parse", "HEAD^{commit}")
     assert head is not None
     head = head.decode("ascii").strip()
-    git("checkout", "--quiet", "--detach", head)
-    if p5_advice_claims(adoption_table_rows(repo)):
-        project_source_example_history(repo)
+    advice = p5_advice_claims(adoption_table_rows(ROOT))
+    if advice:
+        line, = advice
+        source = line.split("|")[3].strip().strip("`")
+        head = git("rev-parse", f"{source}^")
         if git("tag", "--list", SOURCE_EXAMPLE_TAG):
             git("tag", "-d", SOURCE_EXAMPLE_TAG)
-        git("add", "-A")
-        git("commit", "-m", "Project the inherited screening history")
-        head = git("rev-parse", "HEAD")
+    git("checkout", "--quiet", "--detach", head)
     ledger = repo / AGENT_ADOPTIONS
     initial = ledger.read_text()
     row = vbase_screening_rows(adoption_table_rows(repo))[0]
@@ -13799,7 +13799,15 @@ def source_example_git_cases(tmp, witnesses, failures):
         state, text, records, subjects = p5_advice_binding(repo)
         report = run(repo)
         counter = subprocess.run(
-            [sys.executable, "-B", "scripts/count_polaris_effective_scenarios.py", "--check"],
+            [sys.executable, "-B", "-c", (
+                "import sys\n"
+                "from pathlib import Path\n"
+                "sys.path.insert(0, sys.argv[1])\n"
+                "import count_polaris_effective_scenarios as counter\n"
+                "counter.ROOT = Path.cwd()\n"
+                "sys.argv = ['count_polaris_effective_scenarios.py', '--check']\n"
+                "raise SystemExit(counter.main())\n"
+            ), str(ROOT / "scripts")],
             cwd=repo, capture_output=True, text=True,
         )
         found = [*records, *subjects, *(item for rows in report.findings.values() for item in rows)]
@@ -13819,26 +13827,28 @@ def source_example_git_cases(tmp, witnesses, failures):
         if not held:
             failures.append(mutant)
 
-    base = local_git(ROOT, "rev-parse", "refs/remotes/origin/main").decode("ascii").strip()
-    authored = local_git(ROOT, "rev-parse", "HEAD").decode("ascii").strip()
     git("remote", "set-url", "origin", str(Path(tmp) / "no-source-example-remote"))
     git("remote", "set-url", "--push", "origin", str(Path(tmp) / "no-source-example-push"))
+    line, = p5_advice_claims(adoption_table_rows(ROOT))
+    source = line.split("|")[3].strip().strip("`")
+    # Replay the first carrier so later adoptions and recorded withdrawals do not
+    # change the census of this historical fixture.
+    current = local_git(ROOT, "rev-parse", "HEAD").decode("ascii").strip()
+    authored = git("log", "--reverse", "--format=%H", "--ancestry-path", "-S", line,
+                   f"{source}..{current}", "--", AGENT_ADOPTIONS).splitlines()[0]
+    before_source = git("rev-parse", f"{source}^")
     git("checkout", "--quiet", "--detach", authored)
     ledger = repo / AGENT_ADOPTIONS
-    line, = p5_advice_claims(adoption_table_rows(repo))
-    source = line.split("|")[3].strip().strip("`")
     protected = "refs/remotes/origin/main"
     tag = f"refs/tags/{SOURCE_EXAMPLE_TAG}"
     if git("tag", "--list", SOURCE_EXAMPLE_TAG):
         git("tag", "-d", SOURCE_EXAMPLE_TAG)
-    git("update-ref", protected, base)
+    git("update-ref", protected, before_source)
     saved = _VBASE_SELFTEST_GIT_ROOT
     _VBASE_SELFTEST_GIT_ROOT = None
     try:
         check("staged", tag, "", "", "staged", 603)
         git("tag", "-a", SOURCE_EXAMPLE_TAG, source, "-m", "Synthetic exact annotation")
-        before_source = git("rev-parse", f"{source}^^")
-        git("update-ref", protected, before_source)
         check("tag-before-protection", protected, authored, before_source, "invalid",
               clue="outside protected main")
         git("update-ref", protected, authored)
