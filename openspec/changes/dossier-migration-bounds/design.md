@@ -13,7 +13,7 @@
   - the parity sentence (2.24, narrowed by 2.38) says check passes the migration of every v10 or v11 draft that check passes;
   - the v12 model (2.24, line 134) holds "zero to 200 elements and zero to 400 relationships";
   - a v11 draft of 222 nodes across six graphs passes check, and its migration fails with `$.model.elements: must hold 0 to 200 items; holds 222`.
-- [Observed] Why both hold: the v10 and v11 schema documents bound each diagram and not the draft. `packages/polaris-dossier/src/draft-schema.ts` admits up to 20 diagrams (`diagrams: list(diagram, 0, 20)`), a graph of 1 to 40 nodes and 1 to 80 edges, and (2.23, line 120) a containment of at most 40 groups. So their schema documents admit up to 800 nodes and groups and 1,600 edges in one draft.
+- [Observed] Why both hold: the v10 and v11 schemas and checks bound each diagram and not the draft. `packages/polaris-dossier/src/draft-schema.ts` admits up to 20 diagrams (`diagrams: list(diagram, 0, 20)`) and a graph of 1 to 40 nodes and 1 to 80 edges. A containment's 40-group total is a check finding (2.23, line 120: "depth and the total are the findings below alone"), not a schema-document bound. So a draft check passes may hold up to 800 nodes and groups and 1,600 edges.
 - [Inferred] The arithmetic of the migration, from line 142: each node and each group becomes one element, each edge one relationship, and a nesting becomes the element's `parent`, not a relationship. Every identity of a v10 or v11 draft is unique, so the merge by identity joins nothing. So the migrated model holds exactly (nodes + groups) elements and (edges) relationships, and fits the v12 bounds exactly where those totals are at most 200 and 400. Sequence and swimlane members never enter the model.
 - [Inferred] Two repairs were possible.
   - (a) Narrow the parity to drafts whose totals fit, and say what happens to the rest.
@@ -29,6 +29,16 @@
 
 - [Inferred] One scenario, "A migrated model past the v12 bounds keeps no parity". It states the reviewer's case (six graphs, 222 nodes; 37 per graph is one layout of it) and the two edges of the bound: 200 nodes and groups with 400 edges keeps parity, and 401 edges draws the finding at `$.model.relationships`.
 - [Inferred] The Form lines name the fixtures, what is observed, the hand-counted oracle and the falsifier for 2.41.
+
+## D3a. The parity is over the migrated value (review finding 1)
+
+- [Inferred] The migration adds members: `model`, a `view` per graph or containment diagram, each element's `type`, and a nested group's `parent`. So a migrated draft is larger than its source, and one written to a file may pass the draft's read bound (4,194,304 bytes, version 2.14) or its 500,000 values, which check refuses before any finding.
+- [Inferred] The parity is a claim about the rules, so it is stated over the value the migration returns: check derives findings from it as from a draft it has read. The migration states no serialization, and no parity is stated for a file past the read bound. The Falsifier says the same.
+
+## D3b. The schema the migration yields (from the code lane)
+
+- [Observed] Versions 2.33 to 2.40 said, in the figure-plan paragraph (line 252), "The migration of version 2.24 is unchanged and yields a schema-v13 draft". The 2.24 migration paragraph (line 142) and the code (`migrateDraft`) yield schema v12.
+- [Inferred] 2.41 corrects that one sentence to v12. Line 142 governs, so the correction moves no rule. A sweep of the 2.41 text for "yields a" finds no other schema claim about this migration.
 
 ## D4. Bytes that move
 
@@ -48,4 +58,15 @@
 
 ## Review
 
-[Observed] No review has read this version. The lead arranges one; this change dispatches none.
+[Observed] Review 1, `docs/reviews/syzygy-3efd-87/R-MIGRATION-BOUNDS-SPEC-1-RAW.md`, records `REVISE` (line 2) over spec sha256 `87d64cdd7ded843aed556c1749f280079e9428221589f52daec6033524748e93` at commit `617a1081b`, with one blocking finding (1) and five notes (2 to 6). The repaired spec hashes to `64869dc96bf377b6d085bb646e0873606e631adb42084eb8723caa3f82e30b4c`; no review has read the repairs.
+
+| Finding | Kind | Disposition |
+|---|---|---|
+| 1. Migration grows the draft past the read bounds | Blocking | Repaired: the parity is stated over the value the migration returns, and the read bound's case is named with no parity for it; the Falsifier matches (D3a) |
+| 2. Scenario lacks a 201-element case and a containment | Note | Repaired: the 200/400 draft holds a 40-group containment (35 nested groups carry `parent`, no relationship for a nesting); 201 nodes and groups with 400 edges and 200 with 401 edges each draw exactly one finding |
+| 3. "schema documents admit … 800" | Note | Repaired: "a draft check passes may hold up to 800 nodes and groups and 1,600 edges"; D2 likewise |
+| 4. `d` reused outside its binding | Note | Repaired: the passage opens "For a draft of schema v10 or v11 that check passes" and says "its" |
+| 5. SEMANTIC-DELTA counts lines, lists items | Note | Repaired in `migration_bounds_delta.py`: it states the lines and the items separately |
+| 6. The .37 test does not assert the migrated boundaries | Note (code) | No spec change; the follow-up is on syzygy-3efd.37 (D5) |
+
+[Observed] Also folded in: the v13 wording of line 252 (D3b), reported by the code lane, which no review has read.

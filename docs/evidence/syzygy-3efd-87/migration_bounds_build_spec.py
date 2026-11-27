@@ -41,23 +41,28 @@ text = '\n'.join(lines)
 # The parity claim: who it covers.
 replace("For every draft d of schema v10 or v11 that check passes, check passes the migrated draft;",
         "For every draft d of schema v10 or v11 that check passes and whose migrated model fits the bounds of the v12 model, check passes "
-        "the migrated draft;")
+        "the migrated draft, taken as the value the migration returns;")
 
 # The bound arithmetic, after the closing sentence on drafts check does not pass.
 ANCHOR = ("No parity is stated for a draft check does not pass: its findings may differ in kind as well as path, because the model's and "
           "the views' bounds and checks are not the diagram's (a containment of six top-level groups, for example, draws a `schema` "
           "finding in schema v11 and a `view-shape` finding once migrated).")
 replace(ANCHOR, ANCHOR + (
-    " The migrated model's elements are d's graph nodes and containment groups and its relationships are d's graph edges, one for "
-    "one: every identity of a schema-v10 or v11 draft is unique, so the merge by identity joins none, and a nesting becomes an "
-    "element's `parent`, never a relationship. So d's migrated model fits the bounds of the v12 model exactly where d's graph nodes "
-    "and containment groups number at most 200 in all, across every diagram, and its graph edges at most 400 in all. The v10 and v11 "
-    "schemas bound each diagram and not the draft (up to 20 diagrams, a graph of up to 40 nodes and 80 edges, a containment of up to "
-    "40 groups), so their schema documents admit a draft of up to 800 nodes and groups and 1,600 edges. A draft check passes whose "
-    "nodes and "
+    " For a draft of schema v10 or v11 that check passes, the migrated model's elements are its graph nodes and containment groups "
+    "and its relationships are its graph edges, one for one: every identity of such a draft is unique, so the merge by identity joins "
+    "none, and a nesting becomes an element's `parent`, never a relationship. So its migrated model fits the bounds of the v12 model "
+    "exactly where its graph nodes and containment groups number at most 200 in all, across every diagram, and its graph edges at most "
+    "400 in all. The v10 and v11 schemas and checks bound each diagram and not the draft (up to 20 diagrams, a graph of up to 40 nodes "
+    "and 80 edges, a containment of up to 40 groups), so a draft check passes may hold up to 800 nodes and groups and 1,600 edges. A "
+    "draft check passes whose nodes and "
     "groups number more than 200 in all, or whose edges more than 400, migrates to a draft that check refuses with a `schema` finding "
     "at `$.model.elements` or `$.model.relationships`, as check refuses any v12 draft whose model exceeds those bounds, and no parity "
-    "is stated for it; the migration itself is unchanged and still yields that draft, and no bound of either schema changes."))
+    "is stated for it; the migration itself is unchanged and still yields that draft, and no bound of either schema changes. The "
+    "parity is stated over the migrated draft as the value the migration returns, check deriving its findings from that value as it "
+    "derives them from a draft it has read; the migration states no serialization. Because the migration adds members (`model`, a "
+    "`view` for each graph or containment diagram, each element's `type` and a nested group's `parent`), a migrated draft written to a "
+    "file may pass the draft's read bound of 4,194,304 bytes (version 2.14) or 500,000 values, which check refuses before it derives "
+    "any finding, though the draft it was migrated from was within them; no parity is stated for that file."))
 
 # One scenario, before the one Form line.
 FORM = '\nForm: event-response.\n'
@@ -68,7 +73,8 @@ SCENARIO = '''
 
 - **WHEN** a schema-v11 draft that check passes holds six graph diagrams of 37 nodes each, 222 nodes in all, with 60 edges in all and no containment, and is migrated to schema v12
 - **THEN** the migrated draft's `model` holds 222 elements, one per node, and check refuses it with a `schema` finding at `$.model.elements`, so the parity of version 2.24 is not stated for it, and the migration's output is the one the rules of version 2.24 give
-- **AND** a schema-v11 draft that check passes holding graph nodes and containment groups 200 in all and graph edges 400 in all migrates to a draft check passes, with the parity stated, and one holding 401 edges in all migrates to a draft check refuses with a `schema` finding at `$.model.relationships'''
+- **AND** a schema-v11 draft that check passes holding six graph diagrams of 160 nodes and 400 edges in all and one containment of 40 groups, five at level 1, 200 elements in all, migrates to a draft check passes, with the parity stated, whose `model` holds 200 elements, the 35 nested groups each carrying `parent`, and 400 relationships, none for a nesting
+- **AND** the same draft with one graph node more, 201 nodes and groups in all and 400 edges, migrates to a draft check refuses with a `schema` finding at `$.model.elements` alone, and with one graph edge more instead, 200 nodes and groups and 401 edges in all, to a draft check refuses with a `schema` finding at `$.model.relationships'''
 text = text[:at] + '\n' + SCENARIO.rstrip('\n') + '`' + '\n' + text[at:]
 
 
@@ -85,8 +91,12 @@ extend("compared with the citation link the list of the figure carrying the node
        "; for version 2.41, each fixture's node, group and edge totals counted by hand from the fixture, and the expected `schema` finding "
        "written before check runs.")
 extend("changes any finding but the `field-version` one at a walk, or any byte.",
-       "; for version 2.41, a draft whose nodes and groups number at most 200 and edges at most 400 migrates to a draft check refuses, "
-       "or one past either bound migrates to a draft check passes, or the migration yields no draft for it.")
+       "; for version 2.41, check derives a finding from the migrated value of a draft whose nodes and groups number at most 200 and "
+       "edges at most 400, or none from that of a draft past either bound, a nesting is counted as a relationship, or the migration "
+       "yields no draft for it.")
+
+replace("The migration of version 2.24 is unchanged and yields a schema-v13 draft;",
+        "The migration of version 2.24 is unchanged and yields a schema-v12 draft;")
 
 assert '2.NN' not in text
 out.parent.mkdir(parents=True, exist_ok=True)
