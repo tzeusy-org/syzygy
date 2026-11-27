@@ -114,6 +114,7 @@ export const INTEGRATION_TESTS: readonly string[] = [
   'packages/polaris-dossier/src/scripted-benchmark.test.ts',
   'packages/polaris-dossier/src/session-view.test.ts',
   'packages/polaris-dossier/src/start-gates.test.ts',
+  'packages/polaris-dossier/src/system-model.test.ts',
   'packages/polaris-dossier/src/verify-text-script.test.ts',
   'packages/polaris-dossier/src/waiting-sessions.test.ts',
   'packages/polaris-generation-consent/src/act-families.test.ts',
