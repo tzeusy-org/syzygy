@@ -289,6 +289,10 @@ authority and no model yet called on the current path.
     [Derived-base screening 2.35](openspec/changes/dossier-derived-base-screening) records A-333. The correction applies when its protected adoption and exact version tag are verified.
     Before the derived-base screening version is effective, Polaris has 39 requirements and 579 scenarios.
     With the derived-base screening version effective, Polaris has 39 requirements and 603 scenarios.
+
+[Source-example advice](openspec/changes/polaris-source-example-advice) records A-334. The advisory applies when its protected adoption and exact version tag are verified.
+
+With the source-example advice version effective, Polaris has 39 requirements and 610 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and

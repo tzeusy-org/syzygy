@@ -3539,6 +3539,24 @@ def vbase_binding(root):
     )
 
 
+P5_ADVICE_CHANGE = "polaris-source-example-advice"
+P5_ADVICE_HOME = f"{CHANGES}/{P5_ADVICE_CHANGE}"
+P5_ADVICE_SPEC = f"{P5_ADVICE_HOME}/proposed/polaris-generation/spec.md"
+SOURCE_EXAMPLE_TAG = "polaris-dossier-source-example-advice-v2.36"
+P5_ADVICE_PREDECESSOR = "b7d3324969101e742b2592869d8761f680fe8615"
+P5_ADVICE_STATUS_PREFIX = "[Source-example advice]("
+P5_ADVICE_INDEX_PREFIX = f"| [`{P5_ADVICE_CHANGE}`]("
+P5_ADVICE_COUNT_SCOPE = "With the source-example advice"
+P5_ADVICE_COUNT_PREFIX = "With the source-example advice version effective, Polaris has "
+P5_ADVICE_COUNT = re.compile(re.escape(P5_ADVICE_COUNT_PREFIX) + r"(\d+) requirements and (\d+) scenarios\.")
+P5_ADVICE_CANDIDATE_INDEX = '| [`polaris-source-example-advice`](changes/polaris-source-example-advice) | One immediate advisory for a known absent code selection in a supported operator-agent draft. | **Candidate.** Adoption and implementation pending | [Draft semantic delta](changes/polaris-source-example-advice/SEMANTIC-DELTA.md) |'
+P5_ADVICE_SUBJECTS = {
+    "openspec/changes/polaris-source-example-advice/proposed/polaris-generation/spec.md": "e2688ca4162bd10065fbd87dcf6134ab8263a8039dbd3de62b4eb2de85771177",
+    "openspec/changes/polaris-source-example-advice/GOVERNING-DEPENDENCIES.json": "3f6c2b317bf01c0d940f7ee7b41ce73ddb2b0cfd5aa4efe2afbfb26c4ae3efef",
+    "openspec/changes/polaris-source-example-advice/SCREENING-SUCCESSOR-DELTA.md": "77fe62bf7a02a5f91dcf32fb036b59eeb1a0621c1934bf6a091394728afa9890",
+}
+
+
 def is_vbase_screening_row(row):
     return _is_reviewed_version_row(row, VBASE_SCREENING_TAG, VBASE_SCREENING_SUBJECTS)
 
@@ -3669,6 +3687,245 @@ def vbase_screening_binding(root):
     if protected_disposition:
         return "reverted", None, [], []
     return "effective", text, [], []
+
+
+def is_source_example_row(row):
+    return _is_reviewed_version_row(row, SOURCE_EXAMPLE_TAG, P5_ADVICE_SUBJECTS)
+
+
+def p5_advice_claims(rows):
+    return [row for row in rows if is_source_example_row(row)]
+
+
+def p5_advice_authority(root, identity, candidate_only=False):
+    status = read_text(root, STATUS) or ""
+    index = read_text(root, OPENSPEC_README) or ""
+    expected_status = (
+        f"{P5_ADVICE_STATUS_PREFIX}{P5_ADVICE_HOME}) records {identity}. "
+        "The advisory applies when its protected adoption and exact version tag are verified."
+    )
+    index_home = f"changes/{P5_ADVICE_CHANGE}"
+    expected_index = (
+        f"{P5_ADVICE_INDEX_PREFIX}{index_home}) | One immediate advisory for a known absent code "
+        f"selection in a supported operator-agent draft. | `{identity}` in "
+        f"[AGENT-ADOPTIONS.md](../{AGENT_ADOPTIONS}) applies when the exact version tag is verified, "
+        f"`{SOURCE_EXAMPLE_TAG}` | [Semantic delta]({index_home}/SCREENING-SUCCESSOR-DELTA.md) |"
+    )
+    status_rows = scoped_route_lines(status, (P5_ADVICE_STATUS_PREFIX,))
+    index_rows = scoped_route_lines(index, (P5_ADVICE_INDEX_PREFIX,))
+    if candidate_only:
+        return not status_rows and len(index_rows) == 1 and index_rows[0] == P5_ADVICE_CANDIDATE_INDEX
+    return status_rows == [expected_status] and index_rows == [expected_index]
+
+
+def p5_advice_binding(root):
+    """Select the source-example advisory only after its exact protected version binds."""
+    ledger = adoption_table_rows(root)
+    claims = p5_advice_claims(ledger)
+    ref = f"refs/tags/{SOURCE_EXAMPLE_TAG}"
+    git_root = _VBASE_SELFTEST_GIT_ROOT or root
+
+    def invalid(reason):
+        return "invalid", None, [f"Source-example advice: {reason}"], []
+
+    tag = local_git(git_root, "for-each-ref",
+                    "--format=%(refname) %(objecttype) %(tag) %(*objecttype) %(*objectname)", ref)
+    if _VBASE_SELFTEST_GIT_ROOT is not None:
+        # The shared copied-history selftest predates this version.
+        tag = b""
+    if not claims:
+        if tag:
+            return invalid("a version tag has no canonical adoption")
+        status = read_text(root, STATUS) or ""
+        index = read_text(root, OPENSPEC_README) or ""
+        routes = scoped_route_lines(index, (P5_ADVICE_INDEX_PREFIX,))
+        if (any(route != P5_ADVICE_CANDIDATE_INDEX for route in routes)
+                or len(routes) > 1
+                or scoped_route_lines(status, (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_SCOPE))):
+            return invalid("a candidate displays an active or conflicting authority route")
+        return "candidate", None, [], []
+
+    if len(claims) != 1:
+        return invalid("expected exactly one adoption")
+    row = [cell.strip() for cell in claims[0].split("|")[1:-1]]
+    if len(row) != 7:
+        return invalid("expected a seven-column adoption row")
+    identity, date, commit, subject_links, why, inverse, version = row
+    match = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+    if (not re.fullmatch(r"A-[1-9][0-9]*", identity) or not valid_adoption_date(date)
+            or match is None or not why or version != f"`{SOURCE_EXAMPLE_TAG}`"):
+        return invalid("malformed adoption identity, date, commit, reason or tag")
+    source = match[1]
+    if (inverse != f"`git revert {source}`" or any(
+            f"](https://github.com/tzeusy-org/syzygy/blob/{source}/{path})" not in subject_links
+            for path in P5_ADVICE_SUBJECTS)):
+        return invalid("the row does not name the exact reviewed source and inverse")
+
+    if vbase_screening_binding(root)[0] != "effective":
+        return invalid("the effective v2.35 screening predecessor is unavailable")
+    parent = local_git(git_root, "rev-list", "--parents", "-n1", source)
+    if (parent is None or len(parent.split()) != 2
+            or local_git(git_root, "merge-base", "--is-ancestor", P5_ADVICE_PREDECESSOR, f"{source}^") is None):
+        return invalid("the source has no single parent with the screened predecessor")
+    paths = local_git(git_root, "diff-tree", "--no-commit-id", "-r", "--name-only", "-z", source)
+    if paths is None or set(paths.rstrip(b"\0").split(b"\0")) != {
+            path.encode("ascii") for path in (*P5_ADVICE_SUBJECTS, STATUS, OPENSPEC_README)}:
+        return invalid("the source commit changes paths outside the reviewed source and its routes")
+    source_subjects = {}
+    for path, digest in P5_ADVICE_SUBJECTS.items():
+        entry = local_git(git_root, "ls-tree", "-z", source, "--", path)
+        body = local_git(git_root, "show", f"{source}:{path}")
+        if not entry or not entry.startswith(b"100644 blob ") or body is None or sha(body) != digest:
+            return invalid(f"the exact reviewed Git subject is unavailable at {path}")
+        source_subjects[path] = entry, body
+
+    def evidence(commit_oid):
+        rows = git_adoption_rows(git_root, commit_oid)
+        if ([line for line in rows if line.split("|")[1].strip() == identity] != claims
+                or p5_advice_claims(rows) != claims
+                or local_git(git_root, "merge-base", "--is-ancestor", source, commit_oid) is None):
+            return None
+        return rows
+
+    head = "HEAD"
+    authored = evidence(head)
+    if (authored is None
+            or [line for line in ledger if line.split("|")[1].strip() == identity] != claims):
+        return invalid("the unique adoption and source are outside authored Git")
+    protected = "refs/remotes/origin/main"
+    protected_rows = evidence(protected) if tag else None
+    if tag is None:
+        return invalid("the local version ref inventory is unavailable")
+    if tag and tag.split() != [ref.encode("ascii"), b"tag", SOURCE_EXAMPLE_TAG.encode("ascii"),
+                              b"commit", source.encode("ascii")]:
+        return invalid("the version is not annotated directly on its exact source")
+    if tag and protected_rows is None:
+        return invalid("the exact adopted source is outside protected main")
+
+    def disposition(rows):
+        return recorded_disposition(root, identity, source, SOURCE_EXAMPLE_TAG, P5_ADVICE_SUBJECTS,
+                                    plain_revert=True, ledger_rows=rows)
+
+    revoked = disposition(ledger)
+    if revoked != disposition(authored) or (tag and revoked != disposition(protected_rows)):
+        return invalid("worktree, authored and protected dispositions disagree")
+    if revoked:
+        added = p5_advice_member_delta(read_text(root, VBASE_SCREENING_SPEC) or "",
+                                      source_subjects[P5_ADVICE_SPEC][1].decode("utf-8"))
+        if added is None or not tag or not p5_advice_inverse_verified(
+                root, git_root, source, revoked, protected_rows, added):
+            return invalid("the recorded withdrawal lacks its protected source-only inverse")
+        return "reverted", None, [], []
+
+    for path, (entry, body) in source_subjects.items():
+        if (body != read_bytes(root, path) or entry != local_git(git_root, "ls-tree", "-z", head, "--", path)
+                or (tag and entry != local_git(git_root, "ls-tree", "-z", protected, "--", path))):
+            return invalid(f"the worktree and exact Git subjects disagree at {path}")
+    scopes = {STATUS: (P5_ADVICE_STATUS_PREFIX,), OPENSPEC_README: (P5_ADVICE_INDEX_PREFIX,)}
+    counts = {STATUS: (P5_ADVICE_COUNT_SCOPE,)}
+    stale = tag and local_git(git_root, "merge-base", "--is-ancestor", protected, head) is None
+    if (not p5_advice_authority(root, identity) or not git_routes_match(root, git_root, source, scopes)
+            or not git_routes_match(root, git_root, head, scopes)
+            or (tag and not git_routes_match(root, git_root, protected, scopes))
+            or (stale and not git_routes_match(root, git_root, protected, counts))):
+        return invalid("the exact adoption authority routes disagree")
+    return ("effective", read_text(root, P5_ADVICE_SPEC), [], []) if tag else ("staged", None, [], [])
+
+
+def p5_advice_delta(root, findings):
+    predecessor = read_text(root, VBASE_SCREENING_SPEC) or ""
+    successor = read_text(root, P5_ADVICE_SPEC) or ""
+    added = p5_advice_member_delta(predecessor, successor)
+    if added is None:
+        findings.append("POLARIS source-example advice: cannot count the screened and advisory members")
+        return 0
+    return added
+
+
+def p5_advice_member_delta(predecessor, successor):
+    ident = VBASE_SCREENING_REPLACES[0]
+    counts = []
+    for text in (predecessor, successor):
+        members = [len(block["scenarios"]) for block in _polaris_blocks_manual(text)
+                   if block["section"] == "MODIFIED" and tuple(block["ids"]) == (ident,)]
+        if len(members) != 1:
+            return None
+        counts.append(members[0])
+    return counts[1] - counts[0]
+
+
+def p5_advice_inverse_verified(root, git_root, source, identity, protected_rows, added):
+    withdrawal = [row for row in protected_rows if row.split("|")[1].strip() == identity]
+    if len(withdrawal) != 1:
+        return False
+    commit = withdrawal[0].split("|")[3].strip().strip("`")
+    protected = "refs/remotes/origin/main"
+    parents = local_git(git_root, "rev-list", "--parents", "-n1", commit)
+    if (parents is None or len(parents.split()) != 2
+            or local_git(git_root, "merge-base", "--is-ancestor", source, commit) is None
+            or local_git(git_root, "merge-base", "--is-ancestor", commit, protected) is None
+            or local_git(git_root, "merge-base", "--is-ancestor", commit, "HEAD") is None
+            or not p5_advice_authority(root, None, candidate_only=True)
+            or scoped_route_lines(read_text(root, STATUS) or "", (P5_ADVICE_COUNT_SCOPE,))):
+        return False
+
+    def changed_lines(before, after):
+        diff = local_git(git_root, "diff", "--binary", "--no-color", "--no-ext-diff", "--no-textconv",
+                         "--no-renames", "--no-indent-heuristic", "--diff-algorithm=myers",
+                         "--src-prefix=a/", "--dst-prefix=b/", "--unified=0", before, after, "--")
+        if not diff:
+            return None
+        # Later changes can shift hunks and blob identities. Compare the paths,
+        # modes, hunk boundaries and exact added or removed bytes.
+        return [b"@@" if line.startswith(b"@@ ") else line
+                for line in diff.split(b"\n") if not line.startswith(b"index ")]
+
+    def count_deletion(revision):
+        raw = local_git(git_root, "show", f"{revision}:{STATUS}")
+        if raw is None:
+            return None
+        try:
+            body = raw.decode("utf-8")
+        except UnicodeDecodeError:
+            return None
+        counts = scoped_route_lines(body, (P5_ADVICE_COUNT_SCOPE,))
+        screening = scoped_route_lines(body, (VBASE_PHASE_PREFIXES[1],))
+        advice = P5_ADVICE_COUNT.fullmatch(counts[0]) if len(counts) == 1 else None
+        base = VBASE_STATUS_ACTIVE.fullmatch(screening[0]) if len(screening) == 1 else None
+        if not advice or not base or (int(advice[1]), int(advice[2])) != (int(base[1]), int(base[2]) + added):
+            return None
+        return b"-" + counts[0].encode("utf-8")
+
+    reverse = changed_lines(source, f"{source}^")
+    source_count = count_deletion(source)
+    current_count = count_deletion(f"{commit}^")
+    if reverse is None or source_count is None or current_count is None or reverse.count(source_count) != 1:
+        return False
+    # An authorized later addition can update the derived count before this
+    # inverse. It is the only substituted line in the exact reverse patch.
+    expected = [current_count if line == source_count else line for line in reverse]
+    if changed_lines(f"{commit}^", commit) != expected:
+        return False
+    for path in P5_ADVICE_SUBJECTS:
+        if read_bytes(root, path) is not None or any(
+                local_git(git_root, "ls-tree", "-z", ref, "--", path) != b""
+                for ref in (f"{source}^", commit, "HEAD", protected)):
+            return False
+    for path, prefixes in (
+        (STATUS, (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_SCOPE)),
+        (OPENSPEC_README, (P5_ADVICE_INDEX_PREFIX,)),
+    ):
+        bodies = [local_git(git_root, "show", f"{ref}:{path}")
+                  for ref in (f"{source}^", commit, "HEAD", protected)]
+        try:
+            scopes = [scoped_route_lines(body.decode("utf-8"), prefixes) if body is not None else None
+                      for body in bodies]
+        except UnicodeDecodeError:
+            return False
+        expected = [] if path == STATUS else [P5_ADVICE_CANDIDATE_INDEX]
+        if any(scope != expected for scope in scopes):
+            return False
+    return True
 
 
 def vbase_screening_git_matches(root, git_root, claims, historical, retirement, source, commit):
@@ -5925,6 +6182,13 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, vbase_amendment, VBASE_SCREENING_REPLACES)
                 pa += extra_a
                 pb += extra_b
+        _advice_state, advice, advice_records, advice_subjects = p5_advice_binding(root)
+        findings += advice_records + advice_subjects
+        if advice is not None:
+            a, extra_a = compose_figure_by_id(a, advice, VBASE_SCREENING_REPLACES)
+            b, extra_b = compose_figure_by_name(b, advice, VBASE_SCREENING_REPLACES)
+            pa += extra_a
+            pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
         findings += [f"POLARIS method B: {p}" for p in pb]
         if a != b:
@@ -5967,8 +6231,16 @@ def vbase_screening_projects(root, pop, findings):
             return pop, None
         projections[label] = by_id
     selected = "active" if state == "effective" else "pretag"
-    if projections[selected] != current:
-        findings.append("POLARIS derived-base screening: selected census differs from its projection")
+    selected_population = projections[selected]
+    _advice_state, advice, _records, _subjects = p5_advice_binding(root)
+    if advice is not None:
+        by_id, errors_a = compose_figure_by_id(selected_population, advice, VBASE_SCREENING_REPLACES)
+        by_name, errors_b = compose_figure_by_name(selected_population, advice, VBASE_SCREENING_REPLACES)
+        if errors_a or errors_b or by_id != by_name:
+            findings.append("POLARIS source-example advice: selected census projections disagree")
+        selected_population = by_id
+    if selected_population != current:
+        findings.append("POLARIS: selected census differs from the separately verified screening transition")
     ident = VBASE_SCREENING_REPLACES[0]
     ledger = {"requirement": ident, "tag": VBASE_SCREENING_TAG, "populations": {}}
     for label, requirements in projections.items():
@@ -6354,6 +6626,8 @@ def polaris_expected(root, findings):
             findings.append("POLARIS derived base: cannot count predecessor and successor for 034")
         else:
             n_scen += replacement[0] - previous[0]
+    if p5_advice_binding(root)[0] == "effective":
+        n_scen += p5_advice_delta(root, findings)
     return n_req, n_scen, ids
 
 
@@ -7465,9 +7739,19 @@ def check_routes(root, pop, report):
             match = pattern.fullmatch(candidates[0]) if len(candidates) == 1 else None
             declarations.append(match.groups() if match else None)
         selected = 1 if screening_state == "effective" else 0
+        advice_state, _advice, _records, _subjects = p5_advice_binding(root)
+        screening_want = want
+        if advice_state in {"staged", "effective"}:
+            added = p5_advice_delta(root, findings)
+            current_scenarios = int(want[1])
+            screening_scenarios = current_scenarios - added if advice_state == "effective" else current_scenarios
+            screening_want = (want[0], str(screening_scenarios))
+            prospective = f"{P5_ADVICE_COUNT_PREFIX}{want[0]} requirements and {screening_scenarios + added} scenarios."
+            if scoped_route_lines(status, (P5_ADVICE_COUNT_SCOPE,)) != [prospective]:
+                findings.append(f"`{STATUS}` does not declare the exact source-example advice census")
         if (figures or len(expected_figures) != 2
                 or declarations != expected_figures
-                or expected_figures[selected] != want):
+                or expected_figures[selected] != screening_want):
             findings.append(f"`{STATUS}` does not declare both exact Polaris census states")
     elif figures != [want]:
         findings.append(f"`{STATUS}`: Polaris composition figure {figures} "
@@ -7756,7 +8040,7 @@ def inputs(root):
     paths |= {QKIND_UNION, *QKIND_SUBJECTS}
     paths |= {FIGPLAN_UNION, *FIGPLAN_SUBJECTS}
     paths |= {VBASE_UNION, *VBASE_SUBJECTS}
-    paths |= {VBASE_SCREENING_PROJECTION, *VBASE_SCREENING_SUBJECTS}
+    paths |= {VBASE_SCREENING_PROJECTION, *VBASE_SCREENING_SUBJECTS, *P5_ADVICE_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -13297,6 +13581,26 @@ def adopted_mutants():
     )
 
 
+def project_source_example_history(root):
+    """Keep the established screening mutants on the earlier advisory-free history."""
+    ledger = root / AGENT_ADOPTIONS
+    body = ledger.read_text(encoding="utf-8")
+    ledger.write_text("".join(line for line in body.splitlines(keepends=True)
+                              if not is_source_example_row(line.rstrip("\n"))), encoding="utf-8")
+    for path in P5_ADVICE_SUBJECTS:
+        (root / path).unlink(missing_ok=True)
+    status = root / STATUS
+    prefixes = (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_SCOPE)
+    status.write_text("".join(line for line in status.read_text(encoding="utf-8").splitlines(keepends=True)
+                              if not line.strip().startswith(prefixes)), encoding="utf-8")
+    index = root / OPENSPEC_README
+    lines = index.read_text(encoding="utf-8").splitlines(keepends=True)
+    index.write_text("".join(
+        P5_ADVICE_CANDIDATE_INDEX + "\n" if line.strip().startswith(P5_ADVICE_INDEX_PREFIX) else line
+        for line in lines
+    ), encoding="utf-8")
+
+
 def project_vbase_screening_history(root):
     """Keep the older amendment fixtures on their own tagged history."""
     retirement = vbase_disposition(root, vbase_rows(root))
@@ -13423,6 +13727,13 @@ def vbase_screening_git_cases(tmp, witnesses, failures):
     head = local_git(ROOT, "rev-parse", "HEAD^{commit}")
     assert head is not None
     head = head.decode("ascii").strip()
+    advice = p5_advice_claims(adoption_table_rows(ROOT))
+    if advice:
+        line, = advice
+        source = line.split("|")[3].strip().strip("`")
+        head = git("rev-parse", f"{source}^")
+        if git("tag", "--list", SOURCE_EXAMPLE_TAG):
+            git("tag", "-d", SOURCE_EXAMPLE_TAG)
     git("checkout", "--quiet", "--detach", head)
     ledger = repo / AGENT_ADOPTIONS
     initial = ledger.read_text()
@@ -13527,6 +13838,205 @@ def vbase_screening_git_cases(tmp, witnesses, failures):
         _VBASE_SELFTEST_GIT_ROOT = saved
 
 
+def source_example_git_cases(tmp, witnesses, failures):
+    """Replay the source-example version against actual bound predecessor objects."""
+    import build_polaris_dossier_local_agent_mode as legacy_dossier
+
+    global _VBASE_SELFTEST_GIT_ROOT
+    repo = Path(tmp) / "source-example-git"
+    subprocess.run(["git", "clone", "--quiet", "--shared", "--no-checkout", str(ROOT), str(repo)],
+                   check=True, capture_output=True)
+
+    def git(*args):
+        result = subprocess.run(
+            ["git", "-c", "commit.gpgsign=false", "-c", "tag.gpgsign=false",
+             "-c", "user.name=Reconciliation selftest",
+             "-c", "user.email=reconciliation-selftest@example.invalid", *args],
+            cwd=repo, check=True, capture_output=True, text=True,
+        )
+        return result.stdout.strip()
+
+    def check(name, path, old, new, expected, figure=None, clue=None):
+        state, text, records, subjects = p5_advice_binding(repo)
+        report = run(repo)
+        counter = subprocess.run(
+            [sys.executable, "-B", "-c", (
+                "import sys\n"
+                "from pathlib import Path\n"
+                "sys.path.insert(0, sys.argv[1])\n"
+                "import count_polaris_effective_scenarios as counter\n"
+                "counter.ROOT = Path.cwd()\n"
+                "sys.argv = ['count_polaris_effective_scenarios.py', '--check']\n"
+                "raise SystemExit(counter.main())\n"
+            ), str(ROOT / "scripts")],
+            cwd=repo, capture_output=True, text=True,
+        )
+        found = [*records, *subjects, *(item for rows in report.findings.values() for item in rows)]
+        counter_output = counter.stdout + counter.stderr
+        held = state == expected and (text is not None) == (expected == "effective")
+        if clue:
+            held = held and any(clue.lower() in item.lower() for item in found) and counter.returncode != 0
+            held = held and clue.lower() in counter_output.lower()
+        else:
+            _, total = figure
+            held = held and not report.failed and counter.returncode == 0
+            held = held and f"CHECK PASS: recomputed total {total} matches expected {total}." in counter_output
+            held = held and legacy_dossier.status_figure(repo) == figure
+        mutant = "source-example-git-" + name
+        witnesses.append({"mutant": mutant, "path": path, "old": old, "new": new,
+                          "expected": clue or f"{expected} {figure}", "failed": found,
+                          "counterDiagnostic": counter.stderr.strip(),
+                          "outcome": ("killed" if clue else "held") if held else "SURVIVED"})
+        if not held:
+            failures.append(mutant)
+
+    def record_inverse(inverse):
+        row = (f"| A-99999 | 2026-11-27 | `{inverse}` | Reverted {line.split('|')[1].strip()} | "
+               f"Fixture withdrawal. | `git revert {inverse}` | — |")
+        content = ledger.read_text(encoding="utf-8")
+        assert content.count(line) == 1
+        ledger.write_text(content.replace(line, line + "\n" + row), encoding="utf-8")
+        git("add", AGENT_ADOPTIONS)
+        git("commit", "-m", "Record the synthetic protected withdrawal")
+        git("update-ref", protected, git("rev-parse", "HEAD"))
+        return row
+
+    def withdraw_refreshed_count():
+        current = status.read_text(encoding="utf-8")
+        authority, = scoped_route_lines(current, (P5_ADVICE_STATUS_PREFIX,))
+        phase, = scoped_route_lines(current, (P5_ADVICE_COUNT_SCOPE,))
+        original = f"\n{authority}\n\n{phase}\n"
+        assert current.count(original) == 1
+        without_advice = current.replace(original, "", 1)
+        try:
+            git("revert", "--no-commit", source)
+        except subprocess.CalledProcessError:
+            assert git("diff", "--name-only", "--diff-filter=U") == STATUS
+            status.write_text(without_advice, encoding="utf-8")
+            git("add", STATUS)
+        assert status.read_text(encoding="utf-8") == without_advice
+        git("commit", "-m", "Withdraw the advice and preserve the later census refresh")
+        return record_inverse(git("rev-parse", "HEAD"))
+
+    git("remote", "set-url", "origin", str(Path(tmp) / "no-source-example-remote"))
+    git("remote", "set-url", "--push", "origin", str(Path(tmp) / "no-source-example-push"))
+    line, = p5_advice_claims(adoption_table_rows(ROOT))
+    source = line.split("|")[3].strip().strip("`")
+    # Replay the first carrier so later adoptions and recorded withdrawals do not
+    # change the census of this historical fixture.
+    current = local_git(ROOT, "rev-parse", "HEAD").decode("ascii").strip()
+    authored = git("log", "--reverse", "--format=%H", "--ancestry-path", "-S", line,
+                   f"{source}..{current}", "--", AGENT_ADOPTIONS).splitlines()[0]
+    before_source = git("rev-parse", f"{source}^")
+    git("checkout", "--quiet", "--detach", authored)
+    ledger = repo / AGENT_ADOPTIONS
+    protected = "refs/remotes/origin/main"
+    tag = f"refs/tags/{SOURCE_EXAMPLE_TAG}"
+    if git("tag", "--list", SOURCE_EXAMPLE_TAG):
+        git("tag", "-d", SOURCE_EXAMPLE_TAG)
+    git("update-ref", protected, before_source)
+    saved = _VBASE_SELFTEST_GIT_ROOT
+    _VBASE_SELFTEST_GIT_ROOT = None
+    try:
+        check("staged", tag, "", "", "staged", (39, 603))
+        git("tag", "-a", SOURCE_EXAMPLE_TAG, source, "-m", "Synthetic exact annotation")
+        check("tag-before-protection", protected, authored, before_source, "invalid",
+              clue="outside protected main")
+        git("update-ref", protected, authored)
+        check("active", tag, "", source, "effective", (39, 610))
+
+        git("tag", "-d", SOURCE_EXAMPLE_TAG)
+        git("tag", SOURCE_EXAMPLE_TAG, source)
+        check("lightweight", tag, "annotated", "lightweight", "invalid", clue="not annotated directly")
+        git("tag", "-d", SOURCE_EXAMPLE_TAG)
+        git("tag", "-a", SOURCE_EXAMPLE_TAG, source, "-m", "Synthetic exact annotation")
+
+        status = repo / STATUS
+        before = status.read_text(encoding="utf-8")
+        count = next(row.strip() for row in visible_route_lines(before)
+                     if row.strip().startswith(P5_ADVICE_COUNT_PREFIX))
+        fault = count.replace("610 scenarios.", "611 scenarios.")
+        assert before.count(count) == 1 and fault != count
+        status.write_text(before.replace(count, fault), encoding="utf-8")
+        check("wrong-count", STATUS, count, fault, "effective", clue="source-example advice")
+        competing = "\nWith the source-example advice effective, Polaris has 39 requirements and 611 scenarios.\n"
+        status.write_text(before + competing, encoding="utf-8")
+        check("competing-count", STATUS, "", competing, "effective", clue="source-example advice")
+        git("add", STATUS)
+        git("commit", "-m", "Record a conflicting protected advice count")
+        git("update-ref", protected, git("rev-parse", "HEAD"))
+        check("authored-competing-count", STATUS, "", competing, "effective", clue="source-example advice")
+        git("checkout", "--quiet", "--detach", authored)
+        check("stale-count", STATUS, "", competing, "invalid", clue="authority routes disagree")
+        git("update-ref", protected, authored)
+        status.write_text(before, encoding="utf-8")
+
+        spec = repo / P5_ADVICE_SPEC
+        prior = spec.read_text(encoding="utf-8")
+        addition = "\nSynthetic unexpected body.\n"
+        spec.write_text(prior + addition, encoding="utf-8")
+        check("dirty-source", P5_ADVICE_SPEC, "", addition, "invalid",
+              clue="worktree and exact Git subjects disagree")
+        spec.write_text(prior, encoding="utf-8")
+
+        _propose_candidate(repo)
+        _install_addition(repo)
+        expanded = count.replace("39 requirements and 610 scenarios.", "40 requirements and 612 scenarios.")
+        assert expanded != count
+        status.write_text(status.read_text(encoding="utf-8").replace(count, expanded), encoding="utf-8")
+        assert not regenerate(repo)
+        git("add", "-A")
+        git("commit", "-m", "Install a later signed addition with refreshed advice counts")
+        check("later-addition", STATUS, count, expanded, "effective", (40, 612))
+        expanded_head = git("rev-parse", "HEAD")
+        git("update-ref", protected, expanded_head)
+        check("protected-later-addition", STATUS, count, expanded, "effective", (40, 612))
+        row = withdraw_refreshed_count()
+        check("refreshed-inverse", AGENT_ADOPTIONS, "", row, "reverted", (40, 605))
+
+        git("checkout", "--quiet", "--detach", expanded_head)
+        incorrect = expanded.replace("612 scenarios.", "613 scenarios.")
+        assert expanded != incorrect
+        status.write_text(status.read_text(encoding="utf-8").replace(expanded, incorrect), encoding="utf-8")
+        git("add", STATUS)
+        git("commit", "-m", "Record the wrong refreshed advice count")
+        withdraw_refreshed_count()
+        check("incorrect-refreshed-inverse", STATUS, expanded, incorrect, "invalid",
+              clue="protected source-only inverse")
+
+        git("checkout", "--quiet", "--detach", authored)
+        git("update-ref", protected, authored)
+
+        later = "\nUnrelated fixture note after source-example adoption.\n"
+        status.write_text(before + later, encoding="utf-8")
+        git("add", STATUS)
+        git("commit", "-m", "Retain unrelated later status text")
+        prior_inverse = git("rev-parse", "HEAD")
+        git("revert", "--no-edit", source)
+        inverse = git("rev-parse", "HEAD")
+        check("unrecorded-inverse", P5_ADVICE_SPEC, source, inverse, "invalid",
+              clue="worktree and exact Git subjects disagree")
+        row = record_inverse(inverse)
+        withdrawn = git("rev-parse", "HEAD")
+        assert later in status.read_text(encoding="utf-8")
+        check("recorded-inverse", AGENT_ADOPTIONS, "", row, "reverted", (39, 603))
+
+        git("checkout", "--quiet", "--detach", prior_inverse)
+        git("revert", "--no-commit", source)
+        side_effect = "\nUnrelated edit in the same inverse commit.\n"
+        status.write_text(status.read_text(encoding="utf-8") + side_effect, encoding="utf-8")
+        git("add", STATUS)
+        git("commit", "-m", "Withdraw the source and add an unrelated line")
+        record_inverse(git("rev-parse", "HEAD"))
+        check("inverse-side-effect", STATUS, "", side_effect, "invalid", clue="protected source-only inverse")
+
+        git("update-ref", protected, withdrawn)
+        git("checkout", "--quiet", "--detach", authored)
+        check("stale-inverse", protected, authored, inverse, "invalid", clue="dispositions disagree")
+    finally:
+        _VBASE_SELFTEST_GIT_ROOT = saved
+
+
 # The case workers fork after the parent warms this invocation's cache.
 @_reverse_cache_scope()
 def selftest(witness_path=None):
@@ -13536,6 +14046,9 @@ def selftest(witness_path=None):
     with tempfile.TemporaryDirectory() as tmp:
         base = Path(tmp) / "base"
         scratch(ROOT, base)
+        if p5_advice_claims(adoption_table_rows(base)):
+            source_example_git_cases(tmp, witnesses, failures)
+            project_source_example_history(base)
         _propose_candidate(base)
         clean = run(base)
         if clean.failed:

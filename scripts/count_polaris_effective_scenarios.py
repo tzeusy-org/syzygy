@@ -473,6 +473,7 @@ class CompositionResult:
     per_requirement: dict[str, tuple[str, int]]
     total: int
     screening_state: str
+    source_example_state: str
 
 
 def declared_source_amendment(root: Path) -> str | None:
@@ -783,13 +784,22 @@ def screening_amendment(root: Path) -> tuple[str, str | None]:
     raise ScenarioCountError(f"derived-base screening returned an invalid binding result ({state})")
 
 
+def source_example_amendment(root: Path) -> tuple[str, str | None]:
+    import check_spec_reconciliation as adoption
+
+    state, text, records, subjects = adoption.p5_advice_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("source-example advice adoption findings:\n" + "\n".join(records + subjects))
+    return state, text
+
+
 def screening_inputs() -> tuple[str, ...]:
     """Inputs a hypothetical source patch may not change while reusing Git proof."""
     import check_spec_reconciliation as adoption
 
     union = Path(adoption.VBASE_SCREENING_SPEC).parents[2] / "GOVERNING-DEPENDENCIES.json"
     return (adoption.AGENT_ADOPTIONS, adoption.FIGPLAN_SPEC, adoption.VBASE_SPEC,
-            adoption.VBASE_SCREENING_SPEC, union.as_posix())
+            adoption.VBASE_SCREENING_SPEC, union.as_posix(), *adoption.P5_ADVICE_SUBJECTS)
 
 
 def covhold_amendment(root: Path) -> str | None:
@@ -820,8 +830,9 @@ def build_composition(root: Path, *, screening_authority: Path | None = None) ->
             if (copied.is_file() != authority.is_file()
                     or (copied.is_file() and copied.read_bytes() != authority.read_bytes())):
                 raise ScenarioCountError(f"proposed patch changes derived-base screening binding input {rel}")
-    screening_state, screening = screening_amendment(
-        screening_authority if screening_authority is not None else root)
+    authority = screening_authority if screening_authority is not None else root
+    screening_state, screening = screening_amendment(authority)
+    source_example_state, source_example = source_example_amendment(authority)
     sources = [(path.relative_to(root).as_posix(), path.read_text(encoding="utf-8"))
                for path in discover_composition_files(root)]
     for label, text in ((adoption.DECLARED_SOURCE_SPEC, declared_source_amendment(root)),
@@ -858,7 +869,8 @@ def build_composition(root: Path, *, screening_authority: Path | None = None) ->
                         (adoption.TERM_BRIEF_SPEC, term_brief_amendment(root)),
                         (adoption.QKIND_SPEC, qkind_amendment(root)),
                         (adoption.FIGPLAN_SPEC, figplan_amendment(root)),
-                        (adoption.VBASE_SCREENING_SPEC, screening)):
+                        (adoption.VBASE_SCREENING_SPEC, screening),
+                        (adoption.P5_ADVICE_SPEC, source_example)):
         if text is not None:
             sources.append((label, text))
 
@@ -886,6 +898,7 @@ def build_composition(root: Path, *, screening_authority: Path | None = None) ->
         per_requirement=composed_1,
         total=total,
         screening_state=screening_state,
+        source_example_state=source_example_state,
     )
 
 
@@ -927,6 +940,7 @@ def composition_inputs(root: Path) -> list[Path]:
     qkind_amendment(root)
     figplan_amendment(root)
     screening_amendment(root)
+    source_example_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
         adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
         *adoption.URL_SOURCE_RFC_PATHS, *adoption.FIGURE_SUBJECTS, *adoption.DERIVED_SUBJECTS,
@@ -942,7 +956,8 @@ def composition_inputs(root: Path) -> list[Path]:
     return list(dict.fromkeys(files))
 
 
-def read_status_assertion(root: Path, *, screening_state: str) -> tuple[int, int]:
+def read_status_assertion(root: Path, *, screening_state: str,
+                          source_example_state: str) -> tuple[int, int]:
     import check_spec_reconciliation as adoption
 
     path = root / STATUS_PAGE_REL
@@ -963,11 +978,38 @@ def read_status_assertion(root: Path, *, screening_state: str) -> tuple[int, int
             figures.append((int(match[1]), int(match[2])))
         if legacy:
             raise ScenarioCountError(f"{path} has an unconditional composition count beside the screening counts")
-        return figures[screening_state == "effective"]
+        screening_figure = figures[screening_state == "effective"]
+        if source_example_state not in {"staged", "effective"}:
+            return screening_figure
+        if screening_state != "effective":
+            raise ScenarioCountError("source-example advice requires effective screening")
+        candidates = [line for line in lines if line.startswith(adoption.P5_ADVICE_COUNT_SCOPE)]
+        advisory = adoption.P5_ADVICE_COUNT.fullmatch(candidates[0]) if len(candidates) == 1 else None
+        if advisory is None:
+            raise ScenarioCountError(f"{path} needs one complete source-example advice count")
+        advisory_figure = int(advisory[1]), int(advisory[2])
+        old_count, new_count = source_example_member_counts(root)
+        if advisory_figure != (screening_figure[0], screening_figure[1] + new_count - old_count):
+            raise ScenarioCountError(f"{path} source-example advice count differs from its two source members")
+        return advisory_figure if source_example_state == "effective" else screening_figure
 
     if len(legacy) != 1:
         raise ScenarioCountError(f"{path} needs exactly one historical effective composition count")
     return int(legacy[0][0]), int(legacy[0][1])
+
+
+def source_example_member_counts(root: Path) -> tuple[int, int]:
+    import check_spec_reconciliation as adoption
+
+    counts = []
+    for rel in (adoption.VBASE_SCREENING_SPEC, adoption.P5_ADVICE_SPEC):
+        text = (root / rel).read_text(encoding="utf-8")
+        by_regex = parse_regex(text, rel).modified
+        by_lines = parse_manual(text, rel).modified
+        if len(by_regex) != 1 or by_regex != by_lines:
+            raise ScenarioCountError(f"{rel} source-example advice member counts disagree")
+        counts.append(by_regex[0].scenario_count)
+    return counts[0], counts[1]
 
 
 # --------------------------------------------------------------------------
@@ -1185,7 +1227,8 @@ def _check_totals(result: CompositionResult, status_reqs: int, status_scenarios:
 
 def _run_check(root: Path, *, expect: int | None = None) -> tuple[CompositionResult, int, int]:
     result = build_composition(root)
-    status_reqs, status_scenarios = read_status_assertion(root, screening_state=result.screening_state)
+    status_reqs, status_scenarios = read_status_assertion(
+        root, screening_state=result.screening_state, source_example_state=result.source_example_state)
     _check_totals(result, status_reqs, status_scenarios, expect=expect)
     return result, status_reqs, status_scenarios
 
@@ -1253,7 +1296,8 @@ def _project_ledger(ledger: Path, predicates: list[tuple[str, Callable[[str], bo
 def _write_historical_status(root: Path, requirements: int, scenarios: int) -> None:
     import check_spec_reconciliation as adoption
 
-    (root / adoption.VBASE_SCREENING_SPEC).unlink(missing_ok=True)
+    for path in (adoption.VBASE_SCREENING_SPEC, *adoption.P5_ADVICE_SUBJECTS):
+        (root / path).unlink(missing_ok=True)
     (root / STATUS_PAGE_REL).write_text(
         f"{requirements} requirements and {scenarios} scenarios in the effective composition.\n",
         encoding="utf-8",
@@ -1346,7 +1390,7 @@ def _screening_status_selftest(base: Path) -> None:
     status.write_text(f"```md\n{active}\n```\n<!-- {holding} -->\n{pair}", encoding="utf-8")
     for state, expected in (("candidate", (39, 579)), ("staged", (39, 579)),
                             ("reverted", (39, 579)), ("effective", (39, 603))):
-        if read_status_assertion(fixture, screening_state=state) != expected:
+        if read_status_assertion(fixture, screening_state=state, source_example_state="candidate") != expected:
             raise ScenarioCountError(f"screening status did not select the expected {state} total")
     print("  [ok] screening status: candidate, staged and reverted use 39/579 and effective uses 39/603")
     for label, text in (
@@ -1357,7 +1401,8 @@ def _screening_status_selftest(base: Path) -> None:
         ("unconditional legacy count beside phase counts", f"{pair}39 requirements and 597 scenarios in the effective composition.\n"),
     ):
         status.write_text(text, encoding="utf-8")
-        _expect_fail(label, lambda: read_status_assertion(fixture, screening_state="staged"))
+        _expect_fail(label, lambda: read_status_assertion(
+            fixture, screening_state="staged", source_example_state="candidate"))
 
     ledger = fixture / "projected-ledger.md"
     tag = adoption.VBASE_SCREENING_TAG
@@ -1543,14 +1588,15 @@ def main() -> int:
             with with_proposed_scratch(ROOT, package_dir) as scratch:
                 result = build_composition(scratch, screening_authority=ROOT)
                 status_reqs, status_scenarios = read_status_assertion(
-                    scratch, screening_state=result.screening_state)
+                    scratch, screening_state=result.screening_state, source_example_state=result.source_example_state)
                 label = f"scratch copy with {package_dir.relative_to(ROOT) if package_dir.is_relative_to(ROOT) else package_dir}'s proposed patches applied"
                 print(render_report(result, label))
                 print()
                 print(f"(scratch) PROJECT-STATUS.md asserts: {status_reqs} requirements, {status_scenarios} scenarios")
         else:
             result = build_composition(ROOT)
-            status_reqs, status_scenarios = read_status_assertion(ROOT, screening_state=result.screening_state)
+            status_reqs, status_scenarios = read_status_assertion(
+                ROOT, screening_state=result.screening_state, source_example_state=result.source_example_state)
             print(render_report(result, "tracked tree (HEAD)"))
             print()
             print(f"PROJECT-STATUS.md asserts: {status_reqs} requirements, {status_scenarios} scenarios")

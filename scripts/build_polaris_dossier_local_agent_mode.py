@@ -190,8 +190,9 @@ def refigure(root: pathlib.Path, text: str) -> str:
 
 
 def status_figure(root: pathlib.Path) -> tuple[int, int]:
-    state, _ = counter.screening_amendment(root)
-    return counter.read_status_assertion(root, screening_state=state)
+    screening, _ = counter.screening_amendment(root)
+    advice, _ = counter.source_example_amendment(root)
+    return counter.read_status_assertion(root, screening_state=screening, source_example_state=advice)
 
 
 def figure_paragraph(text: str) -> str:
