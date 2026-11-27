@@ -3539,6 +3539,22 @@ def vbase_binding(root):
     )
 
 
+P5_ADVICE_CHANGE = "polaris-source-example-advice"
+P5_ADVICE_HOME = f"{CHANGES}/{P5_ADVICE_CHANGE}"
+P5_ADVICE_SPEC = f"{P5_ADVICE_HOME}/proposed/polaris-generation/spec.md"
+SOURCE_EXAMPLE_TAG = "polaris-dossier-source-example-advice-v2.36"
+P5_ADVICE_PREDECESSOR = "b7d3324969101e742b2592869d8761f680fe8615"
+P5_ADVICE_STATUS_PREFIX = "[Source-example advice]("
+P5_ADVICE_INDEX_PREFIX = f"| [`{P5_ADVICE_CHANGE}`]("
+P5_ADVICE_COUNT_PREFIX = "With the source-example advice version effective, Polaris has "
+P5_ADVICE_CANDIDATE_INDEX = '| [`polaris-source-example-advice`](changes/polaris-source-example-advice) | One immediate advisory for a known absent code selection in a supported operator-agent draft. | **Candidate.** Adoption and implementation pending | [Draft semantic delta](changes/polaris-source-example-advice/SEMANTIC-DELTA.md) |'
+P5_ADVICE_SUBJECTS = {
+    "openspec/changes/polaris-source-example-advice/proposed/polaris-generation/spec.md": "e2688ca4162bd10065fbd87dcf6134ab8263a8039dbd3de62b4eb2de85771177",
+    "openspec/changes/polaris-source-example-advice/GOVERNING-DEPENDENCIES.json": "3f6c2b317bf01c0d940f7ee7b41ce73ddb2b0cfd5aa4efe2afbfb26c4ae3efef",
+    "openspec/changes/polaris-source-example-advice/SCREENING-SUCCESSOR-DELTA.md": "77fe62bf7a02a5f91dcf32fb036b59eeb1a0621c1934bf6a091394728afa9890",
+}
+
+
 def is_vbase_screening_row(row):
     return _is_reviewed_version_row(row, VBASE_SCREENING_TAG, VBASE_SCREENING_SUBJECTS)
 
@@ -3669,6 +3685,174 @@ def vbase_screening_binding(root):
     if protected_disposition:
         return "reverted", None, [], []
     return "effective", text, [], []
+
+
+def is_source_example_row(row):
+    return _is_reviewed_version_row(row, SOURCE_EXAMPLE_TAG, P5_ADVICE_SUBJECTS)
+
+
+def p5_advice_claims(rows):
+    return [row for row in rows if is_source_example_row(row)]
+
+
+def p5_advice_authority(root, identity, candidate_only=False):
+    status = read_text(root, STATUS) or ""
+    index = read_text(root, OPENSPEC_README) or ""
+    expected_status = (
+        f"{P5_ADVICE_STATUS_PREFIX}{P5_ADVICE_HOME}) records {identity}. "
+        "The advisory applies when its protected adoption and exact version tag are verified."
+    )
+    index_home = f"changes/{P5_ADVICE_CHANGE}"
+    expected_index = (
+        f"{P5_ADVICE_INDEX_PREFIX}{index_home}) | One immediate advisory for a known absent code "
+        f"selection in a supported operator-agent draft. | `{identity}` in "
+        f"[AGENT-ADOPTIONS.md](../{AGENT_ADOPTIONS}) applies when the exact version tag is verified, "
+        f"`{SOURCE_EXAMPLE_TAG}` | [Semantic delta]({index_home}/SCREENING-SUCCESSOR-DELTA.md) |"
+    )
+    status_rows = scoped_route_lines(status, (P5_ADVICE_STATUS_PREFIX,))
+    index_rows = scoped_route_lines(index, (P5_ADVICE_INDEX_PREFIX,))
+    if candidate_only:
+        return not status_rows and len(index_rows) == 1 and index_rows[0] == P5_ADVICE_CANDIDATE_INDEX
+    return status_rows == [expected_status] and index_rows == [expected_index]
+
+
+def p5_advice_binding(root):
+    """Select the source-example advisory only after its exact protected version binds."""
+    ledger = adoption_table_rows(root)
+    claims = p5_advice_claims(ledger)
+    ref = f"refs/tags/{SOURCE_EXAMPLE_TAG}"
+    git_root = _VBASE_SELFTEST_GIT_ROOT or root
+
+    def invalid(reason):
+        return "invalid", None, [f"Source-example advice: {reason}"], []
+
+    tag = local_git(git_root, "for-each-ref",
+                    "--format=%(refname) %(objecttype) %(tag) %(*objecttype) %(*objectname)", ref)
+    if not claims:
+        if tag:
+            return invalid("a version tag has no canonical adoption")
+        status = read_text(root, STATUS) or ""
+        index = read_text(root, OPENSPEC_README) or ""
+        routes = scoped_route_lines(index, (P5_ADVICE_INDEX_PREFIX,))
+        if (any(route != P5_ADVICE_CANDIDATE_INDEX for route in routes)
+                or len(routes) > 1
+                or scoped_route_lines(status, (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_PREFIX))):
+            return invalid("a candidate displays an active or conflicting authority route")
+        return "candidate", None, [], []
+
+    if len(claims) != 1:
+        return invalid("expected exactly one adoption")
+    row = [cell.strip() for cell in claims[0].split("|")[1:-1]]
+    if len(row) != 7:
+        return invalid("expected a seven-column adoption row")
+    identity, date, commit, subject_links, why, inverse, version = row
+    match = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+    if (not re.fullmatch(r"A-[1-9][0-9]*", identity) or not valid_adoption_date(date)
+            or match is None or not why or version != f"`{SOURCE_EXAMPLE_TAG}`"):
+        return invalid("malformed adoption identity, date, commit, reason or tag")
+    source = match[1]
+    if (inverse != f"`git revert {source}`" or any(
+            f"](https://github.com/tzeusy-org/syzygy/blob/{source}/{path})" not in subject_links
+            for path in P5_ADVICE_SUBJECTS)):
+        return invalid("the row does not name the exact reviewed source and inverse")
+
+    if vbase_screening_binding(root)[0] != "effective":
+        return invalid("the effective v2.35 screening predecessor is unavailable")
+    parent = local_git(git_root, "rev-list", "--parents", "-n1", source)
+    if (parent is None or len(parent.split()) != 2
+            or local_git(git_root, "merge-base", "--is-ancestor", P5_ADVICE_PREDECESSOR, f"{source}^") is None):
+        return invalid("the source has no single parent with the screened predecessor")
+    paths = local_git(git_root, "diff-tree", "--no-commit-id", "-r", "--name-only", "-z", source)
+    if paths is None or set(paths.rstrip(b"\0").split(b"\0")) != {
+            path.encode("ascii") for path in (*P5_ADVICE_SUBJECTS, STATUS, OPENSPEC_README)}:
+        return invalid("the source commit changes paths outside the reviewed source and its routes")
+
+    def evidence(commit_oid):
+        rows = git_adoption_rows(git_root, commit_oid)
+        if ([line for line in rows if line.split("|")[1].strip() == identity] != claims
+                or p5_advice_claims(rows) != claims
+                or local_git(git_root, "merge-base", "--is-ancestor", source, commit_oid) is None):
+            return None
+        return rows
+
+    head = "HEAD"
+    authored = evidence(head)
+    if (authored is None
+            or [line for line in ledger if line.split("|")[1].strip() == identity] != claims):
+        return invalid("the unique adoption and source are outside authored Git")
+    protected = "refs/remotes/origin/main"
+    protected_rows = evidence(protected) if tag else None
+    if tag is None:
+        return invalid("the local version ref inventory is unavailable")
+    if tag and tag.split() != [ref.encode("ascii"), b"tag", SOURCE_EXAMPLE_TAG.encode("ascii"),
+                              b"commit", source.encode("ascii")]:
+        return invalid("the version is not annotated directly on its exact source")
+    if tag and protected_rows is None:
+        return invalid("the exact adopted source is outside protected main")
+
+    def disposition(rows):
+        return recorded_disposition(root, identity, source, SOURCE_EXAMPLE_TAG, P5_ADVICE_SUBJECTS,
+                                    plain_revert=True, ledger_rows=rows)
+
+    revoked = disposition(ledger)
+    if revoked != disposition(authored) or (tag and revoked != disposition(protected_rows)):
+        return invalid("worktree, authored and protected dispositions disagree")
+    if revoked:
+        if not tag or not p5_advice_inverse_verified(root, git_root, source, revoked, protected_rows):
+            return invalid("the recorded withdrawal lacks its protected source-only inverse")
+        return "reverted", None, [], []
+
+    for path, digest in P5_ADVICE_SUBJECTS.items():
+        entry = local_git(git_root, "ls-tree", "-z", source, "--", path)
+        body = local_git(git_root, "show", f"{source}:{path}")
+        if (not entry or not entry.startswith(b"100644 blob ") or body is None or sha(body) != digest
+                or body != read_bytes(root, path) or entry != local_git(git_root, "ls-tree", "-z", head, "--", path)
+                or (tag and entry != local_git(git_root, "ls-tree", "-z", protected, "--", path))):
+            return invalid(f"the worktree and exact Git subjects disagree at {path}")
+    scopes = {STATUS: (P5_ADVICE_STATUS_PREFIX,), OPENSPEC_README: (P5_ADVICE_INDEX_PREFIX,)}
+    if (not p5_advice_authority(root, identity) or not git_routes_match(root, git_root, source, scopes)
+            or not git_routes_match(root, git_root, head, scopes)
+            or (tag and not git_routes_match(root, git_root, protected, scopes))):
+        return invalid("the exact adoption authority routes disagree")
+    return ("effective", read_text(root, P5_ADVICE_SPEC), [], []) if tag else ("staged", None, [], [])
+
+
+def p5_advice_delta(root, findings):
+    predecessor = read_text(root, VBASE_SCREENING_SPEC) or ""
+    successor = read_text(root, P5_ADVICE_SPEC) or ""
+    ident = VBASE_SCREENING_REPLACES[0]
+    counts = []
+    for text in (predecessor, successor):
+        members = [len(block["scenarios"]) for block in _polaris_blocks_manual(text)
+                   if block["section"] == "MODIFIED" and tuple(block["ids"]) == (ident,)]
+        if len(members) != 1:
+            findings.append("POLARIS source-example advice: cannot count the screened and advisory members")
+            return 0
+        counts.append(members[0])
+    return counts[1] - counts[0]
+
+
+def p5_advice_inverse_verified(root, git_root, source, identity, protected_rows):
+    withdrawal = [row for row in protected_rows if row.split("|")[1].strip() == identity]
+    if len(withdrawal) != 1:
+        return False
+    commit = withdrawal[0].split("|")[3].strip().strip("`")
+    protected = "refs/remotes/origin/main"
+    if (local_git(git_root, "merge-base", "--is-ancestor", source, commit) is None
+            or local_git(git_root, "merge-base", "--is-ancestor", commit, protected) is None
+            or local_git(git_root, "merge-base", "--is-ancestor", commit, "HEAD") is None
+            or not p5_advice_authority(root, None, candidate_only=True)
+            or scoped_route_lines(read_text(root, STATUS) or "", (P5_ADVICE_COUNT_PREFIX,))):
+        return False
+    for path in (*P5_ADVICE_SUBJECTS, STATUS, OPENSPEC_README):
+        if local_git(git_root, "ls-tree", "-z", f"{source}^", "--", path) != local_git(
+                git_root, "ls-tree", "-z", commit, "--", path):
+            return False
+    for path in P5_ADVICE_SUBJECTS:
+        if read_bytes(root, path) is not None or any(
+                local_git(git_root, "ls-tree", "-z", ref, "--", path) != b"" for ref in ("HEAD", protected)):
+            return False
+    return True
 
 
 def vbase_screening_git_matches(root, git_root, claims, historical, retirement, source, commit):
@@ -5925,6 +6109,13 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, vbase_amendment, VBASE_SCREENING_REPLACES)
                 pa += extra_a
                 pb += extra_b
+        _advice_state, advice, advice_records, advice_subjects = p5_advice_binding(root)
+        findings += advice_records + advice_subjects
+        if advice is not None:
+            a, extra_a = compose_figure_by_id(a, advice, VBASE_SCREENING_REPLACES)
+            b, extra_b = compose_figure_by_name(b, advice, VBASE_SCREENING_REPLACES)
+            pa += extra_a
+            pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
         findings += [f"POLARIS method B: {p}" for p in pb]
         if a != b:
@@ -5967,8 +6158,16 @@ def vbase_screening_projects(root, pop, findings):
             return pop, None
         projections[label] = by_id
     selected = "active" if state == "effective" else "pretag"
-    if projections[selected] != current:
-        findings.append("POLARIS derived-base screening: selected census differs from its projection")
+    selected_population = projections[selected]
+    _advice_state, advice, _records, _subjects = p5_advice_binding(root)
+    if advice is not None:
+        by_id, errors_a = compose_figure_by_id(selected_population, advice, VBASE_SCREENING_REPLACES)
+        by_name, errors_b = compose_figure_by_name(selected_population, advice, VBASE_SCREENING_REPLACES)
+        if errors_a or errors_b or by_id != by_name:
+            findings.append("POLARIS source-example advice: selected census projections disagree")
+        selected_population = by_id
+    if selected_population != current:
+        findings.append("POLARIS: selected census differs from the separately verified screening transition")
     ident = VBASE_SCREENING_REPLACES[0]
     ledger = {"requirement": ident, "tag": VBASE_SCREENING_TAG, "populations": {}}
     for label, requirements in projections.items():
@@ -6354,6 +6553,8 @@ def polaris_expected(root, findings):
             findings.append("POLARIS derived base: cannot count predecessor and successor for 034")
         else:
             n_scen += replacement[0] - previous[0]
+    if p5_advice_binding(root)[0] == "effective":
+        n_scen += p5_advice_delta(root, findings)
     return n_req, n_scen, ids
 
 
@@ -7465,9 +7666,19 @@ def check_routes(root, pop, report):
             match = pattern.fullmatch(candidates[0]) if len(candidates) == 1 else None
             declarations.append(match.groups() if match else None)
         selected = 1 if screening_state == "effective" else 0
+        advice_state, _advice, _records, _subjects = p5_advice_binding(root)
+        screening_want = want
+        if advice_state in {"staged", "effective"}:
+            added = p5_advice_delta(root, findings)
+            current_scenarios = int(want[1])
+            screening_scenarios = current_scenarios - added if advice_state == "effective" else current_scenarios
+            screening_want = (want[0], str(screening_scenarios))
+            prospective = f"{P5_ADVICE_COUNT_PREFIX}{want[0]} requirements and {screening_scenarios + added} scenarios."
+            if scoped_route_lines(status, (P5_ADVICE_COUNT_PREFIX,)) != [prospective]:
+                findings.append(f"`{STATUS}` does not declare the exact source-example advice census")
         if (figures or len(expected_figures) != 2
                 or declarations != expected_figures
-                or expected_figures[selected] != want):
+                or expected_figures[selected] != screening_want):
             findings.append(f"`{STATUS}` does not declare both exact Polaris census states")
     elif figures != [want]:
         findings.append(f"`{STATUS}`: Polaris composition figure {figures} "
@@ -7756,7 +7967,7 @@ def inputs(root):
     paths |= {QKIND_UNION, *QKIND_SUBJECTS}
     paths |= {FIGPLAN_UNION, *FIGPLAN_SUBJECTS}
     paths |= {VBASE_UNION, *VBASE_SUBJECTS}
-    paths |= {VBASE_SCREENING_PROJECTION, *VBASE_SCREENING_SUBJECTS}
+    paths |= {VBASE_SCREENING_PROJECTION, *VBASE_SCREENING_SUBJECTS, *P5_ADVICE_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
