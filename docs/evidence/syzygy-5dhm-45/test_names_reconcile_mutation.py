@@ -22,9 +22,9 @@ CHECK_RUN = ['python3', CHECK, '--check']
 COUNT_RUN = ['python3', COUNT]
 
 MUTANTS = [
-    ('status-count-off', STATUS, 'Polaris has 39 requirements and 619 scenarios.', 'Polaris has 39 requirements and 618 scenarios.',
+    ('status-count-off', STATUS, 'Polaris has 39 requirements and 631 scenarios.', 'Polaris has 39 requirements and 630 scenarios.',
      CHECK_RUN, 'does not declare the exact test-name recognizers census'),
-    ('status-count-off-counter', STATUS, 'Polaris has 39 requirements and 619 scenarios.', 'Polaris has 39 requirements and 618 scenarios.',
+    ('status-count-off-counter', STATUS, 'Polaris has 39 requirements and 631 scenarios.', 'Polaris has 39 requirements and 630 scenarios.',
      COUNT_RUN, 'test-name recognizers count differs'),
     ('status-route-old-id', STATUS, 'is agent-adopted in A-337.', 'is agent-adopted in A-336.',
      CHECK_RUN, 'does not route test-name recognizers v2.40'),
@@ -40,9 +40,9 @@ MUTANTS = [
      '                b, extra_b = compose_figure_by_name(b, tnames_amendment, TNAMES_REPLACES)\n',
      '                extra_a = extra_b = []\n', CHECK_RUN, 'FAIL  R3'),
     ('expected-skips-tnames', CHECK, '        n_scen += tnames_delta(root, findings)\n', '        pass\n', CHECK_RUN, 'FAIL  R3'),
-    ('projection-skips-tnames', CHECK, '                    findings.append("POLARIS test-name recognizers: selected census projections disagree")\n'
-     '                selected_population = by_id\n',
-     '                    findings.append("POLARIS test-name recognizers: selected census projections disagree")\n',
+    ('projection-skips-tnames', CHECK, '                            findings.append("POLARIS test-name recognizers: selected census projections disagree")\n'
+     '                        selected_population = by_id\n',
+     '                            findings.append("POLARIS test-name recognizers: selected census projections disagree")\n',
      CHECK_RUN, 'selected census differs'),
     ('status-want-unadjusted', CHECK, "            want = (want[0], str(int(want[1]) - tnames_delta(root, findings)))\n", '',
      CHECK_RUN, 'FAIL  R5'),
