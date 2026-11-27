@@ -55,6 +55,10 @@ STATUS_ROUTE = f"{STATUS_PREFIX}{SPEC}) follows its exact protected adoption, ve
 INDEX_ROUTE = (f"{INDEX_PREFIX}changes/polaris-dossier-p111-supervisor-composition) | REQ-048 supervisor"
                " composition | State is selected from its protected binding | "
                "[Semantic delta](changes/polaris-dossier-p111-supervisor-composition/SEMANTIC-DELTA.md) |")
+STATUS_COUNT_PREFIX = "With the P111 supervisor version effective, Polaris has "
+STATUS_COUNT_SCOPE = "With the P111 supervisor version"
+STATUS_COUNT = re.compile(re.escape(STATUS_COUNT_PREFIX) + r"(\d+) requirements and (\d+) scenarios\.")
+HTML_COMMENT = re.compile(r"<!--.*?(?:-->|\Z)", re.S)
 
 
 class Refusal(RuntimeError):
@@ -110,21 +114,35 @@ def claims(rows):
 
 
 def route_lines(data, prefix):
-    return [line for line in recon.visible_route_lines(data.decode()) if line.startswith(prefix)]
+    # Preserve placement. Removing a raw HTML comment can create an
+    # apparent top-level route that GitHub cannot render as Markdown.
+    text = HTML_COMMENT.sub(lambda match: re.sub(r"[^\r\n]", " ", match[0]), data.decode())
+    return [line for line in recon.visible_route_lines(text) if line.startswith(prefix)]
 
 
 def routes_at(root, commit, expected):
-    for path, prefix, line in ((STATUS, STATUS_PREFIX, STATUS_ROUTE), (INDEX, INDEX_PREFIX, INDEX_ROUTE)):
-        current = blob(root, commit, path)
-        require(current is not None and route_lines(current, prefix) == ([line] if expected else []),
-                f"incorrect P111 route in {path}")
+    status, index = blob(root, commit, STATUS), blob(root, commit, INDEX)
+    require(status is not None and route_lines(status, STATUS_PREFIX) == ([STATUS_ROUTE] if expected else []),
+            f"incorrect P111 route in {STATUS}")
+    require(index is not None and route_lines(index, INDEX_PREFIX) == ([INDEX_ROUTE] if expected else []),
+            f"incorrect P111 route in {INDEX}")
+    counts = route_lines(status, STATUS_COUNT_SCOPE)
+    if expected:
+        require(len(counts) == 1 and STATUS_COUNT.fullmatch(counts[0]),
+                f"incorrect P111 prospective count in {STATUS}")
+    else:
+        require(not counts, f"withdrawn P111 count remains in {STATUS}")
+    return counts
 
 
 def route_worktree(root, commit):
-    for path, prefix in ((STATUS, STATUS_PREFIX), (INDEX, INDEX_PREFIX)):
+    for path, prefixes in ((STATUS, (STATUS_PREFIX, STATUS_COUNT_SCOPE)), (INDEX, (INDEX_PREFIX,))):
         snapshot = blob(root, commit, path)
-        require(snapshot is not None and route_lines((root / path).read_bytes(), prefix)
-                == route_lines(snapshot, prefix), f"dirty or shadowed P111 route in {path}")
+        require(snapshot is not None, f"missing P111 route file {path}")
+        worktree = (root / path).read_bytes()
+        for prefix in prefixes:
+            require(route_lines(worktree, prefix) == route_lines(snapshot, prefix),
+                    f"dirty or shadowed P111 route in {path}")
 
 
 def checked_predecessors(root, protected):
@@ -154,7 +172,7 @@ def checked_predecessors(root, protected):
     return blob(root, BASE_SUBJECT, recon.TREEREAD_SPEC).decode()
 
 
-def checked_subjects(root, source, current, protected=None):
+def checked_subjects(root, source, current=None, protected=None):
     raw_paths = git(root, "ls-tree", "-r", "-z", "--name-only", source, "--", SPEC_HOME)
     require(raw_paths is not None
             and {path for path in raw_paths.split(b"\0") if path}
@@ -164,16 +182,19 @@ def checked_subjects(root, source, current, protected=None):
         source_entry = entry(root, source, path)
         source_body = blob(root, source, path)
         require(source_entry and source_entry.startswith(b"100644 blob ")
-                and source_body is not None and hashlib.sha256(source_body).hexdigest() == digest
-                and entry(root, current, path) == source_entry
-                and (protected is None or entry(root, protected, path) == source_entry)
-                and (root / path).is_file() and not (root / path).is_symlink()
-                and not ((root / path).stat().st_mode & 0o111)
-                and (root / path).read_bytes() == source_body,
+                and source_body is not None and hashlib.sha256(source_body).hexdigest() == digest,
                 f"reviewed P111 bytes or modes differ for {path}")
+        if current is not None:
+            worktree = root / path
+            require(entry(root, current, path) == source_entry
+                    and (protected is None or entry(root, protected, path) == source_entry)
+                    and worktree.is_file() and not worktree.is_symlink()
+                    and not (worktree.stat().st_mode & 0o111)
+                    and worktree.read_bytes() == source_body,
+                    f"reviewed P111 bytes or modes differ for {path}")
 
 
-def checked_inverse(root, protected, source, disposition, rows):
+def checked_inverse(root, current, protected, source, disposition, rows):
     matches = [row for row in rows if parts(row)[0] == disposition]
     require(len(matches) == 1, "protected P111 disposition is ambiguous")
     inverse = parts(matches[0])[2].strip("`")
@@ -190,10 +211,14 @@ def checked_inverse(root, protected, source, disposition, rows):
     require(reverse and recon.normalized_source_diff(root, inverse_parent, inverse) == reverse,
             "recorded P111 withdrawal differs from the exact source inverse")
     for path in REVIEWED_SUBJECTS:
-        require(entry(root, parent, path) == entry(root, inverse, path) == entry(root, protected, path),
+        worktree = root / path
+        require(entry(root, parent, path) == entry(root, inverse, path)
+                == entry(root, current, path) == entry(root, protected, path) == b""
+                and not worktree.exists() and not worktree.is_symlink(),
                 f"inverse did not restore {path}")
-    routes_at(root, inverse, False)
-    routes_at(root, protected, False)
+    for revision in (inverse, current, protected):
+        routes_at(root, revision, False)
+    route_worktree(root, current)
 
 
 def scenario_blocks(body):
@@ -209,9 +234,14 @@ def select(root):
     protected_rows = recon.git_adoption_rows(root, protected) if protected else []
     working_claims, authored_claims, protected_claims = (claims(rows) for rows in
                                                         (working_rows, authored_rows, protected_rows))
-    tag = oid(root, REF)
+    tag = git(root, "for-each-ref",
+              "--format=%(refname) %(objecttype) %(tag) %(*objecttype) %(*objectname)", REF)
     if not working_claims and not authored_claims and not protected_claims and not tag:
+        metadata = root / ".git"
+        require(tag is not None or (not metadata.exists() and not metadata.is_symlink()),
+                "P111 version ref inventory is unavailable")
         return Binding("candidate")
+    require(tag is not None, "P111 version ref inventory is unavailable")
     require(current and protected, "exact authored or protected revision is unavailable")
     prior = checked_predecessors(root, protected)
     require(len(working_claims) == 1 and working_claims == authored_claims,
@@ -233,10 +263,9 @@ def select(root):
         require(protected_claims == [row] and unique(protected_rows, identity, row)
                 and reachable(root, source, protected), "P111 adoption absent or conflicting on protected main")
     else:
-        require(tag is None, "tag exists before exact P111 protected row and source")
-    if tag is not None:
-        proof = git(root, "for-each-ref", "--format=%(refname) %(objecttype) %(tag) %(*objecttype) %(*objectname)", REF)
-        require(proof and proof.decode().split() == [REF, "tag", TAG, "commit", source],
+        require(not tag, "tag exists before exact P111 protected row and source")
+    if tag:
+        require(tag.split() == [part.encode("ascii") for part in (REF, "tag", TAG, "commit", source)],
                 "P111 tag does not annotate the exact source commit directly")
     disposition_args = (root, identity, source, TAG, (SPEC, DEPENDENCIES))
     working_veto, authored_veto, protected_veto = (
@@ -245,20 +274,23 @@ def select(root):
     )
     disposition_error = "P111 dispositions disagree across worktree, authored and protected history"
     require(working_veto == authored_veto == protected_veto, disposition_error)
+    source_counts = routes_at(root, source, True)
     if protected_veto:
-        require(tag is not None, "protected P111 withdrawal has no exact version annotation")
+        require(tag, "protected P111 withdrawal has no exact version annotation")
         disposition = [line for line in protected_rows if parts(line)[0] == protected_veto]
         require(len(disposition) == 1 and unique(working_rows, protected_veto, disposition[0])
                 and unique(authored_rows, protected_veto, disposition[0]), disposition_error)
-        checked_inverse(root, protected, source, protected_veto, protected_rows)
+        checked_subjects(root, source)
+        checked_inverse(root, current, protected, source, protected_veto, protected_rows)
         return Binding("reverted", source=source)
     checked_subjects(root, source, current, protected if protected_claims else None)
-    routes_at(root, source, True)
-    routes_at(root, current, True)
+    require(routes_at(root, current, True) == source_counts,
+            "authored P111 prospective count differs from the exact source")
     if protected_claims:
-        routes_at(root, protected, True)
+        require(routes_at(root, protected, True) == source_counts,
+                "protected P111 prospective count differs from the exact source")
     route_worktree(root, current)
-    if tag is None:
+    if not tag:
         return Binding("staged", source=source)
     body = blob(root, source, SPEC)
     text = body.decode()
@@ -271,11 +303,6 @@ def select(root):
             and details["candidateSHA256"] == hashlib.sha256(body).hexdigest()
             and len(details["warrants"]) == 7, "reviewed P111 warrant projection is inconsistent")
     return Binding("effective", text, source, details["warrants"])
-
-
-STATUS_COUNT_PREFIX = "With the P111 supervisor version effective, Polaris has "
-STATUS_COUNT_SCOPE = "With the P111 supervisor version"
-STATUS_COUNT = re.compile(re.escape(STATUS_COUNT_PREFIX) + r"(\d+) requirements and (\d+) scenarios\.")
 
 
 def assert_count(root, state, predecessor, added):
