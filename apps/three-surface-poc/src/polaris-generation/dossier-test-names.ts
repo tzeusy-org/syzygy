@@ -1,7 +1,7 @@
 import type { LocalTestName, LocalTestNames, LocalTestNamesFile } from '@syzygy/polaris-generation-core/live';
 import { escapeHtml as escape } from './draft-preview.js';
 
-/** The test-names reference page (REQ-polaris-generation-034 version 2.40, syzygy-5dhm.45): the names four lexical recognizers read in
+/** The test-names reference page (REQ-polaris-generation-034 version 2.42, syzygy-5dhm.45): the names four lexical recognizers read in
  * the admitted test files of the pinned tree, a table of them per unit, every listed name with its file and line, and the files whose
  * names are Unknown. Every name is Inferred and carries its label and evidence in the DOM text; the table states counts in words beside
  * its numbers. Pure; no script. */

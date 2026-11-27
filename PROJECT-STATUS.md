@@ -312,7 +312,7 @@ lexical import facts of every TypeScript file the bound screen admits whole as t
 
 With the import facts version effective, Polaris has 39 requirements and 625 scenarios.
 
-[Test-name recognizers amendment 2.40](openspec/changes/dossier-test-names) is agent-adopted in A-337.
+[Test-name recognizers amendment 2.42](openspec/changes/dossier-test-names) is agent-adopted in A-337.
 It replaces REQ-polaris-generation-034 from version 2.39, the import facts (278 to 284 scenarios): each operator-agent
 render reads declared test names lexically and publishes them per unit on `reference/test-names.html`.
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""syzygy-5dhm.45: wire REQ-polaris-generation-034 v2.40 (test-name recognizers) into the reconciliation scripts after v2.39.
+"""syzygy-5dhm.45: wire REQ-polaris-generation-034 v2.42 (test-name recognizers) into the reconciliation scripts after v2.39.
 
 Usage: test_names_wire_reconciliation.py <worktree> <subject sha256>
 Edits scripts/check_spec_reconciliation.py and scripts/count_polaris_effective_scenarios.py in place: each place the v2.39 import
-facts (syzygy-3efd.60) is wired gains the same wiring for v2.40 with the import facts as its predecessor, every filter that leaves
-out the import facts' row also leaves out this one (v2.40 stands on v2.39, so it leaves with it), and a selftest case mirrors the
+facts (syzygy-3efd.60) is wired gains the same wiring for v2.42 with the import facts as its predecessor, every filter that leaves
+out the import facts' row also leaves out this one (v2.42 stands on v2.39, so it leaves with it), and a selftest case mirrors the
 import facts'. Derived from the earlier builds' scripts (over the choice floor, then migration parity) as each took a number first.
 Each edit asserts its anchor occurs once, so a run over a changed predecessor stops rather than guessing. Run once.
 """
@@ -47,7 +47,7 @@ def rename(text: str) -> str:
     for old, mark in pred:
         text = text.replace(old, mark)
     text = (text.replace('IMPFACTS_', 'TNAMES_').replace('impfacts_', 'tnames_').replace('import facts', 'test-name recognizers')
-            .replace('dossier-import-facts', 'dossier-test-names').replace('import-facts-', 'test-names-').replace('v2.39', 'v2.40'))
+            .replace('dossier-import-facts', 'dossier-test-names').replace('import-facts-', 'test-names-').replace('v2.39', 'v2.42'))
     back = {'@P1@': 'impfacts_binding', '@PMD@': 'p5_advice_member_delta', '@P2@': 'IMPFACTS_SPEC', '@P3@': '"v2.39 import facts"',
             '@P4@': 'import facts v2.39', '@P5@': 'prior v2.39 import facts', '@P6@': 'requires effective v2.39', '@P7@': 'is_impfacts_row',
             '@P8@': 'impfacts_amendment is None'}
@@ -67,12 +67,12 @@ assert n == 14 and m == 1, (n, m)
 # 1. Constants.
 consts = block(s, '# The v2.39 lexical import facts (syzygy-3efd.60)', 'IMPFACTS_BOUND_PARTS = len(IMPFACTS_SUBJECTS)\n')
 mine = rename(consts).replace('(syzygy-3efd.60)', '(syzygy-5dhm.45)').replace('the v2.38 migration parity', 'the v2.39 import facts')
-mine = mine.replace('[Import facts amendment 2.39]', '[Test-name recognizers amendment 2.40]')
-mine = mine.replace('# The v2.40 lexical test-name recognizers', '# The v2.40 test-name recognizers').replace(' (drafted over 2.33 as 2.NN)', '')
+mine = mine.replace('[Import facts amendment 2.39]', '[Test-name recognizers amendment 2.42]')
+mine = mine.replace('# The v2.42 lexical test-name recognizers', '# The v2.42 test-name recognizers').replace(' (drafted over 2.33 as 2.NN)', '')
 mine = mine.replace('"With the import facts"', '"With the test-name recognizers"')
 mine = mine.replace('"With the import facts version effective', '"With the test-name recognizers version effective')
 mine = re.sub(r'TNAMES_SPEC: "[0-9a-f]{64}"', f'TNAMES_SPEC: "{subject}"', mine)
-for needle in ('"polaris-dossier-test-names-v2.40"', '[Test-name recognizers amendment 2.40]', subject, '"dossier-test-names"',
+for needle in ('"polaris-dossier-test-names-v2.42"', '[Test-name recognizers amendment 2.42]', subject, '"dossier-test-names"',
                '"With the test-name recognizers"'):
     assert needle in mine, needle
 s = after(s, consts, '\n' + mine)
@@ -88,7 +88,7 @@ binding = block(s, 'def impfacts_binding(root):\n', '    )\n')
 delta = block(s, 'def impfacts_delta(root, findings):\n', '    return added\n')
 mine = rename(binding).replace('only over the effective v2.38 migration parity REQ-034.', 'only over the effective v2.39 import facts REQ-034.')
 assert 'effective v2.39 import facts REQ-034' in mine, mine
-assert 'predecessor=impfacts_binding, predecessor_label="v2.39 import facts", version="v2.40"' in mine, mine
+assert 'predecessor=impfacts_binding, predecessor_label="v2.39 import facts", version="v2.42"' in mine, mine
 assert 'label="test-name recognizers"' in mine
 mine_delta = rename(delta).replace('the test-name recognizers add to REQ-034 over the migration parity', 'the test-name recognizers add to REQ-034 over the import facts')
 assert 'over the import facts, counted' in mine_delta
@@ -99,9 +99,9 @@ s = after(s, delta, '\n\n' + mine + '\n\n' + mine_delta)
 acct = block(s, '    impfacts_retired_by = impfacts_disposition(root, impfacts_rows(root))\n', '    r2 += impfacts_subjects\n')
 s = after(s, acct, rename(acct))
 s = after(s, '        retirement += f"; v2.39 inactive by {impfacts_retired_by}"\n',
-          '    if tnames_retired_by:\n        retirement += f"; v2.40 inactive by {tnames_retired_by}"\n')
+          '    if tnames_retired_by:\n        retirement += f"; v2.42 inactive by {tnames_retired_by}"\n')
 
-# 4. The census composition: v2.40 composes only over an effective v2.39.
+# 4. The census composition: v2.42 composes only over an effective v2.39.
 comp = block(s, '        impfacts_amendment, impfacts_records, impfacts_subjects = impfacts_binding(root)\n        findings += impfacts_records + impfacts_subjects\n',
              '                pb += extra_b\n')
 mine = rename(comp)
@@ -111,7 +111,7 @@ s = after(s, comp, mine)
 # 5. The selected census projection.
 sel = block(s, '                impfacts_amendment, _records, _subjects = impfacts_binding(root)\n                if impfacts_amendment is not None:\n                    by_id,',
             '                    selected_population = by_id\n')
-# Nested one level deeper, inside the import facts' own branch: v2.40 projects only over an effective v2.39.
+# Nested one level deeper, inside the import facts' own branch: v2.42 projects only over an effective v2.39.
 s = after(s, sel, ''.join('    ' + line if line.strip() else line for line in rename(sel).splitlines(keepends=True)))
 
 # 6. The scenario arithmetic.
@@ -130,10 +130,10 @@ assert '(tnames_amendment, TNAMES_UNION)):' in s
 routes = block(s, '    impfacts_amendment, _records, _subjects = impfacts_binding(root)\n    impfacts_fields = ',
                '`{OPENSPEC_README}` calls import facts v2.39 adopted while it is not in force")\n')
 mine = rename(routes)
-assert mine.count('test-name recognizers v2.40') == 4, mine
+assert mine.count('test-name recognizers v2.42') == 4, mine
 s = after(s, routes, mine)
 
-# 9. The status census: v2.40's sentence states the current total, then v2.39's states its own.
+# 9. The status census: v2.42's sentence states the current total, then v2.39's states its own.
 cen = block(s, '        if impfacts_binding(root)[0] is not None:\n            # The import facts\' own sentence',
             'declares an import facts census while it is not in force")\n')
 mine = rename(cen).replace('declares an test-name recognizers census', 'declares a test-name recognizers census').replace("# The test-name recognizers' own sentence states the current total; the earlier sentences state theirs.",
@@ -152,7 +152,7 @@ s = after(s, '    impfacts_subjects = IMPFACTS_BOUND_PARTS if impfacts_rows_now 
 s = after(s, ' - migpar_records - impfacts_records', ' - tnames_records')
 s = after(s, ' - migpar_subjects - impfacts_subjects', ' - tnames_subjects')
 
-# 12. The earlier-history projection: v2.40 stands on v2.39, so its routes leave with it.
+# 12. The earlier-history projection: v2.42 stands on v2.39, so its routes leave with it.
 s = s.replace(', IMPFACTS_STATUS_PREFIX, IMPFACTS_COUNT_SCOPE)\n',
               ', IMPFACTS_STATUS_PREFIX, IMPFACTS_COUNT_SCOPE, TNAMES_STATUS_PREFIX, TNAMES_COUNT_SCOPE)\n', 1)
 s = s.replace(' IMPFACTS_INDEX_PREFIX)) else line\n',
@@ -187,7 +187,7 @@ s = after(s, case, '\n\n' + mine)
 s = after(s, '        lambda w, f: impfacts_cases(tmp, base, w, f),\n', '        lambda w, f: tnames_cases(tmp, base, w, f),\n')
 recon.write_text(s, encoding='utf-8')
 
-# 14. The scenario counter: compose v2.40 over v2.39, read its inputs, and check its own status count.
+# 14. The scenario counter: compose v2.42 over v2.39, read its inputs, and check its own status count.
 c = count.read_text(encoding='utf-8')
 fn = block(c, 'def impfacts_amendment(root: Path) -> str | None:\n', '    return text\n')
 c = after(c, fn, '\n\n' + fn.replace('impfacts_amendment', 'tnames_amendment').replace('impfacts_binding', 'tnames_binding')

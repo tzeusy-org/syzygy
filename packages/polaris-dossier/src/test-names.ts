@@ -10,7 +10,7 @@ import {
 } from './test-names-recognize.js';
 import { secretPathOf } from './screen.js';
 
-/** Declared test names (REQ-polaris-generation-034 version 2.40, syzygy-5dhm.45): what four versioned lexical recognizers read in the
+/** Declared test names (REQ-polaris-generation-034 version 2.42, syzygy-5dhm.45): what four versioned lexical recognizers read in the
  * test files of the pinned tree that the bound screening policy admits, one per framework (pytest, JavaScript and TypeScript test calls,
  * Go testing functions, JUnit methods), each name mapped to its unit by rule `top-level-unit`: the top-level directory its path begins
  * with, or the repository root. A name states only what one file declares, never that the test runs or passes, and is Inferred at this
