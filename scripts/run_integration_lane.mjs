@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const composed = 'packages/polaris-dossier/src/url-run-composed.test.ts';
+const orderedHost = 'packages/polaris-dossier/src/url-ordered-design-host.test.ts';
 const scenarios = ['complete', 'delivery-stop', 'stop-resume', 'eligible-stop-resume'];
 const lanes = ['core-1', 'core-2', 'core-3', ...scenarios];
 const observer = '^bounded restoration observer \\(no native authority fixture\\)';
@@ -20,8 +21,17 @@ function exact(actual, expected, label) {
 function plan(files) {
   const core = files.filter(file => file !== composed).sort();
   assert(core.length >= 3, 'three nonempty core slices required');
+  const slices = [0, 1, 2].map(index => core.slice(Math.floor(index * core.length / 3), Math.floor((index + 1) * core.length / 3)));
+  // Hosted 1cd763: this native file cost 131s in core-3 while core-1's batch cost 33s.
+  // Move the whole file; keep the other sorted assignments and every coverage check.
+  const hostSlice = slices.findIndex(slice => slice.includes(orderedHost));
+  if (hostSlice > 0) {
+    slices[hostSlice].splice(slices[hostSlice].indexOf(orderedHost), 1);
+    slices[0].push(orderedHost);
+    slices[0].sort();
+  }
   return Object.fromEntries(lanes.map((lane, index) => [lane, index < 3
-    ? [{ files: core.slice(Math.floor(index * core.length / 3), Math.floor((index + 1) * core.length / 3)) },
+    ? [{ files: slices[index] },
       ...(index === 0 ? [{ files: [composed], pattern: observer }] : [])]
     : [{ files: [composed], pattern: nativePattern(lane) }]]));
 }
@@ -29,6 +39,12 @@ function plan(files) {
 function workflowLanes(text) {
   const block = /^  integration:\n([\s\S]*?)(?=^  [\w-]+:|(?![\s\S]))/m.exec(text)?.[1];
   assert(block, 'integration job missing');
+  const selectorStep = "        if: github.event_name == 'pull_request'\n        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/select_ci_tests.mjs --base \"${{ github.event.pull_request.base.sha }}\" --out \"$RUNNER_TEMP/ci-selection.json\"";
+  const selectedTiers = [...text.matchAll(/^  (unit|e2e):\n([\s\S]*?)(?=^  [\w-]+:|(?![\s\S]))/gm)];
+  exact(selectedTiers.map(match => match[1]), ['unit', 'e2e'], 'selected workflow tiers');
+  for (const [, tier, body] of selectedTiers) assert(body.includes(selectorStep), tier + ': pull-request selector retained');
+  assert(!block.includes('scripts/select_ci_tests.mjs'), 'integration must not recompute an unused selection');
+  assert(block.includes("Integration fallback: every mandatory lane runs; this tier does not consume the PR selection."), 'integration full fallback disclosed');
   assert(!/^\s+(?:include|exclude|continue-on-error):/m.test(block), 'matrix exceptions may not remove required lanes');
   assert(/^      fail-fast: false$/m.test(block), 'all mandatory lanes must run after a peer fails');
   const rows = [...block.matchAll(/^        lane: (\[[^\n]+\])$/gm)];
@@ -97,12 +113,18 @@ function checkReceipts(records, sha) {
 }
 
 function selftest() {
-  const files = ['a.test.ts', 'b.test.ts', 'c.test.ts', 'd.test.ts', composed];
+  const files = ['a.test.ts', 'b.test.ts', 'c.test.ts', 'd.test.ts', orderedHost, composed];
   const cases = [1, 2, 3].map(id => `bounded restoration observer (no native authority fixture) > observer ${id}`)
     .concat(scenarios.map(scenario => `composed URL run with actual role processes > runs the genuine production pipeline to ${scenario}`));
   const routes = plan(files), matrix = [...lanes], sha = 'a'.repeat(40);
   const records = Object.fromEntries(lanes.map(lane => [`${lane}.json`, { lane, sha }]));
   population(files, routes, cases, matrix);
+  assert.deepEqual([routes,
+    plan([orderedHost, 'z-a.test.ts', 'z-b.test.ts', composed]),
+    plan(['a.test.ts', 'b.test.ts', 'c.test.ts', composed]),
+  ].map(routes => [routes['core-1'][0].files.includes(orderedHost),
+    lanes.slice(0, 3).flatMap(lane => routes[lane][0].files).filter(file => file === orderedHost).length]),
+  [[true, 1], [true, 1], [false, 0]], 'ordered host: relocated, already in first slice, or absent');
   checkReceipts(records, sha);
   const mutations = [
     ['omitted file', changed => { changed.routes['core-1'][0].files.pop(); }],
@@ -124,11 +146,19 @@ function selftest() {
   assert.throws(() => checkReceipts(missing, sha), undefined, 'missing success receipt');
   assert.throws(() => checkReceipts({ ...records, 'unexpected.json': {} }, sha), undefined, 'unexpected success receipt');
   assert.throws(() => checkReceipts({ ...records, 'complete.json': { lane: 'complete', sha: 'b'.repeat(40) } }, sha), undefined, 'foreign commit receipt');
-  const fixture = `  integration:\n    strategy:\n      fail-fast: false\n      matrix:\n        lane: ${JSON.stringify(lanes)}\n  e2e:\n`;
+  const selectorStep = "        if: github.event_name == 'pull_request'\n        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/select_ci_tests.mjs --base \"${{ github.event.pull_request.base.sha }}\" --out \"$RUNNER_TEMP/ci-selection.json\"";
+  const fallback = "Integration fallback: every mandatory lane runs; this tier does not consume the PR selection.";
+  const fixture = ['  unit:', selectorStep, '  integration:', '    strategy:', '      fail-fast: false',
+    '      matrix:', '        lane: ' + JSON.stringify(lanes), '    steps:', '      - run: |',
+    '          echo "' + fallback + '"', '  e2e:', selectorStep, ''].join('\n');
   exact(workflowLanes(fixture), lanes, 'workflow parser control');
   assert.throws(() => workflowLanes(fixture.replace('      matrix:', '      matrix:\n        exclude: []')), undefined, 'matrix exclusion');
   assert.throws(() => workflowLanes(fixture.replace('fail-fast: false', 'fail-fast: true')), undefined, 'matrix fail-fast');
-  console.log(`integration routing selftest: control + ${mutations.length + 5} rejected mutations`);
+  assert.throws(() => workflowLanes(fixture.replace('  unit:\n' + selectorStep, '  unit:')), undefined, 'unit selector omitted');
+  assert.throws(() => workflowLanes(fixture.replace('  e2e:\n' + selectorStep, '  e2e:')), undefined, 'e2e selector omitted');
+  assert.throws(() => workflowLanes(fixture.replace(fallback, '')), undefined, 'integration fallback omitted');
+  assert.throws(() => workflowLanes(fixture.replace('    steps:\n', '    steps:\n          node scripts/select_ci_tests.mjs\n')), undefined, 'integration selector recomputed');
+  console.log(`integration routing selftest: control + ${mutations.length + 9} rejected mutations`);
 }
 
 async function main() {

@@ -141,7 +141,8 @@ jobs:
         run: node scripts/check_unit_tmpdir.mjs --selection "$RUNNER_TEMP/ci-selection.json"
 
   # Integration tier: git, a real tree, loopback servers, python recorders.
-  # Three sorted file slices and four composed native cases. The three
+  # Three sorted slices, with the ordered-host file moved to core-1, and
+  # four composed native cases. The three
   # bounded observer cases and TMPDIR-driver controls run only in core-1.
   # All lanes reuse this prerequisite definition and wait for the unit job.
   integration:
@@ -208,14 +209,13 @@ jobs:
       - name: install (npm ci)
         run: npm ci
 
-      # The selector prints the PR's reach, but the mandatory lane router is not
-      # selection-aware. Run all seven lanes conservatively; do not invoke the
-      # generic selected-tier runner in each matrix cell (it repeats the tier).
-      - name: select tests and disclose full integration fallback (pull requests only)
+      # The mandatory lane router does not consume a PR selection. Unit and
+      # e2e retain their selectors; integration always runs all seven lanes.
+      # Disclose that full fallback without recomputing the unused graph.
+      - name: disclose full integration fallback (pull requests only)
         if: github.event_name == 'pull_request'
         run: |
-          node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/select_ci_tests.mjs --base "${{ github.event.pull_request.base.sha }}" --out "$RUNNER_TEMP/ci-selection.json"
-          echo "Integration fallback: every mandatory lane runs; selection is informational for this tier."
+          echo "Integration fallback: every mandatory lane runs; this tier does not consume the PR selection."
 
       - name: install pinned Claude native fixture
         run: node scripts/provision_dossier_native_cli.mjs "$HOME/.local/share/claude/versions"

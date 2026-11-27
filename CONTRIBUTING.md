@@ -158,8 +158,8 @@ See [repository scripts](scripts/README.md) for the Python governance tools.
   and e2e files a pull request's change can reach. Integration conservatively
   runs all seven mandatory lanes: its router does not yet consume a selection,
   and every native case, prerequisite and success receipt remains required.
-  The integration jobs print the selection and disclose this full-tier fallback;
-  they do not run the generic selected-tier runner once per matrix cell.
+  Integration jobs disclose this full-tier fallback without recomputing the
+  unused selection; unit and e2e retain their pull-request selectors.
   Merge-group runs run every tier whole, so `main` only moves to a tree that
   passed the full suite. `scripts/select_ci_tests.mjs` prints the choice:
   Vitest's module graph for changed workspace modules, plus the tests that
@@ -177,8 +177,9 @@ See [repository scripts](scripts/README.md) for the Python governance tools.
   does not exist or a file is in two tiers.
 - **Hosted CI** (`.github/workflows/node-ci.yml`) runs the unit job first,
   then seven integration lanes and the e2e job in parallel. Integration uses
-  three deterministic slices of its sorted non-composed files and one lane
-  per native composed scenario. The three bounded restoration observer cases
+  three deterministic slices of its sorted non-composed files, moving the
+  measured ordered-host file to core-1, and one lane per native composed
+  scenario. The three bounded restoration observer cases
   and TMPDIR-driver selftests run only in `core-1`. The unit job checks the
   routing against Vitest's full integration file and composed-case discovery;
   each lane checks its actual selection before running it. The job named
