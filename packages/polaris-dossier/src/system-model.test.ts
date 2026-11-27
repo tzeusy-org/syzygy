@@ -13,7 +13,7 @@ import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
 import { GIT_ENV, tempDir } from '@syzygy/test-kit';
-import { migrateDraft } from './system-model.js';
+import { expandModel, migrateDraft } from './system-model.js';
 
 // The system model (REQ-polaris-generation-034 version 2.24, schema v12, syzygy-3efd.37): each scenario over a pinned tree built here with
 // the git CLI. Every expected finding, state, reason, attribute and text is a literal written from the requirement's text and the fixture
@@ -327,7 +327,7 @@ describe('system model: render', () => {
     const { files, machine } = await rendered(B, held);
     const runtime = figureOf(files.get('index.html')!, 'runtime');
     expect(runtime).toContain('<g class="edge unknown" data-relation="contains" data-epistemic="unknown"><title>contains (unknown)</title>');
-    expect(runtime).toContain('<li data-relation="contains" data-epistemic="unknown">Repository → Withheld item: contains <span class="visually-hidden ev"><span class="marking unknown">[Unknown]</span></span></li>');
+    expect(runtime).toContain('<li data-relation="contains" data-unknown-reason="edge-not-inferred">Repository → Withheld item: Syzygy could not derive this relation (edge-not-inferred)</li>');
     expect(runtime).toContain('  n0 -.-&gt;|&quot;contains #40;unknown#41;&quot;| n1\n');
     expect(runtime).toContain('<p class="diagram-tally">2 boxes and 1 arrow, as marked: 0 observed, 1 inferred, 2 unknown.</p>');
     expect(claimsNamed(files, 'repo-src')).toBe(0);
@@ -428,5 +428,129 @@ describe('system model: the brief paragraph', () => {
     const brief = fs.readFileSync(path.join(run, 'brief.md'), 'utf8');
     expect(brief).toContain('polaris-dossier-brief-v21');
     expect(brief).not.toContain('Describe the system once');
+  });
+});
+
+describe('system model: check, each finding and gate', () => {
+  it('refuses a parent and a relationship end naming no element', async () => {
+    const doc = modelDraft([el('api', 'API', 'module', { parent: 'ghost' }), el('db', 'Store', 'store')], [rel('api-db', 'api', 'nowhere', 'calls', 'reads')],
+      [graphView('runtime', ['api', 'db'], [])]);
+    expect((await findingsOf(A, doc)).findings.filter((finding) => finding.kind === 'unresolved-reference')).toEqual([
+      { kind: 'unresolved-reference', at: '$.model.elements[0].parent', detail: 'ghost: no element of the model has this identity' },
+      { kind: 'unresolved-reference', at: '$.model.relationships[0].to', detail: 'nowhere: no element of the model has this identity' },
+    ]);
+  });
+
+  it('refuses a unit on a store and on a person, as on a module', async () => {
+    const doc = modelDraft([el('db', 'Store', 'store', { unit: tld('src') }), el('ops', 'Operator', 'person', { unit: tld('web') })], [rel('ops-db', 'ops', 'db', 'calls', 'reads')],
+      [graphView('runtime', ['db', 'ops'], ['ops-db'])]);
+    expect(await findingsOf(A, doc)).toEqual({ outcome: 'findings', findings: [
+      { kind: 'element-type', at: '$.model.elements[0].type', detail: 'db: an element of type store carries no unit' },
+      { kind: 'element-type', at: '$.model.elements[1].type', detail: 'ops: an element of type person carries no unit' },
+    ] });
+  });
+
+  it('decides no relationship or parent beside an element-parent finding', async () => {
+    const doc = SYSTEM(tld('missing'));
+    (doc['model'] as { elements: Doc[] }).elements[2] = el('api', 'API', 'module', { parent: 'api' });
+    expect(await findingsOf(A, doc)).toEqual({ outcome: 'findings', findings: [
+      { kind: 'element-parent', at: '$.model.elements[2].parent', detail: 'api: an element is part of at most two elements above it and never of itself' },
+    ] });
+  });
+
+  it('leaves unasserted, and so unchallenged, a relationship whose element renders as a withheld item', async () => {
+    const doc = modelDraft(
+      [el('repo', 'Repository', 'system', { unit: ROOT }), el('src', 'Source', 'directory', { parent: 'repo', unit: tld('missing'), citations: [{ id: 'c-src', path: '.env', startLine: 1, endLine: 1 }] })],
+      [derived('repo-src', 'repo', 'src')], [graphView('runtime', ['repo', 'src'], ['repo-src']), containView('layout', ['repo', 'src'])]);
+    const { result } = await checked(B, doc);
+    if (!result.ok) throw new Error(result.refusal.reason);
+    expect({ outcome: result.report.outcome, findings: result.report.findings }).toEqual(PASSED);
+    expect(((result.report as unknown as Doc)['reviewReach'] as Doc)['elements']).toEqual([{ at: '$.model.elements[1]', kind: 'diagram-node', id: 'src',
+      detail: 'every span it cites, or a span it quotes, is withheld by screening: the node renders Unknown and its label does not render; if every node and edge of its diagram is withheld, the diagram\'s title and relationship render as "Withheld item" too, and so does the title of a section whose paragraphs and diagrams are all withheld' }]);
+  });
+
+  it('advises a relationship two views share once, at its model path', async () => {
+    const doc = modelDraft([el('src', 'Source', 'module'), el('api', 'API', 'module')], [rel('src-api', 'src', 'api', 'calls', 'calls', { citations: [{ id: 'c-src-api', path: 'src/a.ts', startLine: 1, endLine: 1 }] })],
+      [graphView('one', ['src', 'api'], ['src-api']), graphView('two', ['src', 'api'], ['src-api'])]);
+    const { result } = await checked(A, doc);
+    if (!result.ok) throw new Error(result.refusal.reason);
+    expect((((result.report as unknown as Doc)['readerAdvice'] as Doc)['advisories'] as Doc[]).filter((advisory) => advisory['standard'] === 'RS-17')).toEqual([{ standard: 'RS-17', at: '$.model.relationships[0]',
+      detail: 'the edge "src-api" cites no file that its node "src" or its node "api" cites: cite where the source shows these two connect, or check that the edge joins the right nodes (polaris-reader-standards-v1 does not yet mark RS-17 counted; this is its locality alone)' }]);
+  });
+
+  it('reads a produced disposition naming its view\'s elements from the expansion', async () => {
+    const doc = modelDraft([el('api', 'API', 'module'), el('db', 'Store', 'store')], [rel('api-db', 'api', 'db', 'calls', 'reads')],
+      [graphView('runtime', ['api', 'db'], ['api-db'], { disposition: { kind: 'produced', assetIds: ['api', 'db', 'api-db'] } })]);
+    expect(await findingsOf(A, doc)).toEqual(PASSED);
+  });
+
+  it('nests a selected element whose parent the view does not select at the top', async () => {
+    const doc = modelDraft([el('repo', 'Repository', 'system', { unit: ROOT }), el('src', 'Source', 'directory', { parent: 'repo', unit: tld('src') }), el('lib', 'Library', 'module', { parent: 'src' })], [derived('repo-src', 'repo', 'src')],
+      [graphView('runtime', ['repo', 'src'], ['repo-src']), containView('layout', ['src', 'lib'])]);
+    expect(await findingsOf(A, doc)).toEqual(PASSED);
+    const { files, machine } = await rendered(A, doc);
+    const layout = figureOf(files.get('index.html')!, 'layout');
+    expect(layout).toContain('<ul class="figure-outline"><li class="inferred">Source<ul><li class="inferred">Library</li></ul></li></ul>');
+    expect(layout).toContain('<ul><li>Source, as shown in <a href="#figure-runtime">Figure runtime</a></li><li data-claim-id="lib" data-epistemic="inferred">Library (in Source) ');
+    expect(machine['figureStructures']).toEqual([{ diagram: 'layout', kind: 'containment', page: 'index.html', laidOutPx: 224,
+      groups: [{ id: 'src', parent: null, level: 1 }, { id: 'lib', parent: 'src', level: 2 }], nestings: [{ parent: 'src', child: 'lib', witness: witness('unknown', 'endpoint-without-unit') }] }]);
+  });
+
+  it('refuses at a render a draft whose check record was altered to passed, from its model finding found again', async () => {
+    const doc = modelDraft([el('api', 'API', 'module'), el('db', 'Store', 'store', { unit: tld('src') })], [rel('api-db', 'api', 'db', 'calls', 'reads')], [graphView('runtime', ['api', 'db'], ['api-db'])]);
+    const { run, result } = await checked(A, doc);
+    if (!result.ok || result.report.outcome !== 'findings') throw new Error('the fixture draft must have findings');
+    const file = path.join(run, 'checks', 'rev-0.json');
+    fs.writeFileSync(file, JSON.stringify({ ...JSON.parse(fs.readFileSync(file, 'utf8')), outcome: 'passed', findings: [] }));
+    const out = await renderRun(run, { sources: sources(A.commit), now: () => LATER, probe: neverProbe, loadScreen: async () => SCREEN, renderer: renderLocalDossier });
+    expect(out.ok ? null : { stage: out.refusal.stage, reasons: out.refusal.reasons }).toEqual({ stage: 'rederive', reasons: ['element-type at $.model.elements[1].type'] });
+  });
+});
+
+describe('system model: the migration parity\'s one exception (a spec defect, spec bead syzygy-3efd.85)', () => {
+  // 2.24 line 138 leaves a relationship with a withheld end unasserted; line 98 (2.19) asserts a v11 graph edge whose end node alone is
+  // withheld. So a migrated witnessed edge to a withheld node renders as the draft's own edge, its marking and `data-relation` alone, and
+  // `edge-not-inferred` appears only in `machine.json`'s witness, against line 142's parity claim; line 140's
+  // `Syzygy could not derive this relation` form applies to derived relationships alone. Pinned here so it is never silent; bead
+  // syzygy-3efd.85 narrows the parity claim.
+  it('renders a v11 witnessed edge to a withheld node as the draft\'s own edge once migrated, edge-not-inferred in machine.json alone', async () => {
+    const v11 = draftOf([figure('runtime', [node('repo', 'Repository', ROOT), node('src', 'Source', tld('src'), { citations: [{ id: 'c-src', path: '.env', startLine: 1, endLine: 1 }] })],
+      [edge('repo-src', 'repo', 'src', 'contains', 'holds')])], V11);
+    const [before, after] = [await rendered(B, v11), await rendered(B, migrateDraft(v11)!)];
+    const [one, two] = [figureOf(before.files.get('index.html')!, 'runtime'), figureOf(after.files.get('index.html')!, 'runtime')];
+    expect(one).toContain('<g class="edge observed" data-relation="contains" data-witness-fact="_tree-contains-1" data-witness-rule="top-level-unit" data-witness-rule-version="1" data-epistemic="observed">');
+    expect(one).toContain('<li data-relation="contains" data-witness-fact="_tree-contains-1" data-witness-rule="top-level-unit" data-witness-rule-version="1" data-epistemic="observed">Repository → Withheld item: contains <span class="derived-mark">Witnessed by Syzygy</span>');
+    expect(two).toContain('<g class="edge inferred" data-relation="contains"><title>holds (inferred)</title>');
+    expect(two).toContain('<li data-relation="contains" data-claim-id="repo-src" data-epistemic="inferred">Repository → Withheld item: holds <span class="visually-hidden ev"><span class="marking inferred">[Inferred]</span></span> ');
+    expect(two).not.toContain('data-unknown-reason="edge-not-inferred"');
+    expect([before.machine['edges'], after.machine['edges']]).toEqual([
+      [{ diagram: 'runtime', page: 'index.html', id: 'repo-src', from: 'repo', to: 'src', epistemic: 'observed', text: 'contains', relation: 'contains', witness: witness('witnessed', null, '_tree-contains-1') }],
+      [{ diagram: 'runtime', page: 'index.html', id: 'repo-src', from: 'repo', to: 'src', epistemic: 'inferred', text: 'holds', relation: 'contains', witness: witness('unknown', 'edge-not-inferred') }],
+    ]);
+  });
+});
+
+describe('system model: a derived relationship not witnessed, in Syzygy\'s words', () => {
+  // Rule relation-witness version 1 derives `contains` alone, so a derived relationship of any other relation is refused at check and no
+  // checked draft renders one; the expansion is pure and still gives every relation the words version 2.19 gives it (line 140).
+  it('expands a derived relationship of each relation with the words version 2.19 gives a witnessed edge, no citation', () => {
+    const doc = modelDraft(
+      [el('a', 'A', 'module'), el('b', 'B', 'module')],
+      ['contains', 'declares-dependency', 'needs-job', 'depends-on-service', 'calls'].map((relation, i) => derived(`r${i}`, 'a', 'b', relation)),
+      [graphView('runtime', ['a', 'b'], ['r0', 'r1', 'r2', 'r3', 'r4'])]);
+    const edges = ((expandModel(doc).doc['diagrams'] as Doc[])[0]!['edges'] as Doc[]).map((e) => [e['id'], e['label'], e['citations']]);
+    expect(edges).toEqual([['r0', 'contains', []], ['r1', 'declares a dependency on', []], ['r2', 'needs', []], ['r3', 'depends on', []], ['r4', 'calls', []]]);
+  });
+
+  // A challenged derived relationship is a check finding, so no checked draft renders one; the renderer still states the state's reason as
+  // `challenged` (line 140), pinned here by handing it a challenged witness for the derived relationship of a draft that passed.
+  it('gives a challenged derived relationship the reason challenged', async () => {
+    const challenge = (input: Parameters<DossierRenderer>[0]): Parameters<DossierRenderer>[0] => ({ ...input, local: { ...input.local,
+      edgeRelations: new Map([...(input.local.edgeRelations ?? new Map())].map(([id, relation]) => [id, id !== 'repo-src' ? relation
+        : { relation: relation.relation, witness: { state: 'challenged' as const, reason: null, fact: null, rule: null, ruleVersion: null } }])) } });
+    const renderer: DossierRenderer = Object.assign((input: Parameters<DossierRenderer>[0]) => renderLocalDossier(challenge(input)),
+      renderLocalDossier.pageSinkContract === undefined ? {} : { pageSinkContract: renderLocalDossier.pageSinkContract });
+    const { files } = await rendered(A, SYSTEM(), { renderer });
+    expect(figureOf(files.get('index.html')!, 'runtime')).toContain('<li data-relation="contains" data-unknown-reason="challenged">Repository → Source: Syzygy could not derive this relation (challenged)</li>');
   });
 });

@@ -819,7 +819,11 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       if (relation !== undefined) diagramRelationEdges.push({ index, entry: { diagram: d.id, page: from, id: e.id, from: e.from, to: e.to, epistemic: e.epistemic, text: e.label, ...(derivedIds.has(e.id) ? { basis: 'derived' } : {}), relation: relation.relation, witness: relation.witness } });
       if (relation?.evidence !== undefined) return witnessItem(e, relation);
       const ends = `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}`;
-      if (derivedIds.has(e.id)) return `<li${relation === undefined ? '' : witnessAttrs(relation)} data-epistemic="unknown">${ends}: ${escape(e.label)} ${mark(from, 'unknown')}</li>`;
+      // A derived relationship not witnessed (version 2.24): Syzygy's words for what it could not derive, and the state's reason.
+      if (derivedIds.has(e.id)) {
+        const reason = relation === undefined ? 'unknown' : relation.witness.state === 'challenged' ? 'challenged' : relation.witness.reason ?? 'unknown';
+        return `<li data-relation="${escape(relation?.relation ?? '')}" data-unknown-reason="${escape(reason)}">${ends}: Syzygy could not derive this relation (${escape(reason)})</li>`;
+      }
       const shown = asShown(from, e.id, index);
       if (shown !== undefined) return `<li>${ends}: ${escape(e.label)}${shown}</li>`;
       return claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)}${heldText(e.id)} ${mark(from, e.epistemic)} ${refs(from, e.sourceIds, e.id)}`, `${heldAttrs(e.id)}${relation === undefined ? '' : witnessAttrs(relation)}`, held(e.id) === undefined ? null : 'excluded-content', held(e.id) === undefined ? undefined : { withheldSources: held(e.id)!.sources });
