@@ -26,7 +26,11 @@ PARAGRAPHS = [
     '`.cjs`, `.ts`, `.tsx`, `.mts` and `.cts` (read as JavaScript and TypeScript), `.go` (read as Go) or `.java` (read as Java). Each body '
     'is read through the lexer the test-name recognizers read through, which finds every comment (`#` in Python; `//` and `/* */` in the '
     'others) and every string literal of the language, and replaces each comment and each string interior by spaces in the code text; a '
-    'regular-expression literal is blanked and is no comment. A body that ends inside a comment or a string, or in which a line break comes '
+    'regular-expression literal is blanked and is no comment. From this version, for the test-name recognizers too, a template literal '
+    'ends at the first backtick outside its substitutions, each `${` substitution ending at the `}` that balances it, with every quoted '
+    'string, template literal and comment inside it skipped whole, so a template nested in a substitution never ends the outer one and '
+    'nothing inside either is read as code or as a comment. The lexer reads no JSX: text between JSX tags that holds `//` or `/*` is '
+    'read as a comment. A body that ends inside a comment or a string, or in which a line break comes '
     'inside a quoted string that cannot hold one, is Unknown `unparsed` with the parse fault `unterminated`. In the content of each comment, '
     'between its delimiters, the recognizer matches these ECMAScript regular expressions, case-sensitive and global: kind `todo`, '
     f'`(?<![{W}])TODO(?![{W}])`; kind `fixme`, `(?<![{W}])FIXME(?![{W}])`; kind `hack`, `(?<![{W}])HACK(?![{W}])`; kind `deprecation`, '
@@ -39,10 +43,11 @@ PARAGRAPHS = [
     'never in a comment or a string, it matches kind `deprecation` in Java by `(?<![A-Za-z0-9_$.@])@Deprecated(?![A-Za-z0-9_$])` and in '
     f'Python by `(?<![{W}])(?:Pending)?DeprecationWarning(?![{W}])`. No marker is read in a string, so a Python docstring holds none. Each '
     'match is one marker: its kind, its matched text `marker`, its 1-based line under the line rule that ends a line at CRLF, CR or LF, and '
-    '`quote`, that line without its terminator and without its leading and trailing spaces and tabs. A marker states only that the file '
+    '`quote`, that line without its terminator and without its leading and trailing spaces and tabs, and, on line 1, without a byte-order '
+    'mark opening the body. A marker states only that the file '
     'writes that line: what the marker means is not read, and what an issue reference names lies outside the clone, so it is Unknown, and '
-    'nothing is fetched or resolved. A pattern can match a token that is no issue reference (a colour written `#767676`, say); the marker '
-    'still states only that the line holds that token.',
+    'nothing is fetched or resolved. A pattern can match a token that is no issue reference (a colour written `#767676`, or a path and '
+    'anchor written `docs/x#12`, say); the marker still states only that the line holds that token.',
     # The member.
     'Each candidate takes the disposition, in the order, that the test-name recognizers give theirs, with two differences: the recognizer '
     'reads and lists at most 1000 files, and a marker whose quote the value checks refuse (empty, longer than 256 characters, holding a '
@@ -63,8 +68,8 @@ PARAGRAPHS = [
     'check does not write it, and no reader takes it from a stored record.',
     # The page and the machine view.
     'Where a render holds both the derived structure and the member, it SHALL publish one reference page, `reference/rough-edges.html`, '
-    'titled `Rough edges`, linked in the reading order and on `contents.html` immediately after the test-names page where that is '
-    'published and otherwise immediately after the computed maps, and opening with a legend of its own: the view switch a map page\'s '
+    'titled `Rough edges`, linked in the reading order and on `contents.html` as the last of the items after the Sources page: after the '
+    'computed maps where those are published and after the test-names page where that is published, and opening with a legend of its own: the view switch a map page\'s '
     'legend carries, and what `Derived by Syzygy` and `Not established.` mean there. Its section `<section id="rough-edges" '
     'data-reading-level="1" data-topics="">` holds: a note naming the revision, the bound screening policy, the five languages, the rule and '
     'its version, where each kind is read, that nothing is read inside a string, that each line is quoted from the file, that a marker '
@@ -74,8 +79,11 @@ PARAGRAPHS = [
     'row per listed unit and the column headers `Unit`, `Files read`, `TODO`, `FIXME`, `HACK`, `Deprecation`, `Issue references` and '
     '`All markers`, the root named `Repository root` and a directory `<dir>/`, whose caption says how many units it lists and how many it '
     'counts and does not list, or, where no file was read for markers, the sentence `No source file was read for markers, so no unit has a '
-    'row.`, followed, where any candidate file is Unknown, by a `Not established.` sentence giving their number and saying that what they '
-    'write is counted in no row, so each count is of the files read and never a total (VIS-2); under `<h2>What is going away</h2>` each '
+    'row.`, followed, where any candidate file is Unknown or left out for its secret path, by a `Not established.` sentence giving the number '
+    'of both and saying that what they write is counted in no row, so each count is of the files read and never a total (VIS-2); under '
+    '`<h2>Deprecation markers</h2>` a sentence saying that these are what may be going away, that each is a line that writes a deprecation '
+    'form and never a claim that anything is deprecated, and that a Python line may handle or silence a deprecation warning rather than '
+    'raise one, then each '
     'listed deprecation marker, and under `<h2>Every other marker, by unit</h2>` each other listed marker, both grouped by unit in the '
     'table\'s order, in Syzygy\'s words `<marker>, in <path> at line <n>:` for TODO, FIXME and HACK, `Deprecation marker <marker>, in '
     '<path> at line <n>:` and `Issue reference <marker>, in <path> at line <n>:`, followed by the quote in a `<q>` element, marked `Derived '
@@ -118,7 +126,7 @@ SCENARIOS = '''
 #### Scenario: Rough-edges page rendered
 
 - **WHEN** a render holds the derived structure and a member whose units are the root and `web`, whose markers are a `TODO` quoted `# TODO: pin <versions>`, a `HACK` and an issue reference `#7` on one line, and an `@deprecated`, and whose one Unknown file is web/open.ts (`unparsed`, `unterminated`)
-- **THEN** `reference/rough-edges.html` holds the per-unit table with the row `Repository root`, the deprecation marker under `What is going away` and the others under `Every other marker, by unit`, each with `Derived by Syzygy`, its evidence and its quote shown as `# TODO: pin &lt;versions&gt;`, the issue reference with its `Not established.` statement and `data-unknown-reason="source-uncaptured-or-unreachable"`, and the Unknown file's item opened by `Not established.` with `data-unknown-reason="mapping-coverage-absent"`
+- **THEN** `reference/rough-edges.html` holds the per-unit table with the row `Repository root`, the deprecation marker under `Deprecation markers` and the others under `Every other marker, by unit`, each with `Derived by Syzygy`, its evidence and its quote shown as `# TODO: pin &lt;versions&gt;`, the issue reference with its `Not established.` statement and `data-unknown-reason="source-uncaptured-or-unreachable"`, and the Unknown file's item opened by `Not established.` with `data-unknown-reason="mapping-coverage-absent"`
 - **AND** `contents.html` links the page, `machine.json`'s `roughEdges` holds its page and the member's markers, and the page holds no script and no link to an issue
 
 #### Scenario: Rough edges Unknown when the tree is not listed

@@ -19,10 +19,10 @@
       "candidates": 2334,
       "secretPathsLeftOut": 0,
       "setApart": 0,
-      "observed": 961,
-      "unknown": 1373,
+      "observed": 967,
+      "unknown": 1367,
       "valuesLeftOut": 0,
-      "markers": 19,
+      "markers": 21,
       "filesNotListed": 1334
     },
     "markersByKind": {
@@ -30,16 +30,16 @@
       "fixme": 0,
       "hack": 0,
       "deprecation": 0,
-      "issue-reference": 18
+      "issue-reference": 20
     },
     "unknownFilesListedByReason": {
-      "unparsed/unterminated": 10,
       "secret-detector-match": 28,
+      "unparsed/unterminated": 4,
       "active-content": 1
     },
     "uncounted": {
       "basis": "Unknown, never zero: no row of units counts a file not read for markers",
-      "unknownFiles": 1373
+      "unknownFiles": 1367
     },
     "units": [
       {
@@ -68,14 +68,14 @@
       },
       {
         "unit": "apps",
-        "files": 197,
-        "markers": 9,
+        "files": 203,
+        "markers": 11,
         "byKind": {
           "todo": 1,
           "fixme": 0,
           "hack": 0,
           "deprecation": 0,
-          "issue-reference": 8
+          "issue-reference": 10
         }
       },
       {
@@ -92,8 +92,8 @@
       }
     ],
     "unitsNotListed": 0,
-    "markersListed": 19,
+    "markersListed": 21,
     "markersNotListed": 0,
-    "deriveElapsedMs": 28990
+    "deriveElapsedMs": 14184
   }
 }

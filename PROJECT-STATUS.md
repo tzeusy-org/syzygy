@@ -323,6 +323,12 @@ It replaces REQ-polaris-generation-034 from version 2.40, the figure walks (291 
 render reads declared test names lexically and publishes them per unit on `reference/test-names.html`.
 
 With the test-name recognizers version effective, Polaris has 39 requirements and 644 scenarios.
+
+[Rough-edge markers amendment 2.43](openspec/changes/dossier-rough-edges) is agent-adopted in A-338.
+It replaces REQ-polaris-generation-034 from version 2.42, the test-name recognizers (297 to 304 scenarios): each operator-agent
+render reads TODO, FIXME, HACK, deprecation markers and issue references lexically and publishes them per unit on `reference/rough-edges.html`.
+
+With the rough-edge markers version effective, Polaris has 39 requirements and 651 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
