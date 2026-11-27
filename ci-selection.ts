@@ -26,6 +26,8 @@
 // A change the graph cannot bound runs every tier in full: manifests, the lockfile, test and type configuration, the
 // workflow, this selector and its runners, and a deleted or renamed workspace module.
 
+import type { ReaderInventory } from './ci-reader-inventory.js';
+
 /** One changed path, as `git diff --name-status` reports it. Renames and copies also list the source path. */
 export interface ChangedPath {
   readonly status: string;
@@ -53,7 +55,7 @@ export const FULL_RUN_TRIGGERS: ReadonlyArray<{ readonly rule: string; readonly 
   { rule: 'test configuration', test: /^vitest[^/]*\.(ts|mts|js|mjs)$/u },
   { rule: 'package test configuration', test: /^(apps|packages)\/[^/]+\/vitest[^/]*\.(ts|mts|js|mjs)$/u },
   { rule: 'type configuration', test: /(^|\/)tsconfig[^/]*\.json$/u },
-  { rule: 'selector', test: /^ci-selection\.ts$/u },
+  { rule: 'selector', test: /^ci-(selection|reader-inventory)\.ts$/u },
   { rule: 'selector', test: /^scripts\/(select_ci_tests|run_ci_tier|check_unit_tmpdir)\.mjs$/u },
   { rule: 'workflow', test: /^\.github\/workflows\//u },
 ];
@@ -91,11 +93,13 @@ export function fullSelection(reasons: readonly string[]): SelectionPlan {
 
 /**
  * Only changes eligible for selection need the module inventory. The reader returns undefined when it cannot supply
- * every tracked workspace module (repository-relative) and its exact text.
+ * every tracked workspace module (repository-relative) and its exact text. Registered filesystem input families
+ * can add named full-run reasons before the remaining graph heuristics.
  */
 export function planSelection(
   changed: readonly ChangedPath[],
   readModules: () => ReadonlyMap<string, string> | undefined,
+  readInventory?: (modules: ReadonlyMap<string, string>) => ReaderInventory,
 ): SelectionPlan {
   if (changed.length === 0) return { mode: 'selected', reasons: [], code: [], documents: [], related: [] };
   const reasons = new Set<string>();
@@ -111,6 +115,17 @@ export function planSelection(
   if (reasons.size > 0) return fullSelection([...reasons]);
   const modules = readModules();
   if (modules === undefined) return fullSelection(['Tracked workspace modules could not be read exactly']);
+
+  const inventory = readInventory?.(modules);
+  if (inventory !== undefined) {
+    if ('issue' in inventory) return fullSelection([inventory.issue]);
+    for (const change of changed) {
+      for (const path of change.previous === undefined ? [change.path] : [change.previous, change.path]) {
+        if (inventory.matches(path)) reasons.add(`tracked test reader (${inventory.reader}): ${path}`);
+      }
+    }
+    if (reasons.size > 0) return fullSelection([...reasons]);
+  }
 
   const code = new Set<string>();
   const documents: Array<{ path: string; tokens: string[]; readers: string[] }> = [];

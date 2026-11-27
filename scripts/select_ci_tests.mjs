@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const { fullSelection, matchesPullRequestCheckout, parseGitPathList, parseNameStatus, planSelection } =
   await import(join(ROOT, 'ci-selection.ts'));
+const { dossierCorpusReaders, DOSSIER_CORPUS_MANIFEST } = await import(join(ROOT, 'ci-reader-inventory.ts'));
 const { TIERS, testFiles, filesOfTier } = await import(join(ROOT, 'vitest.tiers.ts'));
 
 function argument(name) {
@@ -83,8 +84,27 @@ function readTrackedModules() {
   }
 }
 
+function readInventory(head, modules) {
+  let manifest;
+  try {
+    const entries = parseGitPathList(git('ls-tree', '-z', '--full-tree', head, '--', DOSSIER_CORPUS_MANIFEST));
+    if (entries.length > 0) {
+      const entry = /^(?:100644|100755) blob ([0-9a-f]{40})\t(.+)$/u.exec(entries[0]);
+      if (entries.length !== 1 || entry?.[2] !== DOSSIER_CORPUS_MANIFEST) {
+        throw new Error('unreadable dossier corpus manifest entry');
+      }
+      manifest = JSON.parse(utf8.decode(git('cat-file', 'blob', entry[1])));
+    }
+  } catch {
+    return { issue: 'Tracked dossier corpus reader manifest could not be read exactly' };
+  }
+  return dossierCorpusReaders(modules, manifest);
+}
+
 const { head, changed, fallbackReason } = changeInputs();
-const plan = fallbackReason === null ? planSelection(changed, readTrackedModules) : fullSelection([fallbackReason]);
+const plan = fallbackReason === null
+  ? planSelection(changed, readTrackedModules, (modules) => readInventory(head, modules))
+  : fullSelection([fallbackReason]);
 const population = testFiles(ROOT);
 const tiers = Object.fromEntries(TIERS.map((tier) => [tier, filesOfTier(population, tier)]));
 

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { DOSSIER_CORPUS_MANIFEST, dossierCorpusReaders } from '../../../ci-reader-inventory.js';
 import {
   FULL_RUN_TRIGGERS, ROOTED, WALKS, matchesPullRequestCheckout, namesPath, parseGitPathList, parseNameStatus,
   planSelection as select, readerTokens, type ChangedPath,
@@ -50,7 +51,7 @@ describe('the pull-request selection plan', () => {
 
   it('runs every tier for a change the graph cannot bound, naming each trigger', () => {
     const triggers = ['package.json', 'apps/a/package.json', 'package-lock.json', '.npmrc', 'vitest.config.ts', 'vitest.tiers.ts', 'vitest.setup.ts',
-      'packages/cap1-system/vitest.config.ts', 'tsconfig.json', 'packages/p/tsconfig.build.json', 'ci-selection.ts', 'scripts/select_ci_tests.mjs',
+      'packages/cap1-system/vitest.config.ts', 'tsconfig.json', 'packages/p/tsconfig.build.json', 'ci-selection.ts', 'ci-reader-inventory.ts', 'scripts/select_ci_tests.mjs',
       'scripts/run_ci_tier.mjs', 'scripts/check_unit_tmpdir.mjs', '.github/workflows/node-ci.yml',
       '.github/workflows/governance-docs.yml', '.github/workflows/generation-mutation-gate.yml'];
     for (const path of triggers) {
@@ -182,5 +183,67 @@ describe('its parts', () => {
       expect(() => parseNameStatus(new TextEncoder().encode(record))).toThrow(/unreadable Git (?:path|name-status)/u);
     }
     expect(() => parseNameStatus(Uint8Array.of(77, 0, 0xff, 0))).toThrow();
+  });
+});
+
+
+describe('tracked dossier corpus reader inputs', () => {
+  const reader = 'packages/polaris-dossier/src/corpus.test.ts';
+  const costs = 'docs/evidence/pursuit-2026-11-21b/measure-now.json';
+  const references = '.claude/skills/polaris-dossier/references';
+  const trackedReader = `import { mechanismVersion } from './corpus.js';
+    const MANIFEST = '${DOSSIER_CORPUS_MANIFEST}';
+    const COSTS = '${costs}';
+    readJson(MANIFEST);
+    readJson(COSTS);`;
+  const manifest = {
+    format: 'polaris-dossier-corpus/1',
+    mechanismVersion: {
+      format: 'polaris-dossier-mechanism/1',
+      members: [{ group: 'agent-texts', path: `${references}/*.md` }, { group: 'agent-texts', path: 'docs/direct-only.md' }],
+      excludeSuffixes: ['.draft.md'],
+    },
+  };
+  const withInventory = (
+    changed: readonly ChangedPath[],
+    modules: ReadonlyMap<string, string> = new Map([[reader, trackedReader]]),
+    declaration: unknown = manifest,
+  ) => select(changed, () => modules, (sources) => dossierCorpusReaders(sources, declaration));
+  const fullReason = (path: string) => `tracked test reader (${reader}): ${path}`;
+
+  it('runs full for direct inputs and every matching member, including a newly tracked path', () => {
+    for (const path of [DOSSIER_CORPUS_MANIFEST, costs, 'docs/direct-only.md', `${references}/new-reference.md`]) {
+      expect(withInventory([M('A', path)]), path).toMatchObject({ mode: 'full', reasons: [fullReason(path)] });
+    }
+  });
+
+  it('matches both change names and a deletion, while keeping the same basename elsewhere and excluded suffixes narrow', () => {
+    const prior = `${references}/only.md`;
+    expect(withInventory([M('R100', 'docs/former-reference.md', prior)]).reasons).toEqual([fullReason(prior)]);
+    expect(withInventory([M('D', prior)]).reasons).toEqual([fullReason(prior)]);
+    for (const path of [prior.replace('.claude/', '.codex/'), `${references}/nested/only.md`, `${references}/ignored.draft.md`]) {
+      expect(withInventory([M('M', path)]).mode, path).toBe('selected');
+    }
+  });
+
+  it('names a newly tracked related reader and refuses changed direct paths or an unresolved reader call', () => {
+    const changed = [M('M', 'docs/unrelated.md')];
+    const newReader = 'packages/polaris-dossier/src/extra-reader.test.ts';
+    const modules = new Map([[reader, trackedReader], [newReader, "import { mechanismVersion as version } from './corpus.js'; version(manifest, tree);"]]);
+    expect(withInventory(changed, modules).reasons).toEqual([`Unregistered dossier corpus test reader: ${newReader}`]);
+    modules.set(newReader, "import type { MechanismTree } from './corpus.js';");
+    expect(withInventory(changed, modules).mode).toBe('selected');
+    for (const input of ["'docs/unlisted.md'", 'fromEnvironment()']) {
+      const drifted = new Map([[reader, `${trackedReader} readJson(${input});`]]);
+      expect(withInventory(changed, drifted).reasons).toEqual([`Tracked dossier corpus test reader inputs drifted: ${reader}`]);
+    }
+  });
+
+  it('names a malformed declaration or an absent known consumer rather than choosing a narrow plan', () => {
+    const changed = [M('M', 'docs/other.md')];
+    const badMechanism = { ...manifest.mechanismVersion, members: [{ group: 'agent-texts', path: 'docs/*/outside.md' }] };
+    expect(withInventory(changed, undefined, { ...manifest, mechanismVersion: badMechanism }).reasons)
+      .toEqual(['Tracked dossier corpus reader manifest could not be read exactly']);
+    expect(withInventory(changed, new Map()).reasons).toEqual([`Tracked dossier corpus test reader inputs drifted: ${reader}`]);
   });
 });
