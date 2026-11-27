@@ -1,0 +1,441 @@
+{
+  "subject": {
+    "tree": "syzygy (this repository)",
+    "commit": "208946ab430101e40358961cc5f5a1c029726b4c",
+    "policy": "polaris-butlers-project-shape-secrets dossier-declared-source/2.0.0",
+    "policySha256": "8c10531f57d129ad5d402e53d7d9fdc741387f6eaab701bbdb46419181b11967"
+  },
+  "before": {
+    "testNamesRead": 0,
+    "pagesListingTestNames": 0,
+    "basis": "no rule before REQ-polaris-generation-034 version 2.34 read a test name"
+  },
+  "after": {
+    "format": "polaris-dossier-test-names/1",
+    "recognizers": [
+      {
+        "rule": "pytest-test-name",
+        "ruleVersion": 1,
+        "label": "inferred",
+        "candidates": 9,
+        "secretPathsLeftOut": 0,
+        "setApart": 0,
+        "inferred": 9,
+        "unknown": 0,
+        "valuesLeftOut": 0,
+        "names": 68,
+        "filesNotListed": 0
+      },
+      {
+        "rule": "js-test-call",
+        "ruleVersion": 1,
+        "label": "inferred",
+        "candidates": 383,
+        "secretPathsLeftOut": 0,
+        "setApart": 0,
+        "inferred": 212,
+        "unknown": 171,
+        "valuesLeftOut": 1,
+        "names": 2278,
+        "filesNotListed": 133
+      },
+      {
+        "rule": "go-test-function",
+        "ruleVersion": 1,
+        "label": "inferred",
+        "candidates": 0,
+        "secretPathsLeftOut": 0,
+        "setApart": 0,
+        "inferred": 0,
+        "unknown": 0,
+        "valuesLeftOut": 0,
+        "names": 0,
+        "filesNotListed": 0
+      },
+      {
+        "rule": "junit-test-method",
+        "ruleVersion": 1,
+        "label": "inferred",
+        "candidates": 0,
+        "secretPathsLeftOut": 0,
+        "setApart": 0,
+        "inferred": 0,
+        "unknown": 0,
+        "valuesLeftOut": 0,
+        "names": 0,
+        "filesNotListed": 0
+      }
+    ],
+    "unknownFiles": [
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/materialize-action.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-style-tokens.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/polaris-generation/repo-corpus-isolation.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/polaris-presentation-route.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/polaris-reconciliation.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/polaris-source-route.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/proposal-disclosure.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/response-limits.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/routes.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/surface-routes.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/trajectory.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "apps/three-surface-poc/src/tuple-encoding.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/cap1-conformance/src/req-015.conformance.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/cap1-daemon/src/routes-machine.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/cap1-daemon/src/server.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/cap1-system/src/consent-coverage.system.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/cap1-system/src/credentials.system.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/cap1-system/src/degradation.system.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/cap1-system/src/fresh-clone.system.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/cap1-system/src/full-facts.system.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/cap1-system/src/write-boundary.system.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/polaris-dossier/src/agent-texts.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/polaris-dossier/src/census.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/polaris-dossier/src/check.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/polaris-dossier/src/close.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/polaris-dossier/src/credential-probe.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/polaris-dossier/src/derive.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/polaris-dossier/src/derived-record.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/polaris-dossier/src/gate-parts.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/polaris-dossier/src/inventory-coverage.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/polaris-dossier/src/inventory.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/polaris-dossier/src/launch-clone.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/polaris-dossier/src/launch-identity.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      },
+      {
+        "rule": "js-test-call",
+        "path": "packages/polaris-dossier/src/launch.test.ts",
+        "reason": "secret-detector-match",
+        "parseFault": null
+      }
+    ],
+    "uncounted": {
+      "basis": "Unknown, never zero: no row of units counts a file not read for names",
+      "unknownFiles": 171,
+      "filesNotListed": 133,
+      "withheldBySecretDetector": 38
+    },
+    "units": [
+      {
+        "unit": "apps",
+        "files": 100,
+        "names": 1053,
+        "byRule": {
+          "pytest-test-name": 0,
+          "js-test-call": 1053,
+          "go-test-function": 0,
+          "junit-test-method": 0
+        }
+      },
+      {
+        "unit": "docs",
+        "files": 19,
+        "names": 43,
+        "byRule": {
+          "pytest-test-name": 0,
+          "js-test-call": 43,
+          "go-test-function": 0,
+          "junit-test-method": 0
+        }
+      },
+      {
+        "unit": "packages",
+        "files": 98,
+        "names": 1182,
+        "byRule": {
+          "pytest-test-name": 0,
+          "js-test-call": 1182,
+          "go-test-function": 0,
+          "junit-test-method": 0
+        }
+      },
+      {
+        "unit": "scripts",
+        "files": 4,
+        "names": 68,
+        "byRule": {
+          "pytest-test-name": 68,
+          "js-test-call": 0,
+          "go-test-function": 0,
+          "junit-test-method": 0
+        }
+      }
+    ],
+    "unitsNotListed": 0,
+    "namesListed": 2000,
+    "namesNotListed": 346,
+    "firstNames": [
+      {
+        "name": "POC-REQ-001: the code-structure observation states its provenance once",
+        "kind": "suite",
+        "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+        "line": 132,
+        "rule": "js-test-call"
+      },
+      {
+        "name": "names git HEAD in one shared-shape record, and no other field holds the revision or the capture instant",
+        "kind": "test",
+        "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+        "line": 133,
+        "rule": "js-test-call"
+      },
+      {
+        "name": "a sampled entry's size and digest match stat and an independent digest at that commit",
+        "kind": "test",
+        "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+        "line": 143,
+        "rule": "js-test-call"
+      },
+      {
+        "name": "falsifier: the oracle names each limb",
+        "kind": "suite",
+        "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+        "line": 153,
+        "rule": "js-test-call"
+      },
+      {
+        "name": "a provenance revision that differs from HEAD",
+        "kind": "test",
+        "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+        "line": 154,
+        "rule": "js-test-call"
+      },
+      {
+        "name": "no provenance record",
+        "kind": "test",
+        "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+        "line": 160,
+        "rule": "js-test-call"
+      },
+      {
+        "name": "the record in another shape (a list, or a field outside the shared shape)",
+        "kind": "test",
+        "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+        "line": 166,
+        "rule": "js-test-call"
+      },
+      {
+        "name": "another observation field holding the revision",
+        "kind": "test",
+        "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+        "line": 178,
+        "rule": "js-test-call"
+      },
+      {
+        "name": "an entry carrying the revision",
+        "kind": "test",
+        "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+        "line": 184,
+        "rule": "js-test-call"
+      },
+      {
+        "name": "an entry carrying the capture instant",
+        "kind": "test",
+        "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+        "line": 190,
+        "rule": "js-test-call"
+      },
+      {
+        "name": "POC-REQ-010: the work-item observation states its provenance once",
+        "kind": "suite",
+        "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+        "line": 199,
+        "rule": "js-test-call"
+      },
+      {
+        "name": "names the Dolt head in one shared-shape record, and no other field holds the revision or the capture instant",
+        "kind": "test",
+        "path": "apps/three-surface-poc/src/block-provenance-sweep.test.ts",
+        "line": 200,
+        "rule": "js-test-call"
+      }
+    ]
+  }
+}

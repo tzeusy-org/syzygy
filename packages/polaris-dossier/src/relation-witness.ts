@@ -220,6 +220,15 @@ export function decideWitness(edge: WitnessEdge, inputs: WitnessInputs, table: r
   return { state: 'challenged', reason: null, factKind: row.fact, rule: rule.id, ruleVersion: rule.version };
 }
 
+/** Whether a row of rule `relation-witness` at the eligibility table given joins the relation and the two unit kinds (version 2.24): the
+ * relation has a row, the units are that row's kinds, and the rule the row reads for this source is in the table. */
+export function derivable(relation: RelationType, from: Unit, to: Unit, table: readonly EligibilityRow[] = ELIGIBILITY_TABLE): boolean {
+  const row = rowOf(relation);
+  if (row === undefined || from.kind !== row.from || to.kind !== row.to) return false;
+  const rule = row.rule(from);
+  return rule !== undefined && table.some((entry) => entry.rule === rule.id && entry.version === rule.version);
+}
+
 /** A render's decision (version 2.19): an edge is witnessed there only where the joining fact renders Observed; otherwise it is `unknown`
  * with `fact-not-current`. Check reads no currency policy for this rule and never applies this. */
 export function witnessAtRender(decision: WitnessDecision, rendersObserved: (factId: string) => boolean): WitnessDecision {

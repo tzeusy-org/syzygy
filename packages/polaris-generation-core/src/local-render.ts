@@ -260,6 +260,63 @@ export type LocalManifestFacts =
   }
   | { readonly format: string; readonly state: 'unknown'; readonly why: string };
 
+/** The declared test names this render derived itself (REQ-polaris-generation-034 version 2.42): four lexical recognizers' names in the
+ * admitted test files of the pinned tree, each Inferred, mapped to its unit by rule `top-level-unit`. */
+export interface LocalTestNamesFile {
+  readonly path: string;
+  readonly epistemic: 'inferred' | 'unknown';
+  readonly unknownReason: string | null;
+  readonly parseFault: string | null;
+  readonly names: number | null;
+  readonly valuesLeftOut: number | null;
+}
+export interface LocalTestNamesRecognizer {
+  readonly rule: string;
+  readonly ruleVersion: number;
+  readonly label: 'inferred';
+  readonly candidates: number;
+  readonly secretPathsLeftOut: number;
+  readonly setApart: number;
+  readonly inferred: number;
+  readonly unknown: number;
+  readonly valuesLeftOut: number;
+  readonly names: number;
+  readonly files: readonly LocalTestNamesFile[];
+  readonly filesNotListed: number;
+}
+export interface LocalTestName {
+  readonly id: string;
+  readonly name: string;
+  readonly kind: 'test' | 'suite';
+  readonly rule: string;
+  readonly ruleVersion: number;
+  readonly path: string;
+  readonly line: number;
+  readonly unit: string | null;
+  readonly epistemic: 'inferred';
+}
+export type LocalTestNames =
+  | {
+    readonly format: string;
+    readonly state: 'derived';
+    readonly screeningPolicy: { readonly policyId: string; readonly policyVersion: string; readonly sha256: string };
+    readonly unitRule: { readonly rule: string; readonly ruleVersion: number };
+    readonly recognizers: readonly LocalTestNamesRecognizer[];
+    readonly units: readonly { readonly unit: string | null; readonly files: number; readonly names: number; readonly byRule: Readonly<Record<string, number>> }[];
+    readonly unitsNotListed: number;
+    readonly names: readonly LocalTestName[];
+    readonly namesNotListed: number;
+  }
+  | { readonly format: string; readonly state: 'unknown'; readonly why: string };
+/** A schema-v12 draft's model (version 2.24): identities, types, parents, bases and the views (diagram ids, in diagram order) selecting
+ * each. Labels, marks and citations stay in the expanded figures' claims. */
+export interface LocalModel {
+  readonly elements: readonly { readonly id: string; readonly type: string; readonly parent: string | null; readonly views: readonly string[] }[];
+  readonly relationships: readonly {
+    readonly id: string; readonly from: string; readonly to: string; readonly relation: string; readonly basis: 'cited' | 'derived'; readonly views: readonly string[];
+  }[];
+}
+
 /** One schema-v9 graph edge's relation and witness state at a render (version 2.19). `witness` is the machine form. A witnessed edge alone
  * names its fact, rule and version and carries `evidence`: Syzygy's words for the relation, the witnessing fact's kind, and the revision and
  * digest of the record it is a fact of; every other edge carries nulls there and no `evidence`. */
@@ -313,9 +370,16 @@ export interface LocalRenderInput {
   /** The declared manifest facts this render derived itself (version 2.9), from which the unit map and the CI pipeline map are drawn. The
    * three computed map pages render only where this and `derivedStructure` are both present; `syzygy dossier render` always supplies both. */
   readonly manifestFacts?: LocalManifestFacts;
+  /** The declared test names this render derived itself (version 2.42), from which the test-names reference page is drawn. The page
+   * renders only where this and `derivedStructure` are both present, so an input without it keeps its pages and machine view. */
+  readonly testNames?: LocalTestNames;
   /** A schema-v9 draft's graph edges (REQ-polaris-generation-034 version 2.19), by edge id: each edge's relation and the witness state rule
    * `relation-witness` gives it at this render. Absent for every earlier draft, so its pages and machine view keep their bytes. */
   readonly edgeRelations?: ReadonlyMap<string, LocalEdgeRelation>;
+  /** A schema-v12 draft's system model (REQ-polaris-generation-034 version 2.24): its elements and relationships, each with the views that
+   * select it, whose figures the draft's `diagrams` carry already expanded. Absent for every earlier draft, so its pages and machine view
+   * keep their bytes. */
+  readonly model?: LocalModel;
   /** A schema-v6 draft's `thesisBasis` (REQ-polaris-generation-034 version 2.4): what the authoring session says its introduction rests
    * on, and whether the code-reading line renders before it. Absent for every earlier draft, so its pages and machine view keep their
    * bytes. */

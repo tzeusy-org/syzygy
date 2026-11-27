@@ -318,6 +318,12 @@ or deep dive may walk one graph figure in numbered steps, linking each step to i
 
 With the figure walks version effective, Polaris has 39 requirements and 638 scenarios.
 
+[Test-name recognizers amendment 2.42](openspec/changes/dossier-test-names) is agent-adopted in A-337.
+It replaces REQ-polaris-generation-034 from version 2.40, the figure walks (291 to 297 scenarios): each operator-agent
+render reads declared test names lexically and publishes them per unit on `reference/test-names.html`.
+
+With the test-name recognizers version effective, Polaris has 39 requirements and 644 scenarios.
+
 [Migration bounds amendment 2.41](openspec/changes/dossier-migration-bounds) is agent-adopted in A-272.
 It replaces REQ-polaris-generation-034 from version 2.40, the figure walks (291 to 292 scenarios): the v10 and v11
 migration keeps its parity only where the migrated model fits the v12 bounds of 200 elements and 400 relationships.

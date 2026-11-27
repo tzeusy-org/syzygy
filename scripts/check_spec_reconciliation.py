@@ -3624,22 +3624,22 @@ WALK_SUBJECTS = {
 }
 WALK_BOUND_PARTS = len(WALK_SUBJECTS)
 
-# The v2.41 migration bounds (syzygy-3efd.87): one MODIFIED REQ-polaris-generation-034 after
+# The v2.42 test-name recognizers (syzygy-5dhm.45): one MODIFIED REQ-polaris-generation-034 after
 # the v2.40 figure walks, adopted by an agent row and its version tag.
-MIGBOUND_CHANGE = "dossier-migration-bounds"
-MIGBOUND_HOME = f"{CHANGES}/{MIGBOUND_CHANGE}"
-MIGBOUND_SPEC = f"{MIGBOUND_HOME}/proposed/polaris-generation/spec.md"
-MIGBOUND_UNION = f"{MIGBOUND_HOME}/GOVERNING-DEPENDENCIES.json"
-MIGBOUND_TAG = "polaris-dossier-migration-bounds-v2.41"
-MIGBOUND_STATUS_PREFIX = f"[Migration bounds amendment 2.41]({MIGBOUND_HOME})"
-MIGBOUND_INDEX_PREFIX = f"| [`{MIGBOUND_CHANGE}`]("
-MIGBOUND_REPLACES = (POLARIS_ID + "034",)
-MIGBOUND_COUNT_SCOPE = "With the migration bounds"
-MIGBOUND_COUNT_PREFIX = "With the migration bounds version effective, Polaris has "
-MIGBOUND_SUBJECTS = {
-    MIGBOUND_SPEC: "64869dc96bf377b6d085bb646e0873606e631adb42084eb8723caa3f82e30b4c",
+TNAMES_CHANGE = "dossier-test-names"
+TNAMES_HOME = f"{CHANGES}/{TNAMES_CHANGE}"
+TNAMES_SPEC = f"{TNAMES_HOME}/proposed/polaris-generation/spec.md"
+TNAMES_UNION = f"{TNAMES_HOME}/GOVERNING-DEPENDENCIES.json"
+TNAMES_TAG = "polaris-dossier-test-names-v2.42"
+TNAMES_STATUS_PREFIX = f"[Test-name recognizers amendment 2.42]({TNAMES_HOME})"
+TNAMES_INDEX_PREFIX = f"| [`{TNAMES_CHANGE}`]("
+TNAMES_REPLACES = (POLARIS_ID + "034",)
+TNAMES_COUNT_SCOPE = "With the test-name recognizers"
+TNAMES_COUNT_PREFIX = "With the test-name recognizers version effective, Polaris has "
+TNAMES_SUBJECTS = {
+    TNAMES_SPEC: "82293d2d720fa8de3ead5234abfef86d0105db73fa2e4ff3c3ca6da097ed3e7b",
 }
-MIGBOUND_BOUND_PARTS = len(MIGBOUND_SUBJECTS)
+TNAMES_BOUND_PARTS = len(TNAMES_SUBJECTS)
 
 
 def is_vbase_screening_row(row):
@@ -4144,6 +4144,23 @@ def walk_disposition(root, rows):
     return None
 
 
+def is_tnames_row(line):
+    return _is_reviewed_version_row(line, TNAMES_TAG, TNAMES_SUBJECTS)
+
+
+def tnames_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_tnames_row(line)]
+
+
+def tnames_disposition(root, rows):
+    if TNAMES_TAG is not None and len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), TNAMES_TAG,
+                                    TNAMES_SUBJECTS, plain_revert=True)
+    return None
+
+
 def walk_binding(root):
     """Apply the figure walks only over the effective v2.39 import facts REQ-034."""
     return _reviewed_version_binding(
@@ -4163,38 +4180,21 @@ def walk_delta(root, findings):
     return added
 
 
-def is_migbound_row(line):
-    return _is_reviewed_version_row(line, MIGBOUND_TAG, MIGBOUND_SUBJECTS)
-
-
-def migbound_rows(root):
-    return [[cell.strip() for cell in line.split("|")[1:-1]]
-            for line in adoption_table_rows(root) if is_migbound_row(line)]
-
-
-def migbound_disposition(root, rows):
-    if MIGBOUND_TAG is not None and len(rows) == 1 and len(rows[0]) == 7:
-        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
-        return recorded_disposition(root, identity, commit.strip("`"), MIGBOUND_TAG,
-                                    MIGBOUND_SUBJECTS, plain_revert=True)
-    return None
-
-
-def migbound_binding(root):
-    """Apply the migration bounds only over the effective v2.40 figure walks REQ-034."""
+def tnames_binding(root):
+    """Apply the test-name recognizers only over the effective v2.40 figure walks REQ-034."""
     return _reviewed_version_binding(
-        root, migbound_rows(root), migbound_disposition,
-        version_tag=MIGBOUND_TAG, subjects_map=MIGBOUND_SUBJECTS, spec=MIGBOUND_SPEC,
-        predecessor=walk_binding, predecessor_label="v2.40 figure walks", version="v2.41",
-        label="migration bounds",
+        root, tnames_rows(root), tnames_disposition,
+        version_tag=TNAMES_TAG, subjects_map=TNAMES_SUBJECTS, spec=TNAMES_SPEC,
+        predecessor=walk_binding, predecessor_label="v2.40 figure walks", version="v2.42",
+        label="test-name recognizers",
     )
 
 
-def migbound_delta(root, findings):
-    """Scenarios the migration bounds add to REQ-034 over the figure walks, counted from both texts."""
-    added = p5_advice_member_delta(read_text(root, WALK_SPEC) or "", read_text(root, MIGBOUND_SPEC) or "")
+def tnames_delta(root, findings):
+    """Scenarios the test-name recognizers add to REQ-034 over the figure walks, counted from both texts."""
+    added = p5_advice_member_delta(read_text(root, WALK_SPEC) or "", read_text(root, TNAMES_SPEC) or "")
     if added is None:
-        findings.append("POLARIS migration bounds: cannot count predecessor and successor for 034")
+        findings.append("POLARIS test-name recognizers: cannot count predecessor and successor for 034")
         return 0
     return added
 
@@ -5091,15 +5091,15 @@ def check_outcomes(root, report):
         subjects_seen += WALK_BOUND_PARTS
     r1 += walk_records
     r2 += walk_subjects
-    migbound_retired_by = migbound_disposition(root, migbound_rows(root))
-    migbound_amendment, migbound_records, migbound_subjects = migbound_binding(root)
-    if migbound_retired_by:
+    tnames_retired_by = tnames_disposition(root, tnames_rows(root))
+    tnames_amendment, tnames_records, tnames_subjects = tnames_binding(root)
+    if tnames_retired_by:
         records += 2
-    elif migbound_amendment is not None or migbound_records or migbound_subjects:
+    elif tnames_amendment is not None or tnames_records or tnames_subjects:
         records += 1
-        subjects_seen += MIGBOUND_BOUND_PARTS
-    r1 += migbound_records
-    r2 += migbound_subjects
+        subjects_seen += TNAMES_BOUND_PARTS
+    r1 += tnames_records
+    r2 += tnames_subjects
     retirement = ""
     if declared_retired_by:
         retirement += f"; v2.0 inactive by {declared_retired_by}"
@@ -5163,8 +5163,8 @@ def check_outcomes(root, report):
         retirement += f"; v2.39 inactive by {impfacts_retired_by}"
     if walk_retired_by:
         retirement += f"; v2.40 inactive by {walk_retired_by}"
-    if migbound_retired_by:
-        retirement += f"; v2.41 inactive by {migbound_retired_by}"
+    if tnames_retired_by:
+        retirement += f"; v2.42 inactive by {tnames_retired_by}"
     if vbase_retired_by:
         retirement += f"; v2.34 inactive by {vbase_retired_by}"
     if qfile_retired_by:
@@ -6555,14 +6555,14 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, walk_amendment, WALK_REPLACES)
                 pa += extra_a
                 pb += extra_b
-        migbound_amendment, migbound_records, migbound_subjects = migbound_binding(root)
-        findings += migbound_records + migbound_subjects
-        if migbound_amendment is not None:
+        tnames_amendment, tnames_records, tnames_subjects = tnames_binding(root)
+        findings += tnames_records + tnames_subjects
+        if tnames_amendment is not None:
             if walk_amendment is None:
-                findings.append("POLARIS: migration bounds require effective figure walks v2.40")
+                findings.append("POLARIS: test-name recognizers require effective figure walks v2.40")
             else:
-                a, extra_a = compose_figure_by_id(a, migbound_amendment, MIGBOUND_REPLACES)
-                b, extra_b = compose_figure_by_name(b, migbound_amendment, MIGBOUND_REPLACES)
+                a, extra_a = compose_figure_by_id(a, tnames_amendment, TNAMES_REPLACES)
+                b, extra_b = compose_figure_by_name(b, tnames_amendment, TNAMES_REPLACES)
                 pa += extra_a
                 pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
@@ -6643,12 +6643,12 @@ def vbase_screening_projects(root, pop, findings):
                         if errors_a or errors_b or by_id != by_name:
                             findings.append("POLARIS figure walks: selected census projections disagree")
                         selected_population = by_id
-                        migbound_amendment, _records, _subjects = migbound_binding(root)
-                        if migbound_amendment is not None:
-                            by_id, errors_a = compose_figure_by_id(selected_population, migbound_amendment, MIGBOUND_REPLACES)
-                            by_name, errors_b = compose_figure_by_name(selected_population, migbound_amendment, MIGBOUND_REPLACES)
+                        tnames_amendment, _records, _subjects = tnames_binding(root)
+                        if tnames_amendment is not None:
+                            by_id, errors_a = compose_figure_by_id(selected_population, tnames_amendment, TNAMES_REPLACES)
+                            by_name, errors_b = compose_figure_by_name(selected_population, tnames_amendment, TNAMES_REPLACES)
                             if errors_a or errors_b or by_id != by_name:
-                                findings.append("POLARIS migration bounds: selected census projections disagree")
+                                findings.append("POLARIS test-name recognizers: selected census projections disagree")
                             selected_population = by_id
     if selected_population != current:
         findings.append("POLARIS: selected census differs from the separately verified screening transition")
@@ -7047,8 +7047,8 @@ def polaris_expected(root, findings):
         n_scen += impfacts_delta(root, findings)
     if walk_binding(root)[0] is not None:
         n_scen += walk_delta(root, findings)
-    if migbound_binding(root)[0] is not None:
-        n_scen += migbound_delta(root, findings)
+    if tnames_binding(root)[0] is not None:
+        n_scen += tnames_delta(root, findings)
     return n_req, n_scen, ids
 
 
@@ -7313,9 +7313,9 @@ def check_generated(root, pop, report):
     walk_amendment, _records, _subjects = walk_binding(root)
     if walk_amendment is not None:
         files += tracked(root, WALK_HOME)
-    migbound_amendment, _records, _subjects = migbound_binding(root)
-    if migbound_amendment is not None:
-        files += tracked(root, MIGBOUND_HOME)
+    tnames_amendment, _records, _subjects = tnames_binding(root)
+    if tnames_amendment is not None:
+        files += tracked(root, TNAMES_HOME)
     candidate_ref_dirs = addition_dirs + (URL_SOURCE_HOME + "/",)
     files += list(ROUTE_PAGES)
     # An addition may cite a candidate Polaris requirement still under
@@ -7390,7 +7390,7 @@ def check_generated(root, pop, report):
                         (migpar_amendment, MIGPAR_UNION),
                         (impfacts_amendment, IMPFACTS_UNION),
                         (walk_amendment, WALK_UNION),
-                        (migbound_amendment, MIGBOUND_UNION)):
+                        (tnames_amendment, TNAMES_UNION)):
         if delta is None:
             continue
         examined += 1
@@ -8056,24 +8056,24 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls figure walks v2.40 adopted while it is not in force")
         if any("Agent adoption" in line for line in rows.get(WALK_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls figure walks v2.40 adopted while it is not in force")
-    migbound_amendment, _records, _subjects = migbound_binding(root)
-    migbound_fields = [line.strip() for line in visible_route_lines(status)
-                       if line.strip().startswith(MIGBOUND_STATUS_PREFIX)]
-    if migbound_amendment is not None:
+    tnames_amendment, _records, _subjects = tnames_binding(root)
+    tnames_fields = [line.strip() for line in visible_route_lines(status)
+                       if line.strip().startswith(TNAMES_STATUS_PREFIX)]
+    if tnames_amendment is not None:
         examined += 2
-        if not any(Path(AGENT_ADOPTIONS).name in line and MIGBOUND_TAG in line
-                   for line in rows.get(MIGBOUND_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` does not route migration bounds v2.41 "
+        if not any(Path(AGENT_ADOPTIONS).name in line and TNAMES_TAG in line
+                   for line in rows.get(TNAMES_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route test-name recognizers v2.42 "
                             f"to `{AGENT_ADOPTIONS}` and its version tag")
-        identity = migbound_rows(root)[0][0]
-        if AGENT_ADOPTIONS not in status or migbound_fields != [f"{MIGBOUND_STATUS_PREFIX} is agent-adopted in {identity}."]:
-            findings.append(f"`{STATUS}` does not route migration bounds v2.41 and its adoption {identity}")
-    elif MIGBOUND_CHANGE in changes:
+        identity = tnames_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or tnames_fields != [f"{TNAMES_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route test-name recognizers v2.42 and its adoption {identity}")
+    elif TNAMES_CHANGE in changes:
         examined += 2
-        if any("is agent-adopted" in field for field in migbound_fields):
-            findings.append(f"`{STATUS}` calls migration bounds v2.41 adopted while it is not in force")
-        if any("Agent adoption" in line for line in rows.get(MIGBOUND_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` calls migration bounds v2.41 adopted while it is not in force")
+        if any("is agent-adopted" in field for field in tnames_fields):
+            findings.append(f"`{STATUS}` calls test-name recognizers v2.42 adopted while it is not in force")
+        if any("Agent adoption" in line for line in rows.get(TNAMES_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls test-name recognizers v2.42 adopted while it is not in force")
     vbase_retired_by = vbase_disposition(root, vbase_rows(root))
     vbase_fields = [line.strip() for line in visible_route_lines(status)
                     if line.strip().startswith(VBASE_STATUS_PREFIX)]
@@ -8271,14 +8271,14 @@ def check_routes(root, pop, report):
             declarations.append(match.groups() if match else None)
         selected = 1 if screening_state == "effective" else 0
         advice_state, _advice, _records, _subjects = p5_advice_binding(root)
-        if migbound_binding(root)[0] is not None:
-            # The migration bounds' own sentence states the current total; the earlier sentences state theirs.
-            if scoped_route_lines(status, (MIGBOUND_COUNT_SCOPE,)) != [
-                    f"{MIGBOUND_COUNT_PREFIX}{want[0]} requirements and {want[1]} scenarios."]:
-                findings.append(f"`{STATUS}` does not declare the exact migration bounds census")
-            want = (want[0], str(int(want[1]) - migbound_delta(root, findings)))
-        elif scoped_route_lines(status, (MIGBOUND_COUNT_SCOPE,)):
-            findings.append(f"`{STATUS}` declares a migration bounds census while it is not in force")
+        if tnames_binding(root)[0] is not None:
+            # The test-name recognizers' own sentence states the current total; the earlier sentences state theirs.
+            if scoped_route_lines(status, (TNAMES_COUNT_SCOPE,)) != [
+                    f"{TNAMES_COUNT_PREFIX}{want[0]} requirements and {want[1]} scenarios."]:
+                findings.append(f"`{STATUS}` does not declare the exact test-name recognizers census")
+            want = (want[0], str(int(want[1]) - tnames_delta(root, findings)))
+        elif scoped_route_lines(status, (TNAMES_COUNT_SCOPE,)):
+            findings.append(f"`{STATUS}` declares a test-name recognizers census while it is not in force")
         if walk_binding(root)[0] is not None:
             # The figure walks' own sentence states the current total; the earlier sentences state theirs.
             if scoped_route_lines(status, (WALK_COUNT_SCOPE,)) != [
@@ -8616,7 +8616,7 @@ def inputs(root):
     paths |= {MIGPAR_UNION, *MIGPAR_SUBJECTS}
     paths |= {IMPFACTS_UNION, *IMPFACTS_SUBJECTS}
     paths |= {WALK_UNION, *WALK_SUBJECTS}
-    paths |= {MIGBOUND_UNION, *MIGBOUND_SUBJECTS}
+    paths |= {TNAMES_UNION, *TNAMES_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -9033,10 +9033,10 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     walk_retired = walk_disposition(tree, walk_rows_now)
     walk_records = 2 if walk_retired else int(bool(walk_rows_now))
     walk_subjects = WALK_BOUND_PARTS if walk_rows_now and not walk_retired else 0
-    migbound_rows_now = migbound_rows(tree)
-    migbound_retired = migbound_disposition(tree, migbound_rows_now)
-    migbound_records = 2 if migbound_retired else int(bool(migbound_rows_now))
-    migbound_subjects = MIGBOUND_BOUND_PARTS if migbound_rows_now and not migbound_retired else 0
+    tnames_rows_now = tnames_rows(tree)
+    tnames_retired = tnames_disposition(tree, tnames_rows_now)
+    tnames_records = 2 if tnames_retired else int(bool(tnames_rows_now))
+    tnames_subjects = TNAMES_BOUND_PARTS if tnames_rows_now and not tnames_retired else 0
     vbase_rows_now = vbase_rows(tree)
     vbase_retired = vbase_disposition(tree, vbase_rows_now)
     vbase_records = 2 if vbase_retired else int(bool(vbase_rows_now))
@@ -9053,7 +9053,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                             and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_readmit_row(line) and not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_migbound_row(line)
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line)
                       and not is_infra_row(line)
                       and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line) and not is_worth_row(line)
                       and not is_edit_account_row(line))
@@ -9069,8 +9069,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records - step_records - qkind_records - figplan_records - vbase_records - choice_records - migpar_records - impfacts_records - walk_records - migbound_records
-            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects - step_subjects - qkind_subjects - figplan_subjects - vbase_subjects - choice_subjects - migpar_subjects - impfacts_subjects - walk_subjects - migbound_subjects
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records - step_records - qkind_records - figplan_records - vbase_records - choice_records - migpar_records - impfacts_records - walk_records - tnames_records
+            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects - step_subjects - qkind_subjects - figplan_subjects - vbase_subjects - choice_subjects - migpar_subjects - impfacts_subjects - walk_subjects - tnames_subjects
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
             - (DERIVED_BOUND_PARTS if had_derived else 0)
@@ -9228,7 +9228,7 @@ def url_source_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_url_source_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_migbound_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -12209,7 +12209,7 @@ def reach_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_reach_row(line) and not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_migbound_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -12329,7 +12329,7 @@ def raw_read_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_migbound_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "01234567"
@@ -12401,7 +12401,7 @@ def treeread_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_migbound_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "89abcdef"
@@ -12936,7 +12936,7 @@ def qkind_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_migbound_row(line))
+                      if not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -13029,7 +13029,7 @@ def figplan_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_migbound_row(line))
+                      if not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -13105,92 +13105,6 @@ def figplan_cases(tmp, base, witnesses, failures):
     record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 034", found, held, baseline=True)
 
 
-def migbound_cases(tmp, base, witnesses, failures):
-    """Guard the migration bounds' row, its predecessor, its checked spec bytes and its retirement.
-
-    The selftest base is projected onto the history before the v2.36 source-example advice, so the
-    v2.40 figure walks this version stands on is not effective there either, and the migration bounds
-    can only be pending or refused here; `--check` on the delivered tree witnesses it effective.
-    """
-    original = read_text(base, MIGBOUND_SPEC)
-    if original is None or MIGBOUND_TAG is None:
-        return
-
-    def record(name, rel, old, new, expected, found, held, baseline=False):
-        mutant = f"migration-bounds-{name}"
-        witnesses.append({"mutant": mutant, "path": rel, "old": old, "new": new,
-                          "expected": expected, "failed": found,
-                          "outcome": ("held" if baseline else "killed") if held else "SURVIVED"})
-        if not held:
-            failures.append(mutant)
-
-    tree = Path(tmp) / "dossier-migration-bounds"
-    shutil.copytree(base, tree)
-    ledger = tree / AGENT_ADOPTIONS
-    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_migbound_row(line))
-    ledger.write_text(pending)
-    before, before_findings = census(tree)
-    prior = before["POLARIS"]
-    held = migbound_binding(tree) == (None, [], []) and not before_findings
-    record("pending", AGENT_ADOPTIONS, "<no row>", "<unchanged>", "no migration bounds binding and a clean census",
-           before_findings, held, baseline=True)
-
-    oid = "0123456789abcdef0123456789abcdef01234567"
-    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{MIGBOUND_SPEC}"
-    row = (f"| A-999 | 2026-11-28 | `{oid}` | [spec]({snapshot}) | Selftest | "
-           f"`git revert -m 1 {oid}` | `{MIGBOUND_TAG}` |\n")
-    later = "f" * 40
-    unrelated = f"| A-1001 | 2026-11-28 | `{later}` | "
-    for name, citation in (
-        ("prior-snapshot", unrelated + f"[prior spec]({snapshot}) | Other work | `git revert {later}` | — |\n"),
-        ("tag-in-reason", unrelated + f"Other work | `{MIGBOUND_TAG}` | `git revert {later}` | — |\n"),
-    ):
-        ledger.write_text(pending + citation)
-        text, r1, r2 = migbound_binding(tree)
-        record(f"pending-{name}", AGENT_ADOPTIONS, "<no citation>", citation,
-               "an unrelated row does not claim this adoption", r1 + r2,
-               text is None and not r1 and not r2, baseline=True)
-
-    # The row without an effective v2.40 predecessor is refused, and the census keeps the predecessor.
-    ledger.write_text(pending + row)
-    text, r1, r2 = migbound_binding(tree)
-    after, after_findings = census(tree)
-    record("prior-unavailable", AGENT_ADOPTIONS, "<no row>", row, "R1 requires effective v2.40", r1 + r2,
-           text is None and not r2 and any("prior v2.40 figure walks" in finding for finding in r1)
-           and after["POLARIS"] == prior)
-
-    for name, old, new, detail in (
-        ("malformed-tagged", "| Selftest | ", "| ", "seven-column"),
-        ("wrong-tag", MIGBOUND_TAG, MIGBOUND_TAG + "-wrong", "malformed"),
-        ("wrong-snapshot", snapshot, snapshot.replace("/blob/", "/tree/"), "does not name"),
-        ("wrong-revert", f"git revert -m 1 {oid}", f"git revert {'0' * 40}", "revert"),
-    ):
-        assert row.count(old) == 1 and old != new
-        ledger.write_text(pending + row.replace(old, new, 1))
-        text, r1, r2 = migbound_binding(tree)
-        record(name, AGENT_ADOPTIONS, old, new, f"R1 refusal mentioning {detail}", r1 + r2,
-               text is None and not r2 and any(detail in finding for finding in r1))
-
-    ledger.write_text(pending + row)
-    spec = tree / MIGBOUND_SPEC
-    current_bound = "number at most 200 in all, across every diagram,"
-    changed = "number at most 220 in all, across every diagram,"
-    assert original.count(current_bound) == 1
-    spec.write_text(original.replace(current_bound, changed, 1))
-    text, r1, r2 = migbound_binding(tree)
-    record("modified-model-total", MIGBOUND_SPEC, current_bound, changed, "R2 bound-subject refusal",
-           r1 + r2, text is None and len(r2) == 1 and MIGBOUND_SPEC in r2[0])
-    spec.write_text(original)
-
-    veto = "| A-1000 | 2026-11-28 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n"
-    ledger.write_text(pending + row + veto)
-    retired, found = census(tree)
-    held = (migbound_disposition(tree, migbound_rows(tree)) == "A-1000"
-            and migbound_binding(tree) == (None, [], []) and not found and retired["POLARIS"] == prior)
-    record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 034", found, held, baseline=True)
-
-
 def walk_cases(tmp, base, witnesses, failures):
     """Guard the figure walks' row, its predecessor, its checked spec bytes and its retirement.
 
@@ -13214,7 +13128,7 @@ def walk_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_walk_row(line) and not is_migbound_row(line))
+                      if not is_walk_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -13277,6 +13191,92 @@ def walk_cases(tmp, base, witnesses, failures):
     record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 034", found, held, baseline=True)
 
 
+def tnames_cases(tmp, base, witnesses, failures):
+    """Guard the test-name recognizers' row, its predecessor, its checked spec bytes and its retirement.
+
+    The selftest base is projected onto the history before the v2.36 source-example advice, so the
+    v2.39 import facts and the v2.40 figure walks this version stands on are not effective there either,
+    and the test-name recognizers can only be pending or refused here; `--check` on the delivered tree witnesses it effective.
+    """
+    original = read_text(base, TNAMES_SPEC)
+    if original is None or TNAMES_TAG is None:
+        return
+
+    def record(name, rel, old, new, expected, found, held, baseline=False):
+        mutant = f"test-names-{name}"
+        witnesses.append({"mutant": mutant, "path": rel, "old": old, "new": new,
+                          "expected": expected, "failed": found,
+                          "outcome": ("held" if baseline else "killed") if held else "SURVIVED"})
+        if not held:
+            failures.append(mutant)
+
+    tree = Path(tmp) / "dossier-test-names"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_walk_row(line) and not is_tnames_row(line))
+    ledger.write_text(pending)
+    before, before_findings = census(tree)
+    prior = before["POLARIS"]
+    held = tnames_binding(tree) == (None, [], []) and not before_findings
+    record("pending", AGENT_ADOPTIONS, "<no row>", "<unchanged>", "no test-name recognizers binding and a clean census",
+           before_findings, held, baseline=True)
+
+    oid = "0123456789abcdef0123456789abcdef01234567"
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{TNAMES_SPEC}"
+    row = (f"| A-999 | 2026-11-28 | `{oid}` | [spec]({snapshot}) | Selftest | "
+           f"`git revert -m 1 {oid}` | `{TNAMES_TAG}` |\n")
+    later = "f" * 40
+    unrelated = f"| A-1001 | 2026-11-28 | `{later}` | "
+    for name, citation in (
+        ("prior-snapshot", unrelated + f"[prior spec]({snapshot}) | Other work | `git revert {later}` | — |\n"),
+        ("tag-in-reason", unrelated + f"Other work | `{TNAMES_TAG}` | `git revert {later}` | — |\n"),
+    ):
+        ledger.write_text(pending + citation)
+        text, r1, r2 = tnames_binding(tree)
+        record(f"pending-{name}", AGENT_ADOPTIONS, "<no citation>", citation,
+               "an unrelated row does not claim this adoption", r1 + r2,
+               text is None and not r1 and not r2, baseline=True)
+
+    # The row without an effective v2.40 predecessor is refused, and the census keeps the predecessor.
+    ledger.write_text(pending + row)
+    text, r1, r2 = tnames_binding(tree)
+    after, after_findings = census(tree)
+    record("prior-unavailable", AGENT_ADOPTIONS, "<no row>", row, "R1 requires effective v2.40", r1 + r2,
+           text is None and not r2 and any("prior v2.40 figure walks" in finding for finding in r1)
+           and after["POLARIS"] == prior)
+
+    for name, old, new, detail in (
+        ("malformed-tagged", "| Selftest | ", "| ", "seven-column"),
+        ("wrong-tag", TNAMES_TAG, TNAMES_TAG + "-wrong", "malformed"),
+        ("wrong-snapshot", snapshot, snapshot.replace("/blob/", "/tree/"), "does not name"),
+        ("wrong-revert", f"git revert -m 1 {oid}", f"git revert {'0' * 40}", "revert"),
+    ):
+        assert row.count(old) == 1 and old != new
+        ledger.write_text(pending + row.replace(old, new, 1))
+        text, r1, r2 = tnames_binding(tree)
+        record(name, AGENT_ADOPTIONS, old, new, f"R1 refusal mentioning {detail}", r1 + r2,
+               text is None and not r2 and any(detail in finding for finding in r1))
+
+    ledger.write_text(pending + row)
+    spec = tree / TNAMES_SPEC
+    current_bound = "each recognizer reads and lists at most 250 files"
+    changed = "each recognizer reads and lists at most 251 files"
+    assert original.count(current_bound) == 1
+    spec.write_text(original.replace(current_bound, changed, 1))
+    text, r1, r2 = tnames_binding(tree)
+    record("modified-limit", TNAMES_SPEC, current_bound, changed, "R2 bound-subject refusal",
+           r1 + r2, text is None and len(r2) == 1 and TNAMES_SPEC in r2[0])
+    spec.write_text(original)
+
+    veto = "| A-1000 | 2026-11-28 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n"
+    ledger.write_text(pending + row + veto)
+    retired, found = census(tree)
+    held = (tnames_disposition(tree, tnames_rows(tree)) == "A-1000"
+            and tnames_binding(tree) == (None, [], []) and not found and retired["POLARIS"] == prior)
+    record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 034", found, held, baseline=True)
+
+
 def impfacts_cases(tmp, base, witnesses, failures):
     """Guard the import facts' row, its predecessor, its checked spec bytes and its retirement.
 
@@ -13300,7 +13300,7 @@ def impfacts_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_impfacts_row(line) and not is_walk_row(line) and not is_migbound_row(line))
+                      if not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -13386,7 +13386,7 @@ def migpar_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_migbound_row(line))
+                      if not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -13472,7 +13472,7 @@ def choice_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_migbound_row(line))
+                      if not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -13553,7 +13553,7 @@ def vbase_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_migbound_row(line))
+                      if not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -13772,7 +13772,7 @@ def term_brief_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_migbound_row(line))
+                      if not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     before_pop, before_findings = census(tree)
     before = before_pop["POLARIS"]
@@ -13976,7 +13976,7 @@ def readmit_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_migbound_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -14617,24 +14617,23 @@ def project_source_example_history(root):
                               and not is_choice_row(line.rstrip("\n"))
                               and not is_migpar_row(line.rstrip("\n"))
                               and not is_impfacts_row(line.rstrip("\n"))
-                              and not is_walk_row(line.rstrip("\n"))
-                              and not is_migbound_row(line.rstrip("\n"))), encoding="utf-8")
+                              and not is_walk_row(line.rstrip("\n")) and not is_tnames_row(line.rstrip("\n"))), encoding="utf-8")
     for path in P5_ADVICE_SUBJECTS:
         (root / path).unlink(missing_ok=True)
     status = root / STATUS
     # The v2.37 choice floor stands on v2.36, the v2.38 migration parity on v2.37, the v2.39 import facts
-    # on v2.38, the v2.40 figure walks on v2.39 and the v2.41 migration bounds on v2.40, so their routes
-    # leave with it.
+    # on v2.38 and the v2.40 figure walks on v2.39 and
+    # the v2.42 test-name recognizers on v2.40, so their routes leave with it.
     prefixes = (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_SCOPE, CHOICE_STATUS_PREFIX, CHOICE_COUNT_SCOPE,
                 MIGPAR_STATUS_PREFIX, MIGPAR_COUNT_SCOPE, IMPFACTS_STATUS_PREFIX, IMPFACTS_COUNT_SCOPE,
-                WALK_STATUS_PREFIX, WALK_COUNT_SCOPE, MIGBOUND_STATUS_PREFIX, MIGBOUND_COUNT_SCOPE)
+                WALK_STATUS_PREFIX, WALK_COUNT_SCOPE, TNAMES_STATUS_PREFIX, TNAMES_COUNT_SCOPE)
     status.write_text("".join(line for line in status.read_text(encoding="utf-8").splitlines(keepends=True)
                               if not line.strip().startswith(prefixes)), encoding="utf-8")
     index = root / OPENSPEC_README
     lines = index.read_text(encoding="utf-8").splitlines(keepends=True)
     index.write_text("".join(
         P5_ADVICE_CANDIDATE_INDEX + "\n" if line.strip().startswith(P5_ADVICE_INDEX_PREFIX)
-        else _candidate_index_row(line) if line.strip().startswith((CHOICE_INDEX_PREFIX, MIGPAR_INDEX_PREFIX, IMPFACTS_INDEX_PREFIX, WALK_INDEX_PREFIX, MIGBOUND_INDEX_PREFIX)) else line
+        else _candidate_index_row(line) if line.strip().startswith((CHOICE_INDEX_PREFIX, MIGPAR_INDEX_PREFIX, IMPFACTS_INDEX_PREFIX, WALK_INDEX_PREFIX, TNAMES_INDEX_PREFIX)) else line
         for line in lines
     ), encoding="utf-8")
 
@@ -15184,7 +15183,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         ledger = figure_base / AGENT_ADOPTIONS
         rows = ledger.read_text().splitlines(keepends=True)
         ledger.write_text("".join(line for line in rows
-                                  if not is_edit_account_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_migbound_row(line)))
+                                  if not is_edit_account_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line)))
     # The families below run side by side, each in its own fresh fork, and
     # their witnesses, failures and printed lines are merged in this order
     # (syzygy-7rkx). A family added here must keep three rules, or a
@@ -15226,7 +15225,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         lambda w, f: migpar_cases(tmp, base, w, f),
         lambda w, f: impfacts_cases(tmp, base, w, f),
         lambda w, f: walk_cases(tmp, base, w, f),
-        lambda w, f: migbound_cases(tmp, base, w, f),
+        lambda w, f: tnames_cases(tmp, base, w, f),
         lambda w, f: vbase_cases(tmp, base, w, f),
     ]
     _run_families(families, witnesses, failures)

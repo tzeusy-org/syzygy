@@ -9,6 +9,7 @@ import {
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { READABLE_SPACING, layoutContainment, layoutDiagram, layoutSequence, layoutSwimlane, renderContainmentSvg, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg, type ContainmentClaim } from './diagram-layout.js';
+import { TEST_NAMES_LEGEND, TEST_NAMES_PAGE, testNamesMachine, testNamesPage } from './dossier-test-names.js';
 import { FINDING_CSS, FIND_BY_TASK_PAGE, NAME_INDEX_PAGE, NO_TASK_ROUTES, TASK_ROUTES_WITHHELD, buildNameIndex, glossaryDisplayName, glossaryNameForms, indexLinkCount, renderNameIndex, type IndexTarget, type IndexedBlock } from './dossier-finding.js';
 import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureList, regionMarkup } from './dossier-render-local.js';
 import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as escape } from './draft-preview.js';
@@ -760,6 +761,40 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   type WitnessedRelation = Extract<LocalEdgeRelation, { readonly evidence: object }>;
   const witnessAttrs = (relation: LocalEdgeRelation): string => ` data-relation="${escape(relation.relation)}"${relation.evidence === undefined ? ''
     : ` data-witness-fact="${escape(relation.witness.fact)}" data-witness-rule="${escape(relation.witness.rule)}" data-witness-rule-version="${relation.witness.ruleVersion}"`}`;
+  // A schema-v12 draft's model (version 2.24): its figures arrive as their views' expansions. An element or cited relationship more than one
+  // view selects carries `data-element` or `data-relationship` in every figure drawing it, and its claim renders once, in its first figure:
+  // the first, in draft diagram order, whose view selects it and that renders as a `<figure>`; each later figure lists it `as shown in` that
+  // one. A derived relationship is no claim: Observed in Syzygy's words where witnessed, Unknown in Syzygy's words otherwise.
+  const model = local?.model;
+  const derivedIds = new Set(model?.relationships.flatMap(r => (r.basis === 'derived' ? [r.id] : [])) ?? []);
+  const viewsOf = new Map<string, readonly string[]>([...(model?.elements ?? []), ...(model?.relationships ?? []).filter(r => r.basis === 'cited')].map(entry => [entry.id, entry.views]));
+  const shared = (id: string): boolean => (viewsOf.get(id)?.length ?? 0) > 1;
+  const figurePage = (d: DraftDiagram): string | undefined => {
+    if (d.disposition.kind !== 'produced') return undefined;
+    if (d.home?.kind === 'overview') return view.drafted ? 'index.html' : undefined;
+    if (d.home?.kind === 'deep-dive' && deepPaths.has(d.home.id)) return deepPaths.get(d.home.id);
+    const section = draft.sections.find(entry => entry.id === d.sectionId);
+    return section === undefined || section.disposition.kind !== 'produced' || view.deferredSections.has(section.id) ? undefined : sectionPage(section.id);
+  };
+  const firstFigure = (id: string): { readonly index: number; readonly page: string } | undefined => {
+    const views = viewsOf.get(id) ?? [];
+    for (const [i, d] of draft.diagrams.entries()) {
+      if (!views.includes(d.id)) continue;
+      const page = figurePage(d);
+      if (page !== undefined) return { index: i, page };
+    }
+    return undefined;
+  };
+  // `, as shown in <a href>title</a>` for a shared element or cited relationship listed in a figure that is not its first; undefined otherwise.
+  const asShown = (from: string, id: string, index: number): string | undefined => {
+    if (!shared(id)) return undefined;
+    const first = firstFigure(id);
+    if (first === undefined || first.index === index) return undefined;
+    const target = draft.diagrams[first.index]!;
+    const link = first.page === from ? `#figure-${target.id}` : href(from, first.page, `figure-${target.id}`);
+    return `, as shown in <a href="${escape(link)}">${escape(target.title)}</a>`;
+  };
+  const sharedAttr = (id: string, kind: 'element' | 'relationship'): string => (shared(id) ? ` data-${kind}="${escape(id)}"` : '');
   const diagram = (from: string, asDrafted: DraftDiagram, index: number, asHero = false): string => {
     if (asDrafted.disposition.kind !== 'produced') return notice(from, asDrafted.id, asDrafted.disposition, asHero);
     if (asDrafted.figure?.kind === CONTAINMENT_KIND) return containmentFigure(from, asDrafted, asDrafted.figure.groups, index);
@@ -768,30 +803,41 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     // and marking.
     const words = (id: string): string | undefined => relationOf(id)?.evidence?.words;
     const d: DraftDiagram = local?.edgeRelations === undefined ? asDrafted
-      : { ...asDrafted, edges: asDrafted.edges.map(e => { const said = words(e.id); return said === undefined ? e : { ...e, label: said, epistemic: 'observed' as const, sourceIds: [] }; }) };
+      : { ...asDrafted, edges: asDrafted.edges.map(e => { const said = words(e.id); return said !== undefined ? { ...e, label: said, epistemic: 'observed' as const, sourceIds: [] }
+        : derivedIds.has(e.id) ? { ...e, epistemic: 'unknown' as const, sourceIds: [] } : e; }) };
     const nodes = new Map(d.nodes.map(node => [node.id, node]));
     // A withheld node or edge (v1.5) reads `Withheld item` and says, in Syzygy's words, what is withheld, with its count.
     const held = (id: string): WithheldNote | undefined => local?.withheldElements?.get(id);
     const heldText = (id: string): string => held(id) === undefined ? '' : ` <span class="withheld-note">${escape(withheldWords(held(id)!))}</span>`;
     const heldAttrs = (id: string): string => held(id) === undefined ? '' : ' data-unknown-reason="excluded-content"';
-    const nodeList = d.nodes.map(n => claim('li', n.id, n.epistemic, `${escape(n.label)}${heldText(n.id)} ${mark(from, n.epistemic)} ${refs(from, n.sourceIds, n.id)}`, heldAttrs(n.id), held(n.id) === undefined ? null : 'excluded-content', held(n.id) === undefined ? undefined : { withheldSources: held(n.id)!.sources })).join('');
+    const nodeList = d.nodes.map(n => { const shown = asShown(from, n.id, index); return shown !== undefined ? `<li>${escape(n.label)}${shown}</li>` : claim('li', n.id, n.epistemic, `${escape(n.label)}${heldText(n.id)} ${mark(from, n.epistemic)} ${refs(from, n.sourceIds, n.id)}`, heldAttrs(n.id), held(n.id) === undefined ? null : 'excluded-content', held(n.id) === undefined ? undefined : { withheldSources: held(n.id)!.sources }); }).join('');
     const witnessItem = (e: DraftDiagram['edges'][number], relation: WitnessedRelation): string =>
       `<li${witnessAttrs(relation)} data-epistemic="observed">${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(relation.evidence.words)} <span class="derived-mark">Witnessed by Syzygy</span>`
       + `<span class="visually-hidden ev"> ${escape(`Evidence: label Observed; witnessed by fact ${relation.witness.fact} (${relation.evidence.factKind}), derived by Syzygy by rule ${relation.witness.rule} version ${relation.witness.ruleVersion} at revision ${relation.evidence.revision}; record sha256:${relation.evidence.recordSha256}.`)}</span></li>`;
     const diagramRelationEdges: typeof relationEdges = [];
     const edgeList = d.edges.map(e => {
       const relation = relationOf(e.id);
-      if (relation !== undefined) diagramRelationEdges.push({ index, entry: { diagram: d.id, page: from, id: e.id, from: e.from, to: e.to, epistemic: e.epistemic, text: e.label, relation: relation.relation, witness: relation.witness } });
+      if (relation !== undefined) diagramRelationEdges.push({ index, entry: { diagram: d.id, page: from, id: e.id, from: e.from, to: e.to, epistemic: e.epistemic, text: e.label, ...(derivedIds.has(e.id) ? { basis: 'derived' } : {}), relation: relation.relation, witness: relation.witness } });
       if (relation?.evidence !== undefined) return witnessItem(e, relation);
+      const ends = `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}`;
+      // A derived relationship not witnessed (version 2.24): Syzygy's words for what it could not derive, and the state's reason.
+      if (derivedIds.has(e.id)) {
+        const reason = relation === undefined ? 'unknown' : relation.witness.state === 'challenged' ? 'challenged' : relation.witness.reason ?? 'unknown';
+        return `<li data-relation="${escape(relation?.relation ?? '')}" data-unknown-reason="${escape(reason)}">${ends}: Syzygy could not derive this relation (${escape(reason)})</li>`;
+      }
+      const shown = asShown(from, e.id, index);
+      if (shown !== undefined) return `<li>${ends}: ${escape(e.label)}${shown}</li>`;
       return claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)}${heldText(e.id)} ${mark(from, e.epistemic)} ${refs(from, e.sourceIds, e.id)}`, `${heldAttrs(e.id)}${relation === undefined ? '' : witnessAttrs(relation)}`, held(e.id) === undefined ? null : 'excluded-content', held(e.id) === undefined ? undefined : { withheldSources: held(e.id)!.sources });
     }).join('');
     // A witnessed arrow's group also carries `data-epistemic="observed"`; its line style is the `observed` class every arrow's marking gives.
     // Keyed by edge id: `renderDiagramSvg` asks the hook for nodes too, which get nothing here because check's `duplicate-id` keeps every
     // identity of a rendered (passed) draft unique, so no node shares an edge's id.
-    const edgeAttrs = new Map(d.edges.flatMap(e => {
+    const edgeAttrs = new Map([...d.nodes.flatMap(n => (shared(n.id) ? [[n.id, sharedAttr(n.id, 'element')] as const] : [])), ...d.edges.flatMap(e => {
       const relation = relationOf(e.id);
-      return relation === undefined ? [] : [[e.id, `${witnessAttrs(relation)}${relation.evidence === undefined ? '' : ' data-epistemic="observed"'}`] as const];
-    }));
+      const marking = relation?.evidence !== undefined ? ' data-epistemic="observed"' : derivedIds.has(e.id) ? ' data-epistemic="unknown"' : '';
+      const attrs = `${sharedAttr(e.id, 'relationship')}${relation === undefined ? '' : witnessAttrs(relation)}${marking}`;
+      return attrs === '' ? [] : [[e.id, attrs] as const];
+    })]);
     let svg: string;
     try {
       svg = edgeAttrs.size === 0 ? renderDiagramSvg(d, index, escape, local === undefined ? undefined : READABLE_SPACING)
@@ -833,15 +879,16 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     for (const group of groups) visit(group, undefined, 1);
     let svg: string, layout: ReturnType<typeof layoutContainment>;
     try {
-      svg = renderContainmentSvg(groups, index, escape);
+      svg = renderContainmentSvg(groups, index, escape, id => sharedAttr(id, 'element'));
       assertInertSvg(svg);
       layout = layoutContainment(groups);
     } catch {
       return notice(from, d.id, { kind: 'unresolved', reason: 'diagram could not be rendered inertly', references: [...new Set(preorder.flatMap(({ group }) => group.sourceIds))] });
     }
-    const listed = preorder.map(({ group, parent }) => claim('li', group.id, group.epistemic,
+    const listed = preorder.map(({ group, parent }) => { const shown = asShown(from, group.id, index); return shown !== undefined
+      ? `<li>${escape(group.label)}${parent === undefined ? '' : ` (in ${escape(parent.label)})`}${shown}</li>` : claim('li', group.id, group.epistemic,
       `${escape(group.label)}${parent === undefined ? '' : ` (in ${escape(parent.label)})`}${heldText(group.id)} ${mark(from, group.epistemic)} ${refs(from, group.sourceIds, group.id)}`,
-      heldAttrs(group.id), held(group.id) === undefined ? null : 'excluded-content', held(group.id) === undefined ? undefined : { withheldSources: held(group.id)!.sources })).join('');
+      heldAttrs(group.id), held(group.id) === undefined ? null : 'excluded-content', held(group.id) === undefined ? undefined : { withheldSources: held(group.id)!.sources }); }).join('');
     const witnessed = preorder.flatMap(({ group, parent }) => {
       const relation = parent === undefined ? undefined : relationOf(group.id);
       return relation?.evidence === undefined ? [] : [`<li${witnessAttrs(relation)} data-epistemic="observed">${escape(parent!.label)} contains ${escape(group.label)}: <span class="derived-mark">Witnessed by Syzygy</span>`
@@ -921,6 +968,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const standaloneDives = poleSpec === undefined ? diveLinks : [];
   // Both the sidebar and the page turns use this order, including the maps only when the site renders them.
   const maps = local?.derivedStructure !== undefined && local.manifestFacts !== undefined ? { derived: local.derivedStructure, manifests: local.manifestFacts } : undefined;
+  // Version 2.38: the test-names reference page, after the maps, only where the render derived the member and holds a derived record.
+  const testNames = local?.derivedStructure !== undefined && local.testNames !== undefined ? { derived: local.derivedStructure, member: local.testNames } : undefined;
+  const referenceLinks = testNames === undefined ? [] : [TEST_NAMES_PAGE];
   const findingLinks = local === undefined ? [] : [{ path: FIND_BY_TASK_PAGE, title: 'Find by task' }, { path: NAME_INDEX_PAGE, title: 'Index' }];
   const readingGroups = [
     ...[overview, ...findingLinks].map(link => ({ title: link.title, link, dives: [], hue: null })),
@@ -930,7 +980,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       dives: diveLinks.filter(dive => pole.sections.includes(dive.sectionId)),
       hue: pole.hue,
     })),
-    ...[contentsLink, ...standaloneDives, glossaryLink, sourceIndexLink, ...(maps === undefined ? [] : COMPUTED_MAPS)]
+    ...[contentsLink, ...standaloneDives, glossaryLink, sourceIndexLink, ...(maps === undefined ? [] : COMPUTED_MAPS), ...referenceLinks]
       .map(link => ({ title: link.title, link, dives: [], hue: null })),
   ];
   // How the dossier was made stays apart from its subject. The appendix is the last page of the reading order.
@@ -987,6 +1037,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // A page citing a redacted file says once what the mark on its citations means (RFC7-34: a visual encoding is legended).
   const legended = (path: string, main: string): string => narrative(path) ? `${READING_LEGEND}${main}`
     : MAP_PATHS.has(path) ? `${MAP_READING_LEGEND}${main}`
+    : testNames !== undefined && path === TEST_NAMES_PAGE.path ? `${TEST_NAMES_LEGEND}${main}`
     : local !== undefined && main.includes('class="redaction-mark"')
     ? `${main}<p class="redaction-legend"><span aria-hidden="true">†N</span> on a citation: N lines of that file are withheld by screening. Its source page marks where.</p>` : main;
   const deferredSourceLeaves = new Map<string, () => string>();
@@ -1181,7 +1232,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
 
   // --- contents
   const contents = `<ol>${local === undefined ? '' : `<li><a href="${FIND_BY_TASK_PAGE}">Find by task</a></li><li><a href="${NAME_INDEX_PAGE}">Index</a></li>`}${(withheld ? [] : draft.sections).map(section => `<li><a href="${escape(sectionHref('contents.html', section.id))}">${escape(section.title)}</a>${draft.deepDives.some(dive => dive.sectionId === section.id && deepPaths.has(dive.id))
-    ? `<ol>${draft.deepDives.filter(dive => dive.sectionId === section.id && deepPaths.has(dive.id)).map(dive => `<li><a href="${escape(href('contents.html', deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}<li><a href="glossary.html">Glossary</a></li><li><a href="sources/index.html">Sources</a></li>${maps === undefined ? '' : COMPUTED_MAPS.map(m => `<li><a href="${m.path}">${m.title}</a></li>`).join('')}${local === undefined ? `${reportItems('contents.html')}</ol>` : `</ol><h2 id="about-this-run">${ABOUT_THIS_RUN}</h2><p>How this dossier was made, apart from what it says about the project.</p><ol>${reportItems('contents.html')}</ol>`}`;
+    ? `<ol>${draft.deepDives.filter(dive => dive.sectionId === section.id && deepPaths.has(dive.id)).map(dive => `<li><a href="${escape(href('contents.html', deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}<li><a href="glossary.html">Glossary</a></li><li><a href="sources/index.html">Sources</a></li>${maps === undefined ? '' : COMPUTED_MAPS.map(m => `<li><a href="${m.path}">${m.title}</a></li>`).join('')}${referenceLinks.map(link => `<li><a href="${link.path}">${link.title}</a></li>`).join('')}${local === undefined ? `${reportItems('contents.html')}</ol>` : `</ol><h2 id="about-this-run">${ABOUT_THIS_RUN}</h2><p>How this dossier was made, apart from what it says about the project.</p><ol>${reportItems('contents.html')}</ol>`}`;
   add('contents.html', 1, 'Contents', `<section id="contents"><h1>Contents</h1>${contents}</section>`);
 
   // --- glossary: inventory terms, each an Inferred claim; for an operator-agent run, the understanding record's terminology
@@ -1307,6 +1358,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     mapFigures = { directories: drawn.directories.figures, units: drawn.units.figures, ci: drawn.ci.figures, infrastructure: drawn.infrastructure.figures };
   }
 
+  // --- the test-names reference page (version 2.42), after the maps.
+  if (testNames !== undefined) add(TEST_NAMES_PAGE.path, 1, TEST_NAMES_PAGE.title, testNamesPage(testNames.member, testNames.derived.revision));
+
   // --- the operator-agent run's own pages: understanding, discovery, clarifications, executions, review
   for (const localPage of localPages) {
     const groups = localPage.groups.map(group => `<section id="${escape(group.id)}" data-reading-level="1" data-topics=""><h2>${escape(group.heading)}</h2><p class="group-note">${escape(group.note)}</p>${group.items.length === 0 ? `<p>${escape(group.empty)}</p>` : `<ul class="local-items">${group.items.map(entry => item(localPage.path, 'li', entry)).join('')}</ul>`}</section>`).join('');
@@ -1373,11 +1427,18 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       ...(hero === undefined ? {} : { hero: { form: hero.form, diagram: !withheld && hero.form === 'figure' ? hero.diagram : null, rendered: heroRendered } }),
       ...(local.derivedStructure === undefined ? {} : { derivedStructure: derivedMachine(local.derivedStructure) }),
       ...(maps === undefined || mapFigures === undefined ? {} : { computedMaps: computedMapsMachine(maps.derived, maps.manifests, mapFigures) }),
+      ...(testNames === undefined ? {} : { testNames: testNamesMachine(testNames.member) }),
       // Present only for a render holding a sequence or swimlane figure (version 2.5), so every other machine view keeps its bytes.
       ...(figureStructures.length === 0 ? {} : { figureStructures: [...figureStructures].sort((a, b) => a.index - b.index).map(({ entry }) => entry) }),
       // Present only for a schema-v9 draft (version 2.19): each graph edge as drawn, with its relation and witness state. A witnessed edge is
       // labelled `observed`, its text is Syzygy's words, and it is in no list of `claims`.
       ...(local.edgeRelations === undefined ? {} : { edges: [...relationEdges].sort((a, b) => a.index - b.index).map(({ entry }) => entry) }),
+      // Present only for a schema-v12 draft (version 2.24): its model, each element and relationship once, with the views selecting it and,
+      // for a relationship, the witness state a rule gave it at this render, null where no rule decides it.
+      ...(local.model === undefined ? {} : { model: {
+        elements: local.model.elements.map(e => ({ id: e.id, type: e.type, parent: e.parent, views: e.views })),
+        relationships: local.model.relationships.map(r => ({ id: r.id, from: r.from, to: r.to, relation: r.relation, basis: r.basis, views: r.views, witness: local.edgeRelations?.get(r.id)?.witness ?? null })),
+      } }),
       pages: [...pages.map(p => p.path), 'size-report.html'],
       claims: claimsByPage,
       nonNormative,

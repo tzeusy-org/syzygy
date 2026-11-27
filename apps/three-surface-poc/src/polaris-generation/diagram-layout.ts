@@ -782,7 +782,10 @@ export function layoutContainment(groups: readonly ContainmentGroupInput[]): Con
 /** A containment as static SVG: each group's box in preorder, a parent before the groups drawn inside it, each in its marking's line style,
  * its label in its first 40 px (or its whole box where it has no children). No line, arrow or connector. Every text passes through
  * `escape`; the caller must still pass the result through `assertInertSvg`. */
-export function renderContainmentSvg(roots: readonly ContainmentClaim[], index: number | string, escape: (value: string) => string): string {
+export function renderContainmentSvg(roots: readonly ContainmentClaim[], index: number | string, escape: (value: string) => string,
+  /** Attributes Syzygy adds to each group's box, by group id (built by the caller from Syzygy's own values, escaped): a v12 shared element's
+   * `data-element` (version 2.24). */
+  elementAttributes: (id: string) => string = () => ''): string {
   const layout = layoutContainment(roots);
   const claims: ContainmentClaim[] = [];
   const visit = (group: ContainmentClaim): void => { claims.push(group); group.children.forEach(visit); };
@@ -792,7 +795,7 @@ export function renderContainmentSvg(roots: readonly ContainmentClaim[], index: 
     const lines = figureLines(group, CONTAINMENT_CHARS[at.level - 1]!);
     const band = at.leaf ? CONTAINMENT_LEAF : CONTAINMENT_HEAD;
     const baseline = at.y + band / 2 + 5 - (lines.length - 1) * 8;
-    return `<g class="node ${group.epistemic}"><title>${escape(group.label)} (${group.epistemic})</title><rect x="${num(at.x)}" y="${num(at.y)}" width="${at.width}" height="${at.height}" rx="6"/>${figureText(lines, at.x + at.width / 2, baseline, 16, escape)}</g>`;
+    return `<g class="node ${group.epistemic}"${elementAttributes(group.id)}><title>${escape(group.label)} (${group.epistemic})</title><rect x="${num(at.x)}" y="${num(at.y)}" width="${at.width}" height="${at.height}" rx="6"/>${figureText(lines, at.x + at.width / 2, baseline, 16, escape)}</g>`;
   }).join('');
   // No marker is defined: the drawing has no arrow to head.
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${layout.width} ${layout.height}" width="${layout.width}" height="${layout.height}" role="img" aria-labelledby="diagram-title-${index}" aria-describedby="diagram-text-${index}">${body}</svg>`;
