@@ -29,7 +29,7 @@ const reasons: Record<string, number> = {};
 for (const f of r.files) if (f.epistemic === 'unknown') reasons[`${f.unknownReason}${f.parseFault === null ? '' : `/${f.parseFault}`}`] = (reasons[`${f.unknownReason}${f.parseFault === null ? '' : `/${f.parseFault}`}`] ?? 0) + 1;
 console.log(JSON.stringify({
   subject: { tree: 'syzygy (this repository)', commit, policy: `${load.screen.policyId} ${load.screen.policyVersion}`, policySha256: load.screen.policySha256 },
-  before: { markersRead: 0, pagesListingMarkers: 0, basis: 'no rule before REQ-polaris-generation-034 version 2.43 read a rough-edge marker' },
+  before: { markersRead: 0, pagesListingMarkers: 0, basis: 'no rule before REQ-polaris-generation-034 version 2.44 read a rough-edge marker' },
   after: {
     format: member.format,
     recognizer: { rule: r.rule, ruleVersion: r.ruleVersion, label: r.label, candidates: r.candidates, secretPathsLeftOut: r.secretPathsLeftOut, setApart: r.setApart, observed: r.observed, unknown: r.unknown, valuesLeftOut: r.valuesLeftOut, markers: r.markers, filesNotListed: r.filesNotListed },

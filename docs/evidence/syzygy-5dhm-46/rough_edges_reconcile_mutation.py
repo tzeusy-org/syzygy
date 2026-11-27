@@ -4,7 +4,7 @@
 Usage: rough_edges_reconcile_mutation.py <worktree> <out.json>. The tree must be clean. Each mutant replaces one
 fragment (found exactly once) in one file, runs `scripts/check_spec_reconciliation.py --check` (or the counter),
 records whether the expected finding appears, and restores the file with `git checkout`. The selftest base is
-projected before the v2.36 advice, so v2.43 is effective only here, on the delivered tree.
+projected before the v2.36 advice, so v2.44 is effective only here, on the delivered tree.
 """
 import json
 import pathlib
@@ -22,27 +22,27 @@ CHECK_RUN = ['python3', CHECK, '--check']
 COUNT_RUN = ['python3', COUNT]
 
 MUTANTS = [
-    ('status-count-off', STATUS, 'Polaris has 39 requirements and 651 scenarios.', 'Polaris has 39 requirements and 650 scenarios.',
+    ('status-count-off', STATUS, 'Polaris has 39 requirements and 652 scenarios.', 'Polaris has 39 requirements and 651 scenarios.',
      CHECK_RUN, 'does not declare the exact rough-edge markers census'),
-    ('status-count-off-counter', STATUS, 'Polaris has 39 requirements and 651 scenarios.', 'Polaris has 39 requirements and 650 scenarios.',
+    ('status-count-off-counter', STATUS, 'Polaris has 39 requirements and 652 scenarios.', 'Polaris has 39 requirements and 651 scenarios.',
      COUNT_RUN, 'rough-edge markers count differs'),
     ('status-route-old-id', STATUS, 'is agent-adopted in A-338.', 'is agent-adopted in A-337.',
-     CHECK_RUN, 'does not route rough-edge markers v2.43'),
-    ('index-old-tag', README, '`polaris-dossier-rough-edges-v2.43`', '`polaris-dossier-rough-edges-v2.39`',
-     CHECK_RUN, 'does not route rough-edge markers v2.43'),
+     CHECK_RUN, 'does not route rough-edge markers v2.44'),
+    ('index-old-tag', README, '`polaris-dossier-rough-edges-v2.44`', '`polaris-dossier-rough-edges-v2.40`',
+     CHECK_RUN, 'does not route rough-edge markers v2.44'),
     ('spec-one-byte', SPEC, '# Dossier rough-edge markers', '# Dossier rough-edge markerz',
-     CHECK_RUN, 'differs from the reviewed v2.43 subject'),
-    ('row-old-tag', LEDGER, '| `polaris-dossier-rough-edges-v2.43` |', '| `polaris-dossier-rough-edges-v2.39` |',
-     CHECK_RUN, 'calls rough-edge markers v2.43 adopted while it is not in force'),
+     CHECK_RUN, 'differs from the reviewed v2.44 subject'),
+    ('row-old-tag', LEDGER, '| `polaris-dossier-rough-edges-v2.44` |', '| `polaris-dossier-rough-edges-v2.40` |',
+     CHECK_RUN, 'calls rough-edge markers v2.44 adopted while it is not in force'),
     ('row-test-is-choice', CHECK, 'for line in adoption_table_rows(root) if is_rough_row(line)]',
      'for line in adoption_table_rows(root) if is_choice_row(line)]', CHECK_RUN, 'rough-edge markers: malformed adoption identity'),
     ('census-skips-rough', CHECK, '                a, extra_a = compose_figure_by_id(a, rough_amendment, ROUGH_REPLACES)\n'
      '                b, extra_b = compose_figure_by_name(b, rough_amendment, ROUGH_REPLACES)\n',
      '                extra_a = extra_b = []\n', CHECK_RUN, 'FAIL  R3'),
     ('expected-skips-rough', CHECK, '        n_scen += rough_delta(root, findings)\n', '        pass\n', CHECK_RUN, 'FAIL  R3'),
-    ('projection-skips-rough', CHECK, '                                    findings.append("POLARIS rough-edge markers: selected census projections disagree")\n'
-     '                                selected_population = by_id\n',
-     '                                    findings.append("POLARIS rough-edge markers: selected census projections disagree")\n',
+    ('projection-skips-rough', CHECK, '                                        findings.append("POLARIS rough-edge markers: selected census projections disagree")\n'
+     '                                    selected_population = by_id\n',
+     '                                        findings.append("POLARIS rough-edge markers: selected census projections disagree")\n',
      CHECK_RUN, 'selected census differs'),
     ('status-want-unadjusted', CHECK, "            want = (want[0], str(int(want[1]) - rough_delta(root, findings)))\n", '',
      CHECK_RUN, 'FAIL  R5'),

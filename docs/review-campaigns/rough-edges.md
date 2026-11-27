@@ -1,4 +1,4 @@
-# Dossier rough-edge markers 2.43
+# Dossier rough-edge markers 2.44
 
 ## Patterns
 
@@ -6,7 +6,7 @@
 
 ## What was under review
 
-[Observed] The MODIFIED REQ-polaris-generation-034 version 2.43 in `openspec/changes/dossier-rough-edges/` (recognizer `rough-edge-marker` v1, the render's `roughEdges` member and `reference/rough-edges.html`; bead syzygy-5dhm.46), its implementation, evidence scripts and reconciler wiring, bound by the commit in the raw's head. The adoption row A-338 was written after the review. The review establishes no adoption.
+[Observed] The MODIFIED REQ-polaris-generation-034, then numbered version 2.43 over the v2.42 test-name recognizers (rebuilt as 2.44 over the v2.43 migration bounds after review, its additions unchanged), in `openspec/changes/dossier-rough-edges/` (recognizer `rough-edge-marker` v1, the render's `roughEdges` member and `reference/rough-edges.html`; bead syzygy-5dhm.46), its implementation, evidence scripts and reconciler wiring, bound by the commit in the raw's head. The adoption row A-338 was written after the review. The review establishes no adoption.
 
 ## Last verdict of record, and where the findings landed
 

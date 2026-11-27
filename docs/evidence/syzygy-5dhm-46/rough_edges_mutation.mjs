@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Rule-6 mutation run for syzygy-5dhm.46 (REQ-polaris-generation-034 version 2.43 rough-edge markers).
+// Rule-6 mutation run for syzygy-5dhm.46 (REQ-polaris-generation-034 version 2.44 rough-edge markers).
 // Usage: node docs/evidence/syzygy-5dhm-46/rough_edges_mutation.mjs <out.json>
 // Applies each mutant (an exact, unique old -> new fragment) to a clean tree, runs the rough-edges and test-name test files, records the
 // failed-test count read from vitest's output, and restores the file byte for byte. Refuses to start on a dirty source or test file.
@@ -99,7 +99,7 @@ for (const [id, layer, file, oldText, newText] of MUTANTS) {
 }
 const after = run();
 const record = {
-  subject: 'REQ-polaris-generation-034 version 2.43 rough-edge markers (syzygy-5dhm.46)',
+  subject: 'REQ-polaris-generation-034 version 2.44 rough-edge markers (syzygy-5dhm.46)',
   rule: 'AGENTS.md verification rule 6',
   commit,
   files,

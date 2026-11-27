@@ -2,7 +2,7 @@
 """syzygy-5dhm.46: build REQ-polaris-generation-034 version VERSION (rough-edge markers) from the effective predecessor's bytes.
 
 Usage: rough_edges_build_spec.py <predecessor spec.md> <predecessor label> <out>
-<predecessor label> is the banner's words for the predecessor, for example 'version 2.42 (the test-name recognizers, A-337)'. The script
+<predecessor label> is the banner's words for the predecessor, for example 'version 2.43 (the migration bounds, syzygy-3efd.87, A-272)'. The script
 replaces the title (line 1) and the banner (the one line starting 'Candidate version '), places three paragraphs immediately after the
 test-names page paragraph, seven scenarios immediately after the last scenario (the end of the file), and appends one sentence to each of
 the oracle's Observable, Oracle and Falsifier lines. Every other byte is the predecessor's; removing these additions and restoring the title
@@ -11,7 +11,7 @@ and banner recovers it. Rebuilding as another version is a re-run with VERSION c
 import pathlib
 import sys
 
-VERSION = '2.43'
+VERSION = '2.44'
 TAG = f'polaris-dossier-rough-edges-v{VERSION}'
 
 NEW_TITLE = '# Dossier rough-edge markers'
