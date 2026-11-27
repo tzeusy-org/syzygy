@@ -1,6 +1,6 @@
-# Dossier migration bounds — version 2.41
+# Dossier migration bounds — version 2.43
 
-[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10, built over figure walks 2.40 (design D1).
+[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10, built over test-name recognizers 2.42 (design D1; first built over figure walks 2.40 as 2.41).
 
 ## Why
 

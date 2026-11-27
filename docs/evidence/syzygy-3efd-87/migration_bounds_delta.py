@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Generate SEMANTIC-DELTA.md for version 2.41 (migration bounds, over figure walks 2.40) from the bytes of the predecessor and the new text. Usage: migration_bounds_delta.py <worktree>."""
+"""Generate SEMANTIC-DELTA.md for version 2.43 (migration bounds, over test-name recognizers 2.42) from the bytes of the predecessor and the new text. Usage: migration_bounds_delta.py <worktree>."""
 import difflib
 import hashlib
 import pathlib
 import sys
 
 W = pathlib.Path(sys.argv[1])
-PRED = 'openspec/changes/dossier-figure-walks/proposed/polaris-generation/spec.md'
+PRED = 'openspec/changes/dossier-test-names/proposed/polaris-generation/spec.md'
 NEW = 'openspec/changes/dossier-migration-bounds/proposed/polaris-generation/spec.md'
 pb, nb_ = (W / PRED).read_bytes(), (W / NEW).read_bytes()
 old, new = pb.decode('utf-8').split('\n'), nb_.decode('utf-8').split('\n')
@@ -49,7 +49,7 @@ assert not added_paras, added_paras
 scen = [nb[j][len('#### Scenario: '):] for j in inserted if nb[j].startswith('#### Scenario:')]
 sha = lambda b: hashlib.sha256(b).hexdigest()
 
-out = f'''# Version 2.41 semantic delta
+out = f'''# Version 2.43 semantic delta
 
 [Inferred] Candidate agent-decided amendment under VIS-4. No adoption is claimed; this file states exactly what changes so the change is reviewable as one delta (`NORMATIVE-CHANGE-WORKFLOW.md`). Every quoted text and count below was extracted from the bytes by script (a line diff of the requirement block and a word diff of each changed line), not transcribed: `docs/evidence/syzygy-3efd-87/migration_bounds_delta.py` writes this file.
 
@@ -59,7 +59,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `{PRED}` (dossier figure walks version 2.40, row A-271, tag `polaris-dossier-figure-walks-v2.40`; sha256 `{sha(pb)}`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces that text, composed after version 2.40. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.40's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `{PRED}` (dossier test-name recognizers version 2.42, row A-337, tag `polaris-dossier-test-names-v2.42`; sha256 `{sha(pb)}`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces that text, composed after version 2.42. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.42's, byte for byte.
 
 ## Carried unchanged
 
@@ -67,7 +67,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Amended in place
 
-[Observed] The title and preamble (file head, not requirement text) name version 2.41. In the requirement, each changed line, with the displaced words and the words that replace them:
+[Observed] The title and preamble (file head, not requirement text) name version 2.43. In the requirement, each changed line, with the displaced words and the words that replace them:
 
 {chr(10).join(amend)}
 
