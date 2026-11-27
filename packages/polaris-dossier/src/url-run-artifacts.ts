@@ -736,7 +736,8 @@ function create(given: UrlRunArtifactsOptions) {
           if (review.ordered) {
             const parents = orderedUrlDesignReviewParents(review);
             if (parents.length === 0) refuse();
-            for (const parent of parents) { ledger.metadata(parent); if (!inputParents.includes(parent)) inputParents.push(parent); }
+            ledger.inspectMetadata(parents.map(receipt => ({ receipt })));
+            for (const parent of parents) if (!inputParents.includes(parent)) inputParents.push(parent);
             if (inputParents.length > limits.parents) refuse();
             designOrigin = parents[0];
           } else { designOrigin = designReads.get(review.artifactReadId!); }

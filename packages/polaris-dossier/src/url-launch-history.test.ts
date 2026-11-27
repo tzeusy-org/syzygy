@@ -292,7 +292,7 @@ describe('protected URL design delivery audit', () => {
     'renew-launch-drift', 'renew-receipt-drift'] as const)(
     'keeps a metadata-only event and rechecks after durability (%s)', async mode => {
     if (mode.startsWith('ordered')) plans = orderedPlans;
-    const { originPolicy, ledger, artifactOptions, initial } = productFixture(mode.startsWith('ordered'));
+    const { originPolicy, ledger, artifactOptions, initial, current } = productFixture(mode.startsWith('ordered'));
     const firstDesignRound = mode === 'ordered-resumed' ? 2 : undefined;
     const round = firstDesignRound ?? 1;
     const auditDeadline = mode.startsWith('ordered') ? Date.now() + 60_000 : undefined;
@@ -531,10 +531,36 @@ describe('protected URL design delivery audit', () => {
             return { stdout: JSON.stringify({ command: 'await', format: 'polaris-dossier-await/1', outcome: 'submitted', role: 'review', kind: 'design',
               session: 1, next: 'own checked', disclosures: [], passed: true, check: report }), stderr: '', exit: 0 };
           });
-          const producer = createUrlRunArtifacts({ ...artifactOptions, runDossier: () => actualRunner });
+          let inParentBatch = false, parentSamples = 0;
+          let parentFault: 'entry' | 'exit' | 'receipt' | undefined;
+          const origins = mode !== 'ordered' ? artifactOptions.origins : { ...artifactOptions.origins, ledger: { ...ledger,
+            inspectMetadata: (requests: Parameters<typeof ledger.inspectMetadata>[0]) => {
+              if (requests.length !== 1 || requests[0]!.receipt !== parent) return ledger.inspectMetadata(requests);
+              inParentBatch = true;
+              try { return ledger.inspectMetadata(parentFault === 'receipt' ? [{ receipt: { ...parent } }] : requests); }
+              finally { inParentBatch = false; }
+            } } };
+          if (mode === 'ordered') current.mockImplementation(() => {
+            if (!inParentBatch) return true;
+            parentSamples++;
+            return parentFault !== 'entry' && !(parentFault === 'exit' && parentSamples === 2);
+          });
+          const producer = createUrlRunArtifacts({ ...artifactOptions, origins, runDossier: () => actualRunner });
           producer.registerInitial(initial);
           const nativeArgv = ['dossier', 'await', '/work', '--submit', submittedPath, '--stdin'];
+          if (mode === 'ordered') {
+            for (const fault of ['entry', 'exit', 'receipt'] as const) {
+              parentFault = fault; parentSamples = 0;
+              await expect(producer.stageOrderedDesignVerdict(nativeArgv, Buffer.from(protocol.stdin), proof))
+                .rejects.toThrow('url-run-artifacts-unavailable');
+              expect(parentSamples).toBe(fault === 'exit' ? 2 : 1);
+              expect(actualRunner).not.toHaveBeenCalled();
+              expect(producer.latestStageCheck('design')).toBeNull();
+            }
+            parentFault = undefined; parentSamples = 0;
+          }
           const staged = await producer.stageOrderedDesignVerdict(nativeArgv, Buffer.from(protocol.stdin), proof);
+          if (mode === 'ordered') expect(parentSamples).toBe(2);
           expect(actualRunner).toHaveBeenCalledTimes(1);
           const checked = staged.checked;
           expect(producer.hasCommittedProduct('reviews/checks/design-verdict-0.json', checked.checkSha256)).toBe(false);
