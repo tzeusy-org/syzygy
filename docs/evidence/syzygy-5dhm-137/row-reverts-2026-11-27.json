@@ -1,0 +1,251 @@
+{
+  "script": "docs/evidence/syzygy-5dhm-137/check_row_reverts.py",
+  "originMain": "98c077705367d972f52263f00f94b72e5775c13e",
+  "results": [
+    {
+      "row": "A-316",
+      "form": "stated",
+      "base": "f59dcd396416d0cb742097e454394256134fe31e",
+      "revert": [
+        "fd0df7894d448d5e09afd366aacc116686e8acbe",
+        "8d3e55bef400bbf47394c99499c3d3e8f3c50d96",
+        "f2f967f0c0f7639e7098fbc1bd1067d65936d61b"
+      ],
+      "outcome": "applied",
+      "stops": []
+    },
+    {
+      "row": "A-316",
+      "form": "stated",
+      "base": "98c077705367d972f52263f00f94b72e5775c13e",
+      "revert": [
+        "fd0df7894d448d5e09afd366aacc116686e8acbe",
+        "8d3e55bef400bbf47394c99499c3d3e8f3c50d96",
+        "f2f967f0c0f7639e7098fbc1bd1067d65936d61b"
+      ],
+      "outcome": "conflict",
+      "stops": [
+        {
+          "commit": "f2f967f0c0f7639e7098fbc1bd1067d65936d61b",
+          "conflicts": [
+            "packages/polaris-dossier/src/cli.test.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "row": "A-316",
+      "form": "full list with A-327 rules",
+      "base": "f59dcd396416d0cb742097e454394256134fe31e",
+      "revert": [
+        "3f5b41a5ea34c3bf8c38d7ceb8b4c4712c383663",
+        "fd0df7894d448d5e09afd366aacc116686e8acbe",
+        "30c5a4d8e8c0be54d38acc8b04dec53670f47683",
+        "8d3e55bef400bbf47394c99499c3d3e8f3c50d96",
+        "018604d06de715570956f3805cb324d941f4f8aa",
+        "f2f967f0c0f7639e7098fbc1bd1067d65936d61b"
+      ],
+      "outcome": "conflict",
+      "stops": [
+        {
+          "commit": "3f5b41a5ea34c3bf8c38d7ceb8b4c4712c383663",
+          "conflicts": [
+            ".syzygy/governance/decisions/AGENT-ADOPTIONS.md"
+          ]
+        },
+        {
+          "commit": "30c5a4d8e8c0be54d38acc8b04dec53670f47683",
+          "conflicts": [
+            ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+            "docs/review-campaigns/verify-text-page.md"
+          ]
+        }
+      ]
+    },
+    {
+      "row": "A-314",
+      "form": "stated",
+      "base": "1268de79536edd086288673e18d9b1efbec2a201",
+      "revert": [
+        "cf823b2e56b561d68381f02a2cc2d3924931fe44",
+        "fe3e55dfe8b90ff60d621a97191c2b7ab9088931"
+      ],
+      "outcome": "conflict",
+      "stops": [
+        {
+          "commit": "fe3e55dfe8b90ff60d621a97191c2b7ab9088931",
+          "conflicts": [
+            "packages/polaris-dossier/src/cli.test.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "row": "A-314",
+      "form": "stated",
+      "base": "98c077705367d972f52263f00f94b72e5775c13e",
+      "revert": [
+        "cf823b2e56b561d68381f02a2cc2d3924931fe44",
+        "fe3e55dfe8b90ff60d621a97191c2b7ab9088931"
+      ],
+      "outcome": "conflict",
+      "stops": [
+        {
+          "commit": "fe3e55dfe8b90ff60d621a97191c2b7ab9088931",
+          "conflicts": [
+            "packages/polaris-dossier/src/cli.test.ts",
+            "vitest.tiers.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "row": "A-314",
+      "form": "full list with A-327 rules",
+      "base": "1268de79536edd086288673e18d9b1efbec2a201",
+      "revert": [
+        "6d448171cd087bdb5a4d23435f0bad4988a86344",
+        "cf823b2e56b561d68381f02a2cc2d3924931fe44",
+        "54204778eb82fe994a0c79955d480c4491ca9900",
+        "fe3e55dfe8b90ff60d621a97191c2b7ab9088931"
+      ],
+      "outcome": "applied",
+      "listMatchedBeforeFixup": true,
+      "listMatchesAfterFixup": true,
+      "stops": [
+        {
+          "commit": "6d448171cd087bdb5a4d23435f0bad4988a86344",
+          "conflicts": [
+            ".syzygy/governance/decisions/AGENT-ADOPTIONS.md"
+          ]
+        },
+        {
+          "commit": "54204778eb82fe994a0c79955d480c4491ca9900",
+          "conflicts": [
+            ".syzygy/governance/decisions/AGENT-ADOPTIONS.md"
+          ]
+        },
+        {
+          "commit": "fe3e55dfe8b90ff60d621a97191c2b7ab9088931",
+          "conflicts": [
+            "packages/polaris-dossier/src/cli.test.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "row": "A-320",
+      "form": "stated",
+      "base": "bec82ce45ab715abc23704c0cbc5e99931dec4e8",
+      "revert": [
+        "10998aebfb15a8341b12be305ed1cb5c46514a14",
+        "e5388d6d000739cc65ee23304cdbdaa44e97309b"
+      ],
+      "outcome": "applied",
+      "stops": []
+    },
+    {
+      "row": "A-320",
+      "form": "stated",
+      "base": "98c077705367d972f52263f00f94b72e5775c13e",
+      "revert": [
+        "10998aebfb15a8341b12be305ed1cb5c46514a14",
+        "e5388d6d000739cc65ee23304cdbdaa44e97309b"
+      ],
+      "outcome": "applied",
+      "stops": []
+    },
+    {
+      "row": "A-320",
+      "form": "full list with A-327 rules",
+      "base": "bec82ce45ab715abc23704c0cbc5e99931dec4e8",
+      "revert": [
+        "c0b4f1081a5872ec2b683c1a306e414514c3a482",
+        "10998aebfb15a8341b12be305ed1cb5c46514a14",
+        "463c0f8f1662d5e2e7b35531e42ced1a8f0cdfea",
+        "e5388d6d000739cc65ee23304cdbdaa44e97309b"
+      ],
+      "outcome": "applied",
+      "listMatchedBeforeFixup": true,
+      "listMatchesAfterFixup": true,
+      "stops": [
+        {
+          "commit": "463c0f8f1662d5e2e7b35531e42ced1a8f0cdfea",
+          "conflicts": [
+            ".syzygy/governance/decisions/AGENT-ADOPTIONS.md"
+          ]
+        }
+      ]
+    },
+    {
+      "row": "A-315",
+      "form": "stated",
+      "base": "e852d0c9a0fe624778924f2745e5c7d03655626a",
+      "revert": [
+        "dba7a40f622084889db826a57bafeed0af22147a..0e0b281d192737a8e8415b24be326355c464dd97"
+      ],
+      "outcome": "conflict",
+      "stops": [
+        {
+          "commit": "e78224b4d74221c2febd2df9a77250ebdd9c230f",
+          "conflicts": [
+            "packages/polaris-dossier/src/cli.test.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "row": "A-315",
+      "form": "stated",
+      "base": "98c077705367d972f52263f00f94b72e5775c13e",
+      "revert": [
+        "dba7a40f622084889db826a57bafeed0af22147a..0e0b281d192737a8e8415b24be326355c464dd97"
+      ],
+      "outcome": "conflict",
+      "stops": [
+        {
+          "commit": "e78224b4d74221c2febd2df9a77250ebdd9c230f",
+          "conflicts": [
+            "packages/polaris-dossier/src/check.ts",
+            "packages/polaris-dossier/src/cli.test.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "row": "A-315",
+      "form": "full list with A-327 rules",
+      "base": "e852d0c9a0fe624778924f2745e5c7d03655626a",
+      "revert": [
+        "8be2705d791b8f35d391ef59eba89a74832396c5",
+        "415191d831afe36c267fcc98b543eb68a4fc8c5e",
+        "0e0b281d192737a8e8415b24be326355c464dd97",
+        "dcb731947e00fe7aa6eda9f63953f570fdae1027",
+        "b301c88db124d7f17f6e8d7199362a492a7d7162",
+        "e78224b4d74221c2febd2df9a77250ebdd9c230f",
+        "cc9b609428df72f2b34bf8b08ae30e81b55c9077"
+      ],
+      "outcome": "applied",
+      "listMatchedBeforeFixup": false,
+      "fixupDropped": [
+        "question-kinds.ts"
+      ],
+      "fixupAdded": [],
+      "listMatchesAfterFixup": true,
+      "stops": [
+        {
+          "commit": "415191d831afe36c267fcc98b543eb68a4fc8c5e",
+          "conflicts": [
+            ".syzygy/governance/decisions/AGENT-ADOPTIONS.md"
+          ]
+        },
+        {
+          "commit": "e78224b4d74221c2febd2df9a77250ebdd9c230f",
+          "conflicts": [
+            "packages/polaris-dossier/src/cli.test.ts"
+          ]
+        }
+      ]
+    }
+  ]
+}
