@@ -189,7 +189,10 @@ def coverage(root, objects, change, anchor, adoptions):
         if oid:
             named.append(oid.decode().strip())
     findings = []
+    named_commits = set(named)
     for commit in listed.decode().split():
+        if commit in named_commits:
+            continue
         if not any(commit == oid or _git(objects, "merge-base", "--is-ancestor", commit, oid) is not None
                    for oid in named):
             findings.append(
@@ -286,6 +289,26 @@ def selftest():
                         [f[:40] for f in check(row(first))] == [f[:40] for f in check(row(later))]
                         and len(check(row(first))) == 1 and second[:12] in check(row(first))[0]))
         results.append(("both rows cover both", check(row(first) + row(second)) == []))
+        # Exact validated commit identities need no ancestry subprocesses;
+        # failures of the remaining ancestry checks must still refuse.
+        from unittest import mock
+        ancestry_queries = []
+        original_git = _git
+
+        def failed_ancestry(objects, *args):
+            if args[:2] == ("merge-base", "--is-ancestor"):
+                ancestry_queries.append(args)
+                return None
+            return original_git(objects, *args)
+
+        with mock.patch.object(sys.modules[__name__], "_git", failed_ancestry):
+            exact = check(row("0" * 40) + row(first) + row(second))
+            results.append(("exact rows skip ancestry despite an unresolved row",
+                            exact == [] and ancestry_queries == []))
+            failed = check(row(first) + row(later))
+            results.append(("failed ancestry cannot cover a nonmember",
+                            len(failed) == 1 and second[:12] in failed[0]
+                            and bool(ancestry_queries)))
         write(f"{change}/extra.md", "x\n")
         results.append(("untracked file fails", "differs from HEAD" in " ".join(check(row(second)))))
         (repo / change / "extra.md").unlink()
