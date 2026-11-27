@@ -391,8 +391,9 @@ describe('system model: migration', () => {
     expect(migrateDraft(draftOf([], V12))).toBeUndefined();
   });
 
-  it('keeps check and every figure byte for byte', async () => {
-    const original = V11_DRAFT();
+  // Each member is compared as the bytes it serializes to (R37 finding 7): a figure is its HTML string, a record member its JSON text.
+  const bytes = (value: unknown): string => JSON.stringify(value);
+  async function keepsParity(original: Doc): Promise<void> {
     const migrated = migrateDraft(original)!;
     const [before, after] = [await checked(A, original), await checked(A, migrated)];
     const record = (r: { run: string }): Doc => {
@@ -403,21 +404,38 @@ describe('system model: migration', () => {
     for (const r of [before, after]) expect(r.result.ok && r.result.report.outcome).toBe('passed');
     for (const member of ['figureFit', 'readingLedger']) {
       expect(record(before)[member], member).toBeDefined();
-      expect(record(after)[member], member).toEqual(record(before)[member]);
+      expect(bytes(record(after)[member]), member).toBe(bytes(record(before)[member]));
     }
     const report = (r: { result: CheckResult }): Doc => (r.result.ok ? r.result.report as unknown as Doc : {});
     for (const member of ['readerAdvice', 'reviewReach']) {
       expect(report(before)[member], member).toBeDefined();
-      expect(report(after)[member], member).toEqual(report(before)[member]);
+      expect(bytes(report(after)[member]), member).toBe(bytes(report(before)[member]));
     }
-    const [v11, v12] = [await rendered(A, original), await rendered(A, migrated)];
-    expect(figuresOf(v12.files)).toEqual(figuresOf(v11.files));
+    const [old, v12] = [await rendered(A, original), await rendered(A, migrated)];
+    expect(bytes(figuresOf(v12.files))).toBe(bytes(figuresOf(old.files)));
     for (const member of ['edges', 'figureStructures']) {
-      expect(v11.machine[member], member).toBeDefined();
-      expect(v12.machine[member], member).toEqual(v11.machine[member]);
+      if (member === 'figureStructures' && old.machine[member] === undefined) { expect(v12.machine[member], member).toBeUndefined(); continue; }
+      expect(old.machine[member], member).toBeDefined();
+      expect(bytes(v12.machine[member]), member).toBe(bytes(old.machine[member]));
     }
-    expect(Object.keys(figuresOf(v11.files)).length).toBeGreaterThan(0);
-    expect(v11.machine['model']).toBeUndefined();
+    expect(Object.keys(figuresOf(old.files)).length).toBeGreaterThan(0);
+    expect(old.machine['model']).toBeUndefined();
+  }
+
+  it('keeps check and every figure byte for byte', async () => {
+    await keepsParity(V11_DRAFT());
+  });
+
+  it('migrates a v10 draft, and keeps its check and every figure byte for byte (R37 finding 4)', async () => {
+    const v10 = draftOf([figure('runtime', [node('repo', 'Repository', ROOT), node('src', 'Source', tld('src')), node('api', 'API')],
+      [edge('repo-src', 'repo', 'src', 'contains', 'holds'), edge('src-api', 'src', 'api', 'calls', 'calls')])], V10);
+    const migrated = migrateDraft(v10)!;
+    expect([migrated['schemaVersion'], (migrated['model'] as Doc)['elements'], (migrated['diagrams'] as Doc[])[0]!['view']]).toEqual([V12, [
+      { id: 'repo', label: 'Repository', type: 'system', epistemic: 'inferred', citations: [cite('c-repo')], unit: ROOT },
+      { id: 'src', label: 'Source', type: 'directory', epistemic: 'inferred', citations: [cite('c-src')], unit: tld('src') },
+      { id: 'api', label: 'API', type: 'module', epistemic: 'inferred', citations: [cite('c-api')] },
+    ], { elements: ['repo', 'src', 'api'], relationships: ['repo-src', 'src-api'] }]);
+    await keepsParity(v10);
   });
 });
 
@@ -552,5 +570,119 @@ describe('system model: a derived relationship not witnessed, in Syzygy\'s words
       renderLocalDossier.pageSinkContract === undefined ? {} : { pageSinkContract: renderLocalDossier.pageSinkContract });
     const { files } = await rendered(A, SYSTEM(), { renderer });
     expect(figureOf(files.get('index.html')!, 'runtime')).toContain('<li data-relation="contains" data-unknown-reason="challenged">Repository → Source: Syzygy could not derive this relation (challenged)</li>');
+  });
+});
+
+describe('system model: a containment view\'s shape (R37 finding 1)', () => {
+  const tops = (n: number): Doc[] => Array.from({ length: n }, (_, k) => el(`t${k}`, `Top ${k}`, 'module'));
+  const under = (parent: string, n: number): Doc[] => Array.from({ length: n }, (_, k) => el(`${parent}c${k}`, `Child ${parent}.${k}`, 'module', { parent }));
+  const ids = (elements: Doc[]): string[] => elements.map((element) => String(element['id']));
+  const SHAPE = 'c1: a containment view shows one to five outermost elements and at most eight inside any one';
+
+  it('passes a containment view at both bounds: five outermost elements and eight inside one', async () => {
+    const elements = [...tops(5), ...under('t0', 8)];
+    expect(await findingsOf(A, modelDraft(elements, [], [containView('c1', ids(elements))]))).toEqual(PASSED);
+  });
+
+  it('reports view-shape at a containment view of six outermost elements', async () => {
+    const elements = [...tops(6), ...under('t0', 1)];
+    expect(await findingsOf(A, modelDraft(elements, [], [containView('c1', ids(elements))]))).toEqual({ outcome: 'findings', findings: [
+      { kind: 'view-shape', at: '$.diagrams[0].view.elements', detail: SHAPE },
+    ] });
+  });
+
+  it('reports view-shape at a containment view with nine elements inside one', async () => {
+    const elements = [...tops(1), ...under('t0', 9)];
+    expect(await findingsOf(A, modelDraft(elements, [], [containView('c1', ids(elements))]))).toEqual({ outcome: 'findings', findings: [
+      { kind: 'view-shape', at: '$.diagrams[0].view.elements', detail: SHAPE },
+    ] });
+  });
+
+  it('reports containment-flat at a containment view that nests nothing', async () => {
+    const elements = tops(3);
+    expect(await findingsOf(A, modelDraft(elements, [], [containView('c1', ids(elements))]))).toEqual({ outcome: 'findings', findings: [
+      { kind: 'containment-flat', at: '$.diagrams[0].view.elements', detail: 'c1: a containment nests at least one group in another' },
+    ] });
+  });
+});
+
+describe('system model: v13 is not "earlier" (R37 finding 3)', () => {
+  it('keeps the schema findings of a v13 draft carrying model and a view, never field-version', async () => {
+    const graph = figure('g', [node('a', 'A'), node('b', 'B')], [edge('a-b', 'a', 'b', 'calls', 'calls')]);
+    const doc = { ...draftOf([{ ...graph, view: { elements: ['a'], relationships: [] } }], 'polaris-dossier-local-draft-v13'), model: { elements: [], relationships: [] } };
+    const { findings } = await findingsOf(A, doc);
+    expect(findings.filter((finding) => finding.kind === 'field-version')).toEqual([]);
+    expect(findings.filter((finding) => finding.at === '$.model' || finding.at.startsWith('$.diagrams[0].view'))).toEqual([
+      { kind: 'schema', at: '$.model', detail: 'is not a field of this form' },
+      { kind: 'schema', at: '$.diagrams[0].view', detail: 'is not a field of this form' },
+    ]);
+  });
+});
+
+describe('system model: scenarios and bounds the first tests left out (R37 finding 4)', () => {
+  it('draws a derived relationship Unknown with the reason coverage-partial where coverage is partial', async () => {
+    // `docs` is a submodule, so rule top-level-unit's coverage is partial and the derived `contains` is neither witnessed nor challenged.
+    const partial = pinnedTree(TREE_A, ['docs']);
+    const doc = modelDraft([el('repo', 'Repository', 'system', { unit: ROOT }), el('dx', 'Documentation', 'directory', { unit: tld('docs') })],
+      [derived('repo-dx', 'repo', 'dx')], [graphView('runtime', ['repo', 'dx'], ['repo-dx'])]);
+    expect(await findingsOf(partial, doc)).toEqual(PASSED);
+    const { files, machine } = await rendered(partial, doc);
+    const runtime = figureOf(files.get('index.html')!, 'runtime');
+    expect(runtime).toContain('<g class="edge unknown" data-relation="contains" data-epistemic="unknown"><title>contains (unknown)</title>');
+    expect(runtime).toContain('<li data-relation="contains" data-unknown-reason="coverage-partial">Repository → Documentation: Syzygy could not derive this relation (coverage-partial)</li>');
+    expect(machine['edges']).toEqual([{ diagram: 'runtime', page: 'index.html', id: 'repo-dx', from: 'repo', to: 'dx', epistemic: 'unknown', text: 'contains', basis: 'derived',
+      relation: 'contains', witness: witness('unknown', 'coverage-partial') }]);
+  });
+
+  it('renders a cited relationship Syzygy finds witnessed as the witnessed arrow and item in both views, never the draft label or as shown in', async () => {
+    const doc = modelDraft([el('repo', 'Repository', 'system', { unit: ROOT }), el('src', 'Source', 'directory', { unit: tld('src') })],
+      [rel('repo-src', 'repo', 'src', 'contains', 'keeps the code')], [graphView('one', ['repo', 'src'], ['repo-src']), graphView('two', ['repo', 'src'], ['repo-src'])]);
+    expect(await findingsOf(A, doc)).toEqual(PASSED);
+    const { files } = await rendered(A, doc);
+    const item = '<li data-relation="contains" data-witness-fact="_tree-contains-1" data-witness-rule="top-level-unit" data-witness-rule-version="1" data-epistemic="observed">Repository → Source: contains <span class="derived-mark">Witnessed by Syzygy</span>';
+    for (const id of ['one', 'two']) {
+      const fig = figureOf(files.get('index.html')!, id);
+      expect(fig, id).toContain(item);
+      expect(fig, id).not.toContain('keeps the code');
+      expect(fig, id).not.toContain('Repository → Source: contains, as shown in');
+    }
+  });
+
+  it('bounds a graph view to 1 to 40 elements and 1 to 80 relationships, at and past each bound', async () => {
+    const many = Array.from({ length: 41 }, (_, k) => el(`e${k}`, `E ${k}`, 'module'));
+    const links = Array.from({ length: 81 }, (_, k) => rel(`r${k}`, 'e0', 'e1', 'calls', `calls ${k}`));
+    const viewSchema = async (elements: number, relationships: number): Promise<Doc[]> => {
+      const doc = modelDraft(many.slice(0, elements), links.slice(0, relationships), [graphView('g', many.slice(0, elements).map((e) => String(e['id'])), links.slice(0, relationships).map((r) => String(r['id'])))]);
+      return (await findingsOf(A, doc)).findings.filter((finding) => finding.kind === 'schema' && finding.at.startsWith('$.diagrams[0].view'));
+    };
+    expect(await viewSchema(40, 80)).toEqual([]);
+    expect(await viewSchema(41, 80)).toEqual([{ kind: 'schema', at: '$.diagrams[0].view.elements', detail: 'must hold 1 to 40 items; holds 41' }]);
+    expect(await viewSchema(40, 81)).toEqual([{ kind: 'schema', at: '$.diagrams[0].view.relationships', detail: 'must hold 1 to 80 items; holds 81' }]);
+  });
+
+  it('bounds the model to 0 to 200 elements and 0 to 400 relationships, at and past each bound', async () => {
+    const modelSchema = async (elements: number, relationships: number): Promise<Doc[]> => {
+      const doc = modelDraft(Array.from({ length: elements }, (_, k) => el(`e${k}`, `E ${k}`, 'module')),
+        Array.from({ length: relationships }, (_, k) => rel(`r${k}`, 'e0', 'e1', 'calls', `calls ${k}`)), [graphView('g', ['e0', 'e1'], ['r0'])]);
+      return (await findingsOf(A, doc)).findings.filter((finding) => finding.kind === 'schema' && finding.at.startsWith('$.model'));
+    };
+    expect(await modelSchema(200, 400)).toEqual([]);
+    expect(await modelSchema(201, 400)).toEqual([{ kind: 'schema', at: '$.model.elements', detail: 'must hold 0 to 200 items; holds 201' }]);
+    expect(await modelSchema(200, 401)).toEqual([{ kind: 'schema', at: '$.model.relationships', detail: 'must hold 0 to 400 items; holds 401' }]);
+  });
+});
+
+describe('system model: the migration parity\'s bound exception (a spec defect, spec bead syzygy-3efd.87)', () => {
+  // R37 finding 2: v11 allows up to 20 diagrams of 40 nodes (800 nodes), while 2.24 line 134 bounds the model to 200 elements, so line 142's
+  // claim that check passes every migrated draft d that check passes fails for a large d. The code follows line 134; bead syzygy-3efd.87
+  // repairs the spec. Pinned here so it is never silent.
+  it('refuses a migrated v11 draft of 222 nodes at the model bound, though the v11 draft passes', async () => {
+    const diagrams = Array.from({ length: 6 }, (_, d) => figure(`f${d}`, Array.from({ length: 37 }, (_, k) => node(`n${d}-${k}`, `Node ${d}.${k}`)),
+      [edge(`e${d}`, `n${d}-0`, `n${d}-1`, 'calls', 'calls')]));
+    const v11 = draftOf(diagrams, V11);
+    expect(await findingsOf(A, v11)).toEqual(PASSED);
+    expect((await findingsOf(A, migrateDraft(v11)!)).findings.filter((finding) => finding.kind === 'schema')).toEqual([
+      { kind: 'schema', at: '$.model.elements', detail: 'must hold 0 to 200 items; holds 222' },
+    ]);
   });
 });

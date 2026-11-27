@@ -50,6 +50,10 @@ const MUTANTS = [
   ['type-module-store-person', SM, "if (type === 'module' || type === 'store' || type === 'person') out.push", "if (type === 'module' || type === 'store') out.push"],
   ['type-mismatch-dropped', SM, "else if (standsFor !== type) out.push", "else if (false) out.push"],
   ['parent-chain-two-to-three', SM, "if (reached.has(next) || steps > 2) return true;", "if (reached.has(next) || steps > 3) return true;"],
+  // --- the code review's three mutants (docs/reviews/syzygy-3efd-37/R37-CODE-REVIEW-RAW.md, M1 to M3), each surviving at db980e4c
+  ['review-m1-view-shape-dropped', SM, "if (shape.tops > CONTAINMENT_BOUNDS.groups[1] || shape.widest > CONTAINMENT_BOUNDS.children[1]) {", "if (false) {"],
+  ['review-m2-view-flat-dropped', SM, "if (!shape.nested) out.push", "if (false) out.push"],
+  ['review-m3-v13-precedes-model', SCHEMA, "!hasModelForm(version) && !hasWorthKnowingForm(version)", "!hasModelForm(version)"],
   // --- relationship findings
   ['derivable-ignored', SM, "if (from === undefined || to === undefined || !derivable(relationship['relation'] as RelationType, from, to)) {", "if (from === undefined || to === undefined) {"],
   ['relationship-end-unresolved-skipped', SM, "if (named !== undefined && !index.elementById.has(named)) { resolved = false;", "if (false) { resolved = false;"],

@@ -366,35 +366,6 @@ export function migrateDraft(doc: Doc): Record<string, unknown> | undefined {
   return out;
 }
 
-/** A path of a v10 or v11 draft moved as the migration moves its member (version 2.24): a node or group (at any depth) to its element, an
- * edge to its relationship, each keeping the rest of its path; any other path unchanged. */
-export function migratedPath(doc: Doc, at: string): string {
-  const migrated = migrateDraft(doc);
-  if (migrated === undefined) return at;
-  const index = modelIndex(migrated);
-  const moves: [string, string][] = [];
-  list(doc['diagrams']).forEach((diagram, i) => {
-    if (!isRecord(diagram)) return;
-    list(diagram['nodes']).forEach((node, k) => { const id = isRecord(node) ? text(node['id']) : undefined; const to = id === undefined ? undefined : index.elementById.get(id); if (to !== undefined) moves.push([`$.diagrams[${i}].nodes[${k}]`, to.at]); });
-    list(diagram['edges']).forEach((edge, k) => { const id = isRecord(edge) ? text(edge['id']) : undefined; const to = id === undefined ? undefined : index.relationshipById.get(id); if (to !== undefined) moves.push([`$.diagrams[${i}].edges[${k}]`, to.at]); });
-    const visit = (values: unknown, prefix: string): void => list(values).forEach((group, k) => {
-      if (!isRecord(group)) return;
-      const own = `${prefix}[${k}]`;
-      const id = text(group['id']);
-      const to = id === undefined ? undefined : index.elementById.get(id);
-      if (to !== undefined) moves.push([own, to.at]);
-      visit(group['children'], `${own}.children`);
-    });
-    if (diagram['kind'] === CONTAINMENT_KIND) visit(diagram['groups'], `$.diagrams[${i}].groups`);
-  });
-  let best: [string, string] | undefined;
-  for (const move of moves) {
-    const [prefix] = move;
-    if ((at === prefix || at.startsWith(`${prefix}.`) || at.startsWith(`${prefix}[`)) && (best === undefined || prefix.length > best[0].length)) best = move;
-  }
-  return best === undefined ? at : `${best[1]}${at.slice(best[0].length)}`;
-}
-
 /** A decided relationship or nesting of a v12 draft's expansion, as `relationDecisions` gives it. */
 interface Decided { readonly id: string; readonly decision: WitnessDecision }
 

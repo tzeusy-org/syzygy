@@ -260,9 +260,6 @@ export type LocalManifestFacts =
   }
   | { readonly format: string; readonly state: 'unknown'; readonly why: string };
 
-/** One schema-v9 graph edge's relation and witness state at a render (version 2.19). `witness` is the machine form. A witnessed edge alone
- * names its fact, rule and version and carries `evidence`: Syzygy's words for the relation, the witnessing fact's kind, and the revision and
- * digest of the record it is a fact of; every other edge carries nulls there and no `evidence`. */
 /** A schema-v12 draft's model (version 2.24): identities, types, parents, bases and the views (diagram ids, in diagram order) selecting
  * each. Labels, marks and citations stay in the expanded figures' claims. */
 export interface LocalModel {
@@ -272,6 +269,9 @@ export interface LocalModel {
   }[];
 }
 
+/** One schema-v9 graph edge's relation and witness state at a render (version 2.19). `witness` is the machine form. A witnessed edge alone
+ * names its fact, rule and version and carries `evidence`: Syzygy's words for the relation, the witnessing fact's kind, and the revision and
+ * digest of the record it is a fact of; every other edge carries nulls there and no `evidence`. */
 export type LocalEdgeRelation =
   | {
     readonly relation: string;
