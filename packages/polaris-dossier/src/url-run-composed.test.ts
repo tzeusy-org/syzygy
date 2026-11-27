@@ -1199,6 +1199,43 @@ async function observeRoleLaunches(
   }));
 }
 
+type CurrentPolicyTrace = { policyCurrent?: Partial<Record<'sync' | 'async', {
+  calls: number; settled: number; rejected: number; pending: number; elapsedMs: number;
+}>> };
+
+/** Two fixed summaries, owned by the issuing current scope. Settlement says
+ * nothing about authority: fulfilled true and false are counted identically.
+ * Pending calls contribute elapsed time only when they settle. */
+function observeCurrentPolicy<S extends CurrentPolicyTrace, T extends boolean | Promise<boolean>>(
+  scope: AsyncLocalStorage<S>, kind: 'sync' | 'async', clock: () => number, current: () => T,
+): T {
+  const trace = scope.getStore();
+  if (trace === undefined) return current();
+  const summaries = trace.policyCurrent ??= {};
+  const summary = summaries[kind] ??= { calls: 0, settled: 0, rejected: 0, pending: 0, elapsedMs: 0 };
+  const began = clock();
+  summary.calls++; summary.pending++;
+  const settle = (rejected: boolean): void => {
+    summary.settled++; summary.pending--; summary.rejected += Number(rejected);
+    summary.elapsedMs += clock() - began;
+  };
+  try {
+    const original = current();
+    if (original instanceof Promise) void original.then(() => settle(false), () => settle(true));
+    else settle(false);
+    return original;
+  } catch (error) { settle(true); throw error; }
+}
+
+/** Nested Vitest spies restore the underlying original, not the prior spy.
+ * Reinstall that exact prior descriptor only while this pause still owns it. */
+function restorePausedPolicyCurrent(pause: typeof policySnapshot.committedUrlPoliciesCurrentAsync & { mockRestore(): unknown },
+  previous: PropertyDescriptor): void {
+  if (policySnapshot.committedUrlPoliciesCurrentAsync !== pause) return;
+  pause.mockRestore();
+  Object.defineProperty(policySnapshot, 'committedUrlPoliciesCurrentAsync', previous);
+}
+
 type ScopedCurrentCalls<T extends ResumeStamp> = { calls: number; entries: T[]; firstRefusal?: T };
 
 /** Observe only the original callback inside this exact append's current scope. */
@@ -1343,7 +1380,7 @@ async function observeDesignRun(run: string, traceInference = false) {
     | 'reproduce' | 'read-reproduced-delivery';
   type CurrentStage = { phase: CurrentPhase; timing: ResumeStamp;
     lease?: ReturnType<typeof designProduct.urlDesignProductLeaseState>['state']; leaseRemainingMs?: number };
-  type CurrentTrace = ResumeStamp & { stages: CurrentStage[] };
+  type CurrentTrace = ResumeStamp & CurrentPolicyTrace & { stages: CurrentStage[] };
   type InferenceStep = {
     ordinal: number;
     mediate: ResumeStamp;
@@ -1435,6 +1472,14 @@ async function observeDesignRun(run: string, traceInference = false) {
     },
   };
   if (traceInference) {
+    const policyCurrent = policySnapshot.committedUrlPoliciesCurrent;
+    const policyCurrentAsync = policySnapshot.committedUrlPoliciesCurrentAsync;
+    const syncPolicyHistory = vi.spyOn(policySnapshot, 'committedUrlPoliciesCurrent');
+    syncPolicyHistory.mockImplementation((...args) => withoutObserverHistory(syncPolicyHistory, () =>
+      observeCurrentPolicy(currentScope, 'sync', clock, () => policyCurrent(...args))));
+    const asyncPolicyHistory = vi.spyOn(policySnapshot, 'committedUrlPoliciesCurrentAsync');
+    asyncPolicyHistory.mockImplementation((...args) => withoutObserverHistory(asyncPolicyHistory, () =>
+      observeCurrentPolicy(currentScope, 'async', clock, () => policyCurrentAsync(...args))));
     const matchPublication = machinePeer.matchesResumedDesignPeerPublication;
     vi.spyOn(machinePeer, 'matchesResumedDesignPeerPublication').mockImplementation((...args) => {
       if (firstDesignPublication.match !== undefined) return matchPublication(...args);
@@ -2440,6 +2485,122 @@ describe('bounded restoration observer (no native authority fixture)', () => {
     catch (error) { expect(error).toBe(marker); }
     expect(throwCurrent).toHaveBeenCalledTimes(1); expect(retained.firstRefusal).toBe(firstCurrentFailure);
     expect(JSON.stringify(retained)).not.toContain('OWN_NOT_DIAGNOSTIC');
+
+    // Exercise the same two policy ports without reading any policy or Git.
+    const policyScope = new AsyncLocalStorage<CurrentPolicyTrace>();
+    const firstPolicy: CurrentPolicyTrace = {}, secondPolicy: CurrentPolicyTrace = {};
+    let policyNow = 1, policyClockReads = 0;
+    const policyClock = () => { policyClockReads++; return policyNow; };
+    const policyArgs = ['OWN_PRIVATE_POLICY_PATH', {}, {}] as unknown as Parameters<typeof policySnapshot.committedUrlPoliciesCurrent>;
+    const outsidePolicy = Promise.resolve(true);
+    const syncOriginal = vi.fn((..._args: typeof policyArgs): boolean => true);
+    const asyncOriginal = vi.fn((..._args: typeof policyArgs): Promise<boolean> => outsidePolicy);
+    const syncPolicyPort = vi.spyOn(policySnapshot, 'committedUrlPoliciesCurrent').mockImplementation((...args) =>
+      observeCurrentPolicy(policyScope, 'sync', policyClock, () => syncOriginal(...args)));
+    const asyncPolicyPort = vi.spyOn(policySnapshot, 'committedUrlPoliciesCurrentAsync').mockImplementation((...args) =>
+      observeCurrentPolicy(policyScope, 'async', policyClock, () => asyncOriginal(...args)));
+    try {
+      expect(policySnapshot.committedUrlPoliciesCurrent(...policyArgs)).toBe(true);
+      expect(policySnapshot.committedUrlPoliciesCurrentAsync(...policyArgs)).toBe(outsidePolicy);
+      await outsidePolicy;
+      expect(policyClockReads).toBe(0);
+      expect(firstPolicy).toEqual({}); expect(secondPolicy).toEqual({});
+      expect(policyScope.run(firstPolicy, () => policySnapshot.committedUrlPoliciesCurrent(...policyArgs))).toBe(true);
+      syncOriginal.mockReturnValueOnce(false);
+      policyNow = 2;
+      expect(policyScope.run(firstPolicy, () => policySnapshot.committedUrlPoliciesCurrent(...policyArgs))).toBe(false);
+      syncOriginal.mockImplementationOnce(() => { throw marker; });
+      policyNow = 3;
+      try {
+        policyScope.run(firstPolicy, () => policySnapshot.committedUrlPoliciesCurrent(...policyArgs));
+        expect.unreachable();
+      } catch (error) { expect(error).toBe(marker); }
+      expect(firstPolicy).toEqual({ policyCurrent: {
+        sync: { calls: 3, settled: 3, rejected: 1, pending: 0, elapsedMs: 0 },
+      } });
+      let resolvePolicyFirst!: (value: boolean) => void, rejectPolicySecond!: (cause: unknown) => void;
+      let resolvePolicyOther!: (value: boolean) => void;
+      const policyFirst = new Promise<boolean>(resolve => { resolvePolicyFirst = resolve; });
+      const policySecond = new Promise<boolean>((_resolve, reject) => { rejectPolicySecond = reject; });
+      const policyOther = new Promise<boolean>(resolve => { resolvePolicyOther = resolve; });
+      asyncOriginal.mockReturnValueOnce(policyFirst).mockReturnValueOnce(policySecond).mockReturnValueOnce(policyOther);
+      policyNow = 4;
+      expect(policyScope.run(firstPolicy, () => policySnapshot.committedUrlPoliciesCurrentAsync(...policyArgs))).toBe(policyFirst);
+      policyNow = 5;
+      expect(policyScope.run(firstPolicy, () => policySnapshot.committedUrlPoliciesCurrentAsync(...policyArgs))).toBe(policySecond);
+      policyNow = 6;
+      expect(policyScope.run(secondPolicy, () => policySnapshot.committedUrlPoliciesCurrentAsync(...policyArgs))).toBe(policyOther);
+      expect(firstPolicy.policyCurrent?.async).toEqual({ calls: 2, settled: 0, rejected: 0, pending: 2, elapsedMs: 0 });
+      expect(secondPolicy.policyCurrent?.async).toEqual({ calls: 1, settled: 0, rejected: 0, pending: 1, elapsedMs: 0 });
+      policyNow = 8;
+      policyScope.run(secondPolicy, () => rejectPolicySecond(marker));
+      await expect(policySecond).rejects.toBe(marker);
+      expect(firstPolicy.policyCurrent?.async).toEqual({ calls: 2, settled: 1, rejected: 1, pending: 1, elapsedMs: 3 });
+      policyNow = 9; resolvePolicyOther(true);
+      await expect(policyOther).resolves.toBe(true);
+      policyNow = 10; resolvePolicyFirst(false);
+      await expect(policyFirst).resolves.toBe(false);
+      expect(firstPolicy.policyCurrent?.async).toEqual({ calls: 2, settled: 2, rejected: 1, pending: 0, elapsedMs: 9 });
+      expect(secondPolicy.policyCurrent?.async).toEqual({ calls: 1, settled: 1, rejected: 0, pending: 0, elapsedMs: 3 });
+      expect(policyClockReads).toBe(12);
+      expect(syncOriginal).toHaveBeenCalledTimes(4); expect(asyncOriginal).toHaveBeenCalledTimes(4);
+      for (const args of [...syncOriginal.mock.calls, ...asyncOriginal.mock.calls]) expect(args).toEqual(policyArgs);
+      // Repeated calls grow numeric summaries, never retained per-call arrays.
+      for (let index = 0; index < 70; index++)
+        expect(policyScope.run(firstPolicy, () => policySnapshot.committedUrlPoliciesCurrent(...policyArgs))).toBe(true);
+      expect(firstPolicy.policyCurrent?.sync).toEqual({ calls: 73, settled: 73, rejected: 1, pending: 0, elapsedMs: 0 });
+      expect(Object.keys(firstPolicy.policyCurrent!)).toEqual(['sync', 'async']);
+      expect(secondPolicy).toEqual({ policyCurrent: {
+        async: { calls: 1, settled: 1, rejected: 0, pending: 0, elapsedMs: 3 },
+      } });
+      const policyDiagnostic = JSON.stringify({ firstPolicy, secondPolicy });
+      for (const excluded of ['OWN_PRIVATE_POLICY_PATH', 'OWN_NOT_DIAGNOSTIC', 'body', 'error'])
+        expect(policyDiagnostic).not.toContain(excluded);
+
+      // A second observer scope and the genuine pause/restore pattern must
+      // leave subsequent calls measured without changing the first scope.
+      const beforeLifecycle = structuredClone({ firstPolicy, secondPolicy });
+      const repeatedScope = new AsyncLocalStorage<CurrentPolicyTrace>(), repeatedTrace: CurrentPolicyTrace = {};
+      const priorObserver = Object.getOwnPropertyDescriptor(policySnapshot, 'committedUrlPoliciesCurrentAsync')!;
+      const precedingCurrent = policySnapshot.committedUrlPoliciesCurrentAsync;
+      const repeated = vi.spyOn(policySnapshot, 'committedUrlPoliciesCurrentAsync').mockImplementation((...args) =>
+        observeCurrentPolicy(repeatedScope, 'async', policyClock, () => precedingCurrent(...args)));
+      const beforePause = Object.getOwnPropertyDescriptor(policySnapshot, 'committedUrlPoliciesCurrentAsync')!;
+      const currentBeforePause = policySnapshot.committedUrlPoliciesCurrentAsync;
+      let reportPolicyChecked!: () => void, releasePolicy!: () => void;
+      const policyChecked = new Promise<void>(resolve => { reportPolicyChecked = resolve; });
+      const policyHold = new Promise<void>(resolve => { releasePolicy = resolve; });
+      const pause = vi.spyOn(policySnapshot, 'committedUrlPoliciesCurrentAsync').mockImplementationOnce(async (...args) => {
+        const current = await currentBeforePause(...args);
+        reportPolicyChecked();
+        await policyHold;
+        return current;
+      });
+      try {
+        const pending = repeatedScope.run(repeatedTrace, () => policySnapshot.committedUrlPoliciesCurrentAsync(...policyArgs));
+        await policyChecked;
+        releasePolicy();
+        await expect(pending).resolves.toBe(true);
+        restorePausedPolicyCurrent(pause, beforePause);
+        expect(policySnapshot.committedUrlPoliciesCurrentAsync).toBe(repeated);
+        const afterPause = repeatedScope.run(repeatedTrace, () => policySnapshot.committedUrlPoliciesCurrentAsync(...policyArgs));
+        expect(afterPause).toBe(outsidePolicy);
+        await afterPause;
+        expect(repeatedTrace).toEqual({ policyCurrent: {
+          async: { calls: 2, settled: 2, rejected: 0, pending: 0, elapsedMs: 0 },
+        } });
+        expect({ firstPolicy, secondPolicy }).toEqual(beforeLifecycle);
+        const later = vi.spyOn(policySnapshot, 'committedUrlPoliciesCurrentAsync').mockReturnValue(outsidePolicy);
+        try {
+          restorePausedPolicyCurrent(pause, beforePause);
+          expect(policySnapshot.committedUrlPoliciesCurrentAsync).toBe(later);
+        } finally { restorePausedPolicyCurrent(later, beforePause); }
+      } finally {
+        releasePolicy();
+        restorePausedPolicyCurrent(pause, beforePause);
+        restorePausedPolicyCurrent(repeated, priorObserver);
+      }
+    } finally { syncPolicyPort.mockRestore(); asyncPolicyPort.mockRestore(); }
   });
 });
 
@@ -2741,6 +2902,7 @@ describe('composed URL run with actual role processes', () => {
         expect(await options.current()).toBe(true);
         const lock = path.join(recoveryHost.root, `${sha256(f.run)}.recovery.lock`);
         const withdrawn = `${lock}.controlled-withdrawal`;
+        const priorPolicyDescriptor = Object.getOwnPropertyDescriptor(policySnapshot, 'committedUrlPoliciesCurrentAsync')!;
         const policyCurrent = policySnapshot.committedUrlPoliciesCurrentAsync;
         let reportChecked!: () => void, releasePolicy!: () => void;
         const checkedPolicy = new Promise<void>(resolve => { reportChecked = resolve; });
@@ -2763,7 +2925,7 @@ describe('composed URL run with actual role processes', () => {
           } finally { await fs.rename(withdrawn, lock); }
         } finally {
           releasePolicy();
-          pausePolicy.mockRestore();
+          restorePausedPolicyCurrent(pausePolicy, priorPolicyDescriptor);
         }
         expect(await options.current()).toBe(true);
         resumeGuardsChecked = true;
