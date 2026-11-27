@@ -1,15 +1,16 @@
-# Design — migration parity narrowed (version 2.NN)
+# Design — migration parity narrowed (version 2.38)
 
-[Inferred] Version 2.NN of REQ-polaris-generation-034, for syzygy-3efd.85. It is drafted on `agent/syzygy-3efd.85`, over the version 2.34 text (`dossier-derived-base-views`, row A-267, tag `polaris-dossier-derived-base-views-v2.34`), which is in PR #1021 at the time of drafting.
+[Inferred] Version 2.38 of REQ-polaris-generation-034, for syzygy-3efd.85. It was drafted on `agent/syzygy-3efd.85` over the version 2.34 text (`dossier-derived-base-views`, row A-267, tag `polaris-dossier-derived-base-views-v2.34`) and is rebuilt over the version 2.36 text (`polaris-source-example-advice`, row A-334, tag `polaris-dossier-source-example-advice-v2.36`), the REQ-034 in force on main when it adopts.
 
 ## D1. The version label
 
 - [Observed] syzygy-3efd.32 (figure walks) and syzygy-3efd.60 (import facts) are drafted as REQ-034 amendments too, and are expected to adopt first.
-- [Inferred] So this change keeps the placeholder 2.NN and the tag `polaris-dossier-migration-parity-v2.NN` until adoption, and rebuilds over whatever is then in force. It touches only the migration paragraph, one carried scenario and the Form lines; neither .32 nor .60 edits the migration paragraph (their semantic deltas name no migration text), so the rebuild is mechanical.
+- [Inferred] So this change kept the placeholder 2.NN and the tag `polaris-dossier-migration-parity-v2.NN` until adoption, to rebuild over whatever was then in force. It touches only the migration paragraph, one carried scenario and the Form lines; neither .32 nor .60 edits the migration paragraph (their semantic deltas name no migration text), so the rebuild is mechanical.
+- [Observed] At adoption, versions 2.35 (screened derived base, A-333) and 2.36 (source-example advice, A-334) are in force on main and open PR #1010 claims 2.37, so this change takes 2.38 and the tag `polaris-dossier-migration-parity-v2.38`. It is rebuilt over the 2.36 text by an anchored script: the migration paragraph (line 142) and the carried scenario hold the same bytes in 2.36 as in 2.34, and the Case, Observable, Oracle and Falsifier lines end in the same words, so the same edits apply; the new scenario follows "Brief v23 states the derived base", before the Form line, as it did over 2.34 (2.35 and 2.36 append their own scenarios after the warrants block).
 
 ## D2. Narrow the claim, keep the rule
 
-- [Observed] The cited lines, in the 2.34 text that carries them:
+- [Observed] The cited lines, at the same line numbers in the 2.34 and the 2.36 text:
   - the 2.19 order (line 98): "an edge the draft labels Unknown, or one rendered as a withheld item, is `unknown` (`edge-not-inferred`)";
   - the 2.24 case (line 138): "a relationship or parent either of whose elements renders as a withheld item being `unknown` (`edge-not-inferred`)";
   - the migration parity (line 142): "every `<figure>` element … and every figure entry of its `machine.json` are byte-identical to those of d".
@@ -50,4 +51,4 @@
 | 7 | Note: checker docstring said "figure-plan" for 2.34 | Repaired: `migpar` docstring in `scripts/check_spec_reconciliation.py` now says "v2.34 derived-base". The placeholder label and tag stay until adoption, as D1 states. |
 | 8 | Note: d's own rendering of a witnessed edge to a withheld node is unchanged | No change: out of this amendment's scope (D2); the migrated draft is the one 2.24 makes honest. |
 
-[Observed] The repaired spec's sha256 is `17c98ddf50ddae77e88bbd983a21bd5fa526508e056d9a5f34474a43b0e40b46`. No review has read the repaired bytes; under D10 none is dispatched.
+[Observed] The repaired spec over 2.34 hashed to sha256 `17c98ddf50ddae77e88bbd983a21bd5fa526508e056d9a5f34474a43b0e40b46`; rebuilt over 2.36 and labelled 2.38 it hashes to `3f292ca99bec13885c08e2c4e84932156962de847022f3e35f8a910ed82f52be`. No review has read the repaired bytes or the rebuild; under D10 none is dispatched.

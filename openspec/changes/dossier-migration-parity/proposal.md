@@ -1,6 +1,6 @@
-# Dossier migration parity — version 2.NN
+# Dossier migration parity — version 2.38
 
-[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10. The label 2.NN is a placeholder, set when the change is adopted; it is drafted over derived-base views 2.34 and will likely adopt after syzygy-3efd.32 and syzygy-3efd.60, rebuilding over whichever lands first (design D1).
+[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10. It was drafted over derived-base views 2.34 with the placeholder label 2.NN and is rebuilt, for adoption, over source-example advice 2.36 as version 2.38 (design D1).
 
 ## Why
 
