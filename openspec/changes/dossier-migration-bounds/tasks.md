@@ -5,5 +5,5 @@
 - [x] Wire the overlay into `scripts/check_spec_reconciliation.py` (pending until its row) and `scripts/count_polaris_effective_scenarios.py`, with selftest cases (`migbound_cases`).
 - [x] Append the agent-adoption row naming the installing commit, with its revert command (A-272).
 - [ ] Create the version tag `polaris-dossier-migration-bounds-v2.41` at the installing commit once it is on the default branch.
-- [ ] One independent fresh-context review (CC-REV-4), arranged by the lead; raw retained, findings dispositioned in `design.md`.
+- [x] One independent fresh-context review (CC-REV-4), arranged by the lead; raw retained, findings dispositioned in `design.md` (REVISE, all repaired; no review has read the repairs).
 - [ ] Confirm the syzygy-3efd.37 test labelled with this bead asserts the `schema` finding at both bounds (`design.md` D5).
