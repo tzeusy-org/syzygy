@@ -129,7 +129,10 @@ With a URL (the author, driving the loop):
     `syzygy dossier close <run> --usage-tokens <n> --usage-turns <n>` with
     the figures they give, or `syzygy dossier close <run>` with none; never
     enter a figure they did not give, and never 0. Report the site path and
-    `syzygy dossier status <run>` verbatim, and what is still Unknown.
+    `syzygy dossier status <run>` verbatim, and what is still Unknown. The
+    cost line close and status print is Unknown in a run started this way:
+    Syzygy reads usage only from the sessions `syzygy polaris` starts, so
+    the operator's figure is the only usage this run records.
 
 With a role (a fresh session started in the session directory step 8's
 command names). A waiting session's prompt says it was started at the

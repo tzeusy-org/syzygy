@@ -17,6 +17,7 @@ import { screenLoaderOf, placementSubjectOf } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { RUN_TREE_BOUNDS, isMissingEntry, readBoundedText, readCause } from './run-tree-read.js';
 import { CAPACITY_UNKNOWN, STEP_LINES_MAX, stepMeasures, type StepLogSnapshot } from './step-measures.js';
+import { costLine, sessionUsage } from './session-usage.js';
 
 /** `syzygy dossier close <run> [--usage-tokens N] [--usage-turns N]` (REQ-polaris-generation-033, 018; design "Command surface",
  * `close`; syzygy-qkea.11).
@@ -31,6 +32,10 @@ import { CAPACITY_UNKNOWN, STEP_LINES_MAX, stepMeasures, type StepLogSnapshot } 
  * recorded and that Syzygy cannot observe it. Everything else the record carries from the run directory (the configuration, the brief's
  * execution rule, the agent's reported commands, the step instants and the step measures derived from the same read, the breach log) is a stored record within the agent sessions' write
  * reach, and Inferred. The record copies no file body: no brief, prompt or transcript body enters it, only each stored file's digest.
+ * Since version 2.39 (syzygy-5dhm.26) the record also carries `sessionUsage`: for a launched run, each role's token counts, model
+ * responses and span, read by Syzygy from the agent tool's own transcripts in the home Syzygy gave that session, with a run total, all
+ * Inferred because each session can write its home; for a run the operator started, Unknown (`session-usage.ts`). Only numbers and fixed
+ * reasons enter it. The operator's declared figure and the step measures' `toolOwnedUsage` keep their meaning: a transcript is no receipt.
  * Syzygy made no provider call for the run, issued no credential for it and wrote none to the state directory. */
 
 export const EXECUTION_RECORD_FORMAT = 'polaris-dossier-execution-record/2';
@@ -79,6 +84,8 @@ export interface CloseReport {
   readonly record: string;
   readonly closedAt: string;
   readonly usage: AgentUsage;
+  /** The one cost line, from the session usage this record carries (version 2.39). */
+  readonly cost: string;
   readonly credential: CredentialStepResult;
   readonly storedFiles: number;
   readonly disclosures: readonly string[];
@@ -134,6 +141,7 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
   // One bounded read gives both the steps view and the step measures; the inventory below may see a later file (version 2.31).
   const stepLog = readStepLog(run);
   deps.afterStepLogRead?.();
+  const usageRead = sessionUsage(run);
   const stored = storedFiles(run);
   const record = {
     format: EXECUTION_RECORD_FORMAT,
@@ -155,6 +163,7 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
     agentUsage: usage,
     steps: stepInstantsOf(stepLog),
     stepMeasures: stepMeasures(stepLog, now),
+    sessionUsage: usageRead,
     credential: { atClose: credential, breaches: breachLog(run), ...(credential.required ? { disclosure: CREDENTIAL_CHECK_DISCLOSURE } : {}) },
     declaredProvider: { provider: declared.agentProvider, contentClasses: subject.contentClasses, label: 'Inferred', actualTransmission: 'Unknown' },
     noProviderCall: NO_PROVIDER_CALL,
@@ -181,6 +190,7 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
       record: recordFile,
       closedAt: isoOf(now),
       usage,
+      cost: costLine(usageRead).text,
       credential,
       storedFiles: stored.files.length,
       disclosures: record.disclosures,
