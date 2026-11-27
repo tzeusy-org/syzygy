@@ -1,0 +1,96 @@
+{
+  "metadataHead": "f4bbffea3582817e01cc7dc7eece6aed51472090",
+  "archiveSha256": "d76c546d820593199b208149d2ddbe95c41ae9984eb673b84863336ed34ffd93",
+  "archiveBytes": 200751,
+  "memberCount": 17,
+  "memberReadbackHashes": 17,
+  "sourceDualHashCount": 13,
+  "deterministicRebuildEqual": true,
+  "members": [
+    {
+      "path": "PRIOR-REFERENCES.json",
+      "bytes": 449,
+      "sha256": "517305ec99fccd5bd28350b0d36c5353823e9f4229b795695fe30dc4d0efeac9"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3113,
+      "sha256": "5ba3f3c96e99c10c54ac4beb064798e162423e97cf81612c957826fcd856749b"
+    },
+    {
+      "path": "SOURCE-INDEX.json",
+      "bytes": 3508,
+      "sha256": "ae2d76c3e5981cb0b3a92cac9f66d9ff9e571d00a97564a50149306436369926"
+    },
+    {
+      "path": "SUMMARY.json",
+      "bytes": 5031,
+      "sha256": "0a1170772cef72cc2db838e763b073fec3d901cfa5f060b150c8ed2c77c30423"
+    },
+    {
+      "path": "assembly/assemble-hosted-f4bb-proof-R1.py",
+      "bytes": 10723,
+      "sha256": "9a6746168d13d094f737db30f32a6bf3d7c9d70baf6cee104e5163331e196377"
+    },
+    {
+      "path": "completed-hosted/SHA256SUMS",
+      "bytes": 428,
+      "sha256": "2b5d3eb769850d0d69dd34069eed2ffebddb7e8dde3650de675e9107eb3a743d"
+    },
+    {
+      "path": "completed-hosted/governance-jobs.json",
+      "bytes": 37936,
+      "sha256": "63c52be13c71909313294c0c52ad70befaf6a8ea2c53b59b6ba48196c660916b"
+    },
+    {
+      "path": "completed-hosted/governance-summary.json",
+      "bytes": 907,
+      "sha256": "50a305c9fdfdb978c788e8f80e24b28b08e38eca4cb0b48c4a555c1bca8bcfc6"
+    },
+    {
+      "path": "completed-hosted/node-jobs.json",
+      "bytes": 30936,
+      "sha256": "ee81554e1b0974f8724b6a155c76242546236edd333259c2d1fcdc6420873f87"
+    },
+    {
+      "path": "completed-hosted/node-summary.json",
+      "bytes": 1496,
+      "sha256": "8f2c3b2361ce8a3bf6120e128fde6b24559fcb8abd4b119b6e838eb28623799b"
+    },
+    {
+      "path": "completed-hosted/stop-resume-job.log",
+      "bytes": 1240052,
+      "sha256": "d36ff0b10ecf6e80c91df6e4a79d82327d07d8f9302280251a5a5c24f7f20163"
+    },
+    {
+      "path": "runtime-assessment/ASSESSMENT.md",
+      "bytes": 12937,
+      "sha256": "0e63e6eeebfadfc761b03b5995dda574374410765220b79a5d9475f28bed5ca2"
+    },
+    {
+      "path": "runtime-assessment/SHA256SUMS",
+      "bytes": 412,
+      "sha256": "f2420270a2fb6fd45bed2f272c3684d89bab4eca91d93c039bd6d22e57840820"
+    },
+    {
+      "path": "runtime-assessment/bindings.json",
+      "bytes": 9980,
+      "sha256": "e98bd84262a25be5310fa762ca37b9df60e3f3898a553ac47e407e1803ce07b7"
+    },
+    {
+      "path": "runtime-assessment/measurements.json",
+      "bytes": 21726,
+      "sha256": "b6429658b1a92b20305764cb308638b0f0970aeaded912b4093f273874ed80b0"
+    },
+    {
+      "path": "runtime-assessment/source-census.tsv",
+      "bytes": 4065,
+      "sha256": "b4822f93093a94e30175ef076306e834cbe31656b3a205f4d21486ea968ef46f"
+    },
+    {
+      "path": "runtime-assessment/verification.json",
+      "bytes": 1070,
+      "sha256": "39af27a6bcd7d6b2d51dec3ea432af2353b7806fae33c031a0c984bdb4d410ad"
+    }
+  ]
+}

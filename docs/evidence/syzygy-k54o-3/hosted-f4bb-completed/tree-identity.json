@@ -1,0 +1,13 @@
+{
+  "asOf": "2026-11-27T02:45:46.209650+00:00",
+  "syntheticCommit": "6bae261f3a33af477406513336d4cbd865d1ea0d",
+  "tree": "63ffa8665a26c4e0e94f656b8cfd72d2edf3453e",
+  "head": "f4bbffea3582817e01cc7dc7eece6aed51472090",
+  "headTree": "63ffa8665a26c4e0e94f656b8cfd72d2edf3453e",
+  "equal": true,
+  "parents": [
+    "fda6daf1d752e8796a2723eb2866842b15fcbb50",
+    "f4bbffea3582817e01cc7dc7eece6aed51472090"
+  ],
+  "rawFile": "/home/orca/.tmp/f3-native-admission-fixes/hosted-f4bb-synthetic-commit-api.json"
+}
