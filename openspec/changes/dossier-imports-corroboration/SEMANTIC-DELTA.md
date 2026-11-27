@@ -8,7 +8,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-migration-bounds/proposed/polaris-generation/spec.md` (dossier migration bounds version 2.43, row A-272, tag `polaris-dossier-migration-bounds-v2.43`; sha256 `bbc1ab4794a9748de88350b2c7cc9ffbeec5dd6d74231739860789aa724acf02`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-imports-corroboration/proposed/polaris-generation/spec.md`, sha256 `5b13a3998bfa9b2b05361ef5f7523b8a7ae58a3d074a440b22e870571d933955`) replaces that text, composed after version 2.43. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.43's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-migration-bounds/proposed/polaris-generation/spec.md` (dossier migration bounds version 2.43, row A-272, tag `polaris-dossier-migration-bounds-v2.43`; sha256 `bbc1ab4794a9748de88350b2c7cc9ffbeec5dd6d74231739860789aa724acf02`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-imports-corroboration/proposed/polaris-generation/spec.md`, sha256 `d60afad88bc72dde63ad597d2b9a5fa646143e4b68f89202ffcaff8742068c4d`) replaces that text, composed after version 2.43. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.43's, byte for byte.
 
 ## Carried unchanged
 
@@ -36,7 +36,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 - "Version 2.44 makes rule `relation-witness` version 2: version 1 with one row more, for `imports`, and …"
 - "A `corroborated` edge is the draft's claim and renders as version 2.16 renders an edge, with …"
 
-[Observed] 3 scenarios, after the predecessor's last scenario that precedes the Form line, and before that line: "An import statement corroborates an imports arrow", "No import fact is never read as no import", "Import facts that cannot be read leave the arrow Unknown".
+[Observed] 4 scenarios, after the predecessor's last scenario that precedes the Form line, and before that line: "An import statement corroborates an imports arrow", "A missing import fact is never read as no import", "Import facts that cannot be read leave the arrow Unknown", "A corroborated relationship shown in two views".
 
 ## Removed
 
