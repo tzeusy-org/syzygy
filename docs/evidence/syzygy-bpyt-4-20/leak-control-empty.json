@@ -1,0 +1,115 @@
+{
+  "case": "empty",
+  "source": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject/docs/evidence/poc-fixture-leak-2026-10-22/leak_by_file.py",
+  "source_sha256": "96aba7927e4a60108e227d122223c74e3cfea006a3960565549cfe8c4b1256b2",
+  "boundary": "subprocess.run is explicitly synthetic; actual guarded script executes unchanged via runpy",
+  "legacy_selector": "unchanged, not a current full-app measurement",
+  "base": "/tmp/s420-oc7c9l4j",
+  "root": "/tmp/s420-oc7c9l4j/scratch",
+  "calls": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject",
+        "ls-files",
+        "apps/three-surface-poc/src"
+      ],
+      "cwd": "",
+      "tmpdir": null
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject",
+        "grep",
+        "-l",
+        "-F",
+        "-e",
+        "test-model-fixture",
+        "-e",
+        "polaris-accessibility-variants",
+        "--",
+        "apps/three-surface-poc/src"
+      ],
+      "cwd": "",
+      "tmpdir": null
+    },
+    {
+      "argv": [
+        "npx",
+        "vitest",
+        "run",
+        "apps/three-surface-poc/src/fixture-a.test.ts",
+        "--project",
+        "@syzygy/three-surface-poc-app"
+      ],
+      "cwd": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject",
+      "tmpdir": "/tmp/s420-oc7c9l4j/scratch/f00"
+    },
+    {
+      "argv": [
+        "npx",
+        "vitest",
+        "run",
+        "apps/three-surface-poc/src/fixture-b.test.ts",
+        "--project",
+        "@syzygy/three-surface-poc-app"
+      ],
+      "cwd": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject",
+      "tmpdir": "/tmp/s420-oc7c9l4j/scratch/f01"
+    }
+  ],
+  "error": null,
+  "stdout": "apps/three-surface-poc/src/fixture-a.test.ts 0 1 1\napps/three-surface-poc/src/fixture-b.test.ts 0 1 1\n{\n \"tool\": \"leak_by_file.py\",\n \"treeCommit\": \"38eab812488c85198f37b8be18f1dd24cd5898f8\",\n \"project\": \"@syzygy/three-surface-poc-app\",\n \"testFilesInDirectory\": 2,\n \"fixtureUsingTestFiles\": 2,\n \"filesWithCopiesLeft\": 2,\n \"filesWithTemplatesLeft\": 2,\n \"copiesLeftTotal\": 2,\n \"templatesLeftTotal\": 2,\n \"nonzeroExits\": []\n}\n",
+  "stderr": "",
+  "record": {
+    "tool": "leak_by_file.py",
+    "treeCommit": "38eab812488c85198f37b8be18f1dd24cd5898f8",
+    "project": "@syzygy/three-surface-poc-app",
+    "testFilesInDirectory": 2,
+    "fixtureUsingTestFiles": 2,
+    "filesWithCopiesLeft": 2,
+    "filesWithTemplatesLeft": 2,
+    "copiesLeftTotal": 2,
+    "templatesLeftTotal": 2,
+    "nonzeroExits": [],
+    "results": [
+      {
+        "file": "apps/three-surface-poc/src/fixture-a.test.ts",
+        "exit": 0,
+        "summary": [
+          "Test Files 1 passed",
+          "Tests 2 passed"
+        ],
+        "templatesLeft": 1,
+        "copiesLeft": 1,
+        "otherEntriesLeft": 1
+      },
+      {
+        "file": "apps/three-surface-poc/src/fixture-b.test.ts",
+        "exit": 0,
+        "summary": [
+          "Test Files 1 passed",
+          "Tests 2 passed"
+        ],
+        "templatesLeft": 1,
+        "copiesLeft": 1,
+        "otherEntriesLeft": 1
+      }
+    ]
+  },
+  "replay": {
+    "refused_before_subprocess": true,
+    "occupied_canary_survived": true,
+    "output_absent": true,
+    "error": {
+      "type": "SystemExit",
+      "message": "refusing /tmp/s420-oc7c9l4j/scratch: it exists and is not an empty directory"
+    }
+  },
+  "sibling_bytes_metadata_preserved": true,
+  "root_retained_for_accountable_inspection": true,
+  "holds": true
+}

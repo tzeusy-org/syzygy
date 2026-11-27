@@ -1,0 +1,91 @@
+{
+  "observer": "separate outer filesystem inspection after child scripts completed",
+  "roots": [
+    {
+      "case": "child-nonzero",
+      "inner_base": "/tmp/s420-esh8p8ij",
+      "outer_base": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/tmp/s420-esh8p8ij",
+      "sibling_sha256": "9e5ceaee9b05899b906ddff3f5cc9df13f500c55688ee15f80a231f3d781b4c4",
+      "entries": [
+        "home",
+        "scratch",
+        "scratch/replay-canary",
+        "shared-tmp",
+        "sibling-canary"
+      ],
+      "storage_preserved_for_owner_inspection": true
+    },
+    {
+      "case": "empty",
+      "inner_base": "/tmp/s420-oc7c9l4j",
+      "outer_base": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/tmp/s420-oc7c9l4j",
+      "sibling_sha256": "9e5ceaee9b05899b906ddff3f5cc9df13f500c55688ee15f80a231f3d781b4c4",
+      "entries": [
+        "home",
+        "scratch",
+        "scratch/replay-canary",
+        "shared-tmp",
+        "sibling-canary"
+      ],
+      "storage_preserved_for_owner_inspection": true
+    },
+    {
+      "case": "failure",
+      "inner_base": "/tmp/s420-zm957aqk",
+      "outer_base": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/tmp/s420-zm957aqk",
+      "sibling_sha256": "9e5ceaee9b05899b906ddff3f5cc9df13f500c55688ee15f80a231f3d781b4c4",
+      "entries": [
+        "home",
+        "scratch",
+        "scratch/f00",
+        "scratch/f00/other",
+        "scratch/f00/syzygy-poc-surface-fixture-Copy",
+        "scratch/f00/syzygy-poc-surface-fixture-template-Synthetic",
+        "shared-tmp",
+        "sibling-canary"
+      ],
+      "storage_preserved_for_owner_inspection": true
+    },
+    {
+      "case": "missing",
+      "inner_base": "/tmp/s420-jn3ofvjp",
+      "outer_base": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/tmp/s420-jn3ofvjp",
+      "sibling_sha256": "9e5ceaee9b05899b906ddff3f5cc9df13f500c55688ee15f80a231f3d781b4c4",
+      "entries": [
+        "home",
+        "scratch",
+        "scratch/replay-canary",
+        "shared-tmp",
+        "sibling-canary"
+      ],
+      "storage_preserved_for_owner_inspection": true
+    },
+    {
+      "case": "non-directory",
+      "inner_base": "/tmp/s420-v_93z8jr",
+      "outer_base": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/tmp/s420-v_93z8jr",
+      "sibling_sha256": "9e5ceaee9b05899b906ddff3f5cc9df13f500c55688ee15f80a231f3d781b4c4",
+      "entries": [
+        "home",
+        "scratch",
+        "shared-tmp",
+        "sibling-canary"
+      ],
+      "storage_preserved_for_owner_inspection": true
+    },
+    {
+      "case": "refusal",
+      "inner_base": "/tmp/s420-njcs6tvm",
+      "outer_base": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/tmp/s420-njcs6tvm",
+      "sibling_sha256": "9e5ceaee9b05899b906ddff3f5cc9df13f500c55688ee15f80a231f3d781b4c4",
+      "entries": [
+        "home",
+        "shared-tmp",
+        "sibling-canary"
+      ],
+      "storage_preserved_for_owner_inspection": true
+    }
+  ],
+  "distinct_roots": 6,
+  "retained_failed_or_occupied_roots": "Not deleted; contents enumerated for accountable review. No active process reported in each outer run capture."
+}

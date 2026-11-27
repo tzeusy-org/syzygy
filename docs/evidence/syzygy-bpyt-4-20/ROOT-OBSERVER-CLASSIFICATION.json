@@ -1,0 +1,509 @@
+{
+  "at": "2026-11-06T10:35:08.831543+00:00",
+  "reviewer": "ROOT independent of author and observer",
+  "inputs": [
+    {
+      "path": "guard_observer.py",
+      "sha256": "71f7169be2ee7fafdcfec15e0e7ac8c11b3800fe2abea9b47f8100a32d6faf61",
+      "bytes": 2855
+    },
+    {
+      "path": "guard-exec.trace",
+      "sha256": "1e99ba4dcd50951e2bc3bc1b34b06bda380f5f930d7f2ff5da471547e5d3f32f",
+      "bytes": 56307
+    },
+    {
+      "path": "guard-probe.json",
+      "sha256": "18124acc55bcb1f8d8fce6920cdad8c9f13df1362578d0c8a103a22833c3d5e3",
+      "bytes": 17707
+    },
+    {
+      "path": "runs/n13-guard-probe/capture.json",
+      "sha256": "47b770f3c3d9dcfd4d4c746135951eb47365d20e7169414844b3a5b4521d071e",
+      "bytes": 2235
+    }
+  ],
+  "two_hash_methods": true,
+  "trace_lines": 583,
+  "counterexamples": [
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "8f24a0179bd2bf06ea796cf44e18ef20dec0fc4fbff277462e669f45da3c299b"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "18faf2e7cd83e1bb5217f91944451d39cfcf7dffb6e2e463547ced2ff6b45602"
+    },
+    {
+      "executable": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "292e413ce5ab8c3e1b8fb7dfbb6581e183e0e38c8b082839eeff2c1a7cea425a"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "00545a3cf8e33c06830e87151e0e7b97c7c07b8347df687a00ff2fa7cba12d3a"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "ENOENT": false,
+      "return0": true,
+      "line_sha256": "eb3068dbf9182c09ac0a8a721849e2db257bc91b7abadc101bb92f8aac0e47b7"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "32f51aaa20fa6212de992025a4ef1235f18dd20e2251521b34ebaec3e264c79e"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "eeeb38aed8a3cd4ced3f95ec993daab15b92553af9675c6ca18a200b1c40c6f3"
+    },
+    {
+      "executable": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "4572cc6d0f9dbd0ff1750f990edef7cb7e76a3acc3bf5c0cb6070b7f94c74f84"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "06696b490953161f7f68b7c2e67c2a72195d3a0a9ecd66def6fec6632af91a0e"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "ENOENT": false,
+      "return0": true,
+      "line_sha256": "82a4984d2bd0bdd403904b53df23a8c00099ed845a3e809637fbb016a1494c7c"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "b27a4d2de1885b3a22a37bb633963080c5a606ce4c8a28987640694a885e45ed"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "e7019bc6ded219f20f1342f63e188fa5a5e9ccbd74fe71fd17fcdcd8af0ad940"
+    },
+    {
+      "executable": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "f2ecd7015c271bae69ff651ea7f7d27b0747c1b0d04617c74aba9049bcd7acf5"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "187b40563e1c419180502dcc5cfe096de1993ecf113bfe3b022ce6e74c6e5918"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "ENOENT": false,
+      "return0": true,
+      "line_sha256": "97013776efb4fd546b146c36a9b7ab393d0dab67a897443f4a0c95418885b3c0"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "97a2855fd6a556af35ee167c5cc6d770782a687d5159f697318123d1d8305d47"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "be6b286fbaa28d7989d09bd00bd1f57abe84e9d76005d2ff95775436a9d04774"
+    },
+    {
+      "executable": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "491d53a00434a5c4dde3e358a14ad245f6a194e6a62a77872ba2482bf3375fb7"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "3fc4fec3d59327170ad310664bf9b0e3810025c2f430eefb647c070b5e752d6f"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "ENOENT": false,
+      "return0": true,
+      "line_sha256": "9c6854e4ecfa1b060bb3b956616350b1e2169459d80f5d094897d94fbdf33b07"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "12e592603ab7a30f46652aee1d14df772e420c21d08b14f5a0f2a89f1b627f4a"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "db123c60a0b5488111317581d33424aa922a549064ee4c7b00a1ad714628d02e"
+    },
+    {
+      "executable": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "2b459006d4876e1b27d71deda386bc7735fe0eaf50dd1044c12cd5db5c1e9c56"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "8f2b312e1ceb2006a1e0dedcc88cea896239b58fc57d8a54ee15a67d45fc5872"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "ENOENT": false,
+      "return0": true,
+      "line_sha256": "cac043b4549b2814b3b3cf883f890ca5888518234451fc41af87e9db75adfab8"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "ad6954c13ad0362b1fe53ac6f1552d8053b723ab7e9102f13a46c4104ae2520f"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "75250a3dea8aa15a761a649ccdd1d9127fdfdb29e93e42a77fd75c6b527b3f4e"
+    },
+    {
+      "executable": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "1170e0176349fc60fad7068944d8f48d71b552f36148c19145242059a4bfe3bb"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "b96719c27895942085e3fd6c4d366cf3b33e7fdd46246fde2fd6929711e1c564"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "ENOENT": false,
+      "return0": true,
+      "line_sha256": "4ec95abc0d61dd91e056b9b68532306b7c0f2826fe96848eebdc623b07c38dcc"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "6e33869dc607679497452d8e2bd95a8754d7c755cd260accc2b2b952ef14c36b"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "b786b639e140b3b58f6c3b38a8d66923b2f72f69126dbe522924a6fb0173e65b"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "2c3803d0c318d80b38882cac6112bef03cd34d52e8cee1a7725ca0d0e38e157d"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "de47f06045c3105de9e6886e944515849f363add29f6c2465af3650b17bdf65d"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "0e0b0770bfeeeb7a75e7dfc7a1a96f0f1ff196096c6f7ad96359ab630817844d"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "a8f1e0255e95de011c25f4e46028d362f829b99a5a274dd41d828e80e6d9b196"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "4eef3d349748b2205995dec96d1c98e17fd2273eb31432bf25683771cb726abc"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "f1040c602eb19bd5339d35b8e58318ac9db69740907bf82de8c58de8d956e68e"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "d602fb8b69dec687156c381c4b5bfa5e15657c16b50218add166e8b00f792a51"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "cf245a4b917971634ac0c8db7d6ac4759e8f134014235b1be5c7433a86d28f86"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "883b30eaa472b3b5a513feea48bd2155af53833fdfc1208e740cbebf681047e2"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "91c4a76ba137536a40b8ac6718615532112c80b88202fe1b9d08e1ed7687e59d"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "45979e2dfc16db02a73053ce01a4314278b6f2e3de8d820a4137a3de86dcfcad"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "fe100291ea98dd783ad420398920ca6f2d892086b44981c74ae127118f796e6a"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "579f0e9d5e1d8e011f0ae7949584f440c2724634d3b63954125216c04bc201bc"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "32a6a5a95851e0b0cb30840a13a3ef4d298270cded1a452a244a1c3ad9252747"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "64795ff41e7c2f9d322046dd14aa23d326e4f21dea8ae06cb8ff83aca136a740"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "da7a093edaec7bb9371e827eb5deb66274d7a72fbead8e6ec465dcc138a36ca0"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "8bf9ab554506aa13074f11020a28f03bdefebc3866eda53f6c3ac4e3919f4ef1"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "1fbf14c389c1d253e192a3ee23cef3a9b5d25540cf9fcce63ba4e6ed6a6ea9f3"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "f78d46e93194bbb511148fe86b97ec737177df4c5917788dd29bcad638bf2ad2"
+    },
+    {
+      "executable": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "ff0fa9107f7137a2f2b2304430c0b69b85cfc7df6356e3f00f7a0444ddaa4fee"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "0710bccea35730bff97628749db9eed2e32cf1fd9d6ae0eba4d85fb246f4a8ba"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "ENOENT": false,
+      "return0": true,
+      "line_sha256": "d2c67a402d84e425c9cd08dc7a2eb7a6dc28a8f8acb4bdd74f6eb36e8df59bb2"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "d0f234cebfb84f3ba54de486d93829433c44a4e9bc77b7ecf06d28e60ec3d990"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "fad99135b621c44852d91656e4705cdc49428cbc9acb8f311b65882480b472df"
+    },
+    {
+      "executable": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "03c2c30a201037c225f1a790a44516d8c30c44d1bf5ccb89d22bd8aa0798cded"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "483579c1288d9c5cf46661a7fa9b78fa431433b3d05e02b396c50be4a2af63b1"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "ENOENT": false,
+      "return0": true,
+      "line_sha256": "8f6c3d8258b0f9536e59118672c0d82ae8414165789e623fff699469e27809db"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "7031f40daf91c7deb8cba4934317d93df5ca2127663e280c3c1128aa6ed17e1a"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "76e3a87f08d35c9bae524d2475cc84c49f08fa3f628fddbaeda0e6fd003dce36"
+    },
+    {
+      "executable": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "53516d548de6f4a1ffc20050e6d448b5e6f93916450fa7f99964ba61cb145b08"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "d2666bdb97f601efa543ea4688fa508d9c2d3d6831c66ca5be9b7df955819ecc"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "ENOENT": false,
+      "return0": true,
+      "line_sha256": "7a5f5f92840cc7e8d17afa5776b66b5b3ac131ddcc67258481bd3df30bb212e2"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "626a13ef441d4e879e1b44fe3b0aab0715102ad4008b9f0eac3b09eb3b0c9424"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "52039cb0ac4e07ce4f143c38293463e044286e829df5d3c5f3a9639154d22207"
+    },
+    {
+      "executable": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "309932397f80333964e6a63fc04087600b8b1398571bca5b8d9aaba758325975"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "a41e09b35493510d7d69d6fc46e9c7d2cab620bf8bf662d2a2eaafbf98104740"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "ENOENT": false,
+      "return0": true,
+      "line_sha256": "b2d6949c742e55bf19942a2d4fe976851194f43809459f8b59c273418e8a768f"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "d613a9bd7fd071b4ce49d069af0c2cf102f7099a5d29ecaf1a9f9305039fad67"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "5526b81ec8fc72cbc984641d3c1b9ee52ef665852cac7c9666c291729daf467b"
+    },
+    {
+      "executable": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "2ff1ec31a2110be97e86d0b4866d9bdb44f9adea1a6c4407ee26f5bc90d060cb"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "62983384d93e55189851e6a59739d100bd1a25f1a351826d8ba90111b73dd857"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "ENOENT": false,
+      "return0": true,
+      "line_sha256": "b6a3fa59f2258891578f5a4e7b234240f66eaba0df2636ff9a80f395defe9aec"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "dc7e0eae5045053629fa6724950a3242456712566c514e2f3ff3b5478e52e0dc"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "66cf4b45fee9523c4a3e0af12a6f4750fb11bd4eb4176a05b0c57cd7bb0924fa"
+    },
+    {
+      "executable": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "f607045519be0b916bf848ca221007731405bb052ff171a1ad937cc71414ed0a"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/git",
+      "ENOENT": true,
+      "return0": false,
+      "line_sha256": "80e5e7bd6ee6fb398c0ec084f756bb8dd7c3792c6f20a0d735782510b65d6269"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "ENOENT": false,
+      "return0": true,
+      "line_sha256": "74efe264dba5e06d0f3759d7bf4a9a07ac88c819a15025508b38520ccf2bfc05"
+    }
+  ],
+  "classification": "CONFIRMED LIMITED OBSERVER FALSE POSITIVE: observer v1 lines22-23 select substring anywhere in execve line, including failed Git PATH lookup under node directory and successful Git metadata args mentioning vitest.config.ts.",
+  "emitter_capture_exit": 0,
+  "limits": "Canary samples were not persisted; no independent full-canary proof/N13 completion/universal no-launch claim. No-proc failure is separate; no waiver.",
+  "justified_next": "One fresh declared probe capture after executable parsing repair and save-before-validation is justified by actual observer defect and missing evidence. Retain v1/raw histories unchanged; positive control real node/npx/vitest executable. No broad retry solely green.",
+  "prior_root_attempt": "Partial earlier root receipt failed because verification code ran before all copy iterations finished; retained unchanged, not evidence failure."
+}

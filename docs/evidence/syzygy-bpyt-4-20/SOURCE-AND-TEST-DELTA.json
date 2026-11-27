@@ -1,0 +1,27 @@
+{
+  "subject": "38eab812488c85198f37b8be18f1dd24cd5898f8",
+  "exact_inherited_helper": true,
+  "guard_is_immediate_statement_after_four_positional_argument_parse": true,
+  "guard_line": 39,
+  "first_tracked_query_line": 48,
+  "fixture_complete_diff_exactly_one_third_name_suffix": true,
+  "test_delta": {
+    "vitest": "+0 ~2 -0",
+    "expanded_f5_cases": 2,
+    "probe_added": {
+      "refusal": 6,
+      "predicate_mutant": 3,
+      "wiring": 1
+    },
+    "adapter_primary_cases": 6,
+    "adapter_replays": 4,
+    "adapter_actual_script_invocations": 10,
+    "mutated_prose_corpus_rows": 16,
+    "parser_positive_real_exec_commands": 3
+  },
+  "source_sha256": {
+    "docs/evidence/poc-fixture-leak-2026-10-22/leak_by_file.py": "96aba7927e4a60108e227d122223c74e3cfea006a3960565549cfe8c4b1256b2",
+    "apps/three-surface-poc/src/fixture-directories.test.ts": "7d6c805bff973d5cab16e2470db436d8351bfdf58cca9f84c5a315beb6a7e980",
+    "docs/evidence/poc-fixture-leak-2026-10-22/guard_probe.py": "c2db048db78e7064d2e7dd32e1fbe255eebb286110bd53a18005065d5c602e19"
+  }
+}

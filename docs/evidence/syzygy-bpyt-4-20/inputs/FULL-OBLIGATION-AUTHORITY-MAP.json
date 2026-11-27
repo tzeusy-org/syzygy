@@ -1,0 +1,239 @@
+{
+  "issue_id": "syzygy-bpyt.4.20",
+  "subject_commit": "5110a4901e2bff68864adbc57233e0c774b3fb27",
+  "frozen_original_obligations": [
+    {
+      "id": "O1",
+      "obligation": "Full original description and historical lineage retained",
+      "origin": "Unchanged original description; enrollment/ORIGINAL.json; R-GP-IMPL-FIXTURE-PID-SWEEP-3/PR509/round3/N12+N13",
+      "proposed_coverage": "Design outcome/lineage and AC4",
+      "current_state": "Preserved as text; actual repairs OPEN"
+    },
+    {
+      "id": "O2",
+      "obligation": "N12 NS fallback 0 collides first and third names",
+      "origin": "Original N12 paragraph; fixture-directories.test.ts:19,153-157",
+      "proposed_coverage": "Design N12 and AC6-8",
+      "current_state": "Observed statically; executable outcome Unknown"
+    },
+    {
+      "id": "O3",
+      "obligation": "Two original F5 reading identities both execute without readable own namespace",
+      "origin": "cannot be read; names no inode; original full parameterized title",
+      "proposed_coverage": "AC6-8",
+      "current_state": "Both preserved; no execution in shaping"
+    },
+    {
+      "id": "O4",
+      "obligation": "No-list, no-remove fail-closed product behavior stays correct",
+      "origin": "Original says sweep itself behaved correctly; existing listings[] and survivor assertions",
+      "proposed_coverage": "Design N12, AC6-8",
+      "current_state": "Production changes excluded; actual runtime Unknown"
+    },
+    {
+      "id": "O5",
+      "obligation": "Distinct third suffix concrete chosen repair, not weaker comment",
+      "origin": "Original example -n${NS}-Own123 and otherwise-narrow-comment alternative",
+      "proposed_coverage": "Design N12 and AC4/6",
+      "current_state": "Choose repair; comment narrowing cannot close full requested outcome"
+    },
+    {
+      "id": "O6",
+      "obligation": "Original bwrap no-proc execution and exact full-commit evidence",
+      "origin": "Original AC1; --unshare-user --unshare-pid --tmpfs /proc; 16 tests | 0 failed | 7 skipped",
+      "proposed_coverage": "AC7-8",
+      "current_state": "Required future 9 pass/7 skip/0 fail/exit0; not observed"
+    },
+    {
+      "id": "O7",
+      "obligation": "Historical failed summary and hung runner remain disclosed",
+      "origin": "Raw run9: 16 tests/2 failed/7 skipped; timeout124",
+      "proposed_coverage": "Portable observer design, AC7",
+      "current_state": "Historical fact only; post-summary hang remains failure"
+    },
+    {
+      "id": "O8",
+      "obligation": "N13 argv scratch-root plus both destructive fNN removals",
+      "origin": "Original N13; leak_by_file.py:23,36-37,53",
+      "proposed_coverage": "Design N13, AC9-12",
+      "current_state": "Observed unguarded static source; repair Unknown"
+    },
+    {
+      "id": "O9",
+      "obligation": "Guard same private_directory semantics before loop",
+      "origin": "Original offers existing helper or mkdtemp; chosen helper preserves accepted private-root CLI",
+      "proposed_coverage": "N13 precise predicate, AC9/11",
+      "current_state": "Concrete chosen design; exact refusal/output authority applicability unresolved for future implementation"
+    },
+    {
+      "id": "O10",
+      "obligation": "Shared and occupied roots refused before effects",
+      "origin": "Original AC2; inherited slash/temp/TMPDIR/HOME/ancestor/nonempty predicates",
+      "proposed_coverage": "AC9-11",
+      "current_state": "All named cases proposed; actual behavior Unknown"
+    },
+    {
+      "id": "O11",
+      "obligation": "Five-tool population, invocation and static wiring propagation",
+      "origin": "Original add leak_by_file.py to guard_probe tool list/wiring; avoid four-of-five fallback",
+      "proposed_coverage": "AC10",
+      "current_state": "Planned 30 refusal/15 predicate/5 wiring rows; current historical 24/12/4 not relabeled"
+    },
+    {
+      "id": "O12",
+      "obligation": "Rule6 wiring mutant killed",
+      "origin": "Original AC2; exact new guard call dropped",
+      "proposed_coverage": "AC10-11",
+      "current_state": "Static gate + actual intended counterexample planned; not executed"
+    },
+    {
+      "id": "O13",
+      "obligation": "Original Tests +a ~b -c disclosure",
+      "origin": "Original AC3",
+      "proposed_coverage": "AC14",
+      "current_state": "Planned Vitest +0 ~2 -0; probe expansion separately; shaping actual +0 ~0 -0"
+    },
+    {
+      "id": "O14",
+      "obligation": "Test-only/evidence tooling; original class-none expectation contested",
+      "origin": "Original final description paragraph; primary CC-REV-1/GP-Q0",
+      "proposed_coverage": "Design authority/verification; AC5/15",
+      "current_state": "No product widening; reviewer decides classes and gates"
+    },
+    {
+      "id": "O15",
+      "obligation": "Original metadata and exact existing dependency retained",
+      "origin": "Original fields and syzygy-bpyt.4 parent-child edge",
+      "proposed_coverage": "AC4-5; FIELD-PRESERVATION-CHECK.json",
+      "current_state": "No proposed metadata/edge changes; enrollment added needs-shaping before dispatch"
+    },
+    {
+      "id": "O16",
+      "obligation": "Full original outcome closure through actual gates",
+      "origin": "Original whole child remains open; no narrower substitute authorized",
+      "proposed_coverage": "AC15-16",
+      "current_state": "OPEN; authority/readiness/review/runtime/hosted/merge-group/actual owner judgment+cycle report/landing remain"
+    }
+  ],
+  "original_three_acceptance_verbatim": "1. The two F5 cases pass inside bwrap --unshare-user --unshare-pid --tmpfs /proc (recorded with the full commit). 2. leak_by_file.py refuses a shared or non-empty root, and guard_probe covers it (rule-6 wiring mutant killed). 3. Tests: +a ~b -c stated.",
+  "complete_current_acceptance_verbatim": "1. The two F5 cases pass inside bwrap --unshare-user --unshare-pid --tmpfs /proc (recorded with the full commit). 2. leak_by_file.py refuses a shared or non-empty root, and guard_probe covers it (rule-6 wiring mutant killed). 3. Tests: +a ~b -c stated.\n\n4. Preserve the full original description verbatim and the three original acceptance criteria above as a verbatim prefix, together with every original case, lineage, field metadata and dependency ID/type. Both N12 and N13 stay in this single OPEN child until their complete landed outcome is verified; neither a narrowed comment nor a four-of-five disclaimer is a substitute repair.\n\n5. Before execution, bind a clean committed subject and refresh independent ownership/readiness against actual open full-file PR allocations and unpublished owners known to root. Keep the three named source files and new owned evidence bounded. Respect PR763's Chrome/lifetime ownership, PR764's private standalone unit driver/helper/package/CONTRIBUTING ownership, and 8.13's recorder correction; no borrowed unmerged implementation or parallel shared-harness edits. Record actual governing authority/applicability for the evidence-tool refusal correction. If any governing gate consequence lacks authority, keep the exact full-scope consequence held/Unknown and complete the concrete reviewed same-bead offering; do not infer a grant, ask about routine engineering choices or implement first. Packet-complete and runnable-now are separate states.\n\n6. Fix the existing F5 fixture names with a distinct own suffix, retaining all three physical directories even when independent NS is '0'. Keep both named parameter rows, title, three-directory survivor assertion, empty listings assertion, both n0 prefix assertions, mocked boundary restoration and afterEach cleanup. Preserve seven actual unreadable-namespace skips for removal-dependent tests; the two F5 rows must execute and pass, never skip. Production namespace, deletion, listing, name, UID and symlink/live/legacy/foreign semantics stay unchanged.\n\n7. At the exact repaired full commit, capture a readable-proc control (16/16 expanded cases pass) and the original no-proc bwrap flags --unshare-user --unshare-pid --tmpfs /proc against current --project integration. The no-proc run must demonstrate unreadable inner PID-namespace link and report the same 16-case population, 9 pass including both exact F5 identities, 7 legitimate skips, 0 failures and exit0 without a post-summary hang. Retain complete argv/mount/runtime/subject/output records captured by an outer observer distinct from the emitter, which does not depend on inner /proc. An unsupported sandbox, absent tool, timeout124, missing/zero tests or identity visibility failure is a remaining gate, never a pass or exemption. Diagnose before any justified retry and retain every attempt.\n\n8. Demonstrate N12 regression sensitivity in a contained clone by restoring the original colliding suffix at the same no-proc seam: both F5 identities must fail the intended directory assertion while the fixed control passes. Re-run the relevant existing no-namespace early-return and thrown/unparseable-reading fallback counterexamples as source-bound controls if using them as current evidence; do not carry historical kills as new runs. Each mutation records old/new, one matching occurrence, full reachable subject/digest, collection count and named executed failure; timeout/collection errors do not count as kills. Restore and rehash source after each.\n\n9. Add and call the same private_directory predicate on leak_by_file.py's tmp_root before any tracked query, mkdir, rmtree or test launch. Preserve its four positional arguments. A resolved shared root (/, tempfile.gettempdir(), TMPDIR/default /tmp, HOME), an ancestor of those, an occupied directory and a non-directory refuse nonzero before effects; empty shared HOME and an empty ancestor of a missing TMPDIR still refuse. Missing or empty independent private roots remain accepted. Resolve links as the inherited predicate does; do not add unrelated skip/refusal/deletion policy or claim atomic/concurrent ownership. Existing admitted-run measurement schema, child failure recording and fNN deletion behavior remain as specified in design.\n\n10. Extend guard_probe.py's invocation/variable/wiring populations to include leak_by_file.py with actual argument order and a drop-call mutant. Execute it only against a new private fixture with synthetic HOME/TMPDIR/canaries; retain the old four tools and all six case identities. Inspect all 30 planned refusal rows, 15 planned predicate-mutant rows and 5 planned wiring rows, and the JSON holds fields, not just process exit or printed totals. Require nonzero refusing, intact independently observed canary contents and no result file or child launch for each refused invocation. The new tool's exact guard-before-first-action wiring mutant must be killed by the existing static check. A missing population row, accidental no-op, AST/collection error or timeout invalidates the claimed denominator.\n\n11. Add bounded positive and failure controls using the actual guarded script with a declared synthetic subprocess boundary: a missing root and an existing empty root accept, produce the unchanged record shape, clean their own fNN leaf, and preserve a sibling canary; refusal occurs before any subprocess call; re-running a now-occupied root refuses without erasure. Each predicate mutant must target its isolated distinguishing case. Never run the unsafe legacy full writer, unguarded drop-call copy, real shared root or another session's scratch to prove the safety check. Do not misrepresent the stale legacy --project selector or synthetic child results as current full-app measurement.\n\n12. Keep concurrent runs in distinct private roots and require the unrelated sibling/decoy to survive; record the inherited non-atomic same-root/race residual. Use verified owned stable handles for any authorized future process termination and complete wait/reaping before removing fixture storage. Retain final owned directory/process observations and visibility remainders; no command-pattern signal, broad /tmp sweep or Unknown-as-zero. Preserve a refused occupied/failed-run root until its accountable owner has inspected it. No signals, runtime probes, installations or implementation happen during shaping.\n\n13. New evidence names both N12/N13, predecessor review/disposition, full test/guard subject commits and scripted file digests, actual command/runtime/environment boundaries, independently captured raw output, named test/skip populations, per-row and mutant outcomes, test delta, cleanup and limitations. Keep original raw/act-bound/evidence bytes intact; add current evidence beside them and label historical four-tool claims at their specific cited sentences when describing them. The legacy project's obsolete selector, .split() discovery limitation, recorded-only commit argument, prefix count and failure-cleanup/same-root limitations are disclosed, not silently migrated. No observed repository code/body, consent state, provider or product output is involved.\n\n14. State actual Tests: +a ~b -c separately for Vitest and evidence/observer controls. Expected repair delta is Vitest +0 ~2 -0; the existing fifth-tool guard expansion adds 6 refusal, 3 predicate-mutant and 1 wiring row, with new safe adapter control counts separately enumerated. Preserve each original test identity and skipped identity. An unexpected growth/change needs review against the nearest existing tests. Shaping itself has product executions0 and +0 ~0 -0; no current pass is claimed.\n\n15. Complete focused integration checks, npm run check and one clean-clone npm run check:all using the then-current CONTRIBUTING placement and PROJECT-STATUS canonical battery, with the shared full-suite lock. Retain the exact tree, complete outputs, collected/executed/skip denominators and any failed attempts. Do not execute the obsolete historical app-project selector as a current tier, silently weaken assertions/timeouts/corpora or self-classify an outside-code failure. Fresh independent exact-head full-original-outcome review rules classes, all seven CC-BAR-5 floors, authority applicability, safety, evidence and actual test delta; retain verbatim -RAW.md/exact verdict and every disposition, plus applicable GP-Q0 differential/mutants/nonblocking cycle notice. Hosted node/governance and protected merge-group checks remain distinct actual-tree gates.\n\n16. The November3 item4 app/core MERGE hold remains until actual owner judgment syzygy-1z3.22 AND cycle report syzygy-1z3.25 are recorded. PR763's corrected technical PASS/notice does not lift it. After lawful release and appropriate root-authorized landing, reconcile every original criterion and both repairs against landed bytes, report remaining Unknowns and improvement-cycle notice before a new cycle, and only then consider closure. No shaping application, review-only success, guard-only landing or future-owner assumption satisfies the whole original outcome.\n",
+  "all_current_criteria": [
+    {
+      "id": 1,
+      "text": "1. The two F5 cases pass inside bwrap --unshare-user --unshare-pid --tmpfs /proc (recorded with the full commit).",
+      "state": "OPEN"
+    },
+    {
+      "id": 2,
+      "text": "2. leak_by_file.py refuses a shared or non-empty root, and guard_probe covers it (rule-6 wiring mutant killed).",
+      "state": "OPEN"
+    },
+    {
+      "id": 3,
+      "text": "3. Tests: +a ~b -c stated.",
+      "state": "OPEN"
+    },
+    {
+      "id": 4,
+      "text": "4. Preserve the full original description verbatim and the three original acceptance criteria above as a verbatim prefix, together with every original case, lineage, field metadata and dependency ID/type. Both N12 and N13 stay in this single OPEN child until their complete landed outcome is verified; neither a narrowed comment nor a four-of-five disclaimer is a substitute repair.",
+      "state": "OPEN"
+    },
+    {
+      "id": 5,
+      "text": "5. Before execution, bind a clean committed subject and refresh independent ownership/readiness against actual open full-file PR allocations and unpublished owners known to root. Keep the three named source files and new owned evidence bounded. Respect PR763's Chrome/lifetime ownership, PR764's private standalone unit driver/helper/package/CONTRIBUTING ownership, and 8.13's recorder correction; no borrowed unmerged implementation or parallel shared-harness edits. Record actual governing authority/applicability for the evidence-tool refusal correction. If any governing gate consequence lacks authority, keep the exact full-scope consequence held/Unknown and complete the concrete reviewed same-bead offering; do not infer a grant, ask about routine engineering choices or implement first. Packet-complete and runnable-now are separate states.",
+      "state": "OPEN"
+    },
+    {
+      "id": 6,
+      "text": "6. Fix the existing F5 fixture names with a distinct own suffix, retaining all three physical directories even when independent NS is '0'. Keep both named parameter rows, title, three-directory survivor assertion, empty listings assertion, both n0 prefix assertions, mocked boundary restoration and afterEach cleanup. Preserve seven actual unreadable-namespace skips for removal-dependent tests; the two F5 rows must execute and pass, never skip. Production namespace, deletion, listing, name, UID and symlink/live/legacy/foreign semantics stay unchanged.",
+      "state": "OPEN"
+    },
+    {
+      "id": 7,
+      "text": "7. At the exact repaired full commit, capture a readable-proc control (16/16 expanded cases pass) and the original no-proc bwrap flags --unshare-user --unshare-pid --tmpfs /proc against current --project integration. The no-proc run must demonstrate unreadable inner PID-namespace link and report the same 16-case population, 9 pass including both exact F5 identities, 7 legitimate skips, 0 failures and exit0 without a post-summary hang. Retain complete argv/mount/runtime/subject/output records captured by an outer observer distinct from the emitter, which does not depend on inner /proc. An unsupported sandbox, absent tool, timeout124, missing/zero tests or identity visibility failure is a remaining gate, never a pass or exemption. Diagnose before any justified retry and retain every attempt.",
+      "state": "OPEN"
+    },
+    {
+      "id": 8,
+      "text": "8. Demonstrate N12 regression sensitivity in a contained clone by restoring the original colliding suffix at the same no-proc seam: both F5 identities must fail the intended directory assertion while the fixed control passes. Re-run the relevant existing no-namespace early-return and thrown/unparseable-reading fallback counterexamples as source-bound controls if using them as current evidence; do not carry historical kills as new runs. Each mutation records old/new, one matching occurrence, full reachable subject/digest, collection count and named executed failure; timeout/collection errors do not count as kills. Restore and rehash source after each.",
+      "state": "OPEN"
+    },
+    {
+      "id": 9,
+      "text": "9. Add and call the same private_directory predicate on leak_by_file.py's tmp_root before any tracked query, mkdir, rmtree or test launch. Preserve its four positional arguments. A resolved shared root (/, tempfile.gettempdir(), TMPDIR/default /tmp, HOME), an ancestor of those, an occupied directory and a non-directory refuse nonzero before effects; empty shared HOME and an empty ancestor of a missing TMPDIR still refuse. Missing or empty independent private roots remain accepted. Resolve links as the inherited predicate does; do not add unrelated skip/refusal/deletion policy or claim atomic/concurrent ownership. Existing admitted-run measurement schema, child failure recording and fNN deletion behavior remain as specified in design.",
+      "state": "OPEN"
+    },
+    {
+      "id": 10,
+      "text": "10. Extend guard_probe.py's invocation/variable/wiring populations to include leak_by_file.py with actual argument order and a drop-call mutant. Execute it only against a new private fixture with synthetic HOME/TMPDIR/canaries; retain the old four tools and all six case identities. Inspect all 30 planned refusal rows, 15 planned predicate-mutant rows and 5 planned wiring rows, and the JSON holds fields, not just process exit or printed totals. Require nonzero refusing, intact independently observed canary contents and no result file or child launch for each refused invocation. The new tool's exact guard-before-first-action wiring mutant must be killed by the existing static check. A missing population row, accidental no-op, AST/collection error or timeout invalidates the claimed denominator.",
+      "state": "OPEN"
+    },
+    {
+      "id": 11,
+      "text": "11. Add bounded positive and failure controls using the actual guarded script with a declared synthetic subprocess boundary: a missing root and an existing empty root accept, produce the unchanged record shape, clean their own fNN leaf, and preserve a sibling canary; refusal occurs before any subprocess call; re-running a now-occupied root refuses without erasure. Each predicate mutant must target its isolated distinguishing case. Never run the unsafe legacy full writer, unguarded drop-call copy, real shared root or another session's scratch to prove the safety check. Do not misrepresent the stale legacy --project selector or synthetic child results as current full-app measurement.",
+      "state": "OPEN"
+    },
+    {
+      "id": 12,
+      "text": "12. Keep concurrent runs in distinct private roots and require the unrelated sibling/decoy to survive; record the inherited non-atomic same-root/race residual. Use verified owned stable handles for any authorized future process termination and complete wait/reaping before removing fixture storage. Retain final owned directory/process observations and visibility remainders; no command-pattern signal, broad /tmp sweep or Unknown-as-zero. Preserve a refused occupied/failed-run root until its accountable owner has inspected it. No signals, runtime probes, installations or implementation happen during shaping.",
+      "state": "OPEN"
+    },
+    {
+      "id": 13,
+      "text": "13. New evidence names both N12/N13, predecessor review/disposition, full test/guard subject commits and scripted file digests, actual command/runtime/environment boundaries, independently captured raw output, named test/skip populations, per-row and mutant outcomes, test delta, cleanup and limitations. Keep original raw/act-bound/evidence bytes intact; add current evidence beside them and label historical four-tool claims at their specific cited sentences when describing them. The legacy project's obsolete selector, .split() discovery limitation, recorded-only commit argument, prefix count and failure-cleanup/same-root limitations are disclosed, not silently migrated. No observed repository code/body, consent state, provider or product output is involved.",
+      "state": "OPEN"
+    },
+    {
+      "id": 14,
+      "text": "14. State actual Tests: +a ~b -c separately for Vitest and evidence/observer controls. Expected repair delta is Vitest +0 ~2 -0; the existing fifth-tool guard expansion adds 6 refusal, 3 predicate-mutant and 1 wiring row, with new safe adapter control counts separately enumerated. Preserve each original test identity and skipped identity. An unexpected growth/change needs review against the nearest existing tests. Shaping itself has product executions0 and +0 ~0 -0; no current pass is claimed.",
+      "state": "OPEN"
+    },
+    {
+      "id": 15,
+      "text": "15. Complete focused integration checks, npm run check and one clean-clone npm run check:all using the then-current CONTRIBUTING placement and PROJECT-STATUS canonical battery, with the shared full-suite lock. Retain the exact tree, complete outputs, collected/executed/skip denominators and any failed attempts. Do not execute the obsolete historical app-project selector as a current tier, silently weaken assertions/timeouts/corpora or self-classify an outside-code failure. Fresh independent exact-head full-original-outcome review rules classes, all seven CC-BAR-5 floors, authority applicability, safety, evidence and actual test delta; retain verbatim -RAW.md/exact verdict and every disposition, plus applicable GP-Q0 differential/mutants/nonblocking cycle notice. Hosted node/governance and protected merge-group checks remain distinct actual-tree gates.",
+      "state": "OPEN"
+    },
+    {
+      "id": 16,
+      "text": "16. The November3 item4 app/core MERGE hold remains until actual owner judgment syzygy-1z3.22 AND cycle report syzygy-1z3.25 are recorded. PR763's corrected technical PASS/notice does not lift it. After lawful release and appropriate root-authorized landing, reconcile every original criterion and both repairs against landed bytes, report remaining Unknowns and improvement-cycle notice before a new cycle, and only then consider closure. No shaping application, review-only success, guard-only landing or future-owner assumption satisfies the whole original outcome.",
+      "state": "OPEN"
+    }
+  ],
+  "full_design_verbatim": "Candidate dispatch design \u2014 FIRST shaping only, 2026-11-05; no adoption or execution clearance.\n\nOutcome and lineage. Preserve the complete original description and original three acceptance criteria. Complete BOTH R-GP-IMPL-FIXTURE-PID-SWEEP-3 N12 and N13 from PR509 round3, not a fixture-only, script-only, comment-only or documentary substitute: the two F5 cases execute successfully with unreadable PID namespace, and leak_by_file.py validates its scratch root before any directory mutation. The retained raw verdict is CONFIRM WITH EXCEPTIONS at a6be88169abd9287de0fe181f83d36d61983cd34; its dispositions assign both notes to this child. Those are historical review facts, not current proof. Baseline inspected: clean agent/syzygy-bpyt.4 at 5110a4901e2bff68864adbc57233e0c774b3fb27. No source repair has been made. Status remains OPEN. Keep title, type, priority, labels, owner, lineage, parent syzygy-bpyt.4 and its parent-child edge unchanged; no new decomposition or inferred dependency.\n\nGoverning intent and limits. Primary implementation base: CAPABILITY-1-IMPLEMENTATION-AUTHORIZATION-ACT.md authorizes code/tests/developer tooling and explicitly authorized worker workflows; THREE-SURFACE-POC-MODE-DIRECTION.md extends it only where the bounded non-release experiment requires. Primary work warrant: THREE-SURFACE-POC-IMPROVEMENT-CYCLES-DIRECTION.md, \u201cbounded repair or improvement beads derived only from recorded findings\u201d; its other prohibitions and shared-model WIP one remain. GP-Q0 in OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md admits implementation/test improvement work under existing acts but defines behavior preservation to exclude \u201ca rendered byte, a wire format, a refusal string or an exit code\u201d and says an unlisted change to what a gate accepts/refuses \u201cstops and returns to the owner.\u201d This proposal does not claim a new scratch refusal is editorial: unsafe legacy evidence-tool invocations intentionally gain nonzero refusal before effects; admitted private-root execution keeps its existing measurement semantics. Before implementing, record the actual scope/applicability of the existing work warrant and implementation acts to that evidence-tool correction. A confirmed finding warrants work; it is not an owner act. If existing authority is insufficient for a gate, security/privacy/retention or normative contract consequence, retain that exact consequence as Unknown/held, prepare the concrete same-bead reviewed offering before any genuine owner question, and obtain the required act before that implementation. Do not manufacture a human question about suffix choice, copying the existing helper or test plumbing. Do not edit an adopted spec/policy or infer authorization from a candidate banner. VIS-2 (\u201cNo evidence means Unknown, not success\u201d), VIS-4 (agents may draft, never adopt shape), SEC-3 (observed code only under an explicit opt-in profile), CC-TEST-1/2/4, CC-PROV-1 and all seven CC-BAR-5 floors apply. CC-REV-1 says the author \u201cnever finally decides which classes it touches.\u201d Class none is the original expectation, contested by default; a reviewer decides. Apply GP-Q0 differential/predicate mutants/nonblocking cycle notice if its class triggers apply. Always retain the original N12/N13 historical verdict/disposition and current evidence separately.\n\nOwned implementation map, subject to root's fresh allocation. Exactly apps/three-surface-poc/src/fixture-directories.test.ts; docs/evidence/poc-fixture-leak-2026-10-22/leak_by_file.py; docs/evidence/poc-fixture-leak-2026-10-22/guard_probe.py; additive task-owned evidence/adapters under docs/evidence/syzygy-bpyt-4-20/ and new private OWN. The fixture production module, global setup, test-model-fixture producers, accessibility CLI, Vitest/root manifests, package/CONTRIBUTING files and shared lifetime harnesses are read-only reference surfaces. Do not add a parallel global cleanup guard or borrow unmerged code. Freeze historical raw reviews, signed bytes, old JSON/log records and their copies; publish new evidence beside them. Do not rewrite the historical four-tool record to claim five were tested then. Updating executable evidence-tool source is an explicit current successor whose new commit/digests retire any claim that the old review verifies these changed bytes; the old review remains valid for its identified old subject.\n\nCurrent allocation/readiness, refresh before execution. The 2026-11-05 static capture covers 14 actual open PRs and initially 158 file incidences (160 at the end refresh after PR764 published its correction), returned file count equal to changedFiles for each PR. Set intersection and an independent nested comparison find no exact overlap with the three proposed source paths. This says nothing about unseen/unpublished writers. Full file allocations are retained in OPEN-PRS-FULL-ALLOCATION.json. PR763 owns its nine Chrome/lifetime paths at 88b502e7060a4013b7932f0cb3771cb2e2dbe06b; corrected full-original-eight-AC technical PASS and its GP-Q0 notice are recorded, but it remains DRAFT and actual owner judgment syzygy-1z3.22 AND cycle report syzygy-1z3.25 are outstanding. PR764 initially published 7addd966285d8634d6960ad665132f0e4bf2ac30 with four files; the independent correction aa10788a1c4588d5d9bd3101d5c1c2ed76b8f8d3 was private at first inspection and is now the published PR head with six files, including scripts/check_unit_tmpdir_child.py beside scripts/check_unit_tmpdir.mjs, package.json, CONTRIBUTING and its two evidence files. Those files stay with 4.17. The 8.13 author owns the new-entry record truth correction in scripts/record_versioned_signoff.py and its package evidence, not these targets. Other open PRs 761/754/745/743/741/717/714/652/642/640/585/514 remain allocated exactly as captured. Shared package or verification machinery alone does not create a blanket package hold; actual shared harness edits would require serialization before writes. No unmerged PR is a dependency for this fix. Packet completeness is a proposal pending root review; runnable-now has not been certified. The source child remains open/unassigned after shaping. Future execution needs actual independent ownership, scoped authority, available lane and refreshed readiness; a needs-shaping stamp supplies none of them.\n\nActual landing hold. OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03.md item4 opens the window on 2026-11-05 at latest and says \u201cno merge may touch apps/three-surface-poc/src or packages/three-surface-poc-core/src until the owner's judgment and the cycle report are recorded.\u201d The F5 test is inside that exact app path. Candidate drafting and independently authorized preparation can proceed; the whole combined repair cannot land while the actual judgment AND report remain absent. A technical pass, date passage, agent report, cycle notice, PR764 correction or hypothetical future owner answer never lifts it. Keep the full original outcome together and OPEN; do not land a guard-only substitute to close this child.\n\nN12 design and runtime matrix. Leave production pidNamespace(), ownedCopyPrefix()/ownedTemplatePrefix(), ESRCH-only deletion, UID/lstat checks, symlink/file/live/legacy/foreign preservation and no-namespace early return unchanged. In the existing it.each body, give the third unread entry a distinct literal suffix, e.g. p${dead}-n${NS}-Own123, preserving the first n0 copy and template. With NS='0', three actual directory names must still exist; assert literal cardinality/distinctness as fixture hygiene if useful, while the behavior oracle remains real directory contents plus the existing readdirSync-effect recorder. Keep both exact case identities \u201ccannot be read\u201d (ENOENT) and \u201cnames no inode\u201d (pid:[]), full test title and both ownership-prefix assertions. They run as it.each on every host; do not skip them, weaken the three-name expectation, remove the listings assertion, filter duplicates or relabel a skip as a pass. Existing seven sweeping tests remain skipped only when independent ownNamespace() is undefined; seven ordinary it tests and two F5 expansions then execute. Static source at the baseline is 16 expanded tests: 7 ordinary, 7 sweeping, 2 F5. On a readable namespace run all 16; on no /proc require 9 passed, 7 skipped, 0 failed, including both named F5 cases and a normal terminating process. The original required summary \u201c16 tests | 0 failed | 7 skipped\u201d is reconciled to actual runner wording. Preserve the comment's unreadable-case-everywhere meaning by fixing the case, not narrowing the promised behavior. Adjacent test-model-fixture.test.ts remains a producer/naming regression reference, not a second source of production namespace truth.\n\nPortable execution observer and failure recovery. Future authorized verification uses the existing integration tier, never the removed @syzygy/three-surface-poc-app project: direct local Vitest entry for fixture-directories.test.ts with --project integration, first in a normal readable-proc fixture and then with bwrap --unshare-user --unshare-pid --tmpfs /proc. Retain the actual complete argv/mount manifest, Node/Vitest/bwrap versions, private paths, full committed tree and file digests. Confirm the inner /proc/self/ns/pid is unreadable rather than infer it from requested flags. Use a task-owned outer launcher/observer with private initially empty short TMPDIR, HOME/cache and output roots, no credentials, no network/provider access and only the necessary trusted runtime/worktree mounts. Install only in the private clone from the exact lockfile/public tarball cache, offline before the DNS-free namespace preflight; no installation occurs during shaping. Source resolution must be that clone's own source exports after npm ci. Do not run the old reviewer wrapper, whose outputs/stop files append beside frozen scripts. An outer observer, distinct from the test emitter, captures stdout/stderr, JSON/test identity counts, wait status, timeout and final process/directory checks; a worker's own JSON remains a report fact unless separately captured under CC-TEST-2. It must work without reading the inner /proc. Keep exact handles for the process/namespace/session this launcher creates; use parent wait/stable handle plus verified UID/start/namespace ownership on the outer side, never pid-number or command-pattern ownership alone. Termination/recovery signals are permitted only for this future authorized private fixture and are reported, not executed in shaping. Do not depend on unmerged 4.14 or 4.17 cleanup code. A timeout, permission denial, unreadable outer identity, collection error or missing test report is not a passing portability result; retain the attempt and concrete remaining Unknown. Historical R3 printed the two failures then hung until timeout124: a future no-failure summary followed by a hang still fails completion and requires diagnosis. Fresh roots per attempt; do not keep retrying the same unchanged failure until green. Reap owned children, then verify owned entries/processes using independent outer observations; when visibility is incomplete say Unknown, never zero. Concurrent unrelated sessions/decoy roots must survive.\n\nN13 design and precise root contract. Copy the existing private_directory(path) predicate from interrupt_probe.py (or its identical peers), with pathlib/os/tempfile imports and its existing refusal text, into leak_by_file.py; call tmp_root = private_directory(tmp_root) immediately after argument parsing and before tracked() queries, fNN mkdir/rmtree or child execution. Return the canonical resolved Path. Reject a resolved root equal to /, tempfile.gettempdir(), explicit TMPDIR (or /tmp), HOME, or an ancestor containing one of them, even if it is empty or the shared child does not exist. Reject an existing non-directory or a directory holding anything. Missing or existing-empty distinct private roots remain allowed; their fNN children are still created/removed per file and the root itself stays. Keep CLI positional order <repo-tree> <tree-commit> <scratch-tmp-root> <out.json>. Do not change admitted-run discovery, selector, count schema, nonzero-child recording, output location, deletion suffixes, timing, successful-run exit or exception propagation as incidental cleanup. The predicate resolves symlinks exactly as its peers do; it is not a new blanket symlink refusal, mode/UID validator, race-proof lease or atomic ownership protocol. Concurrent callers must use separately allocated roots; same-root races/replacements by another actor are outside this inherited predicate and must be disclosed, not silently 'fixed'. A rejected occupied root is left for its accountable operator after inspection, never automatically emptied for retry. File-system/permission errors fail before destructive work; preserve the raw failure and partial own fixture for diagnosis when later operations fail. No shared real /tmp, real HOME, other user's directory or unowned scratch is ever passed to the destructive legacy tool.\n\nN13 probe propagation and honest runnability. Extend existing guard_probe.py rather than invent a second shared framework: add leak_by_file.py to INVOCATIONS as [WT, HEAD, directory, output] in the exact legacy argument order, to the scratch-variable metadata as tmp_root, and to UNGUARD with ('tmp_root = private_directory(tmp_root)', 'tmp_root = tmp_root.resolve()'). Keep old four tools and every six-case identity: home, temp, contains-shared, occupied, home-empty, contains-missing-shared. Update four-to-five explanatory text in the current probe, not historical results. The expected current population becomes 5 tools \u00d7 6 refusal cases = 30 rows, 5 \u00d7 3 predicate mutants = 15 rows, and 5 wiring mutants. Those are planned denominators, not observed outcomes. For each refusal require nonzero exit with refusing, intact independently checked canary bytes/metadata and no output/launch/filesystem mutation. Existing guard_probe's printed exit alone is insufficient: inspect its JSON holds and every row; it currently may exit0 when holds is false. Keep exactly one gate species per invariant: actual refusal is checked by behavior execution, before-first-removal placement by the existing static wired(source) check with its dropped-call mutant; predicate mutants validate those gates, not a second substitute species. Add contained positive-root controls for absent and existing-empty roots and isolation/replay controls through a copied safe runpy/subprocess boundary adapter: supply deterministic tracked file/child results without invoking real legacy npx/tests, execute the actual guarded script, inspect output shape, removed fNN and intact siblings, and assert a refused root causes no subprocess boundary call. The intentional three predicate counterexamples (shared-directory clause, ancestor clause, occupied clause) must each discriminate their isolated case; a dropped/misplaced call must fail wired(source), not crash during collection. No unguarded full writer invocation is used as a mutant. All mutant old/new fragments, exact occurrence count, full commit/file digest and named failures are retained and sources restored.\n\nProducer, persistence and residual inventory. Fixture prefixes flow to test-model-fixture.ts, global setup and polaris-accessibility-main.ts; this task changes their test fixture only, not their emitted names/sweep policy. The historical leak tool discovers tracked app .test.ts names containing test-model-fixture or polaris-accessibility-variants, runs each with its own fNN TMPDIR, records per-file exit/summary/copies/templates/other entries and aggregate fields in <out.json>, then removes that leaf. No daemon/product model or persisted/wire schema changes. Its legacy PROJECT='@syzygy/three-surface-poc-app' is absent from current Vitest tier names, so a valid real invocation on current HEAD cannot be represented as a current full-app measurement. This task's guard proof does not need that run: refused paths terminate before it; accepted-root controls use the explicitly synthetic subprocess adapter, never claim current full-app evidence. Do not broaden this repair to migrate historical producers or silently label no selected tests as success. The historical .split() path model, commit argument merely recorded, broad prefix counting, non-atomic root guard, lack of full failure-finally cleanup and no-/proc/multi-kernel sweep residuals remain disclosed. No new provider, observed repository content or external service is needed. No replay/migration of old records is authorized; new evidence is append-only, full-commit-bound, with capture scope and exact denominators.\n\nVerification, documentation and completion. Extend the nearest existing two F5 parameter expansions; planned Vitest delta +0 ~2 -0, no duplicate test file just for already-pinned behavior. Guard probe gains +6 refusal, +3 predicate-mutant and +1 wiring rows for the fifth tool; positive-root/isolation adapter controls are reported separately with actual executed counts. Shaping actual product executions 0 and code-test delta +0 ~0 -0. Record every attempted run, raw output and failure; outside-code failure classification requires independent confirmation under CC-TEST-4. Publish a new N12/N13 evidence index with exact predecessor/source links, full subject+digests, normal/no-proc identities/results, guard population/output and meaningful mutants, limitations, before/after test delta and owned cleanup. No authoritative spec change is expected for the bounded repair; if actual work invalidates one, CC-REV-2 and the applicable act gate control. Do not edit frozen R3/raw/dispositions or promote the original class-none expectation into a ruling. Before a PR, use the current CONTRIBUTING tier commands: focused integration first, npm run check and then one clean-clone npm run check:all, with the canonical battery read from PROJECT-STATUS.md at execution time. Serialize broad verification with /home/orca/.tmp/syzygy-full-suite-20261104.lock and preserve each exact subject; no copy of the battery in this packet is a second authority. The current unit-driver owner may land before this runs; consume only its then-landed interface or the current mainline command, not its private branch. Fresh independent exact-head full-outcome review determines classes/all floors and preserves verbatim -RAW.md and exact verdict; a later semantic edit retires it. Apply required GP-Q0 checks/notice, hosted required node/governance and protected merge-group checks on their actual trees. Root alone performs authorized landing/lifecycle; the real app merge hold must first be cleared by the actual owner judgment and cycle report. Reconcile both original findings and all three original AC against landed bytes before any closure. Packet application, synthetic controls, an emitter report, an unmerged PR or partial success closes nothing.\n",
+  "current_mapping": {
+    "O1-O7": "N12 full scope and historical disclosure retained; existing test repair warrant; runtime/mutation/landing unfulfilled.",
+    "O8-O12": "N13 full unsafe-root/guard/wiring outcome retained; new GP-Q0 exception must precede implementation; behavior unfulfilled.",
+    "O13": "Actual precode delta +0 ~0 -0; planned Vitest +0 ~2 -0, probe +6/+3/+1 and adapter counts separate.",
+    "O14": "Original class-none expectation is historical; independent reviewer decides.",
+    "O15": "Same child, unchanged original description/prefix/design/AC copied exactly; no metadata/edge mutation.",
+    "O16": "Whole outcome remains unresolved until authority, execution, independent review, actual hold release, hosted integration and lawful landing."
+  },
+  "preservation": {
+    "original_obligation_rows": 16,
+    "original_description_exact": true,
+    "original_three_AC_exact_prefix": true,
+    "appended_criteria_count": 13,
+    "criterion_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "shaping_repeated": false,
+    "fields_edited": false
+  },
+  "authority_finding": "AUTHORITY-FINDING.json",
+  "all_original_outcomes": "OPEN; in_progress tracker enrollment is not outcome satisfaction"
+}
