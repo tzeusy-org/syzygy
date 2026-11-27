@@ -803,6 +803,16 @@ def source_example_amendment(root: Path) -> tuple[str, str | None]:
     return state, text
 
 
+def choice_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.choice_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("choice floor adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def screening_inputs() -> tuple[str, ...]:
     """Inputs a hypothetical source patch may not change while reusing Git proof."""
     import check_spec_reconciliation as adoption
@@ -881,7 +891,8 @@ def build_composition(root: Path, *, screening_authority: Path | None = None) ->
                         (adoption.QKIND_SPEC, qkind_amendment(root)),
                         (adoption.FIGPLAN_SPEC, figplan_amendment(root)),
                         (adoption.VBASE_SCREENING_SPEC, screening),
-                        (adoption.P5_ADVICE_SPEC, source_example)):
+                        (adoption.P5_ADVICE_SPEC, source_example),
+                        (adoption.CHOICE_SPEC, choice_amendment(root))):
         if text is not None:
             sources.append((label, text))
 
@@ -953,6 +964,7 @@ def composition_inputs(root: Path) -> list[Path]:
     figplan_amendment(root)
     screening_amendment(root)
     source_example_amendment(root)
+    choice_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
         adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
         *adoption.URL_SOURCE_RFC_PATHS, *adoption.FIGURE_SUBJECTS, *adoption.DERIVED_SUBJECTS,
@@ -961,11 +973,14 @@ def composition_inputs(root: Path) -> list[Path]:
         *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.FINDPAGES_SUBJECTS, *adoption.SUBSEC_SUBJECTS, *adoption.RELTYPE_SUBJECTS, *adoption.HERO_SUBJECTS, *adoption.READERS_SUBJECTS, *adoption.CONT_SUBJECTS, *adoption.MODEL_SUBJECTS, *adoption.WORTH_SUBJECTS,
         *adoption.REACH_SUBJECTS, *adoption.READMIT_SUBJECTS, *adoption.RAW_READ_SUBJECTS, *adoption.TREEREAD_SUBJECTS,
         *adoption.VERIFY_SUBJECTS, *adoption.QFILE_SUBJECTS, *adoption.SCRIPTED_GRADE_SUBJECTS, *adoption.STEP_MEASURES_SUBJECTS, *adoption.SESSION_USAGE_SUBJECTS, *adoption.COVHOLD_SUBJECTS, *adoption.EDIT_ACCOUNT_SUBJECTS,
-        *adoption.TERM_BRIEF_SUBJECTS, *adoption.QKIND_SUBJECTS, *adoption.FIGPLAN_SUBJECTS, *screening_inputs(),
+        *adoption.TERM_BRIEF_SUBJECTS, *adoption.QKIND_SUBJECTS, *adoption.FIGPLAN_SUBJECTS, *screening_inputs(), *adoption.CHOICE_SUBJECTS,
     }
     files = discover_composition_files(root)
     files += [root / rel for rel in sorted(paths) if (root / rel).is_file()]
     return list(dict.fromkeys(files))
+
+
+CHOICE_COUNT = re.compile(r"(\d+) requirements and (\d+) scenarios\.")
 
 
 def read_status_assertion(root: Path, *, screening_state: str,
@@ -1003,7 +1018,19 @@ def read_status_assertion(root: Path, *, screening_state: str,
         old_count, new_count = source_example_member_counts(root)
         if advisory_figure != (screening_figure[0], screening_figure[1] + new_count - old_count):
             raise ScenarioCountError(f"{path} source-example advice count differs from its two source members")
-        return advisory_figure if source_example_state == "effective" else screening_figure
+        if source_example_state != "effective" or choice_amendment(root) is None:
+            if any(line.startswith(adoption.CHOICE_COUNT_SCOPE) for line in lines):
+                raise ScenarioCountError(f"{path} declares a choice floor count while it is not in force")
+            return advisory_figure if source_example_state == "effective" else screening_figure
+        choices = [line for line in lines if line.startswith(adoption.CHOICE_COUNT_SCOPE)]
+        choice = CHOICE_COUNT.fullmatch(choices[0].removeprefix(adoption.CHOICE_COUNT_PREFIX)) if len(choices) == 1 else None
+        if choice is None:
+            raise ScenarioCountError(f"{path} needs one complete choice floor count")
+        findings: list[str] = []
+        added = adoption.choice_delta(root, findings)
+        if findings or (int(choice[1]), int(choice[2])) != (advisory_figure[0], advisory_figure[1] + added):
+            raise ScenarioCountError(f"{path} choice floor count differs from its two source members")
+        return int(choice[1]), int(choice[2])
 
     if len(legacy) != 1:
         raise ScenarioCountError(f"{path} needs exactly one historical effective composition count")

@@ -1,0 +1,47 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-26T07:20:13.703Z",
+  "commit": "eb710930863254bb0683bbac9aa3eaaf842f13f5",
+  "subject": {
+    "packages/polaris-dossier/src/reader-advice.ts": "cee86e433400d847e0d7589699cc1359839a37d5d8f7e3a3ca66dc929fddcac7"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --testTimeout=120000 --reporter=json --outputFile=<scratch>/mutation-<id>.json; for a Python or JSON source, python3 <each listed command> (a non-zero exit is a failure)",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 900 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/reader-advice.ts": [
+      "packages/polaris-dossier/src/reader-standards.test.ts",
+      "packages/polaris-dossier/src/check.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "exitCode": 0,
+      "tests": 396,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "any-label-counts",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "isRecord(entry) && entry['label'] === 'inferred')",
+      "new": "isRecord(entry))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 396,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) counts every Inferred item for a draft with no Poles"
+      ],
+      "seconds": 44
+    }
+  ],
+  "equivalent": [],
+  "summary": {
+    "mutants": 1,
+    "killed": 1,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 0
+  }
+}
