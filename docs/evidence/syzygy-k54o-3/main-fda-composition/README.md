@@ -55,7 +55,4 @@ metadata profiling wraps the preparation, prefix and main family calls;
 read-invocation memo scopes borrow an existing run scope. The superseded F3
 entry/edition scheduler is not composed as a second nested family pool.
 
-[Unknown] Behavior of the composed tree remains unverified. Fresh source
-review and proportionate verification under the existing bounds must precede
-an acceptance claim. A later installing adoption must name its actual commit;
-this candidate invents none.
+[Observed] Superseded 2026-11-27, historical candidate statement: "Behavior of the composed tree remains unverified. Fresh source review and proportionate verification under the existing bounds must precede an acceptance claim. A later installing adoption must name its actual commit; this candidate invents none." Fresh source PASS and completed scoped verification now bind actual merge `4d691d32a06d49440d64ffbed4e6ed44c9f8404d`, adopted by A-324; see [the scoped proof](SCOPED-PROOF.md). [Unknown] Genuine recovery and full-suite acceptance.

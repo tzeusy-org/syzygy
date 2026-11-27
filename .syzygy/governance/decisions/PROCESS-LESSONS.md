@@ -806,3 +806,6 @@ verification rules and points here for the incidents.*
   bounded cleanup whenever retention is requested, independently of whether
   the planned cut was reached. [Inferred] Failure evidence must survive the
   earliest refusal, not only the expected checkpoint.
+
+
+- [Observed] PR metadata's `baseRefOid` can lag the current default-branch tip. On 2026-11-26, PR #839 metadata named main `4b86e4285e7c78ddf049f64c9a3fd95fc0952cf3`, while an independent `git ls-remote https://github.com/tzeusy-org/syzygy.git refs/heads/main` observed `fda6daf1d752e8796a2723eb2866842b15fcbb50`. Check the live ref when composing main. This establishes ref identity, not the cause of absent CI. The receipt (SHA-256 `2f4a03adf73d0ad28f1a231b8569cb97b4f4ab36feea2b96ada26c1299556417`) is retained as `main-fda-current-ref-receipt.json` in [the composition proof](../../../docs/evidence/syzygy-k54o-3/main-fda-composition/SCOPED-PROOF.md); this lesson adds no gate.

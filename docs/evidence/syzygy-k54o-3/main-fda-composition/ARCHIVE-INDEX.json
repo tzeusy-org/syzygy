@@ -1,0 +1,2023 @@
+{
+  "kind": "deterministic completed source/scoped-verification proof; no product execution",
+  "subjectCommit": "4d691d32a06d49440d64ffbed4e6ed44c9f8404d",
+  "subjectTree": "861050427e7953040e611a4485c87faade10c75c",
+  "archive": {
+    "path": "proof.tar.gz",
+    "bytes": 4474327,
+    "sha256": "116f267accb368068b19d649a60ae30db8ab99e010215d37d51f7823dde2f457",
+    "independentSha256sumMatches": true,
+    "secondBuildByteIdentical": true,
+    "format": "PAX tar inside gzip, file order sorted; regular members mode0644, uid/gid/mtime0; gzip mtime0 and no source filename"
+  },
+  "sourcePacket": {
+    "originalManifestPopulation": 203,
+    "originalManifestSha256": "13c066c521e0aa9e7f81343aa328c4de74c88d6f9147fbbd552bb88ff3556ed7",
+    "everyOriginalManifestEntryMatches": true
+  },
+  "verification": {
+    "completedSteps": 15,
+    "allLogHashesMatch": true,
+    "rootReconciliationSha256": "fcf918d0cd6c753ac8ca8e3227016ef6db686a78fbe32559f5648f407cb42cb3",
+    "witnessRows": 806,
+    "killed": 646,
+    "held": 160,
+    "fullBattery": "not run",
+    "genuineF3Acceptance": "Unknown"
+  },
+  "memberCount": 249,
+  "members": [
+    {
+      "path": "ADOPTION-METADATA.json",
+      "bytes": 1599,
+      "sha256": "418a3231b60be129c6628b243500e8ce1e33fad0dbd666e44b7444899b1ca0f9",
+      "mode": "0644",
+      "readbackSha256": "418a3231b60be129c6628b243500e8ce1e33fad0dbd666e44b7444899b1ca0f9",
+      "readbackMatches": true
+    },
+    {
+      "path": "IMMUTABLE-SOURCE-COPY-INVENTORY.json",
+      "bytes": 72491,
+      "sha256": "d4e6228ff9583d6b652fbf093ff7057875a618650afadd42d9f77eef2cf28948",
+      "mode": "0644",
+      "readbackSha256": "d4e6228ff9583d6b652fbf093ff7057875a618650afadd42d9f77eef2cf28948",
+      "readbackMatches": true
+    },
+    {
+      "path": "PROCESS-LESSONS-APPEND-DRAFT.md",
+      "bytes": 1358,
+      "sha256": "62909d560e1cddfdeffb5e55bafe2e987e85101397be191f8f2655e371a93151",
+      "mode": "0644",
+      "readbackSha256": "62909d560e1cddfdeffb5e55bafe2e987e85101397be191f8f2655e371a93151",
+      "readbackMatches": true
+    },
+    {
+      "path": "PROPOSED-ADOPTION-ROW.md",
+      "bytes": 1963,
+      "sha256": "ff9541b1fcf6504b4fd22ef87fcc2d63effc49879870c1cc016f68ced753e658",
+      "mode": "0644",
+      "readbackSha256": "ff9541b1fcf6504b4fd22ef87fcc2d63effc49879870c1cc016f68ced753e658",
+      "readbackMatches": true
+    },
+    {
+      "path": "README.md",
+      "bytes": 6961,
+      "sha256": "90bbafb1dabf3d389c88c3dce3032568a590748d483a3b1683c65d813cc4103e",
+      "mode": "0644",
+      "readbackSha256": "90bbafb1dabf3d389c88c3dce3032568a590748d483a3b1683c65d813cc4103e",
+      "readbackMatches": true
+    },
+    {
+      "path": "main-fda-composition-acceptance.md",
+      "bytes": 2238,
+      "sha256": "734f6d7c475a9e054507461c8797dcc84f53bf19e8c545a5968085a2cb3f02de",
+      "mode": "0644",
+      "readbackSha256": "734f6d7c475a9e054507461c8797dcc84f53bf19e8c545a5968085a2cb3f02de",
+      "readbackMatches": true
+    },
+    {
+      "path": "main-fda-composition-actual-commit.json",
+      "bytes": 365,
+      "sha256": "6f42e51fe8549e2d8dacffb91cb7ce411e8df9878652dadb9e9c6206c318611d",
+      "mode": "0644",
+      "readbackSha256": "6f42e51fe8549e2d8dacffb91cb7ce411e8df9878652dadb9e9c6206c318611d",
+      "readbackMatches": true
+    },
+    {
+      "path": "main-fda-composition-verification-plan.md",
+      "bytes": 8798,
+      "sha256": "071a3f25d1048d0421b79616cbc90ec3d32c6e4831937671471a26d47bbb8868",
+      "mode": "0644",
+      "readbackSha256": "071a3f25d1048d0421b79616cbc90ec3d32c6e4831937671471a26d47bbb8868",
+      "readbackMatches": true
+    },
+    {
+      "path": "main-fda-current-ref-receipt.json",
+      "bytes": 1174,
+      "sha256": "2f4a03adf73d0ad28f1a231b8569cb97b4f4ab36feea2b96ada26c1299556417",
+      "mode": "0644",
+      "readbackSha256": "2f4a03adf73d0ad28f1a231b8569cb97b4f4ab36feea2b96ada26c1299556417",
+      "readbackMatches": true
+    },
+    {
+      "path": "packaging/package_proof.py.txt",
+      "bytes": 5043,
+      "sha256": "e9cb2d22f1b068b126714d10f04e0af1e63a6bf25fb383b9c6b08da8f02fc4e7",
+      "mode": "0644",
+      "readbackSha256": "e9cb2d22f1b068b126714d10f04e0af1e63a6bf25fb383b9c6b08da8f02fc4e7",
+      "readbackMatches": true
+    },
+    {
+      "path": "review/f3-main-fda-composition-R1-review-RAW.md",
+      "bytes": 9074,
+      "sha256": "ae158a8653c60b53383b4fe3c7d71fd6d843346d7147f7170036e595ee487100",
+      "mode": "0644",
+      "readbackSha256": "ae158a8653c60b53383b4fe3c7d71fd6d843346d7147f7170036e595ee487100",
+      "readbackMatches": true
+    },
+    {
+      "path": "review/f3-main-fda-composition-R1-review-static.json",
+      "bytes": 2595,
+      "sha256": "5d7335f2bf2a1ccb221ff9466b904d4c9bd7b9988a9ba9d6b58520cf1215e84c",
+      "mode": "0644",
+      "readbackSha256": "5d7335f2bf2a1ccb221ff9466b904d4c9bd7b9988a9ba9d6b58520cf1215e84c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/ADOPTION-SECOND-CHECK.json",
+      "bytes": 149,
+      "sha256": "81e97e17842109989e9fa124547cdb810143afb33b0ed90759773062410f705e",
+      "mode": "0644",
+      "readbackSha256": "81e97e17842109989e9fa124547cdb810143afb33b0ed90759773062410f705e",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/DIFF-CHECK.json",
+      "bytes": 160,
+      "sha256": "96e48c57ac856c87fb8df43e4a5a6c85ae186cc3ab05c8535a34988bb42b69a9",
+      "mode": "0644",
+      "readbackSha256": "96e48c57ac856c87fb8df43e4a5a6c85ae186cc3ab05c8535a34988bb42b69a9",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/DIFF-PATH-MANIFEST.json",
+      "bytes": 12813,
+      "sha256": "4a1574f9e17ffe4e3e31496c338b6adae6bad72fe4f72f0ab65ba81245dd9700",
+      "mode": "0644",
+      "readbackSha256": "4a1574f9e17ffe4e3e31496c338b6adae6bad72fe4f72f0ab65ba81245dd9700",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/REVIEW-NOTES.md",
+      "bytes": 3524,
+      "sha256": "84418bc5ba09addd41b6c2c232bff9587b75812c6dc323343fcf26ac2b1b7628",
+      "mode": "0644",
+      "readbackSha256": "84418bc5ba09addd41b6c2c232bff9587b75812c6dc323343fcf26ac2b1b7628",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/SHA256SUMS",
+      "bytes": 23855,
+      "sha256": "13c066c521e0aa9e7f81343aa328c4de74c88d6f9147fbbd552bb88ff3556ed7",
+      "mode": "0644",
+      "readbackSha256": "13c066c521e0aa9e7f81343aa328c4de74c88d6f9147fbbd552bb88ff3556ed7",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/STATIC-VERIFICATION.json",
+      "bytes": 4822,
+      "sha256": "15909e4d3ae561544774665fd3537f3df52618eb20ccb0cff5ac4ea7392d525e",
+      "mode": "0644",
+      "readbackSha256": "15909e4d3ae561544774665fd3537f3df52618eb20ccb0cff5ac4ea7392d525e",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/SUBJECT.json",
+      "bytes": 7145,
+      "sha256": "3b985d0e5f69c60e774fe13d56a603e0bf0044de82d42067812812e62ebe92b0",
+      "mode": "0644",
+      "readbackSha256": "3b985d0e5f69c60e774fe13d56a603e0bf0044de82d42067812812e62ebe92b0",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/absent-input-paths.json",
+      "bytes": 8575,
+      "sha256": "d1f442015aa7c72f522af1b25d6ab0f97d589933cef9eae9f1c5c272340957f0",
+      "mode": "0644",
+      "readbackSha256": "d1f442015aa7c72f522af1b25d6ab0f97d589933cef9eae9f1c5c272340957f0",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/adoption-collisions.json",
+      "bytes": 3865,
+      "sha256": "f2f9eaa788ecf4f6c9191787156e46447c019ab68aad445dc954fe32ce5e2b25",
+      "mode": "0644",
+      "readbackSha256": "f2f9eaa788ecf4f6c9191787156e46447c019ab68aad445dc954fe32ce5e2b25",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/base/.github/workflows/governance-docs.yml",
+      "bytes": 33977,
+      "sha256": "7ed51cd405f791cd86ffb0fef9fb3b266e4fcf089fae329ae123048c4801b1f8",
+      "mode": "0644",
+      "readbackSha256": "7ed51cd405f791cd86ffb0fef9fb3b266e4fcf089fae329ae123048c4801b1f8",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/base/.github/workflows/node-ci.yml",
+      "bytes": 9476,
+      "sha256": "cfb833bc06c4881fe28a33aa272c4cb1faa0e378ed45b1c7a983382ed7f5608f",
+      "mode": "0644",
+      "readbackSha256": "cfb833bc06c4881fe28a33aa272c4cb1faa0e378ed45b1c7a983382ed7f5608f",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/base/.syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+      "bytes": 132931,
+      "sha256": "e3c232840f8e5e60f03ba4dd0b081327b2579dcd8b4a28cb10c81ebd389d9e55",
+      "mode": "0644",
+      "readbackSha256": "e3c232840f8e5e60f03ba4dd0b081327b2579dcd8b4a28cb10c81ebd389d9e55",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/base/CONTRIBUTING.md",
+      "bytes": 18696,
+      "sha256": "d780266df87bb9f79c173a25952e78fef916ad6d752c7da6b0c135f795986843",
+      "mode": "0644",
+      "readbackSha256": "d780266df87bb9f79c173a25952e78fef916ad6d752c7da6b0c135f795986843",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/base/PROJECT-STATUS.md",
+      "bytes": 115934,
+      "sha256": "b616066113ebde516d561d18f8bc6b6ae0029bf1f2c93fa98596022ec02b3313",
+      "mode": "0644",
+      "readbackSha256": "b616066113ebde516d561d18f8bc6b6ae0029bf1f2c93fa98596022ec02b3313",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/base/docs/evidence/spec-readability-reconciliation-2026-10-02/census.json",
+      "bytes": 62844,
+      "sha256": "0e6773a58477242d09050bae3b48bada4feed03dae05764736a087a50a3251f8",
+      "mode": "0644",
+      "readbackSha256": "0e6773a58477242d09050bae3b48bada4feed03dae05764736a087a50a3251f8",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/base/openspec/README.md",
+      "bytes": 43051,
+      "sha256": "e3ac5467c1f55ddec26eba43509265192ae3ed4622bbd357271074919bf8179a",
+      "mode": "0644",
+      "readbackSha256": "e3ac5467c1f55ddec26eba43509265192ae3ed4622bbd357271074919bf8179a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/base/scripts/check_spec_reconciliation.py",
+      "bytes": 697610,
+      "sha256": "9dc870de1fbd73848e65ea9062e95267f87940a616e56d81aa2b96e52622a068",
+      "mode": "0644",
+      "readbackSha256": "9dc870de1fbd73848e65ea9062e95267f87940a616e56d81aa2b96e52622a068",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/base/scripts/check_unit_tmpdir.mjs",
+      "bytes": 26507,
+      "sha256": "db158feb8d70d4848dc67c9f667f9746cdc703a32c710bdf764a810eaa10a691",
+      "mode": "0644",
+      "readbackSha256": "db158feb8d70d4848dc67c9f667f9746cdc703a32c710bdf764a810eaa10a691",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/base/scripts/count_polaris_effective_scenarios.py",
+      "bytes": 66585,
+      "sha256": "c309991f029b3237db1cdf1997cb2fc28b2be91c66a7caa8f1a556841eb26c28",
+      "mode": "0644",
+      "readbackSha256": "c309991f029b3237db1cdf1997cb2fc28b2be91c66a7caa8f1a556841eb26c28",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/candidate.index",
+      "bytes": 1780866,
+      "sha256": "459b7fc382b471dac04ffb4aedfabfac222af4654b571b1ea6cf1d9173d5019e",
+      "mode": "0644",
+      "readbackSha256": "459b7fc382b471dac04ffb4aedfabfac222af4654b571b1ea6cf1d9173d5019e",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/composition-from-ours.patch",
+      "bytes": 1260674,
+      "sha256": "b2df44acfd0f2424df81851b7bc9c7d39624303c1886fd0e0403349ef9b89e11",
+      "mode": "0644",
+      "readbackSha256": "b2df44acfd0f2424df81851b7bc9c7d39624303c1886fd0e0403349ef9b89e11",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/compressed-reference-population.json",
+      "bytes": 17983,
+      "sha256": "9c8a8317ab17a5c0ee1bbf950e647ef2a5f8d110b6323852e67fff48a1e5346e",
+      "mode": "0644",
+      "readbackSha256": "9c8a8317ab17a5c0ee1bbf950e647ef2a5f8d110b6323852e67fff48a1e5346e",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/compressed-reference-results.json",
+      "bytes": 4037,
+      "sha256": "504da95d58b9670d4f29391a3f4874193ff11d5fbf9ed3f0fca1ffec8bcac3c7",
+      "mode": "0644",
+      "readbackSha256": "504da95d58b9670d4f29391a3f4874193ff11d5fbf9ed3f0fca1ffec8bcac3c7",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/.github/workflows/governance-docs.yml",
+      "bytes": 35200,
+      "sha256": "badd287498cb5a4d63cb84ebbcf52e2a428d85ee0bbc7b2172a474ae7ae1f243",
+      "mode": "0644",
+      "readbackSha256": "badd287498cb5a4d63cb84ebbcf52e2a428d85ee0bbc7b2172a474ae7ae1f243",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/.github/workflows/node-ci.yml",
+      "bytes": 17090,
+      "sha256": "c16e674b0c6e557bab7d18cf0315fd27b42da73c892466cc2993bcaddfcb7e10",
+      "mode": "0644",
+      "readbackSha256": "c16e674b0c6e557bab7d18cf0315fd27b42da73c892466cc2993bcaddfcb7e10",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/.syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+      "bytes": 294524,
+      "sha256": "4543df0a779483ab763d5fbf49511c296abfaa35800f7a4ed9480dadc9bcc094",
+      "mode": "0644",
+      "readbackSha256": "4543df0a779483ab763d5fbf49511c296abfaa35800f7a4ed9480dadc9bcc094",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/CONTRIBUTING.md",
+      "bytes": 21424,
+      "sha256": "13296ef9e9184443d40106412433e7bfc9d1a53539d27a412b4d916de49d3dbe",
+      "mode": "0644",
+      "readbackSha256": "13296ef9e9184443d40106412433e7bfc9d1a53539d27a412b4d916de49d3dbe",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/PROJECT-STATUS.md",
+      "bytes": 116620,
+      "sha256": "f12f350733213a6b4ea326c98e5032078f6c83fa1fc014ea246b0c776fb5ddbd",
+      "mode": "0644",
+      "readbackSha256": "f12f350733213a6b4ea326c98e5032078f6c83fa1fc014ea246b0c776fb5ddbd",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/apps/three-surface-poc/src/ci-selection.test.ts",
+      "bytes": 8672,
+      "sha256": "576bc537d8f77b9333b296523931d9ecc3dffb9bd901be7b170e863ef4edd741",
+      "mode": "0644",
+      "readbackSha256": "576bc537d8f77b9333b296523931d9ecc3dffb9bd901be7b170e863ef4edd741",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/ci-selection.ts",
+      "bytes": 8598,
+      "sha256": "778c958cb87b47ec5e59d63cdfa683b04adcfdee1141818d69cee2a976972d8d",
+      "mode": "0644",
+      "readbackSha256": "778c958cb87b47ec5e59d63cdfa683b04adcfdee1141818d69cee2a976972d8d",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/spec-readability-reconciliation-2026-10-02/census.json",
+      "bytes": 63773,
+      "sha256": "b97c910bf54a95463cc8792961ed2fb032486f5976514f35809cdad59154600f",
+      "mode": "0644",
+      "readbackSha256": "b97c910bf54a95463cc8792961ed2fb032486f5976514f35809cdad59154600f",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-0yit/measure-scope-1c42a078.json",
+      "bytes": 223,
+      "sha256": "5cbc4e83d14ffdf62e1cde881696c0deb1a6322b4382c863df63aaa81e28453a",
+      "mode": "0644",
+      "readbackSha256": "5cbc4e83d14ffdf62e1cde881696c0deb1a6322b4382c863df63aaa81e28453a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-0yit/measure_scope.py",
+      "bytes": 1989,
+      "sha256": "2007d14b41d391ece8d9d4c09c95b2f1648e34f7800aaaf662e56278efd3ba32",
+      "mode": "0644",
+      "readbackSha256": "2007d14b41d391ece8d9d4c09c95b2f1648e34f7800aaaf662e56278efd3ba32",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-0yit/parent-cprofile-1c42a078.prof.gz",
+      "bytes": 215246,
+      "sha256": "688d595de8c22a98e84d7a2b41cdbf2c729f68cd92adfca2749e3f09382c9561",
+      "mode": "0644",
+      "readbackSha256": "688d595de8c22a98e84d7a2b41cdbf2c729f68cd92adfca2749e3f09382c9561",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-0yit/phases-1c42a078.jsonl",
+      "bytes": 3136,
+      "sha256": "711b3a1524e3d005d3fae9093cf392690bed54ffb9c1edb0dcc27889ee193ca5",
+      "mode": "0644",
+      "readbackSha256": "711b3a1524e3d005d3fae9093cf392690bed54ffb9c1edb0dcc27889ee193ca5",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-0yit/pool-cases-1c42a078.jsonl",
+      "bytes": 16958,
+      "sha256": "2210c1ccac383f2c04479d0f0bfba58d627c78ca5797bd834673fb097c92f6b1",
+      "mode": "0644",
+      "readbackSha256": "2210c1ccac383f2c04479d0f0bfba58d627c78ca5797bd834673fb097c92f6b1",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-0yit/profile_selftest.py",
+      "bytes": 3225,
+      "sha256": "d5852cf81cf48dee82591396c371e4a773668d423af32e020329e151c64af65a",
+      "mode": "0644",
+      "readbackSha256": "d5852cf81cf48dee82591396c371e4a773668d423af32e020329e151c64af65a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-0yit/selftest-profile-1c42a078.json",
+      "bytes": 6643,
+      "sha256": "7c336d0c9b8dea957e2e280afef2e47280b19af33582d0a2cba7bd0a0740a077",
+      "mode": "0644",
+      "readbackSha256": "7c336d0c9b8dea957e2e280afef2e47280b19af33582d0a2cba7bd0a0740a077",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-0yit/summarize_profile.py",
+      "bytes": 2410,
+      "sha256": "88164883d84dec2741b91e277e9ead45b74d01ce60799e3873ffd32cdf289d3a",
+      "mode": "0644",
+      "readbackSha256": "88164883d84dec2741b91e277e9ead45b74d01ce60799e3873ffd32cdf289d3a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-0yit/summary-1c42a078.txt",
+      "bytes": 4607,
+      "sha256": "e122809364ff5d4814425efc6c6296617804ca89a326c2a670aae9934030b6aa",
+      "mode": "0644",
+      "readbackSha256": "e122809364ff5d4814425efc6c6296617804ca89a326c2a670aae9934030b6aa",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-7rkx/paired-selftest-2026-11-27.json",
+      "bytes": 8074,
+      "sha256": "1d379042b398bf85e59866f73f0093ac2f43732516bf0f93b370bdd2be9f5afe",
+      "mode": "0644",
+      "readbackSha256": "1d379042b398bf85e59866f73f0093ac2f43732516bf0f93b370bdd2be9f5afe",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-7rkx/paired_selftest.sh",
+      "bytes": 1760,
+      "sha256": "34a7f7326744b4b96c06af5f765830aefdbef15c8bb3b4085f31f55468dd2556",
+      "mode": "0644",
+      "readbackSha256": "34a7f7326744b4b96c06af5f765830aefdbef15c8bb3b4085f31f55468dd2556",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-7rkx/pool-mutation-2026-11-27.json",
+      "bytes": 8449,
+      "sha256": "1f346739317c1cddad19a0cfe368aac3433b9180e2b7db83cf268cdd93e97f82",
+      "mode": "0644",
+      "readbackSha256": "1f346739317c1cddad19a0cfe368aac3433b9180e2b7db83cf268cdd93e97f82",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-7rkx/pool_mutation.py",
+      "bytes": 7201,
+      "sha256": "824f1bc0eb2a64b010dae0d125673fa0b8e8cecf6245a10ef34c4ddf1a11ba57",
+      "mode": "0644",
+      "readbackSha256": "824f1bc0eb2a64b010dae0d125673fa0b8e8cecf6245a10ef34c4ddf1a11ba57",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-7rkx/scope-family-mutation-2026-11-26.json",
+      "bytes": 4033,
+      "sha256": "17219f2877f9a1a8c580f4f295d93ba1f40e1799e97877b8ad065a2828eebba7",
+      "mode": "0644",
+      "readbackSha256": "17219f2877f9a1a8c580f4f295d93ba1f40e1799e97877b8ad065a2828eebba7",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-7rkx/scope_family_harness.py",
+      "bytes": 4429,
+      "sha256": "cf2dc015859c65aa27e927005d8c7122d74d42e5e9dcc0e575633ac5f7206038",
+      "mode": "0644",
+      "readbackSha256": "cf2dc015859c65aa27e927005d8c7122d74d42e5e9dcc0e575633ac5f7206038",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-7rkx/scope_family_mutation.py",
+      "bytes": 5259,
+      "sha256": "afe0db92cb5962185ca522d83ee24ebb15eb8bef011b4f9f435fbb8b2303d906",
+      "mode": "0644",
+      "readbackSha256": "afe0db92cb5962185ca522d83ee24ebb15eb8bef011b4f9f435fbb8b2303d906",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-7rkx/witness-merged-6d3f8f2a1.json.gz",
+      "bytes": 73102,
+      "sha256": "b584c6df4dc62d761af5b8ad7144fad3993c67b5c33ba5a6eda626a3d55da3ab",
+      "mode": "0644",
+      "readbackSha256": "b584c6df4dc62d761af5b8ad7144fad3993c67b5c33ba5a6eda626a3d55da3ab",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/evidence/syzygy-qu5j/pr-selection-2026-11-27.json",
+      "bytes": 10060,
+      "sha256": "d3189fd057f0015ec27991ed09eb6b61845979f574020927defdb846ce9d2f4a",
+      "mode": "0644",
+      "readbackSha256": "d3189fd057f0015ec27991ed09eb6b61845979f574020927defdb846ce9d2f4a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/review-campaigns/dossier-derived-base-views.md",
+      "bytes": 1134,
+      "sha256": "1acf1684d8f49bb9cb7b04bfbe75c252228080b8d3f72d5720507e652dd06c7c",
+      "mode": "0644",
+      "readbackSha256": "1acf1684d8f49bb9cb7b04bfbe75c252228080b8d3f72d5720507e652dd06c7c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/review-campaigns/qu5j-pr-selection.md",
+      "bytes": 657,
+      "sha256": "041ddb3516b63e1287b030a84edb4b799af133f0ba17be2b96048d1c7a64aa0c",
+      "mode": "0644",
+      "readbackSha256": "041ddb3516b63e1287b030a84edb4b799af133f0ba17be2b96048d1c7a64aa0c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/review-campaigns/reconciliation-pool.md",
+      "bytes": 1745,
+      "sha256": "070bc9397dc9f134418908de4a3f1cd58eb43a6c5564d48a961aefa6785ccd62",
+      "mode": "0644",
+      "readbackSha256": "070bc9397dc9f134418908de4a3f1cd58eb43a6c5564d48a961aefa6785ccd62",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/reviews/R-QU5J-PR-SELECTION-1-RAW.md",
+      "bytes": 10880,
+      "sha256": "b8fd2f6ac96dafe7c351c4d89175d16225af6b36b18bf15b66fb1037efaeed1d",
+      "mode": "0644",
+      "readbackSha256": "b8fd2f6ac96dafe7c351c4d89175d16225af6b36b18bf15b66fb1037efaeed1d",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/reviews/syzygy-3efd-38/R-DERIVED-BASE-VIEWS-SPEC-1-RAW.md",
+      "bytes": 24322,
+      "sha256": "6adf0ad18edf5b86d6fa8d73c99dd2d7da5f4b698c7fd6d7867f826d9f6542ef",
+      "mode": "0644",
+      "readbackSha256": "6adf0ad18edf5b86d6fa8d73c99dd2d7da5f4b698c7fd6d7867f826d9f6542ef",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/docs/reviews/syzygy-7rkx/R7RKX-REVIEW-RAW.md",
+      "bytes": 11190,
+      "sha256": "f83697a590b833a2a86b172e81cacbf1cd44da900c9553d3c59024c872ed35f4",
+      "mode": "0644",
+      "readbackSha256": "f83697a590b833a2a86b172e81cacbf1cd44da900c9553d3c59024c872ed35f4",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/openspec/README.md",
+      "bytes": 44570,
+      "sha256": "d010d57b5f80f5202954e6fc04497c68fae6665179163399bb466f98f1400c7e",
+      "mode": "0644",
+      "readbackSha256": "d010d57b5f80f5202954e6fc04497c68fae6665179163399bb466f98f1400c7e",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/openspec/changes/cap1-root-adjudication/CONTRACT-COVERAGE.md",
+      "bytes": 1244,
+      "sha256": "480abb4ea4796e19ff38ecda02596aeafe13e784c8480e7ea6f83eb2d322fa14",
+      "mode": "0644",
+      "readbackSha256": "480abb4ea4796e19ff38ecda02596aeafe13e784c8480e7ea6f83eb2d322fa14",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/openspec/changes/cap1-root-adjudication/SEMANTIC-DELTA.md",
+      "bytes": 5979,
+      "sha256": "3ea2837adffb59dcb0890cd82b9c2c1c06de55cbfadee8af8046f2a6cd783e02",
+      "mode": "0644",
+      "readbackSha256": "3ea2837adffb59dcb0890cd82b9c2c1c06de55cbfadee8af8046f2a6cd783e02",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/openspec/changes/cap1-root-adjudication/proposal.md",
+      "bytes": 1691,
+      "sha256": "21eb0c92dd803c2688a5647d2f78accd1fabcbd3158c50cfbe4812265ad33a98",
+      "mode": "0644",
+      "readbackSha256": "21eb0c92dd803c2688a5647d2f78accd1fabcbd3158c50cfbe4812265ad33a98",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/openspec/changes/cap1-root-adjudication/proposed/project-registration-and-honest-shape-visibility/spec.md",
+      "bytes": 2483,
+      "sha256": "185af92ae6eed07aae21f6b285ff980e9fd106d43f0f814bd2a30afe7e4d96bd",
+      "mode": "0644",
+      "readbackSha256": "185af92ae6eed07aae21f6b285ff980e9fd106d43f0f814bd2a30afe7e4d96bd",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/openspec/changes/dossier-derived-base-views/.openspec.yaml",
+      "bytes": 40,
+      "sha256": "0b89965c6919ee9f0b3679bc8491b3c9efd623f2ceac7e5bd3929eff87f22215",
+      "mode": "0644",
+      "readbackSha256": "0b89965c6919ee9f0b3679bc8491b3c9efd623f2ceac7e5bd3929eff87f22215",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/openspec/changes/dossier-derived-base-views/GOVERNING-DEPENDENCIES.json",
+      "bytes": 1663,
+      "sha256": "3f6c2b317bf01c0d940f7ee7b41ce73ddb2b0cfd5aa4efe2afbfb26c4ae3efef",
+      "mode": "0644",
+      "readbackSha256": "3f6c2b317bf01c0d940f7ee7b41ce73ddb2b0cfd5aa4efe2afbfb26c4ae3efef",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/openspec/changes/dossier-derived-base-views/README.md",
+      "bytes": 2370,
+      "sha256": "1f000fde917d55b5c6bb4a63fc452dfc63d411ea65da379d95ae74988c8d30fb",
+      "mode": "0644",
+      "readbackSha256": "1f000fde917d55b5c6bb4a63fc452dfc63d411ea65da379d95ae74988c8d30fb",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/openspec/changes/dossier-derived-base-views/SEMANTIC-DELTA.md",
+      "bytes": 8921,
+      "sha256": "025f2d7c7c0077582c5bbd0227fef92312e730b31687a203af97e5e43ba636b3",
+      "mode": "0644",
+      "readbackSha256": "025f2d7c7c0077582c5bbd0227fef92312e730b31687a203af97e5e43ba636b3",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/openspec/changes/dossier-derived-base-views/design.md",
+      "bytes": 19592,
+      "sha256": "a07a54702a9b787169af09920e8bcb8f1373530a1dc333bb01241a5e06fe4927",
+      "mode": "0644",
+      "readbackSha256": "a07a54702a9b787169af09920e8bcb8f1373530a1dc333bb01241a5e06fe4927",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/openspec/changes/dossier-derived-base-views/proposal.md",
+      "bytes": 4402,
+      "sha256": "794c758dc98070da657aa72824ec3b6c3a75f58808cd62497e2267ccb9a655f7",
+      "mode": "0644",
+      "readbackSha256": "794c758dc98070da657aa72824ec3b6c3a75f58808cd62497e2267ccb9a655f7",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/openspec/changes/dossier-derived-base-views/proposed/polaris-generation/spec.md",
+      "bytes": 554673,
+      "sha256": "a404fa70e788f7ca20761f5a30f1d840604706cb811fcf50664f3e2942592c45",
+      "mode": "0644",
+      "readbackSha256": "a404fa70e788f7ca20761f5a30f1d840604706cb811fcf50664f3e2942592c45",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/openspec/changes/dossier-derived-base-views/tasks.md",
+      "bytes": 1492,
+      "sha256": "e8102afaa5ffcab6d166f62cae4b071f1e86a1c1ab9e58589415a147ec668a4c",
+      "mode": "0644",
+      "readbackSha256": "e8102afaa5ffcab6d166f62cae4b071f1e86a1c1ab9e58589415a147ec668a4c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/scripts/check_spec_reconciliation.py",
+      "bytes": 726137,
+      "sha256": "204774aa87e84b002619047bab123cc8bb845e272e6e894e045aad86e1c3fbae",
+      "mode": "0644",
+      "readbackSha256": "204774aa87e84b002619047bab123cc8bb845e272e6e894e045aad86e1c3fbae",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/scripts/check_unit_tmpdir.mjs",
+      "bytes": 28152,
+      "sha256": "c41d8147124a694c90272275871a0720c8131417159885860873a282c91a934c",
+      "mode": "0644",
+      "readbackSha256": "c41d8147124a694c90272275871a0720c8131417159885860873a282c91a934c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/scripts/count_polaris_effective_scenarios.py",
+      "bytes": 67091,
+      "sha256": "2c882393c5841bde9d5b19bd31439396dfb19cf83eeb64077bddfbf544e6b265",
+      "mode": "0644",
+      "readbackSha256": "2c882393c5841bde9d5b19bd31439396dfb19cf83eeb64077bddfbf544e6b265",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/scripts/run_ci_tier.mjs",
+      "bytes": 2932,
+      "sha256": "936f4b118726c056a1cb77923d3ab57c60301001b782fbac6bc11726eb4ece98",
+      "mode": "0644",
+      "readbackSha256": "936f4b118726c056a1cb77923d3ab57c60301001b782fbac6bc11726eb4ece98",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/scripts/select_ci_tests.mjs",
+      "bytes": 3631,
+      "sha256": "f5c25dd0e61a732890250423757e97a9d3507f44491a0457461949106d393ee6",
+      "mode": "0644",
+      "readbackSha256": "f5c25dd0e61a732890250423757e97a9d3507f44491a0457461949106d393ee6",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/conflicted/scripts/test_reconciliation_pool.py",
+      "bytes": 8754,
+      "sha256": "0110dbcd1bbd3baeb2808c6d0adfc03db31b20968966951f28f0a77def53073c",
+      "mode": "0644",
+      "readbackSha256": "0110dbcd1bbd3baeb2808c6d0adfc03db31b20968966951f28f0a77def53073c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/freeze_composition.py",
+      "bytes": 3141,
+      "sha256": "b81dd686bccc212e8e3cabbf24b4ba8e96e8a23280a05856fc6b443d4e505b8e",
+      "mode": "0644",
+      "readbackSha256": "b81dd686bccc212e8e3cabbf24b4ba8e96e8a23280a05856fc6b443d4e505b8e",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/inspect/ci-selection.ts",
+      "bytes": 8598,
+      "sha256": "778c958cb87b47ec5e59d63cdfa683b04adcfdee1141818d69cee2a976972d8d",
+      "mode": "0644",
+      "readbackSha256": "778c958cb87b47ec5e59d63cdfa683b04adcfdee1141818d69cee2a976972d8d",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/inspect/scripts/run_ci_tier.mjs",
+      "bytes": 2932,
+      "sha256": "936f4b118726c056a1cb77923d3ab57c60301001b782fbac6bc11726eb4ece98",
+      "mode": "0644",
+      "readbackSha256": "936f4b118726c056a1cb77923d3ab57c60301001b782fbac6bc11726eb4ece98",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/inspect/scripts/run_integration_lane.mjs",
+      "bytes": 9791,
+      "sha256": "abb7ead193281304676f96f5bb3909e589392de37a3617efe96508c8de514380",
+      "mode": "0644",
+      "readbackSha256": "abb7ead193281304676f96f5bb3909e589392de37a3617efe96508c8de514380",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/inspect/scripts/select_ci_tests.mjs",
+      "bytes": 3631,
+      "sha256": "f5c25dd0e61a732890250423757e97a9d3507f44491a0457461949106d393ee6",
+      "mode": "0644",
+      "readbackSha256": "f5c25dd0e61a732890250423757e97a9d3507f44491a0457461949106d393ee6",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/inspect/scripts/test_reconciliation_pool.py",
+      "bytes": 8754,
+      "sha256": "0110dbcd1bbd3baeb2808c6d0adfc03db31b20968966951f28f0a77def53073c",
+      "mode": "0644",
+      "readbackSha256": "0110dbcd1bbd3baeb2808c6d0adfc03db31b20968966951f28f0a77def53073c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/ours/.github/workflows/governance-docs.yml",
+      "bytes": 34958,
+      "sha256": "eec7773b969a59d063bb624780ffacd33eabd4ebb5af338429bba79855bb57fb",
+      "mode": "0644",
+      "readbackSha256": "eec7773b969a59d063bb624780ffacd33eabd4ebb5af338429bba79855bb57fb",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/ours/.github/workflows/node-ci.yml",
+      "bytes": 13799,
+      "sha256": "81a6e5a704052448e9432fe7c6e244894ebf5867651951da286b250c59a52221",
+      "mode": "0644",
+      "readbackSha256": "81a6e5a704052448e9432fe7c6e244894ebf5867651951da286b250c59a52221",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/ours/.syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+      "bytes": 292253,
+      "sha256": "10d6c689bc0d72669cb43be48d8c6be63c0ace5b25fae9ecfc6b72ddf25bffdb",
+      "mode": "0644",
+      "readbackSha256": "10d6c689bc0d72669cb43be48d8c6be63c0ace5b25fae9ecfc6b72ddf25bffdb",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/ours/CONTRIBUTING.md",
+      "bytes": 20609,
+      "sha256": "a1e7691c03ab37a9ed95102990b3d19e21562ee3b9d609c72c7b61fd03cc5ad6",
+      "mode": "0644",
+      "readbackSha256": "a1e7691c03ab37a9ed95102990b3d19e21562ee3b9d609c72c7b61fd03cc5ad6",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/ours/PROJECT-STATUS.md",
+      "bytes": 115934,
+      "sha256": "b616066113ebde516d561d18f8bc6b6ae0029bf1f2c93fa98596022ec02b3313",
+      "mode": "0644",
+      "readbackSha256": "b616066113ebde516d561d18f8bc6b6ae0029bf1f2c93fa98596022ec02b3313",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/ours/docs/evidence/spec-readability-reconciliation-2026-10-02/census.json",
+      "bytes": 62844,
+      "sha256": "0e6773a58477242d09050bae3b48bada4feed03dae05764736a087a50a3251f8",
+      "mode": "0644",
+      "readbackSha256": "0e6773a58477242d09050bae3b48bada4feed03dae05764736a087a50a3251f8",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/ours/openspec/README.md",
+      "bytes": 43051,
+      "sha256": "e3ac5467c1f55ddec26eba43509265192ae3ed4622bbd357271074919bf8179a",
+      "mode": "0644",
+      "readbackSha256": "e3ac5467c1f55ddec26eba43509265192ae3ed4622bbd357271074919bf8179a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/ours/scripts/check_spec_reconciliation.py",
+      "bytes": 702130,
+      "sha256": "d384d8569f2ba7388ff11f5d0a0a89fe6a0914e1a37aa46503d3bd00f70a0b80",
+      "mode": "0644",
+      "readbackSha256": "d384d8569f2ba7388ff11f5d0a0a89fe6a0914e1a37aa46503d3bd00f70a0b80",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/ours/scripts/check_unit_tmpdir.mjs",
+      "bytes": 26507,
+      "sha256": "db158feb8d70d4848dc67c9f667f9746cdc703a32c710bdf764a810eaa10a691",
+      "mode": "0644",
+      "readbackSha256": "db158feb8d70d4848dc67c9f667f9746cdc703a32c710bdf764a810eaa10a691",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/ours/scripts/count_polaris_effective_scenarios.py",
+      "bytes": 66585,
+      "sha256": "c309991f029b3237db1cdf1997cb2fc28b2be91c66a7caa8f1a556841eb26c28",
+      "mode": "0644",
+      "readbackSha256": "c309991f029b3237db1cdf1997cb2fc28b2be91c66a7caa8f1a556841eb26c28",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/python-conflict-1.txt",
+      "bytes": 1723,
+      "sha256": "ecca4cb87ed563951932cc03ed30474715dc36c1c9ec51238b458668f7e20f3a",
+      "mode": "0644",
+      "readbackSha256": "ecca4cb87ed563951932cc03ed30474715dc36c1c9ec51238b458668f7e20f3a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/python-conflict-2.txt",
+      "bytes": 511,
+      "sha256": "c833aea9fc72c29b7c4f541648a3bdfa6c4375c5e72c5525013da8c308e89262",
+      "mode": "0644",
+      "readbackSha256": "c833aea9fc72c29b7c4f541648a3bdfa6c4375c5e72c5525013da8c308e89262",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/python-conflict-3.txt",
+      "bytes": 4934,
+      "sha256": "00890399c761dcf42cca14cf2a042b03809a84688ce62e12f472b01ffe46947f",
+      "mode": "0644",
+      "readbackSha256": "00890399c761dcf42cca14cf2a042b03809a84688ce62e12f472b01ffe46947f",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/python-conflict-4.txt",
+      "bytes": 6627,
+      "sha256": "918864652507f71d2c4bb26721cc3cc9a84c0f5ec6b5435940b2f45b33212947",
+      "mode": "0644",
+      "readbackSha256": "918864652507f71d2c4bb26721cc3cc9a84c0f5ec6b5435940b2f45b33212947",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/python-conflict-5.txt",
+      "bytes": 6302,
+      "sha256": "0c90039752d993f5b9be52475b945f4b9f2709b6a41353e3b7345ee0acbe8759",
+      "mode": "0644",
+      "readbackSha256": "0c90039752d993f5b9be52475b945f4b9f2709b6a41353e3b7345ee0acbe8759",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/python-conflict-6.txt",
+      "bytes": 2260,
+      "sha256": "43fa518874090ba294778f7781ab8f2f9fe98ece958bfd5a6192f1c225022bf4",
+      "mode": "0644",
+      "readbackSha256": "43fa518874090ba294778f7781ab8f2f9fe98ece958bfd5a6192f1c225022bf4",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/references-89fe6d26.txt",
+      "bytes": 1702,
+      "sha256": "e9cdf26f004a3d7ba6e4c92e85ad713867e6eee0b5f89b4b8c3263a03d7e5655",
+      "mode": "0644",
+      "readbackSha256": "e9cdf26f004a3d7ba6e4c92e85ad713867e6eee0b5f89b4b8c3263a03d7e5655",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/references-fda6daf1.txt",
+      "bytes": 3987,
+      "sha256": "409e469d5f8c8b1a793c6943a86be0d12fe6d61f2568d6a4d48f8fd792900542",
+      "mode": "0644",
+      "readbackSha256": "409e469d5f8c8b1a793c6943a86be0d12fe6d61f2568d6a4d48f8fd792900542",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolution-only.patch",
+      "bytes": 41248,
+      "sha256": "45b694e99f1bf5da57d6aa85518f82edca43b0a2b64e4ec4cd167764911f9ca2",
+      "mode": "0644",
+      "readbackSha256": "45b694e99f1bf5da57d6aa85518f82edca43b0a2b64e4ec4cd167764911f9ca2",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/.github/workflows/governance-docs.yml",
+      "bytes": 35200,
+      "sha256": "badd287498cb5a4d63cb84ebbcf52e2a428d85ee0bbc7b2172a474ae7ae1f243",
+      "mode": "0644",
+      "readbackSha256": "badd287498cb5a4d63cb84ebbcf52e2a428d85ee0bbc7b2172a474ae7ae1f243",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/.github/workflows/node-ci.yml",
+      "bytes": 16725,
+      "sha256": "80454b017ae08a02d4fe28b9711bb978fcbbb23d32440ece647b058fb3bcddb5",
+      "mode": "0644",
+      "readbackSha256": "80454b017ae08a02d4fe28b9711bb978fcbbb23d32440ece647b058fb3bcddb5",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/.syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+      "bytes": 294454,
+      "sha256": "c87c602b4a7bfc009ec96fbddc59d9d05712bbec4da4003e581b12b039258be3",
+      "mode": "0644",
+      "readbackSha256": "c87c602b4a7bfc009ec96fbddc59d9d05712bbec4da4003e581b12b039258be3",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/CONTRIBUTING.md",
+      "bytes": 21730,
+      "sha256": "32b669709b8416134eeea2ba037e11ac08bdde43eb3120176fe0aec3d35f1174",
+      "mode": "0644",
+      "readbackSha256": "32b669709b8416134eeea2ba037e11ac08bdde43eb3120176fe0aec3d35f1174",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/PROJECT-STATUS.md",
+      "bytes": 116620,
+      "sha256": "f12f350733213a6b4ea326c98e5032078f6c83fa1fc014ea246b0c776fb5ddbd",
+      "mode": "0644",
+      "readbackSha256": "f12f350733213a6b4ea326c98e5032078f6c83fa1fc014ea246b0c776fb5ddbd",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/apps/three-surface-poc/src/ci-selection.test.ts",
+      "bytes": 8672,
+      "sha256": "576bc537d8f77b9333b296523931d9ecc3dffb9bd901be7b170e863ef4edd741",
+      "mode": "0644",
+      "readbackSha256": "576bc537d8f77b9333b296523931d9ecc3dffb9bd901be7b170e863ef4edd741",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/ci-selection.ts",
+      "bytes": 8598,
+      "sha256": "778c958cb87b47ec5e59d63cdfa683b04adcfdee1141818d69cee2a976972d8d",
+      "mode": "0644",
+      "readbackSha256": "778c958cb87b47ec5e59d63cdfa683b04adcfdee1141818d69cee2a976972d8d",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/spec-readability-reconciliation-2026-10-02/census.json",
+      "bytes": 63773,
+      "sha256": "b97c910bf54a95463cc8792961ed2fb032486f5976514f35809cdad59154600f",
+      "mode": "0644",
+      "readbackSha256": "b97c910bf54a95463cc8792961ed2fb032486f5976514f35809cdad59154600f",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-0yit/measure-scope-1c42a078.json",
+      "bytes": 223,
+      "sha256": "5cbc4e83d14ffdf62e1cde881696c0deb1a6322b4382c863df63aaa81e28453a",
+      "mode": "0644",
+      "readbackSha256": "5cbc4e83d14ffdf62e1cde881696c0deb1a6322b4382c863df63aaa81e28453a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-0yit/measure_scope.py",
+      "bytes": 1989,
+      "sha256": "2007d14b41d391ece8d9d4c09c95b2f1648e34f7800aaaf662e56278efd3ba32",
+      "mode": "0644",
+      "readbackSha256": "2007d14b41d391ece8d9d4c09c95b2f1648e34f7800aaaf662e56278efd3ba32",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-0yit/parent-cprofile-1c42a078.prof.gz",
+      "bytes": 215246,
+      "sha256": "688d595de8c22a98e84d7a2b41cdbf2c729f68cd92adfca2749e3f09382c9561",
+      "mode": "0644",
+      "readbackSha256": "688d595de8c22a98e84d7a2b41cdbf2c729f68cd92adfca2749e3f09382c9561",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-0yit/phases-1c42a078.jsonl",
+      "bytes": 3136,
+      "sha256": "711b3a1524e3d005d3fae9093cf392690bed54ffb9c1edb0dcc27889ee193ca5",
+      "mode": "0644",
+      "readbackSha256": "711b3a1524e3d005d3fae9093cf392690bed54ffb9c1edb0dcc27889ee193ca5",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-0yit/pool-cases-1c42a078.jsonl",
+      "bytes": 16958,
+      "sha256": "2210c1ccac383f2c04479d0f0bfba58d627c78ca5797bd834673fb097c92f6b1",
+      "mode": "0644",
+      "readbackSha256": "2210c1ccac383f2c04479d0f0bfba58d627c78ca5797bd834673fb097c92f6b1",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-0yit/profile_selftest.py",
+      "bytes": 3225,
+      "sha256": "d5852cf81cf48dee82591396c371e4a773668d423af32e020329e151c64af65a",
+      "mode": "0644",
+      "readbackSha256": "d5852cf81cf48dee82591396c371e4a773668d423af32e020329e151c64af65a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-0yit/selftest-profile-1c42a078.json",
+      "bytes": 6643,
+      "sha256": "7c336d0c9b8dea957e2e280afef2e47280b19af33582d0a2cba7bd0a0740a077",
+      "mode": "0644",
+      "readbackSha256": "7c336d0c9b8dea957e2e280afef2e47280b19af33582d0a2cba7bd0a0740a077",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-0yit/summarize_profile.py",
+      "bytes": 2410,
+      "sha256": "88164883d84dec2741b91e277e9ead45b74d01ce60799e3873ffd32cdf289d3a",
+      "mode": "0644",
+      "readbackSha256": "88164883d84dec2741b91e277e9ead45b74d01ce60799e3873ffd32cdf289d3a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-0yit/summary-1c42a078.txt",
+      "bytes": 4607,
+      "sha256": "e122809364ff5d4814425efc6c6296617804ca89a326c2a670aae9934030b6aa",
+      "mode": "0644",
+      "readbackSha256": "e122809364ff5d4814425efc6c6296617804ca89a326c2a670aae9934030b6aa",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-7rkx/paired-selftest-2026-11-27.json",
+      "bytes": 8074,
+      "sha256": "1d379042b398bf85e59866f73f0093ac2f43732516bf0f93b370bdd2be9f5afe",
+      "mode": "0644",
+      "readbackSha256": "1d379042b398bf85e59866f73f0093ac2f43732516bf0f93b370bdd2be9f5afe",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-7rkx/paired_selftest.sh",
+      "bytes": 1760,
+      "sha256": "34a7f7326744b4b96c06af5f765830aefdbef15c8bb3b4085f31f55468dd2556",
+      "mode": "0644",
+      "readbackSha256": "34a7f7326744b4b96c06af5f765830aefdbef15c8bb3b4085f31f55468dd2556",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-7rkx/pool-mutation-2026-11-27.json",
+      "bytes": 8449,
+      "sha256": "1f346739317c1cddad19a0cfe368aac3433b9180e2b7db83cf268cdd93e97f82",
+      "mode": "0644",
+      "readbackSha256": "1f346739317c1cddad19a0cfe368aac3433b9180e2b7db83cf268cdd93e97f82",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-7rkx/pool_mutation.py",
+      "bytes": 7201,
+      "sha256": "824f1bc0eb2a64b010dae0d125673fa0b8e8cecf6245a10ef34c4ddf1a11ba57",
+      "mode": "0644",
+      "readbackSha256": "824f1bc0eb2a64b010dae0d125673fa0b8e8cecf6245a10ef34c4ddf1a11ba57",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-7rkx/scope-family-mutation-2026-11-26.json",
+      "bytes": 4033,
+      "sha256": "17219f2877f9a1a8c580f4f295d93ba1f40e1799e97877b8ad065a2828eebba7",
+      "mode": "0644",
+      "readbackSha256": "17219f2877f9a1a8c580f4f295d93ba1f40e1799e97877b8ad065a2828eebba7",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-7rkx/scope_family_harness.py",
+      "bytes": 4429,
+      "sha256": "cf2dc015859c65aa27e927005d8c7122d74d42e5e9dcc0e575633ac5f7206038",
+      "mode": "0644",
+      "readbackSha256": "cf2dc015859c65aa27e927005d8c7122d74d42e5e9dcc0e575633ac5f7206038",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-7rkx/scope_family_mutation.py",
+      "bytes": 5259,
+      "sha256": "afe0db92cb5962185ca522d83ee24ebb15eb8bef011b4f9f435fbb8b2303d906",
+      "mode": "0644",
+      "readbackSha256": "afe0db92cb5962185ca522d83ee24ebb15eb8bef011b4f9f435fbb8b2303d906",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-7rkx/witness-merged-6d3f8f2a1.json.gz",
+      "bytes": 73102,
+      "sha256": "b584c6df4dc62d761af5b8ad7144fad3993c67b5c33ba5a6eda626a3d55da3ab",
+      "mode": "0644",
+      "readbackSha256": "b584c6df4dc62d761af5b8ad7144fad3993c67b5c33ba5a6eda626a3d55da3ab",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-k54o-3/main-fda-composition/README.md",
+      "bytes": 3558,
+      "sha256": "8f8327c8d85f3f5ae9ace6060fdbb81e6043226494952bf757821cdded5fa1de",
+      "mode": "0644",
+      "readbackSha256": "8f8327c8d85f3f5ae9ace6060fdbb81e6043226494952bf757821cdded5fa1de",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/evidence/syzygy-qu5j/pr-selection-2026-11-27.json",
+      "bytes": 10060,
+      "sha256": "d3189fd057f0015ec27991ed09eb6b61845979f574020927defdb846ce9d2f4a",
+      "mode": "0644",
+      "readbackSha256": "d3189fd057f0015ec27991ed09eb6b61845979f574020927defdb846ce9d2f4a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/review-campaigns/dossier-derived-base-views.md",
+      "bytes": 1134,
+      "sha256": "1acf1684d8f49bb9cb7b04bfbe75c252228080b8d3f72d5720507e652dd06c7c",
+      "mode": "0644",
+      "readbackSha256": "1acf1684d8f49bb9cb7b04bfbe75c252228080b8d3f72d5720507e652dd06c7c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/review-campaigns/qu5j-pr-selection.md",
+      "bytes": 657,
+      "sha256": "041ddb3516b63e1287b030a84edb4b799af133f0ba17be2b96048d1c7a64aa0c",
+      "mode": "0644",
+      "readbackSha256": "041ddb3516b63e1287b030a84edb4b799af133f0ba17be2b96048d1c7a64aa0c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/review-campaigns/reconciliation-pool.md",
+      "bytes": 1745,
+      "sha256": "070bc9397dc9f134418908de4a3f1cd58eb43a6c5564d48a961aefa6785ccd62",
+      "mode": "0644",
+      "readbackSha256": "070bc9397dc9f134418908de4a3f1cd58eb43a6c5564d48a961aefa6785ccd62",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/reviews/R-QU5J-PR-SELECTION-1-RAW.md",
+      "bytes": 10880,
+      "sha256": "b8fd2f6ac96dafe7c351c4d89175d16225af6b36b18bf15b66fb1037efaeed1d",
+      "mode": "0644",
+      "readbackSha256": "b8fd2f6ac96dafe7c351c4d89175d16225af6b36b18bf15b66fb1037efaeed1d",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/reviews/syzygy-3efd-38/R-DERIVED-BASE-VIEWS-SPEC-1-RAW.md",
+      "bytes": 24322,
+      "sha256": "6adf0ad18edf5b86d6fa8d73c99dd2d7da5f4b698c7fd6d7867f826d9f6542ef",
+      "mode": "0644",
+      "readbackSha256": "6adf0ad18edf5b86d6fa8d73c99dd2d7da5f4b698c7fd6d7867f826d9f6542ef",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/docs/reviews/syzygy-7rkx/R7RKX-REVIEW-RAW.md",
+      "bytes": 11190,
+      "sha256": "f83697a590b833a2a86b172e81cacbf1cd44da900c9553d3c59024c872ed35f4",
+      "mode": "0644",
+      "readbackSha256": "f83697a590b833a2a86b172e81cacbf1cd44da900c9553d3c59024c872ed35f4",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/openspec/README.md",
+      "bytes": 44570,
+      "sha256": "d010d57b5f80f5202954e6fc04497c68fae6665179163399bb466f98f1400c7e",
+      "mode": "0644",
+      "readbackSha256": "d010d57b5f80f5202954e6fc04497c68fae6665179163399bb466f98f1400c7e",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/openspec/changes/cap1-root-adjudication/CONTRACT-COVERAGE.md",
+      "bytes": 1244,
+      "sha256": "480abb4ea4796e19ff38ecda02596aeafe13e784c8480e7ea6f83eb2d322fa14",
+      "mode": "0644",
+      "readbackSha256": "480abb4ea4796e19ff38ecda02596aeafe13e784c8480e7ea6f83eb2d322fa14",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/openspec/changes/cap1-root-adjudication/SEMANTIC-DELTA.md",
+      "bytes": 5979,
+      "sha256": "3ea2837adffb59dcb0890cd82b9c2c1c06de55cbfadee8af8046f2a6cd783e02",
+      "mode": "0644",
+      "readbackSha256": "3ea2837adffb59dcb0890cd82b9c2c1c06de55cbfadee8af8046f2a6cd783e02",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/openspec/changes/cap1-root-adjudication/proposal.md",
+      "bytes": 1691,
+      "sha256": "21eb0c92dd803c2688a5647d2f78accd1fabcbd3158c50cfbe4812265ad33a98",
+      "mode": "0644",
+      "readbackSha256": "21eb0c92dd803c2688a5647d2f78accd1fabcbd3158c50cfbe4812265ad33a98",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/openspec/changes/cap1-root-adjudication/proposed/project-registration-and-honest-shape-visibility/spec.md",
+      "bytes": 2483,
+      "sha256": "185af92ae6eed07aae21f6b285ff980e9fd106d43f0f814bd2a30afe7e4d96bd",
+      "mode": "0644",
+      "readbackSha256": "185af92ae6eed07aae21f6b285ff980e9fd106d43f0f814bd2a30afe7e4d96bd",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/openspec/changes/dossier-derived-base-views/.openspec.yaml",
+      "bytes": 40,
+      "sha256": "0b89965c6919ee9f0b3679bc8491b3c9efd623f2ceac7e5bd3929eff87f22215",
+      "mode": "0644",
+      "readbackSha256": "0b89965c6919ee9f0b3679bc8491b3c9efd623f2ceac7e5bd3929eff87f22215",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/openspec/changes/dossier-derived-base-views/GOVERNING-DEPENDENCIES.json",
+      "bytes": 1663,
+      "sha256": "3f6c2b317bf01c0d940f7ee7b41ce73ddb2b0cfd5aa4efe2afbfb26c4ae3efef",
+      "mode": "0644",
+      "readbackSha256": "3f6c2b317bf01c0d940f7ee7b41ce73ddb2b0cfd5aa4efe2afbfb26c4ae3efef",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/openspec/changes/dossier-derived-base-views/README.md",
+      "bytes": 2370,
+      "sha256": "1f000fde917d55b5c6bb4a63fc452dfc63d411ea65da379d95ae74988c8d30fb",
+      "mode": "0644",
+      "readbackSha256": "1f000fde917d55b5c6bb4a63fc452dfc63d411ea65da379d95ae74988c8d30fb",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/openspec/changes/dossier-derived-base-views/SEMANTIC-DELTA.md",
+      "bytes": 8921,
+      "sha256": "025f2d7c7c0077582c5bbd0227fef92312e730b31687a203af97e5e43ba636b3",
+      "mode": "0644",
+      "readbackSha256": "025f2d7c7c0077582c5bbd0227fef92312e730b31687a203af97e5e43ba636b3",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/openspec/changes/dossier-derived-base-views/design.md",
+      "bytes": 19592,
+      "sha256": "a07a54702a9b787169af09920e8bcb8f1373530a1dc333bb01241a5e06fe4927",
+      "mode": "0644",
+      "readbackSha256": "a07a54702a9b787169af09920e8bcb8f1373530a1dc333bb01241a5e06fe4927",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/openspec/changes/dossier-derived-base-views/proposal.md",
+      "bytes": 4402,
+      "sha256": "794c758dc98070da657aa72824ec3b6c3a75f58808cd62497e2267ccb9a655f7",
+      "mode": "0644",
+      "readbackSha256": "794c758dc98070da657aa72824ec3b6c3a75f58808cd62497e2267ccb9a655f7",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/openspec/changes/dossier-derived-base-views/proposed/polaris-generation/spec.md",
+      "bytes": 554673,
+      "sha256": "a404fa70e788f7ca20761f5a30f1d840604706cb811fcf50664f3e2942592c45",
+      "mode": "0644",
+      "readbackSha256": "a404fa70e788f7ca20761f5a30f1d840604706cb811fcf50664f3e2942592c45",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/openspec/changes/dossier-derived-base-views/tasks.md",
+      "bytes": 1492,
+      "sha256": "e8102afaa5ffcab6d166f62cae4b071f1e86a1c1ab9e58589415a147ec668a4c",
+      "mode": "0644",
+      "readbackSha256": "e8102afaa5ffcab6d166f62cae4b071f1e86a1c1ab9e58589415a147ec668a4c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/scripts/check_spec_reconciliation.py",
+      "bytes": 716927,
+      "sha256": "9655426c3f4ae9543087dec4d593adbfebb39bfa8301dc475f7da3e666ae3600",
+      "mode": "0644",
+      "readbackSha256": "9655426c3f4ae9543087dec4d593adbfebb39bfa8301dc475f7da3e666ae3600",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/scripts/check_unit_tmpdir.mjs",
+      "bytes": 28152,
+      "sha256": "c41d8147124a694c90272275871a0720c8131417159885860873a282c91a934c",
+      "mode": "0644",
+      "readbackSha256": "c41d8147124a694c90272275871a0720c8131417159885860873a282c91a934c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/scripts/count_polaris_effective_scenarios.py",
+      "bytes": 67091,
+      "sha256": "2c882393c5841bde9d5b19bd31439396dfb19cf83eeb64077bddfbf544e6b265",
+      "mode": "0644",
+      "readbackSha256": "2c882393c5841bde9d5b19bd31439396dfb19cf83eeb64077bddfbf544e6b265",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/scripts/run_ci_tier.mjs",
+      "bytes": 2932,
+      "sha256": "936f4b118726c056a1cb77923d3ab57c60301001b782fbac6bc11726eb4ece98",
+      "mode": "0644",
+      "readbackSha256": "936f4b118726c056a1cb77923d3ab57c60301001b782fbac6bc11726eb4ece98",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/scripts/select_ci_tests.mjs",
+      "bytes": 3631,
+      "sha256": "f5c25dd0e61a732890250423757e97a9d3507f44491a0457461949106d393ee6",
+      "mode": "0644",
+      "readbackSha256": "f5c25dd0e61a732890250423757e97a9d3507f44491a0457461949106d393ee6",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/resolved/scripts/test_reconciliation_pool.py",
+      "bytes": 8754,
+      "sha256": "0110dbcd1bbd3baeb2808c6d0adfc03db31b20968966951f28f0a77def53073c",
+      "mode": "0644",
+      "readbackSha256": "0110dbcd1bbd3baeb2808c6d0adfc03db31b20968966951f28f0a77def53073c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/scan_compressed_references.py",
+      "bytes": 2367,
+      "sha256": "d6e171f25340d7dea28ce12f69ff01654f5ac01f486a8b36945412fd8c4109e2",
+      "mode": "0644",
+      "readbackSha256": "d6e171f25340d7dea28ce12f69ff01654f5ac01f486a8b36945412fd8c4109e2",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/static_verify.py",
+      "bytes": 6762,
+      "sha256": "5aa677775da17e79abe6073ffb9ec27989e9812462a2f23d6f3c7fc50d2b7a18",
+      "mode": "0644",
+      "readbackSha256": "5aa677775da17e79abe6073ffb9ec27989e9812462a2f23d6f3c7fc50d2b7a18",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/.github/workflows/governance-docs.yml",
+      "bytes": 34219,
+      "sha256": "346c107f83d0d264a87a9f4c70562e51f8ada121f005d8ca5cfa42129c571c45",
+      "mode": "0644",
+      "readbackSha256": "346c107f83d0d264a87a9f4c70562e51f8ada121f005d8ca5cfa42129c571c45",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/.github/workflows/node-ci.yml",
+      "bytes": 12600,
+      "sha256": "407b6d2f1e7fd53701724b56e22e29e6d168d9ce2b6e60a65ddcb3adfbe67e1a",
+      "mode": "0644",
+      "readbackSha256": "407b6d2f1e7fd53701724b56e22e29e6d168d9ce2b6e60a65ddcb3adfbe67e1a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/.syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+      "bytes": 135132,
+      "sha256": "7e1485a668d7f33cab4216761650c039bbac89a3f33b243425cd277db3c87b07",
+      "mode": "0644",
+      "readbackSha256": "7e1485a668d7f33cab4216761650c039bbac89a3f33b243425cd277db3c87b07",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/CONTRIBUTING.md",
+      "bytes": 19511,
+      "sha256": "f4ac924627c34807d70fe4912e2ce0271cf60a3cf645a4754b3905a531fb1d61",
+      "mode": "0644",
+      "readbackSha256": "f4ac924627c34807d70fe4912e2ce0271cf60a3cf645a4754b3905a531fb1d61",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/PROJECT-STATUS.md",
+      "bytes": 116620,
+      "sha256": "f12f350733213a6b4ea326c98e5032078f6c83fa1fc014ea246b0c776fb5ddbd",
+      "mode": "0644",
+      "readbackSha256": "f12f350733213a6b4ea326c98e5032078f6c83fa1fc014ea246b0c776fb5ddbd",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/apps/three-surface-poc/src/ci-selection.test.ts",
+      "bytes": 8672,
+      "sha256": "576bc537d8f77b9333b296523931d9ecc3dffb9bd901be7b170e863ef4edd741",
+      "mode": "0644",
+      "readbackSha256": "576bc537d8f77b9333b296523931d9ecc3dffb9bd901be7b170e863ef4edd741",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/ci-selection.ts",
+      "bytes": 8598,
+      "sha256": "778c958cb87b47ec5e59d63cdfa683b04adcfdee1141818d69cee2a976972d8d",
+      "mode": "0644",
+      "readbackSha256": "778c958cb87b47ec5e59d63cdfa683b04adcfdee1141818d69cee2a976972d8d",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/spec-readability-reconciliation-2026-10-02/census.json",
+      "bytes": 63773,
+      "sha256": "b97c910bf54a95463cc8792961ed2fb032486f5976514f35809cdad59154600f",
+      "mode": "0644",
+      "readbackSha256": "b97c910bf54a95463cc8792961ed2fb032486f5976514f35809cdad59154600f",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-0yit/measure-scope-1c42a078.json",
+      "bytes": 223,
+      "sha256": "5cbc4e83d14ffdf62e1cde881696c0deb1a6322b4382c863df63aaa81e28453a",
+      "mode": "0644",
+      "readbackSha256": "5cbc4e83d14ffdf62e1cde881696c0deb1a6322b4382c863df63aaa81e28453a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-0yit/measure_scope.py",
+      "bytes": 1989,
+      "sha256": "2007d14b41d391ece8d9d4c09c95b2f1648e34f7800aaaf662e56278efd3ba32",
+      "mode": "0644",
+      "readbackSha256": "2007d14b41d391ece8d9d4c09c95b2f1648e34f7800aaaf662e56278efd3ba32",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-0yit/parent-cprofile-1c42a078.prof.gz",
+      "bytes": 215246,
+      "sha256": "688d595de8c22a98e84d7a2b41cdbf2c729f68cd92adfca2749e3f09382c9561",
+      "mode": "0644",
+      "readbackSha256": "688d595de8c22a98e84d7a2b41cdbf2c729f68cd92adfca2749e3f09382c9561",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-0yit/phases-1c42a078.jsonl",
+      "bytes": 3136,
+      "sha256": "711b3a1524e3d005d3fae9093cf392690bed54ffb9c1edb0dcc27889ee193ca5",
+      "mode": "0644",
+      "readbackSha256": "711b3a1524e3d005d3fae9093cf392690bed54ffb9c1edb0dcc27889ee193ca5",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-0yit/pool-cases-1c42a078.jsonl",
+      "bytes": 16958,
+      "sha256": "2210c1ccac383f2c04479d0f0bfba58d627c78ca5797bd834673fb097c92f6b1",
+      "mode": "0644",
+      "readbackSha256": "2210c1ccac383f2c04479d0f0bfba58d627c78ca5797bd834673fb097c92f6b1",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-0yit/profile_selftest.py",
+      "bytes": 3225,
+      "sha256": "d5852cf81cf48dee82591396c371e4a773668d423af32e020329e151c64af65a",
+      "mode": "0644",
+      "readbackSha256": "d5852cf81cf48dee82591396c371e4a773668d423af32e020329e151c64af65a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-0yit/selftest-profile-1c42a078.json",
+      "bytes": 6643,
+      "sha256": "7c336d0c9b8dea957e2e280afef2e47280b19af33582d0a2cba7bd0a0740a077",
+      "mode": "0644",
+      "readbackSha256": "7c336d0c9b8dea957e2e280afef2e47280b19af33582d0a2cba7bd0a0740a077",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-0yit/summarize_profile.py",
+      "bytes": 2410,
+      "sha256": "88164883d84dec2741b91e277e9ead45b74d01ce60799e3873ffd32cdf289d3a",
+      "mode": "0644",
+      "readbackSha256": "88164883d84dec2741b91e277e9ead45b74d01ce60799e3873ffd32cdf289d3a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-0yit/summary-1c42a078.txt",
+      "bytes": 4607,
+      "sha256": "e122809364ff5d4814425efc6c6296617804ca89a326c2a670aae9934030b6aa",
+      "mode": "0644",
+      "readbackSha256": "e122809364ff5d4814425efc6c6296617804ca89a326c2a670aae9934030b6aa",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-7rkx/paired-selftest-2026-11-27.json",
+      "bytes": 8074,
+      "sha256": "1d379042b398bf85e59866f73f0093ac2f43732516bf0f93b370bdd2be9f5afe",
+      "mode": "0644",
+      "readbackSha256": "1d379042b398bf85e59866f73f0093ac2f43732516bf0f93b370bdd2be9f5afe",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-7rkx/paired_selftest.sh",
+      "bytes": 1760,
+      "sha256": "34a7f7326744b4b96c06af5f765830aefdbef15c8bb3b4085f31f55468dd2556",
+      "mode": "0644",
+      "readbackSha256": "34a7f7326744b4b96c06af5f765830aefdbef15c8bb3b4085f31f55468dd2556",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-7rkx/pool-mutation-2026-11-27.json",
+      "bytes": 8449,
+      "sha256": "1f346739317c1cddad19a0cfe368aac3433b9180e2b7db83cf268cdd93e97f82",
+      "mode": "0644",
+      "readbackSha256": "1f346739317c1cddad19a0cfe368aac3433b9180e2b7db83cf268cdd93e97f82",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-7rkx/pool_mutation.py",
+      "bytes": 7201,
+      "sha256": "824f1bc0eb2a64b010dae0d125673fa0b8e8cecf6245a10ef34c4ddf1a11ba57",
+      "mode": "0644",
+      "readbackSha256": "824f1bc0eb2a64b010dae0d125673fa0b8e8cecf6245a10ef34c4ddf1a11ba57",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-7rkx/scope-family-mutation-2026-11-26.json",
+      "bytes": 4033,
+      "sha256": "17219f2877f9a1a8c580f4f295d93ba1f40e1799e97877b8ad065a2828eebba7",
+      "mode": "0644",
+      "readbackSha256": "17219f2877f9a1a8c580f4f295d93ba1f40e1799e97877b8ad065a2828eebba7",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-7rkx/scope_family_harness.py",
+      "bytes": 4429,
+      "sha256": "cf2dc015859c65aa27e927005d8c7122d74d42e5e9dcc0e575633ac5f7206038",
+      "mode": "0644",
+      "readbackSha256": "cf2dc015859c65aa27e927005d8c7122d74d42e5e9dcc0e575633ac5f7206038",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-7rkx/scope_family_mutation.py",
+      "bytes": 5259,
+      "sha256": "afe0db92cb5962185ca522d83ee24ebb15eb8bef011b4f9f435fbb8b2303d906",
+      "mode": "0644",
+      "readbackSha256": "afe0db92cb5962185ca522d83ee24ebb15eb8bef011b4f9f435fbb8b2303d906",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-7rkx/witness-merged-6d3f8f2a1.json.gz",
+      "bytes": 73102,
+      "sha256": "b584c6df4dc62d761af5b8ad7144fad3993c67b5c33ba5a6eda626a3d55da3ab",
+      "mode": "0644",
+      "readbackSha256": "b584c6df4dc62d761af5b8ad7144fad3993c67b5c33ba5a6eda626a3d55da3ab",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/evidence/syzygy-qu5j/pr-selection-2026-11-27.json",
+      "bytes": 10060,
+      "sha256": "d3189fd057f0015ec27991ed09eb6b61845979f574020927defdb846ce9d2f4a",
+      "mode": "0644",
+      "readbackSha256": "d3189fd057f0015ec27991ed09eb6b61845979f574020927defdb846ce9d2f4a",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/review-campaigns/dossier-derived-base-views.md",
+      "bytes": 1134,
+      "sha256": "1acf1684d8f49bb9cb7b04bfbe75c252228080b8d3f72d5720507e652dd06c7c",
+      "mode": "0644",
+      "readbackSha256": "1acf1684d8f49bb9cb7b04bfbe75c252228080b8d3f72d5720507e652dd06c7c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/review-campaigns/qu5j-pr-selection.md",
+      "bytes": 657,
+      "sha256": "041ddb3516b63e1287b030a84edb4b799af133f0ba17be2b96048d1c7a64aa0c",
+      "mode": "0644",
+      "readbackSha256": "041ddb3516b63e1287b030a84edb4b799af133f0ba17be2b96048d1c7a64aa0c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/review-campaigns/reconciliation-pool.md",
+      "bytes": 1745,
+      "sha256": "070bc9397dc9f134418908de4a3f1cd58eb43a6c5564d48a961aefa6785ccd62",
+      "mode": "0644",
+      "readbackSha256": "070bc9397dc9f134418908de4a3f1cd58eb43a6c5564d48a961aefa6785ccd62",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/reviews/R-QU5J-PR-SELECTION-1-RAW.md",
+      "bytes": 10880,
+      "sha256": "b8fd2f6ac96dafe7c351c4d89175d16225af6b36b18bf15b66fb1037efaeed1d",
+      "mode": "0644",
+      "readbackSha256": "b8fd2f6ac96dafe7c351c4d89175d16225af6b36b18bf15b66fb1037efaeed1d",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/reviews/syzygy-3efd-38/R-DERIVED-BASE-VIEWS-SPEC-1-RAW.md",
+      "bytes": 24322,
+      "sha256": "6adf0ad18edf5b86d6fa8d73c99dd2d7da5f4b698c7fd6d7867f826d9f6542ef",
+      "mode": "0644",
+      "readbackSha256": "6adf0ad18edf5b86d6fa8d73c99dd2d7da5f4b698c7fd6d7867f826d9f6542ef",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/docs/reviews/syzygy-7rkx/R7RKX-REVIEW-RAW.md",
+      "bytes": 11190,
+      "sha256": "f83697a590b833a2a86b172e81cacbf1cd44da900c9553d3c59024c872ed35f4",
+      "mode": "0644",
+      "readbackSha256": "f83697a590b833a2a86b172e81cacbf1cd44da900c9553d3c59024c872ed35f4",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/openspec/README.md",
+      "bytes": 44570,
+      "sha256": "d010d57b5f80f5202954e6fc04497c68fae6665179163399bb466f98f1400c7e",
+      "mode": "0644",
+      "readbackSha256": "d010d57b5f80f5202954e6fc04497c68fae6665179163399bb466f98f1400c7e",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/openspec/changes/cap1-root-adjudication/CONTRACT-COVERAGE.md",
+      "bytes": 1244,
+      "sha256": "480abb4ea4796e19ff38ecda02596aeafe13e784c8480e7ea6f83eb2d322fa14",
+      "mode": "0644",
+      "readbackSha256": "480abb4ea4796e19ff38ecda02596aeafe13e784c8480e7ea6f83eb2d322fa14",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/openspec/changes/cap1-root-adjudication/SEMANTIC-DELTA.md",
+      "bytes": 5979,
+      "sha256": "3ea2837adffb59dcb0890cd82b9c2c1c06de55cbfadee8af8046f2a6cd783e02",
+      "mode": "0644",
+      "readbackSha256": "3ea2837adffb59dcb0890cd82b9c2c1c06de55cbfadee8af8046f2a6cd783e02",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/openspec/changes/cap1-root-adjudication/proposal.md",
+      "bytes": 1691,
+      "sha256": "21eb0c92dd803c2688a5647d2f78accd1fabcbd3158c50cfbe4812265ad33a98",
+      "mode": "0644",
+      "readbackSha256": "21eb0c92dd803c2688a5647d2f78accd1fabcbd3158c50cfbe4812265ad33a98",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/openspec/changes/cap1-root-adjudication/proposed/project-registration-and-honest-shape-visibility/spec.md",
+      "bytes": 2483,
+      "sha256": "185af92ae6eed07aae21f6b285ff980e9fd106d43f0f814bd2a30afe7e4d96bd",
+      "mode": "0644",
+      "readbackSha256": "185af92ae6eed07aae21f6b285ff980e9fd106d43f0f814bd2a30afe7e4d96bd",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/openspec/changes/dossier-derived-base-views/.openspec.yaml",
+      "bytes": 40,
+      "sha256": "0b89965c6919ee9f0b3679bc8491b3c9efd623f2ceac7e5bd3929eff87f22215",
+      "mode": "0644",
+      "readbackSha256": "0b89965c6919ee9f0b3679bc8491b3c9efd623f2ceac7e5bd3929eff87f22215",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/openspec/changes/dossier-derived-base-views/GOVERNING-DEPENDENCIES.json",
+      "bytes": 1663,
+      "sha256": "3f6c2b317bf01c0d940f7ee7b41ce73ddb2b0cfd5aa4efe2afbfb26c4ae3efef",
+      "mode": "0644",
+      "readbackSha256": "3f6c2b317bf01c0d940f7ee7b41ce73ddb2b0cfd5aa4efe2afbfb26c4ae3efef",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/openspec/changes/dossier-derived-base-views/README.md",
+      "bytes": 2370,
+      "sha256": "1f000fde917d55b5c6bb4a63fc452dfc63d411ea65da379d95ae74988c8d30fb",
+      "mode": "0644",
+      "readbackSha256": "1f000fde917d55b5c6bb4a63fc452dfc63d411ea65da379d95ae74988c8d30fb",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/openspec/changes/dossier-derived-base-views/SEMANTIC-DELTA.md",
+      "bytes": 8921,
+      "sha256": "025f2d7c7c0077582c5bbd0227fef92312e730b31687a203af97e5e43ba636b3",
+      "mode": "0644",
+      "readbackSha256": "025f2d7c7c0077582c5bbd0227fef92312e730b31687a203af97e5e43ba636b3",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/openspec/changes/dossier-derived-base-views/design.md",
+      "bytes": 19592,
+      "sha256": "a07a54702a9b787169af09920e8bcb8f1373530a1dc333bb01241a5e06fe4927",
+      "mode": "0644",
+      "readbackSha256": "a07a54702a9b787169af09920e8bcb8f1373530a1dc333bb01241a5e06fe4927",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/openspec/changes/dossier-derived-base-views/proposal.md",
+      "bytes": 4402,
+      "sha256": "794c758dc98070da657aa72824ec3b6c3a75f58808cd62497e2267ccb9a655f7",
+      "mode": "0644",
+      "readbackSha256": "794c758dc98070da657aa72824ec3b6c3a75f58808cd62497e2267ccb9a655f7",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/openspec/changes/dossier-derived-base-views/proposed/polaris-generation/spec.md",
+      "bytes": 554673,
+      "sha256": "a404fa70e788f7ca20761f5a30f1d840604706cb811fcf50664f3e2942592c45",
+      "mode": "0644",
+      "readbackSha256": "a404fa70e788f7ca20761f5a30f1d840604706cb811fcf50664f3e2942592c45",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/openspec/changes/dossier-derived-base-views/tasks.md",
+      "bytes": 1492,
+      "sha256": "e8102afaa5ffcab6d166f62cae4b071f1e86a1c1ab9e58589415a147ec668a4c",
+      "mode": "0644",
+      "readbackSha256": "e8102afaa5ffcab6d166f62cae4b071f1e86a1c1ab9e58589415a147ec668a4c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/scripts/check_spec_reconciliation.py",
+      "bytes": 714677,
+      "sha256": "0a028f18bae9ac39c6d6e25432f0253a766ecfea6a1e8ca9f9ebdd7eae47fb88",
+      "mode": "0644",
+      "readbackSha256": "0a028f18bae9ac39c6d6e25432f0253a766ecfea6a1e8ca9f9ebdd7eae47fb88",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/scripts/check_unit_tmpdir.mjs",
+      "bytes": 28152,
+      "sha256": "c41d8147124a694c90272275871a0720c8131417159885860873a282c91a934c",
+      "mode": "0644",
+      "readbackSha256": "c41d8147124a694c90272275871a0720c8131417159885860873a282c91a934c",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/scripts/count_polaris_effective_scenarios.py",
+      "bytes": 67091,
+      "sha256": "2c882393c5841bde9d5b19bd31439396dfb19cf83eeb64077bddfbf544e6b265",
+      "mode": "0644",
+      "readbackSha256": "2c882393c5841bde9d5b19bd31439396dfb19cf83eeb64077bddfbf544e6b265",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/scripts/run_ci_tier.mjs",
+      "bytes": 2932,
+      "sha256": "936f4b118726c056a1cb77923d3ab57c60301001b782fbac6bc11726eb4ece98",
+      "mode": "0644",
+      "readbackSha256": "936f4b118726c056a1cb77923d3ab57c60301001b782fbac6bc11726eb4ece98",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/scripts/select_ci_tests.mjs",
+      "bytes": 3631,
+      "sha256": "f5c25dd0e61a732890250423757e97a9d3507f44491a0457461949106d393ee6",
+      "mode": "0644",
+      "readbackSha256": "f5c25dd0e61a732890250423757e97a9d3507f44491a0457461949106d393ee6",
+      "readbackMatches": true
+    },
+    {
+      "path": "source-packet/theirs/scripts/test_reconciliation_pool.py",
+      "bytes": 8754,
+      "sha256": "0110dbcd1bbd3baeb2808c6d0adfc03db31b20968966951f28f0a77def53073c",
+      "mode": "0644",
+      "readbackSha256": "0110dbcd1bbd3baeb2808c6d0adfc03db31b20968966951f28f0a77def53073c",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/COMMAND-DEFINITIONS.json",
+      "bytes": 3093,
+      "sha256": "023bc74faf883ac7aa4a25ac7fdfe69065a5b607213f52238c03f5161ef638f9",
+      "mode": "0644",
+      "readbackSha256": "023bc74faf883ac7aa4a25ac7fdfe69065a5b607213f52238c03f5161ef638f9",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/canonical-0.log",
+      "bytes": 4586,
+      "sha256": "cce2482cb130ceecaf7805bef94c3b9d7317743dc4be75a687daf64d11ff6605",
+      "mode": "0644",
+      "readbackSha256": "cce2482cb130ceecaf7805bef94c3b9d7317743dc4be75a687daf64d11ff6605",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/canonical-1.log",
+      "bytes": 195531,
+      "sha256": "cc7ab3b1ebc826caebdad30bdbee8a81459a180de0d25639791d6365dccafdec",
+      "mode": "0644",
+      "readbackSha256": "cc7ab3b1ebc826caebdad30bdbee8a81459a180de0d25639791d6365dccafdec",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/canonical-2.log",
+      "bytes": 29220,
+      "sha256": "c501ce9c90274fc9aaac7bfe14701ac3efb48ba273669af25aff95d34a25c8bf",
+      "mode": "0644",
+      "readbackSha256": "c501ce9c90274fc9aaac7bfe14701ac3efb48ba273669af25aff95d34a25c8bf",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/canonical-3.log",
+      "bytes": 109,
+      "sha256": "3e69d0cb4c5fe55342ea545b89abe3adbf26ac90c2fc6b4900f2c9229391b153",
+      "mode": "0644",
+      "readbackSha256": "3e69d0cb4c5fe55342ea545b89abe3adbf26ac90c2fc6b4900f2c9229391b153",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/canonical-4.log",
+      "bytes": 62,
+      "sha256": "85f5bd35abadd39ba2c7672543f412aea475f21a2bb63c93a137cd1b3487e6da",
+      "mode": "0644",
+      "readbackSha256": "85f5bd35abadd39ba2c7672543f412aea475f21a2bb63c93a137cd1b3487e6da",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/canonical-5.log",
+      "bytes": 1851,
+      "sha256": "eb6062d7d976586389c7cf303b05b07dedfd52105b5b7d44314e0bcc799ae8f2",
+      "mode": "0644",
+      "readbackSha256": "eb6062d7d976586389c7cf303b05b07dedfd52105b5b7d44314e0bcc799ae8f2",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/checkout.log",
+      "bytes": 86,
+      "sha256": "517c0cc47fa619fc57bd6098952e011e5d100edd9d50f124b2e0154a59ecbb1b",
+      "mode": "0644",
+      "readbackSha256": "517c0cc47fa619fc57bd6098952e011e5d100edd9d50f124b2e0154a59ecbb1b",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/clone.log",
+      "bytes": 101,
+      "sha256": "2d52ab38c2cbca2acec35a3e1ef7e7e024bc5abfc068867c7ebea31d01fd50c2",
+      "mode": "0644",
+      "readbackSha256": "2d52ab38c2cbca2acec35a3e1ef7e7e024bc5abfc068867c7ebea31d01fd50c2",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/definitions/PROJECT-STATUS.md",
+      "bytes": 116620,
+      "sha256": "f12f350733213a6b4ea326c98e5032078f6c83fa1fc014ea246b0c776fb5ddbd",
+      "mode": "0644",
+      "readbackSha256": "f12f350733213a6b4ea326c98e5032078f6c83fa1fc014ea246b0c776fb5ddbd",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/definitions/apps/three-surface-poc/src/ci-selection.test.ts",
+      "bytes": 8672,
+      "sha256": "576bc537d8f77b9333b296523931d9ecc3dffb9bd901be7b170e863ef4edd741",
+      "mode": "0644",
+      "readbackSha256": "576bc537d8f77b9333b296523931d9ecc3dffb9bd901be7b170e863ef4edd741",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/definitions/ci-selection.ts",
+      "bytes": 8598,
+      "sha256": "778c958cb87b47ec5e59d63cdfa683b04adcfdee1141818d69cee2a976972d8d",
+      "mode": "0644",
+      "readbackSha256": "778c958cb87b47ec5e59d63cdfa683b04adcfdee1141818d69cee2a976972d8d",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/definitions/package.json",
+      "bytes": 3933,
+      "sha256": "6194b03e996421a09893f3751f8e0377475f003499aa8fec6036f664a57a7592",
+      "mode": "0644",
+      "readbackSha256": "6194b03e996421a09893f3751f8e0377475f003499aa8fec6036f664a57a7592",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/definitions/scripts/check_governance.py",
+      "bytes": 254930,
+      "sha256": "2552fcec196c0a218ab7790588e323c6cc9195f7591cae178e1f804bb0fd265d",
+      "mode": "0644",
+      "readbackSha256": "2552fcec196c0a218ab7790588e323c6cc9195f7591cae178e1f804bb0fd265d",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/definitions/scripts/check_merge_conflict_markers.py",
+      "bytes": 8562,
+      "sha256": "c43b879f78d29075e932118ad8841631792f8d8a59e9121cd39153455a692246",
+      "mode": "0644",
+      "readbackSha256": "c43b879f78d29075e932118ad8841631792f8d8a59e9121cd39153455a692246",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/definitions/scripts/check_spec_reconciliation.py",
+      "bytes": 716927,
+      "sha256": "9655426c3f4ae9543087dec4d593adbfebb39bfa8301dc475f7da3e666ae3600",
+      "mode": "0644",
+      "readbackSha256": "9655426c3f4ae9543087dec4d593adbfebb39bfa8301dc475f7da3e666ae3600",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/definitions/scripts/check_unit_tmpdir.mjs",
+      "bytes": 28152,
+      "sha256": "c41d8147124a694c90272275871a0720c8131417159885860873a282c91a934c",
+      "mode": "0644",
+      "readbackSha256": "c41d8147124a694c90272275871a0720c8131417159885860873a282c91a934c",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/definitions/scripts/count_polaris_effective_scenarios.py",
+      "bytes": 67091,
+      "sha256": "2c882393c5841bde9d5b19bd31439396dfb19cf83eeb64077bddfbf544e6b265",
+      "mode": "0644",
+      "readbackSha256": "2c882393c5841bde9d5b19bd31439396dfb19cf83eeb64077bddfbf544e6b265",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/definitions/scripts/run_integration_lane.mjs",
+      "bytes": 9791,
+      "sha256": "abb7ead193281304676f96f5bb3909e589392de37a3617efe96508c8de514380",
+      "mode": "0644",
+      "readbackSha256": "abb7ead193281304676f96f5bb3909e589392de37a3617efe96508c8de514380",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/definitions/scripts/test_reconciliation_pool.py",
+      "bytes": 8754,
+      "sha256": "0110dbcd1bbd3baeb2808c6d0adfc03db31b20968966951f28f0a77def53073c",
+      "mode": "0644",
+      "readbackSha256": "0110dbcd1bbd3baeb2808c6d0adfc03db31b20968966951f28f0a77def53073c",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/definitions/tsconfig.json",
+      "bytes": 300,
+      "sha256": "2ec7d1a43ce779e181a00e0a3a24f66e49a847cef59d1f768828d51ece4e1d5d",
+      "mode": "0644",
+      "readbackSha256": "2ec7d1a43ce779e181a00e0a3a24f66e49a847cef59d1f768828d51ece4e1d5d",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/definitions/vitest.config.ts",
+      "bytes": 3123,
+      "sha256": "a3b641bca9bfba4241a482443c7594e59959e395fffce8ed9c9cfcac6860ce10",
+      "mode": "0644",
+      "readbackSha256": "a3b641bca9bfba4241a482443c7594e59959e395fffce8ed9c9cfcac6860ce10",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/definitions/vitest.tiers.ts",
+      "bytes": 16017,
+      "sha256": "454f2dcfa3b1e06694d85d4ca393092ed6962c16892aea568e36dfcc3683e7e1",
+      "mode": "0644",
+      "readbackSha256": "454f2dcfa3b1e06694d85d4ca393092ed6962c16892aea568e36dfcc3683e7e1",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/install.log",
+      "bytes": 26,
+      "sha256": "cde4b333b0ffb7e00c902a82cb88b929806847a8160731227c9ecb24ed868161",
+      "mode": "0644",
+      "readbackSha256": "cde4b333b0ffb7e00c902a82cb88b929806847a8160731227c9ecb24ed868161",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/lane-population.log",
+      "bytes": 609,
+      "sha256": "0acfb0d29dbae19a7c9a02e98fee363365654a75e9ad409f718b38d12a3698dd",
+      "mode": "0644",
+      "readbackSha256": "0acfb0d29dbae19a7c9a02e98fee363365654a75e9ad409f718b38d12a3698dd",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/lane-selftest.log",
+      "bytes": 62,
+      "sha256": "79428c330d82fe1c3344f7e106d7beb5adb4a6ed97b915d78149fc3441ffd6f2",
+      "mode": "0644",
+      "readbackSha256": "79428c330d82fe1c3344f7e106d7beb5adb4a6ed97b915d78149fc3441ffd6f2",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/pool.log",
+      "bytes": 1620,
+      "sha256": "8f45a55430a36f322328d255105b42cd1dfa5fe677d8aefb61099571073ca2da",
+      "mode": "0644",
+      "readbackSha256": "8f45a55430a36f322328d255105b42cd1dfa5fe677d8aefb61099571073ca2da",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/progress.json",
+      "bytes": 5941,
+      "sha256": "c6a68a66b208d30a62396ed48aed3495b09774ec9d139f097bae619563b39f25",
+      "mode": "0644",
+      "readbackSha256": "c6a68a66b208d30a62396ed48aed3495b09774ec9d139f097bae619563b39f25",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/reconciliation-selftest-witnesses.json",
+      "bytes": 849842,
+      "sha256": "6e4b8ecd74e164e1d4a2a2a019185496d40110b9c6eb8fe586ce9b608bc048d5",
+      "mode": "0644",
+      "readbackSha256": "6e4b8ecd74e164e1d4a2a2a019185496d40110b9c6eb8fe586ce9b608bc048d5",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/reconciliation-selftest.log",
+      "bytes": 221639,
+      "sha256": "55f11579411c9ee70e0632f126645aa05bb80e7a454db49bd15276b0d40356a2",
+      "mode": "0644",
+      "readbackSha256": "55f11579411c9ee70e0632f126645aa05bb80e7a454db49bd15276b0d40356a2",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/root-reconciliation.json",
+      "bytes": 773,
+      "sha256": "fcf918d0cd6c753ac8ca8e3227016ef6db686a78fbe32559f5648f407cb42cb3",
+      "mode": "0644",
+      "readbackSha256": "fcf918d0cd6c753ac8ca8e3227016ef6db686a78fbe32559f5648f407cb42cb3",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/selector.log",
+      "bytes": 351,
+      "sha256": "4efe4402a16299834516eeba18071c7baeeac48a70b9ba040fbd5d0d678d81ec",
+      "mode": "0644",
+      "readbackSha256": "4efe4402a16299834516eeba18071c7baeeac48a70b9ba040fbd5d0d678d81ec",
+      "readbackMatches": true
+    },
+    {
+      "path": "verification/typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+      "mode": "0644",
+      "readbackSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+      "readbackMatches": true
+    }
+  ]
+}
