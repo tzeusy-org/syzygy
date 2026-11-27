@@ -7,10 +7,10 @@ import type { RepositoryId, RootCandidate } from '@syzygy/cap1-core';
 //
 // Case: two repositories declaring the same project identity (two
 // roots), and separately a project with no declaration (zero roots).
-// Oracle: the two-root case serves a contradiction and no single chosen
-// root; the zero-root case serves Unknown with the verbatim reason.
-// Expected outcomes come from RFC1-1's stated rule, written literally
-// here — never from the implementation's resolution logic.
+// Oracle: the two-root case returns a contradiction on the adjudication
+// route with no single chosen root. The zero-root case returns Unknown
+// with the verbatim reason. Expectations are literal from RFC1-1,
+// RFC1-21 and RFC2-24 reason 8.
 
 const repoA = 'repo-opaque-01' as RepositoryId;
 const repoB = 'repo-opaque-02' as RepositoryId;
@@ -28,18 +28,15 @@ describe('CAP1-REQ-006 — root-count violations surface, never repaired', () =>
     }
   });
 
-  it('scenario: two governance roots — a contradiction routed to the owner, no winner picked', () => {
+  it('scenario: two governance roots — a contradiction routed to adjudication with reason 8', () => {
     const result = designateRoots([candidate(repoA, true), candidate(repoB, true)]);
-    expect(result.status).toBe('contradiction');
-    if (result.status === 'contradiction') {
-      expect(result.kind).toBe('multiple-roots');
-      expect(result.roots).toContain(repoA);
-      expect(result.roots).toContain(repoB);
-      expect(result.routedTo).toBe('owner');
-    }
-    // No repository is served as the chosen root: the contradiction arm
-    // carries no `root` member at all.
-    expect('root' in result).toBe(false);
+    expect(result).toStrictEqual({
+      status: 'contradiction',
+      kind: 'multiple-roots',
+      roots: [repoA, repoB],
+      routedTo: 'adjudication',
+      reason: 'contradicted-pending-adjudication',
+    });
   });
 
   it('scenario: zero governance roots — Unknown with reason `missing-declaration` at the workspace level', () => {
@@ -63,17 +60,18 @@ describe('CAP1-REQ-006 — root-count violations surface, never repaired', () =>
     }
   });
 
-  it('falsifier: two roots are never resolved by any precedence — ordering changes nothing', () => {
-    // Freshest-file or first-found precedence would make the outcome
-    // order-sensitive or pick a winner; assert neither occurs.
-    const forward = designateRoots([candidate(repoA, true), candidate(repoB, true)]);
-    const reversed = designateRoots([candidate(repoB, true), candidate(repoA, true)]);
-    expect(forward.status).toBe('contradiction');
-    expect(reversed.status).toBe('contradiction');
-    if (forward.status === 'contradiction' && reversed.status === 'contradiction') {
-      expect([...forward.roots].sort()).toEqual([...reversed.roots].sort());
-      expect(forward.roots).toHaveLength(2);
-      expect(reversed.roots).toHaveLength(2);
+  it('falsifier: input order and observation time cannot select a root', () => {
+    const older = { ...candidate(repoA, true), observedAt: '2026-01-01T00:00:00Z' };
+    const newer = { ...candidate(repoB, true), observedAt: '2026-01-02T00:00:00Z' };
+    for (const candidates of [[older, newer], [newer, older]]) {
+      const result = designateRoots(candidates);
+      expect(result).toStrictEqual({
+        status: 'contradiction',
+        kind: 'multiple-roots',
+        roots: candidates.map((root) => root.repositoryId),
+        routedTo: 'adjudication',
+        reason: 'contradicted-pending-adjudication',
+      });
     }
   });
 
