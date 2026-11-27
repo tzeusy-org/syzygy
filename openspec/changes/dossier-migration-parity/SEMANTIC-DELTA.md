@@ -8,11 +8,11 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `openspec/changes/polaris-source-example-advice/proposed/polaris-generation/spec.md` (source-example advice version 2.36, row A-334, tag `polaris-dossier-source-example-advice-v2.36`; sha256 `e2688ca4162bd10065fbd87dcf6134ab8263a8039dbd3de62b4eb2de85771177`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-migration-parity/proposed/polaris-generation/spec.md`, sha256 `3f292ca99bec13885c08e2c4e84932156962de847022f3e35f8a910ed82f52be`) replaces that text, composed after version 2.36. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.36's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-choice-floor/proposed/polaris-generation/spec.md` (choice floor version 2.37, row A-336, tag `polaris-dossier-choice-floor-v2.37`; sha256 `02f7a314e827682f08e69e4d47a03479ff82c8896ecbddd99315e5f4e55bc380`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-migration-parity/proposed/polaris-generation/spec.md`, sha256 `e37ca0fc3053302a13ccb0c2ad87c990cdb887fe275568eb9a707425396682f4`) replaces that text, composed after version 2.37. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.37's, byte for byte.
 
 ## Carried unchanged
 
-[Observed] Of the predecessor requirement's 1814 lines, 1808 appear byte for byte and in order in the new text; 6 are amended in place (below) and none is removed. The new text was built from the predecessor bytes by a script that replaces or inserts only at anchors it asserts occur exactly once.
+[Observed] Of the predecessor requirement's 1829 lines, 1823 appear byte for byte and in order in the new text; 6 are amended in place (below) and none is removed. The new text was built from the predecessor bytes by a script that replaces or inserts only at anchors it asserts occur exactly once.
 
 ## Amended in place
 

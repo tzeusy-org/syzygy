@@ -294,17 +294,17 @@ authority and no model yet called on the current path.
 
 With the source-example advice version effective, Polaris has 39 requirements and 610 scenarios.
 
+[Choice floor amendment 2.37](openspec/changes/dossier-choice-floor) is agent-adopted in A-336.
+It replaces REQ-polaris-generation-034 from version 2.36, the source-example advice (263 to 265 scenarios): check advises each Pole
+of a v13, v14 or v15 draft with fewer than three choices or trade-offs on record in the understanding record.
+
+With the choice floor version effective, Polaris has 39 requirements and 612 scenarios.
+
 [Migration parity amendment 2.38](openspec/changes/dossier-migration-parity) is agent-adopted in A-269.
-It replaces REQ-polaris-generation-034 from version 2.36, the source-example advice (263 to 264 scenarios): the byte parity
+It replaces REQ-polaris-generation-034 from version 2.37, the choice floor (265 to 266 scenarios): the byte parity
 of the v10 and v11 migration excludes a figure that draws a witnessed edge to a withheld node; the 2.24 rule is kept.
 
-With the migration parity version effective, Polaris has 39 requirements and 611 scenarios.
-
-[Import facts amendment 2.39](openspec/changes/dossier-import-facts) is agent-adopted in A-270.
-It replaces REQ-polaris-generation-034 from version 2.38, the migration parity (264 to 276 scenarios): check stores the
-lexical import facts of every TypeScript file the bound screen admits whole as the check record's `importFacts`, read by nothing else.
-
-With the import facts version effective, Polaris has 39 requirements and 623 scenarios.
+With the migration parity version effective, Polaris has 39 requirements and 613 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and

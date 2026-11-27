@@ -1,6 +1,6 @@
 # Dossier migration parity — version 2.38
 
-[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10. It was drafted over derived-base views 2.34 with the placeholder label 2.NN and is rebuilt, for adoption, over source-example advice 2.36 as version 2.38 (design D1).
+[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10. It was drafted over derived-base views 2.34 with the placeholder label 2.NN and is rebuilt, for adoption, over choice floor 2.37 as version 2.38 (design D1; a first rebuild over source-example advice 2.36 was withdrawn when 2.37 landed first).
 
 ## Why
 

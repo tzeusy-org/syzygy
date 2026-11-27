@@ -6,13 +6,14 @@
 // On Actions the event must attest the exact checked-out PR merge and its ordered parents. Outside Actions
 // the explicit base is enough for a local comparison.
 import { execFileSync } from 'node:child_process';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { lstatSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const { fullSelection, matchesPullRequestCheckout, parseGitPathList, parseNameStatus, planSelection } =
   await import(join(ROOT, 'ci-selection.ts'));
+const { dossierCorpusReaders } = await import(join(ROOT, 'ci-reader-inventory.ts'));
 const { TIERS, testFiles, filesOfTier } = await import(join(ROOT, 'vitest.tiers.ts'));
 
 function argument(name) {
@@ -83,8 +84,26 @@ function readTrackedModules() {
   }
 }
 
+// A reviewed path is usable only when Git names one regular blob and the runner sees those same bytes.
+function readCheckoutBlob(head, path) {
+  try {
+    const entries = parseGitPathList(git('ls-tree', '-z', '--full-tree', head, '--', path));
+    if (entries.length !== 1) return undefined;
+    const entry = /^(?:100644|100755) blob ([0-9a-f]{40})\t(.+)$/u.exec(entries[0]);
+    if (entry?.[2] !== path) return undefined;
+    const file = join(ROOT, path);
+    if (!lstatSync(file).isFile()) return undefined;
+    const blob = git('cat-file', 'blob', entry[1]);
+    return blob.equals(readFileSync(file)) ? blob : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 const { head, changed, fallbackReason } = changeInputs();
-const plan = fallbackReason === null ? planSelection(changed, readTrackedModules) : fullSelection([fallbackReason]);
+const plan = fallbackReason === null
+  ? planSelection(changed, readTrackedModules, (modules) => dossierCorpusReaders(modules, (path) => readCheckoutBlob(head, path)))
+  : fullSelection([fallbackReason]);
 const population = testFiles(ROOT);
 const tiers = Object.fromEntries(TIERS.map((tier) => [tier, filesOfTier(population, tier)]));
 

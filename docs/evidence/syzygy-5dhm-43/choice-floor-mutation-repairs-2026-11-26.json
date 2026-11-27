@@ -1,0 +1,84 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-26T14:45:29.981Z",
+  "commit": "d208c61356239af8f8b0cd944f9d6441010be3af",
+  "subject": {
+    "packages/polaris-dossier/src/reader-advice.ts": "5d2f5917d4f0e6f81b4ed109848ceb5e315277f651ba953d40471e68ef4d3fdb"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --testTimeout=120000 --reporter=json --outputFile=<scratch>/mutation-<id>.json; for a Python or JSON source, python3 <each listed command> (a non-zero exit is a failure)",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 900 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/reader-advice.ts": [
+      "packages/polaris-dossier/src/reader-standards.test.ts",
+      "packages/polaris-dossier/src/check.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "exitCode": 0,
+      "tests": 402,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "deep-dive-ignored",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "for (const dive of list(doc['deepDives'])) if (isRecord(dive) && counted.has(text(dive['sectionId']) ?? '')) citedPathsIn(dive, cited);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 402,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) attributes by any citation of an item, by a citation at any depth of a section, and by the Pole's deep dives"
+      ],
+      "seconds": 52
+    },
+    {
+      "id": "deep-dive-any-pole",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "if (isRecord(dive) && counted.has(text(dive['sectionId']) ?? '')) citedPathsIn(dive, cited);",
+      "new": "if (isRecord(dive)) citedPathsIn(dive, cited);",
+      "killed": false,
+      "killedBy": null,
+      "tests": 402,
+      "failedTests": [],
+      "seconds": 72
+    },
+    {
+      "id": "first-citation-only",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "citedPathsIn(entry['citations'] === undefined ? [] : { citations: entry['citations'] }, new Set())",
+      "new": "citedPathsIn({ citations: list(entry['citations']).slice(0, 1) }, new Set())",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 402,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) attributes by any citation of an item, by a citation at any depth of a section, and by the Pole's deep dives"
+      ],
+      "seconds": 64
+    },
+    {
+      "id": "nesting-ignored",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "    else citedPathsIn(member, into);",
+      "new": "    else if (key !== 'children' && key !== 'items' && key !== 'rows') citedPathsIn(member, into);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 402,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the choice floor (version 2.33) attributes by any citation of an item, by a citation at any depth of a section, and by the Pole's deep dives"
+      ],
+      "seconds": 89
+    }
+  ],
+  "equivalent": [],
+  "summary": {
+    "mutants": 4,
+    "killed": 3,
+    "survived": 1,
+    "byTimeout": 0,
+    "equivalentNotRun": 0
+  }
+}
