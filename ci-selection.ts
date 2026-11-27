@@ -1,4 +1,4 @@
-// Which tests a pull request runs (syzygy-qu5j). Pure: the caller supplies the changed paths and the module texts, and
+// Which tests a pull request runs (syzygy-qu5j). The caller supplies the changed paths and reads module texts on demand, and
 // `scripts/select_ci_tests.mjs` turns the plan into test files through Vitest's own module graph. Merge-group runs never
 // read this: the tree that lands is always tested whole.
 //
@@ -85,22 +85,36 @@ export function namesPath(text: string, token: string): boolean {
   return new RegExp(`['"\`/]${escaped}['"\`/]`, 'u').test(text);
 }
 
+export function fullSelection(reasons: readonly string[]): SelectionPlan {
+  return { mode: 'full', reasons, code: [], documents: [], related: [] };
+}
+
 /**
- * The plan for one pull request. `modules` maps each tracked workspace module (repository-relative) to its text; only
- * modules are readers, so a document naming another document selects nothing by itself.
+ * Only changes eligible for selection need the module inventory. The reader returns undefined when it cannot supply
+ * every tracked workspace module (repository-relative) and its exact text.
  */
-export function planSelection(changed: readonly ChangedPath[], modules: ReadonlyMap<string, string>): SelectionPlan {
-  const reasons: string[] = [];
-  const code = new Set<string>();
-  const documents: Array<{ path: string; tokens: string[]; readers: string[] }> = [];
+export function planSelection(
+  changed: readonly ChangedPath[],
+  readModules: () => ReadonlyMap<string, string> | undefined,
+): SelectionPlan {
+  if (changed.length === 0) return { mode: 'selected', reasons: [], code: [], documents: [], related: [] };
+  const reasons = new Set<string>();
   for (const change of changed) {
     for (const path of change.previous === undefined ? [change.path] : [change.previous, change.path]) {
       const trigger = FULL_RUN_TRIGGERS.find(({ test }) => test.test(path));
-      if (trigger !== undefined) reasons.push(`${trigger.rule}: ${path}`);
+      if (trigger !== undefined) reasons.add(`${trigger.rule}: ${path}`);
     }
     const removed = change.status.startsWith('D') || change.status.startsWith('R');
     const removedPath = change.status.startsWith('R') ? change.previous ?? change.path : change.path;
-    if (removed && WORKSPACE.test(removedPath)) reasons.push(`workspace module removed or renamed: ${removedPath}`);
+    if (removed && WORKSPACE.test(removedPath)) reasons.add(`workspace module removed or renamed: ${removedPath}`);
+  }
+  if (reasons.size > 0) return fullSelection([...reasons]);
+  const modules = readModules();
+  if (modules === undefined) return fullSelection(['Tracked workspace modules could not be read exactly']);
+
+  const code = new Set<string>();
+  const documents: Array<{ path: string; tokens: string[]; readers: string[] }> = [];
+  for (const change of changed) {
     if (MODULE.test(change.path) && !change.status.startsWith('D')) code.add(change.path); // a removed workspace one has already made the run full
     const names = change.previous === undefined ? [change.path] : [change.previous, change.path];
     const tokens = [...new Set(names.flatMap(readerTokens))];
@@ -113,7 +127,6 @@ export function planSelection(changed: readonly ChangedPath[], modules: Readonly
     const readers = [...modules].filter(([module, text]) => module !== change.path && reads(module, text)).map(([module]) => module).sort();
     documents.push({ path: change.path, tokens, readers });
   }
-  if (reasons.length > 0) return { mode: 'full', reasons: [...new Set(reasons)], code: [], documents: [], related: [] };
   const related = new Set<string>(code);
   for (const { readers } of documents) for (const reader of readers) related.add(reader);
   return { mode: 'selected', reasons: [], code: [...code].sort(), documents, related: [...related].sort() };
@@ -136,19 +149,25 @@ export function matchesPullRequestCheckout(
     typeof eventHead === 'string' && GITHUB_SHA.test(eventHead) && first === base && second === eventHead;
 }
 
-/** Read complete NUL-delimited Git records without quoting or replacing pathname bytes. */
-export function parseNameStatus(output: Uint8Array): ChangedPath[] {
+/** Read complete NUL-delimited Git fields without quoting or replacing pathname bytes. */
+export function parseGitPathList(output: Uint8Array): string[] {
   if (output.length === 0) return [];
   const fields = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(output).split('\0');
-  if (fields.pop() !== '') throw new Error('unreadable Git name-status records');
+  if (fields.pop() !== '' || fields.includes('')) throw new Error('unreadable Git path records');
+  return fields;
+}
+
+/** Read Git's NUL-delimited status and pathname fields, including the extra name for copies and renames. */
+export function parseNameStatus(output: Uint8Array): ChangedPath[] {
+  const fields = parseGitPathList(output);
   const paths: ChangedPath[] = [];
   for (let at = 0; at < fields.length;) {
     const status = fields[at++];
     const first = fields[at++];
-    if (first === undefined || first === '' || status === undefined) throw new Error('unreadable Git name-status records');
+    if (first === undefined || status === undefined) throw new Error('unreadable Git name-status records');
     if (/^[RC](?:0\d\d|100)$/u.test(status)) {
       const second = fields[at++];
-      if (second === undefined || second === '') throw new Error('unreadable Git name-status records');
+      if (second === undefined) throw new Error('unreadable Git name-status records');
       paths.push({ status, path: second, previous: first });
     } else if (/^(?:[ADT]|M(?:0\d\d|100)?)$/u.test(status)) {
       paths.push({ status, path: first });

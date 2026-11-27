@@ -11,7 +11,8 @@ import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const { matchesPullRequestCheckout, parseNameStatus, planSelection } = await import(join(ROOT, 'ci-selection.ts'));
+const { fullSelection, matchesPullRequestCheckout, parseGitPathList, parseNameStatus, planSelection } =
+  await import(join(ROOT, 'ci-selection.ts'));
 const { TIERS, testFiles, filesOfTier } = await import(join(ROOT, 'vitest.tiers.ts'));
 
 function argument(name) {
@@ -69,20 +70,21 @@ function changeInputs() {
   }
 }
 
-function selectionPlan(changed, fallbackReason) {
-  if (fallbackReason !== null) return { mode: 'full', reasons: [fallbackReason], code: [], documents: [], related: [] };
-  const modules = new Map();
-  if (changed.length > 0) {
-    const paths = gitText('ls-files', '-z', '--', 'apps/*/src/**', 'packages/*/src/**', 'packages/*/test-support/**');
-    for (const path of paths.split('\0')) {
-      if (/\.(ts|mts|cts|tsx|js|mjs|cjs)$/u.test(path)) modules.set(path, readFileSync(join(ROOT, path), 'utf8'));
+function readTrackedModules() {
+  try {
+    const modules = new Map();
+    const paths = parseGitPathList(git('ls-files', '-z', '--', 'apps/*/src/**', 'packages/*/src/**', 'packages/*/test-support/**'));
+    for (const path of paths) {
+      if (/\.(ts|mts|cts|tsx|js|mjs|cjs)$/u.test(path)) modules.set(path, utf8.decode(readFileSync(join(ROOT, path))));
     }
+    return modules;
+  } catch {
+    return undefined;
   }
-  return planSelection(changed, modules);
 }
 
 const { head, changed, fallbackReason } = changeInputs();
-const plan = selectionPlan(changed, fallbackReason);
+const plan = fallbackReason === null ? planSelection(changed, readTrackedModules) : fullSelection([fallbackReason]);
 const population = testFiles(ROOT);
 const tiers = Object.fromEntries(TIERS.map((tier) => [tier, filesOfTier(population, tier)]));
 

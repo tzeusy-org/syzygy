@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
-  FULL_RUN_TRIGGERS, ROOTED, WALKS, matchesPullRequestCheckout, namesPath, parseNameStatus,
-  planSelection, readerTokens, type ChangedPath,
+  FULL_RUN_TRIGGERS, ROOTED, WALKS, matchesPullRequestCheckout, namesPath, parseGitPathList, parseNameStatus,
+  planSelection as select, readerTokens, type ChangedPath,
 } from '../../../ci-selection.js';
 
 // syzygy-qu5j: which tests a pull request runs. The module graph itself is Vitest's; these pin the plan handed to it.
 const M = (status: string, path: string, previous?: string): ChangedPath => (previous === undefined ? { status, path } : { status, path, previous });
+const planSelection = (changed: readonly ChangedPath[], modules: ReadonlyMap<string, string>) => select(changed, () => modules);
 const MODULES = new Map<string, string>([
   ['apps/a/src/trajectory.ts', "export const trajectory = 1;"],
   ['apps/a/src/rooted.testkit.ts', "export const ROOT = fileURLToPath(new URL('../../../', import.meta.url));"],
@@ -93,6 +94,21 @@ describe('the pull-request selection plan', () => {
   it('selects nothing for an empty diff', () => {
     expect(planSelection([], MODULES)).toEqual({ mode: 'selected', reasons: [], code: [], documents: [], related: [] });
   });
+
+  it('uses the exact full trigger or empty diff without reading the module inventory', () => {
+    const unreadable = () => { throw new Error('unexpected module read'); };
+    expect(select([M('M', '.github/workflows/synthetic.yml')], unreadable).reasons)
+      .toEqual(['workflow: .github/workflows/synthetic.yml']);
+    expect(select([], unreadable)).toMatchObject({ mode: 'selected', related: [] });
+  });
+
+  it('runs every tier when an otherwise selectable diff has no exact module inventory', () => {
+    const change = [M('M', 'apps/a/src/trajectory.ts')];
+    expect(select(change, () => undefined)).toEqual({
+      mode: 'full', reasons: ['Tracked workspace modules could not be read exactly'], code: [], documents: [], related: [],
+    });
+    expect(select(change, () => MODULES).mode).toBe('selected');
+  });
 });
 
 describe('its parts', () => {
@@ -151,9 +167,19 @@ describe('its parts', () => {
     expect(parseNameStatus(new Uint8Array())).toEqual([]);
   });
 
+  it('preserves every listed pathname and refuses ambiguous inventory bytes', () => {
+    const paths = ['first\u00e9.ts', ' \tsecond\n.ts'];
+    const encoder = new TextEncoder();
+    expect(parseGitPathList(encoder.encode(`${paths.join('\0')}\0`))).toEqual(paths);
+    expect(parseGitPathList(new Uint8Array())).toEqual([]);
+    expect(() => parseGitPathList(encoder.encode('unterminated.ts'))).toThrow();
+    expect(() => parseGitPathList(encoder.encode('extra.ts\0\0'))).toThrow();
+    expect(() => parseGitPathList(Uint8Array.of(0xff, 0))).toThrow();
+  });
+
   it('refuses malformed or unrepresentable Git records', () => {
     for (const record of ['M', 'M\0a.ts', 'M\0\0', 'R099\0old.ts\0', 'C101\0old.md\0new.md\0', '?\0a.ts\0']) {
-      expect(() => parseNameStatus(new TextEncoder().encode(record))).toThrow(/unreadable Git name-status/u);
+      expect(() => parseNameStatus(new TextEncoder().encode(record))).toThrow(/unreadable Git (?:path|name-status)/u);
     }
     expect(() => parseNameStatus(Uint8Array.of(77, 0, 0xff, 0))).toThrow();
   });
