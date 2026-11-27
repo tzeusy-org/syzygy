@@ -12,6 +12,10 @@
 
 [Inferred] Three is the move's number. A floor stated as a count could read as a quota, so the detail ends "never record one its source does not show", and the advice sets no outcome: an author whose source shows two choices is free to record two. The review still judges whether each recorded item is supported.
 
+## Which schemas
+
+[Inferred] Version 2.33 (the figure plan) added draft schema v14 and version 2.35 schema v15, each carrying every member a v13 draft may carry, and each draws its worth-knowing advice as a v13 draft does. The choice floor reads only the understanding record, the Poles, the sections and the deep dives, which all three schemas share, so it applies to v13, v14 and v15 drafts alike. `check` parses only v13 drafts today; the floor gates on `hasWorthKnowingForm`, the same gate as the worth-knowing count, which the implementation of the later schemas extends. A scenario and the falsifier state the v14 and v15 case so that implementation cannot leave them out.
+
 ## Why no brief change
 
 [Inferred] The bead's approach puts the floor in `reader-advice.ts` as advice only. Check's report already reaches the author on every check; the brief, draft schema and renderer are untouched, so the comprehension-regression rule of `CONTRIBUTING.md`, which applies to those three, is not engaged.

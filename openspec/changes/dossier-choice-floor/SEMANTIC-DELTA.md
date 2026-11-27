@@ -2,17 +2,17 @@
 
 ## Predecessor
 
-[Observed] A-315, REQ-polaris-generation-034 v2.32 at `0e0b281d192737a8e8415b24be326355c464dd97`, `openspec/changes/dossier-question-kind-floor/proposed/polaris-generation/spec.md`, SHA-256 `4439371414c716ba52493066bfe9908029c8378e06594454cf8e343939590b32`, 220 scenario headings. It is the effective REQ-034 on `origin/main` at `e852d0c9a` (PR #1008), the last change to that requirement there.
+[Observed] A-334, REQ-polaris-generation-034 v2.36 (the source-example advice) at `8e64522613a9f76eb2c9e37896954b90f808afe6`, `openspec/changes/polaris-source-example-advice/proposed/polaris-generation/spec.md`, SHA-256 `e2688ca4162bd10065fbd87dcf6134ab8263a8039dbd3de62b4eb2de85771177`, 263 scenario headings. It is the effective REQ-034 on `origin/main` at `98c077705`, the last change to that requirement there. This amendment was first built as 2.33 over the question-kind floor 2.32 (A-315); the figure plan 2.33 (A-65), the screened derived base 2.35 (A-333) and the source-example advice 2.36 (A-334) landed first, so it is rebuilt over 2.36.
 
 ## Amended in place
 
-- The title and the banner paragraph name version 2.33, its predecessor and its tag.
+- The title and the banner paragraph name version 2.37, its predecessor and its tag.
 - The event-response form's Observable, Oracle and Falsifier lines each gain one sentence for the choice floor; their predecessor bytes are kept as each line's prefix.
 
 ## Added
 
-- One paragraph immediately after the worth-knowing count advice paragraph: check's `readerAdvice.choiceFloor` for a v13 draft, rule `choice-floor` version 1, what is on record, how an item is attributed to a Pole, the threshold of three and the literal detail.
-- Two scenarios immediately after the last scenario: a Pole below the floor advised and one at three not; Inferred items counted once per Pole, a draft with no Poles, and an earlier schema. The proposed requirement has 222 scenarios; the 220 predecessor scenarios are byte-identical.
+- One paragraph immediately after the worth-knowing count advice paragraph: check's `readerAdvice.choiceFloor` for a v13, v14 or v15 draft, rule `choice-floor` version 1, what is on record, how an item is attributed to a Pole, the threshold of three and the literal detail.
+- Two scenarios appended after the last scenario, which follows the event-response form in the predecessor: a Pole below the floor advised and one at three not; Inferred items counted once per Pole, a draft with no Poles, and an earlier schema. The proposed requirement has 265 scenarios; the 263 predecessor scenarios are byte-identical and keep their order.
 
 ## Carried and reversed
 
