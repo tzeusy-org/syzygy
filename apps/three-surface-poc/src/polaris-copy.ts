@@ -96,6 +96,7 @@ export const POLARIS_COPY = [
   { id: 'opening.unavailable.catalog', role: 'project-fact', kind: 'lede', text: 'The project catalog is unknown.' },
   { id: 'opening.unavailable-evidence', role: 'project-fact', kind: 'lede', text: 'Evidence for this group is unavailable.' },
   { id: 'opening.empty-catalog', role: 'project-fact', kind: 'lede', text: 'No items were declared by admitted sources.' },
+  { id: 'opening.populated-catalog', role: 'project-fact', kind: 'lede', text: 'This catalog lists its entries and shows their source status.' },
   { id: 'opening.unknown-catalog', role: 'project-fact', kind: 'lede', text: 'The declarations for this class are unknown.' },
   { id: 'group.capability-detail', role: 'project-fact', kind: 'heading', text: 'One capability in depth' },
   { id: 'group.evidence-and-gaps', role: 'project-fact', kind: 'heading', text: 'Evidence and gaps' },

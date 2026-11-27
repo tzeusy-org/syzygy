@@ -5,6 +5,7 @@ import type { PocModel, ProjectShape, ProjectShapeClaim } from '@syzygy/three-su
 
 import { NarrativeRegistry } from './polaris-narrative.js';
 import { renderPolarisPage, renderPolarisPresentation } from './polaris.js';
+import { pocRoutes } from './routes.js';
 import { SHARED_FIXTURE_TIMEOUT_MS, buildFixtureModel, sharedFixtureModels } from './test-model-fixture.js';
 import {
   ADMITTING_AUTHORITY,
@@ -311,6 +312,108 @@ describe('Polaris narrative claim blocks (PWB-REQ-014; RFC7-2, RFC7-3, RFC7-9)',
     expect(unknown.html).toContain('data-unknown-reason="unconsented-source-or-provider"');
     const populated = group(shared.get('observed-with-baseline'));
     expect(populated.html).not.toMatch(/data-polaris-group-opening="polaris-class-baseline-spec"[^>]*>No items were declared/);
+  });
+
+  const catalogGroupId = 'polaris-class-catalog-entry';
+  const catalogChildIds = ['claim:class:catalog-entry', 'claim:item:catalog-entry:Bus', 'claim:item:catalog-entry:Atlas', 'claim:item:catalog-entry:Bishop'];
+  const catalogHosts = ['127.0.0.1:1', 'tzeusy.parrot-hen.ts.net'];
+  const catalogReason = 'contradicted-pending-adjudication';
+  const catalogGap = `polaris-gap-${catalogReason}`;
+
+  async function catalogResponses(input: PocModel, host: string) {
+    const routes = pocRoutes(() => input);
+    const get = async (path: string): Promise<string> => {
+      const route = routes.find((candidate) => candidate.method === 'GET' && candidate.path === path);
+      if (route === undefined) throw new Error(`Missing Polaris route: ${path}`);
+      const response = await route.handle({ request: { method: 'GET', path, headers: { host }, query: new URLSearchParams() } });
+      expect(response.status, `${host} ${path}`).toBe(200);
+      if (typeof response.body !== 'string') throw new Error(`Expected a string response at ${path}`);
+      return response.body;
+    };
+    const html = await get('/polaris');
+    const envelope = JSON.parse(await get('/api/poc/polaris')) as { narrative: ReturnType<typeof renderPolarisPresentation>['narrative'] };
+    const start = html.indexOf('data-polaris-class="catalog-entry"');
+    return {
+      html, group: html.slice(start, html.indexOf('</section>', start)),
+      openings: envelope.narrative.openings.filter((opening) => opening.groupId === catalogGroupId),
+    };
+  }
+
+  it('opens the populated catalog with only its existing declaration and source-status children', async () => {
+    for (const host of catalogHosts) {
+      const { group, openings } = await catalogResponses(shared.get('observed'), host);
+      expect([...group.matchAll(/data-polaris-item="([^"]+)"/g)].map((match) => match[1]), host).toEqual(catalogChildIds.slice(1));
+      expect(group, host).toMatch(/<\/h3>\s*<p[^>]*data-polaris-group-opening="polaris-class-catalog-entry"[^>]*>This catalog lists its entries and shows their source status\.<\/p>/);
+      expect(openings, host).toEqual([{
+        kind: 'group-opening', role: 'epistemic-claim', presentation: 'presentation-artifact', citable: false,
+        groupId: catalogGroupId, groupClass: 'catalog', label: 'Observed', childIds: catalogChildIds,
+      }]);
+      expect(group, host).not.toContain('data-opening-child=');
+    }
+  });
+
+  it('retains each Unknown populated catalog child and routes only to its exact existing remedy', async () => {
+    const base = shared.get('observed');
+    const shape = base.projectShape;
+    if (shape.kind !== 'observed') throw new Error('synthetic project shape unavailable');
+    const unknownIds = ['claim:item:catalog-entry:Bus', 'claim:item:catalog-entry:Atlas'];
+    const makeAdverse = (route: string): PocModel => ({
+      ...base,
+      projectShape: {
+        ...shape,
+        items: shape.items.map((item) => unknownIds.includes(item.claim.claimId) ? {
+          ...item, state: 'contradicted', unknownReason: catalogReason,
+          claim: {
+            ...item.claim,
+            epistemic: { label: 'Unknown', reasons: { primary: catalogReason, secondary: [] }, tier: 'suspended', freshness: 'fresh' },
+            resolutionRoutes: [{ reason: catalogReason, route, actor: 'owner', verb: 'adjudicate', target: 'act' }],
+          },
+        } : item),
+      },
+    });
+    for (const host of catalogHosts) {
+      const { html, group, openings } = await catalogResponses(makeAdverse('Owner adjudication'), host);
+      expect(openings, host).toEqual([expect.objectContaining({ label: 'Unknown', childIds: catalogChildIds })]);
+      expect(group, host).toMatch(/data-claim-role="epistemic-claim"[^>]*>This catalog lists its entries and shows their source status\.<\/p>\s*<p><span[^>]*>Unknown<\/span>/);
+      const targets = [...group.matchAll(/<a href="#([^"]+)" data-opening-child="([^"]+)"[^>]*data-copy-role="action-label"/g)];
+      expect(targets.map((match) => [match[1], match[2]]), host).toEqual(unknownIds.map((id) => [catalogGap, id]));
+      expect(html, host).toMatch(/id="polaris-gap-contradicted-pending-adjudication"[^>]*>[\s\S]*?Route: Owner adjudication\./);
+      for (const id of unknownIds) {
+        expect(group, host).toContain(`data-unknown-disclosure="${id}"`);
+      }
+
+      const differentRemedy = await catalogResponses(makeAdverse('Owner adjudication for this item only'), host);
+      expect(differentRemedy.openings, host).toEqual([]);
+      expect(differentRemedy.group, host).not.toContain('data-polaris-group-opening=');
+      expect(differentRemedy.group, host).toContain('Owner adjudication for this item only');
+    }
+  });
+
+  it('keeps the populated catalog source-status remedy in its own section when source status is Unknown', async () => {
+    const base = shared.get('observed');
+    const shape = base.projectShape;
+    if (shape.kind !== 'observed') throw new Error('synthetic project shape unavailable');
+    const aggregate = shape.classes['catalog-entry'];
+    const refused = shared.get('rejected').projectShape.claim;
+    const input: PocModel = {
+      ...base,
+      projectShape: {
+        ...shape,
+        classes: {
+          ...shape.classes,
+          'catalog-entry': {
+            ...aggregate,
+            claim: { ...aggregate.claim, epistemic: refused.epistemic, resolutionRoutes: refused.resolutionRoutes },
+          },
+        },
+      },
+    };
+    for (const host of catalogHosts) {
+      const { group, openings } = await catalogResponses(input, host);
+      expect(openings, host).toEqual([expect.objectContaining({ label: 'Unknown', childIds: catalogChildIds })]);
+      expect(group, host).toContain('href="#polaris-class-status-catalog-entry" data-opening-child="claim:class:catalog-entry"');
+      expect(group, host).toMatch(/id="polaris-class-status-catalog-entry"><div class="unknown-disclosure" data-unknown-disclosure="claim:class:catalog-entry"[^>]*>[\s\S]*?data-unknown-reason="unconsented-source-or-provider"/);
+    }
   });
 
   it('binds every named diagram element to its source declaration anchor', () => {
