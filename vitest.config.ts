@@ -29,7 +29,7 @@ export default defineConfig({
     // host, and a worker per core oversubscribed it. Vitest takes the bound
     // only here, for every project; a project may set no worker count.
     maxWorkers: '50%',
-    setupFiles: [fileURLToPath(new URL('./vitest.setup.ts', import.meta.url))],
+    setupFiles: [fileURLToPath(new URL('./vitest.setup.ts', import.meta.url)), fileURLToPath(new URL('./vitest.read-census.setup.ts', import.meta.url))],
     projects: [
       tier('unit', {
         include: WORKSPACE_TESTS,
