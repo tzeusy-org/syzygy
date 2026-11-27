@@ -22,7 +22,7 @@ export interface ReaderAdvice {
   readonly advisories: readonly ReaderAdvisory[];
   /** The worth-knowing count advice (version 2.26): on a schema-v13 draft only, so an earlier draft's advice keeps its bytes. */
   readonly worthKnowing?: readonly WorthKnowingAdvisory[];
-  /** The choice floor (version 2.37): on a draft with the worth-knowing form (schema v13 and later), like `worthKnowing`. */
+  /** The choice floor (version 2.37): on a draft with the worth-knowing form (schema v13 today), like `worthKnowing`. */
   readonly choiceFloor?: readonly ChoiceFloorAdvisory[];
 }
 

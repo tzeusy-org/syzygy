@@ -226,7 +226,7 @@ describe('reader advice: the worth-knowing count (version 2.26)', () => {
   });
 });
 
-// Version 2.37 (syzygy-5dhm.43): the choice floor, on a draft with the worth-knowing form (schema v13 and later). Literals from the specification.
+// Version 2.37 (syzygy-5dhm.43): the choice floor, on a draft with the worth-knowing form (schema v13 today). Literals from the specification.
 describe('reader advice: the choice floor (version 2.37)', () => {
   const V13 = 'polaris-dossier-local-draft-v13';
   const cite = (path: string) => ({ id: `c-${path}`, path, startLine: 1, endLine: 1 });
