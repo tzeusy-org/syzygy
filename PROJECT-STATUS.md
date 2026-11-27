@@ -299,6 +299,12 @@ It replaces REQ-polaris-generation-034 from version 2.36, the source-example adv
 of a v13, v14 or v15 draft with fewer than three choices or trade-offs on record in the understanding record.
 
 With the choice floor version effective, Polaris has 39 requirements and 612 scenarios.
+
+[Test-name recognizers amendment 2.38](openspec/changes/dossier-test-names) is agent-adopted in A-337.
+It replaces REQ-polaris-generation-034 from version 2.37, the choice floor (265 to 271 scenarios): each operator-agent
+render reads declared test names lexically and publishes them per unit on `reference/test-names.html`.
+
+With the test-name recognizers version effective, Polaris has 39 requirements and 618 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
