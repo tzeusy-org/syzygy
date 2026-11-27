@@ -53,7 +53,7 @@ export const PWB_INDEX_DEPTH = 3;
 export const PILLAR_KEYS = ['heart-and-soul', 'legends-and-lore', 'spec-and-spine', 'lay-and-land', 'craft-and-care'] as const;
 export type PillarKey = (typeof PILLAR_KEYS)[number];
 
-const PILLAR_LABELS: Readonly<Record<PillarKey, string>> = {
+export const PILLAR_LABELS: Readonly<Record<PillarKey, string>> = {
   'heart-and-soul': 'Heart and Soul',
   'legends-and-lore': 'Legends and Lore',
   'spec-and-spine': 'Spec and Spine',

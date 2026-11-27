@@ -781,9 +781,9 @@ export function extractSource(
 // `Precedence Order When Layers Disagree` is admitted only as the exact
 // seven-row registry vocabulary. Nothing else in the root mints anything.
 
-const ROOT_SUMMARY_HEADING = 'Key Architectural Facts';
-const PRECEDENCE_HEADING = 'Precedence Order When Layers Disagree';
-const PRECEDENCE_COLUMNS = ['#', 'Layer', 'Owns', 'Home'] as const;
+export const ROOT_SUMMARY_HEADING = 'Key Architectural Facts';
+export const PRECEDENCE_HEADING = 'Precedence Order When Layers Disagree';
+export const PRECEDENCE_COLUMNS = ['#', 'Layer', 'Owns', 'Home'] as const;
 const LAYER_ORDINALS = [1, 2, 3, 4, 5, 6, 7] as const;
 export type LayerOrdinal = (typeof LAYER_ORDINALS)[number];
 
@@ -807,7 +807,7 @@ export const LAYER_ROWS: readonly LayerRow[] = [
 export const ROSTER_HOME_TEMPLATE = 'roster/{butler}/';
 export const INERT_HOME = 'src/, alembic/, tests/';
 
-const STATED_COUNT_FACTS = ['catalog-count:Staffers', 'catalog-count:Butlers'] as const;
+export const STATED_COUNT_FACTS = ['catalog-count:Staffers', 'catalog-count:Butlers'] as const;
 type StatedCountFact = (typeof STATED_COUNT_FACTS)[number];
 
 export interface StatedCount {
