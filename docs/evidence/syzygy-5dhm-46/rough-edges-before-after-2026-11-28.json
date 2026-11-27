@@ -1,0 +1,99 @@
+{
+  "subject": {
+    "tree": "syzygy (this repository)",
+    "commit": "d652b7dcc445f3c0f2f87dd2390aab47bcd2ff60",
+    "policy": "polaris-butlers-project-shape-secrets dossier-declared-source/2.0.0",
+    "policySha256": "8c10531f57d129ad5d402e53d7d9fdc741387f6eaab701bbdb46419181b11967"
+  },
+  "before": {
+    "markersRead": 0,
+    "pagesListingMarkers": 0,
+    "basis": "no rule before REQ-polaris-generation-034 version 2.43 read a rough-edge marker"
+  },
+  "after": {
+    "format": "polaris-dossier-rough-edges/1",
+    "recognizer": {
+      "rule": "rough-edge-marker",
+      "ruleVersion": 1,
+      "label": "observed",
+      "candidates": 2334,
+      "secretPathsLeftOut": 0,
+      "setApart": 0,
+      "observed": 961,
+      "unknown": 1373,
+      "valuesLeftOut": 0,
+      "markers": 19,
+      "filesNotListed": 1334
+    },
+    "markersByKind": {
+      "todo": 1,
+      "fixme": 0,
+      "hack": 0,
+      "deprecation": 0,
+      "issue-reference": 18
+    },
+    "unknownFilesListedByReason": {
+      "unparsed/unterminated": 10,
+      "secret-detector-match": 28,
+      "active-content": 1
+    },
+    "uncounted": {
+      "basis": "Unknown, never zero: no row of units counts a file not read for markers",
+      "unknownFiles": 1373
+    },
+    "units": [
+      {
+        "unit": null,
+        "files": 1,
+        "markers": 0,
+        "byKind": {
+          "todo": 0,
+          "fixme": 0,
+          "hack": 0,
+          "deprecation": 0,
+          "issue-reference": 0
+        }
+      },
+      {
+        "unit": ".syzygy",
+        "files": 10,
+        "markers": 0,
+        "byKind": {
+          "todo": 0,
+          "fixme": 0,
+          "hack": 0,
+          "deprecation": 0,
+          "issue-reference": 0
+        }
+      },
+      {
+        "unit": "apps",
+        "files": 197,
+        "markers": 9,
+        "byKind": {
+          "todo": 1,
+          "fixme": 0,
+          "hack": 0,
+          "deprecation": 0,
+          "issue-reference": 8
+        }
+      },
+      {
+        "unit": "docs",
+        "files": 753,
+        "markers": 10,
+        "byKind": {
+          "todo": 0,
+          "fixme": 0,
+          "hack": 0,
+          "deprecation": 0,
+          "issue-reference": 10
+        }
+      }
+    ],
+    "unitsNotListed": 0,
+    "markersListed": 19,
+    "markersNotListed": 0,
+    "deriveElapsedMs": 28990
+  }
+}
