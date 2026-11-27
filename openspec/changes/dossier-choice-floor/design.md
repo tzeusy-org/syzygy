@@ -24,7 +24,7 @@
 
 [Observed] One fresh-context review, `docs/reviews/syzygy-5dhm-43/R-CHOICE-FLOOR-1-RAW.md`, recorded `REVISE` over commit `a3bb87f6` with one blocking finding (F1) and five non-blocking (F2 to F6). Each was repaired; none was overruled, and under D10 no confirmation round was run, so no review has read the repaired bytes.
 
-- F1, F2: row A-321 lists every non-merge commit of the change in full in its commit column, and its revert column reverts them newest first after the commit that adds the row.
+- F1, F2: the row (A-321 then, A-336 since the rebuild as 2.37) lists every non-merge commit of the change in full, newest first, in its What-changed cell, and its revert cell reverts them all after first reverting the commit that last amends the row. Its commit cell holds the one specification commit the snapshot and tag bind, because the reconciler accepts exactly one full hash there for a tagged row.
 - F3: a test where only an item's second citation names the Pole's file.
 - F4: tests where only a nested child and only a steps item cite the attributing file.
 - F5: a deep dive now attributes to the Pole of its `sectionId`, in the code and in the requirement's paragraph, scenario and falsifier; the sentence above is narrowed to match.
