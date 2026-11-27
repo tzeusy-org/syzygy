@@ -657,7 +657,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 597,
+      "scenarios": 579,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1286,25 +1286,7 @@
             "A figure that mixes levels is advised",
             "Figure advice gates nothing",
             "Schema v14 joins the system model to the worth-knowing mark",
-            "Brief v22 asks for the figure plan",
-            "Pruned view prints its chip",
-            "Hide without a reason refused",
-            "Base element keeps Syzygy's words",
-            "Group places base elements in the draft's element",
-            "Select and group together",
-            "Group into a third-level element refused",
-            "Directory containment keeps the root",
-            "One manifest declaring two packages",
-            "Draft element taking a base element's name refused",
-            "Cited arrow joins two base elements",
-            "Path the map does not list refused",
-            "Base element hidden and grouped refused",
-            "Too many base elements refused",
-            "Unknown base renders a notice",
-            "Chip links from a deeper page",
-            "Schema v14 and earlier keep their bytes under base views",
-            "Figure advice reads no base view",
-            "Brief v23 states the derived base"
+            "Brief v22 asks for the figure plan"
           ]
         },
         "REQ-polaris-generation-035": {

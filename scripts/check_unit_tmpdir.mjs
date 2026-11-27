@@ -229,6 +229,24 @@ async function fullUnit() {
     args: [entry, 'run', '--project', 'unit', '--allowOnly=false', '--passWithNoTests=false', '--retry=0', '--reporter=default', `--reporter=${HERE}`] })).ok;
 }
 
+// syzygy-qu5j: a pull request's unit run, narrowed to the files scripts/select_ci_tests.mjs chose. Every chosen file must be a
+// unit file of the current tree; the run's report must name exactly those files, as the full run's must name its population.
+async function selectedUnit(selectionPath) {
+  const { filesOfTier, testFiles } = await import(join(ROOT, 'vitest.tiers.ts'));
+  const selection = JSON.parse(fs.readFileSync(selectionPath, 'utf8'));
+  const population = filesOfTier(testFiles(ROOT), 'unit');
+  const chosen = selection?.tiers?.unit;
+  if (!Array.isArray(chosen)) throw new Error('selection-without-unit-tier');
+  const strays = chosen.filter((path) => !population.includes(path));
+  if (strays.length || new Set(chosen).size !== chosen.length) throw new Error(`selection-not-unit-files: ${JSON.stringify(strays)}`);
+  const expected = chosen.map((path) => ({ project: 'unit', path }));
+  print('unit-selection', { projects: ['unit'], mode: selection.mode, fileCount: expected.length, population: population.length, expected });
+  if (expected.length === 0) { print('unit-selected-none', { mode: selection.mode, population: population.length }); return true; }
+  const entry = join(ROOT, 'node_modules/vitest/vitest.mjs');
+  return (await ownedRun({ mode: 'selected-current-unit', expected,
+    args: [entry, 'run', '--project', 'unit', ...chosen, '--allowOnly=false', '--passWithNoTests=false', '--retry=0', '--reporter=default', `--reporter=${HERE}`] })).ok;
+}
+
 async function selftest() {
   const control = freshRoot();
   const expected = [{ project: 'fixture', path: 'fixture.test.ts' }];
@@ -388,6 +406,7 @@ if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.m
   try {
     if (process.argv.length === 2) process.exitCode = await fullUnit() ? 0 : 1;
     else if (process.argv.length === 3 && process.argv[2] === '--selftest') await selftest();
-    else throw new Error('usage: node scripts/check_unit_tmpdir.mjs [--selftest]; focused runs use Vitest directly');
+    else if (process.argv.length === 4 && process.argv[2] === '--selection') process.exitCode = await selectedUnit(process.argv[3]) ? 0 : 1;
+    else throw new Error('usage: node scripts/check_unit_tmpdir.mjs [--selftest | --selection <file>]; focused runs use Vitest directly');
   } catch (e) { console.error(e); process.exitCode = 1; }
 }

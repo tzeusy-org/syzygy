@@ -15,6 +15,7 @@ import {
   PROJECT_SHAPE_FIXTURE_BASELINE_SPEC_PATH,
   PROJECT_SHAPE_FIXTURE_TEXTS,
   PROJECT_SHAPE_FIXTURE_TEXTS_WITHOUT_PRECEDENCE,
+  PROJECT_SHAPE_FIXTURE_TEXTS_WITHOUT_BASELINE_SPEC,
   PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC,
   PROJECT_SHAPE_FIXTURE_TEXTS_WITH_SECRET,
   REJECTING_AUTHORITY,
@@ -389,14 +390,13 @@ describe('Polaris copy roles (PWB-REQ-012)', () => {
     }
   });
 
-  it('keeps no group lede and no connective prose between groups: each group header is one heading', () => {
+  it('preserves one heading with the original identities in each group header', () => {
     const html = renderPolarisPage(modelFor('observed'));
     const headers = [...html.matchAll(/<header class="group"[^>]*>([\s\S]*?)<\/header>/g)].map((match) => (match[1] as string).trim());
     expect(headers.length).toBe(7);
     for (const header of headers) {
       expect(header).toMatch(/^<h2 id="polaris-group-[a-z0-9-]+" data-copy-role="project-fact" data-claim-role="non-normative-framing" data-presentation-artifact data-non-citable>[^<]+<\/h2>$/);
     }
-    expect(html).not.toContain('group-lede');
   });
 
   it('flags meta-narration: the counterexample fixture fails every rule the sweep enforces', () => {
@@ -444,6 +444,10 @@ describe('Polaris copy roles (PWB-REQ-012)', () => {
     }
     const rendered: CopyString[] = [];
     for (const variant of VARIANTS) rendered.push(...sweep(renderPolarisPage(modelFor(variant))).strings);
+    const emptyCatalog = buildFixtureModel(cleanups, {
+      projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITHOUT_BASELINE_SPEC) },
+    });
+    rendered.push(...sweep(renderPolarisPage(emptyCatalog)).strings);
     rendered.push(...sweep(`<div data-copy-role="project-fact">${renderProjectReading({ summary: 'Selected complete paragraph.', full: 'Complete declaration.', condensed: true })}</div>`).strings);
     rendered.push(...sweep(`<div data-copy-role="project-fact">${renderProjectReading({ summary: 'A complete statement.', full: 'Example component\n\nA complete statement.', condensed: true, chapters: [{ id: 'example', title: 'Example component', body: 'A complete statement.' }] })}</div>`).strings);
     // The exact-source route's own strings: rendered text, an identity the

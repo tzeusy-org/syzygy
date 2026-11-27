@@ -5,7 +5,7 @@
 - [x] Wire the overlay into `scripts/check_spec_reconciliation.py` (pending until its row) and `scripts/count_polaris_effective_scenarios.py`, with selftest cases (`vbase_cases`).
 - [x] One independent fresh-context review (CC-REV-4), raw retained, findings dispositioned (`design.md`, "Review").
 - [x] Set the version label 2.34 in place of 2.NN, then append the agent-adoption row naming the installing commit (A-267).
-- [ ] Create the version tag `polaris-dossier-derived-base-views-v2.34` at the installing commit once it is on the default branch.
+- [x] Record that A-332 retired this untagged version claim after independent screening review.
 - [ ] Schema v15, the base findings and path resolution in check (`packages/polaris-dossier/src/`), with literal-case tests of every scenario.
 - [ ] Base expansion, the chip, hidden items, note, notice and `machine.json` `base` (`apps/three-surface-poc/src/polaris-generation/`), each map page byte-identical with and without a base view, every stored draft re-rendered byte-identical and the provider golden unchanged.
 - [ ] Brief v23 (`packages/polaris-dossier/src/brief.ts`) and a recorded rule-6 mutation run.

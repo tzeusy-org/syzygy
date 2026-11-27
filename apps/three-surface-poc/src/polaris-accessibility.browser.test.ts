@@ -319,6 +319,14 @@ describe.skipIf(executable === undefined)('Polaris keyboard, non-visual and cont
       expect(report.focusTrace.reached).toBe(report.focusTrace.population);
       expect(report.focusTrace.reverse).toHaveLength(report.focusTrace.forward.length);
       expect(report.activations.length).toBeGreaterThan(5);
+      if (variant.shape === 'not-evaluated' || variant.shape === 'not-admitted' || variant.shape === 'observation-failed') {
+        expect(report.activations.filter(({ href }) => href.startsWith('#polaris-shape-status-')).map(({ href }) => href))
+          .toEqual(['#polaris-shape-status-overview', '#polaris-shape-status-boundaries', '#polaris-shape-status-v1',
+            '#polaris-shape-status-architecture', '#polaris-shape-status-catalog']);
+        expect(report.activations.filter(({ href }) => href.startsWith('#polaris-evidence-status-')).map(({ href }) => href))
+          .toEqual(['#polaris-evidence-status-overview', '#polaris-evidence-status-boundaries', '#polaris-evidence-status-v1',
+            '#polaris-evidence-status-architecture', '#polaris-evidence-status-catalog']);
+      }
       expect(report.accessibilityTree.nodes).toBeGreaterThan(50);
       expect(report.accessibilityTree.byRole['heading'] ?? 0).toBeGreaterThan(5);
       expect(report.accessibilityTree.byRole['link']).toBeGreaterThan(5);

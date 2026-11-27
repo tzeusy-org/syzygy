@@ -109,6 +109,7 @@ export const POLARIS_GROUPS = [
   'evidence-and-gaps',
 ] as const;
 export type PolarisGroup = (typeof POLARIS_GROUPS)[number];
+type ProjectGroup = Exclude<PolarisGroup, 'capability-detail' | 'evidence-and-gaps'>;
 
 const CATALOG_CLASSES: readonly ExtractionClass[] = [
   'catalog-entry',
@@ -776,7 +777,7 @@ function capabilityGuide(shape: Extract<ProjectShape, { kind: 'observed' }>): st
   </section>`;
 }
 
-function classBlock(shape: Extract<ProjectShape, { kind: 'observed' }>, cls: ExtractionClass, withItems: boolean): string {
+function classBlock(shape: Extract<ProjectShape, { kind: 'observed' }>, cls: ExtractionClass, withItems: boolean, groupClass?: 'catalog'): string {
   const aggregate = shape.classes[cls];
   const items = shape.items.filter((item) => item.class === cls);
   const table = !withItems
@@ -794,10 +795,19 @@ function classBlock(shape: Extract<ProjectShape, { kind: 'observed' }>, cls: Ext
         return `<details class="class-provenance"><summary${copyAttr('label.source-notes')}>${copy('label.source-notes')} — ${escapeHtml(cls)}</summary><div${block.attrs}><div data-claim-provenance="${escapeHtml(aggregate.claim.claimId)}">${guide}<p>${escapeHtml(classStatement(shape, cls))}</p></div>${supportCitations(aggregate.claim.support, block.anchors)}</div></details>`;
       })()
     : unknownRoutes(aggregate.claim, `${escapeHtml(classStatement(shape, cls))} `);
+  const groupId = `polaris-class-${cls}`;
+  const target = `polaris-class-status-${cls}`;
+  const unknown = aggregate.claim.epistemic.label === 'Unknown';
+  const opening = groupClass !== 'catalog' ? ''
+    : items.length === 0
+      ? singleChildOpening(groupId, groupClass, unknown ? 'opening.unknown-catalog' : 'opening.empty-catalog',
+        `class.${cls}`, aggregate.claim, target)
+      : cls === 'catalog-entry' ? populatedCatalogOpening(groupId, aggregate.claim, items, target) : '';
+  const child = `${summary}
+    ${tupleLine(aggregate.claim)}`;
   return `<section class="claim-section" data-polaris-section="${escapeHtml(aggregate.claim.claimId)}" data-polaris-class="${escapeHtml(cls)}">
-    ${heading(3, `polaris-class-${cls}`, `class.${cls}`)}
-    ${summary}
-    ${tupleLine(aggregate.claim)}
+    ${heading(3, groupId, `class.${cls}`)}
+    ${opening}${opening && unknown ? `<div id="${target}">${child}</div>` : child}
     ${reasonCountsBlock(aggregate.claim.claimId, aggregate.reasonCounts)}
     ${onDemandCounts(aggregate.claim.claimId, escapeHtml(denominatorText(aggregate)))}
     ${table}
@@ -817,7 +827,41 @@ function accountByKey(shape: Extract<ProjectShape, { kind: 'observed' }>, key: P
   return accountStatement(statement, shape.identity.revision);
 }
 
-function shapeUnknownBlock(shape: Exclude<ProjectShape, { kind: 'observed' }>, group: PolarisGroup): string {
+function singleChildOpening(
+  groupId: string,
+  groupClass: 'project-category' | 'catalog' | 'evidence',
+  lede: PolarisCopyId,
+  title: PolarisCopyId,
+  claim: ProjectShapeClaim,
+  target: string,
+): string {
+  const label = claim.epistemic.label;
+  registry().registerOpening({ groupId, groupClass, label, childIds: [claim.claimId] });
+  const action = groupClass === 'evidence' ? 'label.evidence-remedy' : 'label.source-remedies';
+  const route = label !== 'Unknown' ? ''
+    : ` <a href="#${target}" data-opening-child="${escapeHtml(claim.claimId)}"${copyAttr(action)}>${copy(action)} — ${copy(title)}</a>`;
+  return groupOpeningHtml(groupId, lede, label, route);
+}
+
+function groupOpeningHtml(groupId: string, lede: PolarisCopyId, label: ProjectShapeClaim['epistemic']['label'], routes: string): string {
+  return `<p class="group-lede" data-polaris-group-opening="${groupId}"${roleAttr('project-fact', 'epistemic-claim')}>${copy(lede)}</p>
+  <p><span${roleAttr('epistemic-disclosure')}>${label}</span>${routes}</p>`;
+}
+
+function populatedCatalogOpening(groupId: string, aggregate: ProjectShapeClaim, items: readonly ProjectShapeItem[], aggregateTarget: string): string {
+  // Item disclosures are inside the collapsed population. An opening cannot
+  // use a page-wide reason row as the destination for an individual item.
+  if (items.some((item) => item.claim.epistemic.label !== 'Observed')) return '';
+
+  const label = aggregate.epistemic.label;
+  const route = label === 'Unknown'
+    ? ` <a href="#${aggregateTarget}" data-opening-child="${escapeHtml(aggregate.claimId)}"${copyAttr('label.source-remedies')}>${copy('label.source-remedies')} — ${copy('class.catalog-entry')}</a>`
+    : '';
+  registry().registerOpening({ groupId, groupClass: 'catalog', label, childIds: [aggregate.claimId, ...items.map((item) => item.claim.claimId)] });
+  return groupOpeningHtml(groupId, 'opening.populated-catalog', label, route);
+}
+
+function shapeUnknownBlock(shape: Exclude<ProjectShape, { kind: 'observed' }>, group: ProjectGroup, preface: string): string {
   let detail: string;
   switch (shape.kind) {
     case 'not-evaluated':
@@ -830,11 +874,18 @@ function shapeUnknownBlock(shape: Exclude<ProjectShape, { kind: 'observed' }>, g
       detail = `<p${DISCLOSURE}><small>${copy('sentence.observer-failed')}${shape.failure.failureState === undefined ? '' : ` (${escapeHtml(shape.failure.failureState)})`}: ${escapeHtml(shape.failure.detail)}</small></p>`;
       break;
   }
-  return `<section class="claim-section" data-polaris-section="shape:${escapeHtml(group)}">
-    ${unknownRoutes(shape.claim, '', copyText(`group.${group}`))}
+  const groupId = `polaris-group-${group}`;
+  const target = `polaris-shape-status-${group}`;
+  const opening = singleChildOpening(groupId, group === 'catalog' ? 'catalog' : 'project-category',
+    `opening.unavailable.${group}`, `group.${group}`, shape.claim, target);
+  const evidenceTarget = `polaris-evidence-status-${group}`;
+  const evidence = singleChildOpening(`polaris-evidence-${group}`, 'evidence',
+    'opening.unavailable-evidence', `group.${group}`, shape.claim, evidenceTarget);
+  return `${opening}${preface}<section class="claim-section" id="${target}" data-polaris-section="shape:${group}" data-polaris-evidence-owner="${groupId}">
+    ${evidence}<div id="${evidenceTarget}">${unknownRoutes(shape.claim, '', copyText(`group.${group}`))}
     ${detail}
     ${shape.authority === undefined || group !== 'overview' ? '' : authorityLine(shape.authority)}
-    ${tupleLine(shape.claim)}
+    ${tupleLine(shape.claim)}</div>
   </section>`;
 }
 
@@ -1463,13 +1514,13 @@ function groupHeader(group: PolarisGroup): string {
   </header>`;
 }
 
-function projectGroupBody(shape: ProjectShape, group: Exclude<PolarisGroup, 'capability-detail' | 'evidence-and-gaps'>): string {
+function projectGroupBody(shape: ProjectShape, group: ProjectGroup, preface = ''): string {
   if (shape.kind !== 'observed') {
-    return shapeUnknownBlock(shape, group);
+    return shapeUnknownBlock(shape, group, preface);
   }
   switch (group) {
     case 'overview':
-      return `${accountByKey(shape, 'purpose')}${proofStrip(shape)}${introductoryDiagram(shape)}${accountByKey(shape, 'promises')}${classBlock(shape, 'project-account-section', false)}`;
+      return `${preface}${accountByKey(shape, 'purpose')}${proofStrip(shape)}${introductoryDiagram(shape)}${accountByKey(shape, 'promises')}${classBlock(shape, 'project-account-section', false)}`;
     case 'boundaries':
       return `${accountByKey(shape, 'refusals')}${classBlock(shape, 'principle', true)}`;
     case 'architecture':
@@ -1477,7 +1528,7 @@ function projectGroupBody(shape: ProjectShape, group: Exclude<PolarisGroup, 'cap
     case 'v1':
       return `${capabilityGuide(shape)}${accountByKey(shape, 'v1-scope')}${accountByKey(shape, 'v1-success')}${classBlock(shape, 'success-criterion', true)}`;
     case 'catalog':
-      return CATALOG_CLASSES.map((cls) => classBlock(shape, cls, true)).join('');
+      return preface + CATALOG_CLASSES.map((cls) => classBlock(shape, cls, true, 'catalog')).join('');
   }
 }
 
@@ -1893,8 +1944,8 @@ function renderPolarisBody(model: PocModel, mountPrefix: string, narrative: Narr
   const body = `
     ${OPENING_INDEX_PLACEHOLDER}
     ${groupHeader('overview')}
-    ${tupleGloss(firstTupleClaim(shape))}
-    ${projectGroupBody(shape, 'overview')}
+    ${projectGroupBody(shape, 'overview', `${tupleGloss(firstTupleClaim(shape))}
+    `)}
     <p class="notice"${copyAttr('notice')}>${copy('notice')} <a href="#polaris-claim-states"${copyAttr('label.claim-states')}>${copy('label.claim-states')}</a></p>
     ${claimStatesBlock(model)}
     ${currencyProbeBand(model)}
@@ -1906,8 +1957,8 @@ function renderPolarisBody(model: PocModel, mountPrefix: string, narrative: Narr
     ${projectGroupBody(shape, 'architecture')}
     ${openingUnknownBand(shape)}
     ${groupHeader('catalog')}
-    ${RECONCILIATION_PLACEHOLDER}
-    ${projectGroupBody(shape, 'catalog')}
+    ${projectGroupBody(shape, 'catalog', `${RECONCILIATION_PLACEHOLDER}
+    `)}
     ${groupHeader('capability-detail')}
     <p class="scope-instruction" data-polaris-capability-scope data-scope="poc-bound"${copyAttr('capability.scope')}>${copy('capability.scope')}</p>
     ${deepDives}

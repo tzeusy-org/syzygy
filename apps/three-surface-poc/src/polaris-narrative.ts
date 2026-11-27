@@ -67,6 +67,20 @@ interface NarrativeBlock extends RegisteredBlock {
   readonly anchorsResolved: AnchorsResolved;
 }
 
+type GroupOpeningInput = {
+  readonly groupId: string;
+  readonly groupClass: 'project-category' | 'catalog' | 'item-detail' | 'evidence';
+  readonly label: ProjectShapeClaim['epistemic']['label'];
+  readonly childIds: readonly [string, ...string[]];
+};
+
+interface GroupOpening extends GroupOpeningInput {
+  readonly kind: 'group-opening';
+  readonly role: 'epistemic-claim';
+  readonly presentation: 'presentation-artifact';
+  readonly citable: false;
+}
+
 // Test seam: exported type the tests name; production code uses it only inside this file.
 export interface PolarisNarrative {
   readonly kind: 'polaris-narrative';
@@ -75,6 +89,8 @@ export interface PolarisNarrative {
   readonly roles: readonly NarrativeClaimRole[];
   readonly anchorTargetClasses: readonly AnchorTargetClass[];
   readonly blocks: readonly NarrativeBlock[];
+  /** Openings carry child identities instead of anchors and do not enter the resolution pair. */
+  readonly openings: readonly GroupOpening[];
   /** The sum of the blocks' pairs, or Unknown where each of theirs is. */
   readonly anchorsResolved: AnchorsResolved;
   /** Capability deep dives: band composition, verbatim state and the
@@ -147,8 +163,23 @@ export function capturedStateOf(claim: ProjectShapeClaim): CapturedTargetState {
  * target state (PWB-REQ-014 later-read mutation case). */
 export class NarrativeRegistry {
   private readonly blocks: RegisteredBlock[] = [];
+  private readonly openings: GroupOpening[] = [];
   private readonly deepDives: DeepDiveMachineForm[] = [];
   private readonly seen = new Set<string>();
+
+  registerOpening(opening: GroupOpeningInput): void {
+    if (this.openings.some((entry) => entry.groupId === opening.groupId)) {
+      throw new Error(`group opening registered twice: ${opening.groupId}`);
+    }
+    this.openings.push(deepFreeze({
+      ...opening,
+      childIds: [...opening.childIds],
+      kind: 'group-opening',
+      role: 'epistemic-claim',
+      presentation: 'presentation-artifact',
+      citable: false,
+    }));
+  }
 
   registerDeepDive(form: DeepDiveMachineForm): void {
     if (this.deepDives.some((dive) => dive.capabilityId === form.capabilityId)) throw new Error(`deep dive registered twice: ${form.capabilityId}`);
@@ -192,6 +223,7 @@ export class NarrativeRegistry {
       anchorTargetClasses: [...ANCHOR_TARGET_CLASSES],
       blocks: this.blocks.map((block, index) => ({ ...block, anchorsResolved: pairs.blocks[index] as AnchorsResolved })),
       anchorsResolved: pairs.narrative,
+      openings: [...this.openings],
       deepDives: [...this.deepDives],
     });
   }

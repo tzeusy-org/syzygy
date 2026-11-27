@@ -231,9 +231,12 @@ root.
 
 - A repository carries at most one `.syzygy/` plane, at its root, and is the
   governance root of at most one Project.
-- A declaration purporting to designate a *different* repository as root, or
-  a Project resolving to two roots, is a contradiction per RFC1-1 — routed to
-  the owner, never repaired silently.
+- A declaration purporting to designate a *different* repository as root
+  is a contradiction per RFC1-1 — routed to the owner, never repaired
+  silently.
+- A Project resolving to two roots is a Contradiction per RFC1-1, routed
+  under RFC1-21 and RFC2-24 reason 8. No root is picked and the
+  contradiction is never repaired silently.
 - A Project resolving to **zero** roots mints no contradiction: RFC1-1's
   zero-roots rule (cited, not restated) surfaces that case at the
   workspace/manifest level, unevaluable as a Project and rendered Unknown

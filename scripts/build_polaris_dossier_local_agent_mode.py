@@ -190,15 +190,18 @@ def refigure(root: pathlib.Path, text: str) -> str:
 
 
 def status_figure(root: pathlib.Path) -> tuple[int, int]:
-    found = FIGURE_RE.findall((root / STATUS).read_text(encoding="utf-8"))
-    if len(found) != 1:
-        raise Refusal(f"{STATUS}: expected one effective-composition figure, found {len(found)}")
-    return int(found[0][0]), int(found[0][1])
+    screening, _ = counter.screening_amendment(root)
+    advice, _ = counter.source_example_amendment(root)
+    return counter.read_status_assertion(root, screening_state=screening, source_example_state=advice)
 
 
 def figure_paragraph(text: str) -> str:
     """The status page's paragraph or list item that carries the figure."""
     m = FIGURE_RE.search(text)
+    if m is None:
+        # Both screening figures share the same specification links.
+        prefix = counter.SCREENING_STATUS_PREFIXES[0]
+        m = re.search(r"^[ \t]*" + re.escape(prefix), text, flags=re.M)
     if m is None:
         return ""
     start = max(text.rfind("\n\n", 0, m.start()),
