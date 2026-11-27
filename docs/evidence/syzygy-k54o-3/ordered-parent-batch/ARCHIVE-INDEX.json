@@ -1,0 +1,272 @@
+{
+  "sourceIndependentSha256sumChecks": 45,
+  "subject": {
+    "actualCommit": "c1bb89f89247770686209b688c8fac220e0031da",
+    "actualTree": "8af0f537cc593a5529fcf7fe7e612550047373f5",
+    "parent": "8f8c024940b7eabf1324a3180c4355593bc48187",
+    "scopedRootAcceptance": true,
+    "originalWrappers": {
+      "R1": "FAILED",
+      "R2": "FAILED",
+      "R3": "scopedAccepted"
+    },
+    "performanceBenefit": "Unknown",
+    "nextOriginalCase": "not invoked by this proof",
+    "fullFinalGates": "not established"
+  },
+  "archive": "proof.tar.gz",
+  "archiveBytes": 189766,
+  "archiveSha256": "370c2e78f6f14d6342fe3eb7d05e2b34db4eea6533acdf18dd630b9ed7fbf0be",
+  "memberCount": 48,
+  "copiedSourceFiles": 45,
+  "copiedSourceBytes": 1098471,
+  "payloadBytes": 1117931,
+  "deterministicByteRebuildEqual": true,
+  "memberReadbackHashCount": 48,
+  "memberMode": "0644",
+  "memberMtime": 0,
+  "uid": 0,
+  "gid": 0,
+  "members": [
+    {
+      "path": "README.md",
+      "bytes": 4398,
+      "sha256": "7efbce26a6bcf0f7c9ece123258bb0c3188e2f5ccd503e5aa8cc33550c1c597c"
+    },
+    {
+      "path": "SOURCE-INDEX.json",
+      "bytes": 14582,
+      "sha256": "ffd8a70e3c886bfa21b29872eef48b08f706b49d7a4c25708334c5a81f36d1b9"
+    },
+    {
+      "path": "actual-commit/ordered-parent-batch-actual-commit.json",
+      "bytes": 797,
+      "sha256": "cb20166b86697a59d1afcb0270d835e118ccff0b07947078c6fffe7e36eee528"
+    },
+    {
+      "path": "assembly/assemble-ordered-parent-batch-proof-R1.py",
+      "bytes": 16248,
+      "sha256": "07842e1e8afc179a4385b72c95036deba8e26a5cb7cd2995f66c2a0305bc5446"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-focused-1/baseline.json",
+      "bytes": 29241,
+      "sha256": "8662107112bf92d49717b5174f2beea8bcf346ed0f79aff4b34cdcf7f68aaa77"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-focused-1/baseline.log",
+      "bytes": 705,
+      "sha256": "96bd55c3f8a10ee4811bd4ebb2094f676b96d05262d1d3510ca79bb2e3cfcb9b"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-focused-1/progress.json",
+      "bytes": 476,
+      "sha256": "a832474032314a0b307e3e6c10a0c2d24a24683de70d7e1401796d229866ed86"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-focused-1/typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-mutations-2/cleanup.json",
+      "bytes": 640,
+      "sha256": "17ad3999e549a9d754dde97713a1764de5ad9e82ba52373228b66b5a45eec15b"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-mutations-2/per-parent-mutant.json",
+      "bytes": 462,
+      "sha256": "88fbe5737333f5291e89412047238a51e91dc8ffa56d4ba649cc1c47c2061b3c"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-mutations-2/per-parent.json",
+      "bytes": 20455,
+      "sha256": "a00a55441e1be3c39668fe4bb55c839aed4483f8d996b7df7df7464747db1c42"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-mutations-2/per-parent.log",
+      "bytes": 9090,
+      "sha256": "68b109e06f997b736ee373bdd8e13057fce020472d9903e405edcfb9afa29262"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-mutations-3/cleanup.json",
+      "bytes": 1170,
+      "sha256": "5fd1bf37d672212e926188d1c426ed7cceb18a966de341ecf5f9225fbf445784"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-mutations-3/complete.json",
+      "bytes": 3355,
+      "sha256": "51e61d7a37d246912ccc65ed90fc03229aead62632c8ec1b6a969a5217873c04"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-mutations-3/empty-batch-mutant.json",
+      "bytes": 236,
+      "sha256": "5c832a3c04d267b730dfe2ebe713adfdf8e6cae0a09c3264e63109f9fe824c1c"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-mutations-3/empty-batch.json",
+      "bytes": 20455,
+      "sha256": "12483e3e31b0decea88436518390b328370d52a338116402ca3285902f7489e3"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-mutations-3/empty-batch.log",
+      "bytes": 9091,
+      "sha256": "ac59021eb2bda11ef5fd45524f252e04340e0c58762beb86523758defe593704"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-mutations-3/lost-exit-mutant.json",
+      "bytes": 1106,
+      "sha256": "70d7722e47eb88d72e7ea24b28bbb86852114444b674bb2715eda5b64b939de8"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-mutations-3/lost-exit.json",
+      "bytes": 20447,
+      "sha256": "c7385c59fa7feb3ca42ad4c7eb902ea641e79da090edcf926f93a16af60101b3"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-mutations-3/lost-exit.log",
+      "bytes": 9088,
+      "sha256": "7179075b8139cb4893af427b95ee003a62ff15b966d5c50da2e662203c25fa27"
+    },
+    {
+      "path": "focused-evidence/ordered-parent-batch-mutations-3/progress.json",
+      "bytes": 2163,
+      "sha256": "9b7bf6da23d9bc62bb2a465b7cc5e624a0cf89dc8c6507fa3c634113c3a7681f"
+    },
+    {
+      "path": "frozen-source-R1/README.md",
+      "bytes": 9020,
+      "sha256": "34c059229942016eb40761b16878d83e9720bf38bae7f5b71b5f47e5966ac6d4"
+    },
+    {
+      "path": "frozen-source-R1/actual-base-receipt.json",
+      "bytes": 284,
+      "sha256": "f5f21c36dd00042ffdd4d85edf4eb5fee55c2d8eadb58ae1560d6379f6709903"
+    },
+    {
+      "path": "frozen-source-R1/bundle-manifest.json",
+      "bytes": 1839,
+      "sha256": "29e8522a22908d0ba6070325090bb4ac8c2b69be620736cc46cbbc224b3edbaa"
+    },
+    {
+      "path": "frozen-source-R1/manifest.json",
+      "bytes": 1185,
+      "sha256": "644ab034b9bb6f8b88fc731d89d862b9360d6a36b3c9fa764204fe68f7934225"
+    },
+    {
+      "path": "frozen-source-R1/minimal.patch",
+      "bytes": 4470,
+      "sha256": "cd6af59a45ad5516da51dfe744b8ba1df355062ee2438812562153a12a9c6fd1"
+    },
+    {
+      "path": "frozen-source-R1/original/packages/polaris-dossier/src/url-launch-history.test.ts",
+      "bytes": 105046,
+      "sha256": "bda655d6cf70d452ad662016bda5691824e7d4474e669e16beb93cd5c32d386d"
+    },
+    {
+      "path": "frozen-source-R1/original/packages/polaris-dossier/src/url-run-artifacts.ts",
+      "bytes": 127206,
+      "sha256": "ea1665b8f8afcb53d25e4e32c913afc987fa01b840980e796f400c99b29fc509"
+    },
+    {
+      "path": "frozen-source-R1/resolved/packages/polaris-dossier/src/url-launch-history.test.ts",
+      "bytes": 106685,
+      "sha256": "dd792a870adba8100ca7eb47c135630fd661fcc66d4718a0623f75660609029f"
+    },
+    {
+      "path": "frozen-source-R1/resolved/packages/polaris-dossier/src/url-run-artifacts.ts",
+      "bytes": 127252,
+      "sha256": "8fc4b73e759c179d52b5ab5e1fa190d7da626c88006d02086cb439d84f644642"
+    },
+    {
+      "path": "frozen-source-R1/source-and-governing-snippets.json",
+      "bytes": 19849,
+      "sha256": "9025a5a72bf55753d6b4f5d00a2926422e8eabce3bd47fe3e2befd979090b275"
+    },
+    {
+      "path": "frozen-source-R1/verification.json",
+      "bytes": 816,
+      "sha256": "0cc939144f8cea7df71e0057fae09e414b171e80897234ffd51bb1c3941d90db"
+    },
+    {
+      "path": "independent-predecessor-cost-assessment/ADDENDUM-SHA256SUMS",
+      "bytes": 167,
+      "sha256": "78c3f9d06ec2d877a231c171ae2da937a5e5c6e50b187c5b822c887179057301"
+    },
+    {
+      "path": "independent-predecessor-cost-assessment/ADDENDUM.md",
+      "bytes": 5894,
+      "sha256": "9bf356224e2e28bf9b6aa941dbe24358297a1ea1f71a630998774ede4d212555"
+    },
+    {
+      "path": "independent-predecessor-cost-assessment/ASSESSMENT.md",
+      "bytes": 10745,
+      "sha256": "8a6107f62cfa0b47d3f3df063e6dbdeef6d2d4761944247c891423f0b6e3d659"
+    },
+    {
+      "path": "independent-predecessor-cost-assessment/SHA256SUMS",
+      "bytes": 324,
+      "sha256": "989f60574fc129c45a2aee29c7b8ddbbed5e1e6af1780548fe8fcd02cdd016c9"
+    },
+    {
+      "path": "independent-predecessor-cost-assessment/addendum-bindings.json",
+      "bytes": 2421,
+      "sha256": "31ee440cbe4a38882a677376793b7569ebd519a01c80c6b3dc62156fc72139c3"
+    },
+    {
+      "path": "independent-predecessor-cost-assessment/analysis.json",
+      "bytes": 26362,
+      "sha256": "6586661e055ff8dd4d3f8854672b30c55bd696b9daaabe2160c44e63923e3066"
+    },
+    {
+      "path": "independent-predecessor-cost-assessment/bindings.json",
+      "bytes": 6208,
+      "sha256": "400225d4ca272b4991b2e48e093138564e4bf3845fd4347f485efdba40db204b"
+    },
+    {
+      "path": "independent-predecessor-cost-assessment/measurements.json",
+      "bytes": 364194,
+      "sha256": "4837e75cd1012c38c5f782cc6241f9074e6575370485932721baa069580dab78"
+    },
+    {
+      "path": "prior-phase-proof-reference.json",
+      "bytes": 480,
+      "sha256": "6d0f127ec944dbf64ff366191ee4575ddec85b307e4be1fa53df1457f226efa4"
+    },
+    {
+      "path": "reviews/f3-ordered-parent-batch-R1-source-review-RAW.md",
+      "bytes": 7560,
+      "sha256": "7c0771066af45a2f49f3a300e938e4850a6653228ac1eee8af5d21602662a77e"
+    },
+    {
+      "path": "root-reconciliations/root-parent-batch-focused-baseline-reconciliation.json",
+      "bytes": 1403,
+      "sha256": "a9cd00fa973aa26af9f616d198b0ed4780e71c39dc2af7e66ffe6e2a96be9feb"
+    },
+    {
+      "path": "root-reconciliations/root-parent-batch-focused-complete-reconciliation.json",
+      "bytes": 4272,
+      "sha256": "4c2d8c5b6e8709fbbb3ead4591dd055ea1a5b52c55bd057095217093f3543e46"
+    },
+    {
+      "path": "root-reconciliations/root-parent-batch-per-parent-mutation-reconciliation.json",
+      "bytes": 1855,
+      "sha256": "bc558172b33ba57ca6ea626d0c4640ee2103e4bbd6a8b743cda02ef946059c81"
+    },
+    {
+      "path": "verification-definitions/verify-ordered-parent-batch-mutations-R2.py",
+      "bytes": 6075,
+      "sha256": "d8ec1b06f9764e9ae1185b119d5794426e14720c72b6e9b7e226a7f0048f9078"
+    },
+    {
+      "path": "verification-definitions/verify-ordered-parent-batch-mutations-R3.py",
+      "bytes": 6187,
+      "sha256": "27413112f82294b7361fb2d34845bb3c81dac5f112f59f3f0813f9492dc200a0"
+    },
+    {
+      "path": "verification-definitions/verify-ordered-parent-batch.py",
+      "bytes": 5890,
+      "sha256": "1fc01a6050a0cdcc49eb69eaaf956de02f819dccdabb03693bfcfe5a9e557e4c"
+    }
+  ]
+}
