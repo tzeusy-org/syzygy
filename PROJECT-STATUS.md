@@ -288,23 +288,23 @@ authority and no model yet called on the current path.
     replacement and the independent screening findings explain why the version was withheld.
     [Derived-base screening 2.35](openspec/changes/dossier-derived-base-screening) records A-333. The correction applies when its protected adoption and exact version tag are verified.
     Before the derived-base screening version is effective, Polaris has 39 requirements and 582 scenarios.
-    *(2026-11-28: the predecessor figure of 579 scenarios is superseded by session usage 2.39's three REQ-033 scenarios.)*
+    *(2026-11-28: the predecessor figure of 579 scenarios is superseded by session usage 2.41's three REQ-033 scenarios.)*
     With the derived-base screening version effective, Polaris has 39 requirements and 606 scenarios.
-    *(2026-11-28: the predecessor figure of 603 scenarios is superseded by session usage 2.39's three REQ-033 scenarios.)*
+    *(2026-11-28: the predecessor figure of 603 scenarios is superseded by session usage 2.41's three REQ-033 scenarios.)*
 
 [Source-example advice](openspec/changes/polaris-source-example-advice) records A-334. The advisory applies when its protected adoption and exact version tag are verified.
 
 With the source-example advice version effective, Polaris has 39 requirements and 613 scenarios.
-*(2026-11-28: the predecessor figure of 610 scenarios is superseded by session usage 2.39's three REQ-033 scenarios.)*
+*(2026-11-28: the predecessor figure of 610 scenarios is superseded by session usage 2.41's three REQ-033 scenarios.)*
 
 [Choice floor amendment 2.37](openspec/changes/dossier-choice-floor) is agent-adopted in A-336.
 It replaces REQ-polaris-generation-034 from version 2.36, the source-example advice (263 to 265 scenarios): check advises each Pole
 of a v13, v14 or v15 draft with fewer than three choices or trade-offs on record in the understanding record.
 
 With the choice floor version effective, Polaris has 39 requirements and 615 scenarios.
-*(2026-11-28: the predecessor figure of 612 scenarios is superseded by session usage 2.39's three REQ-033 scenarios.)*
+*(2026-11-28: the predecessor figure of 612 scenarios is superseded by session usage 2.41's three REQ-033 scenarios.)*
 
-[Session usage amendment 2.39](openspec/changes/dossier-session-usage) is agent-adopted in A-338.
+[Session usage amendment 2.41](openspec/changes/dossier-session-usage) is agent-adopted in A-338.
 It replaces REQ-polaris-generation-033 from version 2.31, the close measures (25 to 28 scenarios): close records a launched run's
 per-session token counts, read by Syzygy from each session's own transcripts, with a run total; close, status and the review
 page give one cost line, money Unknown. Every composition state above contains REQ-033, so each figure above counts its three

@@ -9,7 +9,7 @@ import { closeRun, type CloseDeps } from './close.js';
 import { writeLaunchedMarker } from './launched.js';
 import { COST_NOT_IN_RECORD, COST_RECORD_UNREADABLE, runStatus } from './status.js';
 
-// REQ-polaris-generation-033 version 2.39 (syzygy-5dhm.26) through the ordinary steps: the Execution Record's session usage, status's
+// REQ-polaris-generation-033 version 2.41 (syzygy-5dhm.26) through the ordinary steps: the Execution Record's session usage, status's
 // cost line before and after close, and the review page alone printing the cost line in its review-status region.
 
 type Doc = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -46,7 +46,7 @@ function launchedSessions(): void {
   });
 }
 
-describe('close session usage and the cost line (REQ-polaris-generation-033 v2.39)', () => {
+describe('close session usage and the cost line (REQ-polaris-generation-033 v2.41)', () => {
   it('records Unknown usage for the operator-started fixture run, and status prints its cost line from the record', () => {
     expect(readJson(record()).sessionUsage).toMatchObject({ format: 'polaris-dossier-session-usage/1', label: 'Unknown', why: 'operator-started' });
     const status = runStatus(run, () => LATER);
@@ -87,7 +87,7 @@ describe('close session usage and the cost line (REQ-polaris-generation-033 v2.3
     expect(readJson(record()).stepMeasures.toolOwnedUsage).toEqual({ label: 'Unknown', why: 'no-tool-owned-receipt' });
   }, 60_000);
 
-  it('says a record closed before version 2.39 carries no session usage, and a malformed one is Unknown', () => {
+  it('says a record closed before version 2.41 carries no session usage, and a malformed one is Unknown', () => {
     const doc = readJson(record());
     const { sessionUsage: _omitted, ...older } = doc;
     fs.writeFileSync(record(), JSON.stringify(older));

@@ -13,7 +13,7 @@ import type { DossierDraft, DraftParagraph, EpistemicMarking } from './draft-mod
 export const REVIEW_STATUS_REGION = 'review-status';
 /** The region's opening tag, exactly as the renderer writes it. */
 export const REVIEW_STATUS_REGION_OPEN = `<aside class="review-status" data-review-status-region="${REVIEW_STATUS_REGION}" aria-label="Review status">`;
-/** The region item carrying the run's one cost line (REQ-polaris-generation-033 version 2.39): the review page's region alone shows it. */
+/** The region item carrying the run's one cost line (REQ-polaris-generation-033 version 2.41): the review page's region alone shows it. */
 export const COST_STATUS_ID = 'review-status/cost';
 
 /**

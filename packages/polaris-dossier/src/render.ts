@@ -989,7 +989,7 @@ export function designStatusItem(design: DesignReviewOfRecord | undefined, run: 
   return { id: 'review-status/design', text: `Rendered-design review: one counts, bound to packet ${design.packetSha256}, which Syzygy built at this render from these pages outside this region; its verdict, ${design.verdict.readiness}${design.verdict.blocking ? ' beside a blocking finding' : ''}, is the review session's. ${continuation.text} (Inferred, from ${continuation.basis}.)`, label: 'Inferred' };
 }
 
-/** The cost line, read at this render from the launched sessions' own transcripts (version 2.39, `session-usage.ts`). It lives in the
+/** The cost line, read at this render from the launched sessions' own transcripts (version 2.41, `session-usage.ts`). It lives in the
  * review-status region, the only part of a page a later render may change without retiring the rendered-design review, since every render
  * reads it anew; the renderer shows it on the review page alone. */
 export function costStatusItem(run: string): LocalDisclosureItem {

@@ -14,7 +14,7 @@ import { RUN_TREE_BOUNDS, readBoundedText, readCause } from './run-tree-read.js'
 
 /** `syzygy dossier status <run>`: the run's state, limits spent, open findings and reviews still
  * required, read from the run directory; before close, a launched run's cost line is also read from the sessions' transcripts under
- * its agents root (version 2.39, `session-usage.ts`). Status reads nothing else and writes nothing. Everything it reports
+ * its agents root (version 2.41, `session-usage.ts`). Status reads nothing else and writes nothing. Everything it reports
  * comes from stored files the agent sessions can write, so every value is labelled Inferred
  * (owner direction `POLARIS-DOSSIER-LOCAL-AGENT-RECORDS-2026-10-05`). */
 
@@ -58,7 +58,7 @@ export interface StatusReport {
     readonly deadline: string;
     readonly agentUsage: string;
   };
-  /** The one cost line (version 2.39): from the session usage the Execution Record carries once the run is closed; before that, read now
+  /** The one cost line (version 2.41): from the session usage the Execution Record carries once the run is closed; before that, read now
    * from the launched sessions' own transcripts, and said to be read now. */
   readonly cost: string;
   /** Whether the run's Execution Record exists, and when it does not, why: not closed yet, or never, because the deadline passed first. */
@@ -101,7 +101,7 @@ export function closedUsage(file: string): string {
   return `${NOT_RECORDED}; the Execution Record carries no usage in the form close writes`;
 }
 
-export const COST_NOT_IN_RECORD = 'Cost: not recorded. This run was closed before the Execution Record carried session usage (version 2.39), and status does not read it again.';
+export const COST_NOT_IN_RECORD = 'Cost: not recorded. This run was closed before the Execution Record carried session usage (version 2.41), and status does not read it again.';
 export const COST_RECORD_UNREADABLE = 'Cost: Unknown. The Execution Record cannot be read, or carries session usage in no form close writes.';
 export const COST_READ_NOW = 'read now, before close; the run total may still grow';
 

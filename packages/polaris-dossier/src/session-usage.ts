@@ -7,7 +7,7 @@ import { agentHome } from './run-dir.js';
 import { utcInstantMs } from './step-measures.js';
 
 /** Per-session usage, read by Syzygy from the agent tool's own transcripts, a run total and the one cost line (REQ-polaris-generation-033
- * version 2.39; syzygy-5dhm.26).
+ * version 2.41; syzygy-5dhm.26).
  *
  * Only a launched run (`syzygy polaris`) has sessions whose usage Syzygy can attribute: it started each role's session itself, in a private
  * home under the run's agents root, and the agent tool (Claude Code, with `CLAUDE_CONFIG_DIR` set to that home's `.claude`) keeps that

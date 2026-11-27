@@ -29,7 +29,7 @@ export function disclosureList(items: readonly LocalDisclosureItem[], escape: Es
 }
 
 /** The named review-status region. The review page shows packet identities in readable groups, and it alone shows the cost line
- * (REQ-polaris-generation-033 version 2.39). */
+ * (REQ-polaris-generation-033 version 2.41). */
 export function regionMarkup(items: readonly LocalDisclosureItem[], escape: Escape): (path: string) => string {
   const markup = (showDigests: boolean): string => {
     const lines = items.filter(item => showDigests || item.id !== COST_STATUS_ID).map(item => {

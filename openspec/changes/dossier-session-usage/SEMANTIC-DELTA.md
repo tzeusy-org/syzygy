@@ -8,7 +8,7 @@
 
 ## Amended in place
 
-- The title and the banner paragraph name version 2.39, its predecessor and its tag.
+- The title and the banner paragraph name version 2.41, its predecessor and its tag.
 
 ## Added
 
@@ -18,7 +18,7 @@
 
 ## Carried
 
-[Inferred] The sentence "Token or turn totals attributable to either tool, cache totals, cost and tool runtime remain Unknown when Syzygy has no tool-owned receipt" is kept: a transcript in the session's own home is no receipt, so the step measures' `toolOwnedUsage` stays Unknown, and the new member is a separate Inferred reading. The operator's declared figure, the existing steps view and every earlier record keep their meaning; a record closed before 2.39 has no `sessionUsage`, and status says it is not recorded.
+[Inferred] The sentence "Token or turn totals attributable to either tool, cache totals, cost and tool runtime remain Unknown when Syzygy has no tool-owned receipt" is kept: a transcript in the session's own home is no receipt, so the step measures' `toolOwnedUsage` stays Unknown, and the new member is a separate Inferred reading. The operator's declared figure, the existing steps view and every earlier record keep their meaning; a record closed before 2.41 has no `sessionUsage`, and status says it is not recorded.
 
 ## Reversal
 
