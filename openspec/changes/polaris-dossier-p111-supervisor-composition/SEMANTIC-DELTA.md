@@ -1,0 +1,9 @@
+# P111 supervisor semantic delta
+
+**Candidate normative change.** The proposed successor replaces only REQ-polaris-generation-048 at the adopted A-53 boundary. It incorporates the six independently reviewed attended scenarios already preserved by #989. The original 28 scenarios stay in order. The R3 candidate's six archived subjects and its verbatim review and notes retain their original bindings.
+
+The replacement's observable addition is one attended projection of the existing run and attempt. It exposes attested detach and reattach intervals, distinguishes system wait, eligible question and unavailable observation, preserves stop and resume as separate transitions, and keeps a usable Author question path available. The scope follows the existing one-command entry, exact supplied-clone validation, bounded supervisor, role tool palette and refusal behavior. The candidate's role coverage derives from the already governing clauses. [Role composition](ROLE-COMPOSITION.md).
+
+The exact predecessor is the REQ-polaris-generation-048 block in the A-53 source. Its full source digest is `84fc7c71221705b6a2b614e3acf4496d10bb2e3ba4815c1e776ad450b3bc19a5`. The reviewed #989 patch applies to that source and reverses byte-for-byte. Deterministic extraction yields the one proposed requirement block. See the [recorded patch and baseline](../polaris-dossier-attended-supervisor-view/VERIFICATION.md).
+
+Version assignment needs the confirmed effective predecessor chain. The latest protected status names v2.34 and A-267, and the corresponding remote tag was unavailable in the independent check. The exact recorder, dependency projection, status and version lineage still require binding for the eventual version. Fresh CC-REV-2 reads those results with this subject. A successful protected inverse restores the prior effective REQ-048 and its downstream projections while retaining immutable review and adoption records.
