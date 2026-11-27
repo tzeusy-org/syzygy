@@ -64,6 +64,10 @@ describe('rough-edge-marker v1: deprecation', () => {
     ]);
   });
 
+  it('does not read an annotation written after a dot', () => {
+    expect(rows(recognizeMarkers('class A { int x = a.@Deprecated; }\n', 'java'))).toEqual([]);
+  });
+
   it('does not read the Java annotation form in JavaScript', () => {
     expect(rows(recognizeMarkers('@Deprecated\nclass A {}\n', 'javascript'))).toEqual([]);
   });
@@ -87,6 +91,10 @@ describe('rough-edge-marker v1: issue references', () => {
     expect(rows(recognizeMarkers('x := 1 //#5\n/*#6*/\n', 'go')).map((r) => r[1])).toEqual(['#5', '#6']);
   });
 
+  it('takes one reference where two forms overlap, the earlier pattern\'s', () => {
+    expect(rows(recognizeMarkers('# https://github.com/o/GH-1/issues/2\n', 'python')).map((r) => r[1])).toEqual(['https://github.com/o/GH-1/issues/2']);
+  });
+
   it('reads none in a string', () => {
     expect(rows(recognizeMarkers('x := "see #1"\n', 'go'))).toEqual([]);
   });
@@ -101,6 +109,15 @@ describe('rough-edge-marker v1: what the lexer reads as a comment', () => {
   it('reads a comment and a brace inside a substitution as the substitution\'s, never as the end of the template', () => {
     const text = 'const a = `${ { k: "}" } /* } */ }`; // TODO after\n';
     expect(rows(recognizeMarkers(text, 'javascript'))).toEqual([['todo', 'TODO', 1, 'const a = `${ { k: "}" } /* } */ }`; // TODO after']]);
+  });
+
+  it('skips a string and a comment holding a backtick inside a substitution', () => {
+    const text = 'const a = `${ "`" }`; // TODO x\nconst b = `${ y /* ` */ }`; // HACK z\n';
+    expect(rows(recognizeMarkers(text, 'javascript')).map((r) => [r[0], r[2]])).toEqual([['todo', 1], ['hack', 2]]);
+  });
+
+  it('reads nothing in a regular-expression literal', () => {
+    expect(rows(recognizeMarkers('const r = /TODO|#12/u;\n', 'javascript'))).toEqual([]);
   });
 
   it('reads JSX text holding // as a comment, as the spec discloses (R-ROUGH-EDGES-1 F4)', () => {
