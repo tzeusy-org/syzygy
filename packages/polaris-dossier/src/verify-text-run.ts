@@ -1,6 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { sha256 } from '@syzygy/support';
+import { NotARegularFileError, PastBoundError, readBoundedFile } from './check-record-read.js';
 import type { GateSources } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { isoOf } from './iso-of.js';
@@ -69,6 +70,20 @@ const realOf = (target: string): string => {
   }
 };
 
+/** The `--text` file's bytes, or why it is refused. It is read by the reader rule of version 2.10 (`readBoundedFile`, syzygy-3efd.83): one
+ * open without blocking, the type and size from that descriptor, at most one byte past the bound read, so a FIFO or a file grown past
+ * the bound after its size was taken is refused, never read whole. A link to a regular file is read, as `stat` read it before; the bound
+ * is this command's own, stated here and in no requirement yet (syzygy-nffo). */
+export function readVerifyText(textFile: string): { readonly bytes: Uint8Array } | { readonly reason: string } {
+  try {
+    return { bytes: new Uint8Array(readBoundedFile(textFile, VERIFY_TEXT_MAX_BYTES)) };
+  } catch (cause) {
+    if (cause instanceof NotARegularFileError) return { reason: `${textFile} is not a regular file` };
+    if (cause instanceof PastBoundError) return { reason: `${textFile} is larger than the ${VERIFY_TEXT_MAX_BYTES}-byte text bound` };
+    return { reason: `the text ${textFile} cannot be read (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
+  }
+}
+
 export async function verifyTextInRun(runDir: string, request: VerifyTextRequest, deps: VerifyTextDeps): Promise<VerifyTextResult> {
   const run = path.resolve(runDir);
   const started = deps.now();
@@ -93,15 +108,9 @@ export async function verifyTextInRun(runDir: string, request: VerifyTextRequest
   const pinned = subject.pinnedRevision.commit;
 
   const textFile = path.resolve(request.textFile);
-  let bytes: Uint8Array;
-  try {
-    const stats = fs.statSync(textFile);
-    if (!stats.isFile()) return refuse('text', `${textFile} is not a regular file`);
-    if (stats.size > VERIFY_TEXT_MAX_BYTES) return refuse('text', `${textFile} is larger than the ${VERIFY_TEXT_MAX_BYTES}-byte text bound`);
-    bytes = new Uint8Array(fs.readFileSync(textFile));
-  } catch (cause) {
-    return refuse('text', `the text ${textFile} cannot be read (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})`);
-  }
+  const read = readVerifyText(textFile);
+  if ('reason' in read) return refuse('text', read.reason);
+  const { bytes } = read;
   let markdown: string;
   try { markdown = new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { return refuse('text', `${textFile} is not strict UTF-8`); }
 

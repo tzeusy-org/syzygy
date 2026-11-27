@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 569 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 581 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -278,9 +278,14 @@ authority and no model yet called on the current path.
     It replaces REQ-polaris-generation-034 from version 2.29 (215 to 220 scenarios): check advises, per major unit,
     the kinds of newcomer question no block declared in a v13 draft's `questionKinds` answers; brief v21 asks for them.
     *(2026-11-26: the predecessor figure of 562 scenarios is superseded.)*
-    [Choice floor amendment 2.33](openspec/changes/dossier-choice-floor) is agent-adopted in A-321.
-    It replaces REQ-polaris-generation-034 from version 2.32 (220 to 222 scenarios): check advises each Pole
-    of a v13 draft with fewer than three choices or trade-offs on record in the understanding record.
+    [Figure plan amendment 2.33](openspec/changes/dossier-figure-plan) is agent-adopted in A-65.
+    It replaces REQ-polaris-generation-034 from version 2.32 (220 to 232 scenarios): schema v14 joins the system model to the
+    worth-knowing mark and requires a figure plan; check advises, gating nothing, on figures that carry too little, repeat another
+    or mix levels; brief v22 asks for the plan. No review has read the 2.33 rebuild.
+    [Choice floor amendment 2.34](openspec/changes/dossier-choice-floor) is agent-adopted in A-321.
+    It replaces REQ-polaris-generation-034 from version 2.33 (232 to 234 scenarios): check advises each Pole
+    of a v13 or v14 draft with fewer than three choices or trade-offs on record in the understanding record.
+    *(2026-11-27: the predecessor figure of 579 scenarios is superseded.)*
     *(2026-11-26: the predecessor figure of 567 scenarios is superseded.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
@@ -733,6 +738,7 @@ python3 scripts/build_polaris_dependency_unions.py --check   # both Polaris depe
 python3 scripts/build_polaris_dependency_unions.py --selftest
 python3 scripts/check_spec_reconciliation.py --check   # five readability outcomes terminal and binding; populations by two methods; routes and generated rows
 python3 scripts/check_spec_reconciliation.py --selftest
+python3 scripts/test_reconciliation_pool.py   # the selftest's family pool and per-run scope: order, failures, exits, dead workers, fresh forks
 python3 scripts/build_three_surface_poc_spec_dependencies.py --check
 python3 scripts/build_directive_register.py --check     # every identifier -> its definition site
 python3 scripts/build_directive_register.py --selftest
@@ -764,7 +770,7 @@ python3 scripts/dossier_pilot_runs.py --selftest   # page classes and one mutati
 python3 scripts/test_dossier_pilot.py   # the pilot harness tests, literal expectations; needs node and git for the screened-tree cases
 ```
 
-The one hundred and thirty-eight checks above are the same one hundred and thirty-eight the hosted workflow runs
+The one hundred and thirty-nine checks above are the same one hundred and thirty-nine the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.
