@@ -2876,6 +2876,15 @@ def selftest(root: Path) -> int:
         "build_three_surface_poc_readability_successor.py",
         "build_three_surface_poc_vocabulary_epistemic_amendment.py",
     ) + tuple(name + ".py" for name in LATER_SIGNED_INPUT_BUILDERS)
+
+    def checkout_core_fixture(tree):
+        git(tree, "checkout", "--quiet", "--detach", CORE_COMMIT)
+        # The frozen P115 fixture predates these two Polaris bindings. A local
+        # clone copies their current tags but the frozen ledger has neither row.
+        for tag in (reconciliation.VBASE_SCREENING_TAG, reconciliation.SOURCE_EXAMPLE_TAG):
+            if git(tree, "tag", "--list", tag):
+                git(tree, "tag", "-d", tag)
+
     if transaction_present(root):
         later = later_signed_selftest()
         for name, passed in later:
@@ -2899,7 +2908,7 @@ def selftest(root: Path) -> int:
             tree = Path(temp) / "tree"
             subprocess.run(["git", "clone", "--quiet", "--no-hardlinks", "--no-checkout",
                             str(root), str(tree)], check=True, capture_output=True)
-            git(tree, "checkout", "--quiet", "--detach", CORE_COMMIT)
+            checkout_core_fixture(tree)
             for name in current_tools:
                 shutil.copyfile(root / "scripts" / name, tree / "scripts" / name)
                 if (tree / "scripts" / name).read_bytes() != (root / "scripts" / name).read_bytes():
@@ -2937,7 +2946,7 @@ def selftest(root: Path) -> int:
             tree = Path(temp) / "tree"
             subprocess.run(["git", "clone", "--quiet", "--no-hardlinks", "--no-checkout",
                             str(root), str(tree)], check=True, capture_output=True)
-            git(tree, "checkout", "--quiet", "--detach", CORE_COMMIT)
+            checkout_core_fixture(tree)
             # Exercise current preparation/reader bytes in the frozen core tree.
             for name in current_tools:
                 shutil.copyfile(root / "scripts" / name, tree / "scripts" / name)

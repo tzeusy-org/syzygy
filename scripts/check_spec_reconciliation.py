@@ -3548,6 +3548,7 @@ P5_ADVICE_STATUS_PREFIX = "[Source-example advice]("
 P5_ADVICE_INDEX_PREFIX = f"| [`{P5_ADVICE_CHANGE}`]("
 P5_ADVICE_COUNT_SCOPE = "With the source-example advice"
 P5_ADVICE_COUNT_PREFIX = "With the source-example advice version effective, Polaris has "
+P5_ADVICE_COUNT = re.compile(re.escape(P5_ADVICE_COUNT_PREFIX) + r"(\d+) requirements and (\d+) scenarios\.")
 P5_ADVICE_CANDIDATE_INDEX = '| [`polaris-source-example-advice`](changes/polaris-source-example-advice) | One immediate advisory for a known absent code selection in a supported operator-agent draft. | **Candidate.** Adoption and implementation pending | [Draft semantic delta](changes/polaris-source-example-advice/SEMANTIC-DELTA.md) |'
 P5_ADVICE_SUBJECTS = {
     "openspec/changes/polaris-source-example-advice/proposed/polaris-generation/spec.md": "e2688ca4162bd10065fbd87dcf6134ab8263a8039dbd3de62b4eb2de85771177",
@@ -3770,6 +3771,13 @@ def p5_advice_binding(root):
     if paths is None or set(paths.rstrip(b"\0").split(b"\0")) != {
             path.encode("ascii") for path in (*P5_ADVICE_SUBJECTS, STATUS, OPENSPEC_README)}:
         return invalid("the source commit changes paths outside the reviewed source and its routes")
+    source_subjects = {}
+    for path, digest in P5_ADVICE_SUBJECTS.items():
+        entry = local_git(git_root, "ls-tree", "-z", source, "--", path)
+        body = local_git(git_root, "show", f"{source}:{path}")
+        if not entry or not entry.startswith(b"100644 blob ") or body is None or sha(body) != digest:
+            return invalid(f"the exact reviewed Git subject is unavailable at {path}")
+        source_subjects[path] = entry, body
 
     def evidence(commit_oid):
         rows = git_adoption_rows(git_root, commit_oid)
@@ -3802,15 +3810,15 @@ def p5_advice_binding(root):
     if revoked != disposition(authored) or (tag and revoked != disposition(protected_rows)):
         return invalid("worktree, authored and protected dispositions disagree")
     if revoked:
-        if not tag or not p5_advice_inverse_verified(root, git_root, source, revoked, protected_rows):
+        added = p5_advice_member_delta(read_text(root, VBASE_SCREENING_SPEC) or "",
+                                      source_subjects[P5_ADVICE_SPEC][1].decode("utf-8"))
+        if added is None or not tag or not p5_advice_inverse_verified(
+                root, git_root, source, revoked, protected_rows, added):
             return invalid("the recorded withdrawal lacks its protected source-only inverse")
         return "reverted", None, [], []
 
-    for path, digest in P5_ADVICE_SUBJECTS.items():
-        entry = local_git(git_root, "ls-tree", "-z", source, "--", path)
-        body = local_git(git_root, "show", f"{source}:{path}")
-        if (not entry or not entry.startswith(b"100644 blob ") or body is None or sha(body) != digest
-                or body != read_bytes(root, path) or entry != local_git(git_root, "ls-tree", "-z", head, "--", path)
+    for path, (entry, body) in source_subjects.items():
+        if (body != read_bytes(root, path) or entry != local_git(git_root, "ls-tree", "-z", head, "--", path)
                 or (tag and entry != local_git(git_root, "ls-tree", "-z", protected, "--", path))):
             return invalid(f"the worktree and exact Git subjects disagree at {path}")
     scopes = {STATUS: (P5_ADVICE_STATUS_PREFIX,), OPENSPEC_README: (P5_ADVICE_INDEX_PREFIX,)}
@@ -3827,19 +3835,26 @@ def p5_advice_binding(root):
 def p5_advice_delta(root, findings):
     predecessor = read_text(root, VBASE_SCREENING_SPEC) or ""
     successor = read_text(root, P5_ADVICE_SPEC) or ""
+    added = p5_advice_member_delta(predecessor, successor)
+    if added is None:
+        findings.append("POLARIS source-example advice: cannot count the screened and advisory members")
+        return 0
+    return added
+
+
+def p5_advice_member_delta(predecessor, successor):
     ident = VBASE_SCREENING_REPLACES[0]
     counts = []
     for text in (predecessor, successor):
         members = [len(block["scenarios"]) for block in _polaris_blocks_manual(text)
                    if block["section"] == "MODIFIED" and tuple(block["ids"]) == (ident,)]
         if len(members) != 1:
-            findings.append("POLARIS source-example advice: cannot count the screened and advisory members")
-            return 0
+            return None
         counts.append(members[0])
     return counts[1] - counts[0]
 
 
-def p5_advice_inverse_verified(root, git_root, source, identity, protected_rows):
+def p5_advice_inverse_verified(root, git_root, source, identity, protected_rows, added):
     withdrawal = [row for row in protected_rows if row.split("|")[1].strip() == identity]
     if len(withdrawal) != 1:
         return False
@@ -3865,8 +3880,31 @@ def p5_advice_inverse_verified(root, git_root, source, identity, protected_rows)
         return [b"@@" if line.startswith(b"@@ ") else line
                 for line in diff.split(b"\n") if not line.startswith(b"index ")]
 
+    def count_deletion(revision):
+        raw = local_git(git_root, "show", f"{revision}:{STATUS}")
+        if raw is None:
+            return None
+        try:
+            body = raw.decode("utf-8")
+        except UnicodeDecodeError:
+            return None
+        counts = scoped_route_lines(body, (P5_ADVICE_COUNT_SCOPE,))
+        screening = scoped_route_lines(body, (VBASE_PHASE_PREFIXES[1],))
+        advice = P5_ADVICE_COUNT.fullmatch(counts[0]) if len(counts) == 1 else None
+        base = VBASE_STATUS_ACTIVE.fullmatch(screening[0]) if len(screening) == 1 else None
+        if not advice or not base or (int(advice[1]), int(advice[2])) != (int(base[1]), int(base[2]) + added):
+            return None
+        return b"-" + counts[0].encode("utf-8")
+
     reverse = changed_lines(source, f"{source}^")
-    if reverse is None or changed_lines(f"{commit}^", commit) != reverse:
+    source_count = count_deletion(source)
+    current_count = count_deletion(f"{commit}^")
+    if reverse is None or source_count is None or current_count is None or reverse.count(source_count) != 1:
+        return False
+    # An authorized later addition can update the derived count before this
+    # inverse. It is the only substituted line in the exact reverse patch.
+    expected = [current_count if line == source_count else line for line in reverse]
+    if changed_lines(f"{commit}^", commit) != expected:
         return False
     for path in P5_ADVICE_SUBJECTS:
         if read_bytes(root, path) is not None or any(
@@ -13863,6 +13901,23 @@ def source_example_git_cases(tmp, witnesses, failures):
         git("update-ref", protected, git("rev-parse", "HEAD"))
         return row
 
+    def withdraw_refreshed_count():
+        current = status.read_text(encoding="utf-8")
+        authority, = scoped_route_lines(current, (P5_ADVICE_STATUS_PREFIX,))
+        phase, = scoped_route_lines(current, (P5_ADVICE_COUNT_SCOPE,))
+        original = f"\n{authority}\n\n{phase}\n"
+        assert current.count(original) == 1
+        without_advice = current.replace(original, "", 1)
+        try:
+            git("revert", "--no-commit", source)
+        except subprocess.CalledProcessError:
+            assert git("diff", "--name-only", "--diff-filter=U") == STATUS
+            status.write_text(without_advice, encoding="utf-8")
+            git("add", STATUS)
+        assert status.read_text(encoding="utf-8") == without_advice
+        git("commit", "-m", "Withdraw the advice and preserve the later census refresh")
+        return record_inverse(git("rev-parse", "HEAD"))
+
     git("remote", "set-url", "origin", str(Path(tmp) / "no-source-example-remote"))
     git("remote", "set-url", "--push", "origin", str(Path(tmp) / "no-source-example-push"))
     line, = p5_advice_claims(adoption_table_rows(ROOT))
@@ -13933,7 +13988,24 @@ def source_example_git_cases(tmp, witnesses, failures):
         git("add", "-A")
         git("commit", "-m", "Install a later signed addition with refreshed advice counts")
         check("later-addition", STATUS, count, expanded, "effective", (40, 612))
+        expanded_head = git("rev-parse", "HEAD")
+        git("update-ref", protected, expanded_head)
+        check("protected-later-addition", STATUS, count, expanded, "effective", (40, 612))
+        row = withdraw_refreshed_count()
+        check("refreshed-inverse", AGENT_ADOPTIONS, "", row, "reverted", (40, 605))
+
+        git("checkout", "--quiet", "--detach", expanded_head)
+        incorrect = expanded.replace("612 scenarios.", "613 scenarios.")
+        assert expanded != incorrect
+        status.write_text(status.read_text(encoding="utf-8").replace(expanded, incorrect), encoding="utf-8")
+        git("add", STATUS)
+        git("commit", "-m", "Record the wrong refreshed advice count")
+        withdraw_refreshed_count()
+        check("incorrect-refreshed-inverse", STATUS, expanded, incorrect, "invalid",
+              clue="protected source-only inverse")
+
         git("checkout", "--quiet", "--detach", authored)
+        git("update-ref", protected, authored)
 
         later = "\nUnrelated fixture note after source-example adoption.\n"
         status.write_text(before + later, encoding="utf-8")
