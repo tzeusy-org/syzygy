@@ -4,7 +4,7 @@ import {
 } from './test-names-recognize.js';
 import { scanCLike, scanPython } from './test-names-lexer.js';
 
-// syzygy-5dhm.45 (REQ-polaris-generation-034 version 2.38): golden fixtures for the four test-name recognizers. Each fixture writes test
+// syzygy-5dhm.45 (REQ-polaris-generation-034 version 2.40): golden fixtures for the four test-name recognizers. Each fixture writes test
 // names in code, and the same names in comments, docstrings and strings, which must yield nothing. Expected names and lines are literals
 // written from the fixture text before the recognizer ran.
 

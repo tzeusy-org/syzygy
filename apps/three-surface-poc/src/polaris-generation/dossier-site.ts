@@ -1263,7 +1263,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     mapFigures = { directories: drawn.directories.figures, units: drawn.units.figures, ci: drawn.ci.figures, infrastructure: drawn.infrastructure.figures };
   }
 
-  // --- the test-names reference page (version 2.38), after the maps.
+  // --- the test-names reference page (version 2.40), after the maps.
   if (testNames !== undefined) add(TEST_NAMES_PAGE.path, 1, TEST_NAMES_PAGE.title, testNamesPage(testNames.member, testNames.derived.revision));
 
   // --- the operator-agent run's own pages: understanding, discovery, clarifications, executions, review

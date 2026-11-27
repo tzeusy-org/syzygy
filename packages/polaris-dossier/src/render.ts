@@ -343,7 +343,7 @@ export async function renderManifestFacts(clonePath: string, pinned: string, dep
   return deriveManifestFacts({ entries, screen, consented, read: async (manifestPath) => (await manifestReader.readBlobs([manifestPath]))[0]! });
 }
 
-/** The render's own test-names member (version 2.38): as `renderManifestFacts`, each test file read alone through its own pinned reader
+/** The render's own test-names member (version 2.40): as `renderManifestFacts`, each test file read alone through its own pinned reader
  * whose object bound is `MANIFEST_BLOB_LIMIT`; `unknown` where the tree cannot be listed. */
 export async function renderTestNames(clonePath: string, pinned: string, deps: Pick<RenderDeps, 'openReader'>, screen: DossierScreen,
   consented: readonly string[] | null, reader: { readonly listTree: () => Promise<readonly TreeEntry[]> }): Promise<TestNames> {

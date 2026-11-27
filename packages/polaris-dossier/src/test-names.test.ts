@@ -7,7 +7,7 @@ import { GitObjectReadRefusal, type VerifiedBlob } from './git-object-reader.js'
 import { buildDossierScreen, type DossierScreen } from './screen.js';
 import { deriveTestNames, testNamesUnknown, type TestNames } from './test-names.js';
 
-// syzygy-5dhm.45 (REQ-polaris-generation-034 version 2.38): the testNames member from a tree listing, the bound policy's screen and a
+// syzygy-5dhm.45 (REQ-polaris-generation-034 version 2.40): the testNames member from a tree listing, the bound policy's screen and a
 // reader double that fails the test on any path the stated dispositions do not read. Expected members, counts and names are literals
 // written from the fixture before the driver ran. Planted secret values are fake and assembled from pieces.
 

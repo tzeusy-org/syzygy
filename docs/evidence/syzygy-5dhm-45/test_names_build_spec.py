@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""syzygy-5dhm.45: build REQ-polaris-generation-034 version 2.38 from the effective predecessor's bytes.
+"""syzygy-5dhm.45: build REQ-polaris-generation-034 version 2.40 from the effective predecessor's bytes.
 
 Usage: test_names_build_spec.py <predecessor spec.md> <predecessor label> <out>
 <predecessor label> is the banner's words for the predecessor, for example 'version 2.32 (A-321)'. The script replaces the title (line 1)
@@ -15,8 +15,8 @@ prior_path, label, out = pathlib.Path(sys.argv[1]), sys.argv[2], pathlib.Path(sy
 prior = prior_path.read_text(encoding='utf-8')
 
 NEW_TITLE = '# Dossier test-name recognizers'
-NEW_BANNER = (f'Candidate version 2.38. One MODIFIED requirement, REQ-polaris-generation-034, whose complete text below replaces effective {label}. '
-              'It binds through its agent adoption row and the annotated tag `polaris-dossier-test-names-v2.38`. It adds four lexical test-name '
+NEW_BANNER = (f'Candidate version 2.40. One MODIFIED requirement, REQ-polaris-generation-034, whose complete text below replaces effective {label}. '
+              'It binds through its agent adoption row and the annotated tag `polaris-dossier-test-names-v2.40`. It adds four lexical test-name '
               'recognizers, the render\'s `testNames` member, the reference page `reference/test-names.html` and the machine view\'s `testNames` '
               'member, all in the operator-agent mode; it changes no finding, no gate, no other page of a render without the member, and no '
               'provider-mode byte.')
@@ -25,7 +25,7 @@ ANCHOR = '`machine.json` SHALL carry, beside `derivedStructure` and outside `rev
 
 PARAGRAPHS = [
     # The recognizers.
-    'From version 2.38 each render in the operator-agent mode SHALL also derive declared test names: what four versioned recognizers read in '
+    'From version 2.40 each render in the operator-agent mode SHALL also derive declared test names: what four versioned recognizers read in '
     'the test files of the pinned tree that the bound screening policy admits, each named by its rule id at version 1. Their candidates are '
     'blob entries named by path alone: for `pytest-test-name`, a basename ending `.py` that begins `test_` or ends `_test.py`; for '
     '`js-test-call`, a basename ending one of `.js`, `.jsx`, `.mjs`, `.cjs`, `.ts`, `.tsx`, `.mts` and `.cts` whose stem before that ending '

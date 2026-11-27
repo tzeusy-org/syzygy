@@ -2,11 +2,11 @@
 
 ## Predecessor
 
-[Observed] REQ-polaris-generation-034 v2.37, the choice floor (syzygy-5dhm.43), at `7a55940f1e683f99de40d1a53a8c81e0372cc36f`, `openspec/changes/dossier-choice-floor/proposed/polaris-generation/spec.md`, SHA-256 `02f7a314e827682f08e69e4d47a03479ff82c8896ecbddd99315e5f4e55bc380`, 265 scenario headings. It succeeds v2.36, the source-example advice (A-334), the effective REQ-034 on `origin/main`.
+[Observed] REQ-polaris-generation-034 v2.38, the migration parity (syzygy-3efd.85), at `a74a738b565ed0971371649d077a521b0914c779`, `openspec/changes/dossier-migration-parity/proposed/polaris-generation/spec.md`, SHA-256 `e37ca0fc3053302a13ccb0c2ad87c990cdb887fe275568eb9a707425396682f4`, 266 scenario headings. It succeeds v2.37, the choice floor (A-336), and is the effective REQ-034 on `origin/main`. This change was first built as v2.38 over the choice floor; migration parity took that number first, so it was rebuilt as v2.40 (v2.39 is held by the session-usage change to REQ-033).
 
 ## Amended in place
 
-- The title and the banner paragraph name version 2.38, its predecessor and its tag.
+- The title and the banner paragraph name version 2.40, its predecessor and its tag.
 - The event-response form's Observable, Oracle and Falsifier lines each gain one sentence for the test-name recognizers; their predecessor bytes are kept as each line's prefix.
 
 ## Added
