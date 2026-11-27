@@ -35,7 +35,7 @@ MUTANTS = [
     ('row-old-tag', LEDGER, '| `polaris-dossier-test-names-v2.38` |', '| `polaris-dossier-test-names-v2.37` |',
      CHECK_RUN, 'calls test-name recognizers v2.38 adopted while it is not in force'),
     ('row-test-is-choice', CHECK, 'for line in adoption_table_rows(root) if is_tnames_row(line)]',
-     'for line in adoption_table_rows(root) if is_choice_row(line)]', CHECK_RUN, 'choice floor v2.37 adopted while it is not in force'),
+     'for line in adoption_table_rows(root) if is_choice_row(line)]', CHECK_RUN, 'test-name recognizers: malformed adoption identity'),
     ('census-skips-tnames', CHECK, '                a, extra_a = compose_figure_by_id(a, tnames_amendment, TNAMES_REPLACES)\n'
      '                b, extra_b = compose_figure_by_name(b, tnames_amendment, TNAMES_REPLACES)\n',
      '                extra_a = extra_b = []\n', CHECK_RUN, 'FAIL  R3'),
