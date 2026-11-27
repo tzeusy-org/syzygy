@@ -455,6 +455,24 @@ describe('system model: migration', () => {
     await keepsParity(v11);
   }, 120_000);
 
+  /** `sized` with one containment more, first: five top-level groups, each holding seven, so 40 groups and 35 nestings. */
+  const contained = (counts: readonly (readonly [number, number])[]): Doc => {
+    const doc = sized(counts);
+    const tops = Array.from({ length: 5 }, (_, t) => group(`g${t}`, `Group ${t}`, Array.from({ length: 7 }, (_, c) => group(`g${t}-${c}`, `Group ${t}.${c}`))));
+    return { ...doc, diagrams: [containment('nest', tops), ...doc.diagrams] };
+  };
+
+  it('counts a group as an element and a nesting as no relationship: nodes and groups of 200 keep parity, of 201 get the finding (version 2.41)', async () => {
+    const at200 = contained([[40, 80], [40, 80], [40, 80], [40, 80]]);
+    const model = migrateDraft(at200)!['model'] as Doc;
+    expect([model['elements'].length, model['relationships'].length]).toEqual([200, 320]);
+    await keepsParity(at200);
+    const at201 = contained([[40, 80], [40, 80], [40, 80], [39, 78], [2, 1]]);
+    expect(await findingsOf(A, at201)).toEqual(PASSED);
+    expect((await findingsOf(A, migrateDraft(at201)!)).findings.filter((finding) => finding.kind === 'schema')).toEqual([
+      { kind: 'schema', at: '$.model.elements', detail: 'must hold 0 to 200 items; holds 201' }]);
+  }, 120_000);
+
   it('gives the migrated draft check\'s schema finding at 201 nodes, and at 401 edges, though each v11 draft passes (version 2.41)', async () => {
     const nodes = sized([[40, 80], [40, 80], [40, 80], [40, 80], [39, 79], [2, 1]]);
     const edges = sized([[40, 80], [40, 80], [40, 80], [40, 80], [38, 80], [2, 1]]);
