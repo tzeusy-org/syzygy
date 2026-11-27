@@ -325,6 +325,13 @@ or deep dive may walk one graph figure in numbered steps, linking each step to i
 With the figure walks version effective, Polaris has 39 requirements and 641 scenarios.
 *(2026-11-28: the predecessor figure of 638 scenarios is superseded by session usage 2.41's three REQ-033 scenarios.)*
 
+[Test-name recognizers amendment 2.42](openspec/changes/dossier-test-names) is agent-adopted in A-337.
+It replaces REQ-polaris-generation-034 from version 2.40, the figure walks (291 to 297 scenarios): each operator-agent
+render reads declared test names lexically and publishes them per unit on `reference/test-names.html`.
+
+With the test-name recognizers version effective, Polaris has 39 requirements and 647 scenarios.
+*(2026-11-28: the predecessor figure of 644 scenarios is superseded by session usage 2.41's three REQ-033 scenarios.)*
+
 [Session usage amendment 2.41](openspec/changes/dossier-session-usage) is agent-adopted in A-338.
 It replaces REQ-polaris-generation-033 from version 2.31, the close measures (25 to 28 scenarios): close records a launched run's
 per-session token counts, read by Syzygy from each session's own transcripts, with a run total; close, status and the review

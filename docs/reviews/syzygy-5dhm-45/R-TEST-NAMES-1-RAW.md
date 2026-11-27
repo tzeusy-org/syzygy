@@ -1,0 +1,65 @@
+# R-TEST-NAMES-1 — syzygy-5dhm.45 test-name recognizers v2.38
+Reviewed commit: 78418cf137208346ce12401f4f27b9722cb631eb
+Verdict: REVISE
+
+Scope: PR #1037 (branch agent/syzygy-5dhm.45) at the reviewed commit, merge base with origin/main `a5d6eb2475748418bc3d6fe3dedb28b1aafdb8b7`. Worked in a detached snapshot worktree at the reviewed commit (`npm ci` run inside it) and, for the revert test, a scratch clone. Probe scripts: `/home/orca/.tmp/r45/probe.ts`, `spec_cmp.py`, `spec_cmp2.py`, `astral_sweep.py`, `resolve.py`.
+
+## Findings
+
+### 1. High — [Observed] The lexer's blanking shrinks every astral character, so offsets drift: JavaScript names after one are silently dropped, and every other recognizer reports wrong lines
+
+- Where: `packages/polaris-dossier/src/test-names-lexer.ts:20`
+  ```ts
+  const blank = (text: string): string => text.replace(/[^\r\n]/gu, ' ');
+  ```
+  With the `u` flag, `[^\r\n]` matches a whole code point, so a surrogate pair (two UTF-16 code units, e.g. any emoji) becomes ONE space. The code text is then shorter than the body by one unit per astral character in any comment or string interior, contradicting the module's own contract ("newlines kept, so every offset and line of the code text is the body's", lines 3–4) and the spec's statement that the lexer keeps every offset.
+- Evidence (probe `/home/orca/.tmp/r45/probe.ts`, run with `npx vite-node` in the snapshot):
+  - `node -e`: `'// \u{1F389}\n'` has length 6; blanked with `/gu` it has length 5; with `/g` it has length 6.
+  - `recognizeJsTests("// 🎉🎉\nit('a', () => {});\nit('b', () => {});\n")` → `{"ok":true,"names":[]}` (control without the emoji: `a` line 2, `b` line 3).
+  - `recognizeJsTests("it('party 🎉', () => {});\nit('after', () => {});\n")` → only `party 🎉`; `after` is lost.
+  - ``recognizeJsTests("const x = `🎉`;\ntest('after', () => {});\n")`` → no names.
+  - `recognizePytest("# " + "🎉"×20 + "\n\ndef test_a():…")` → `test_a` at line 1 (true line 3). Go (40 emoji in a comment) → `TestA` at line 2 (true line 4); JUnit → `works` at line 1 (true line 3).
+- Mechanism: `recognizeJsTests` looks a literal up by `byStart.get(match.index + match[0].length)` — a code-text offset — in a map keyed by body offsets (`test-names-recognize.ts:94,97`), so after any drift the lookup misses and the call is skipped. The other three compute `lineOf(match.index …)` (code-text offset) over `lineIndex(text)` (body offsets), `test-names-recognize.ts:51,55,69`.
+- Why it matters: the file is still reported as read and Inferred with a `names` count that is too low, and the page says each count "is of the files read" — an undisclosed undercount, not an Unknown (VIS-2). The spec's own clauses are violated: `js-test-call` "takes each call …" and `line` is "the 1-based line of the name in its file". Rendered evidence (`Test <name>, in <path> at line <n>.`) names wrong lines. Emoji in JS/TS test titles and comments is common in real repositories.
+- Exposure on the reviewed evidence: [Observed] none of Syzygy's own 402 JS/TS/pytest candidate files holds a character above U+FFFF (`astral_sweep.py`), which is why the before/after record and the 34/34 mutation run did not see it. No test in `test-names-recognize.test.ts`, `test-names.test.ts` or `dossier-test-names.test.ts` uses a non-BMP character; the lexer test "keeps the code text the same length" uses BMP input only.
+- Repair: drop the `u` flag (`/[^\r\n]/g`), which replaces each UTF-16 code unit; add a lexer test that a body holding an astral character in a comment, a string and a template yields code text of equal length, plus recognizer tests (JS name after an emoji comment and after an emoji-bearing title; a pytest/Go/JUnit line after an emoji comment). Add the `u`-flag restoration as a rule-6 mutant and record it.
+
+### 2. Medium — [Observed] The row's spec-commit revert command does not apply at the PR tip, and once forced through it leaves PROJECT-STATUS claiming v2.38 in force with no check failing
+
+- Where: `.syzygy/governance/decisions/AGENT-ADOPTIONS.md:129` (A-337 revert column: "`git revert f46798ce…` reverts the specification and its reconciler wiring alone").
+- Evidence (scratch clone at the reviewed commit, `origin/main` and tags fetched from the shared repository):
+  - `git revert --no-edit f46798ce46ac3307e7261faf5f6cc95e7e8b47ba` stops with two conflicts: `openspec/README.md` (f46798ce4 added the `dossier-test-names` index row, which `83055b0d0` later edited) and `AGENT-ADOPTIONS.md` (f46798ce4 also normalized the A-336 row's `|  A-336` padding; reverting re-introduces the double space next to the later A-337 row).
+  - So the commit does more than "the specification and its reconciler wiring": it also carries the openspec index row, the A-336 padding fix and an evidence-script edit (`git show --stat f46798ce4`: 13 files).
+  - After resolving the conflicts by hand (index row dropped, both adoption rows kept), `python3 scripts/check_spec_reconciliation.py --check` → "7 of 7 predicates without FAIL; PASS" and the counter reports 612 scenarios, while `PROJECT-STATUS.md:303` still reads "is agent-adopted in A-337" and line 307 "With the test-name recognizers version effective, Polaris has 39 requirements and 618 scenarios." Nothing detects the stale route once the wiring that checks it is gone.
+- Repair: either state the real recipe (revert `83055b0d0` and then `f46798ce4`, or the merge commit) in the revert column, or move the A-336 padding fix and the index row out of the spec commit so the plain revert applies; and say in the row that the status lines added by `83055b0d0` must go with it. [Inferred] The A-336 row (choice floor) likely carries the same pattern; not checked here.
+
+### 3. Low — [Observed] The version tag does not exist yet
+
+- `git ls-remote origin 'refs/tags/polaris-dossier-test-names*'` and `git tag -l` return nothing; the sibling `polaris-dossier-choice-floor-v2.37` points at its spec commit `7a55940f`. The reconciler checks only the tag's spelling in the row (`check_spec_reconciliation.py` `_reviewed_version_binding`, ~line 3298), not that it exists. `tasks.md` leaves "Adopt with one row and the version tag" unchecked, so this is pending, not wrong. Repair: create the annotated tag at `f46798ce46ac3307e7261faf5f6cc95e7e8b47ba` once the PR merges (the row requires a merge, not a squash).
+
+### 4. Low — [Observed] Lexical false positives and false negatives the spec does not disclose
+
+- JS lookbehind `(?<![\w$.])` is ASCII-only: `éit('x')` yields the name `x` (`test-names-recognize.ts:89`). Spec: a call "that is no member of another object" — a different identifier is not a call of `it`.
+- pytest's identifier class `[A-Za-z0-9_]` skips a Unicode-named test (`def test_café():` → no name, file still Inferred) (`test-names-recognize.ts:61`). The spec says "each `def` … whose name begins `test`".
+- The `unterminated` fault also fires when a single-line string meets a line break, not only at the end of the body (`test-names-lexer.ts:54`; JSX `<p>Don't</p>` and `if (a) /'/.test(s)` both give `unparsed`/`unterminated`; Python `return"""…` and 3.12 nested-quote f-strings likewise). These fail toward Unknown, which is honest, and `design.md` mentions the JSX case, but the spec text says only "a body that ends inside a comment or a string". Repair: one spec sentence that a string reaching a line break it may not span is the same fault; optionally use `\p{ID_Continue}` / `\p{ID_Start}` classes.
+- pytest takes nested helper functions inside a test and `test*` methods of a non-`Test` class (`test_inner`, `test_m` in probe). Spec-consistent ("at any indentation") and the page says a name is never a claim it runs; noted only.
+
+### 5. Low — [Inferred] Minor spec–code and row-prose drift
+
+- Spec: where the member is `unknown` "the section holds only a `Not established.` sentence"; the code also emits `<h1>Test names</h1>` inside the section (`apps/three-surface-poc/src/polaris-generation/dossier-test-names.ts:50-52`). Repair the sentence ("only its heading and …") or the markup.
+- A-337 prose: "maps each name to the units whose files it sits in" — the rule is the single top-level directory of the path (`top-level-unit`), or the root; and "(pytest functions and methods … JUnit `@Test` methods)" omits the suite kinds (`Test` classes, `describe`/`context`/`suite`) and the four other JUnit annotations. Not wrong in substance; repair the wording if the row is touched for finding 2.
+
+## Checks that held
+
+- Spec byte-identity [Observed]: scripted (`spec_cmp2.py`). Predecessor SHA-256 `02f7a314…c380` (matches SEMANTIC-DELTA), successor `7db850c2…ab40` (matches `TNAMES_SUBJECTS` and `git show f46798ce4:…spec.md | sha256sum`). Scenario blocks (heading plus WHEN/THEN/AND bullets): 265 → 271; the first 265 equal the predecessor's in order and each is byte-present; the 6 added follow the last predecessor scenario: "Test names read from code, never from comments or strings", "Test files left out, set apart or Unknown", "Test names the value checks refuse", "Test-names page rendered", "Test names Unknown when the tree is not listed", "No test-names page without the member". Other changes (unified diff, 58 lines): title and banner; three new paragraphs after line 212; the event-response Observable/Oracle/Falsifier lines each extended with the old bytes as prefix. The one duplicate heading ("Earlier schema keeps its bytes") is inherited from v2.37.
+- Disposition order and limits [Observed]: `test-names.ts:126-139` follows `manifest-facts.ts:168-177` (secret path, set apart, path-citable, symlink, path screen, class gate, read limit); 250 files per recognizer, 2000 names, 250 units, value limit 256 (`MANIFEST_VALUE_LIMIT`), control and secret-detector checks — all as the spec states. The `setApartPath` refactor in `derive.ts` keeps the same predicate.
+- Secret screening not weakened [Observed]: secret-path candidates are counted and never read or named; each read body passes `screenTargetBody` whole and an excluded or redacted body is Unknown with no names; every name passes `screenBody`. Class gate precedes reading.
+- Path rules [Observed] by probe: `.mts`/`.cts` not shadowed by `.ts` (the dot makes the comment at `test-names-recognize.ts:29` true); `_test.go` alone, `.test.ts` alone, `ATestCase.java` not candidates; `Test.java`, `TestCase.java`, `Testing.java` candidates per spec.
+- Comment/string blanking for BMP text [Observed]: names in `//`, `/* */`, `#`, docstrings, strings, template literals (with and without substitutions), Go raw strings and block comments, Java text blocks are not read; Go method, indented func, `Testable`, `Benchmark`, two-parameter and generic forms excluded; JUnit `@Testable` and commented/stringified annotations excluded; qualified annotations, annotation arguments, interleaved annotations, generics and arrays read; JS member calls, `test.each`, escapes other than `\\`/`\'`/`\"` refused; modifiers chain read.
+- No script, escaped output [Observed]: `dossier-test-names.ts` escapes every name, path and rule; its test asserts the page holds no script and `renders <b>` is escaped.
+- Provider-mode golden [Observed]: `git diff --quiet origin/main HEAD -- apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts` → unchanged; the golden test passes.
+- No observed code executed [Observed]: recognizers are pure lexical functions; `cli.test.ts`'s network-module sweep now includes the three new sources and passes.
+- Wiring [Observed]: `tnames_binding` takes `predecessor=choice_binding`; composition applies v2.38 only when the choice floor is in force and records "requires effective choice floor v2.37" otherwise (`check_spec_reconciliation.py` ~6336-6345); the counter composes after `CHOICE_SPEC`. `python3 scripts/check_spec_reconciliation.py --check` → 7 of 7 without FAIL, PASS (R6 WARN is the pre-existing PWB pin); `python3 scripts/count_polaris_effective_scenarios.py` → 39 requirements, 618 scenarios, matching PROJECT-STATUS.
+- Reconcile mutation evidence [Observed]: `test-names-reconcile-mutation-2026-11-28.json` names commit `bf4a7eb9f`, a green baseline of both commands, and 11 mutants each with old/new fragments, all killed. [Inferred] No mutant swaps `predecessor=choice_binding` for an earlier predecessor; it would be equivalent in the current state, so no gap in force today.
+- Row A-337 [Observed]: commit column `f46798ce…` is an ancestor of the reviewed commit; the snapshot URL names that commit and the spec path whose digest matches; the tag column spells `polaris-dossier-test-names-v2.38` (see finding 3); the row requires a merge so the commit stays reachable.
+- Tests [Observed]: `npx vitest run` over `test-names.test.ts`, `test-names-recognize.test.ts`, `dossier-test-names.test.ts`, `render.test.ts`, `cli.test.ts` and the provider golden: 6 files, 297 tests passed. [Inferred] They pin per-framework names, comment/string exclusion, dispositions, value checks, page and machine member well (the recorded 34/34 mutation run agrees), but nothing would fail on finding 1.

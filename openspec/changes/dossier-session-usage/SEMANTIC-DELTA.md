@@ -4,7 +4,7 @@
 
 [Observed] A-310, REQ-polaris-generation-033 v2.31 at `34084d4c22f741f6d3c9a9a0bc235f2785e81cb5`, `openspec/changes/dossier-step-measures/proposed/polaris-generation/spec.md`, SHA-256 `f7ff5706c26b937d991e24183d5dcb29091fefe580b066ccbfc32540fde7ea05`, 25 scenario headings.
 
-[Observed] v2.31 is the last change to REQ-033 on `origin/main` at `b3e397fd3695c8b0b78348394761b7a6c90314b4` (first checked at `92b8ded82f07fc2ad7164a174ea6e5e2320eb2c4`): of the `*_REPLACES` tuples in `scripts/check_spec_reconciliation.py` that name 033 (raw read, run-tree read bounds, verify, question file, scripted benchmark grading, step measures, URL source), step measures v2.31 is the newest; the versions after it, v2.32 to v2.40, each replace REQ-polaris-generation-034 or 035 alone.
+[Observed] v2.31 is the last change to REQ-033 on `origin/main` at `d652b7dcc445f3c0f2f87dd2390aab47bcd2ff60` (first checked at `92b8ded82f07fc2ad7164a174ea6e5e2320eb2c4`): of the `*_REPLACES` tuples in `scripts/check_spec_reconciliation.py` that name 033 (raw read, run-tree read bounds, verify, question file, scripted benchmark grading, step measures, URL source), step measures v2.31 is the newest; the versions after it, v2.32 to v2.40 and v2.42, each replace REQ-polaris-generation-034 or 035 alone.
 
 ## Amended in place
 
