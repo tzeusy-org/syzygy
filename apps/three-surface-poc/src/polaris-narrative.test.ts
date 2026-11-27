@@ -185,7 +185,7 @@ describe('Polaris narrative claim blocks (PWB-REQ-014; RFC7-2, RFC7-3, RFC7-9)',
     ] as const;
     for (const variant of ['unevaluated', 'rejected'] as const) {
       const { html, narrative } = renderPolarisPresentation(shared.get(variant));
-      expect(narrative.openings).toEqual(expected.map(([group, groupClass]) => ({
+      expect(narrative.openings.filter((opening) => opening.groupClass !== 'evidence')).toEqual(expected.map(([group, groupClass]) => ({
         kind: 'group-opening',
         groupId: `polaris-group-${group}`,
         groupClass,
@@ -199,16 +199,73 @@ describe('Polaris narrative claim blocks (PWB-REQ-014; RFC7-2, RFC7-3, RFC7-9)',
         expect(opening).not.toHaveProperty('anchors');
         expect(opening).not.toHaveProperty('anchorsResolved');
       }
-      const ledes = narrativeUnits(html).filter((unit) => attr(unit.attrs, 'data-polaris-group-opening') !== undefined);
+      const ledes = narrativeUnits(html).filter((unit) => attr(unit.attrs, 'data-polaris-group-opening')?.startsWith('polaris-group-'));
       expect(ledes.map((unit) => [attr(unit.attrs, 'data-polaris-group-opening'), unit.inner]))
         .toEqual(expected.map(([group, , sentence]) => [`polaris-group-${group}`, sentence]));
       for (const [group] of expected) {
         const target = `polaris-shape-status-${group}`;
         expect(html.match(new RegExp(`id="${target}"`, 'g'))).toHaveLength(1);
         expect(html).toContain(`href="#${target}" data-opening-child="claim:project-shape"`);
-        expect(html).toContain(`<section class="claim-section" id="${target}" data-polaris-section="shape:${group}">`);
+        expect(html).toContain(`<section class="claim-section" id="${target}" data-polaris-section="shape:${group}"`);
       }
       expect(narrative.blocks.flatMap((block) => block.anchors).some((anchor) => anchor.supports.includes('claim:project-shape'))).toBe(false);
+    }
+  });
+
+
+
+  it('puts the unavailable answer first even over the existing tuple key and reconciliation', () => {
+    const { html } = renderPolarisPresentation(shared.get('rejected'));
+    for (const group of ['overview', 'boundaries', 'v1', 'architecture', 'catalog']) {
+      const header = new RegExp(`<header class="group" data-polaris-group="${group}"[^>]*>.*?</header>`, 's');
+      const end = header.exec(html);
+      expect(end, group).not.toBeNull();
+      const following = html.slice((end?.index ?? 0) + (end?.[0].length ?? 0)).trimStart();
+      expect(following.startsWith(`<p class="group-lede" data-polaris-group-opening="polaris-group-${group}"`), group).toBe(true);
+    }
+  });
+
+  it('matches every unavailable category evidence opening to the existing machine claim and its in-place disclosure', () => {
+    const categories = ['overview', 'boundaries', 'v1', 'architecture', 'catalog'] as const;
+    for (const variant of ['unevaluated', 'rejected'] as const) {
+      const model = shared.get(variant);
+      const machine = JSON.parse(JSON.stringify(model)) as PocModel;
+      const claim = machine.projectShape.claim;
+      expect(claim).toMatchObject({ claimId: 'claim:project-shape', epistemic: { label: 'Unknown' } });
+      const primary = 'reasons' in claim.epistemic ? claim.epistemic.reasons.primary : undefined;
+      const route = claim.resolutionRoutes.find((entry) => entry.reason === primary)?.route;
+      expect(route).toBeDefined();
+      const { html, narrative } = renderPolarisPresentation(model);
+      const openings = narrative.openings.filter((opening) => opening.groupClass === 'evidence');
+      expect(openings).toEqual(categories.map((category) => ({
+        kind: 'group-opening',
+        groupId: `polaris-evidence-${category}`,
+        groupClass: 'evidence',
+        label: claim.epistemic.label,
+        childIds: [claim.claimId],
+        role: 'epistemic-claim',
+        presentation: 'presentation-artifact',
+        citable: false,
+      })));
+      const units = narrativeUnits(html);
+      for (const category of categories) {
+        const target = `polaris-evidence-status-${category}`;
+        const group = `polaris-evidence-${category}`;
+        expect(html).toContain(`data-polaris-section="shape:${category}" data-polaris-evidence-owner="polaris-group-${category}"`);
+        const headings = units.filter((unit) => attr(unit.attrs, 'data-polaris-group-opening') === group);
+        expect(headings.map((unit) => unit.inner)).toEqual(['Evidence for this group is unavailable.']);
+        const links = units.filter((unit) => unit.tag === 'a' && attr(unit.attrs, 'href') === `#${target}`);
+        expect(links).toHaveLength(1);
+        expect(attr(links[0]?.attrs ?? '', 'data-opening-child')).toBe(claim.claimId);
+        expect(attr(links[0]?.attrs ?? '', 'data-copy-role')).toBe('action-label');
+        expect(html.match(new RegExp(`id="${target}"`, 'g'))).toHaveLength(1);
+        expect(html).toContain(`id="${target}"><div class="unknown-disclosure" data-unknown-disclosure="${claim.claimId}"`);
+        const targetIndex = html.indexOf(`id="${target}"`);
+        const disclosure = html.slice(targetIndex, html.indexOf('</section>', targetIndex));
+        expect(disclosure).toContain(`data-unknown-reason="${primary}"`);
+        expect(disclosure).toContain(route?.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;').replaceAll("'", '&#39;'));
+      }
     }
   });
 

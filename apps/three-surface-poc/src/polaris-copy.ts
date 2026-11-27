@@ -94,6 +94,7 @@ export const POLARIS_COPY = [
   { id: 'opening.unavailable.architecture', role: 'project-fact', kind: 'lede', text: 'The declared architecture is unknown.' },
   { id: 'opening.unavailable.v1', role: 'project-fact', kind: 'lede', text: 'The declared V1 scope is unknown.' },
   { id: 'opening.unavailable.catalog', role: 'project-fact', kind: 'lede', text: 'The project catalog is unknown.' },
+  { id: 'opening.unavailable-evidence', role: 'project-fact', kind: 'lede', text: 'Evidence for this group is unavailable.' },
   { id: 'opening.empty-catalog', role: 'project-fact', kind: 'lede', text: 'No items were declared by admitted sources.' },
   { id: 'opening.unknown-catalog', role: 'project-fact', kind: 'lede', text: 'The declarations for this class are unknown.' },
   { id: 'group.capability-detail', role: 'project-fact', kind: 'heading', text: 'One capability in depth' },
@@ -153,6 +154,7 @@ export const POLARIS_COPY = [
   // Progressive disclosure (PWB-REQ-011): exhaustive populations stay
   // complete behind a native disclosure whose control names the count.
   { id: 'label.selected-passages', role: 'scope-instruction', kind: 'label', text: 'Selected passages from the project’s declaration. The complete account follows below.' },
+  { id: 'label.evidence-remedy', role: 'action-label', kind: 'label', text: 'Inspect the evidence disclosure' },
   { id: 'label.source-remedies', role: 'action-label', kind: 'label', text: 'Source details and remedies' },
   { id: 'label.guide-intro', role: 'scope-instruction', kind: 'label', text: 'Declared capability groups, with examples where available.' },
   { id: 'label.complete-catalog', role: 'action-label', kind: 'label', text: 'Explore the complete catalog' },
