@@ -1229,9 +1229,9 @@ function observeCurrentPolicy<S extends CurrentPolicyTrace, T extends boolean | 
 
 /** Nested Vitest spies restore the underlying original, not the prior spy.
  * Reinstall that exact prior descriptor only while this pause still owns it. */
-function restorePausedPolicyCurrent(pause: typeof policySnapshot.committedUrlPoliciesCurrentAsync & { mockRestore(): unknown },
+function restorePausedPolicyCurrent(pause: { mockRestore(): unknown },
   previous: PropertyDescriptor): void {
-  if (policySnapshot.committedUrlPoliciesCurrentAsync !== pause) return;
+  if (!Object.is(policySnapshot.committedUrlPoliciesCurrentAsync, pause)) return;
   pause.mockRestore();
   Object.defineProperty(policySnapshot, 'committedUrlPoliciesCurrentAsync', previous);
 }
