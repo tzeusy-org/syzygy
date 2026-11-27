@@ -17,7 +17,9 @@ export interface StringToken {
 }
 export type Scanned = { readonly ok: true; readonly code: string; readonly strings: readonly StringToken[] } | { readonly ok: false; readonly fault: 'unterminated' };
 
-const blank = (text: string): string => text.replace(/[^\r\n]/gu, ' ');
+/** Every UTF-16 code unit but a line break becomes one space, so the code text keeps every offset of the body: no `u` flag, which
+ * would turn a surrogate pair into one space and move every later offset (R-TEST-NAMES-1 F1). */
+const blank = (text: string): string => text.replace(/[^\r\n]/g, ' ');
 
 /** A plain literal's value: the simple escapes resolved, or null for anything else. */
 function plainValue(inner: string): string | null {

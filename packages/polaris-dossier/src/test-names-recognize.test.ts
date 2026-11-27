@@ -29,6 +29,43 @@ describe('the lexer keeps offsets and blanks comments and string interiors', () 
     if (!s.ok) throw new Error('unparsed');
     expect(s.code).toBe('a = b / c; r =             ;');
   });
+  // R-TEST-NAMES-1 F1: a character outside the Basic Multilingual Plane is two code units; blanking it as one moved every later offset.
+  it('keeps every offset across a character outside the Basic Multilingual Plane', () => {
+    const party = '\u{1F389}';
+    const text = `// ${party}${party}\nx = "${party}"; # ${party}\n`;
+    const c = scanCLike(text);
+    const pyText = text.replace('//', '#');
+    const p = scanPython(pyText);
+    if (!c.ok || !p.ok) throw new Error('unparsed');
+    expect(c.code.length).toBe(text.length);
+    expect(p.code.length).toBe(pyText.length);
+  });
+});
+
+describe('a character outside the Basic Multilingual Plane moves no later name or line', () => {
+  const party = '\u{1F389}';
+  it('js-test-call', () => {
+    const text = [`// ${party}${party}`, `it('party ${party}', () => {});`, "it('after', () => {});"].join('\n');
+    expect(names(recognizeJsTests(text))).toEqual([`2:test:party ${party}`, '3:test:after']);
+  });
+  it('pytest-test-name', () => {
+    expect(names(recognizePytest(`# ${party}\nx = "${party}"\ndef test_after():\n    pass\n`))).toEqual(['3:test:test_after']);
+  });
+  it('go-test-function', () => {
+    expect(names(recognizeGoTests(`package p\n// ${party}\nvar s = "${party}"\nfunc TestAfter(t *testing.T) {}\n`))).toEqual(['4:test:TestAfter']);
+  });
+  it('junit-test-method', () => {
+    expect(names(recognizeJunit(`class FooTest {\n  // ${party}\n  String s = "${party}";\n  @Test void after() {}\n}\n`))).toEqual(['4:test:after']);
+  });
+});
+
+describe('identifiers beyond ASCII (R-TEST-NAMES-1 F4)', () => {
+  it('pytest takes a test name that continues with letters beyond ASCII', () => {
+    expect(names(recognizePytest('def test_caf\u00e9():\n    pass\nclass Test\u00c9t\u00e9:\n    pass\n'))).toEqual(['1:test:test_caf\u00e9', '3:suite:Test\u00c9t\u00e9']);
+  });
+  it('js-test-call takes no call whose callee is a longer identifier ending in a listed name', () => {
+    expect(names(recognizeJsTests("\u00e9it('x', () => {});\nit('y', () => {});"))).toEqual(['2:test:y']);
+  });
 });
 
 describe('rule pytest-test-name v1', () => {

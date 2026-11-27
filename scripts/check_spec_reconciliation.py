@@ -3586,7 +3586,7 @@ TNAMES_REPLACES = (POLARIS_ID + "034",)
 TNAMES_COUNT_SCOPE = "With the test-name recognizers"
 TNAMES_COUNT_PREFIX = "With the test-name recognizers version effective, Polaris has "
 TNAMES_SUBJECTS = {
-    TNAMES_SPEC: "7db850c28bc14fa2d18cb52a888f8617afff17d85f1730c1c7a8432e5dbaab40",
+    TNAMES_SPEC: "1c77f8415284ba57dd3d1d886103a190a0fa071e510630d9110ee472f0b4f875",
 }
 TNAMES_BOUND_PARTS = len(TNAMES_SUBJECTS)
 

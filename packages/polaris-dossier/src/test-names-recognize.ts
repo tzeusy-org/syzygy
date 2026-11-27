@@ -58,7 +58,7 @@ function namesIn(text: string, scanned: Scanned, pattern: RegExp, kindOf: (match
 }
 
 /** pytest: a `def` (or `async def`) whose name starts `test`, at any indentation, and a `class` whose name starts `Test`. */
-const PYTEST = /^[ \t]*(?:(?:async[ \t]+)?def[ \t]+(test[A-Za-z0-9_]*)[ \t]*\(|class[ \t]+(Test[A-Za-z0-9_]*)[ \t]*[(:])/gmu;
+const PYTEST = /^[ \t]*(?:(?:async[ \t]+)?def[ \t]+(test\p{ID_Continue}*)[ \t]*\(|class[ \t]+(Test\p{ID_Continue}*)[ \t]*[(:])/gmu;
 export function recognizePytest(text: string): RecognizedNames {
   const scanned = scanPython(text);
   if (!scanned.ok) return { ok: false, parseFault: scanned.fault };
@@ -86,7 +86,7 @@ export const recognizeJunit = (text: string): RecognizedNames => namesIn(text, s
  * object, whose first argument is a plain string literal: that literal's value is the name. A call whose first argument is anything
  * else (a variable, a template with a substitution, a table form) names nothing this version reads. */
 const JS_CALLEES = [...JS_TEST_CALL.suites, ...JS_TEST_CALL.tests];
-const JS = new RegExp(`(?<![\\w$.])(${JS_CALLEES.join('|')})((?:\\s*\\.\\s*(?:${JS_TEST_CALL.modifiers.join('|')}))*)\\s*\\(\\s*`, 'gu');
+const JS = new RegExp(`(?<![\\p{ID_Continue}$.\\u200c\\u200d])(${JS_CALLEES.join('|')})((?:\\s*\\.\\s*(?:${JS_TEST_CALL.modifiers.join('|')}))*)\\s*\\(\\s*`, 'gu');
 export function recognizeJsTests(text: string): RecognizedNames {
   const scanned = scanCLike(text, { javascript: true });
   if (!scanned.ok) return { ok: false, parseFault: scanned.fault };
