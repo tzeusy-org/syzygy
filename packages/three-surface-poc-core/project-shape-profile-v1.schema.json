@@ -19,9 +19,16 @@
       "items": { "$ref": "#/$defs/pillar" }
     },
     "sourceRules": {
-      "type": "array",
-      "uniqueItems": true,
-      "items": { "$ref": "#/$defs/sourceRule" }
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root-index", "pillar-index", "pillar-named-file", "baseline-spec-tree", "roster-tree"],
+      "properties": {
+        "root-index": { "type": "boolean" },
+        "pillar-index": { "type": "boolean" },
+        "pillar-named-file": { "type": "boolean" },
+        "baseline-spec-tree": { "type": "boolean" },
+        "roster-tree": { "type": "boolean" }
+      }
     },
     "treePopulations": {
       "type": "array",
@@ -88,15 +95,6 @@
       }
     },
     "treeRule": { "enum": ["baseline-spec-tree", "roster-tree"] },
-    "sourceRule": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["rule", "rootIndexRequired"],
-      "properties": {
-        "rule": { "enum": ["root-index", "pillar-index", "pillar-named-file", "baseline-spec-tree", "roster-tree"] },
-        "rootIndexRequired": { "type": "boolean" }
-      }
-    },
     "treePopulation": {
       "type": "object",
       "additionalProperties": false,

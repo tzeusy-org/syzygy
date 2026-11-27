@@ -7,26 +7,27 @@ import {
   CRAFT_POLICY_HEADING,
   DESIGN_CONTRACT_HEADING,
   LAYER_ROWS,
-  PRECEDENCE_COLUMNS,
-  PRECEDENCE_HEADING,
   PROJECT_ACCOUNT_KEYS,
-  ROOT_SUMMARY_HEADING,
-  STATED_COUNT_FACTS,
   V1_HEADINGS,
   VISION_HEADINGS,
 } from './project-shape-extraction.js';
 import {
   EXTRACTION_CLASSES,
   PILLAR_KEYS,
-  PILLAR_LABELS,
   PWB_INDEX_DEPTH,
   PWB_ROOT_INDEX_PATH,
   SOURCE_RULE_NEEDS_ROOT_INDEX,
-  SOURCE_RULES,
   type ExtractionClass,
   type PillarKey,
   type SourceRule,
 } from './project-shape-manifest.js';
+import {
+  PILLAR_LABELS,
+  PRECEDENCE_COLUMNS,
+  PRECEDENCE_HEADING,
+  ROOT_SUMMARY_HEADING,
+  STATED_COUNT_FACTS,
+} from './project-shape-profile-vocabulary.js';
 
 type TreeRule = Extract<SourceRule, 'baseline-spec-tree' | 'roster-tree'>;
 
@@ -64,7 +65,7 @@ export interface ProjectShapeProfile {
   readonly rootIndex: string;
   readonly indexDepth: number;
   readonly pillars: readonly { readonly key: PillarKey; readonly label: string }[];
-  readonly sourceRules: readonly { readonly rule: SourceRule; readonly rootIndexRequired: boolean }[];
+  readonly sourceRules: Readonly<Record<SourceRule, boolean>>;
   readonly treePopulations: readonly {
     readonly rule: TreeRule;
     readonly pathPattern: string;
@@ -167,7 +168,7 @@ export const BUILT_IN_PROJECT_SHAPE_PROFILE: ProjectShapeProfile = deepFreeze({
   rootIndex: PWB_ROOT_INDEX_PATH,
   indexDepth: PWB_INDEX_DEPTH,
   pillars: PILLAR_KEYS.map(key => ({ key, label: PILLAR_LABELS[key] })),
-  sourceRules: SOURCE_RULES.map(rule => ({ rule, rootIndexRequired: SOURCE_RULE_NEEDS_ROOT_INDEX[rule] })),
+  sourceRules: { ...SOURCE_RULE_NEEDS_ROOT_INDEX },
   treePopulations: [
     { rule: 'baseline-spec-tree', pathPattern: 'openspec/specs/<key>/spec.md' },
     { rule: 'roster-tree', pathPattern: 'roster/<key>/butler.toml', companion: 'MANIFESTO.md' },

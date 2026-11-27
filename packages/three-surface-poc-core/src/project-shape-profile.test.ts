@@ -14,13 +14,13 @@ describe('built-in project shape profile', () => {
       ['lay-and-land', 'Lay and Land'],
       ['craft-and-care', 'Craft and Care'],
     ]);
-    expect(profile.sourceRules.map(({ rule, rootIndexRequired }) => [rule, rootIndexRequired])).toEqual([
-      ['root-index', true],
-      ['pillar-index', true],
-      ['pillar-named-file', true],
-      ['baseline-spec-tree', false],
-      ['roster-tree', false],
-    ]);
+    expect(profile.sourceRules).toEqual({
+      'root-index': true,
+      'pillar-index': true,
+      'pillar-named-file': true,
+      'baseline-spec-tree': false,
+      'roster-tree': false,
+    });
     expect(profile.treePopulations).toEqual([
       { rule: 'baseline-spec-tree', pathPattern: 'openspec/specs/<key>/spec.md' },
       { rule: 'roster-tree', pathPattern: 'roster/<key>/butler.toml', companion: 'MANIFESTO.md' },
