@@ -1,0 +1,2063 @@
+{
+  "status": "Candidate impact evidence; independent closure pending",
+  "base": "fb44ebffe7793bffc364e29aee230a36dc70ce4d",
+  "scope": "Tracked regular Markdown under openspec at this protected Git tree. Ledger, PROJECT-STATUS and candidate snapshots are separately identified evidence, outside this denominator.",
+  "method": "Count unique strict UTF-8 Markdown Git blobs; check the path population with git archive. Match the four historical literal markers and literal Polaris ID declaration lines with two independent readers. Give relationship verdicts only to the scoped source and routing checks recorded below.",
+  "sweepActor": "lane-three private P111 refresh author",
+  "independentCheck": "Pending fresh review of the final exact source and integration.",
+  "historicalCensus": {
+    "path": "REFERENCE-CENSUS.json",
+    "base": "b739924d6c968bbea50f1d87122a69f3428523bd",
+    "sha256": "838508505a51e5b2e90188ca4284316a260c178858d458d984ad27e5a0e7d61a"
+  },
+  "candidate": {
+    "frozenSource": "f03f72d93ce5f9e5b5f03a79cc56ac76fa40f593",
+    "requirement": "REQ-polaris-generation-048",
+    "sourceSHA256": "29cf8f11a4391834a756c5b6574cf6854f9b1e6e2a12e6ef879eb2ca5f8fa749",
+    "priorReviewedPatch": {
+      "protectedCommit": "7b33789084d81a23b87e51993483220b76a2516f",
+      "path": "openspec/changes/polaris-dossier-attended-supervisor-view/proposed/polaris-generation/spec.md.patch",
+      "sha256": "a4d0d0b62767fbcc7a7a6f77cf5bb05d18ff47f864e4b06c4643ce44caa246a4"
+    }
+  },
+  "population": {
+    "documents": 369,
+    "polarisDeclarationOccurrences": 107,
+    "distinctPolarisIdentities": 48,
+    "matchedDocuments": 28,
+    "subjects": [
+      {
+        "path": "openspec/README.md",
+        "sha256": "791e3e38919d1f384aac24c5d4b566a1ca22364cb77cc714f714be96958999f3"
+      },
+      {
+        "path": "openspec/changes/archive/README.md",
+        "sha256": "40edf75352b29ef874da60051ab677a181aecd69993d42eb479f9a4a0a653d1d"
+      },
+      {
+        "path": "openspec/changes/cap1-consent-refusal-disclosure/CONTRACT-COVERAGE.md",
+        "sha256": "393c5c0df5a84780f69901184dc44b50fca2bb5ece4c3c153caa35f070b89b1e"
+      },
+      {
+        "path": "openspec/changes/cap1-consent-refusal-disclosure/SEMANTIC-DELTA.md",
+        "sha256": "9d0f7faa44161cdd5c4f06ff60bff36b9f263c1519f18e9cdb5a69db2b97fe95"
+      },
+      {
+        "path": "openspec/changes/cap1-consent-refusal-disclosure/design.md",
+        "sha256": "8927c6e9fd88d5738beaa65808470d0e067e0123e9e1098d473f761496ee4b5c"
+      },
+      {
+        "path": "openspec/changes/cap1-consent-refusal-disclosure/proposal.md",
+        "sha256": "d0dc48bc56cd755c8a47a3ad44c9a7d2259b0db46ee76d7b43c1f404ae7599f8"
+      },
+      {
+        "path": "openspec/changes/cap1-consent-refusal-disclosure/proposed/project-registration-and-honest-shape-visibility/spec.md",
+        "sha256": "451844b6edd8139e7fdc9bcc32cb113f967ccb2d0f3427dac1be9226bf2bb038"
+      },
+      {
+        "path": "openspec/changes/cap1-consent-refusal-disclosure/tasks.md",
+        "sha256": "712f21c19333723d4a2be09aa667d6e88fb7d7ad63aeec85b918eaa6ef2b262d"
+      },
+      {
+        "path": "openspec/changes/cap1-root-adjudication/CONTRACT-COVERAGE.md",
+        "sha256": "480abb4ea4796e19ff38ecda02596aeafe13e784c8480e7ea6f83eb2d322fa14"
+      },
+      {
+        "path": "openspec/changes/cap1-root-adjudication/SEMANTIC-DELTA.md",
+        "sha256": "3ea2837adffb59dcb0890cd82b9c2c1c06de55cbfadee8af8046f2a6cd783e02"
+      },
+      {
+        "path": "openspec/changes/cap1-root-adjudication/proposal.md",
+        "sha256": "21eb0c92dd803c2688a5647d2f78accd1fabcbd3158c50cfbe4812265ad33a98"
+      },
+      {
+        "path": "openspec/changes/cap1-root-adjudication/proposed/project-registration-and-honest-shape-visibility/spec.md",
+        "sha256": "493c6a8c4dbb27a9c04c1fca3b6c07e9de0df74e68912829d205ed9a01accd4e"
+      },
+      {
+        "path": "openspec/changes/cap1-trusted-bootstrap-consent/ADOPTION.md",
+        "sha256": "3fdef15f04de020c7423246e8eaa029d6787f5157a39c42e2c39c7fb896330bd"
+      },
+      {
+        "path": "openspec/changes/cap1-trusted-bootstrap-consent/APPLYING.md",
+        "sha256": "7914019b85f51906e2464992332c002225b37aab4bd12aebfe0321a4235fc494"
+      },
+      {
+        "path": "openspec/changes/cap1-trusted-bootstrap-consent/CAPABILITY-COVERAGE.md",
+        "sha256": "c6269ae3bbc6e4bf814eb01b637148ce136bed1b36ebd25866ba9fd19bdc56d7"
+      },
+      {
+        "path": "openspec/changes/cap1-trusted-bootstrap-consent/CONTRACT-COVERAGE.md",
+        "sha256": "972ab4b306999104327de27e1af3a2ee5e94fb38c08e75c25e68c3d9065dae45"
+      },
+      {
+        "path": "openspec/changes/cap1-trusted-bootstrap-consent/PREDECESSOR-REQUIREMENTS.md",
+        "sha256": "06e57c5c9be920a285c7c93fd9f8f2e4ac518e4edee1eef9c514b5b7c83d3f01"
+      },
+      {
+        "path": "openspec/changes/cap1-trusted-bootstrap-consent/README.md",
+        "sha256": "eeb3d06b0a773b2a13eeb6cbef33b6fb605f4c4fddcc61f7bb3cfb53d7b296fc"
+      },
+      {
+        "path": "openspec/changes/cap1-trusted-bootstrap-consent/REVIEW-DISPOSITION.md",
+        "sha256": "02c0503bd810f4957d666422471a42109e49fbe68ec10a9ca518cc57353fdbd2"
+      },
+      {
+        "path": "openspec/changes/cap1-trusted-bootstrap-consent/VALIDATION.md",
+        "sha256": "00878791dd84d7491e1ba8e5e7e2a88dade1b1410e62496db8ccf9b6b5ea750a"
+      },
+      {
+        "path": "openspec/changes/cap1-trusted-bootstrap-consent/design.md",
+        "sha256": "ac9ea7d46f2ac03efcfc8a255798795c6f07115f8017e500f50f819dc05df5c0"
+      },
+      {
+        "path": "openspec/changes/cap1-trusted-bootstrap-consent/proposal.md",
+        "sha256": "5829d6f00b9948ef5fd2ed8df4a7ab5e08411188bf9e9c8e9184f64545e2b2e1"
+      },
+      {
+        "path": "openspec/changes/cap1-trusted-bootstrap-consent/specs/project-registration-and-honest-shape-visibility/spec.md",
+        "sha256": "359ff741742902f0b07bbf1b4ec9aa997d17145cd56805fb49d6e683a12776e7"
+      },
+      {
+        "path": "openspec/changes/cap1-trusted-bootstrap-consent/tasks.md",
+        "sha256": "e5b8d0ec2701f738e66d77a4d1faee41a0427d67b5aef73d360c76053ce29193"
+      },
+      {
+        "path": "openspec/changes/dossier-brief-terminology/README.md",
+        "sha256": "c6cd91614a424239028bec97cb75ec38bdf58c31952ee8897ab75fe21c43fb21"
+      },
+      {
+        "path": "openspec/changes/dossier-brief-terminology/SEMANTIC-DELTA.md",
+        "sha256": "4246996ccdcd8a58722ae95548a83af7f1154d33a0d6701f8e34915987dc9244"
+      },
+      {
+        "path": "openspec/changes/dossier-brief-terminology/design.md",
+        "sha256": "5490f17cc21a99844b1a49856dc11aad2328490b9eb6d32f186f342126547a89"
+      },
+      {
+        "path": "openspec/changes/dossier-brief-terminology/proposal.md",
+        "sha256": "ee39e25458fc8f2210ce6156966b92a7a788e9a262e4c6554924f970cee5483b"
+      },
+      {
+        "path": "openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md",
+        "sha256": "64944deafb9ae449323a0b0308929bd0d5fa071f8f4e048a06c4157bfa5aa60c"
+      },
+      {
+        "path": "openspec/changes/dossier-brief-terminology/tasks.md",
+        "sha256": "29c752f51bae89ec74a13f5f34add51ae4aa89de69e4e73e2e84755d74edeeef"
+      },
+      {
+        "path": "openspec/changes/dossier-computed-maps/README.md",
+        "sha256": "9eef91b71b871513ea379ebd323a8b951a15ce47b505312bf3940ba0fb26ab89"
+      },
+      {
+        "path": "openspec/changes/dossier-computed-maps/SEMANTIC-DELTA.md",
+        "sha256": "1b568219e6a2eae9e184482b521ee24a54f7dd54d9ce389d9629f82c5ba695e9"
+      },
+      {
+        "path": "openspec/changes/dossier-computed-maps/design.md",
+        "sha256": "d1d428e92d885b11c7189b007382a4470df1493bedd22d2d37918a4825c32c74"
+      },
+      {
+        "path": "openspec/changes/dossier-computed-maps/proposal.md",
+        "sha256": "55bc1a32253d9be86c4840de8e2cdcc51bf949bb3418b9363727569faa9a428a"
+      },
+      {
+        "path": "openspec/changes/dossier-computed-maps/proposed/polaris-generation/spec.md",
+        "sha256": "63902cc6f737295f7aac4953b7c950ced6142d5648bdd63abc4996d31a8d0987"
+      },
+      {
+        "path": "openspec/changes/dossier-computed-maps/tasks.md",
+        "sha256": "02fad4abe880ff45dce6b361436fa2ad06cda42d63233111b8cf4c5906027118"
+      },
+      {
+        "path": "openspec/changes/dossier-containment-figure/README.md",
+        "sha256": "e70008804ff8a732e2a3bff6b364339cdd727e42a5fdb6b0cdd302f230beb62f"
+      },
+      {
+        "path": "openspec/changes/dossier-containment-figure/SEMANTIC-DELTA.md",
+        "sha256": "056e8ddf609c2f805c63a0e55c37e853aa2f581eb4df9d7730939b1fa09f4c4f"
+      },
+      {
+        "path": "openspec/changes/dossier-containment-figure/design.md",
+        "sha256": "2e774b7ab6618d8a687b67ffa6cef275a96550be3569cde07d3532c67760ace4"
+      },
+      {
+        "path": "openspec/changes/dossier-containment-figure/proposal.md",
+        "sha256": "b0b928d222091e4134e6ee7391271762613adac9b3fc6e272dcab9c84b859fc0"
+      },
+      {
+        "path": "openspec/changes/dossier-containment-figure/proposed/polaris-generation/spec.md",
+        "sha256": "0f6ef5fb8ba2ef4577e2512f54c7e0e7683de7d5466def39fcb1b7b555d92f5d"
+      },
+      {
+        "path": "openspec/changes/dossier-containment-figure/tasks.md",
+        "sha256": "8867c5478ea43ff563c611b2c28527c4c674552e7c708ad321080940d1f38ff8"
+      },
+      {
+        "path": "openspec/changes/dossier-coverage-hold/README.md",
+        "sha256": "87c2c9ee8ae160a7abcd7eeac7c5fcd3e1fb7abe8ca19f99faff32552f2318d7"
+      },
+      {
+        "path": "openspec/changes/dossier-coverage-hold/SEMANTIC-DELTA.md",
+        "sha256": "efc9ea19a764a0780d1f97f5e05ff56488f84a9098f4deede61c63573a43ad35"
+      },
+      {
+        "path": "openspec/changes/dossier-coverage-hold/design.md",
+        "sha256": "02885f5d175fd6eae5f96c840ecc1d31389fb6c0b5cc6fceb63354df185a6ef9"
+      },
+      {
+        "path": "openspec/changes/dossier-coverage-hold/proposal.md",
+        "sha256": "103b47dc52a6a8daa134bae6ec8f4e22bb8ad14bb78678636bf9a58c04e747af"
+      },
+      {
+        "path": "openspec/changes/dossier-coverage-hold/proposed/polaris-generation/spec.md",
+        "sha256": "aa65f8050d9fc2ea1b2757241403291d97ac18f3a9ec65ca45dabbcc5addd24d"
+      },
+      {
+        "path": "openspec/changes/dossier-coverage-hold/tasks.md",
+        "sha256": "1fb5cddb16c0beefac558e4039ce6797b386be8d3ed8f9e9d67f88a56876bf64"
+      },
+      {
+        "path": "openspec/changes/dossier-coverage-precheck/README.md",
+        "sha256": "0924ba5a9105739f2194e6f50de286a72e1eb2406f237d98e8a42a8b06bfec92"
+      },
+      {
+        "path": "openspec/changes/dossier-coverage-precheck/SEMANTIC-DELTA.md",
+        "sha256": "cc933f6e7a1f9d0926bdb1294b2dfdbedff98fc73a0132ae0157a0a7aca10af0"
+      },
+      {
+        "path": "openspec/changes/dossier-coverage-precheck/design.md",
+        "sha256": "e7725245cd98985494ee18e4cc303a70c55eb0e6994466c03bea16a3d30867ee"
+      },
+      {
+        "path": "openspec/changes/dossier-coverage-precheck/proposal.md",
+        "sha256": "0bad7e8258659800d434445461129e6797d0d2df158346332cb210c5fb33602f"
+      },
+      {
+        "path": "openspec/changes/dossier-coverage-precheck/proposed/polaris-generation/spec.md",
+        "sha256": "995c2ec47619567a86a5899eacbe3b1cf96a652686af4bfa7cd51e0ea1841287"
+      },
+      {
+        "path": "openspec/changes/dossier-coverage-precheck/tasks.md",
+        "sha256": "9db7ee86249463b48fb67f9e5995116a5e146e9797f728f10c15526c30050797"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-model/README.md",
+        "sha256": "b02197c6443b443134430ae6519407b2689264a7f00cf47507e8e8c6e99c8466"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-model/SEMANTIC-DELTA.md",
+        "sha256": "9d3a6ae7c935d3c6a223b0a70427e6ca3e433c44e5cdf4830edd4b4386fe71d4"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-model/design.md",
+        "sha256": "f752be8ecdc2d152ca4c77f72edd024477fcd1f48bda4da9ff8113a54d3e8c67"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-model/proposal.md",
+        "sha256": "b2a3fae4f4dcb8ef53358480ef6352e49676d71f2e6dd096dd188a95ec7ed63b"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md",
+        "sha256": "d17dad153f030bd935059a8b0df24286d72370b275a5fb4052de901b2af4e040"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-model/tasks.md",
+        "sha256": "cf873195db4397091d38d3b027f61a96f21f53218486d734d92dfd81657a92ab"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-reach/README.md",
+        "sha256": "80ad0d859c901ada693925dcbc2a5cd75efb7d392efae49b5f9f3892415a10dd"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-reach/SEMANTIC-DELTA.md",
+        "sha256": "dd5f35768009a8a95490d65a1af3f5e097121b976bfd551a31892d7e3cf57d05"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-reach/design.md",
+        "sha256": "4ad42989554550fffb1d0e585f82e01e23dd5399061a0cb7cd5132414629efe6"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-reach/proposal.md",
+        "sha256": "d1240533458000c0388857b7ff440440740e7c1e4c8df943e6b99793e79ff6ef"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-reach/proposed/polaris-generation/spec.md",
+        "sha256": "73047a45f1ee296e52fcdbe898ef14fb386b78cf13ce5b6c1fc097d1f12b6072"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-reach/tasks.md",
+        "sha256": "c57a763cd201b305cf96ede10e691a7915d4840ea83d21fafea06fbaebb10337"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-readmission/README.md",
+        "sha256": "3349d174f9960b73b6bcfc76d9c9c970e096d75fe540f4ed1c46ec807427ba8b"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-readmission/SEMANTIC-DELTA.md",
+        "sha256": "7d4af8c83bdbad97c0ec868d8eca528e8166b3dd7388a5aed25634707f26da2c"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-readmission/design.md",
+        "sha256": "81b4291bcbcb18aa8fc09a31f75242076c22b85c4ae1239bef35de03b1777186"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-readmission/proposal.md",
+        "sha256": "bbcaea7e6950edfaf1dc4248f2a2a0cb67074d47d1199e8181e33c46c52e88a4"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-readmission/proposed/polaris-generation/spec.md",
+        "sha256": "494dcd81b3bb8d0638c5a517e9fa1005720cac8b39cba34751f5f6ee62eeb018"
+      },
+      {
+        "path": "openspec/changes/dossier-declared-source-readmission/tasks.md",
+        "sha256": "b40bd73abb5e90a88b78b29405b4338186c8f98a71fc1e72b7b150e7f5b8947c"
+      },
+      {
+        "path": "openspec/changes/dossier-derived-base-screening/SEMANTIC-DELTA.md",
+        "sha256": "29f17e3ef1d66199f7a082188bcdf33272c96ae7969736f61dc208217c28c600"
+      },
+      {
+        "path": "openspec/changes/dossier-derived-base-screening/proposal.md",
+        "sha256": "0ae56f0c1dbc54290405ead1a87eb3452393db1169ffaafd11b75b2c7f55dde3"
+      },
+      {
+        "path": "openspec/changes/dossier-derived-base-screening/proposed/polaris-generation/spec.md",
+        "sha256": "a784c6712ce31a9b72136be27d49a535465a8637a2493d2ef1305a28fcdbc698"
+      },
+      {
+        "path": "openspec/changes/dossier-derived-base-views/README.md",
+        "sha256": "20b2a3b4529f31e98617f9ebae0d985d543e9b5a1d0366928909cc80832c423e"
+      },
+      {
+        "path": "openspec/changes/dossier-derived-base-views/SEMANTIC-DELTA.md",
+        "sha256": "025f2d7c7c0077582c5bbd0227fef92312e730b31687a203af97e5e43ba636b3"
+      },
+      {
+        "path": "openspec/changes/dossier-derived-base-views/design.md",
+        "sha256": "a07a54702a9b787169af09920e8bcb8f1373530a1dc333bb01241a5e06fe4927"
+      },
+      {
+        "path": "openspec/changes/dossier-derived-base-views/proposal.md",
+        "sha256": "794c758dc98070da657aa72824ec3b6c3a75f58808cd62497e2267ccb9a655f7"
+      },
+      {
+        "path": "openspec/changes/dossier-derived-base-views/proposed/polaris-generation/spec.md",
+        "sha256": "a404fa70e788f7ca20761f5a30f1d840604706cb811fcf50664f3e2942592c45"
+      },
+      {
+        "path": "openspec/changes/dossier-derived-base-views/tasks.md",
+        "sha256": "59cb16d0b2369264c3d76d3b59d207fb547df8324c41c9854a6969e507be80da"
+      },
+      {
+        "path": "openspec/changes/dossier-derived-observed-facts/README.md",
+        "sha256": "dbd530f9337b246dabd1ce866ad00b2d019af8ff6c855a2d4658c3091719ed1e"
+      },
+      {
+        "path": "openspec/changes/dossier-derived-observed-facts/SEMANTIC-DELTA.md",
+        "sha256": "7e3f3751615b92edf43fb8602398e07f55bfea5a81aeeb7997dc937d7bbca973"
+      },
+      {
+        "path": "openspec/changes/dossier-derived-observed-facts/design.md",
+        "sha256": "12b4f01b26d77f247248411ed8fa85353985290e63e40fd2edac8498d6fc9c42"
+      },
+      {
+        "path": "openspec/changes/dossier-derived-observed-facts/proposal.md",
+        "sha256": "eeb762366b10e33bccbb9a92fa9943ed658ab757f093882bf4dc6d730b07a976"
+      },
+      {
+        "path": "openspec/changes/dossier-derived-observed-facts/proposed/polaris-generation/spec.md",
+        "sha256": "6c663a807817f825a7a3c6f1f9ff39864745e57ae6c3bb6a8498d98c90fad461"
+      },
+      {
+        "path": "openspec/changes/dossier-derived-observed-facts/tasks.md",
+        "sha256": "f9a552e42bf15cf18cf9cc21faeaf327c6ae59fbd42e364038c0ca1e98142500"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-homes-and-fit/README.md",
+        "sha256": "8895650bf82d6ea5523f2f8a1c8897207abebf5635fdc64963f8b4ee8d6e7720"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-homes-and-fit/SEMANTIC-DELTA.md",
+        "sha256": "144c9a57eca39faf0f32ad8ecc031df242954fadb370a8d1196a7bbebc73eb71"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-homes-and-fit/design.md",
+        "sha256": "659b0256f7425a94ae840140088e73f208fe53dcfbbc3f6554346e8bb337ed8f"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-homes-and-fit/proposal.md",
+        "sha256": "63b90316974b222b278524eb97089baeb5c07e0921f69c9a7bb7d66c79fabcf0"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-homes-and-fit/proposed/polaris-generation/spec.md",
+        "sha256": "32bef7ddf28d36b3bc4e5d31a30caf1e82e509ab4779263ceb1c39f29f10632e"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-homes-and-fit/tasks.md",
+        "sha256": "301154ba77fc0aac9297cb697d0241f4d9c99f6f6acb138e52681666f85de29d"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-kinds/README.md",
+        "sha256": "c0f77ee1bf22f56e9c40e4b6e2ee20544e44f60196520bee49de8d83f41996ec"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-kinds/SEMANTIC-DELTA.md",
+        "sha256": "03ea306ec6c8eb47fb7f48689f5dd87ff3c917131303202f06d30c718d22dd48"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-kinds/design.md",
+        "sha256": "268c6d326313e8f29b93a7612ba4543286daef2e44d6fe6451c50dc64c1e8cda"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-kinds/proposal.md",
+        "sha256": "80d97d63293e1cfde08eaf3d7ff1f12ab7893aa096264747c4960670f4d2c65e"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-kinds/proposed/polaris-generation/spec.md",
+        "sha256": "a949eebfae9492c70b36e703955449cbef9d4b5e6d65bc6151dbe6716ac37a2c"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-kinds/tasks.md",
+        "sha256": "4eb43eb6d38dda18c94135a823a3c83abcbabf508178de02ee4cf9cd227b82a3"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-plan/README.md",
+        "sha256": "0c5f0ae5a4cc9e066f4d10813f7da009b9c5ce2c33abc39e041e075b0a050ac5"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-plan/SEMANTIC-DELTA.md",
+        "sha256": "28d5ae7b4a6ade953e3e235422c6d334f2004f52a954d5fdd646563222d2c6af"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-plan/design.md",
+        "sha256": "659d09796959175cf45ec8a55755095b5a323d93bfd4ae1ad6de8d6dc6d4eaff"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-plan/proposal.md",
+        "sha256": "ad9873b8af42d2bbb30b8904b49b35cf403238f771b481d4661c5831b821491b"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-plan/proposed/polaris-generation/spec.md",
+        "sha256": "8ae85a0b259825a13d5628b939cebf46e002fb72a671117f8685fc7c44016a3c"
+      },
+      {
+        "path": "openspec/changes/dossier-figure-plan/tasks.md",
+        "sha256": "afb32f4bb8f89d408bd36860c9c6817af1b28408d2824428d585a68ae181cf0d"
+      },
+      {
+        "path": "openspec/changes/dossier-hero-figure/README.md",
+        "sha256": "b804847ba6b50d2c1ac7e9089f70d18462f93bd595b85367eb7c2fe33c2df856"
+      },
+      {
+        "path": "openspec/changes/dossier-hero-figure/SEMANTIC-DELTA.md",
+        "sha256": "039bbd4ebad61a2b68d0a8d94abe0bc2d6797466dbeae9a3eb740d56b94e06d8"
+      },
+      {
+        "path": "openspec/changes/dossier-hero-figure/design.md",
+        "sha256": "a31502402da29947bdb3f5684f0b9fb5f0e1368b20a2a9a411fcac20cc811358"
+      },
+      {
+        "path": "openspec/changes/dossier-hero-figure/proposal.md",
+        "sha256": "28ad43403c3374466a12d6780a7dc0b0958ee642978ccc1ca94e08db5a181b24"
+      },
+      {
+        "path": "openspec/changes/dossier-hero-figure/proposed/polaris-generation/spec.md",
+        "sha256": "fcf271f84c03570cfbb8447d3370ae26c4ea75a54211b1677148b607e940d36b"
+      },
+      {
+        "path": "openspec/changes/dossier-hero-figure/tasks.md",
+        "sha256": "df5b4802601330f08637915791fc54de506b71975bc37e35a43e9f7e3deee766"
+      },
+      {
+        "path": "openspec/changes/dossier-index-and-task-routes/README.md",
+        "sha256": "49f8274d3d8e115afe3e2d777f88116d05ecd00754626e81dfa35495d421a218"
+      },
+      {
+        "path": "openspec/changes/dossier-index-and-task-routes/SEMANTIC-DELTA.md",
+        "sha256": "27ed909935129dc46e3878ccae144929738f2fb0ef92574c15e9799db1cf0f6c"
+      },
+      {
+        "path": "openspec/changes/dossier-index-and-task-routes/design.md",
+        "sha256": "d97ddd13f615af24aae26e33583d3dbdf541a764a92fd797c6eb705a2433ac0a"
+      },
+      {
+        "path": "openspec/changes/dossier-index-and-task-routes/proposal.md",
+        "sha256": "dda4b1def07a4b7e81c4440586f6a2158239b6081299e623ba9184a6dccaa66d"
+      },
+      {
+        "path": "openspec/changes/dossier-index-and-task-routes/proposed/polaris-generation/spec.md",
+        "sha256": "16bf8ff1656501342aafba080db0fdee2c707a633d8d437c518929362ab2b985"
+      },
+      {
+        "path": "openspec/changes/dossier-index-and-task-routes/tasks.md",
+        "sha256": "291643731ba9f555db37c6b0816977cca46637bc487a16e9751ef91b4b49d9b8"
+      },
+      {
+        "path": "openspec/changes/dossier-infrastructure-recognizers/README.md",
+        "sha256": "10ac1c84db9814aca382119d17a6547f3ff3c62e3d4dea46d5e34ed98b334a88"
+      },
+      {
+        "path": "openspec/changes/dossier-infrastructure-recognizers/SEMANTIC-DELTA.md",
+        "sha256": "21ae2fd11f18e1060440725f83d3d691a3b705147a7ccc2357667d70583b233c"
+      },
+      {
+        "path": "openspec/changes/dossier-infrastructure-recognizers/design.md",
+        "sha256": "42b1b2974c4b7ebb98bba0826282c0ac67df642e1b6701476b974d3d22d9c01e"
+      },
+      {
+        "path": "openspec/changes/dossier-infrastructure-recognizers/proposal.md",
+        "sha256": "1eb617b1900aa481a23f563dbf9e5806bc060d9fbb2ff6bc2f0170aa7d668628"
+      },
+      {
+        "path": "openspec/changes/dossier-infrastructure-recognizers/proposed/polaris-generation/spec.md",
+        "sha256": "1c87f9db33cee275bcc4f93516eed9b74d7345b3b3e8cb21a51303ad7deb42de"
+      },
+      {
+        "path": "openspec/changes/dossier-infrastructure-recognizers/tasks.md",
+        "sha256": "0983ea7e8ee1ca5bb25c44df87d68818a5afac4bb92d2849ebbb33c55772a544"
+      },
+      {
+        "path": "openspec/changes/dossier-ledger-packs-thesis/README.md",
+        "sha256": "43928b517de87ad0ec87bae2847969a1580e8a6c64b60291d650ecfbe6775f42"
+      },
+      {
+        "path": "openspec/changes/dossier-ledger-packs-thesis/SEMANTIC-DELTA.md",
+        "sha256": "e568763ea04ea6971424dfd70692e6eceb1bc2402b6139eecb68e5a2b441d09b"
+      },
+      {
+        "path": "openspec/changes/dossier-ledger-packs-thesis/design.md",
+        "sha256": "8f60fd79669b49c382fe362e2460feaf7c1774348d81af8ac9c5b54a9cec5b2a"
+      },
+      {
+        "path": "openspec/changes/dossier-ledger-packs-thesis/proposal.md",
+        "sha256": "3df189d8320bd9ffae38dbcb69444a20d8e250f64fa1a42552019bcdf5dde513"
+      },
+      {
+        "path": "openspec/changes/dossier-ledger-packs-thesis/proposed/polaris-generation/spec.md",
+        "sha256": "500a7771f3df85046ff2c0c41a36c2067cf0bf44b1ba65e5bb5f52d4dbd9fded"
+      },
+      {
+        "path": "openspec/changes/dossier-ledger-packs-thesis/tasks.md",
+        "sha256": "5b828061c4714d35be823c5af0a103b01d437ebf566f188c4c07607d2150138e"
+      },
+      {
+        "path": "openspec/changes/dossier-manifest-recognizers/README.md",
+        "sha256": "c4dbaf78b2d5169585d5f57151b1869720514cfd9624cf1ebe7ae1cf1d4cce7a"
+      },
+      {
+        "path": "openspec/changes/dossier-manifest-recognizers/SEMANTIC-DELTA.md",
+        "sha256": "a29546685b770c8ebcc7253ea273d3050cfbec0e0159bad80651eeab49dbb559"
+      },
+      {
+        "path": "openspec/changes/dossier-manifest-recognizers/design.md",
+        "sha256": "93f626ce171d129256844081f83c8596facfa813908a89a9d51a2edda86ca3e6"
+      },
+      {
+        "path": "openspec/changes/dossier-manifest-recognizers/proposal.md",
+        "sha256": "ef2db446e3f085fbb1236c96401c233b354754a6f9dfa7c5e35f73c09fd64faa"
+      },
+      {
+        "path": "openspec/changes/dossier-manifest-recognizers/proposed/polaris-generation/spec.md",
+        "sha256": "55cc14dc4da4ccebaf72f3fa14937be357a2e873ab967a8a8fe79e0db7c3caaa"
+      },
+      {
+        "path": "openspec/changes/dossier-manifest-recognizers/tasks.md",
+        "sha256": "789fc01dbcad4a163774d04b9523cc085debd10ff09a2c3030dc1f23c7e3123b"
+      },
+      {
+        "path": "openspec/changes/dossier-page-subsections/README.md",
+        "sha256": "9a534eac739dc339b2e37b693c84c651cfdc8694dd9b4432892d93e699053b5b"
+      },
+      {
+        "path": "openspec/changes/dossier-page-subsections/SEMANTIC-DELTA.md",
+        "sha256": "0374eea1fab77a89014d1f3bf3e777091b6d606ec1436fcb90cdd517d52f6eeb"
+      },
+      {
+        "path": "openspec/changes/dossier-page-subsections/design.md",
+        "sha256": "235beaf84409ce4d42f745356173eaf927d330ed448257516716e692d43e3ae8"
+      },
+      {
+        "path": "openspec/changes/dossier-page-subsections/proposal.md",
+        "sha256": "c676a0b3fc3fc97b4a5604ee61fdb1f705123fcd58e3097c968e2b63c7f2d7cc"
+      },
+      {
+        "path": "openspec/changes/dossier-page-subsections/proposed/polaris-generation/spec.md",
+        "sha256": "eb02516147a08c2b21a1ddeca4bc1527e9c7f21fb0bcf62bbee35f9b059fcdbc"
+      },
+      {
+        "path": "openspec/changes/dossier-page-subsections/tasks.md",
+        "sha256": "eaffab1f1925a3c4a91b974bad8b811db807b0339cbd58f87ccc24e293e0eb5a"
+      },
+      {
+        "path": "openspec/changes/dossier-question-file/README.md",
+        "sha256": "23dc419362484dd19dc680a6b2d549f19a37f570f534151c6fbe37847371fa62"
+      },
+      {
+        "path": "openspec/changes/dossier-question-file/SEMANTIC-DELTA.md",
+        "sha256": "5afee5c7377e3ac374659271e5bac9e153c266a73e40c6dc929d088f23ecfb9a"
+      },
+      {
+        "path": "openspec/changes/dossier-question-file/design.md",
+        "sha256": "3436ccbc3edf0ef1b5751b824b3b3d9ea2e9efaa2e0c846c93b8a912f0239cf0"
+      },
+      {
+        "path": "openspec/changes/dossier-question-file/proposal.md",
+        "sha256": "a166567f83ae18ca49fb20374055fc547787439065f55b1d76d553202215ff97"
+      },
+      {
+        "path": "openspec/changes/dossier-question-file/proposed/polaris-generation/spec.md",
+        "sha256": "147954d8089b52e98deadf9710c061324c670f8ddfc4b7406fedbb9ab8c18b18"
+      },
+      {
+        "path": "openspec/changes/dossier-question-file/tasks.md",
+        "sha256": "6ecf3db4b02fcab5e770f33a261dd5fb673df1a953ffbcb1b7126f4de901ce84"
+      },
+      {
+        "path": "openspec/changes/dossier-question-kind-floor/README.md",
+        "sha256": "e8ffd2145d78a76f24af0eaca6a3ed24f96a9776dde16f73caa654d558a75861"
+      },
+      {
+        "path": "openspec/changes/dossier-question-kind-floor/SEMANTIC-DELTA.md",
+        "sha256": "9ec1e4c2d51e1e4ac601875a7119bc2af305f4fd02977856d1a7977ac2484f0a"
+      },
+      {
+        "path": "openspec/changes/dossier-question-kind-floor/design.md",
+        "sha256": "2ab85cf28d56255d9ecd411a6638b8131420dc0fd735eeae52f461125f210559"
+      },
+      {
+        "path": "openspec/changes/dossier-question-kind-floor/proposal.md",
+        "sha256": "45e170acc07296b6ebb6bba8a25481c1492803e01ed36e67b0c6ad88aa543534"
+      },
+      {
+        "path": "openspec/changes/dossier-question-kind-floor/proposed/polaris-generation/spec.md",
+        "sha256": "4439371414c716ba52493066bfe9908029c8378e06594454cf8e343939590b32"
+      },
+      {
+        "path": "openspec/changes/dossier-question-kind-floor/tasks.md",
+        "sha256": "793fe4eb48233d087c205372a89f5c57110ab95601a21334e5a8ad86fa07015a"
+      },
+      {
+        "path": "openspec/changes/dossier-raw-read-disclosure/D11-DISCLOSURE-REVIEW-RAW.md",
+        "sha256": "ed31de703632329870338f40961119664d41aaf72710118b64d05089303b49f3"
+      },
+      {
+        "path": "openspec/changes/dossier-raw-read-disclosure/README.md",
+        "sha256": "90b4f51edfb964216f451492620d6261b8ac46a2b947ce6469f80b103c06eff9"
+      },
+      {
+        "path": "openspec/changes/dossier-raw-read-disclosure/REVIEW-DISPOSITIONS.md",
+        "sha256": "991f18d80cf5f9b1f1337ff402175ab3603129536a62ecafb6a0840de3330b43"
+      },
+      {
+        "path": "openspec/changes/dossier-raw-read-disclosure/SEMANTIC-DELTA.md",
+        "sha256": "0bdd4b99056d0f89e8d077422f0596ecfa2f5b191efe5bd97cb7b91e0a135b43"
+      },
+      {
+        "path": "openspec/changes/dossier-raw-read-disclosure/design.md",
+        "sha256": "55ffd0e57462c34b4261127007f68c6bfa35f54bd3e0789e6e6a393df7bf3dbc"
+      },
+      {
+        "path": "openspec/changes/dossier-raw-read-disclosure/proposal.md",
+        "sha256": "b225c4f504b217905ec4ec20fb7e868721f58ae10d7686d23be1f1fc9d3b7ea5"
+      },
+      {
+        "path": "openspec/changes/dossier-raw-read-disclosure/proposed/polaris-generation/spec.md",
+        "sha256": "a53432d787d857185b76193aa614c47d42eca39b3f9c22857935b61127ff5517"
+      },
+      {
+        "path": "openspec/changes/dossier-raw-read-disclosure/tasks.md",
+        "sha256": "440b4ef58115eaf2a8325ceee9f4eb486de4ea8cc52c341ce6c0e2f59d001643"
+      },
+      {
+        "path": "openspec/changes/dossier-readers-edition/README.md",
+        "sha256": "76061aad2835a46b22771d537cb6162dc31bcb668df5dcd294f23e7d1fb28268"
+      },
+      {
+        "path": "openspec/changes/dossier-readers-edition/SEMANTIC-DELTA.md",
+        "sha256": "4dae01abb4853d3123c16f61d5617a447b06f3087fb8216cf6b111e0f854e218"
+      },
+      {
+        "path": "openspec/changes/dossier-readers-edition/design.md",
+        "sha256": "9a649475198d52ff44bdd1278e1e65898b81062c023fdb496895d03fd928a4c3"
+      },
+      {
+        "path": "openspec/changes/dossier-readers-edition/proposal.md",
+        "sha256": "c441b89e28e05d9e286ae9a295815c06f4a2a5631d80f3e829fcf023904e7933"
+      },
+      {
+        "path": "openspec/changes/dossier-readers-edition/proposed/polaris-generation/spec.md",
+        "sha256": "cfc6ce3caf18fcae7a1007e3763378e63c96108dc0d45fb8414007f1ff6c83c1"
+      },
+      {
+        "path": "openspec/changes/dossier-readers-edition/tasks.md",
+        "sha256": "85d7b88fac2339befd56b33d8c8835e4f5398f815cc3418962414c9754e4eb8d"
+      },
+      {
+        "path": "openspec/changes/dossier-record-bounds/README.md",
+        "sha256": "3b94a9ec71d0697042b1cba13f5fc599d83352f3f169fd6105bfe23ffcaa6a9b"
+      },
+      {
+        "path": "openspec/changes/dossier-record-bounds/SEMANTIC-DELTA.md",
+        "sha256": "be5a6b796900f79d66ef9c013b2e78f7fb8ff0392e31adb36a5dfd785a888ab5"
+      },
+      {
+        "path": "openspec/changes/dossier-record-bounds/design.md",
+        "sha256": "599118018b2dccf403c572b60577269188ffed942fcfda742f248832f9a73a16"
+      },
+      {
+        "path": "openspec/changes/dossier-record-bounds/proposal.md",
+        "sha256": "2b0ff4152406b574fa94ec08e5d1431990d69f18ff21f4643a2bfab36513d33c"
+      },
+      {
+        "path": "openspec/changes/dossier-record-bounds/proposed/polaris-generation/spec.md",
+        "sha256": "d4da7a60e65c92d01ac87ca25fa59b22b1adf886868023e33ace2c7e64f01afb"
+      },
+      {
+        "path": "openspec/changes/dossier-record-bounds/tasks.md",
+        "sha256": "091251403d360755b08510822e9ad420572636740898c627e265c763e724fca0"
+      },
+      {
+        "path": "openspec/changes/dossier-relation-types/README.md",
+        "sha256": "283cdd20d717a77fa70b20908f7232e4d41e86b6391a00c96f11ea26c16346a6"
+      },
+      {
+        "path": "openspec/changes/dossier-relation-types/SEMANTIC-DELTA.md",
+        "sha256": "4ff824a77750f2a004148da9a7666659ba6d131f370f2a5f371ac26c52dbdff8"
+      },
+      {
+        "path": "openspec/changes/dossier-relation-types/design.md",
+        "sha256": "e32dc1e3ddc961356286bfea045599dcf0d409d54b9ec9b798633887065d0d10"
+      },
+      {
+        "path": "openspec/changes/dossier-relation-types/proposal.md",
+        "sha256": "6b77c86bd9b2b684756b9829bd5a6ec8ed51dea1d3746fb0bedd099aad9c97b1"
+      },
+      {
+        "path": "openspec/changes/dossier-relation-types/proposed/polaris-generation/spec.md",
+        "sha256": "f6d60b603bd7cc819aca86ae3d1a6de037ecb7717ca1fe214619f646c97afd9c"
+      },
+      {
+        "path": "openspec/changes/dossier-relation-types/tasks.md",
+        "sha256": "7f328e511b0f47d733847f0490c699a425c9b184e8674fc264808724e8ee07ed"
+      },
+      {
+        "path": "openspec/changes/dossier-run-tree-read-bounds/README.md",
+        "sha256": "1b5c1f6858f10a9c1dc6782b0cff72848ce1dcf20e3594e904324f7bcbdb2949"
+      },
+      {
+        "path": "openspec/changes/dossier-run-tree-read-bounds/SEMANTIC-DELTA.md",
+        "sha256": "229114255881e99195f86a13b6b4ce86c2d9881aafa55221609fae596f3d9565"
+      },
+      {
+        "path": "openspec/changes/dossier-run-tree-read-bounds/design.md",
+        "sha256": "2474caf840b4b7f8602dd470a54bc4dd9d049d39ec8dd1a86d2a6dae3ec39ac0"
+      },
+      {
+        "path": "openspec/changes/dossier-run-tree-read-bounds/proposal.md",
+        "sha256": "fd64d9f0e7e1a1a18cb313a747eaa5ffd44541b3dcbc41b4cdbdefb339e752be"
+      },
+      {
+        "path": "openspec/changes/dossier-run-tree-read-bounds/proposed/polaris-generation/spec.md",
+        "sha256": "84fc7c71221705b6a2b614e3acf4496d10bb2e3ba4815c1e776ad450b3bc19a5"
+      },
+      {
+        "path": "openspec/changes/dossier-run-tree-read-bounds/tasks.md",
+        "sha256": "ba003aebf827224cc1d9e496217cd92ed9ca223aae3adbad0b8b8b935ec9ca9c"
+      },
+      {
+        "path": "openspec/changes/dossier-scripted-benchmark-grading/README.md",
+        "sha256": "452e6d0e69fb7374f9073922b5347650addf41c2062e60dabcf4467e87337c64"
+      },
+      {
+        "path": "openspec/changes/dossier-scripted-benchmark-grading/SEMANTIC-DELTA.md",
+        "sha256": "73b9d6630a5c1987d964f41caec257fef40c278213e0a128ff7c6a08792917e2"
+      },
+      {
+        "path": "openspec/changes/dossier-scripted-benchmark-grading/design.md",
+        "sha256": "4ec919537532c509064a99c5693b5422cac3118e1ce78b9f0d1a586c79ecd15a"
+      },
+      {
+        "path": "openspec/changes/dossier-scripted-benchmark-grading/proposal.md",
+        "sha256": "bec450b02fd8bb719ccfbde32df2ff43812acbd73dcc5ba0af16197185520e39"
+      },
+      {
+        "path": "openspec/changes/dossier-scripted-benchmark-grading/proposed/polaris-generation/spec.md",
+        "sha256": "de530007005b65c3f7400d42dabfa2caf50e8b2cc6b00fe2044a31d61ce3ab49"
+      },
+      {
+        "path": "openspec/changes/dossier-scripted-benchmark-grading/tasks.md",
+        "sha256": "17298a996dda12ceda76b58ee4df27e28a365144a72e0855caad05f51238d495"
+      },
+      {
+        "path": "openspec/changes/dossier-spec-corrections/README.md",
+        "sha256": "d1f03fbadd87ba84dcc3fea3246539a15522aaf33bff5ff466cdd7c2b7b46974"
+      },
+      {
+        "path": "openspec/changes/dossier-spec-corrections/SEMANTIC-DELTA.md",
+        "sha256": "e3cfb8093503f5fb466260f3a79539b98fad6778be1ea431e0e9efd87442253e"
+      },
+      {
+        "path": "openspec/changes/dossier-spec-corrections/design.md",
+        "sha256": "06f1bd002492a7c96280065672fae46c8b4caf4ff5d9a930f50e04f699897f82"
+      },
+      {
+        "path": "openspec/changes/dossier-spec-corrections/proposal.md",
+        "sha256": "242766e6e332e9d7db1f529ee3678cc68e9034d90f7c3d62430b694d2e01a472"
+      },
+      {
+        "path": "openspec/changes/dossier-spec-corrections/proposed/polaris-generation/spec.md",
+        "sha256": "376f27c0261120d0238d0d4a6685fe08b19ff03a9d00fcb4a6702349f64834c3"
+      },
+      {
+        "path": "openspec/changes/dossier-spec-corrections/tasks.md",
+        "sha256": "a6daea3187b625adbdd0bf648d0b76e6526009a0c355b04e2a1e1cdf2a398791"
+      },
+      {
+        "path": "openspec/changes/dossier-spec-repairs/README.md",
+        "sha256": "008b134ceaa7d5e5937f2c99c8b85abf27e97e68c3eafb9f6177272b672c3150"
+      },
+      {
+        "path": "openspec/changes/dossier-spec-repairs/SEMANTIC-DELTA.md",
+        "sha256": "b8fb79a9e52ba3b0925e8d1689e27c7ef75dc34d6b8ada166257608287e54b27"
+      },
+      {
+        "path": "openspec/changes/dossier-spec-repairs/design.md",
+        "sha256": "d33edeba4cb6bd6fa1b75e4414ced7884a4a68c17201af3799fd936d6f79e43d"
+      },
+      {
+        "path": "openspec/changes/dossier-spec-repairs/proposal.md",
+        "sha256": "62627b201701c49d6962845cee9fba5a48756f2ab6497a5d9b02ee096ba87166"
+      },
+      {
+        "path": "openspec/changes/dossier-spec-repairs/proposed/polaris-generation/spec.md",
+        "sha256": "a8e768128d9996be234378eeacf88f3b8dc97577d3031c50b0459f6db24272d4"
+      },
+      {
+        "path": "openspec/changes/dossier-spec-repairs/tasks.md",
+        "sha256": "867c4b2360cb40d5b3a54c4913231fb74fc21599f03445d40a4e813efa0736ac"
+      },
+      {
+        "path": "openspec/changes/dossier-step-measures/README.md",
+        "sha256": "9ab6a5f8449a0e06a3c2278013a2f0439feb53189b2fc1a20d9645059f00f195"
+      },
+      {
+        "path": "openspec/changes/dossier-step-measures/SEMANTIC-DELTA.md",
+        "sha256": "710e8cbab009c8cd9314a4accda3cfed9497c59602ec4185b775350d4c24e409"
+      },
+      {
+        "path": "openspec/changes/dossier-step-measures/design.md",
+        "sha256": "8290db76ef3ee989ac27c329fb9ad622b3ffbab839f764f8af77385aa133f025"
+      },
+      {
+        "path": "openspec/changes/dossier-step-measures/proposal.md",
+        "sha256": "022ec78f504eebe050de197c2091a7d24c7faa5b15dd34990816afff0366941d"
+      },
+      {
+        "path": "openspec/changes/dossier-step-measures/proposed/polaris-generation/spec.md",
+        "sha256": "f7ff5706c26b937d991e24183d5dcb29091fefe580b066ccbfc32540fde7ea05"
+      },
+      {
+        "path": "openspec/changes/dossier-step-measures/tasks.md",
+        "sha256": "51d53cc5edd07971b567cba6404cf5feac6a6dcce96cb2aaabf57a9bc2d7d4b2"
+      },
+      {
+        "path": "openspec/changes/dossier-system-model/README.md",
+        "sha256": "82f2241a509f35fa421b934007c59e2416dda88b54ea1702e3f731de0ea7320f"
+      },
+      {
+        "path": "openspec/changes/dossier-system-model/SEMANTIC-DELTA.md",
+        "sha256": "5c4d5f55e9f3cc51371b95d97992ac47f7674331813b03b7ea3c6dfe8625f9d8"
+      },
+      {
+        "path": "openspec/changes/dossier-system-model/design.md",
+        "sha256": "b39b3ef23f7a0152e772beaa55300184c3c07e9f46c1f1d1509465c0ab0bb577"
+      },
+      {
+        "path": "openspec/changes/dossier-system-model/proposal.md",
+        "sha256": "bd98e074939cf102fc2fc0ec58bceb210b00948df396b4692b36ea3c3adb43d5"
+      },
+      {
+        "path": "openspec/changes/dossier-system-model/proposed/polaris-generation/spec.md",
+        "sha256": "f06e830deeef03f5d10f522481c8d25c141ff5ebce097c7411361d5bdc358c54"
+      },
+      {
+        "path": "openspec/changes/dossier-system-model/tasks.md",
+        "sha256": "89be4d23b3c067a0e132711e033bd871c5e680da564e80f6aa317910db484306"
+      },
+      {
+        "path": "openspec/changes/dossier-url-declared-source-run/README.md",
+        "sha256": "f5e7efd56b005e28eefbaaa21270ac83a9ec6f098c6599d864f7211627c8d83d"
+      },
+      {
+        "path": "openspec/changes/dossier-url-declared-source-run/SEMANTIC-DELTA.md",
+        "sha256": "1ce69bb77a4b164d705f46b9315c5318b82ac4af838e4aad32d126cacde92816"
+      },
+      {
+        "path": "openspec/changes/dossier-url-declared-source-run/design.md",
+        "sha256": "8c1ea296374669fd7ca374f264c42152a86493aedcb8e003d6268a02ef8c4d94"
+      },
+      {
+        "path": "openspec/changes/dossier-url-declared-source-run/proposal.md",
+        "sha256": "49899daa0893921f563ccaf8e1e99f59fda84a8aa727ebdeaf8efa6df39304bd"
+      },
+      {
+        "path": "openspec/changes/dossier-url-declared-source-run/proposed/contracts/DOSSIER-URL-LOCAL-MACHINE-CREDENTIAL-AMENDMENT.md",
+        "sha256": "fdbb30efae2b01946a8f8265b9b7bbbd81c89e007aacc94455f7527fcb19aa6d"
+      },
+      {
+        "path": "openspec/changes/dossier-url-declared-source-run/proposed/decisions/DOSSIER-URL-RUN-CONTRACT-APPLICABILITY.md",
+        "sha256": "38e3b6f924c81187cfe7bb31e5383a994d98339689bb0256dd0c1763c8267386"
+      },
+      {
+        "path": "openspec/changes/dossier-url-declared-source-run/proposed/polaris-generation/spec.md",
+        "sha256": "e30836f902361c74943cc0cf69ae907a3e9d678a542b27676677e47c8a5fa865"
+      },
+      {
+        "path": "openspec/changes/dossier-url-declared-source-run/tasks.md",
+        "sha256": "f1b1c5949d47f5a6f9d3803cd2f8be284782af2a6268b726963bfeea02481af6"
+      },
+      {
+        "path": "openspec/changes/dossier-verify-text/README.md",
+        "sha256": "74dd14ebf79f266f7812780a133fded0835766c499145171813337cd63d9635f"
+      },
+      {
+        "path": "openspec/changes/dossier-verify-text/SEMANTIC-DELTA.md",
+        "sha256": "c9279a20f2e4e9cf4ff8851056c62716d1182caf8ef6f2bdae5ae9daa9b80105"
+      },
+      {
+        "path": "openspec/changes/dossier-verify-text/design.md",
+        "sha256": "d76a1e2be291f7d969b2870915654c1ba4ad7f1f3cc28601384e188ff57e39a3"
+      },
+      {
+        "path": "openspec/changes/dossier-verify-text/proposal.md",
+        "sha256": "8937934c29f4a66eb841d02946977c98124a3dda29a6add8a68cd8241f176d53"
+      },
+      {
+        "path": "openspec/changes/dossier-verify-text/proposed/polaris-generation/spec.md",
+        "sha256": "a5453cb1a5c8813fbba513e0b232e6cfc483ceb7ee87061b7f7b67516f0d9cd7"
+      },
+      {
+        "path": "openspec/changes/dossier-verify-text/tasks.md",
+        "sha256": "bb8ab5684057574723bc915697ebe039d68ec05c2fca66d380301f544b903544"
+      },
+      {
+        "path": "openspec/changes/dossier-worth-knowing/README.md",
+        "sha256": "6f3ba8c57c77c98ee7954ba5e47e6a6eb5db8ecad602af448f2da566c38d6ccb"
+      },
+      {
+        "path": "openspec/changes/dossier-worth-knowing/SEMANTIC-DELTA.md",
+        "sha256": "3c31bd2cd722ceadd5e038006d2ed229aa3c8f9a8d392de1f8b61c8f75c6f645"
+      },
+      {
+        "path": "openspec/changes/dossier-worth-knowing/design.md",
+        "sha256": "d7df9336a785324cd6fee6085e10e04f2ccc62c33e6856de459f8bb5fb0ebc42"
+      },
+      {
+        "path": "openspec/changes/dossier-worth-knowing/proposal.md",
+        "sha256": "873c6bbfa8712e21290f423c991491dfba4d69ee63317316e1e2b177cdc702cd"
+      },
+      {
+        "path": "openspec/changes/dossier-worth-knowing/proposed/polaris-generation/spec.md",
+        "sha256": "127e4a8f809211fbff47b118212f94e47d204ef6aaad75a0f357906b9a975928"
+      },
+      {
+        "path": "openspec/changes/dossier-worth-knowing/tasks.md",
+        "sha256": "837b999e2141281d9b9554126f78ec38e5abd30dcdb2ebbd4e9c44d1a376186c"
+      },
+      {
+        "path": "openspec/changes/poc-marker-population-evidence/SEMANTIC-DELTA.md",
+        "sha256": "a20441b864144502aaa02e7d1a3ade38a4c89a0864061c03918dcee78e0bae39"
+      },
+      {
+        "path": "openspec/changes/poc-marker-population-evidence/design.md",
+        "sha256": "50ffb6e2eff8f481b3b0088b4fe6e9b56bbc9dbf8608d6bbbcdf9ca3f721f4d8"
+      },
+      {
+        "path": "openspec/changes/poc-marker-population-evidence/proposal.md",
+        "sha256": "a6baea257fa78478912815ea497bfcdb2faf5998f7667a0a765f359a170b3e8a"
+      },
+      {
+        "path": "openspec/changes/poc-marker-population-evidence/proposed/three-surface-poc-experience/spec.md",
+        "sha256": "90a031bbb62b0185201d97085527e05c74e0dde72eec5ef16f2ac3057affc81c"
+      },
+      {
+        "path": "openspec/changes/poc-marker-population-evidence/tasks.md",
+        "sha256": "d4b496a4d0c4db25fd4be06a31daf4ef9f90a71d87c5aefecbe7dec3d699153a"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-arbitrary-public-repo/AMENDMENTS.md",
+        "sha256": "ed738a871e951960afc6e47ee212791e11b3586fc106be3c9f823a40deb31bda"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-arbitrary-public-repo/GOVERNING-DEPENDENCIES.md",
+        "sha256": "433315cfdfffda251a56d10404fd049e724069ab73a794bbb68ec9090a260cdb"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-arbitrary-public-repo/IMPACT-LEDGER.md",
+        "sha256": "631ee56178502ccaeee599c483abbb8668a5fd139a8beadb779be6f4ae652cac"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-arbitrary-public-repo/OWNER-PACKET.md",
+        "sha256": "56b94bbe58b77c156cc5741d99d92c56aa5d362e01d37386a445795c3dc7824e"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-arbitrary-public-repo/design.md",
+        "sha256": "451a46fe2e59974f66e4b27e4823f2446a0f78cbbf464633e0f44c8507e8dd51"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-arbitrary-public-repo/proposal.md",
+        "sha256": "0d3394bbf1829afdf0dfb29b1d81f6feda7fc65b0d4fc78599d826c375b63946"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-arbitrary-public-repo/proposed/polaris-generation/spec.md",
+        "sha256": "e297197cef6c7f1a070d35cba7829f116b83bc1994459b3af77e4489e4c7f1ef"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-arbitrary-public-repo/tasks.md",
+        "sha256": "6d29ba26abec74e8eb2d10b4623aafe9f6784ba39ffa07820f4745a23de4c697"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-attended-supervisor-view/SEMANTIC-DELTA.md",
+        "sha256": "86a2905f98e8bc809ea7f5217ca61a6f686671b13900b6b3704b2986b9fac038"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-attended-supervisor-view/VERIFICATION.md",
+        "sha256": "554932d1ba53209c1a43d2faa6a7d31258411c8e8d1d5aac3f1ef174075fd6a1"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-launch-consent/GOVERNING-DEPENDENCIES.md",
+        "sha256": "5b9019207a063cd191aa4efa40f956016e3cfa9ea48ba702a0dbd5c1784b45e2"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-launch-consent/IMPACT-LEDGER.md",
+        "sha256": "f40b27d63c1bea54500aff2fb1243786c3a0c8fe0edef2c28799661daf1a9a00"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-launch-consent/OWNER-PACKET.md",
+        "sha256": "1f35740df62f9b7c32fe881d01497d4771df2f8c316878718fa2048823059fe1"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-launch-consent/REVIEW-BRIEF-ROUND-2.md",
+        "sha256": "cd2a7861ef47a7eb89f931eb649b132b8eb626ec65ff9e807a64654bff53ac5c"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-launch-consent/REVIEW-BRIEF-ROUND-3.md",
+        "sha256": "db1aec30dbdee02185830d23fc2f3ff1c1486e4e3dbc8374a89a84caf774abd2"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-launch-consent/REVIEW-BRIEF-ROUND-4.md",
+        "sha256": "46d1dfbb3479919bb65db93709ca0e26fd1f8dcc775ddf8cf3088883118e2205"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-launch-consent/REVIEW-BRIEF.md",
+        "sha256": "8451919a924613fe8a8a206ee174708d644363c22ca973d65260e9efad4c3c1b"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-launch-consent/ROUND-1-DISPOSITIONS.md",
+        "sha256": "8cc3dbe1d1bfa8a023a2c5365f2f0b56c0e63d324d3f8887045796ed70576993"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-launch-consent/ROUND-3-DISPOSITIONS.md",
+        "sha256": "62b30482c7192c4f26b350fb0819db2da5812f4c6505e75245310f868b98e5e0"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-launch-consent/SEMANTIC-DELTA.md",
+        "sha256": "45773c29b12bfaeb66dc009bc72441f5efe58fb448f728c1dd28ff8619dc61e1"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-launch-consent/design.md",
+        "sha256": "844ff662e7858f4cfae63fcab88a5a9fee41a4311f64585a3b010ed8a2c06c9e"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-launch-consent/proposal.md",
+        "sha256": "bb7318223a055e4c2b638b91ba794090d6fc1240bd5f0935909b37f51710df39"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+        "sha256": "21caa65841e76784bbab015320cd0348ebeb092465e135f040901cefcf6e1c84"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-launch-consent/tasks.md",
+        "sha256": "44171bf4bed799a292aa723b3a5f8993d45d6d95dc594fbc181e4e208686ff33"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-local-agent-mode/GOVERNING-DEPENDENCIES.md",
+        "sha256": "9e253e8f7b41f99a24dd6bf3d670f677110010b333f896fb55e6454373f6a0d3"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-local-agent-mode/design.md",
+        "sha256": "92c138390b3e3d9a16294d410202965f710d6feb4433f3b39339d09210e2c6d7"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-local-agent-mode/proposal.md",
+        "sha256": "25074d2a98c782e631e62574ad26c2f92b0debf9b1c23ddc4bb9117ba9eb162a"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+        "sha256": "2dbf5fc5378fa4e0cdcb90b4f9261f6b34882403bf20048948bd58c495490d4e"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-local-agent-mode/tasks.md",
+        "sha256": "6ccaa6893947aa9cbb7dbe7b3704b7084167aee4bc74d4bf251b66115edd60c6"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-motivation-bases/SEMANTIC-DELTA.md",
+        "sha256": "14ae2ad29839155ebb443ace5d464b24c239584f733524fa4a5200f6a8242fd9"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-motivation-bases/design.md",
+        "sha256": "f74babdeb5c009b0164d84d23999b793b96492d2fcd904124a600881f44f9328"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-motivation-bases/proposal.md",
+        "sha256": "c536ffacb6c93e900d70be6324101baf5bdeb3bbde15087ca73689a5278467ea"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-motivation-bases/proposed/polaris-generation/spec.md",
+        "sha256": "04a3e479b7657a2068a3531eba4fb04261c7e0b04f6e43b0fe297b07c4bae230"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-motivation-bases/tasks.md",
+        "sha256": "055c9e36cf708bf3602b2c9bbb4a1e3575cf08d2d8f533d05208c35abdf59a36"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-one-command-run/ATTENDED-VIEW-DESIGN.md",
+        "sha256": "409674eaad67eca2cc3040213fcd6035e21230b9ec399faa23740f300b55ee19"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-one-command-run/CURRENT-COMPOSITION.md",
+        "sha256": "1b3dd49825c72375e10a5a8ecb86d30b212b70127418ea31750e3e3864facf5f"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-one-command-run/OWNER-PACKET.md",
+        "sha256": "30f3f31d00235e6cf1e097cba685ebc474a37aba83cf95e808cb74a3270959b9"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-one-command-run/REVIEW-BRIEF-ROUND-3.md",
+        "sha256": "196e088d178c0642a64141169ad0f8e8de55a0f008831cd05f647791526c9bc1"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-one-command-run/ROUND-1-REPAIRS.md",
+        "sha256": "617d4c20844d6d450603ba0eaa1a4b2ee5947b6679452fad8c30cd9c7a3b4e4d"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-one-command-run/ROUND-2-DISPOSITIONS.md",
+        "sha256": "45350d46b01e12a3b6983aaa2400fd1c4ce3009bc9d2fa399c1b2ba2e49d3a72"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-one-command-run/ROUND-3-DISPOSITIONS.md",
+        "sha256": "c1e150bdcfc3fba1237bd20d4281962df504811ce7dc9316295fd78cba20d484"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-one-command-run/ROUND-3-REPAIRS.md",
+        "sha256": "8d738539a5ae780f7ac2caba67c23efa88c3054af3a55f0e99928a89316022e8"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-one-command-run/design.md",
+        "sha256": "b93210c017048f0c7a19cdcc47c3816b450f91a19d36c2a43c84ce2d2fdc15e7"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-one-command-run/proposal.md",
+        "sha256": "0229c37dcce10d1ef078198661d4d5f5e862e447a27856eaf6bf3a496f073ddd"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-one-command-run/proposed/polaris-generation/spec.md",
+        "sha256": "9d984c99afc4f825ee5210875f016f807b965522badf68ee116a42aa724d1267"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-one-command-run/tasks.md",
+        "sha256": "d0e8363a0019f433549e6aa9bd16e1ea63a611df1b54f68cec793d3f7019fd9d"
+      },
+      {
+        "path": "openspec/changes/polaris-edit-repair-deletion-accounting/SEMANTIC-DELTA.md",
+        "sha256": "55c2c8590929582a6693169360974433e56a5ae5608540cf4091f9644b8e8f02"
+      },
+      {
+        "path": "openspec/changes/polaris-edit-repair-deletion-accounting/design.md",
+        "sha256": "973816156193f754fe7854aa44e506bbcff093de0d70e67b683e917772e8a5ac"
+      },
+      {
+        "path": "openspec/changes/polaris-edit-repair-deletion-accounting/proposal.md",
+        "sha256": "b92aa34dabe747ff765bc8747f16fb9fe40b4f7674d1fb76f30bfa0270ef254c"
+      },
+      {
+        "path": "openspec/changes/polaris-edit-repair-deletion-accounting/proposed/polaris-generation/spec.md",
+        "sha256": "1f0ba725aea6c0660e2da7ffbe653fd0921452d0a1c4a11dcc8792aae5e9fa74"
+      },
+      {
+        "path": "openspec/changes/polaris-edit-repair-deletion-accounting/tasks.md",
+        "sha256": "75fb455d19c1ff841e15ca0c489835b1790b0bbc3dcc420556bdf2363e5ae1c4"
+      },
+      {
+        "path": "openspec/changes/polaris-lexical-import-report/SEMANTIC-DELTA.md",
+        "sha256": "5d0a9878798faf51c066a0c3145ac1b8b3395284effe9928d768b17c568ec0eb"
+      },
+      {
+        "path": "openspec/changes/polaris-lexical-import-report/design.md",
+        "sha256": "40bfdc428cf1fe1ada814094d0cf1585267d37ad1d6c853cf6c7455643244803"
+      },
+      {
+        "path": "openspec/changes/polaris-lexical-import-report/proposal.md",
+        "sha256": "6a81b3bd1b124285cfdbf56c861a5effc5c0de4fc9950bf4a74b1ea41be8adbf"
+      },
+      {
+        "path": "openspec/changes/polaris-lexical-import-report/tasks.md",
+        "sha256": "deb58fed01dbcc3b7e5f5da5ab0078094cdb9d3d2f310c9ca199a16b799a3335"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/ADAPTER-DECLARATIONS.md",
+        "sha256": "3836b93909611fd59890450383e897f9635ee4ba4cd4b5a22ccd611d9ea33564"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/APPLICABILITY-DECISIONS.md",
+        "sha256": "faeae75a1b265667db5969849dec52f8796da69af1407652b053b6554d26b23e"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/ASSET-CONTRACT.md",
+        "sha256": "0804b40250c7bfb284bac97567e0278cfd16e6c8b5a5d5c25db28e8e7efb60d9"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/CAPABILITY-COVERAGE.md",
+        "sha256": "4589e9ee4a5303fdc25d216a0a63e6d732c1185b5a1eb8bb23c7f1b8199b39e0"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/DESIGN-ACCEPTANCE.md",
+        "sha256": "d2ff62db58995ef1fe44b3b6044917743ab5546b56827ba492f1b8ff8580f067"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/EFFECT-HOST-DESIGN.md",
+        "sha256": "11e5c16a9965774eba7e1743e3228fbb5a13c6857829ae79cd61fcc90c59d559"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/ENTRY-AND-WALKTHROUGH.md",
+        "sha256": "b65cd0f69b7800d683ae2d2e3b3053dde1d7c0607f430f90b033eef5c6817f96"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/EXECUTION-PHASES.md",
+        "sha256": "8e3e2c4494df964addb76a885a5b349051f5a0a543346ff4dc15f7c1598b1245"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/GOVERNING-DEPENDENCIES.md",
+        "sha256": "4edf4fe9744370fc61c250926d353890ee6283eb4898e83709ab76e2b627dfa3"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/INTERFACES.md",
+        "sha256": "96e7e396c825d614503253ea45cd0c4317051516c5159e8f120d2786be7243dc"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/NAVIGATION-CONTRACT.md",
+        "sha256": "e30570230c93516adb8d44e30bb810dc4df5ccde3f7d9a32a215214af3cdc321"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/OWNER-FLOW.md",
+        "sha256": "414d845d91b52578c58474446d5feb6c7dc9f1185d8625e4c8ae794edc48c5a9"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/SCHEMA-CONTRACT.md",
+        "sha256": "722eea7233cfb913f4f2e21060f359d721a86336efa1a3851e31ba113a857e8f"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/SECURITY-CONTRACT.md",
+        "sha256": "c6f2703a92a33d31fa5f0644cb4ce669048187d6aa72ce61a4c3aee90bdad6b5"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/SOURCE-POLICY.md",
+        "sha256": "af26acc453396d8b8ddbad94d939bd56f3d87b30ef2a0d3a411c378c48fbba89"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/WORK-STATE-CONTRACT.md",
+        "sha256": "b86d0b944c395bbe66c4363d34be54531c55b6f72e76862626946851e199a986"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/design.md",
+        "sha256": "19d4c147c0ba83693c1406f08186efc68dcc046a0352c3845a54b0a4f3351103"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/proposal.md",
+        "sha256": "ef7bc2a37a181bf6530493995ab47e78260989d2664f61e0165bcca852565f99"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+        "sha256": "a8199646c3b7953e8c4101d70d0307813dd1b3927d0b403f76c22d280dd6a89b"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-generation/tasks.md",
+        "sha256": "d781a1b45fc0e4d216537f40a9e519d41df94eaf1ff252f3484c5f7fd5f794f6"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-understanding-amendment/COVERAGE.md",
+        "sha256": "a9506370bb972502a8cb37c6a66c6e14c787bf6dab878cae2e1b0d62018c1acf"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-understanding-amendment/GOVERNING-DEPENDENCIES.md",
+        "sha256": "e6067cf6b9dcb901d06734b5f97667b81e258b4dff3f5667b80d70c5b8a6685d"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-understanding-amendment/design.md",
+        "sha256": "37a64e32d869414392a00a54c98a883ba9f8a5f575530998e5fd44d576f50fa8"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-understanding-amendment/proposal.md",
+        "sha256": "6378d83eeba81d0dfe96f579f6d98059721efb816c67e2cd155b04e6c03b6f39"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+        "sha256": "6841e63cda0ccdb81966a6fabbdfaf3721910df8ea04959711eb59843859ba58"
+      },
+      {
+        "path": "openspec/changes/polaris-manifesto-understanding-amendment/tasks.md",
+        "sha256": "f0e78d5915f076af4117cb839dee0afb27303b2578eea488c952706e382df68c"
+      },
+      {
+        "path": "openspec/changes/polaris-non-governed-narrative-profile/GOVERNING-DEPENDENCIES.md",
+        "sha256": "5eeca513c48855ea9ff6835e50274ce156dd1383821ffba4c5ea29666ba701cc"
+      },
+      {
+        "path": "openspec/changes/polaris-non-governed-narrative-profile/design.md",
+        "sha256": "d16f020fc80d168c9f0eae91d6d325ec708d6cbf554441b6f4f7c00f77ff7308"
+      },
+      {
+        "path": "openspec/changes/polaris-non-governed-narrative-profile/proposal.md",
+        "sha256": "03a8d0cb33f198fad51d87e64518e06bae426b86452f69afa0d07728cea907e9"
+      },
+      {
+        "path": "openspec/changes/polaris-non-governed-narrative-profile/specs/polaris-generation/spec.md",
+        "sha256": "3b2abfe9221c6aba641c86a23819a3fce5bb0e15617170e7aa7351fc479cb9b3"
+      },
+      {
+        "path": "openspec/changes/polaris-non-governed-narrative-profile/tasks.md",
+        "sha256": "9e717aec8595d3654218f3e9e038837b00cfbaf32346ab659eafeda73918c308"
+      },
+      {
+        "path": "openspec/changes/polaris-omission-advice-screening/SEMANTIC-DELTA.md",
+        "sha256": "9c1227ca7699cf32b5fbb84871ce9faa92a38242653e55a8ab429e3f6d7c6977"
+      },
+      {
+        "path": "openspec/changes/polaris-omission-advice-screening/design.md",
+        "sha256": "b9cfcb7d5d2235d3b4cc6b66dc42df459318d532bf10c047bcdd70a1681f67fa"
+      },
+      {
+        "path": "openspec/changes/polaris-omission-advice-screening/proposal.md",
+        "sha256": "4ec11bb54134d9f3b9334d02465008d4e67a78ac1f24850ad3688e3af345915d"
+      },
+      {
+        "path": "openspec/changes/polaris-omission-advice-screening/tasks.md",
+        "sha256": "c1a54ecb9044ec4bd66b5a509c574b27118ffb7edd28f0a02687836722a2c6bc"
+      },
+      {
+        "path": "openspec/changes/polaris-project-wide-butlers-model/CAPABILITY-COVERAGE.md",
+        "sha256": "d34840d46356696609b21ef3997e86c9944c8cbe8e7447608390e494f80db869"
+      },
+      {
+        "path": "openspec/changes/polaris-project-wide-butlers-model/CONTRACT-COVERAGE-REPAIR-DELTA.md",
+        "sha256": "1e4c0c80d5d120647fb616c50dbead8bc3047410771691fc19d154018beb22f6"
+      },
+      {
+        "path": "openspec/changes/polaris-project-wide-butlers-model/CONTRACT-COVERAGE.md",
+        "sha256": "d54acd212916fb83047874484c9e47acd1fade453384403ba600a7b2a0244d9c"
+      },
+      {
+        "path": "openspec/changes/polaris-project-wide-butlers-model/GOVERNING-DEPENDENCIES.md",
+        "sha256": "69915806cf79f2a220ae2f2d94b180664f12e96bd72206af71602622bef11c14"
+      },
+      {
+        "path": "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-matrix/RFC-0001-0003.md",
+        "sha256": "f28404be66a4241503f2214757d640361751934b2ab308dafeada5c6d2152e50"
+      },
+      {
+        "path": "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-matrix/RFC-0004-0006.md",
+        "sha256": "ec091e743cb95070b30980021f2b5bdf054128161a86f6f8a8bbdf7678ffbc29"
+      },
+      {
+        "path": "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-matrix/RFC-0007-0009.md",
+        "sha256": "6e480d6b94734abd41b15fbdcab1e6d7df9d60f68f0f3f5b0d66f98462728cd0"
+      },
+      {
+        "path": "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-parts/RFC-0001-0003.md",
+        "sha256": "dd64afe3df653bb311aa4d0a94fcb96c444bbb8c254649d49b87569aaa8fecc0"
+      },
+      {
+        "path": "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-parts/RFC-0004-0006.md",
+        "sha256": "5ee83a2cec0aee04703d6034a8846eca300012f81abba8566709181c4d2957d6"
+      },
+      {
+        "path": "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-parts/RFC-0007-0009.md",
+        "sha256": "2f23e7b2d7e3a7a75302cf38d585ea88f06f37b67b52b286271b6b3469bc27b1"
+      },
+      {
+        "path": "openspec/changes/polaris-project-wide-butlers-model/design.md",
+        "sha256": "04e0ba94b3b36850cb3ef70094d70c7076ae9eed99248ae6d52ce9423be5407b"
+      },
+      {
+        "path": "openspec/changes/polaris-project-wide-butlers-model/proposal.md",
+        "sha256": "3a7c7de19e59cd8a589a280607f47cf1192281a3332b02c0ecde8fb832d545bc"
+      },
+      {
+        "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+        "sha256": "44f4ad77e62525595be5839883ac491d26bdd6859f353f91edc1d48903011ed2"
+      },
+      {
+        "path": "openspec/changes/polaris-project-wide-butlers-model/tasks.md",
+        "sha256": "74c9957fa1bb7584222b81a1d12368f5ed0039db3b1851b874a7c429bd9ffecc"
+      },
+      {
+        "path": "openspec/changes/polaris-provider-claim-ledger/SEMANTIC-DELTA.md",
+        "sha256": "29d0e74ba335e7a707fe254d8a097561d4e457b0be7d9008da8617a18f650701"
+      },
+      {
+        "path": "openspec/changes/polaris-provider-claim-ledger/design.md",
+        "sha256": "38c2c669ef1b612b495aa4c6a7ee196ccb876b7896d7e5869deb02694fc2ab4e"
+      },
+      {
+        "path": "openspec/changes/polaris-provider-claim-ledger/proposal.md",
+        "sha256": "5b408dcd7657dc5e8820d1717003d3aff49a4a35210d65b6651c57756e48f906"
+      },
+      {
+        "path": "openspec/changes/polaris-provider-claim-ledger/proposed/polaris-generation/spec.md",
+        "sha256": "f03112ef1db5c68949b307ef099898e88ce88ddb8319255ac55660082154f4e4"
+      },
+      {
+        "path": "openspec/changes/polaris-provider-claim-ledger/tasks.md",
+        "sha256": "c2df6f0b63c1fca0672c3673b36d4e406b515d296898a0736c3f3b724abd5404"
+      },
+      {
+        "path": "openspec/changes/polaris-source-example-advice/SCREENING-SUCCESSOR-DELTA.md",
+        "sha256": "77fe62bf7a02a5f91dcf32fb036b59eeb1a0621c1934bf6a091394728afa9890"
+      },
+      {
+        "path": "openspec/changes/polaris-source-example-advice/SEMANTIC-DELTA.md",
+        "sha256": "e05bb7f4a26843c93d34b04831df0fccb79b738241c22ebda4ef14e7dd8092e2"
+      },
+      {
+        "path": "openspec/changes/polaris-source-example-advice/design.md",
+        "sha256": "4ba7eb5542b786c0b4ebbdaaad612b8a58443a9706a5e63e7c7441df2ef30b3e"
+      },
+      {
+        "path": "openspec/changes/polaris-source-example-advice/proposal.md",
+        "sha256": "d1434e7aafc3428f5ad8aadcbe0fa5ba9b6427b0655e6f4448891ab5b6f4d6c2"
+      },
+      {
+        "path": "openspec/changes/polaris-source-example-advice/proposed/polaris-generation/spec.md",
+        "sha256": "e2688ca4162bd10065fbd87dcf6134ab8263a8039dbd3de62b4eb2de85771177"
+      },
+      {
+        "path": "openspec/changes/polaris-source-example-advice/tasks.md",
+        "sha256": "464a79a6de5524dfcf18c533cabec26de272f84c3d67f06f5c25ce0364959f17"
+      },
+      {
+        "path": "openspec/changes/project-registration-and-honest-shape-visibility/CAPABILITY-COVERAGE.md",
+        "sha256": "2f6f4de4650b6800b968d243dd5887919ea7d4da550413db570d6928ac7646e9"
+      },
+      {
+        "path": "openspec/changes/project-registration-and-honest-shape-visibility/CONTRACT-COVERAGE.md",
+        "sha256": "15431d8ba1fe25a61e4dc2713c4d51fad1cf6d25ef7a9103cc616265102289c9"
+      },
+      {
+        "path": "openspec/changes/project-registration-and-honest-shape-visibility/GOVERNING-DEPENDENCIES.md",
+        "sha256": "a00ccbf24f2e106ec3a396b8ae637097b4aaca9965548aab6d1cda0f37851c8e"
+      },
+      {
+        "path": "openspec/changes/project-registration-and-honest-shape-visibility/design.md",
+        "sha256": "12bb357f30c3f8a3107b507ddedaf2e715c974ca877db8f031699e6268a384ee"
+      },
+      {
+        "path": "openspec/changes/project-registration-and-honest-shape-visibility/proposal.md",
+        "sha256": "4cda00e0df635a853360e22f7c9d3dde68424782a115d1eadf2b7ddeab5c869a"
+      },
+      {
+        "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+        "sha256": "65b66c913cd2650881a9df8cb34a3c63b3f518041e83f45d2451980d9f1d0448"
+      },
+      {
+        "path": "openspec/changes/project-registration-and-honest-shape-visibility/tasks.md",
+        "sha256": "c037aa188970c1314d8e0adfcdc1b6f890c20e05fa3feb841483d8bc5aabaf33"
+      },
+      {
+        "path": "openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md",
+        "sha256": "807acfa69bd97ca039abc82db4d1c98d38bf1d0ea141fb9dded1a1d3b7454fde"
+      },
+      {
+        "path": "openspec/changes/three-surface-poc-experience/GOVERNING-DEPENDENCIES.md",
+        "sha256": "5b84c085f07356405f6376b7bf441d95587753ccb6afa221325ccb894faedbaf"
+      },
+      {
+        "path": "openspec/changes/three-surface-poc-experience/design.md",
+        "sha256": "160c813f747887200e6656fba99395e37a76892d4370da8bdd82d1d40e47e6ac"
+      },
+      {
+        "path": "openspec/changes/three-surface-poc-experience/proposal.md",
+        "sha256": "7eeb404916b6568009db5cef33d4370840970146706ab8ab45d93797ae30776c"
+      },
+      {
+        "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+        "sha256": "97641453697dda04bdf9f05287c4e535dcc5aea1dbd215051db7dd5f372aea6b"
+      },
+      {
+        "path": "openspec/changes/three-surface-poc-experience/tasks.md",
+        "sha256": "97cee9fe8306a051e0db7237394f5853c12061212b5fa1a2acd6a44c4e0f2a9d"
+      },
+      {
+        "path": "openspec/specs/README.md",
+        "sha256": "a70a666052be8de163dabb598c6bf3096108a3c371f1770c3b448e4fcbd885ed"
+      }
+    ]
+  },
+  "markers": [
+    "REQ-polaris-generation-048",
+    "ATTENDED-VIEW-DESIGN.md",
+    "polaris-dossier-attended-supervisor-view",
+    "polaris-dossier-one-command-run"
+  ],
+  "recordedAdoptions": {
+    "A-14": {
+      "ledgerLine": 32,
+      "source": "ab94bcdc7e4a0e1fdb4488e5f2a642fec0dcf118",
+      "path": "openspec/changes/dossier-url-declared-source-run/proposed/polaris-generation/spec.md",
+      "sourceSHA256": "e30836f902361c74943cc0cf69ae907a3e9d678a542b27676677e47c8a5fa865",
+      "tag": "polaris-dossier-url-declared-source-run-v2.1",
+      "tagKind": "tag",
+      "tagObject": "958636eb349b497766eb1bc874840de36810d472"
+    },
+    "A-51": {
+      "ledgerLine": 69,
+      "source": "d4597b04c20cdd12d6c46619e93c82fe9f631a9f",
+      "path": "openspec/changes/dossier-raw-read-disclosure/proposed/polaris-generation/spec.md",
+      "sourceSHA256": "a53432d787d857185b76193aa614c47d42eca39b3f9c22857935b61127ff5517",
+      "tag": "polaris-dossier-raw-read-disclosure-v2.17",
+      "tagKind": "commit",
+      "tagObject": "d4597b04c20cdd12d6c46619e93c82fe9f631a9f"
+    },
+    "A-53": {
+      "ledgerLine": 71,
+      "source": "2b148403bfedabbfcdf7a9a40306003f85dbb6a3",
+      "path": "openspec/changes/dossier-run-tree-read-bounds/proposed/polaris-generation/spec.md",
+      "sourceSHA256": "84fc7c71221705b6a2b614e3acf4496d10bb2e3ba4815c1e776ad450b3bc19a5",
+      "tag": "polaris-dossier-run-tree-read-bounds-v2.18",
+      "tagKind": "commit",
+      "tagObject": "2b148403bfedabbfcdf7a9a40306003f85dbb6a3"
+    },
+    "A-304": {
+      "ledgerLine": 103,
+      "source": "5a40a2d948af2d9d722f708268b5761b3d1443a8",
+      "path": "openspec/changes/dossier-question-file/proposed/polaris-generation/spec.md",
+      "sourceSHA256": "147954d8089b52e98deadf9710c061324c670f8ddfc4b7406fedbb9ab8c18b18",
+      "tag": "polaris-dossier-question-file-v2.27",
+      "tagKind": "tag",
+      "tagObject": "db99f4e58ab27da86e1044dc2c42545e2698a9b5"
+    },
+    "A-305": {
+      "ledgerLine": 104,
+      "source": "23434d292245770bade94376844ddb42a4fc4c83",
+      "path": "openspec/changes/dossier-coverage-hold/proposed/polaris-generation/spec.md",
+      "sourceSHA256": "aa65f8050d9fc2ea1b2757241403291d97ac18f3a9ec65ca45dabbcc5addd24d",
+      "tag": "polaris-dossier-coverage-hold-v2.28",
+      "tagKind": "tag",
+      "tagObject": "802fce53b3417accd21f854b317b7071ef57ccf8"
+    },
+    "A-310": {
+      "ledgerLine": 109,
+      "source": "34084d4c22f741f6d3c9a9a0bc235f2785e81cb5",
+      "path": "openspec/changes/dossier-step-measures/proposed/polaris-generation/spec.md",
+      "sourceSHA256": "f7ff5706c26b937d991e24183d5dcb29091fefe580b066ccbfc32540fde7ea05",
+      "tag": "polaris-dossier-step-measures-v2.31",
+      "tagKind": "tag",
+      "tagObject": "42be4b55f3c2bba82bc89a7372b803efb2cfc7be"
+    },
+    "A-267": {
+      "ledgerLine": 121,
+      "source": "e9eaf3e4601e997996186a57670defc62fd65591",
+      "path": "openspec/changes/dossier-derived-base-views/proposed/polaris-generation/spec.md",
+      "sourceSHA256": "a404fa70e788f7ca20761f5a30f1d840604706cb811fcf50664f3e2942592c45",
+      "tag": "polaris-dossier-derived-base-views-v2.34",
+      "tagState": "absent; retired by A-332"
+    },
+    "A-332": {
+      "ledgerLine": 124,
+      "source": "d84651c513d1fbfc9469e318cd8cbc3f9aebdb8b",
+      "path": "openspec/changes/dossier-derived-base-views/README.md",
+      "sourceSHA256": "20b2a3b4529f31e98617f9ebae0d985d543e9b5a1d0366928909cc80832c423e"
+    },
+    "A-333": {
+      "ledgerLine": 125,
+      "source": "b7d3324969101e742b2592869d8761f680fe8615",
+      "path": "openspec/changes/dossier-derived-base-screening/proposed/polaris-generation/spec.md",
+      "sourceSHA256": "a784c6712ce31a9b72136be27d49a535465a8637a2493d2ef1305a28fcdbc698",
+      "tag": "polaris-dossier-derived-base-screening-v2.35",
+      "tagKind": "tag",
+      "tagObject": "7246fba21c0278757e1e46489855114dc745c230"
+    },
+    "A-334": {
+      "ledgerLine": 126,
+      "source": "8e64522613a9f76eb2c9e37896954b90f808afe6",
+      "path": "openspec/changes/polaris-source-example-advice/proposed/polaris-generation/spec.md",
+      "sourceSHA256": "e2688ca4162bd10065fbd87dcf6134ab8263a8039dbd3de62b4eb2de85771177",
+      "tag": "polaris-dossier-source-example-advice-v2.36",
+      "tagKind": "tag",
+      "tagObject": "3cf25af1b531422e0b1dc514bb4f04bea77d39b4"
+    }
+  },
+  "namedConsumerDeclarationPaths": {
+    "REQ-polaris-generation-033": [
+      "openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-question-file/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-raw-read-disclosure/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-run-tree-read-bounds/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-scripted-benchmark-grading/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-step-measures/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-url-declared-source-run/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-verify-text/proposed/polaris-generation/spec.md",
+      "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md"
+    ],
+    "REQ-polaris-generation-035": [
+      "openspec/changes/dossier-coverage-hold/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-run-tree-read-bounds/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-url-declared-source-run/proposed/polaris-generation/spec.md",
+      "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md"
+    ],
+    "REQ-polaris-generation-047": [
+      "openspec/changes/dossier-url-declared-source-run/proposed/polaris-generation/spec.md",
+      "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md"
+    ],
+    "REQ-polaris-generation-048": [
+      "openspec/changes/dossier-run-tree-read-bounds/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-url-declared-source-run/proposed/polaris-generation/spec.md"
+    ]
+  },
+  "affected": {
+    "openspec/changes/dossier-run-tree-read-bounds/proposed/polaris-generation/spec.md": {
+      "reason": "The staged P111 successor replaces only its REQ-048 member; REQ-033 and REQ-035 in this historical source stay exact.",
+      "method": "Compared the exact adopted A-53 member to the #989 patch and frozen candidate; the forward and inverse replay holds the sibling source bytes.",
+      "actor": "syzygy-zwja specification author"
+    },
+    "openspec/README.md": {
+      "reason": "The effective family route needs the exact P111 source and record state when a successor is bound.",
+      "method": "Read the current protected index and the separate #1022 candidate row; protected current scope has no selected P111 route.",
+      "actor": "syzygy-zwja integration author"
+    }
+  },
+  "explicitlyUnaffected": {
+    "openspec/changes/polaris-dossier-one-command-run/proposed/polaris-generation/spec.md": {
+      "reason": "Proposed REQ-040 through REQ-045 are the retained historical R3 subject.",
+      "method": "Compared exact archived bytes to reviewed R3 and the frozen SHA-256; neither refresh path writes the archive."
+    },
+    "openspec/changes/dossier-derived-base-screening/proposed/polaris-generation/spec.md": {
+      "reason": "A-333 is the protected REQ-034 screening subject; P111 proposes only REQ-048.",
+      "method": "Matched the exact v2.35 annotated source and protected blob; the current source remains the historical 579/603 transition input."
+    },
+    "openspec/changes/polaris-source-example-advice/proposed/polaris-generation/spec.md": {
+      "reason": "A-334's advisory REQ-034 remains the current predecessor population for the P111 count.",
+      "method": "Matched the exact v2.36 annotated source and protected blob; the status and archived two-reader baseline show 39/610 with P111 unselected."
+    },
+    "openspec/changes/polaris-dossier-one-command-run/ROUND-3-DISPOSITIONS.md": {
+      "reason": "The original notes describe only the exact frozen R3 review and stay historical.",
+      "method": "Compared the exact protected blob to the candidate tree and checked the retained raw review identity named inside it."
+    }
+  },
+  "undecidable": {
+    "matched": [
+      "openspec/changes/dossier-coverage-hold/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-coverage-hold/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-declared-source-reach/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-declared-source-reach/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-declared-source-readmission/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-declared-source-readmission/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-infrastructure-recognizers/design.md",
+      "openspec/changes/dossier-question-file/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-raw-read-disclosure/REVIEW-DISPOSITIONS.md",
+      "openspec/changes/dossier-raw-read-disclosure/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-raw-read-disclosure/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-run-tree-read-bounds/design.md",
+      "openspec/changes/dossier-run-tree-read-bounds/proposal.md",
+      "openspec/changes/dossier-scripted-benchmark-grading/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-step-measures/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-url-declared-source-run/proposed/contracts/DOSSIER-URL-LOCAL-MACHINE-CREDENTIAL-AMENDMENT.md",
+      "openspec/changes/dossier-url-declared-source-run/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-verify-text/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-verify-text/design.md",
+      "openspec/changes/dossier-verify-text/proposed/polaris-generation/spec.md",
+      "openspec/changes/polaris-dossier-attended-supervisor-view/SEMANTIC-DELTA.md",
+      "openspec/changes/polaris-dossier-attended-supervisor-view/VERIFICATION.md",
+      "openspec/changes/polaris-dossier-launch-consent/REVIEW-BRIEF.md",
+      "openspec/changes/polaris-dossier-launch-consent/design.md",
+      "openspec/changes/polaris-dossier-launch-consent/proposal.md",
+      "openspec/changes/polaris-dossier-one-command-run/ATTENDED-VIEW-DESIGN.md"
+    ],
+    "unmatched": [
+      "openspec/changes/archive/README.md",
+      "openspec/changes/cap1-consent-refusal-disclosure/CONTRACT-COVERAGE.md",
+      "openspec/changes/cap1-consent-refusal-disclosure/SEMANTIC-DELTA.md",
+      "openspec/changes/cap1-consent-refusal-disclosure/design.md",
+      "openspec/changes/cap1-consent-refusal-disclosure/proposal.md",
+      "openspec/changes/cap1-consent-refusal-disclosure/proposed/project-registration-and-honest-shape-visibility/spec.md",
+      "openspec/changes/cap1-consent-refusal-disclosure/tasks.md",
+      "openspec/changes/cap1-root-adjudication/CONTRACT-COVERAGE.md",
+      "openspec/changes/cap1-root-adjudication/SEMANTIC-DELTA.md",
+      "openspec/changes/cap1-root-adjudication/proposal.md",
+      "openspec/changes/cap1-root-adjudication/proposed/project-registration-and-honest-shape-visibility/spec.md",
+      "openspec/changes/cap1-trusted-bootstrap-consent/ADOPTION.md",
+      "openspec/changes/cap1-trusted-bootstrap-consent/APPLYING.md",
+      "openspec/changes/cap1-trusted-bootstrap-consent/CAPABILITY-COVERAGE.md",
+      "openspec/changes/cap1-trusted-bootstrap-consent/CONTRACT-COVERAGE.md",
+      "openspec/changes/cap1-trusted-bootstrap-consent/PREDECESSOR-REQUIREMENTS.md",
+      "openspec/changes/cap1-trusted-bootstrap-consent/README.md",
+      "openspec/changes/cap1-trusted-bootstrap-consent/REVIEW-DISPOSITION.md",
+      "openspec/changes/cap1-trusted-bootstrap-consent/VALIDATION.md",
+      "openspec/changes/cap1-trusted-bootstrap-consent/design.md",
+      "openspec/changes/cap1-trusted-bootstrap-consent/proposal.md",
+      "openspec/changes/cap1-trusted-bootstrap-consent/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "openspec/changes/cap1-trusted-bootstrap-consent/tasks.md",
+      "openspec/changes/dossier-brief-terminology/README.md",
+      "openspec/changes/dossier-brief-terminology/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-brief-terminology/design.md",
+      "openspec/changes/dossier-brief-terminology/proposal.md",
+      "openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-brief-terminology/tasks.md",
+      "openspec/changes/dossier-computed-maps/README.md",
+      "openspec/changes/dossier-computed-maps/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-computed-maps/design.md",
+      "openspec/changes/dossier-computed-maps/proposal.md",
+      "openspec/changes/dossier-computed-maps/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-computed-maps/tasks.md",
+      "openspec/changes/dossier-containment-figure/README.md",
+      "openspec/changes/dossier-containment-figure/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-containment-figure/design.md",
+      "openspec/changes/dossier-containment-figure/proposal.md",
+      "openspec/changes/dossier-containment-figure/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-containment-figure/tasks.md",
+      "openspec/changes/dossier-coverage-hold/README.md",
+      "openspec/changes/dossier-coverage-hold/design.md",
+      "openspec/changes/dossier-coverage-hold/proposal.md",
+      "openspec/changes/dossier-coverage-hold/tasks.md",
+      "openspec/changes/dossier-coverage-precheck/README.md",
+      "openspec/changes/dossier-coverage-precheck/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-coverage-precheck/design.md",
+      "openspec/changes/dossier-coverage-precheck/proposal.md",
+      "openspec/changes/dossier-coverage-precheck/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-coverage-precheck/tasks.md",
+      "openspec/changes/dossier-declared-source-model/README.md",
+      "openspec/changes/dossier-declared-source-model/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-declared-source-model/design.md",
+      "openspec/changes/dossier-declared-source-model/proposal.md",
+      "openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-declared-source-model/tasks.md",
+      "openspec/changes/dossier-declared-source-reach/README.md",
+      "openspec/changes/dossier-declared-source-reach/design.md",
+      "openspec/changes/dossier-declared-source-reach/proposal.md",
+      "openspec/changes/dossier-declared-source-reach/tasks.md",
+      "openspec/changes/dossier-declared-source-readmission/README.md",
+      "openspec/changes/dossier-declared-source-readmission/design.md",
+      "openspec/changes/dossier-declared-source-readmission/proposal.md",
+      "openspec/changes/dossier-declared-source-readmission/tasks.md",
+      "openspec/changes/dossier-derived-base-screening/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-derived-base-screening/proposal.md",
+      "openspec/changes/dossier-derived-base-views/README.md",
+      "openspec/changes/dossier-derived-base-views/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-derived-base-views/design.md",
+      "openspec/changes/dossier-derived-base-views/proposal.md",
+      "openspec/changes/dossier-derived-base-views/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-derived-base-views/tasks.md",
+      "openspec/changes/dossier-derived-observed-facts/README.md",
+      "openspec/changes/dossier-derived-observed-facts/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-derived-observed-facts/design.md",
+      "openspec/changes/dossier-derived-observed-facts/proposal.md",
+      "openspec/changes/dossier-derived-observed-facts/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-derived-observed-facts/tasks.md",
+      "openspec/changes/dossier-figure-homes-and-fit/README.md",
+      "openspec/changes/dossier-figure-homes-and-fit/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-figure-homes-and-fit/design.md",
+      "openspec/changes/dossier-figure-homes-and-fit/proposal.md",
+      "openspec/changes/dossier-figure-homes-and-fit/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-figure-homes-and-fit/tasks.md",
+      "openspec/changes/dossier-figure-kinds/README.md",
+      "openspec/changes/dossier-figure-kinds/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-figure-kinds/design.md",
+      "openspec/changes/dossier-figure-kinds/proposal.md",
+      "openspec/changes/dossier-figure-kinds/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-figure-kinds/tasks.md",
+      "openspec/changes/dossier-figure-plan/README.md",
+      "openspec/changes/dossier-figure-plan/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-figure-plan/design.md",
+      "openspec/changes/dossier-figure-plan/proposal.md",
+      "openspec/changes/dossier-figure-plan/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-figure-plan/tasks.md",
+      "openspec/changes/dossier-hero-figure/README.md",
+      "openspec/changes/dossier-hero-figure/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-hero-figure/design.md",
+      "openspec/changes/dossier-hero-figure/proposal.md",
+      "openspec/changes/dossier-hero-figure/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-hero-figure/tasks.md",
+      "openspec/changes/dossier-index-and-task-routes/README.md",
+      "openspec/changes/dossier-index-and-task-routes/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-index-and-task-routes/design.md",
+      "openspec/changes/dossier-index-and-task-routes/proposal.md",
+      "openspec/changes/dossier-index-and-task-routes/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-index-and-task-routes/tasks.md",
+      "openspec/changes/dossier-infrastructure-recognizers/README.md",
+      "openspec/changes/dossier-infrastructure-recognizers/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-infrastructure-recognizers/proposal.md",
+      "openspec/changes/dossier-infrastructure-recognizers/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-infrastructure-recognizers/tasks.md",
+      "openspec/changes/dossier-ledger-packs-thesis/README.md",
+      "openspec/changes/dossier-ledger-packs-thesis/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-ledger-packs-thesis/design.md",
+      "openspec/changes/dossier-ledger-packs-thesis/proposal.md",
+      "openspec/changes/dossier-ledger-packs-thesis/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-ledger-packs-thesis/tasks.md",
+      "openspec/changes/dossier-manifest-recognizers/README.md",
+      "openspec/changes/dossier-manifest-recognizers/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-manifest-recognizers/design.md",
+      "openspec/changes/dossier-manifest-recognizers/proposal.md",
+      "openspec/changes/dossier-manifest-recognizers/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-manifest-recognizers/tasks.md",
+      "openspec/changes/dossier-page-subsections/README.md",
+      "openspec/changes/dossier-page-subsections/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-page-subsections/design.md",
+      "openspec/changes/dossier-page-subsections/proposal.md",
+      "openspec/changes/dossier-page-subsections/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-page-subsections/tasks.md",
+      "openspec/changes/dossier-question-file/README.md",
+      "openspec/changes/dossier-question-file/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-question-file/design.md",
+      "openspec/changes/dossier-question-file/proposal.md",
+      "openspec/changes/dossier-question-file/tasks.md",
+      "openspec/changes/dossier-question-kind-floor/README.md",
+      "openspec/changes/dossier-question-kind-floor/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-question-kind-floor/design.md",
+      "openspec/changes/dossier-question-kind-floor/proposal.md",
+      "openspec/changes/dossier-question-kind-floor/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-question-kind-floor/tasks.md",
+      "openspec/changes/dossier-raw-read-disclosure/D11-DISCLOSURE-REVIEW-RAW.md",
+      "openspec/changes/dossier-raw-read-disclosure/README.md",
+      "openspec/changes/dossier-raw-read-disclosure/design.md",
+      "openspec/changes/dossier-raw-read-disclosure/proposal.md",
+      "openspec/changes/dossier-raw-read-disclosure/tasks.md",
+      "openspec/changes/dossier-readers-edition/README.md",
+      "openspec/changes/dossier-readers-edition/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-readers-edition/design.md",
+      "openspec/changes/dossier-readers-edition/proposal.md",
+      "openspec/changes/dossier-readers-edition/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-readers-edition/tasks.md",
+      "openspec/changes/dossier-record-bounds/README.md",
+      "openspec/changes/dossier-record-bounds/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-record-bounds/design.md",
+      "openspec/changes/dossier-record-bounds/proposal.md",
+      "openspec/changes/dossier-record-bounds/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-record-bounds/tasks.md",
+      "openspec/changes/dossier-relation-types/README.md",
+      "openspec/changes/dossier-relation-types/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-relation-types/design.md",
+      "openspec/changes/dossier-relation-types/proposal.md",
+      "openspec/changes/dossier-relation-types/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-relation-types/tasks.md",
+      "openspec/changes/dossier-run-tree-read-bounds/README.md",
+      "openspec/changes/dossier-run-tree-read-bounds/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-run-tree-read-bounds/tasks.md",
+      "openspec/changes/dossier-scripted-benchmark-grading/README.md",
+      "openspec/changes/dossier-scripted-benchmark-grading/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-scripted-benchmark-grading/design.md",
+      "openspec/changes/dossier-scripted-benchmark-grading/proposal.md",
+      "openspec/changes/dossier-scripted-benchmark-grading/tasks.md",
+      "openspec/changes/dossier-spec-corrections/README.md",
+      "openspec/changes/dossier-spec-corrections/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-spec-corrections/design.md",
+      "openspec/changes/dossier-spec-corrections/proposal.md",
+      "openspec/changes/dossier-spec-corrections/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-spec-corrections/tasks.md",
+      "openspec/changes/dossier-spec-repairs/README.md",
+      "openspec/changes/dossier-spec-repairs/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-spec-repairs/design.md",
+      "openspec/changes/dossier-spec-repairs/proposal.md",
+      "openspec/changes/dossier-spec-repairs/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-spec-repairs/tasks.md",
+      "openspec/changes/dossier-step-measures/README.md",
+      "openspec/changes/dossier-step-measures/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-step-measures/design.md",
+      "openspec/changes/dossier-step-measures/proposal.md",
+      "openspec/changes/dossier-step-measures/tasks.md",
+      "openspec/changes/dossier-system-model/README.md",
+      "openspec/changes/dossier-system-model/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-system-model/design.md",
+      "openspec/changes/dossier-system-model/proposal.md",
+      "openspec/changes/dossier-system-model/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-system-model/tasks.md",
+      "openspec/changes/dossier-url-declared-source-run/README.md",
+      "openspec/changes/dossier-url-declared-source-run/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-url-declared-source-run/design.md",
+      "openspec/changes/dossier-url-declared-source-run/proposal.md",
+      "openspec/changes/dossier-url-declared-source-run/proposed/decisions/DOSSIER-URL-RUN-CONTRACT-APPLICABILITY.md",
+      "openspec/changes/dossier-url-declared-source-run/tasks.md",
+      "openspec/changes/dossier-verify-text/README.md",
+      "openspec/changes/dossier-verify-text/proposal.md",
+      "openspec/changes/dossier-verify-text/tasks.md",
+      "openspec/changes/dossier-worth-knowing/README.md",
+      "openspec/changes/dossier-worth-knowing/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-worth-knowing/design.md",
+      "openspec/changes/dossier-worth-knowing/proposal.md",
+      "openspec/changes/dossier-worth-knowing/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-worth-knowing/tasks.md",
+      "openspec/changes/poc-marker-population-evidence/SEMANTIC-DELTA.md",
+      "openspec/changes/poc-marker-population-evidence/design.md",
+      "openspec/changes/poc-marker-population-evidence/proposal.md",
+      "openspec/changes/poc-marker-population-evidence/proposed/three-surface-poc-experience/spec.md",
+      "openspec/changes/poc-marker-population-evidence/tasks.md",
+      "openspec/changes/polaris-dossier-arbitrary-public-repo/AMENDMENTS.md",
+      "openspec/changes/polaris-dossier-arbitrary-public-repo/GOVERNING-DEPENDENCIES.md",
+      "openspec/changes/polaris-dossier-arbitrary-public-repo/IMPACT-LEDGER.md",
+      "openspec/changes/polaris-dossier-arbitrary-public-repo/OWNER-PACKET.md",
+      "openspec/changes/polaris-dossier-arbitrary-public-repo/design.md",
+      "openspec/changes/polaris-dossier-arbitrary-public-repo/proposal.md",
+      "openspec/changes/polaris-dossier-arbitrary-public-repo/proposed/polaris-generation/spec.md",
+      "openspec/changes/polaris-dossier-arbitrary-public-repo/tasks.md",
+      "openspec/changes/polaris-dossier-launch-consent/GOVERNING-DEPENDENCIES.md",
+      "openspec/changes/polaris-dossier-launch-consent/IMPACT-LEDGER.md",
+      "openspec/changes/polaris-dossier-launch-consent/OWNER-PACKET.md",
+      "openspec/changes/polaris-dossier-launch-consent/REVIEW-BRIEF-ROUND-2.md",
+      "openspec/changes/polaris-dossier-launch-consent/REVIEW-BRIEF-ROUND-3.md",
+      "openspec/changes/polaris-dossier-launch-consent/REVIEW-BRIEF-ROUND-4.md",
+      "openspec/changes/polaris-dossier-launch-consent/ROUND-1-DISPOSITIONS.md",
+      "openspec/changes/polaris-dossier-launch-consent/ROUND-3-DISPOSITIONS.md",
+      "openspec/changes/polaris-dossier-launch-consent/SEMANTIC-DELTA.md",
+      "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "openspec/changes/polaris-dossier-launch-consent/tasks.md",
+      "openspec/changes/polaris-dossier-local-agent-mode/GOVERNING-DEPENDENCIES.md",
+      "openspec/changes/polaris-dossier-local-agent-mode/design.md",
+      "openspec/changes/polaris-dossier-local-agent-mode/proposal.md",
+      "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "openspec/changes/polaris-dossier-local-agent-mode/tasks.md",
+      "openspec/changes/polaris-dossier-motivation-bases/SEMANTIC-DELTA.md",
+      "openspec/changes/polaris-dossier-motivation-bases/design.md",
+      "openspec/changes/polaris-dossier-motivation-bases/proposal.md",
+      "openspec/changes/polaris-dossier-motivation-bases/proposed/polaris-generation/spec.md",
+      "openspec/changes/polaris-dossier-motivation-bases/tasks.md",
+      "openspec/changes/polaris-dossier-one-command-run/CURRENT-COMPOSITION.md",
+      "openspec/changes/polaris-dossier-one-command-run/OWNER-PACKET.md",
+      "openspec/changes/polaris-dossier-one-command-run/REVIEW-BRIEF-ROUND-3.md",
+      "openspec/changes/polaris-dossier-one-command-run/ROUND-1-REPAIRS.md",
+      "openspec/changes/polaris-dossier-one-command-run/ROUND-2-DISPOSITIONS.md",
+      "openspec/changes/polaris-dossier-one-command-run/ROUND-3-REPAIRS.md",
+      "openspec/changes/polaris-dossier-one-command-run/design.md",
+      "openspec/changes/polaris-dossier-one-command-run/proposal.md",
+      "openspec/changes/polaris-dossier-one-command-run/tasks.md",
+      "openspec/changes/polaris-edit-repair-deletion-accounting/SEMANTIC-DELTA.md",
+      "openspec/changes/polaris-edit-repair-deletion-accounting/design.md",
+      "openspec/changes/polaris-edit-repair-deletion-accounting/proposal.md",
+      "openspec/changes/polaris-edit-repair-deletion-accounting/proposed/polaris-generation/spec.md",
+      "openspec/changes/polaris-edit-repair-deletion-accounting/tasks.md",
+      "openspec/changes/polaris-lexical-import-report/SEMANTIC-DELTA.md",
+      "openspec/changes/polaris-lexical-import-report/design.md",
+      "openspec/changes/polaris-lexical-import-report/proposal.md",
+      "openspec/changes/polaris-lexical-import-report/tasks.md",
+      "openspec/changes/polaris-manifesto-generation/ADAPTER-DECLARATIONS.md",
+      "openspec/changes/polaris-manifesto-generation/APPLICABILITY-DECISIONS.md",
+      "openspec/changes/polaris-manifesto-generation/ASSET-CONTRACT.md",
+      "openspec/changes/polaris-manifesto-generation/CAPABILITY-COVERAGE.md",
+      "openspec/changes/polaris-manifesto-generation/DESIGN-ACCEPTANCE.md",
+      "openspec/changes/polaris-manifesto-generation/EFFECT-HOST-DESIGN.md",
+      "openspec/changes/polaris-manifesto-generation/ENTRY-AND-WALKTHROUGH.md",
+      "openspec/changes/polaris-manifesto-generation/EXECUTION-PHASES.md",
+      "openspec/changes/polaris-manifesto-generation/GOVERNING-DEPENDENCIES.md",
+      "openspec/changes/polaris-manifesto-generation/INTERFACES.md",
+      "openspec/changes/polaris-manifesto-generation/NAVIGATION-CONTRACT.md",
+      "openspec/changes/polaris-manifesto-generation/OWNER-FLOW.md",
+      "openspec/changes/polaris-manifesto-generation/SCHEMA-CONTRACT.md",
+      "openspec/changes/polaris-manifesto-generation/SECURITY-CONTRACT.md",
+      "openspec/changes/polaris-manifesto-generation/SOURCE-POLICY.md",
+      "openspec/changes/polaris-manifesto-generation/WORK-STATE-CONTRACT.md",
+      "openspec/changes/polaris-manifesto-generation/design.md",
+      "openspec/changes/polaris-manifesto-generation/proposal.md",
+      "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "openspec/changes/polaris-manifesto-generation/tasks.md",
+      "openspec/changes/polaris-manifesto-understanding-amendment/COVERAGE.md",
+      "openspec/changes/polaris-manifesto-understanding-amendment/GOVERNING-DEPENDENCIES.md",
+      "openspec/changes/polaris-manifesto-understanding-amendment/design.md",
+      "openspec/changes/polaris-manifesto-understanding-amendment/proposal.md",
+      "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "openspec/changes/polaris-manifesto-understanding-amendment/tasks.md",
+      "openspec/changes/polaris-non-governed-narrative-profile/GOVERNING-DEPENDENCIES.md",
+      "openspec/changes/polaris-non-governed-narrative-profile/design.md",
+      "openspec/changes/polaris-non-governed-narrative-profile/proposal.md",
+      "openspec/changes/polaris-non-governed-narrative-profile/specs/polaris-generation/spec.md",
+      "openspec/changes/polaris-non-governed-narrative-profile/tasks.md",
+      "openspec/changes/polaris-omission-advice-screening/SEMANTIC-DELTA.md",
+      "openspec/changes/polaris-omission-advice-screening/design.md",
+      "openspec/changes/polaris-omission-advice-screening/proposal.md",
+      "openspec/changes/polaris-omission-advice-screening/tasks.md",
+      "openspec/changes/polaris-project-wide-butlers-model/CAPABILITY-COVERAGE.md",
+      "openspec/changes/polaris-project-wide-butlers-model/CONTRACT-COVERAGE-REPAIR-DELTA.md",
+      "openspec/changes/polaris-project-wide-butlers-model/CONTRACT-COVERAGE.md",
+      "openspec/changes/polaris-project-wide-butlers-model/GOVERNING-DEPENDENCIES.md",
+      "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-matrix/RFC-0001-0003.md",
+      "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-matrix/RFC-0004-0006.md",
+      "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-matrix/RFC-0007-0009.md",
+      "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-parts/RFC-0001-0003.md",
+      "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-parts/RFC-0004-0006.md",
+      "openspec/changes/polaris-project-wide-butlers-model/contract-coverage-parts/RFC-0007-0009.md",
+      "openspec/changes/polaris-project-wide-butlers-model/design.md",
+      "openspec/changes/polaris-project-wide-butlers-model/proposal.md",
+      "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "openspec/changes/polaris-project-wide-butlers-model/tasks.md",
+      "openspec/changes/polaris-provider-claim-ledger/SEMANTIC-DELTA.md",
+      "openspec/changes/polaris-provider-claim-ledger/design.md",
+      "openspec/changes/polaris-provider-claim-ledger/proposal.md",
+      "openspec/changes/polaris-provider-claim-ledger/proposed/polaris-generation/spec.md",
+      "openspec/changes/polaris-provider-claim-ledger/tasks.md",
+      "openspec/changes/polaris-source-example-advice/SCREENING-SUCCESSOR-DELTA.md",
+      "openspec/changes/polaris-source-example-advice/SEMANTIC-DELTA.md",
+      "openspec/changes/polaris-source-example-advice/design.md",
+      "openspec/changes/polaris-source-example-advice/proposal.md",
+      "openspec/changes/polaris-source-example-advice/tasks.md",
+      "openspec/changes/project-registration-and-honest-shape-visibility/CAPABILITY-COVERAGE.md",
+      "openspec/changes/project-registration-and-honest-shape-visibility/CONTRACT-COVERAGE.md",
+      "openspec/changes/project-registration-and-honest-shape-visibility/GOVERNING-DEPENDENCIES.md",
+      "openspec/changes/project-registration-and-honest-shape-visibility/design.md",
+      "openspec/changes/project-registration-and-honest-shape-visibility/proposal.md",
+      "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "openspec/changes/project-registration-and-honest-shape-visibility/tasks.md",
+      "openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md",
+      "openspec/changes/three-surface-poc-experience/GOVERNING-DEPENDENCIES.md",
+      "openspec/changes/three-surface-poc-experience/design.md",
+      "openspec/changes/three-surface-poc-experience/proposal.md",
+      "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "openspec/changes/three-surface-poc-experience/tasks.md",
+      "openspec/specs/README.md"
+    ],
+    "settlement": "Review the relevant effective requirement or consumer contract with the exact successor and confirm the actor and verification result. A matching or missing literal alone supplies no relationship verdict."
+  },
+  "namedConsumers": [
+    {
+      "identity": "REQ-polaris-generation-033",
+      "state": "Unknown",
+      "observedBoundary": "A-310 retains the A-304 digest/opaque reader question-file binding and older-record Unknown. A-51 confines its raw-author disclosure to the declared author channel. These authorities are separate from the typed Author clarification action.",
+      "sources": [
+        "openspec/changes/dossier-step-measures/proposed/polaris-generation/spec.md",
+        "openspec/changes/dossier-question-file/proposed/polaris-generation/spec.md",
+        "openspec/changes/dossier-raw-read-disclosure/proposed/polaris-generation/spec.md"
+      ],
+      "settlement": "At the exact successor, independently compare live and retained-record projections for missing or stale same-attempt evidence, an A-304 reader-only question, and an eligible typed Author question. Verify that the reader-only arm creates no Author action or held-out exposure, and that attach/reconnect adds no input, relay or accounting effect.",
+      "actor": "syzygy-zwja specification author and an independent scope reviewer"
+    },
+    {
+      "identity": "REQ-polaris-generation-035",
+      "state": "Unknown",
+      "observedBoundary": "A-305 holds the exact v5-or-later selected draft and inventory pair when a non-withheld listed entry lacks an outcome. Separate role, queue/delivery and verdict conditions remain in force.",
+      "sources": [
+        "openspec/changes/dossier-coverage-hold/proposed/polaris-generation/spec.md"
+      ],
+      "settlement": "Compare a current candidate role and an adjacent run or role with the same cues. Exercise blocked and eligible waits, withheld outcomes, and stop/resume in the exact successor. Verify no stale pane, detached interval, or viewer reconnect can admit a packet, prompt, delivery or verdict.",
+      "actor": "syzygy-zwja specification author and an independent scope reviewer"
+    },
+    {
+      "identity": "REQ-polaris-generation-047",
+      "state": "Unknown",
+      "observedBoundary": "A-14 retains separate owned acquisition and supplied-clone validation paths. The projection inherits one already admitted source pin and the existing scope.",
+      "sources": [
+        "openspec/changes/dossier-url-declared-source-run/proposed/polaris-generation/spec.md"
+      ],
+      "settlement": "Replay attach, detach, stopped view and checked resume for the same pin on both acquisition paths. Contrast stale/different attempts and missing or changed pin. Verify view inspection does not select again, start acquisition or change the source/admission decision.",
+      "actor": "syzygy-zwja specification author and an independent scope reviewer"
+    }
+  ]
+}

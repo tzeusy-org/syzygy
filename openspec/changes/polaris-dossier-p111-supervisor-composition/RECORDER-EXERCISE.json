@@ -1,0 +1,61 @@
+{
+  "scope": "disposable Git and synthetic review; no recorder is installed",
+  "tests": [
+    {
+      "case": "baseline",
+      "expected": "missing-protected-adoption",
+      "observed": "missing-protected-adoption"
+    },
+    {
+      "case": "tag and row on source branch only",
+      "expected": "missing-protected-adoption",
+      "observed": "missing-protected-adoption"
+    },
+    {
+      "case": "protected integration without version",
+      "expected": "missing-version-ref",
+      "observed": "missing-version-ref"
+    },
+    {
+      "case": "wrong version peel",
+      "expected": "different-version-source",
+      "observed": "different-version-source"
+    },
+    {
+      "case": "exact fixture source, record, review and tag",
+      "expected": "fixture-eligible",
+      "observed": "fixture-eligible"
+    },
+    {
+      "case": "different review bytes",
+      "expected": "different-reviewed-bytes",
+      "observed": "different-reviewed-bytes"
+    },
+    {
+      "case": "duplicate candidate records",
+      "expected": "ambiguous-adoption",
+      "observed": "ambiguous-adoption"
+    },
+    {
+      "case": "different row source",
+      "expected": "different-recorded-scope",
+      "observed": "different-recorded-scope"
+    },
+    {
+      "case": "protected blob drift",
+      "expected": "active-source-differs",
+      "observed": "active-source-differs"
+    },
+    {
+      "case": "real inverse restores predecessor and retains record",
+      "expected": "active-source-differs",
+      "observed": "active-source-differs"
+    }
+  ],
+  "baseline": "a16dfe263c29b7f70304ed81c2fb04a572456016",
+  "fixtureSource": "5c20886e5ee0e9d0a78e42017778d57c87ed8ad6",
+  "fixtureLanding": "ac1024fd0f606dac39d0a609b225c733ebc15833",
+  "fixtureInverse": "dc86784abd041b94dad50182eb775b44d58dca69",
+  "exactPredecessorSHA256": "0aceafd0171ad2396481aabfe7997dcba855ea4a52a87f0d5dc0f7b9575414c0",
+  "exactCandidateRequirementSHA256": "3ae5471ac8cb5739ccd1fd58a5d4b0dc169d186aed3587c18905a44e4f863715"
+}

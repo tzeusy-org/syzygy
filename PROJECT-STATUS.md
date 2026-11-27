@@ -311,6 +311,10 @@ With the source-example advice version effective, Polaris has 39 requirements an
     The checker reads CC-SPEC and its own bytes as history, bound by a
     retained history review ([how](docs/evidence/polaris-understanding-reconciliation-2026-09-28/HISTORY-READING.md)).
 
+[P111 supervisor specification (REQ-048)](openspec/changes/polaris-dossier-p111-supervisor-composition/proposed/polaris-generation/spec.md) follows its exact protected adoption, version and any recorded withdrawal.
+
+With the P111 supervisor version effective, Polaris has 39 requirements and 616 scenarios.
+
 **Implementation is in progress.**
 
 - **Completion requires** the full owner workflow and reviewed output from
