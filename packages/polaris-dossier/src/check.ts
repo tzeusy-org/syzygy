@@ -386,15 +386,15 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   const fit = plan.command === 'check' && parseFault === null ? figureFit(figureDoc, deps.layoutFigure) : undefined;
   // The reading ledger (REQ-polaris-generation-034 version 2.4, syzygy-3efd.21): counts over the draft beside figureFit, from the same
   // draft bytes, so two checks of one draft write the same member; an inventory check record carries none.
-  const figureAdvice = plan.command === 'check' && parseFault === null ? readerAdvice(figureDoc) : undefined;
+  const expandedReaderAdvice = plan.command === 'check' && parseFault === null ? readerAdvice(figureDoc) : undefined;
   // An advisory on a shared element or relationship is located once, at the first diagram whose view selects it (version 2.24).
   const movedKey = (advisory: { readonly at: string }): string => JSON.stringify({ ...advisory, at: viewed!.move(advisory.at) });
-  const ledgerAdvice = figureAdvice === undefined || viewed === undefined ? figureAdvice
-    : { ...figureAdvice, advisories: figureAdvice.advisories.filter((advisory, k, all) => all.findIndex((other) => movedKey(other) === movedKey(advisory)) === k) };
+  const ledgerAdvice = expandedReaderAdvice === undefined || viewed === undefined ? expandedReaderAdvice
+    : { ...expandedReaderAdvice, advisories: expandedReaderAdvice.advisories.filter((advisory, k, all) => all.findIndex((other) => movedKey(other) === movedKey(advisory)) === k) };
   const ledger = fit === undefined || ledgerAdvice === undefined ? undefined : readingLedger(figureDoc, fit, ledgerAdvice);
-  const advice = figureAdvice === undefined || viewed === undefined ? figureAdvice
+  const advice = expandedReaderAdvice === undefined || viewed === undefined ? expandedReaderAdvice
     // A relationship two views share is advised once, at its one path.
-    : { ...figureAdvice, advisories: [...new Map(figureAdvice.advisories.map((advisory) => ({ ...advisory, at: viewed.move(advisory.at) }))
+    : { ...expandedReaderAdvice, advisories: [...new Map(expandedReaderAdvice.advisories.map((advisory) => ({ ...advisory, at: viewed.move(advisory.at) }))
       .map((advisory) => [JSON.stringify(advisory), advisory] as const)).values()] };
   const stored = {
     ...record, ...(fit === undefined ? {} : { figureFit: fit }), ...(ledger === undefined ? {} : { readingLedger: ledger }),

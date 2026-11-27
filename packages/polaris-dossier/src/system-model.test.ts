@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { MODEL_PARAGRAPH, issueBrief } from './brief.js';
 import { checkDraft, type CheckDeps, type CheckResult } from './check.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
@@ -14,6 +14,13 @@ import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-rec
 import { buildDossierScreen } from './screen.js';
 import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 import { expandModel, migrateDraft } from './system-model.js';
+
+// A seam for one case alone (R84 finding 7): the figure advice throws only while `adviceFails.on` is set.
+const adviceFails = vi.hoisted(() => ({ on: false }));
+vi.mock('./figure-plan.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('./figure-plan.js')>();
+  return { ...actual, figureAdvice: (doc: unknown) => { if (adviceFails.on) throw new Error('advice failed'); return actual.figureAdvice(doc); } };
+});
 
 // The system model (REQ-polaris-generation-034 version 2.24, schema v12, syzygy-3efd.37): each scenario over a pinned tree built here with
 // the git CLI. Every expected finding, state, reason, attribute and text is a literal written from the requirement's text and the fixture
@@ -813,6 +820,43 @@ describe('schema v14: the model joined to the worth-knowing mark (version 2.33)'
     expect(withFault.report.findings.some((finding) => finding.kind === 'schema')).toBe(true);
     expect(withFault.report).not.toHaveProperty('figureAdvice');
     expect((await reportOf(joined(V13))).report).not.toHaveProperty('figureAdvice');
+  });
+
+  it('refuses at a render a v14 draft whose check record was altered to passed, from its plan finding found again (R84 finding 1)', async () => {
+    const { run, result } = await checked(A, joined(V14, PLAN.slice(1)));
+    if (!result.ok || result.report.outcome !== 'findings') throw new Error('the fixture draft must have findings');
+    const file = path.join(run, 'checks', 'rev-0.json');
+    fs.writeFileSync(file, JSON.stringify({ ...JSON.parse(fs.readFileSync(file, 'utf8')), outcome: 'passed', findings: [] }));
+    const out = await renderRun(run, { sources: sources(A.commit), now: () => LATER, probe: neverProbe, loadScreen: async () => SCREEN, renderer: renderLocalDossier });
+    expect(out.ok ? null : { stage: out.refusal.stage, reasons: out.refusal.reasons }).toEqual({ stage: 'rederive', reasons: ['figure-plan at $.figurePlan'] });
+  });
+
+  it('advises on the marked paragraph and its question kinds as the same draft at v13 does (R84 finding 4; the callout is render.test.ts\'s)', async () => {
+    const v13 = draftOf([figure('runtime', [node('repo', 'Repository', ROOT), node('src', 'Source', tld('src')), node('api', 'API')],
+      [edge('repo-src', 'repo', 'src', 'contains', 'holds'), edge('src-api', 'src', 'api', 'calls', 'calls')])], V13);
+    v13.sections[0].paragraphs[0].worthKnowing = true;
+    const [at13, at14] = [(await reportOf({ ...v13, questionKinds: [{ blockId: 'p1', kinds: ['mechanism'] }] })).report, (await reportOf(joined(V14))).report];
+    expect(at13.outcome).toBe('passed');
+    expect(at14.readerAdvice?.worthKnowing).toEqual(at13.readerAdvice?.worthKnowing);
+    expect(at14.questionKindAdvice).toEqual(at13.questionKindAdvice);
+  });
+
+  it('leaves the advice out, and changes nothing else, when computing it fails (R84 finding 7)', async () => {
+    const plain = (await reportOf(joined(V14))).report;
+    adviceFails.on = true;
+    try {
+      const failed = (await reportOf(joined(V14))).report;
+      expect(failed).not.toHaveProperty('figureAdvice');
+      // The run directory is each run's own; every other member is compared.
+      const { figureAdvice: _advice, run: _run, checkFile: _file, ...rest } = plain;
+      const { run: _run2, checkFile: _file2, ...others } = failed;
+      expect(others).toEqual(rest);
+    } finally { adviceFails.on = false; }
+  });
+
+  it('keeps the schema finding at the plan of a draft of an unknown version: field-version is for v13 or earlier alone (R84 finding 5)', async () => {
+    const findings = (await findingsOf(A, joined('polaris-dossier-local-draft-v15'))).findings.filter((finding) => finding.at === '$.figurePlan');
+    expect(findings.map(at)).toEqual(['schema $.figurePlan']);
   });
 
   it('renders the same bytes whatever the plan says, and no page or record carries its text', async () => {

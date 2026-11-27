@@ -1,5 +1,4 @@
 import * as fs from 'node:fs';
-import { withoutFigurePlan } from './figure-plan.js';
 import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { decodeUtf8, isRecord, sha256 } from '@syzygy/support';
@@ -8,6 +7,7 @@ import { DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES } from './check-model.js';
 import { NotARegularFileError, readBoundedFile } from './check-record-read.js';
 import { LOCAL_DRAFT_SCHEMA_VERSIONS, checkDraftShape } from './draft-schema.js';
 import { FIGURE_MIN_TEXT_PX, FIGURE_TEXT_PX, FIGURE_VIEWPORTS, figureFit, type FigureLayout } from './figure-fit.js';
+import { withoutFigurePlan } from './figure-plan.js';
 import { readerAdvice } from './reader-advice.js';
 import {
   LEDGER_STANDARDS, READING_LEDGER_FORMAT, WORDS_PER_MINUTE, compareLedgers, readingLedger, storedLedger,

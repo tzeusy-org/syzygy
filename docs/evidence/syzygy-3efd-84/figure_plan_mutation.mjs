@@ -25,6 +25,7 @@ const SCHEMA = `${PKG}/draft-schema.ts`;
 const RENDER = `${PKG}/render.ts`;
 const PACKET = `${PKG}/review-packet.ts`;
 const BRIEF = `${PKG}/brief.ts`;
+const MEASURE = `${PKG}/rerender-measure.ts`;
 
 const SCENARIOS = `${PKG}/system-model.test.ts`;
 const TESTS = {
@@ -32,9 +33,10 @@ const TESTS = {
   [CHECK]: [SCENARIOS],
   [DERIVE]: [SCENARIOS],
   [SCHEMA]: [SCENARIOS, `${PKG}/draft-schema.test.ts`],
-  [RENDER]: [SCENARIOS],
+  [RENDER]: [SCENARIOS, `${PKG}/render.test.ts`],
   [PACKET]: [`${PKG}/review.test.ts`],
   [BRIEF]: [`${PKG}/brief.test.ts`],
+  [MEASURE]: [`${PKG}/rerender-measure.test.ts`],
 };
 const TIMEOUT_MS = 600_000;
 
@@ -103,6 +105,13 @@ const MUTANTS = [
   ['model-form-without-v14', SCHEMA, "version === LOCAL_DRAFT_SCHEMA_VERSION_V12 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14;", "version === LOCAL_DRAFT_SCHEMA_VERSION_V12;"],
   ['worth-knowing-form-without-v14', SCHEMA, "version === LOCAL_DRAFT_SCHEMA_VERSION_V13 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14;", "version === LOCAL_DRAFT_SCHEMA_VERSION_V13;"],
   ['document-plan-dropped', SCHEMA, ", [FIGURE_PLAN_FIELD]: { description: FIGURE_PLAN_DESCRIPTION } }", " }"],
+  // --- review R84's survivors and its recorded "equivalent" mutant, killed since (docs/reviews/syzygy-3efd-84/R84-CODE-REVIEW-RAW.md)
+  ['advice-rule-order', FP, "    if (informationFloor(figure)) advise('figure-information-floor', `${figure.id}: a chain of three or fewer is a sentence; say it in the prose, or draw what a sentence cannot hold`);\n    const self = keyed[n]!;\n    if (self.drawn) {\n      const other = keyed.find((candidate, m) => m !== n && candidate.figure.family === figure.family && [...self.keys].every((key) => candidate.keys.has(key))\n        && ([...candidate.keys].some((key) => !self.keys.has(key)) || (candidate.keys.size === self.keys.size && m < n)));\n      if (other !== undefined) advise('figure-duplicate', `${figure.id}: everything it draws is drawn by ${other.figure.id}; keep one figure, or draw what the other does not`);\n    }\n    const pair = mixedLevels(figure, parentOf);\n    if (pair !== undefined) advise('figure-mixed-levels', `${figure.id}: ${pair[0]} and ${pair[1]} stand for a part and a part within it, and the figure does not show that one holds the other; draw one level, or show the containment`);\n", "    const self = keyed[n]!;\n    if (self.drawn) {\n      const other = keyed.find((candidate, m) => m !== n && candidate.figure.family === figure.family && [...self.keys].every((key) => candidate.keys.has(key))\n        && ([...candidate.keys].some((key) => !self.keys.has(key)) || (candidate.keys.size === self.keys.size && m < n)));\n      if (other !== undefined) advise('figure-duplicate', `${figure.id}: everything it draws is drawn by ${other.figure.id}; keep one figure, or draw what the other does not`);\n    }\n    const pair = mixedLevels(figure, parentOf);\n    if (pair !== undefined) advise('figure-mixed-levels', `${figure.id}: ${pair[0]} and ${pair[1]} stand for a part and a part within it, and the figure does not show that one holds the other; draw one level, or show the containment`);\n    if (informationFloor(figure)) advise('figure-information-floor', `${figure.id}: a chain of three or fewer is a sentence; say it in the prose, or draw what a sentence cannot hold`);\n"],
+  ['render-plan-findings-dropped', RENDER, "  findings.push(...planFindings);\n", ""],
+  ['render-worth-knowing-v13-only', RENDER, "...(hasWorthKnowingForm(doc['schemaVersion']) ? { worthKnowing: {", "...(doc['schemaVersion'] === 'polaris-dossier-local-draft-v13' ? { worthKnowing: {"],
+  ['measure-plan-not-stripped', MEASURE, "  doc = withoutFigurePlan(doc);\n", ""],
+  ['field-version-any-version', DERIVE, "doc['schemaVersion'] !== LOCAL_DRAFT_SCHEMA_VERSION_V14 && LOCAL_DRAFT_SCHEMA_VERSIONS.some((known) => known === doc['schemaVersion'])", "doc['schemaVersion'] !== LOCAL_DRAFT_SCHEMA_VERSION_V14"],
+  ['check-advice-failure-thrown', CHECK, "try { figures = computeFigureAdvice(planned); } catch { figures = undefined; }", "figures = computeFigureAdvice(planned);"],
   // --- the migration parity's bound (version 2.41, syzygy-3efd.87 design D5)
   ['model-elements-199', SCHEMA, "elements: [0, 200] as const, relationships: [0, 400] as const", "elements: [0, 199] as const, relationships: [0, 400] as const"],
   ['model-elements-201', SCHEMA, "elements: [0, 200] as const, relationships: [0, 400] as const", "elements: [0, 201] as const, relationships: [0, 400] as const"],
@@ -113,11 +122,9 @@ const MUTANTS = [
   ['brief-containment-after-model', BRIEF, "    CONTAINMENT_PARAGRAPH,\n    '',\n    MODEL_PARAGRAPH,\n", "    MODEL_PARAGRAPH,\n    '',\n    CONTAINMENT_PARAGRAPH,\n"],
 ].filter(([id]) => only === null || only.has(id));
 
-// A mutant no test can kill, with the reason; recorded, never run and never counted as killed.
-const EQUIVALENT = [
-  { id: 'render-plan-findings-dropped', file: RENDER, old: "  findings.push(...planFindings);\n", new: "",
-    reason: 'Render reads only the latest passed revision, whose check reported no plan finding, and verifies those bytes against the digest its check recorded; the plan findings are pure over those bytes, so re-deriving them at render finds none for every draft render accepts. The line keeps render\'s re-derivation the whole of check\'s.' },
-];
+// A mutant no test can kill, with the reason; recorded, never run and never counted as killed. None since review R84: the one
+// recorded here before (render-plan-findings-dropped) is killable and runs among the mutants above.
+const EQUIVALENT = [];
 
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const files = [...new Set(MUTANTS.map(([, file]) => file))].sort();
@@ -170,6 +177,7 @@ const record = {
   baselines: [],
   mutants: [],
   equivalent: EQUIVALENT,
+  corrects: 'figure-plan-mutation-2026-11-28.json listed render-plan-findings-dropped under `equivalent`, which was false: review R84 finding 1 killed it with a check record altered to passed. It runs here as a mutant.',
   summary: null,
 };
 try {

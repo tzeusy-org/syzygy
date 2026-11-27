@@ -305,6 +305,22 @@ describe('figure advice: mixed levels', () => {
   });
 });
 
+describe('figure advice: order', () => {
+  it('orders advisories by the figure\'s index and, for one figure, by the rule order', () => {
+    const doc = advised([el('root', 'root', { unit: { kind: 'repository-root' } }), el('lib', 'lib', { unit: { kind: 'top-level-directory', path: 'lib' } })],
+      [rel('lib-root', 'lib', 'root')], [gview('g1', ['lib', 'root'], ['lib-root']), gview('g2', ['lib', 'root'], ['lib-root'])]);
+    const floor = (id: string) => `${id}: a chain of three or fewer is a sentence; say it in the prose, or draw what a sentence cannot hold`;
+    const mixed = (id: string) => `${id}: root and lib stand for a part and a part within it, and the figure does not show that one holds the other; draw one level, or show the containment`;
+    expect(figureAdvice(doc)!.advisories).toEqual([
+      { rule: 'figure-information-floor', diagram: 'g1', at: '$.diagrams[0]', detail: floor('g1') },
+      { rule: 'figure-mixed-levels', diagram: 'g1', at: '$.diagrams[0]', detail: mixed('g1') },
+      { rule: 'figure-information-floor', diagram: 'g2', at: '$.diagrams[1]', detail: floor('g2') },
+      { rule: 'figure-duplicate', diagram: 'g2', at: '$.diagrams[1]', detail: 'g2: everything it draws is drawn by g1; keep one figure, or draw what the other does not' },
+      { rule: 'figure-mixed-levels', diagram: 'g2', at: '$.diagrams[1]', detail: mixed('g2') },
+    ]);
+  });
+});
+
 describe('figure advice: other drafts', () => {
   it('is computed for a v14 draft alone', () => {
     expect(figureAdvice({ schemaVersion: V13, diagrams: [] })).toBeUndefined();
