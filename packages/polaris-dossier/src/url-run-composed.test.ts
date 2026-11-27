@@ -7,7 +7,7 @@ import os from 'node:os';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
-import { buildComposedRuntime, prepareComposedRun } from './url-run-composed.testkit.js';
+import { buildComposedRuntime, prepareComposedRun, timeOrderedVerdictPhase, type OrderedVerdictPhaseTimings } from './url-run-composed.testkit.js';
 import { patchFs } from './fs-patch.testkit.js';
 import { draft, inventory, fidelityVerdict, designVerdict } from './full-run.testkit.js';
 import { closeRun } from './close.js';
@@ -1481,7 +1481,9 @@ async function observeDesignRun(run: string, traceInference = false) {
           return timed(stamp, () => input.registerLaunch(committed), () => true);
         },
         reproduce: purpose => currentPhase('reproduce', () => {
-          if (!initialReproduction) return input.reproduce(purpose);
+          if (!initialReproduction) return purpose === undefined
+            ? timeOrderedVerdictPhase(brokerInvocation.getStore()?.verdictPhases, 'reproduction', clock, () => input.reproduce(purpose))
+            : input.reproduce(purpose);
           initialReproduction = false;
           expect(purpose).toBe('ordered-design-startup');
           const began = Date.now(), result = input.reproduce(purpose), issuedBy = Date.now();
@@ -1503,7 +1505,12 @@ async function observeDesignRun(run: string, traceInference = false) {
           const stamp = designLaunchCommit = { startedMs: clock() };
           return timed(stamp, () => input.audit.commitLaunchHistory(...args), () => true);
         }, readDesignDeliveryView: (...args) =>
-          currentPhase('read-reproduced-delivery', () => input.audit.readDesignDeliveryView(...args), () => true) },
+          currentPhase('read-reproduced-delivery', () => input.audit.readDesignDeliveryView(...args), () => true),
+        readOrderedDesignReviewProof: (...args) => timeOrderedVerdictPhase(brokerInvocation.getStore()?.verdictPhases,
+          'proof', clock, () => input.audit.readOrderedDesignReviewProof(...args)) },
+        artifacts: { ...input.artifacts, stageOrderedDesignVerdict: (...args) =>
+          timeOrderedVerdictPhase(brokerInvocation.getStore()?.verdictPhases,
+            'staging', clock, () => input.artifacts.stageOrderedDesignVerdict(...args)) },
       });
     });
     const effectCurrent = machineTransport.sessionMachineEffectCurrent;
@@ -1553,6 +1560,7 @@ async function observeDesignRun(run: string, traceInference = false) {
   type WorkSnapshot = ReturnType<ReturnType<typeof orderedSession.createOrderedDesignSession>['workSnapshot']>;
   type BrokerInvocationTrace = {
     ordinal: number; timing: ResumeStamp; stages: Partial<Record<ResumeBrokerStage, ResumeStamp>>;
+    verdictPhases: OrderedVerdictPhaseTimings;
     operation?: Parameters<typeof machinePeer.mediateUrlMachinePeer>[1];
     workAtEntry?: WorkSnapshot; workAtSettlement?: WorkSnapshot; workAtFault?: WorkSnapshot;
     firstRefusedStage?: ResumeBrokerStage; workAtFirstRefusedStage?: WorkSnapshot;
@@ -1599,7 +1607,7 @@ async function observeDesignRun(run: string, traceInference = false) {
     if (machine === undefined || !orderedBrokers.has(machine)) return startBroker(socket, invoke, onFault, limits, machine, startupCurrent);
     return startBroker(socket, (value, release, context) => {
       const trace: BrokerInvocationTrace = { ordinal: ++brokerInvocations, timing: { startedMs: clock() },
-        stages: {}, workAtEntry: workSnapshot() };
+        stages: {}, verdictPhases: {}, workAtEntry: workSnapshot() };
       latestBrokerInvocation = trace;
       const observed = () => brokerInvocation.run(trace, () => timed(trace.timing, () => brokerPhase('invoke', () => invoke(value,
         (reply, revalidate, finalToolBudgetCheck) => brokerPhase('release', () => release(reply,

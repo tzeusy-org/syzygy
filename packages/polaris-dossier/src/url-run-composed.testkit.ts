@@ -27,6 +27,29 @@ import { reviewCheck } from './review.js';
 import { readUrlParentAdoption, URL_PARENT_DEFAULT_REF, URL_PARENT_RECORD, URL_PARENT_TAG } from './url-parent-adoption.js';
 import { packageUrlRunModeAuthority, registerUrlRunMode } from './url-mode-registry.js';
 
+export type OrderedVerdictPhase = 'reproduction' | 'proof' | 'staging';
+export type OrderedVerdictPhaseTimings = Partial<Record<OrderedVerdictPhase, {
+  startedMs: number; settledMs?: number; outcome?: 'returned' | 'rejected';
+}>>;
+
+/** Three fixed diagnostic slots on the existing broker invocation. A return is
+ * settlement only, never validation, eligibility or authority. Keep the exact
+ * original promise/throw and retain no result, input, error or CPU sample. */
+export function timeOrderedVerdictPhase<T>(timings: OrderedVerdictPhaseTimings | undefined,
+  phase: OrderedVerdictPhase, clock: () => number, invoke: () => Promise<T>): Promise<T> {
+  if (timings === undefined) return invoke();
+  const stamp: NonNullable<OrderedVerdictPhaseTimings[OrderedVerdictPhase]> = { startedMs: clock() };
+  timings[phase] = stamp;
+  const settle = (outcome: 'returned' | 'rejected'): void => {
+    Object.assign(stamp, { settledMs: clock(), outcome });
+  };
+  try {
+    const original = invoke();
+    void original.then(() => settle('returned'), () => settle('rejected'));
+    return original;
+  } catch (cause) { settle('rejected'); throw cause; }
+}
+
 /** The production cold verifier reads actual observing Git objects and refs.
  * This owned repository installs the same reviewed bytes through a real merge,
  * version tag and later adoption row; no parent-adoption gate is mocked. */
