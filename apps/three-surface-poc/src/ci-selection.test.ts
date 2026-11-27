@@ -194,6 +194,7 @@ describe('tracked dossier corpus reader inputs', () => {
   const trackedReader = `import { mechanismVersion } from './corpus.js';
     const MANIFEST = '${DOSSIER_CORPUS_MANIFEST}';
     const COSTS = '${costs}';
+    const readJson = (file) => readRepoFixture(file);
     readJson(MANIFEST);
     readJson(COSTS);`;
   const manifest = {
@@ -237,6 +238,21 @@ describe('tracked dossier corpus reader inputs', () => {
       const drifted = new Map([[reader, `${trackedReader} readJson(${input});`]]);
       expect(withInventory(changed, drifted).reasons).toEqual([`Tracked dossier corpus test reader inputs drifted: ${reader}`]);
     }
+  });
+
+  it('refuses shadowed audited bindings and preserves unrelated local names', () => {
+    const changed = [M('M', 'docs/unrelated.md')];
+    for (const scope of [
+      "{ const MANIFEST = join('docs', 'fixture.json'); readJson(MANIFEST); }",
+      "function inspect(MANIFEST) { readJson(MANIFEST); }",
+      "{ const { MANIFEST } = fixture; readJson(MANIFEST); }",
+      "{ const readJson = anotherReader; readJson(MANIFEST); }",
+    ]) {
+      expect(withInventory(changed, new Map([[reader, trackedReader + scope]])).reasons, scope)
+        .toEqual([`Tracked dossier corpus test reader inputs drifted: ${reader}`]);
+    }
+    const ordinary = "{ const local = 'x'; use(local); readJson(MANIFEST); }";
+    expect(withInventory(changed, new Map([[reader, trackedReader + ordinary]])).mode).toBe('selected');
   });
 
   it('names a malformed declaration or an absent known consumer rather than choosing a narrow plan', () => {

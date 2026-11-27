@@ -32,27 +32,49 @@ function importsCorpus(source: ts.SourceFile): boolean {
 // are still covered by the existing graph heuristics and the whole merge-group run.
 function directReadInputs(source: ts.SourceFile): ReadonlySet<string> | undefined {
   const constants = new Map<string, string>();
+  const topLevel = new Map<string, ts.Identifier>();
   for (const statement of source.statements) {
     if (!ts.isVariableStatement(statement) || !(statement.declarationList.flags & ts.NodeFlags.Const)) continue;
     for (const { name, initializer } of statement.declarationList.declarations) {
-      if (ts.isIdentifier(name) && initializer && ts.isStringLiteralLike(initializer)) constants.set(name.text, initializer.text);
+      if (!ts.isIdentifier(name)) continue;
+      topLevel.set(name.text, name);
+      if (initializer && ts.isStringLiteralLike(initializer)) constants.set(name.text, initializer.text);
     }
   }
+  if (!topLevel.has('readJson')) return undefined;
+
   const inputs = new Set<string>();
+  const referencedBindings = new Set(['readJson']);
+  const otherBindings = new Set<string>();
   let unresolved = false;
+  function recordBinding(name: ts.BindingName): void {
+    if (ts.isIdentifier(name)) {
+      if (topLevel.get(name.text) !== name) otherBindings.add(name.text);
+    } else {
+      for (const element of name.elements) if (ts.isBindingElement(element)) recordBinding(element.name);
+    }
+  }
   function visit(node: ts.Node): void {
+    if (ts.isVariableDeclaration(node) || ts.isParameter(node)) recordBinding(node.name);
+    if ((ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isClassDeclaration(node) ||
+        ts.isClassExpression(node) || ts.isEnumDeclaration(node)) && node.name) recordBinding(node.name);
     if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === 'readJson') {
       const first = node.arguments[0];
       let path: string | undefined;
       if (first && ts.isStringLiteralLike(first)) path = first.text;
-      else if (first && ts.isIdentifier(first)) path = constants.get(first.text);
+      else if (first && ts.isIdentifier(first)) {
+        referencedBindings.add(first.text);
+        path = constants.get(first.text);
+      }
       if (path === undefined) unresolved = true;
       else inputs.add(path);
     }
     ts.forEachChild(node, visit);
   }
   visit(source);
-  return unresolved ? undefined : inputs;
+  // An accepted identifier must be unambiguous in this file. A shadowed binding exceeds the supported audit.
+  if (unresolved || [...referencedBindings].some((name) => otherBindings.has(name))) return undefined;
+  return inputs;
 }
 
 function record(value: unknown): Record<string, unknown> | undefined {
