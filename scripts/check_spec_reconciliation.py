@@ -3546,6 +3546,7 @@ SOURCE_EXAMPLE_TAG = "polaris-dossier-source-example-advice-v2.36"
 P5_ADVICE_PREDECESSOR = "b7d3324969101e742b2592869d8761f680fe8615"
 P5_ADVICE_STATUS_PREFIX = "[Source-example advice]("
 P5_ADVICE_INDEX_PREFIX = f"| [`{P5_ADVICE_CHANGE}`]("
+P5_ADVICE_COUNT_SCOPE = "With the source-example advice"
 P5_ADVICE_COUNT_PREFIX = "With the source-example advice version effective, Polaris has "
 P5_ADVICE_CANDIDATE_INDEX = '| [`polaris-source-example-advice`](changes/polaris-source-example-advice) | One immediate advisory for a known absent code selection in a supported operator-agent draft. | **Candidate.** Adoption and implementation pending | [Draft semantic delta](changes/polaris-source-example-advice/SEMANTIC-DELTA.md) |'
 P5_ADVICE_SUBJECTS = {
@@ -3739,7 +3740,7 @@ def p5_advice_binding(root):
         routes = scoped_route_lines(index, (P5_ADVICE_INDEX_PREFIX,))
         if (any(route != P5_ADVICE_CANDIDATE_INDEX for route in routes)
                 or len(routes) > 1
-                or scoped_route_lines(status, (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_PREFIX))):
+                or scoped_route_lines(status, (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_SCOPE))):
             return invalid("a candidate displays an active or conflicting authority route")
         return "candidate", None, [], []
 
@@ -3812,7 +3813,8 @@ def p5_advice_binding(root):
                 or body != read_bytes(root, path) or entry != local_git(git_root, "ls-tree", "-z", head, "--", path)
                 or (tag and entry != local_git(git_root, "ls-tree", "-z", protected, "--", path))):
             return invalid(f"the worktree and exact Git subjects disagree at {path}")
-    scopes = {STATUS: (P5_ADVICE_STATUS_PREFIX,), OPENSPEC_README: (P5_ADVICE_INDEX_PREFIX,)}
+    scopes = {STATUS: (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_SCOPE),
+              OPENSPEC_README: (P5_ADVICE_INDEX_PREFIX,)}
     if (not p5_advice_authority(root, identity) or not git_routes_match(root, git_root, source, scopes)
             or not git_routes_match(root, git_root, head, scopes)
             or (tag and not git_routes_match(root, git_root, protected, scopes))):
@@ -3841,11 +3843,28 @@ def p5_advice_inverse_verified(root, git_root, source, identity, protected_rows)
         return False
     commit = withdrawal[0].split("|")[3].strip().strip("`")
     protected = "refs/remotes/origin/main"
-    if (local_git(git_root, "merge-base", "--is-ancestor", source, commit) is None
+    parents = local_git(git_root, "rev-list", "--parents", "-n1", commit)
+    if (parents is None or len(parents.split()) != 2
+            or local_git(git_root, "merge-base", "--is-ancestor", source, commit) is None
             or local_git(git_root, "merge-base", "--is-ancestor", commit, protected) is None
             or local_git(git_root, "merge-base", "--is-ancestor", commit, "HEAD") is None
             or not p5_advice_authority(root, None, candidate_only=True)
-            or scoped_route_lines(read_text(root, STATUS) or "", (P5_ADVICE_COUNT_PREFIX,))):
+            or scoped_route_lines(read_text(root, STATUS) or "", (P5_ADVICE_COUNT_SCOPE,))):
+        return False
+
+    def changed_lines(before, after):
+        diff = local_git(git_root, "diff", "--binary", "--no-color", "--no-ext-diff", "--no-textconv",
+                         "--no-renames", "--no-indent-heuristic", "--diff-algorithm=myers",
+                         "--src-prefix=a/", "--dst-prefix=b/", "--unified=0", before, after, "--")
+        if not diff:
+            return None
+        # Later changes can shift hunks and blob identities. Compare the paths,
+        # modes, hunk boundaries and exact added or removed bytes.
+        return [b"@@" if line.startswith(b"@@ ") else line
+                for line in diff.split(b"\n") if not line.startswith(b"index ")]
+
+    reverse = changed_lines(source, f"{source}^")
+    if reverse is None or changed_lines(f"{commit}^", commit) != reverse:
         return False
     for path in P5_ADVICE_SUBJECTS:
         if read_bytes(root, path) is not None or any(
@@ -3853,7 +3872,7 @@ def p5_advice_inverse_verified(root, git_root, source, identity, protected_rows)
                 for ref in (f"{source}^", commit, "HEAD", protected)):
             return False
     for path, prefixes in (
-        (STATUS, (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_PREFIX)),
+        (STATUS, (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_SCOPE)),
         (OPENSPEC_README, (P5_ADVICE_INDEX_PREFIX,)),
     ):
         bodies = [local_git(git_root, "show", f"{ref}:{path}")
@@ -7688,7 +7707,7 @@ def check_routes(root, pop, report):
             screening_scenarios = current_scenarios - added if advice_state == "effective" else current_scenarios
             screening_want = (want[0], str(screening_scenarios))
             prospective = f"{P5_ADVICE_COUNT_PREFIX}{want[0]} requirements and {screening_scenarios + added} scenarios."
-            if scoped_route_lines(status, (P5_ADVICE_COUNT_PREFIX,)) != [prospective]:
+            if scoped_route_lines(status, (P5_ADVICE_COUNT_SCOPE,)) != [prospective]:
                 findings.append(f"`{STATUS}` does not declare the exact source-example advice census")
         if (figures or len(expected_figures) != 2
                 or declarations != expected_figures
@@ -13531,7 +13550,7 @@ def project_source_example_history(root):
     for path in P5_ADVICE_SUBJECTS:
         (root / path).unlink(missing_ok=True)
     status = root / STATUS
-    prefixes = (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_PREFIX)
+    prefixes = (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_SCOPE)
     status.write_text("".join(line for line in status.read_text(encoding="utf-8").splitlines(keepends=True)
                               if not line.strip().startswith(prefixes)), encoding="utf-8")
     index = root / OPENSPEC_README
@@ -13827,6 +13846,17 @@ def source_example_git_cases(tmp, witnesses, failures):
         if not held:
             failures.append(mutant)
 
+    def record_inverse(inverse):
+        row = (f"| A-99999 | 2026-11-27 | `{inverse}` | Reverted {line.split('|')[1].strip()} | "
+               f"Fixture withdrawal. | `git revert {inverse}` | — |")
+        content = ledger.read_text(encoding="utf-8")
+        assert content.count(line) == 1
+        ledger.write_text(content.replace(line, line + "\n" + row), encoding="utf-8")
+        git("add", AGENT_ADOPTIONS)
+        git("commit", "-m", "Record the synthetic protected withdrawal")
+        git("update-ref", protected, git("rev-parse", "HEAD"))
+        return row
+
     git("remote", "set-url", "origin", str(Path(tmp) / "no-source-example-remote"))
     git("remote", "set-url", "--push", "origin", str(Path(tmp) / "no-source-example-push"))
     line, = p5_advice_claims(adoption_table_rows(ROOT))
@@ -13867,7 +13897,16 @@ def source_example_git_cases(tmp, witnesses, failures):
         fault = count.replace("610 scenarios.", "611 scenarios.")
         assert before.count(count) == 1 and fault != count
         status.write_text(before.replace(count, fault), encoding="utf-8")
-        check("wrong-count", STATUS, count, fault, "effective", clue="source-example advice")
+        check("wrong-count", STATUS, count, fault, "invalid", clue="authority routes disagree")
+        competing = "\nWith the source-example advice effective, Polaris has 39 requirements and 611 scenarios.\n"
+        status.write_text(before + competing, encoding="utf-8")
+        check("competing-count", STATUS, "", competing, "invalid", clue="authority routes disagree")
+        git("add", STATUS)
+        git("commit", "-m", "Record a conflicting protected advice count")
+        git("update-ref", protected, git("rev-parse", "HEAD"))
+        git("checkout", "--quiet", "--detach", authored)
+        check("stale-count", STATUS, "", competing, "invalid", clue="authority routes disagree")
+        git("update-ref", protected, authored)
         status.write_text(before, encoding="utf-8")
 
         spec = repo / P5_ADVICE_SPEC
@@ -13882,20 +13921,26 @@ def source_example_git_cases(tmp, witnesses, failures):
         status.write_text(before + later, encoding="utf-8")
         git("add", STATUS)
         git("commit", "-m", "Retain unrelated later status text")
+        prior_inverse = git("rev-parse", "HEAD")
         git("revert", "--no-edit", source)
         inverse = git("rev-parse", "HEAD")
         check("unrecorded-inverse", P5_ADVICE_SPEC, source, inverse, "invalid",
               clue="worktree and exact Git subjects disagree")
-        row = (f"| A-99999 | 2026-11-27 | `{inverse}` | Reverted {line.split('|')[1].strip()} | "
-               f"Fixture withdrawal. | `git revert {inverse}` | — |")
-        content = ledger.read_text(encoding="utf-8")
-        assert content.count(line) == 1
-        ledger.write_text(content.replace(line, line + "\n" + row), encoding="utf-8")
-        git("add", AGENT_ADOPTIONS)
-        git("commit", "-m", "Record the synthetic protected source-only withdrawal")
-        git("update-ref", protected, git("rev-parse", "HEAD"))
+        row = record_inverse(inverse)
+        withdrawn = git("rev-parse", "HEAD")
         assert later in status.read_text(encoding="utf-8")
         check("recorded-inverse", AGENT_ADOPTIONS, "", row, "reverted", 603)
+
+        git("checkout", "--quiet", "--detach", prior_inverse)
+        git("revert", "--no-commit", source)
+        side_effect = "\nUnrelated edit in the same inverse commit.\n"
+        status.write_text(status.read_text(encoding="utf-8") + side_effect, encoding="utf-8")
+        git("add", STATUS)
+        git("commit", "-m", "Withdraw the source and add an unrelated line")
+        record_inverse(git("rev-parse", "HEAD"))
+        check("inverse-side-effect", STATUS, "", side_effect, "invalid", clue="protected source-only inverse")
+
+        git("update-ref", protected, withdrawn)
         git("checkout", "--quiet", "--detach", authored)
         check("stale-inverse", protected, authored, inverse, "invalid", clue="dispositions disagree")
     finally:

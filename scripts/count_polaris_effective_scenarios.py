@@ -984,9 +984,9 @@ def read_status_assertion(root: Path, *, screening_state: str,
         if screening_state != "effective":
             raise ScenarioCountError("source-example advice requires effective screening")
         prefix = adoption.P5_ADVICE_COUNT_PREFIX
-        candidates = [line for line in lines if line.startswith(prefix)]
+        candidates = [line for line in lines if line.startswith(adoption.P5_ADVICE_COUNT_SCOPE)]
         advisory = (SCREENING_STATUS_TOTALS.fullmatch(candidates[0][len(prefix):])
-                    if len(candidates) == 1 else None)
+                    if len(candidates) == 1 and candidates[0].startswith(prefix) else None)
         if advisory is None:
             raise ScenarioCountError(f"{path} needs one complete source-example advice count")
         advisory_figure = int(advisory[1]), int(advisory[2])
