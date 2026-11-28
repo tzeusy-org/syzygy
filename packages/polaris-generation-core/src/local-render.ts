@@ -409,6 +409,49 @@ export type LocalDocsAndCode =
     readonly rowsNotListed: number;
   }
   | { readonly format: string; readonly state: 'unknown'; readonly why: string };
+/** The limits and defaults this render derived itself (REQ-polaris-generation-034 version 2.52): recognizer `limit-default` v1's rows,
+ * the named limit constants of the admitted source files and the entries of the admitted configuration files of the pinned tree. */
+export interface LocalLimitsFile {
+  readonly path: string;
+  readonly source: 'code' | 'config';
+  readonly epistemic: 'observed' | 'unknown';
+  readonly unknownReason: string | null;
+  readonly parseFault: string | null;
+  readonly rows: number | null;
+  readonly valuesLeftOut: number | null;
+}
+export interface LocalLimitRow {
+  readonly id: string;
+  readonly source: 'code' | 'config';
+  readonly kind: string;
+  readonly name: string;
+  readonly value: string | null;
+  readonly valueType: string | null;
+  readonly path: string;
+  readonly line: number;
+  readonly unit: string | null;
+  readonly blob: string;
+  readonly quote: string;
+  readonly epistemic: 'observed' | 'unknown';
+  readonly unknownReason: string | null;
+}
+export type LocalLimitsAndDefaults =
+  | {
+    readonly format: string;
+    readonly state: 'derived';
+    readonly screeningPolicy: { readonly policyId: string; readonly policyVersion: string; readonly sha256: string };
+    readonly unitRule: { readonly rule: string; readonly ruleVersion: number };
+    readonly recognizer: {
+      readonly rule: string; readonly ruleVersion: number; readonly candidates: number; readonly secretPathsLeftOut: number; readonly setApart: number;
+      readonly observed: number; readonly unknown: number; readonly valuesLeftOut: number; readonly sequenceItemsNotRead: number; readonly rows: number;
+      readonly files: readonly LocalLimitsFile[]; readonly filesNotListed: number;
+    };
+    readonly units: readonly { readonly unit: string | null; readonly files: number; readonly constants: number; readonly entries: number; readonly valuesUnknown: number }[];
+    readonly unitsNotListed: number;
+    readonly rows: readonly LocalLimitRow[];
+    readonly rowsNotListed: number;
+  }
+  | { readonly format: string; readonly state: 'unknown'; readonly why: string };
 /** A schema-v12 draft's model (version 2.24): identities, types, parents, bases and the views (diagram ids, in diagram order) selecting
  * each. Labels, marks and citations stay in the expanded figures' claims. */
 export interface LocalModel {
@@ -480,6 +523,9 @@ export interface LocalRenderInput {
   /** The documents' paths and identifiers this render resolved itself (version 2.48), from which the docs-and-code reference page is drawn.
    * The page renders only where this and `derivedStructure` are both present, so an input without it keeps its pages and machine view. */
   readonly docsAndCode?: LocalDocsAndCode;
+  /** The limits and defaults this render derived itself (version 2.52), from which the cliffs reference page is drawn. The page renders
+   * only where this and `derivedStructure` are both present, so an input without it keeps its pages and machine view. */
+  readonly limitsAndDefaults?: LocalLimitsAndDefaults;
   /** A schema-v9 draft's graph edges (REQ-polaris-generation-034 version 2.19), by edge id: each edge's relation and the witness state rule
    * `relation-witness` gives it at this render. Absent for every earlier draft, so its pages and machine view keep their bytes. */
   readonly edgeRelations?: ReadonlyMap<string, LocalEdgeRelation>;

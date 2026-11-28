@@ -12,6 +12,7 @@ import { READABLE_SPACING, layoutContainment, layoutDiagram, layoutSequence, lay
 import { TEST_NAMES_LEGEND, TEST_NAMES_PAGE, testNamesMachine, testNamesPage } from './dossier-test-names.js';
 import { ROUGH_EDGES_LEGEND, ROUGH_EDGES_PAGE, roughEdgesMachine, roughEdgesPage } from './dossier-rough-edges.js';
 import { DOCS_AND_CODE_LEGEND, DOCS_AND_CODE_PAGE, docsAndCodeMachine, docsAndCodePage } from './dossier-docs-and-code.js';
+import { CLIFFS_LEGEND, CLIFFS_PAGE, cliffsMachine, cliffsPage } from './dossier-cliffs.js';
 import { FINDING_CSS, FIND_BY_TASK_PAGE, NAME_INDEX_PAGE, NO_TASK_ROUTES, TASK_ROUTES_WITHHELD, buildNameIndex, glossaryDisplayName, glossaryNameForms, indexLinkCount, renderNameIndex, type IndexTarget, type IndexedBlock } from './dossier-finding.js';
 import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureList, regionMarkup } from './dossier-render-local.js';
 import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as escape } from './draft-preview.js';
@@ -976,7 +977,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const roughEdges = local?.derivedStructure !== undefined && local.roughEdges !== undefined ? { derived: local.derivedStructure, member: local.roughEdges } : undefined;
   // Version 2.48: the docs-and-code reference page, after the rough-edges page, under the same condition on its own member.
   const docsAndCode = local?.derivedStructure !== undefined && local.docsAndCode !== undefined ? { derived: local.derivedStructure, member: local.docsAndCode } : undefined;
-  const referenceLinks = [...(testNames === undefined ? [] : [TEST_NAMES_PAGE]), ...(roughEdges === undefined ? [] : [ROUGH_EDGES_PAGE]), ...(docsAndCode === undefined ? [] : [DOCS_AND_CODE_PAGE])];
+  // Version 2.52: the cliffs reference page, after the docs-and-code page, under the same condition on its own member.
+  const cliffs = local?.derivedStructure !== undefined && local.limitsAndDefaults !== undefined ? { derived: local.derivedStructure, member: local.limitsAndDefaults } : undefined;
+  const referenceLinks = [...(testNames === undefined ? [] : [TEST_NAMES_PAGE]), ...(roughEdges === undefined ? [] : [ROUGH_EDGES_PAGE]), ...(docsAndCode === undefined ? [] : [DOCS_AND_CODE_PAGE]), ...(cliffs === undefined ? [] : [CLIFFS_PAGE])];
   const findingLinks = local === undefined ? [] : [{ path: FIND_BY_TASK_PAGE, title: 'Find by task' }, { path: NAME_INDEX_PAGE, title: 'Index' }];
   const readingGroups = [
     ...[overview, ...findingLinks].map(link => ({ title: link.title, link, dives: [], hue: null })),
@@ -1046,6 +1049,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     : testNames !== undefined && path === TEST_NAMES_PAGE.path ? `${TEST_NAMES_LEGEND}${main}`
     : roughEdges !== undefined && path === ROUGH_EDGES_PAGE.path ? `${ROUGH_EDGES_LEGEND}${main}`
     : docsAndCode !== undefined && path === DOCS_AND_CODE_PAGE.path ? `${DOCS_AND_CODE_LEGEND}${main}`
+    : cliffs !== undefined && path === CLIFFS_PAGE.path ? `${CLIFFS_LEGEND}${main}`
     : local !== undefined && main.includes('class="redaction-mark"')
     ? `${main}<p class="redaction-legend"><span aria-hidden="true">†N</span> on a citation: N lines of that file are withheld by screening. Its source page marks where.</p>` : main;
   const deferredSourceLeaves = new Map<string, () => string>();
@@ -1372,6 +1376,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   if (roughEdges !== undefined) add(ROUGH_EDGES_PAGE.path, 1, ROUGH_EDGES_PAGE.title, roughEdgesPage(roughEdges.member, roughEdges.derived.revision));
   // --- the docs-and-code reference page (version 2.48), after the rough-edges page.
   if (docsAndCode !== undefined) add(DOCS_AND_CODE_PAGE.path, 1, DOCS_AND_CODE_PAGE.title, docsAndCodePage(docsAndCode.member, docsAndCode.derived.revision));
+  // --- the cliffs reference page (version 2.52), after the docs-and-code page.
+  if (cliffs !== undefined) add(CLIFFS_PAGE.path, 1, CLIFFS_PAGE.title, cliffsPage(cliffs.member, cliffs.derived.revision));
 
   // --- the operator-agent run's own pages: understanding, discovery, clarifications, executions, review
   for (const localPage of localPages) {
@@ -1442,6 +1448,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       ...(testNames === undefined ? {} : { testNames: testNamesMachine(testNames.member) }),
       ...(roughEdges === undefined ? {} : { roughEdges: roughEdgesMachine(roughEdges.member) }),
       ...(docsAndCode === undefined ? {} : { docsAndCode: docsAndCodeMachine(docsAndCode.member) }),
+      ...(cliffs === undefined ? {} : { limitsAndDefaults: cliffsMachine(cliffs.member) }),
       // Present only for a render holding a sequence or swimlane figure (version 2.5), so every other machine view keeps its bytes.
       ...(figureStructures.length === 0 ? {} : { figureStructures: [...figureStructures].sort((a, b) => a.index - b.index).map(({ entry }) => entry) }),
       // Present only for a schema-v9 draft (version 2.19): each graph edge as drawn, with its relation and witness state. A witnessed edge is

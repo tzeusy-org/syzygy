@@ -26,6 +26,7 @@ import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type Ma
 import { deriveTestNames, testNamesUnknown, type TestNames } from './test-names.js';
 import { deriveRoughEdges, roughEdgesUnknown, type RoughEdges } from './rough-edges.js';
 import { deriveDocsAndCode, docsAndCodeUnknown, type DocsAndCode } from './doc-references.js';
+import { deriveLimits, limitsUnknown, type LimitsAndDefaults } from './limits.js';
 import { errno, latestInventorySession, logStep, openRun, promptRecordName, readRecord, type OpenedRun } from './inventory.js';
 import { briefStandardsOf, buildDesignPacket, standardsInput } from './design-review.js';
 import { derivedStructureAt, readCurrencyPolicy, secretPathOf, type CurrencyPolicy } from './derived-record.js';
@@ -231,7 +232,9 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const roughEdges = await renderRoughEdges(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
   // Version 2.48 (syzygy-5dhm.119): the documents' paths and identifiers, resolved here the same way, for the docs-and-code page.
   const docsAndCode = await renderDocsAndCode(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
-  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, roughEdges, docsAndCode, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }), ...(model === undefined ? {} : { model }) } };
+  // Version 2.52 (syzygy-5dhm.116): the limits and defaults, derived here the same way, for the cliffs page.
+  const limitsAndDefaults = await renderLimits(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
+  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, roughEdges, docsAndCode, limitsAndDefaults, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }), ...(model === undefined ? {} : { model }) } };
 
   const renderer = deps.renderer;
   const draw = (local: LocalRenderInput): ReadonlyMap<string, string> | string => {
@@ -410,6 +413,21 @@ export async function renderDocsAndCode(clonePath: string, pinned: string, deps:
   }
   const bodyReader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(clonePath, '.git'), revision: pinned, maxObjectBytes: MANIFEST_BLOB_LIMIT });
   return deriveDocsAndCode({ entries, screen, consented, read: async (blobPath) => (await bodyReader.readBlobs([blobPath]))[0]! });
+}
+
+/** The render's own limits-and-defaults member (version 2.52): as `renderDocsAndCode`, through its own pinned reader whose object bound is
+ * `MANIFEST_BLOB_LIMIT`, but `LIMITS_READ_BATCH` files to a call; `unknown` where the tree cannot be listed. */
+export async function renderLimits(clonePath: string, pinned: string, deps: Pick<RenderDeps, 'openReader'>, screen: DossierScreen,
+  consented: readonly string[] | null, reader: { readonly listTree: () => Promise<readonly TreeEntry[]> }): Promise<LimitsAndDefaults> {
+  let entries: readonly TreeEntry[];
+  try {
+    entries = await reader.listTree();
+  } catch (cause) {
+    if (!(cause instanceof GitObjectReadRefusal)) throw cause;
+    return limitsUnknown(cause.reason);
+  }
+  const bodyReader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(clonePath, '.git'), revision: pinned, maxObjectBytes: MANIFEST_BLOB_LIMIT });
+  return deriveLimits({ entries, screen, consented, readMany: (paths) => bodyReader.readBlobs(paths) });
 }
 
 /** Write the site into a new numbered directory under `site/`, through a staging directory renamed into place only when every file is

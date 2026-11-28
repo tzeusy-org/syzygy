@@ -1,0 +1,186 @@
+{
+  "subject": {
+    "tree": "syzygy (this repository)",
+    "commit": "7cd5d8477f939d3d963286ca374481ce3554a19c",
+    "policy": "polaris-butlers-project-shape-secrets dossier-declared-source/2.0.0",
+    "policySha256": "8c10531f57d129ad5d402e53d7d9fdc741387f6eaab701bbdb46419181b11967"
+  },
+  "before": {
+    "rows": 0,
+    "pagesListingRows": 0,
+    "basis": "no rule before REQ-polaris-generation-034 version 2.49 read a limit constant or a configuration entry"
+  },
+  "afterNoStatement": {
+    "recognizer": {
+      "rule": "limit-default",
+      "ruleVersion": 1,
+      "candidates": 2378,
+      "secretPathsLeftOut": 0,
+      "setApart": 0,
+      "observed": 967,
+      "unknown": 1411,
+      "valuesLeftOut": 0,
+      "sequenceItemsNotRead": 0,
+      "rows": 50,
+      "filesNotListed": 1378
+    },
+    "unknownListedByReason": {
+      "code/secret-detector-match": 28,
+      "code/unparsed/unterminated": 4,
+      "code/active-content": 1
+    },
+    "unitsListed": 4,
+    "rowsListed": 50,
+    "rowsNotListed": 0,
+    "listedBySourceKindType": {
+      "code/default/unknown:value-not-literal": 6,
+      "code/default/integer": 2,
+      "code/default/string": 3,
+      "code/timeout/integer": 17,
+      "code/limit/unknown:value-not-literal": 7,
+      "code/limit/integer": 5,
+      "code/max/integer": 7,
+      "code/timeout/unknown:value-not-literal": 2,
+      "code/max/string": 1
+    },
+    "firstListed": [
+      {
+        "path": ".syzygy/governance/contracts/candidates/scripts/build_active_manifest.py",
+        "line": 48,
+        "name": "DEFAULT_ROOT",
+        "value": null,
+        "valueType": null
+      },
+      {
+        "path": "apps/syzygy/src/main.ts",
+        "line": 43,
+        "name": "DEFAULT_PORT",
+        "value": "7477",
+        "valueType": "integer"
+      },
+      {
+        "path": "apps/syzygy/src/main.ts",
+        "line": 44,
+        "name": "DEFAULT_STATE_DIR_NAME",
+        "value": "'.syzygy-daemon-state'",
+        "valueType": "string"
+      },
+      {
+        "path": "apps/three-surface-poc/src/capability-detail.ts",
+        "line": 51,
+        "name": "DEFAULT_READING_MODE",
+        "value": "'Base'",
+        "valueType": "string"
+      },
+      {
+        "path": "apps/three-surface-poc/src/cdp-browser.ts",
+        "line": 80,
+        "name": "COMMAND_TIMEOUT_MS",
+        "value": "30_000",
+        "valueType": "integer"
+      },
+      {
+        "path": "apps/three-surface-poc/src/cli.ts",
+        "line": 14,
+        "name": "DEFAULT_PORT",
+        "value": "7478",
+        "valueType": "integer"
+      },
+      {
+        "path": "apps/three-surface-poc/src/git-blob-batch.test.ts",
+        "line": 28,
+        "name": "REAL_TREE_TIMEOUT_MS",
+        "value": "120_000",
+        "valueType": "integer"
+      },
+      {
+        "path": "apps/three-surface-poc/src/governance-inputs.test.ts",
+        "line": 507,
+        "name": "REAL_TREE_TIMEOUT_MS",
+        "value": "60_000",
+        "valueType": "integer"
+      },
+      {
+        "path": "apps/three-surface-poc/src/main.test.ts",
+        "line": 62,
+        "name": "TEST_TIMEOUT_MS",
+        "value": "30_000",
+        "valueType": "integer"
+      },
+      {
+        "path": "apps/three-surface-poc/src/page-shell.ts",
+        "line": 8,
+        "name": "RESPONSE_LIMIT_LABELS",
+        "value": null,
+        "valueType": null
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-copy.test.ts",
+        "line": 38,
+        "name": "HEADING_WORD_LIMIT",
+        "value": "6",
+        "valueType": "integer"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-copy.test.ts",
+        "line": 39,
+        "name": "LEDE_WORD_LIMIT",
+        "value": "20",
+        "valueType": "integer"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-copy.ts",
+        "line": 316,
+        "name": "DEFAULT_CLAIM_ROLE",
+        "value": null,
+        "valueType": null
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+        "line": 55,
+        "name": "DEFAULT_SPACING",
+        "value": null,
+        "valueType": null
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts",
+        "line": 11,
+        "name": "MAX_PAGE_BYTES",
+        "value": "8_000_000",
+        "valueType": "integer"
+      }
+    ],
+    "deriveElapsedMs": 16521,
+    "readerCalls": 16
+  },
+  "afterStatementListingNoClass": {
+    "recognizer": {
+      "rule": "limit-default",
+      "ruleVersion": 1,
+      "candidates": 2378,
+      "secretPathsLeftOut": 0,
+      "setApart": 0,
+      "observed": 0,
+      "unknown": 2378,
+      "valuesLeftOut": 0,
+      "sequenceItemsNotRead": 0,
+      "rows": 0,
+      "filesNotListed": 1378
+    },
+    "unknownListedByReason": {
+      "code/class-not-consented": 1000
+    },
+    "unitsListed": 0,
+    "rowsListed": 0,
+    "rowsNotListed": 0,
+    "listedBySourceKindType": {},
+    "firstListed": [],
+    "deriveElapsedMs": 419,
+    "readerCalls": 0
+  },
+  "noStatementOnePathPerCall": {
+    "deriveElapsedMs": 28694,
+    "readerCalls": 1000,
+    "memberIdentical": true
+  }
+}

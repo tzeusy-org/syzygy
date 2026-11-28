@@ -480,7 +480,8 @@ describe('render', () => {
       const files = readSite(result.report.site);
       for (const [file, page] of html(files)) {
         // Version 2.9: each computed map page carries its own legend with the same switch and target; version 2.42: so does the
-        // test-names reference page, version 2.43 the rough-edges reference page and version 2.48 the docs-and-code page.
+        // test-names reference page, version 2.43 the rough-edges reference page, version 2.48 the docs-and-code page and version 2.52
+        // the cliffs page.
         const legended = file === 'index.html' || file.startsWith('deep-dives/') || file.startsWith('maps/') || file.startsWith('reference/');
         expect(page.split('class="reading-legend"').length - 1, file).toBe(legended ? 1 : 0);
         expect(page.split('id="evidence-view"').length - 1, file).toBe(legended ? 1 : 0);
@@ -489,6 +490,7 @@ describe('render', () => {
       expect(files.has('reference/test-names.html')).toBe(true);
       expect(files.has('reference/rough-edges.html')).toBe(true);
       expect(files.has('reference/docs-and-code.html')).toBe(true);
+      expect(files.has('reference/cliffs.html')).toBe(true);
       const legend = files.get('index.html')!;
       expect(legend).toContain('<a href="#evidence-view">Show the evidence view</a>');
       expect(legend).toContain('text with such a mark is the agent\'s reading of that source.');
@@ -2120,8 +2122,10 @@ describe('render: derived structure (version 2.3)', () => {
     // The denied `.env`, the active-content `src/tagged.c`, the unknown-class `docs/notes.txt` and the secret path: no object id of any.
     for (const [file, id] of Object.entries(objectIds)) expect(derivedText, file).not.toContain(id);
     // The secret path's directory, anywhere: the rule id `terraform-configuration`, which every map page and machine.json name, is taken
-    // out of the text first, so the bare word `conf` is checked everywhere else.
-    for (const name of ['conf', 'token=', 'abcdefghijk']) for (const [file, text] of files) expect(text.replaceAll('terraform-configuration', ''), `${file} ${name}`).not.toContain(name);
+    // out of the text first, and so is the word `configuration` the cliffs page (v2.52) uses for the files it reads, so the bare word
+    // `conf` is checked everywhere else; the cliffs page is also checked for the directory as a path segment.
+    for (const name of ['conf', 'token=', 'abcdefghijk']) for (const [file, text] of files) expect(text.replaceAll('terraform-configuration', '').replace(/[Cc]onfiguration/gu, ''), `${file} ${name}`).not.toContain(name);
+    expect(files.get('reference/cliffs.html')).not.toMatch(/(?:^|[^A-Za-z])conf\//u);
     expect(JSON.parse(record)).toMatchObject({ files: 9, secretPathsLeftOut: 2, facts: FACTS });
     for (const fact of JSON.parse(record).facts as Record<string, unknown>[]) expect(Object.keys(fact).filter((key) => /size|bytes|object|blob|sha|id$/iu.test(key) && key !== 'id')).toEqual([]);
   });
