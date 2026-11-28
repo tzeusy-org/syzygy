@@ -302,12 +302,22 @@ describe('code excerpt marks: check (version 2.54)', () => {
   });
 
   it('Earlier schemas take highlights and notes as a field-version', async () => {
-    const out = await findingsOf(A, excerptDraft([MARKED()], V17));
+    // Marks that would draw findings in v18 draw only the field-version findings in v17.
+    const out = await findingsOf(A, excerptDraft([code('x', 10, 20, { highlights: [{ startLine: 30, endLine: 31 }], notes: [{ line: 9, block: 'p-ghost' }] })], V17));
     expect(out.findings).toEqual([
       { kind: 'field-version', at: '$.sections[0].paragraphs[2].highlights', detail: '`highlights` and `notes` need draft schema polaris-dossier-local-draft-v18' },
       { kind: 'field-version', at: '$.sections[0].paragraphs[2].notes', detail: '`highlights` and `notes` need draft schema polaris-dossier-local-draft-v18' },
     ]);
     expect(await findingsOf(A, excerptDraft([code('x', 10, 20)], V17))).toEqual(PASSED);
+  });
+
+  it('refuses at a render a v18 draft whose check record was altered to passed, from its highlight finding found again', async () => {
+    const { run, result } = await checked(A, excerptDraft([code('x', 10, 20, { highlights: [{ startLine: 8, endLine: 11 }] })]));
+    if (!result.ok || result.report.outcome !== 'findings') throw new Error('the fixture draft must have findings');
+    const file = path.join(run, 'checks', 'rev-0.json');
+    fs.writeFileSync(file, JSON.stringify({ ...JSON.parse(fs.readFileSync(file, 'utf8')), outcome: 'passed', findings: [] }));
+    const out = await renderRun(run, { sources: sources(A.commit), now: () => LATER, probe: neverProbe, loadScreen: async () => SCREEN, renderer: renderLocalDossier });
+    expect(out.ok ? null : { stage: out.refusal.stage, reasons: out.refusal.reasons }).toEqual({ stage: 'rederive', reasons: ['code-highlight at $.sections[0].paragraphs[2].highlights[0]'] });
   });
 
   it('hands every other reader the draft without the members', async () => {
@@ -402,7 +412,7 @@ describe('code excerpt marks: render (version 2.54)', () => {
       const page = (await rendered(A, doc)).files.get('index.html')!;
       const figure = excerptOf(page, 'x');
       expect(figure, name).not.toContain('code-frame');
-      expect(figure, name).toMatch(/<\/code><\/pre><p class="code-highlights">Highlighted: line 1 \(shown line 1\)\.<\/p><ol class="code-notes"/u);
+      expect(figure, name).toContain(`</code></pre><p class="code-highlights">Highlighted: line 1 (shown line 1).</p><ol class="code-notes" aria-label="Notes on src/${name}.ts, line 1"><li>Line 1 (shown line 1) <a class="code-note" href="#block-p-pool">Read note 1<span class="visually-hidden"> on src/${name}.ts, line 1</span></a></li></ol>`);
       expect(excerptOf(page, 'y'), name).toContain('<pre class="code-gutter" aria-hidden="true"><span class="code-number">1</span>\n<span class="code-number">2</span></pre>');
     }
   });
