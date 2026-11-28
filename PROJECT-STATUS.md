@@ -353,6 +353,12 @@ It replaces REQ-polaris-generation-034 from version 2.48, the docs and code (313
 arrow that a stored lexical import fact joins is corroborated, never Observed, and every other one stays Unknown.
 
 With the imports corroboration version effective, Polaris has 39 requirements and 638 scenarios.
+
+[Cliffs amendment 2.50](openspec/changes/dossier-cliffs) is agent-adopted in A-343.
+It replaces REQ-polaris-generation-034 from version 2.49, the imports corroboration (317 to 325 scenarios): each operator-agent
+render reads the limits and defaults its code and configuration declare and publishes them on `reference/cliffs.html`.
+
+With the cliffs version effective, Polaris has 39 requirements and 646 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
