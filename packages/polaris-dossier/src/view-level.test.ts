@@ -14,6 +14,7 @@ import { buildDossierScreen } from './screen.js';
 import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 import { measureDraft } from './rerender-measure.js';
 import { packetDraftView } from './review-packet.js';
+import { withoutLevels } from './view-level.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 
 // View levels, scopes and zoom links (REQ-polaris-generation-034 version 2.50, schema v17, syzygy-3efd.39): each scenario over a pinned tree
@@ -31,7 +32,7 @@ const V11 = 'polaris-dossier-local-draft-v11', V12 = 'polaris-dossier-local-draf
 const LIVE_POLICY = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'), 'utf8'));
 const POLICY = new TextEncoder().encode(JSON.stringify({
   policyId: 'fixture-public-source', policyVersion: '1', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
-  publicSourceScope: { contentClassification: { rules: [{ class: 'code-content', sourceExtensions: ['.ts', '.md', '.json', '.txt'] }] } },
+  publicSourceScope: { contentClassification: { rules: [{ class: 'code-content', sourceExtensions: ['.ts', '.md', '.json', '.txt', '.mod'] }] } },
 }));
 const SCREEN = buildDossierScreen(POLICY, true, null, 'public');
 
@@ -199,8 +200,12 @@ const dirsContain = (id: string, base: Doc, elements: string[] = []): Doc => con
 
 
 let U: Pinned;
+/** One npm package and one Go module, each from its own manifest: a `package` fact and a `module` fact on the units map (`.mod` is in the
+ * fixture policy's source extensions for this tree alone: no other tree holds one). */
+let G: Pinned;
 beforeAll(() => {
   U = pinnedTree(TREE_U);
+  G = pinnedTree({ 'README.md': TREE_A['README.md']!, 'api/package.json': pkg('api'), 'svc/go.mod': 'module example.com/svc\n' });
 });
 const unlistedAfter = (allowed: number) => {
   let listed = 0;
@@ -404,6 +409,84 @@ describe('schema v17: a view\'s level and scope (version 2.50)', () => {
     const words = (id: string, x: string, y: string) => `${id}: ${x} and ${y} stand for a part and a part within it, and the figure does not show that one holds the other; draw one level, or show the containment`;
     expect(mixed).toEqual([{ diagram: 'parts', detail: words('parts', 'app', 'api') }, { diagram: 'pkgs', detail: words('pkgs', 'api', 'api-core') }]);
     expect(plain(JSON.stringify(await advice(unlevelled(doc))))).toBe(plain(JSON.stringify(await advice(doc))));
+  });
+});
+
+describe('schema v17: the review R39 repairs (version 2.50)', () => {
+  it('refuses at a render a v17 draft whose check record was altered to passed, from its level finding found again (R39 finding 1)', async () => {
+    const doc = levelDraft(MODEL(), [graphView('all', ['app', 'api', 'router', 'user'], []), lv(graphView('parts', ['api', 'router'], []), 'container', 'app')]);
+    const { run, result } = await checked(A, doc);
+    if (!result.ok || result.report.outcome !== 'findings') throw new Error('the fixture draft must have findings');
+    const file = path.join(run, 'checks', 'rev-0.json');
+    fs.writeFileSync(file, JSON.stringify({ ...JSON.parse(fs.readFileSync(file, 'utf8')), outcome: 'passed', findings: [] }));
+    const out = await renderRun(run, { sources: sources(A.commit), now: () => LATER, probe: neverProbe, loadScreen: async () => SCREEN, renderer: renderLocalDossier });
+    expect(out.ok ? null : { stage: out.refusal.stage, reasons: out.refusal.reasons }).toEqual({ stage: 'rederive', reasons: ['view-level at $.diagrams[1].view.elements[1]'] });
+  });
+
+  it('names no scope whose element\'s identity is not a handle: the view takes no finding of this version (R39 finding 2)', async () => {
+    const model = (id: string): Doc[] => [el(id, 'App', 'system'), el('api', 'Api', 'package'), el('user', 'User', 'person')];
+    const faulty = (await findingsOf(A, levelDraft(model('src/app.ts'), [lv(graphView('parts', ['api', 'user'], []), 'container', 'src/app.ts')]))).findings;
+    expect(faulty.some((finding) => finding.kind === 'schema' && finding.at === '$.model.elements[0].id')).toBe(true);
+    expect(faulty.filter((finding) => LEVEL_KINDS.has(finding.kind) || /\.view\.(?:level|scope)$/u.test(finding.at))).toEqual([]);
+    // The same view about a handle: api lies outside it.
+    expect(await levelFindingsOf(A, levelDraft([...model('app'), el('other', 'Other', 'system')], [lv(graphView('parts', ['api', 'user'], []), 'container', 'app'),
+      graphView('rest', ['app', 'other'], [])]))).toEqual([
+      { kind: 'view-scope-outside', at: '$.diagrams[0].view.elements[0]', detail: 'parts: api lies outside app, the element this view is about' }]);
+  });
+
+  it('reports no field-version at a level or scope under a diagram of another kind (R39 finding 8)', async () => {
+    const seq = { ...lv(graphView('seq', ['api', 'user'], []), 'container', 'app'), kind: 'sequence' };
+    const doc = levelDraft(MODEL(), [graphView('all', ['app', 'api', 'router', 'user'], []), seq], [], V16);
+    expect((await findingsOf(A, doc)).findings.filter((finding) => finding.kind === 'field-version')).toEqual([]);
+  });
+
+  it('computes no view-scope-outside finding where a parent names no element (R39 finding 9)', async () => {
+    const elements = [el('app', 'App', 'system'), el('a', 'A', 'package', { parent: 'ghost' }), el('b', 'B', 'package')];
+    const findings = (await findingsOf(A, levelDraft(elements, [lv(graphView('loose', ['a', 'b'], []), 'container', 'app'), graphView('rest', ['app', 'a'], [])]))).findings;
+    expect(findings.some((finding) => finding.kind === 'unresolved-reference' && finding.at === '$.model.elements[1].parent')).toBe(true);
+    expect(findings.filter((finding) => LEVEL_KINDS.has(finding.kind))).toEqual([]);
+  });
+
+  it('computes no view-scope finding where the scope\'s type has a schema finding (R39 finding 9)', async () => {
+    const doc = (type: string): Doc => levelDraft([el('app', 'App', type), el('user', 'User', 'person')], [lv(graphView('ctx', ['app', 'user'], []), 'context', 'app')]);
+    expect((await findingsOf(A, doc('galaxy'))).findings.filter((finding) => LEVEL_KINDS.has(finding.kind))).toEqual([]);
+    expect(await levelFindingsOf(A, doc('package'))).toEqual([{ kind: 'view-scope', at: '$.diagrams[0].view.scope', detail: SCOPE_TYPE('ctx') },
+      { kind: 'view-level', at: '$.diagrams[0].view.elements[0]', detail: 'ctx: a context view shows no element of type package' }]);
+  });
+
+  it('computes no view-level finding at a base whose view has a base-reference finding (R39 finding 9)', async () => {
+    const doc = (select: string[]): Doc => levelDraft([el('app', 'App', 'system')],
+      [lv(dirsContain('tree', { select, restReason: 'Only these are about this.' }, ['app']), 'context', 'app')]);
+    expect(await levelFindingsOf(A, doc(['src']))).toEqual([{ kind: 'view-level', at: '$.diagrams[0].view.base', detail: 'tree: a context view shows no element of type directory' }]);
+    const blocked = (await findingsOf(A, doc(['src', 'nowhere']))).findings;
+    expect(blocked.some((finding) => finding.kind === 'base-reference' && finding.at.startsWith('$.diagrams[0].'))).toBe(true);
+    expect(blocked.filter((finding) => LEVEL_KINDS.has(finding.kind))).toEqual([]);
+  });
+
+  it('types a units base\'s module facts `module` and its package facts `package` (R39 finding 9)', async () => {
+    const doc = (level: string, scope: string): Doc => levelDraft([el('app', 'App', 'system'), el('core', 'Core', 'package', { parent: 'app' }), el('user', 'User', 'person')],
+      [lv(unitsGraph('units', {}, [scope, 'user']), level, scope), graphView('rest', ['app', 'core'], [])]);
+    expect(await levelFindingsOf(G, doc('container', 'app'))).toEqual([{ kind: 'view-level', at: '$.diagrams[0].view.base', detail: 'units: a container view shows no element of type module' }]);
+    expect(await levelFindingsOf(G, doc('context', 'app'))).toEqual([{ kind: 'view-level', at: '$.diagrams[0].view.base', detail: 'units: a context view shows no element of type package' }]);
+    expect(await levelFindingsOf(G, doc('component', 'core'))).toEqual([]);
+  });
+
+  it('leaves a diagram that is not an object as it is when it strips the levels', () => {
+    const doc = levelDraft(MODEL(), [lv(graphView('parts', ['api', 'user'], []), 'container', 'app')]);
+    const odd = { ...doc, diagrams: [...doc.diagrams, 7] };
+    const stripped = withoutLevels(odd) as Doc;
+    expect(stripped.diagrams[1]).toBe(7);
+    expect(stripped.diagrams[0].view).toEqual({ elements: ['api', 'user'], relationships: ['r-parts'] });
+  });
+
+  it('draws no figure inside a collapsible section on any page of a levelled site (R39 finding 5)', async () => {
+    const { files } = await rendered(A, zoomDraft());
+    let seen = 0;
+    for (const [file, text] of files) {
+      if (!file.endsWith('.html')) continue;
+      for (const details of text.match(/<details[\s\S]*?<\/details>/gu) ?? []) { seen += 1; expect(details, file).not.toContain('id="figure-'); }
+    }
+    expect(seen).toBeGreaterThan(0);
   });
 });
 

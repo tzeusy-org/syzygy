@@ -295,6 +295,22 @@ export function zoomInput(walked = false): { readonly local: LocalRenderInput; r
     viewLevels: new Map([['flow', { level: 'context', scope: 'b' }], ['parts', { level: 'container', scope: 'b' }]]) } };
 }
 
+/** A walked figure and a zoom-only figure on one page (version 2.50, review R39 finding 6): `zoomInput(true)`, whose `flow` carries the walk
+ * on section one, with a second figure `more` on the same section, unwalked, which draws `b` and so carries a zoom-only layer. */
+export function zoomMixedInput(): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {
+  const { local, sources } = zoomInput(true);
+  const sourceIds = [READING_SOURCE.sourceId];
+  const draft = local.draft as unknown as Record<string, unknown>;
+  const more = { id: 'more', sectionId: 'one', kind: 'boundary', title: 'More of b', relationship: 'what b talks to', disposition: { kind: 'produced', assetIds: [] },
+    nodes: [{ id: 'b', label: 'Node b', epistemic: 'inferred', sourceIds }, { id: 'm-peer', label: 'Peer', epistemic: 'inferred', sourceIds }],
+    edges: [{ id: 'm-peer-edge', from: 'b', to: 'm-peer', label: 'talks to', epistemic: 'inferred', sourceIds }] };
+  // `b` is one element both views select (version 2.24): its claim renders once, in `flow`, and `more` lists it as shown there.
+  const element = (id: string, views: string[]) => ({ id, type: 'service', parent: null, views });
+  const model = { elements: [...['a', 'c', 'd', 'e'].map(id => element(id, ['flow'])), element('b', ['flow', 'more']), element('m-peer', ['more']),
+    element('p1', ['parts']), element('p2', ['parts'])], relationships: [] };
+  return { sources, local: { ...local, model, draft: { ...draft, diagrams: [...(draft['diagrams'] as unknown[]), more] } as unknown as LocalRenderInput['draft'] } };
+}
+
 /** A containment's layer (version 2.50): `containmentInput`'s workspace with `web` the scope of a component view `inside-web` on section
  * two, so the containment's box for `web` links to `#figure-inside-web` on that section's page. */
 export function zoomContainmentInput(): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {

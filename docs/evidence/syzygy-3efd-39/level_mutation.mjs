@@ -8,7 +8,10 @@
 // `container-drops-system` (a type dropped from the table), `parent-walk-skipped`, `link-to-self` and the 1048 px pair in EQUIVALENT.
 // Run 1 (at f50dad4b4) killed 46 of 51. Three test repairs followed (a component view showing a system; a containment view's attributes;
 // a figure that is its own element's target, graph and containment) for component-admits-system, containment-attrs-dropped and
-// link-to-self; the other two survivors are listed in EQUIVALENT with their reasons.
+// link-to-self; the other two survivors are listed in EQUIVALENT with their reasons. Run 2 (at 26e15b7b0) killed 49 of 49. Review R39
+// (docs/reviews/syzygy-3efd-39/) found that EQUIVALENT's `render-rederive-levels-dropped` was no such thing: a check record altered to
+// passed reaches the render with a level finding, and only that line refuses it. It is now a mutant, killed by the altered-record test,
+// with six more over the review's repairs; the browser file holds two tests, each of which must pass in every baseline that runs it.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -77,6 +80,12 @@ const MUTANTS = [
   // --- a base view
   ['base-level-unchecked', LEVEL, "if (base !== undefined && map !== undefined && !baseBlocked) {", "if (false) {"],
   ['root-typed-directory', LEVEL, "(element.root === true ? 'system' : 'directory')", "'directory'"],
+  // --- review R39's repairs (finding 1's rederive is the former equivalent mutant, now run; findings 2, 6, 8 and 9 add these)
+  ['scope-identity-unchecked', LEVEL, "    if (touched(`${index.elementById.get(scope)!.at}.id`)) continue;\n", ""],
+  ['levelled-any-kind', LEVEL, "isRecord(diagram) && isViewKind(diagram) && isRecord(diagram[VIEW_FIELD])", "isRecord(diagram) && isRecord(diagram[VIEW_FIELD])"],
+  ['base-blocked-ignored', LEVEL, "if (base !== undefined && map !== undefined && !baseBlocked) {", "if (base !== undefined && map !== undefined) {"],
+  ['unit-fact-ignored', LEVEL, "element.unitFact ?? 'package'", "'package'"],
+  ['render-rederive-levels-dropped', RENDER, "  findings.push(...levelFindings(walked, findings, {}));\n", ""],
   // --- where the findings and the stripping happen
   ['check-level-findings-dropped', CHECK, "findings.push(...levelFindings(walked, findings, checkBaseMaps(treeFacts, manifestFacts)));", "void 0;"],
   ['field-version-path-not-replaced', DERIVE, "      for (const at of levelFieldVersionPaths(doc)) subsectionPaths.add(at);\n", ""],
@@ -110,6 +119,7 @@ const MUTANTS = [
   ['positioning-dropped', STYLE, "${walk ? WALK_FIGURE_CSS : zoom ? LAYER_POSITIONING_CSS : ''}", "${walk ? WALK_FIGURE_CSS : ''}"],
   ['zoom-rules-everywhere', STYLE, "${zoom ? `${ZOOM_LINK_CSS}${ZOOM_PASS_THROUGH_CSS}` : ''}", "${`${ZOOM_LINK_CSS}${ZOOM_PASS_THROUGH_CSS}`}"],
   ['focus-outline-on-hover', STYLE, ".zoom-link:focus-visible{outline:", ".zoom-link:hover{outline:"],
+  ['pass-through-unscoped', STYLE, "'.zoom-only .walk-layer,.zoom-only .walk-node{pointer-events:none}'", "'.walk-layer,.walk-node{pointer-events:none}'"],
   ['layer-passes-no-pointer', STYLE, "'.zoom-only .walk-layer,.zoom-only .walk-node{pointer-events:none}'", "''"],
   ['zoom-link-top-left', STYLE, ".zoom-link{position:absolute;right:${tokens.length.none};", ".zoom-link{position:absolute;left:${tokens.length.none};"],
 ].filter(([id]) => only === null || only.has(id));
@@ -128,8 +138,6 @@ const EQUIVALENT = [
     reason: 'A base node\'s identity is a fact identity, which starts with `_` (derived-base.ts), while a zoom target is keyed by a `scope`, a model element\'s identity, which check resolves against the model alone and which the identity schema never lets start with `_`; so `zoomOf` finds no target for a base node either way.' },
   { id: 'target-guard-dropped', file: SITE, old: "if (!drawnFigures.has(target.id)) throw new Error(", new: "if (false) throw new Error(",
     reason: 'The guard refuses a render whose zoom target the inertness check turned into a notice. A checked draft\'s labels pass label-markup and the drawing is built from escaped text only, so assertInertSvg never refuses a checked figure, and no test can reach the guard through the pipeline.' },
-  { id: 'render-rederive-levels-dropped', file: RENDER, old: "  findings.push(...levelFindings(walked, findings, {}));\n", new: "",
-    reason: 'The render re-derives a passed revision\'s findings; a draft that check passed has no level finding, and check\'s and the render\'s derivations read the same frozen bytes (only the base view-level depends on the maps, which the render passes as unestablished), so a passed draft reaches render with none to find.' },
 ];
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const files = [...new Set(MUTANTS.map(([, file]) => file))].sort();
@@ -191,7 +199,7 @@ try {
     const baseline = await runTests(`baseline-${path.basename(file)}`, TESTS[file]);
     record.baselines.push({ file, exitCode: baseline.code, tests: baseline.total, perFile: baseline.perFile, failedTests: baseline.failedTests });
     if (baseline.code !== 0) throw new Error(`the baseline for ${file} fails: ${baseline.failedTests.join('; ')}`);
-    if (TESTS[file].includes(BROWSER) && (baseline.perFile[BROWSER]?.passed ?? 0) !== 1) throw new Error(`the browser test did not pass in the baseline for ${file}: ${JSON.stringify(baseline.perFile[BROWSER])}`);
+    if (TESTS[file].includes(BROWSER) && (baseline.perFile[BROWSER]?.passed ?? 0) !== 2) throw new Error(`the browser test did not pass in the baseline for ${file}: ${JSON.stringify(baseline.perFile[BROWSER])}`);
   }
   for (const [id, file, old, replacement] of MUTANTS) {
     const started = Date.now();

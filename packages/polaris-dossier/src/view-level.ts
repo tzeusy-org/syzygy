@@ -41,9 +41,10 @@ export const LEVEL_DETAIL = Object.freeze({
   fieldVersion: (diagram: string): string => `${diagram}: \`${LEVEL_FIELD}\` and \`${SCOPE_FIELD}\` need draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V17}`,
 });
 
-/** Every graph or containment diagram whose `view` carries `level` or `scope`, in diagram order. */
+/** Every graph or containment diagram whose `view` carries `level` or `scope`, in diagram order; a diagram of another kind is never one,
+ * whatever it carries (R39 finding 8). */
 function levelledViews(doc: Doc): { readonly diagram: Doc; readonly i: number; readonly view: Doc; readonly at: string }[] {
-  return list(doc['diagrams']).flatMap((diagram, i) => (isRecord(diagram) && isRecord(diagram[VIEW_FIELD])
+  return list(doc['diagrams']).flatMap((diagram, i) => (isRecord(diagram) && isViewKind(diagram) && isRecord(diagram[VIEW_FIELD])
     && (Object.hasOwn(diagram[VIEW_FIELD], LEVEL_FIELD) || Object.hasOwn(diagram[VIEW_FIELD], SCOPE_FIELD))
     ? [{ diagram, i, view: diagram[VIEW_FIELD], at: `$.diagrams[${i}].${VIEW_FIELD}` }] : []));
 }
@@ -135,6 +136,9 @@ export function levelFindings(doc: Doc, prior: readonly CheckFinding[], maps: Ba
       out.push({ kind: 'unresolved-reference', at: `${at}.${SCOPE_FIELD}`, detail: LEVEL_DETAIL.unresolved(named) });
       continue;
     }
+    // A scope whose element's own identity is not a handle names nothing a detail may carry: the view takes no finding of this version
+    // past its schema findings, so no detail copies that identity (R39 finding 2).
+    if (touched(`${index.elementById.get(scope)!.at}.id`)) continue;
     const entries = list(view['elements']).map((value, k) => ({ id: text(value), at: `${at}.elements[${k}]` }));
     const scopeType = typeOf(scope);
     if (scopeType !== undefined && (level === 'component' ? !CONTAINER_TYPES.has(scopeType) : scopeType !== 'system')) {
