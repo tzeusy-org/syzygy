@@ -95,13 +95,13 @@ replace('- **WHEN** the overview of a v17 draft holds the graph `flow`, which ca
 DASHED = '#### Scenario: Authored element stays dashed'
 replace(DASHED, (
     '#### Scenario: A directory a denied-path rule names is still named\n\n'
-    '- **WHEN** a public repository\'s pinned tree holds `src/a.ts`, `kubeconfig/notes.txt`, `.kube/config` and '
-    '`.kube/notes.txt`, `kubeconfig` being one of the bound screening policy\'s `deniedPathBasenames` and `.kube` one of its '
+    '- **WHEN** a public repository\'s pinned tree holds `src/a.ts`, `kubeconfig/notes`, `.kube/config` and '
+    '`.kube/notes`, `kubeconfig` being one of the bound screening policy\'s `deniedPathBasenames` and `.kube` one of its '
     '`deniedDirectoryNames`, and no secret detector matching any of these paths\n'
     '- **THEN** the derived facts hold a `top-level-unit` fact for `kubeconfig` counting 1 file and one for `.kube` counting 2 '
     'files, neither counted in `secretPathsLeftOut`, and the directory map draws them as `kubeconfig/ (1 file)` and '
     '`.kube/ (2 files)`\n'
-    '- **AND** no body of `.kube/config` or `.kube/notes.txt` is read, each being a denied path\n'
+    '- **AND** no body of `.kube/config` or `.kube/notes` is read, each being a denied path\n'
     '- **AND** in the walk advice of version 2.51, a step naming the directory `kubeconfig`, whose own path is a denied path, '
     'is neither read nor counted, while a step naming `.kube`, whose own path no denied-path rule names, is read\n\n' + DASHED))
 

@@ -8,7 +8,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-code-excerpts/proposed/polaris-generation/spec.md` (dossier code excerpts version 2.54, row A-345, tag `polaris-dossier-code-excerpts-v2.54`; sha256 `24132cde379082c2667057c3a2e326f22fe0cf89426b256436dc84d8a92facd3`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-view-levels-errata/proposed/polaris-generation/spec.md`, sha256 `343daa34088f46aa7ec4dbd49c10aca67415cef3abaacb31f72bd329f3008e4a`) replaces that text, composed after version 2.54. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.54's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-code-excerpts/proposed/polaris-generation/spec.md` (dossier code excerpts version 2.54, row A-345, tag `polaris-dossier-code-excerpts-v2.54`; sha256 `24132cde379082c2667057c3a2e326f22fe0cf89426b256436dc84d8a92facd3`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-view-levels-errata/proposed/polaris-generation/spec.md`, sha256 `dee4a4dca906319d970e5a6398492d191d8b7707fbf1ffbb5598ad57a28c24c3`) replaces that text, composed after version 2.54. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.54's, byte for byte.
 
 ## Carried unchanged
 
@@ -39,9 +39,9 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 >
 > #### Scenario: A directory a denied-path rule names is still named
 >
-> - **WHEN** a public repository's pinned tree holds `src/a.ts`, `kubeconfig/notes.txt`, `.kube/config` and `.kube/notes.txt`, `kubeconfig` being one of the bound screening policy's `deniedPathBasenames` and `.kube` one of its `deniedDirectoryNames`, and no secret detector matching any of these paths
+> - **WHEN** a public repository's pinned tree holds `src/a.ts`, `kubeconfig/notes`, `.kube/config` and `.kube/notes`, `kubeconfig` being one of the bound screening policy's `deniedPathBasenames` and `.kube` one of its `deniedDirectoryNames`, and no secret detector matching any of these paths
 > - **THEN** the derived facts hold a `top-level-unit` fact for `kubeconfig` counting 1 file and one for `.kube` counting 2 files, neither counted in `secretPathsLeftOut`, and the directory map draws them as `kubeconfig/ (1 file)` and `.kube/ (2 files)`
-> - **AND** no body of `.kube/config` or `.kube/notes.txt` is read, each being a denied path
+> - **AND** no body of `.kube/config` or `.kube/notes` is read, each being a denied path
 > - **AND** in the walk advice of version 2.51, a step naming the directory `kubeconfig`, whose own path is a denied path, is neither read nor counted, while a step naming `.kube`, whose own path no denied-path rule names, is read
 
 The two new sentences of the zoom target paragraph and of the walk advice paragraph are appended to existing lines and appear above as insertions.
