@@ -1,6 +1,6 @@
-# Dossier walk advice — version 2.47
+# Dossier walk advice — version 2.48
 
-[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10, built over view levels 2.45 (design D1).
+[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10, built over view levels 2.47 (design D1).
 
 ## Why
 
@@ -18,8 +18,8 @@
   - a paragraph word matches a label word where they are equal or one is the other plus `s` or `es`;
   - the step is advised on where every non-filler paragraph word matches; one new word stops it (threshold zero).
 - The label is the draft's `label` for a model element or node, the expansion's for an expansion node, and Syzygy's label (2.40) for a base element, never a `names` display name; a base element that is withheld, Unknown in screening or not admitted for output at check is not read.
-- The advisory's detail names the figure, the step number and the paragraph's identity, never a word of the draft or a path; it treats identities as 2.40 and 2.45 do and carries no value 2.35 screens.
-- It gates nothing and moves no finding, record, page or brief; a failure to compute it leaves no member. It reads no 2.45 `level`, `scope` or zoom link.
+- The advisory's detail names the figure, the step number and the paragraph's identity, never a word of the draft or a path; it treats identities as 2.40 and 2.47 do and carries no value 2.35 screens.
+- It gates nothing and moves no finding, record, page or brief; a failure to compute it leaves no member. It reads no 2.47 `level`, `scope` or zoom link.
 - Seven scenarios are added, and the four Form lines are extended.
 
 ## Non-goals
