@@ -335,6 +335,12 @@ It replaces REQ-polaris-generation-034 from version 2.43, the migration bounds (
 render reads TODO, FIXME, HACK, deprecation markers and issue references lexically and publishes them per unit on `reference/rough-edges.html`.
 
 With the rough-edge markers version effective, Polaris has 39 requirements and 652 scenarios.
+
+[URL lean run amendment 2.46](openspec/changes/dossier-url-lean-run) is agent-adopted in A-340.
+It replaces REQ-polaris-generation-025 and 047 from URL dossier 2.1 (14 to 6 and 24 to 6 scenarios): a URL run pins
+one commit by anonymous `git ls-remote`, fetches it with no credential and reads no record.
+
+With the URL lean run version effective, Polaris has 39 requirements and 626 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
