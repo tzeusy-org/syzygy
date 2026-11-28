@@ -13,7 +13,9 @@ import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
 import { GIT_ENV, tempDir } from '@syzygy/test-kit';
-import { resolveBasePath, type BaseMap } from './derived-base.js';
+import { baseEndFindings, baseNestingFindings, resolveBase, resolveBasePath, selectedLevels, viewBaseFindings, type Admit, type BaseMap, type BaseMaps } from './derived-base.js';
+import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
+import type { ScreenLoad } from './screen.js';
 
 // Derived-base views (REQ-polaris-generation-034 version 2.35, schema v15, syzygy-3efd.38): each scenario over a pinned tree built here with
 // the git CLI. Every expected finding, detail, attribute and text is a literal written from the requirement's text and the fixture tree,
@@ -123,7 +125,7 @@ const draftOf = (diagrams: Doc[], version = V11): Doc => ({
 });
 
 /** A briefed run over `tree` with `doc` as its draft, checked once. */
-async function checked(tree: Pinned, doc: Doc): Promise<{ run: string; result: CheckResult }> {
+async function checked(tree: Pinned, doc: Doc, over: Partial<CheckDeps> = {}): Promise<{ run: string; result: CheckResult }> {
   const clone = path.join(tempDir('dossier-model-clone-'), 'kestrel');
   execFileSync('git', ['clone', '-q', '--no-hardlinks', tree.origin, clone], { env: GIT_ENV });
   const run = path.join(tempDir('dossier-model-state-'), RUN_ID);
@@ -138,10 +140,10 @@ async function checked(tree: Pinned, doc: Doc): Promise<{ run: string; result: C
   if (!brief.ok) throw new Error(`fixture brief refused: ${brief.refusal.reason}`);
   fs.mkdirSync(path.join(run, 'drafts'), { recursive: true });
   fs.writeFileSync(path.join(run, 'drafts', 'next.json'), JSON.stringify({ ...doc, pinnedRevision: tree.commit }, null, 2));
-  return { run, result: await checkDraft(run, {}, checkDeps(tree.commit)) };
+  return { run, result: await checkDraft(run, {}, { ...checkDeps(tree.commit), ...over }) };
 }
-const findingsOf = async (tree: Pinned, doc: Doc) => {
-  const { result } = await checked(tree, doc);
+const findingsOf = async (tree: Pinned, doc: Doc, over: Partial<CheckDeps> = {}) => {
+  const { result } = await checked(tree, doc, over);
   if (!result.ok) throw new Error(`refused at ${result.refusal.stage}: ${result.refusal.reason}`);
   if (!('quotations' in result.report)) throw new Error('the bounded form was written');
   return { outcome: result.report.outcome, findings: result.report.findings.map(({ kind, at, detail }) => ({ kind, at, detail })) };
@@ -149,8 +151,8 @@ const findingsOf = async (tree: Pinned, doc: Doc) => {
 const PASSED = { outcome: 'passed', findings: [] };
 
 /** The site of a run whose draft passed check, rendered without a review. */
-async function rendered(tree: Pinned, doc: Doc, over: Partial<RenderDeps> = {}): Promise<{ files: Map<string, string>; machine: Doc }> {
-  const { run, result } = await checked(tree, doc);
+async function rendered(tree: Pinned, doc: Doc, over: Partial<RenderDeps> = {}, checkOver: Partial<CheckDeps> = {}): Promise<{ files: Map<string, string>; machine: Doc }> {
+  const { run, result } = await checked(tree, doc, checkOver);
   if (!result.ok || result.report.outcome !== 'passed') throw new Error(`fixture draft: ${JSON.stringify(result.ok ? result.report.findings : result.refusal)}`);
   const out = await renderRun(run, { sources: sources(tree.commit), now: () => LATER, probe: neverProbe, loadScreen: async () => SCREEN, renderer: renderLocalDossier, ...over });
   if (!out.ok) throw new Error(`render refused at ${out.refusal.stage}: ${out.refusal.reason}`);
@@ -253,7 +255,9 @@ describe('schema v15: a view starting from a derived base (version 2.35)', () =>
     const entry = machine.figureStructures[0];
     expect(entry.groups).toEqual([{ id: 'runtime', parent: null, level: 1, provenance: 'authored' }, { id: '_manifest-1', parent: 'runtime', level: 2, provenance: 'derived' },
       { id: '_manifest-4', parent: 'runtime', level: 2, provenance: 'derived' }, { id: '_manifest-3', parent: null, level: 1, provenance: 'derived' }]);
-    expect(entry.nestings).toEqual([{ parent: 'runtime', child: '_manifest-1', witness: null }, { parent: 'runtime', child: '_manifest-4', witness: null }]);
+    // Each nesting is the draft's, decided by rule `relation-witness` as an element's parent is: `runtime` carries no unit, so it is Unknown.
+    const unknownWitness = { state: 'unknown', reason: 'endpoint-without-unit', fact: null, rule: null, ruleVersion: null };
+    expect(entry.nestings).toEqual([{ parent: 'runtime', child: '_manifest-1', witness: unknownWitness }, { parent: 'runtime', child: '_manifest-4', witness: unknownWitness }]);
     expect(entry.base).toEqual({ map: 'units', established: true, shown: 3, total: 4, hidden: 1, root: null, notListed: { facts: 0, unknownFiles: 0, secretPathsLeftOut: 0 },
       select: null, restReason: null, hides: [{ paths: ['docs/package.json#1'], reason: 'Docs <site>', count: 1 }],
       elements: [{ path: 'api/package.json#1', factId: '_manifest-1', provenance: 'derived', mark: 'inferred', name: null },
@@ -427,5 +431,290 @@ describe('the unit map path (version 2.35)', () => {
     expect(resolveBasePath(MAP, 'two/Cargo.toml#0')).toEqual([]);
     expect(resolveBasePath(MAP, 'two/Cargo.toml#02')).toEqual([]);
     expect(resolveBasePath(MAP, 'api/package.json')).toEqual([2]);
+  });
+});
+
+/** Pinned readers whose tree can be listed `allowed` times in all (the revision's re-verification lists it), and not after; every object
+ * read is the real reader's. */
+const unlistedAfter = (allowed: number) => {
+  let listed = 0;
+  return (options: PinnedObjectReaderOptions): PinnedObjectReader => {
+    const real = openPinnedObjectReader(options);
+    return new Proxy(real, { get: (target, key) => {
+      if (key === 'listTree') return async () => { if (listed++ < allowed) return target.listTree(); throw new GitObjectReadRefusal('object-missing', 'fixture: the tree cannot be listed'); };
+      const value = Reflect.get(target, key);
+      return typeof value === 'function' ? value.bind(target) : value;
+    } });
+  };
+};
+/** The fixture screen's load, except that its screen withholds or cannot classify the exact values named. */
+const fabricated = (withheld: readonly string[], throwing: readonly string[]): ScreenLoad => {
+  if (!SCREEN.ok) throw new Error('fixture screen');
+  const screen = new Proxy(SCREEN.screen, { get: (target, key) => {
+    if (key === 'screenBody') return (text: string) => { if (throwing.includes(text)) throw new Error('fixture: unclassified'); return withheld.includes(text) ? 'secret-detector-match' : target.screenBody(text); };
+    const value = Reflect.get(target, key);
+    return typeof value === 'function' ? value.bind(target) : value;
+  } });
+  return { ...SCREEN, screen };
+};
+
+const FIXED = 'Derived-base detail unavailable under source screening.';
+const REFERENCE_FIXED = 'Base reference unavailable under source screening.';
+/** The check record's findings of a run's first revision. */
+const recordFindings = (run: string): Doc[] => JSON.parse(fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8')).findings.map(({ kind, at, detail }: Doc) => ({ kind, at, detail }));
+/** A check under `screen`, its report and record findings. */
+async function screenedCheck(tree: Pinned, doc: Doc, screen: ScreenLoad): Promise<{ report: Doc[]; record: Doc[] }> {
+  const { run, result } = await checked(tree, doc, { loadScreen: async () => screen });
+  if (!result.ok || !('quotations' in result.report)) throw new Error('refused');
+  return { report: result.report.findings.map(({ kind, at, detail }) => ({ kind, at, detail })), record: recordFindings(run) };
+}
+
+describe('R38 repairs: the root\'s nesting and grouped nestings (version 2.35)', () => {
+  it('Directory containment keeps the root: each nesting is the record\'s `contains` fact in Syzygy\'s words, its witness and its tally', async () => {
+    const { files, machine } = await rendered(D, baseDraft([], [], [dirsContain('parts', { hide: [{ paths: ['docs'], reason: 'Docs' }] })]));
+    const fig = figureOf(files.get('index.html')!, 'parts');
+    expect(fig).toContain('<li data-visual-provenance="computed" data-derived-id="_tree-contains-2" data-epistemic="observed">Repository root contains src/. <span class="visually-hidden ev"><span class="marking observed">[Observed]</span></span> <span class="derived-mark">Derived by Syzygy</span></li>');
+    expect(fig).toContain('<p class="diagram-tally">0 groups in 2 levels, as marked: 0 observed, 0 inferred, 0 unknown. 2 boxes and 0 arrows computed by Syzygy from the Directory map: 2 observed, 0 inferred, 0 unknown. 1 nesting witnessed by Syzygy.</p>');
+    expect(machine.figureStructures[0].nestings).toEqual([{ parent: '_tree-root', child: '_tree-unit-2', witness: { state: 'witnessed', reason: null, fact: '_tree-contains-2', rule: 'top-level-unit', ruleVersion: 1 } }]);
+  });
+
+  it('a base element grouped inside a draft element keeps its relation-witness decision at render', async () => {
+    const doc = baseDraft([el('repo', 'Repo box', 'system', { unit: { kind: 'repository-root' } })], [], [dirsContain('parts', { group: [{ element: 'repo', paths: ['src'] }] }, ['repo'])]);
+    expect(await findingsOf(D, doc)).toEqual(PASSED);
+    const { files, machine } = await rendered(D, doc);
+    expect(machine.figureStructures[0].nestings).toEqual([
+      { parent: 'repo', child: '_tree-unit-2', witness: { state: 'witnessed', reason: null, fact: '_tree-contains-2', rule: 'top-level-unit', ruleVersion: 1 } },
+      { parent: '_tree-root', child: '_tree-unit-1', witness: { state: 'witnessed', reason: null, fact: '_tree-contains-1', rule: 'top-level-unit', ruleVersion: 1 } }]);
+    expect(figureOf(files.get('index.html')!, 'parts')).toContain('2 nestings witnessed by Syzygy.</p>');
+  });
+
+  it('a challenged grouped nesting is a relation-challenged finding at its first group path, its detail screened', () => {
+    const doc: Doc = { schemaVersion: V15, diagrams: [containView('parts', ['docsel'], { view: { elements: ['docsel'], base: { map: 'directories', group: [{ element: 'docsel', paths: ['src'] }] } } })] };
+    const map: BaseMap = { map: 'directories', contains: [], notListed: { directories: 0, secretPathsLeftOut: 0, submodules: 0 }, elements: [
+      { path: 'src', factId: '_tree-unit-2', label: 'src/ (40 files)', name: 'src/', compared: 'src', epistemic: 'observed', unknownReason: null, unit: { kind: 'top-level-directory', path: 'src' } }] };
+    const spec = { map: 'directories' as const, hide: undefined, select: undefined, restReason: undefined, group: [{ element: 'docsel', paths: ['src'] }], names: [] };
+    const bases = new Map([[0, resolveBase(spec, map, 'parts')]]);
+    const challenged = [{ id: '_tree-unit-2', diagram: 0, decision: { state: 'challenged' as const, reason: null, factKind: 'contains', rule: 'top-level-unit', ruleVersion: 1 } }];
+    expect(baseNestingFindings(doc, bases, challenged, () => 'admitted')).toEqual([{ kind: 'relation-challenged', at: '$.diagrams[0].view.base.group[0].paths[0]',
+      detail: 'parts: no contains fact joins the units of group src and the group it is drawn in, in what rule top-level-unit version 1 derived at the pinned revision; correct the nesting or its groups\' units' }]);
+    for (const state of ['withheld', 'unavailable'] as const) expect(baseNestingFindings(doc, bases, challenged, (value) => (value === 'src' ? state : 'admitted'))[0]!.detail).toBe(FIXED);
+    expect(baseNestingFindings(doc, bases, [{ ...challenged[0]!, decision: { state: 'unknown', reason: 'no-eligible-fact' } as never }], () => 'admitted')).toEqual([]);
+  });
+
+  it('a pre-v15 drawing keeps its bytes: a colon identity is still the notice the inert check gives it', async () => {
+    const doc = { ...draftOf([graphView('one', ['x:y', 'b'], ['r1']), graphView('two', ['x:y', 'b'], ['r1'])], V12),
+      model: { elements: [el('x:y', 'Ex', 'service'), el('b', 'Bee', 'service')], relationships: [rel('r1', 'x:y', 'b', 'calls', 'calls')] } };
+    const { files } = await rendered(U, doc);
+    expect(files.get('index.html')).toContain('diagram could not be rendered inertly');
+    expect(files.get('index.html')).not.toContain('data-element="x:y"');
+  });
+});
+
+describe('R38 repairs: every derived-base finding screens its submitted identity (version 2.35)', () => {
+  const many = (): Pinned => pinnedTree({ 'README.md': TREE_A['README.md']!, ...Object.fromEntries(Array.from({ length: 60 }, (_, k) => [`p${k}/package.json`, pkg(`p${k}`)])) });
+  const cases = (): [string, () => Pinned, (id: string) => Doc, Doc][] => [
+    ['base-conflict', () => U, (id) => baseDraft([], [], [unitsGraph(id, { select: ['api/package.json', 'api/package.json'], restReason: 'R' })]),
+      { kind: 'base-conflict', at: '$.diagrams[0].view.base.select[1]', detail: ': a base element is selected, hidden, grouped or named at most once, and grouped or named only where shown' }],
+    ['base-root', () => D, (id) => baseDraft([el('repo', 'Repo box', 'system')], [], [dirsContain(id, { group: [{ element: 'repo', paths: ['.'] }] }, ['repo'])]),
+      { kind: 'base-root', at: '$.diagrams[0].view.base.group[0].paths[0]', detail: ': the repository root frames a containment of the directory map and is shown, never hidden or grouped' }],
+    ['base-group', () => U, (id) => baseDraft([el('runtime', 'Runtime', 'service')], [], [unitsContain(id, { group: [{ element: 'runtime', paths: ['api/package.json'] }] }, [])]),
+      { kind: 'base-group', at: '$.diagrams[0].view.base.group[0].element', detail: ': a group places base elements inside an element this view selects, at level 1 or 2' }],
+    ['base-size', many, (id) => baseDraft([], [], [unitsGraph(id, {})]), { kind: 'base-size', at: '$.diagrams[0].view.base', detail: ': a view shows one to 40 boxes, its base elements included' }],
+    ['base-label', () => U, (id) => baseDraft([el('api-el', 'API', 'service')], [], [unitsGraph(id, {}, ['api-el'])]), { kind: 'base-label', at: '$.diagrams[0].view.elements[0]', detail: `: ${LABEL_DETAIL}` }],
+    ['containment-flat', () => U, (id) => baseDraft([], [], [unitsContain(id, { select: ['api/package.json', 'web/package.json'], restReason: 'R' })]),
+      { kind: 'containment-flat', at: '$.diagrams[0].view.elements', detail: ': a containment nests at least one group in another' }],
+    ['field-version', () => U, (id) => { const doc = baseDraft([el('a', 'Alpha', 'service')], [], [unitsGraph(id, {}, ['a'])], V14); return doc; },
+      { kind: 'field-version', at: '$.diagrams[0].view.base', detail: ': `base` needs draft schema polaris-dossier-local-draft-v15' }],
+  ];
+  for (const [kind, tree, doc, finding] of cases()) {
+    it(`${kind}: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike`, async () => {
+      const pinned = tree();
+      const admitted = await screenedCheck(pinned, doc('figa'), fabricated([], []));
+      expect(admitted.report).toContainEqual({ ...finding, detail: `figa${finding.detail}` });
+      expect(admitted.record).toContainEqual({ ...finding, detail: `figa${finding.detail}` });
+      for (const screen of [fabricated(['figw'], []), fabricated([], ['figw'])]) {
+        const out = await screenedCheck(pinned, doc('figw'), screen);
+        expect(out.report).toContainEqual({ ...finding, detail: FIXED });
+        expect(out.record).toContainEqual({ ...finding, detail: FIXED });
+        expect(JSON.stringify(out)).not.toContain(`figw${finding.detail}`);
+      }
+    });
+  }
+
+  it('a nine-child root is a view-shape finding over the expanded base, its detail screened', async () => {
+    const nine = pinnedTree({ 'README.md': TREE_A['README.md']!, ...Object.fromEntries(Array.from({ length: 9 }, (_, k) => [`d${k}/x.md`, 'x\n'])) });
+    const finding = { kind: 'view-shape', at: '$.diagrams[0].view.elements', detail: 'figa: a containment view shows one to five outermost elements and at most eight inside any one' };
+    expect((await screenedCheck(nine, baseDraft([], [], [dirsContain('figa', {})]), fabricated([], []))).report).toEqual([finding]);
+    expect((await screenedCheck(nine, baseDraft([], [], [dirsContain('figw', {})]), fabricated([], ['figw']))).report).toEqual([{ ...finding, detail: FIXED }]);
+  });
+
+  it('a base end that names nothing is a base-reference at the relationship\'s end, `model:`, screened by its path', async () => {
+    const doc = (end: string) => baseDraft([], [rel('r1', { map: 'units', path: end } as never, { map: 'units', path: 'api/package.json' } as never, 'calls', 'calls')], [unitsGraph('pkgs', {}, [], ['r1'])]);
+    expect((await screenedCheck(U, doc('nope/package.json'), fabricated([], []))).report[0]).toEqual({ kind: 'base-reference', at: '$.model.relationships[0].from', detail: 'model: nope/package.json names no element of the unit map at this revision' });
+    expect((await screenedCheck(U, doc('nope/package.json'), fabricated(['nope/package.json'], []))).report[0]).toEqual({ kind: 'base-reference', at: '$.model.relationships[0].from', detail: REFERENCE_FIXED });
+  });
+
+  it('a v14 base end is a field-version finding at the end, screened by the relationship identity', async () => {
+    const doc = (id: string) => baseDraft([el('a', 'Alpha', 'service')], [rel(id, { map: 'units', path: 'api/package.json' } as never, 'a', 'calls', 'calls')], [graphView('one', ['a'], [id])], V14);
+    expect((await screenedCheck(U, doc('rela'), fabricated([], []))).report).toContainEqual({ kind: 'field-version', at: '$.model.relationships[0].from', detail: 'rela: a base end needs draft schema polaris-dossier-local-draft-v15' });
+    expect((await screenedCheck(U, doc('relw'), fabricated([], ['relw']))).report).toContainEqual({ kind: 'field-version', at: '$.model.relationships[0].from', detail: FIXED });
+  });
+});
+
+describe('R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35)', () => {
+  const unit = (manifest: string, k: number, name: string) => ({ path: `${manifest}#${k}`, factId: `_manifest-${name}`, label: name, name, compared: name, epistemic: 'inferred' as const,
+    unknownReason: null, unit: { kind: 'package-manifest' as const, path: manifest }, manifest });
+  const MAPS: BaseMaps = { units: { map: 'units', elements: [unit('two/Cargo.toml', 1, 'first'), unit('two/Cargo.toml', 2, 'second'), unit('api/package.json', 1, 'api')], contains: [],
+    notListed: { facts: 0, unknownFiles: 0, secretPathsLeftOut: 0 } } };
+  const view = (base: Doc, elements: string[] = []): Doc => unitsGraph('pkgs', base, elements);
+  const doc = (diagram: Doc, model: Doc = { elements: [el('runtime', 'Runtime', 'service')], relationships: [] }): Doc => ({ schemaVersion: V15, model, diagrams: [diagram] });
+  const run = (diagram: Doc, admit: Admit = () => 'admitted', hidden: (p: string) => boolean = () => false) => viewBaseFindings(doc(diagram), diagram, 0, MAPS, new Set(), admit, hidden).findings;
+  it('One manifest declaring two packages: a display name naming both is a base-reference; `#2` and `hide` are not', () => {
+    expect(run(view({ names: [nameOf('two/Cargo.toml', 'Both')] }))).toEqual([{ kind: 'base-reference', at: '$.diagrams[0].view.base.names[0].path',
+      detail: 'pkgs: two/Cargo.toml names 2 elements of the unit map; a display name or an arrow end names one, as two/Cargo.toml#<k>' }]);
+    expect(run(view({ names: [nameOf('two/Cargo.toml#2', 'Second one')] }))).toEqual([]);
+    expect(run(view({ hide: [{ paths: ['two/Cargo.toml'], reason: 'Rust' }] }))).toEqual([]);
+  });
+  it('a path naming nothing, in select, hide, group and names: admitted literal; withheld, unavailable or a left-out path the fixed detail', () => {
+    const absent = (base: Doc, at: string) => {
+      const diagram = containView('pkgs', ['runtime'], { view: { elements: ['runtime'], base: { map: 'units', ...base } } });
+      expect(run(diagram)).toContainEqual({ kind: 'base-reference', at, detail: 'pkgs: gone/package.json names no element of the unit map at this revision' });
+      expect(run(diagram, (value) => (value === 'gone/package.json' ? 'withheld' : 'admitted'))).toContainEqual({ kind: 'base-reference', at, detail: REFERENCE_FIXED });
+      expect(run(diagram, (value) => (value === 'gone/package.json' ? 'unavailable' : 'admitted'))).toContainEqual({ kind: 'base-reference', at, detail: REFERENCE_FIXED });
+      expect(run(diagram, () => 'admitted', (p) => p === 'gone/package.json')).toContainEqual({ kind: 'base-reference', at, detail: REFERENCE_FIXED });
+    };
+    absent({ select: ['gone/package.json'], restReason: 'R' }, '$.diagrams[0].view.base.select[0]');
+    absent({ hide: [{ paths: ['gone/package.json'], reason: 'R' }] }, '$.diagrams[0].view.base.hide[0].paths[0]');
+    absent({ group: [{ element: 'runtime', paths: ['gone/package.json'] }] }, '$.diagrams[0].view.base.group[0].paths[0]');
+    absent({ names: [nameOf('gone/package.json', 'Gone')] }, '$.diagrams[0].view.base.names[0].path');
+  });
+  it('a base end naming two elements or none, screened by its path and the evidence arm', () => {
+    const rels = (from: string): Doc => ({ elements: [], relationships: [rel('r1', { map: 'units', path: from } as never, { map: 'units', path: 'api/package.json' } as never, 'calls', 'calls')] });
+    const d = doc(view({}, []), rels('two/Cargo.toml'));
+    expect(baseEndFindings(d, MAPS, new Set(), () => 'admitted', () => false)).toEqual([{ kind: 'base-reference', at: '$.model.relationships[0].from',
+      detail: 'model: two/Cargo.toml names 2 elements of the unit map; a display name or an arrow end names one, as two/Cargo.toml#<k>' }]);
+    expect(baseEndFindings(doc(view({}), rels('gone/package.json')), MAPS, new Set(), () => 'admitted', (p) => p === 'gone/package.json')).toEqual([
+      { kind: 'base-reference', at: '$.model.relationships[0].from', detail: REFERENCE_FIXED }]);
+    expect(baseEndFindings(doc(view({}), rels('two/Cargo.toml#1')), MAPS, new Set(), () => 'admitted', () => false)).toEqual([]);
+  });
+  it('no base finding where the base already has a schema finding', () => {
+    const diagram = view({ hide: [{ paths: ['gone/package.json'] }] });
+    expect(viewBaseFindings(doc(diagram), diagram, 0, MAPS, new Set(['$.diagrams[0].view.base.hide[0].reason']), () => 'admitted', () => false)).toEqual({ findings: [], clear: false });
+  });
+  it('an element that names itself as its parent is a top-level group', () => {
+    expect([...selectedLevels({ model: { elements: [el('a', 'Alpha', 'service', { parent: 'a' }), el('b', 'Beta', 'service', { parent: 'a' })] } }, ['a', 'b'])]).toEqual([['a', 1], ['b', 2]]);
+  });
+  it('the display-name label arms: another name, and a selected element\'s label', () => {
+    expect(run(view({ names: [nameOf('api/package.json', 'Edge'), nameOf('two/Cargo.toml#1', 'edge ')] })).map(({ kind, at }) => `${kind} ${at}`))
+      .toEqual(['base-label $.diagrams[0].view.base.names[0].label', 'base-label $.diagrams[0].view.base.names[1].label']);
+    expect(run(view({ names: [nameOf('api/package.json', 'Runtime')] }, ['runtime'])).map(({ kind, at }) => `${kind} ${at}`))
+      .toEqual(['base-label $.diagrams[0].view.base.names[0].label']);
+  });
+});
+
+describe('R38 repairs: the base view lists\' bounds (version 2.35)', () => {
+  it('a base view\'s `elements` holds 0 to 40 and `relationships` 0 to 80', async () => {
+    const ids = (n: number, p: string) => Array.from({ length: n }, (_, k) => `${p}${k}`);
+    const els = ids(41, 'e').map((id) => el(id, `Element ${id}`, 'service'));
+    const rels = ids(81, 'r').map((id) => rel(id, 'e0', 'e1', 'calls', 'calls'));
+    const shape = async (elements: string[], relationships: string[]) => (await findingsOf(U, baseDraft(els, rels, [unitsGraph('pkgs', { select: ['api/package.json'], restReason: 'R' }, elements, relationships)])))
+      .findings.filter(({ kind }) => kind === 'schema');
+    expect(await shape(ids(41, 'e'), [])).toEqual([{ kind: 'schema', at: '$.diagrams[0].view.elements', detail: 'must hold 0 to 40 items; holds 41' }]);
+    expect(await shape([], ids(81, 'r'))).toEqual([{ kind: 'schema', at: '$.diagrams[0].view.relationships', detail: 'must hold 0 to 80 items; holds 81' }]);
+    expect(await shape(ids(40, 'e'), ids(80, 'r'))).toEqual([]);
+  });
+});
+
+describe('R38 repairs: the base\'s notices and reasons through a render (version 2.35)', () => {
+  it('Unknown base renders a notice: the tree cannot be listed at the render, and the machine member is three fields', async () => {
+    const { files, machine } = await rendered(D, baseDraft([], [], [dirsGraph('dirs', {})]), { openReader: unlistedAfter(2) });
+    expect(files.get('index.html')).toContain('<p class="figure-notice" data-epistemic="unknown" data-unknown-reason="source-uncaptured-or-unreachable">Not established. This figure starts from the Directory map, which is Unknown at this render: the pinned tree could not be listed. <a href="maps/directories.html">See the map</a>.</p>');
+    expect(files.get('index.html')).not.toContain('id="figure-dirs"');
+    expect(machine.figureStructures).toEqual([{ diagram: 'dirs', kind: 'boundary', page: 'index.html', base: { map: 'directories', established: false, reason: 'source-uncaptured-or-unreachable' } }]);
+  });
+
+  it('the late notice: the unit map not established at check, established at the render, and a path naming nothing', async () => {
+    const doc = baseDraft([], [], [unitsGraph('pkgs', { hide: [{ paths: ['nope/package.json'], reason: 'Gone' }] })]);
+    expect(await findingsOf(U, doc, { openReader: unlistedAfter(2) })).toEqual(PASSED);
+    const { files, machine } = await rendered(U, doc, {}, { openReader: unlistedAfter(2) });
+    expect(files.get('index.html')).toContain('<p class="figure-notice" data-epistemic="unknown" data-unknown-reason="source-uncaptured-or-unreachable">Not established. This figure starts from the Unit map, which this dossier\'s check could not read, and its base does not resolve against the map at this render. <a href="maps/units.html">See the map</a>.</p>');
+    expect(files.get('index.html')).not.toContain('nope/package.json');
+    expect(machine.figureStructures).toEqual([{ diagram: 'pkgs', kind: 'boundary', page: 'index.html', base: { map: 'units', established: false, reason: 'source-uncaptured-or-unreachable' } }]);
+  });
+
+  it('a finding at the render for a map check established is a rederive refusal, never the late notice', async () => {
+    const doc = baseDraft([], [], [unitsGraph('pkgs', { select: ['web/package.json'], restReason: 'Rest' })]);
+    const { run, result } = await checked(U, doc);
+    if (!result.ok || result.report.outcome !== 'passed') throw new Error('fixture');
+    const without = (options: PinnedObjectReaderOptions): PinnedObjectReader => {
+      const real = openPinnedObjectReader(options);
+      return new Proxy(real, { get: (target, key) => (key === 'listTree' ? async () => (await target.listTree()).filter((entry) => entry.path !== 'web/package.json')
+        : ((value) => (typeof value === 'function' ? value.bind(target) : value))(Reflect.get(target, key))) });
+    };
+    const out = await renderRun(run, { sources: sources(U.commit), now: () => LATER, probe: neverProbe, loadScreen: async () => SCREEN, renderer: renderLocalDossier, openReader: without });
+    expect(out.ok).toBe(false);
+    if (out.ok) return;
+    expect(out.refusal.stage).toBe('rederive');
+    expect(out.refusal.reasons).toEqual(['base view at $.diagrams[0]']);
+  });
+
+  it('a graph view of the directory map without the root draws no `contains` arrow', async () => {
+    const { machine } = await rendered(D, baseDraft([], [], [dirsGraph('dirs', { select: ['src', 'docs'], restReason: 'Rest' })]));
+    expect(machine.figureStructures[0].edges).toEqual([]);
+    expect(machine.figureStructures[0].nodes).toEqual([{ id: '_tree-unit-1', provenance: 'derived' }, { id: '_tree-unit-2', provenance: 'derived' }]);
+  });
+
+  it('a base end in machine.json is the fact it resolves to in the render\'s map, drawn or not', async () => {
+    const doc = baseDraft([], [rel('r1', { map: 'units', path: 'web/package.json' } as never, { map: 'units', path: 'api/package.json' } as never, 'calls', 'calls')],
+      [unitsGraph('pkgs', { select: ['web/package.json', 'api/package.json'], restReason: 'Rest' }, [], ['r1'])]);
+    const { machine } = await rendered(U, doc);
+    expect(machine.model.relationships[0]).toMatchObject({ id: 'r1', from: '_manifest-3', to: '_manifest-1' });
+  });
+
+  it('Hide and remainder reasons: an admitted reason byte for byte in both forms; an unclassifiable one refuses the figure, with no base member', async () => {
+    const reason = 'Tests & "fixtures" <kept>';
+    for (const base of [{ hide: [{ paths: ['docs/package.json'], reason }] }, { select: ['api/package.json'], restReason: reason }]) {
+      const { files, machine } = await rendered(U, baseDraft([], [], [unitsGraph('pkgs', base)]));
+      expect(figureOf(files.get('index.html')!, 'pkgs')).toContain('This dossier\'s reason: Tests &amp; &quot;fixtures&quot; &lt;kept&gt;</li>');
+      const member = machine.figureStructures[0].base;
+      expect([...member.hides, member.restReason].filter((entry: Doc | null) => entry !== null).map((entry: Doc) => entry.reason)).toEqual([reason]);
+    }
+    for (const base of [{ hide: [{ paths: ['docs/package.json'], reason: 'Unclassifiable' }] }, { select: ['api/package.json'], restReason: 'Unclassifiable' }]) {
+      const doc = baseDraft([], [], [unitsGraph('pkgs', base)]);
+      const { run, result } = await checked(U, doc);
+      if (!result.ok || result.report.outcome !== 'passed') throw new Error('fixture');
+      const out = await renderRun(run, { sources: sources(U.commit), now: () => LATER, probe: neverProbe, loadScreen: async () => fabricated([], ['Unclassifiable']), renderer: renderLocalDossier });
+      if (!out.ok) throw new Error(`render refused at ${out.refusal.stage}`);
+      const site = out.report.site;
+      const page = fs.readFileSync(path.join(site, 'index.html'), 'utf8');
+      const machine = JSON.parse(fs.readFileSync(path.join(site, 'machine.json'), 'utf8'));
+      expect(page).toContain('A reason this figure gives for what it leaves out could not be screened.');
+      expect(page).not.toContain('Unclassifiable');
+      expect(page).not.toContain('data-base-map=');
+      expect(JSON.stringify(machine.figureStructures ?? [])).not.toContain('"base"');
+    }
+  });
+
+  it('The screening boundary: a valid base figure beside a refused one keeps its tally, reason and identities, and the map page its bytes', async () => {
+    const doc = baseDraft([], [], [unitsGraph('ok', { hide: [{ paths: ['docs/package.json'], reason: 'Docs' }] }), unitsGraph('bad', { select: ['api/package.json'], restReason: 'ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghij' })]);
+    const { files, machine } = await rendered(U, doc);
+    const fig = figureOf(files.get('index.html')!, 'ok');
+    expect(fig).toContain('<li class="base-hidden" data-hidden-count="1">Not shown here: 1 package or module: docs. This dossier\'s reason: Docs</li>');
+    expect(fig).toContain('3 boxes and 0 arrows computed by Syzygy from the Unit map: 0 observed, 3 inferred, 0 unknown.');
+    expect(fig).toContain('data-manifest-id="_manifest-1"');
+    expect(files.get('index.html')).not.toContain('ghp_');
+    expect(machine.figureStructures.map((entry: Doc) => entry.diagram)).toEqual(['ok']);
+    const plain = await rendered(U, draftOf([], V11));
+    expect(files.get('maps/units.html')).toBe(plain.files.get('maps/units.html'));
+  });
+
+  it('Pruned view prints its chip through a render: 9 of 31 packages, 22 hidden under one reason', async () => {
+    const names = Array.from({ length: 31 }, (_, k) => `q${String(k + 1).padStart(2, '0')}`);
+    const tree = pinnedTree({ 'README.md': TREE_A['README.md']!, ...Object.fromEntries(names.map((name) => [`${name}/package.json`, pkg(name)])) });
+    const { files } = await rendered(tree, baseDraft([], [], [unitsGraph('pkgs', { hide: [{ paths: names.slice(9).map((name) => `${name}/package.json`), reason: 'Test fixtures and examples' }] })]));
+    const fig = figureOf(files.get('index.html')!, 'pkgs');
+    expect(fig).toContain('<p class="base-chip" data-visual-provenance="computed">Showing 9 of 31 packages and modules from the <a href="maps/units.html">Unit map</a>; 22 hidden by this dossier.</p>');
+    expect(fig).toContain('<li class="base-hidden" data-hidden-count="22">Not shown here: 22 packages and modules: q10, q11, q12, q13, q14, q15, q16, q17, q18, q19, q20, q21, and 10 more. This dossier\'s reason: Test fixtures and examples</li>');
+    expect(fig).toContain('9 boxes and 0 arrows computed by Syzygy from the Unit map: 0 observed, 9 inferred, 0 unknown.');
   });
 });

@@ -313,7 +313,9 @@ export type LocalTestNames =
 export interface LocalModel {
   readonly elements: readonly { readonly id: string; readonly type: string; readonly parent: string | null; readonly views: readonly string[] }[];
   readonly relationships: readonly {
-    readonly id: string; readonly from: string; readonly to: string; readonly relation: string; readonly basis: 'cited' | 'derived'; readonly views: readonly string[];
+    /** A base end (schema v15) names the fact identity it resolves to in the map the render derives, or null where that map is not
+     * established at the render or the path names no one element of it. */
+    readonly id: string; readonly from: string | null; readonly to: string | null; readonly relation: string; readonly basis: 'cited' | 'derived'; readonly views: readonly string[];
   }[];
 }
 

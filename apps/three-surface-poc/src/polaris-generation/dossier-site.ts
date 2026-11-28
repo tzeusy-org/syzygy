@@ -777,6 +777,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const baseIdAttrs = (map: LocalBase['map'], factId: string, unknownReason: string | null): string =>
     ` data-visual-provenance="computed" data-${map === 'directories' ? 'derived' : 'manifest'}-id="${escape(factId)}"${unknownReason === null ? '' : ` data-unknown-reason="${escape(unknownReason)}"`}`;
   const baseName = (base: Extract<LocalBase, { state: 'drawn' }>, factId: string) => base.names.find(name => name.factId === factId);
+  // Every fact identity a drawn base resolved: its shown elements and the record's `contains` facts joining the root to them.
+  const baseFacts = (base: Extract<LocalBase, { state: 'drawn' }>): ReadonlySet<string> =>
+    new Set(base.elements.flatMap(element => [element.factId, ...(element.contains === null ? [] : [element.contains.factId])]));
   // A shown base element's box: a double border, and its display name's line under it.
   const baseDecoration = (base: Extract<LocalBase, { state: 'drawn' }>, factId: string): BoxDecoration | undefined => {
     if (!base.elements.some(element => element.factId === factId)) return undefined;
@@ -852,8 +855,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const heldText = (id: string): string => held(id) === undefined ? '' : ` <span class="withheld-note">${escape(withheldWords(held(id)!))}</span>`;
     const heldAttrs = (id: string): string => held(id) === undefined ? '' : ' data-unknown-reason="excluded-content"';
     const drawnBase = based?.state === 'drawn' ? based : undefined;
-    // A base element or a base `contains` arrow: every identity Syzygy gives one starts with `_`, which no draft identity may.
-    const isBase = (id: string): boolean => drawnBase !== undefined && id.startsWith('_');
+    // A base element or a base `contains` arrow, by the fact identities the render resolved (R38 note 10).
+    const isBase = (id: string): boolean => drawnBase !== undefined && baseFacts(drawnBase).has(id);
     const baseElement = (id: string) => drawnBase?.elements.find(element => element.factId === id);
     const nodeList = d.nodes.map(n => { if (isBase(n.id)) { const element = baseElement(n.id)!; return baseItem(from, drawnBase!, n.id, element.label, n.epistemic, element.unknownReason); }
       const shown = asShown(from, n.id, index); return shown !== undefined ? `<li>${escape(n.label)}${shown}</li>` : claim('li', n.id, n.epistemic, `${escape(n.label)}${heldText(n.id)} ${mark(from, n.epistemic)} ${refs(from, n.sourceIds, n.id)}`, heldAttrs(n.id), held(n.id) === undefined ? null : 'excluded-content', held(n.id) === undefined ? undefined : { withheldSources: held(n.id)!.sources }); }).join('');
@@ -940,9 +943,15 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       for (const child of group.children) visit(child, group, level + 1);
     };
     for (const group of groups) visit(group, undefined, 1);
-    // A v15 containment's base groups (version 2.35): Syzygy's, by fact identity, which starts with `_` as no draft identity may.
+    // A v15 containment's base groups (version 2.35): Syzygy's, by the fact identities the render resolved.
     const based = baseOf(d.id), drawnBase = based?.state === 'drawn' ? based : undefined;
-    const isBase = (id: string): boolean => drawnBase !== undefined && id.startsWith('_');
+    const isBase = (id: string): boolean => drawnBase !== undefined && baseFacts(drawnBase).has(id);
+    // The root's nesting of a shown directory is the record's `contains` fact (version 2.35, R38 finding 1): stated in Syzygy's words with
+    // the fact's mark, as version 2.23 states a witnessed nesting, and carried as the nesting's witness.
+    const rootContains = (group: DraftContainmentGroup, parent: DraftContainmentGroup | undefined) =>
+      (drawnBase?.map === 'directories' && parent !== undefined && isBase(parent.id) && isBase(group.id) ? baseElement(group.id)?.contains ?? undefined : undefined);
+    const containsWitness = (fact: { readonly factId: string; readonly epistemic: EpistemicMarking }) => ({ state: fact.epistemic === 'observed' ? 'witnessed' : 'unknown',
+      reason: fact.epistemic === 'observed' ? null : 'fact-not-current', fact: fact.factId, rule: 'top-level-unit', ruleVersion: 1 });
     const baseElement = (id: string) => drawnBase?.elements.find(element => element.factId === id);
     const below = (group: DraftContainmentGroup): ContainmentGroupInput => ({ id: group.id, children: group.children.map(below), below: drawnBase !== undefined && baseDecoration(drawnBase, group.id)?.called !== undefined ? CALLED_HEIGHT : 0 });
     let svg: string, layout: ReturnType<typeof layoutContainment>;
@@ -960,6 +969,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       `${escape(group.label)}${parent === undefined ? '' : ` (in ${escape(parent.label)})`}${heldText(group.id)} ${mark(from, group.epistemic)} ${refs(from, group.sourceIds, group.id)}`,
       heldAttrs(group.id), held(group.id) === undefined ? null : 'excluded-content', held(group.id) === undefined ? undefined : { withheldSources: held(group.id)!.sources }); }).join('');
     const witnessed = preorder.flatMap(({ group, parent }) => {
+      const fact = rootContains(group, parent);
+      if (fact !== undefined) return [`<li${baseIdAttrs('directories', fact.factId, null)} data-epistemic="${fact.epistemic}">Repository root contains ${escape(baseElement(group.id)?.name ?? '')}. ${mark(from, fact.epistemic)} <span class="derived-mark">Derived by Syzygy</span></li>`];
       const relation = parent === undefined ? undefined : relationOf(group.id);
       return relation?.evidence === undefined ? [] : [`<li${witnessAttrs(relation)} data-epistemic="observed">${escape(parent!.label)} contains ${escape(group.label)}: <span class="derived-mark">Witnessed by Syzygy</span>`
         + `<span class="visually-hidden ev"> ${escape(`Evidence: label Observed; witnessed by fact ${relation.witness.fact} (${relation.evidence.factKind}), derived by Syzygy by rule ${relation.witness.rule} version ${relation.witness.ruleVersion} at revision ${relation.evidence.revision}; record sha256:${relation.evidence.recordSha256}.`)}</span></li>`];
@@ -968,7 +979,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const outlineCalled = (id: string): string => { const name = drawnBase === undefined || !isBase(id) ? undefined : baseName(drawnBase, id); return name === undefined ? '' : `, called ${escape(name.label)}`; };
     const outline = (group: DraftContainmentGroup): string =>
       `<li class="${group.epistemic}">${isBase(group.id) ? 'Syzygy: ' : ''}${escape(group.label)}${group.epistemic === 'unknown' ? ' ?' : ''}${outlineCalled(group.id)}${group.children.length === 0 ? '' : `<ul>${group.children.map(outline).join('')}</ul>`}</li>`;
-    const witnesses = preorder.filter(({ group, parent }) => parent !== undefined && relationOf(group.id)?.evidence !== undefined).length;
+    const witnesses = preorder.filter(({ group, parent }) => parent !== undefined && (rootContains(group, parent) !== undefined ? rootContains(group, parent)!.epistemic === 'observed'
+      : relationOf(group.id)?.evidence !== undefined)).length;
     const tallyHead = `${counted(preorder.length, 'group', 'groups')} in ${counted(layout.levels, 'level', 'levels')}`;
     const own = preorder.filter(({ group }) => !isBase(group.id));
     const tally = drawnBase === undefined ? figureLegend(preorder.map(({ group }) => group.epistemic), 0, 0, 'as marked', tallyHead)
@@ -982,7 +994,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     if (drawnBase !== undefined) basePages.add(from);
     figureStructures.push({ index, entry: { diagram: d.id, kind: CONTAINMENT_KIND, page: from, laidOutPx: layout.width,
       groups: preorder.map(({ group, parent, level }) => ({ id: group.id, parent: parent?.id ?? null, level, ...(drawnBase === undefined ? {} : { provenance: isBase(group.id) ? 'derived' : 'authored' }) })),
-      nestings: preorder.flatMap(({ group, parent }) => (parent === undefined ? [] : [{ parent: parent.id, child: group.id, witness: relationOf(group.id)?.witness ?? null }])),
+      nestings: preorder.flatMap(({ group, parent }) => (parent === undefined ? [] : [{ parent: parent.id, child: group.id,
+        witness: rootContains(group, parent) !== undefined ? containsWitness(rootContains(group, parent)!) : relationOf(group.id)?.witness ?? null }])),
       ...(drawnBase === undefined ? {} : { base: baseMachine(drawnBase, preorder.filter(({ group }) => isBase(group.id)).map(({ group }) => group.id), '') }) } });
     if (local !== undefined) figureHomes.push({ id: d.id, title: d.title, home: { page: from, fragment: `figure-${d.id}`, label: 'Figure' } });
     const ids = figureIds(index);

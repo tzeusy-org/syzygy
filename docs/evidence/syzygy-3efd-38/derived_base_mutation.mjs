@@ -2,7 +2,8 @@
 // Usage: node derived_base_mutation.mjs <worktree> <out.json> <scratch-dir> [--dry] [--only <id>,<id>]
 // Each mutant replaces one fragment that occurs exactly once in its file, runs the test files of its group, and restores the
 // source in `finally`. `--dry` only asserts that every fragment occurs exactly once. Never edit or commit while it runs.
-// Adapted from docs/evidence/syzygy-3efd-84/figure_plan_mutation.mjs: the same method, these files and mutants.
+// Adapted from docs/evidence/syzygy-3efd-84/figure_plan_mutation.mjs: the same method, these files and mutants. The `R38` mutants
+// (review R38 finding 5) cover the screening, evidence, base-end, nesting, render-arm and bound branches the review listed, and the repairs.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -28,6 +29,8 @@ const BRIEF = `${PKG}/brief.ts`;
 const SITE = `${APP}/dossier-site.ts`;
 const PAGE = `${APP}/dossier-base.ts`;
 const LAYOUT = `${APP}/diagram-layout.ts`;
+const RENDER = `${PKG}/render.ts`;
+const INERT = `${APP}/svg-inert.ts`;
 
 const SCENARIOS = `${PKG}/derived-base.test.ts`;
 const TESTS = {
@@ -41,6 +44,8 @@ const TESTS = {
   [SITE]: [SCENARIOS],
   [PAGE]: [`${APP}/dossier-base.test.ts`, SCENARIOS],
   [LAYOUT]: [SCENARIOS],
+  [RENDER]: [SCENARIOS],
+  [INERT]: [SCENARIOS, `${APP}/svg-inert.test.ts`],
 };
 const TIMEOUT_MS = 600_000;
 
@@ -87,6 +92,42 @@ const MUTANTS = [
   ['double-border-dropped', LAYOUT, "const inner = decoration?.double === true ? doubleRect(at.x, at.y, nodeWidth, NODE_HEIGHT) : '';", "const inner = '';"],
   ['called-line-dropped', LAYOUT, "const called = decoration?.called === undefined ? '' : calledLine(decoration.called, at.x + nodeWidth / 2, at.y + NODE_HEIGHT + 16, escape);", "const called = '';"],
   ['brief-paragraph-dropped', BRIEF, "    DERIVED_BASE_PARAGRAPH,\n", ""],
+  // --- R38 finding 5: the screened details of the five other kinds
+  ['r38-conflict-unscreened', BASE, "detail: screened(admit, [name], `${name}: a base element is selected, hidden, grouped or named at most once, and grouped or named only where shown`, BASE_DETAIL_UNAVAILABLE) });", "detail: `${name}: a base element is selected, hidden, grouped or named at most once, and grouped or named only where shown` });"],
+  ['r38-root-unscreened', BASE, "const rootDetail = screened(admit, [name], `${name}: the repository root frames a containment of the directory map and is shown, never hidden or grouped`, BASE_DETAIL_UNAVAILABLE);", "const rootDetail = `${name}: the repository root frames a containment of the directory map and is shown, never hidden or grouped`;"],
+  ['r38-group-unscreened', BASE, "detail: screened(admit, [name], `${name}: a group places base elements inside an element this view selects, at level 1 or 2`, BASE_DETAIL_UNAVAILABLE) });", "detail: `${name}: a group places base elements inside an element this view selects, at level 1 or 2` });"],
+  ['r38-size-unscreened', BASE, "detail: screened(admit, [name], `${name}: a view shows one to 40 boxes, its base elements included`, BASE_DETAIL_UNAVAILABLE) });", "detail: `${name}: a view shows one to 40 boxes, its base elements included` });"],
+  ['r38-label-unscreened', BASE, "const labelDetail = screened(admit, [name], `${name}: the draft's words never take the name of an element Syzygy draws in the same figure`, BASE_DETAIL_UNAVAILABLE);", "const labelDetail = `${name}: the draft's words never take the name of an element Syzygy draws in the same figure`;"],
+  ['r38-view-detail-unscreened', BASE, "export const screenedViewDetail = (admit: Admit, name: string, detail: string): string => screened(admit, [name], detail, BASE_DETAIL_UNAVAILABLE);", "export const screenedViewDetail = (admit: Admit, name: string, detail: string): string => detail;"],
+  ['r38-field-version-unscreened', BASE, "detail: screened(admit, [name], `${name}: \\`${BASE_FIELD}\\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V15}`, BASE_DETAIL_UNAVAILABLE) });", "detail: `${name}: \\`${BASE_FIELD}\\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V15}` });"],
+  ['r38-end-field-version-unscreened', BASE, "detail: screened(admit, [id], `${id}: a base end needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V15}`, BASE_DETAIL_UNAVAILABLE) });", "detail: `${id}: a base end needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V15}` });"],
+  // --- the evidence arm, the screen's failure, base ends, the ambiguous arm
+  ['r38-view-evidence-ignored', BASE, "const evidence = !hidden(entry.path);", "const evidence = true;"],
+  ['r38-end-evidence-ignored', BASE, "const evidence = !hidden(path);", "const evidence = true;"],
+  ['r38-admit-throw-admitted', BASE, "      return 'unavailable';\n", "      return 'admitted';\n"],
+  ['r38-base-ends-silent', BASE, "  if (!hasBaseForm(doc['schemaVersion'])) return [];\n  const model = isRecord(doc[MODEL_FIELD]) ? doc[MODEL_FIELD] : {};", "  return [];\n  const model = isRecord(doc[MODEL_FIELD]) ? doc[MODEL_FIELD] : {};"],
+  ['r38-ambiguous-ignored', BASE, "if (many && named.length > 1) {", "if (false) {"],
+  ['r38-end-ambiguous-ignored', BASE, "      else if (named.length > 1) out.push(", "      else if (false) out.push("],
+  ['r38-nesting-challenge-ignored', BASE, "if (base === undefined || decision.state !== 'challenged') continue;", "if (true) continue;"],
+  // --- the render's arms and the bounds
+  ['r38-unknown-arm-drawn', BASE, "if (map === undefined) { pending.set(id, { state: 'unknown', map: base.map }); return; }", "if (map === undefined) return;"],
+  ['r38-late-arm-drawn', BASE, "if (late.has(i)) { pending.set(id, { state: 'unresolved', map: base.map }); return; }", ""],
+  ['r38-reason-unavailable-drawn', BASE, "if (screened.includes('unavailable')) { refused.set(i, BASE_REASON_UNAVAILABLE); return; }", ""],
+  ['r38-bounds-not-rewritten', BASE, "const [low, high] = bounded[2] === 'elements' ? BASE_BOUNDS.viewElements : BASE_BOUNDS.viewRelationships;", "const [low, high] = bounded[2] === 'elements' ? [1, 40] : [1, 80];"],
+  ['r38-root-hide-group-ignored', BASE, "if ((entry.list === 'hide' || entry.list === 'group') && resolveBasePath(map, entry.path).includes(root)) findings.push(", "if (false) findings.push("],
+  ['r38-label-other-names-ignored', BASE, "if (baseNames.has(key) || selectedLabels.has(key) || another) findings.push(", "if (baseNames.has(key)) findings.push("],
+  ['r38-self-parent-dropped', BASE, "if (parent === undefined || !chosen.has(parent) || parent === id) visit(id, 1);", "if (parent === undefined || !chosen.has(parent)) visit(id, 1);"],
+  ['r38-touches-never', BASE, "const touches = (at: string, schemaPaths: ReadonlySet<string>): boolean => [...schemaPaths].some(", "const touches = (at: string, schemaPaths: ReadonlySet<string>): boolean => false && [...schemaPaths].some("],
+  ['r38-contains-without-root', MODEL, "const containsEdges = base === undefined || rootFact === undefined || !shownFacts.has(rootFact) ? []", "const containsEdges = base === undefined || rootFact === undefined ? []"],
+  // --- the R38 repairs
+  ['r38-grouped-decisions-dropped', RENDER, "...decisions.nestings.filter(({ id }) => !id.startsWith('_') || grouped.has(id))", "...decisions.nestings.filter(({ id }) => !id.startsWith('_'))"],
+  ['r38-root-contains-unstated', SITE, "if (fact !== undefined) return [`<li", "if (false) return [`<li"],
+  ['r38-root-contains-no-witness', SITE, "witness: rootContains(group, parent) !== undefined ? containsWitness(rootContains(group, parent)!) : relationOf(group.id)?.witness ?? null }])),", "witness: relationOf(group.id)?.witness ?? null }])),"],
+  ['r38-colon-everywhere', INERT, "if (!(name === 'data-name' ? NAME_VALUE : VALUE).test(value)) unsafe();", "if (!(name === 'data-name' ? NAME_VALUE : /^[A-Za-z0-9 #().,:_-]*$/u).test(value)) unsafe();"],
+  ['r38-late-not-disagreement', RENDER, "return map !== undefined && established[map]; }).sort((a, b) => a - b);", "return false; }).sort((a, b) => a - b);"],
+  ['r38-units-always-established', RENDER, "units = isRecord(member) && member['state'] === 'derived';", "units = true;"],
+  ['r38-end-unresolved', RENDER, "return named.length === 1 ? map!.elements[named[0]!]!.factId : null;", "return null;"],
+  ['r38-base-mark-from-draft', RENDER, "baseMarks.get(text(value['id']) ?? '') ?? (", "("],
 ].filter(([id]) => only === null || only.has(id));
 
 // A mutant no test can kill, with the reason; recorded, never run and never counted as killed.

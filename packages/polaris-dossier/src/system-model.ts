@@ -144,7 +144,7 @@ export function expandModel(doc: Doc, bases: ReadonlyMap<number, ResolvedBase> =
 
 /** The model a render hands the site (version 2.24): each element and relationship in model order, with the diagrams whose view selects
  * it, in diagram order. A render follows a passing check, so every identity, type and relation here is the schema's. */
-export function localModelOf(doc: Doc, baseEnd: (end: Doc) => string = () => ''): LocalModel {
+export function localModelOf(doc: Doc, baseEnd: (end: Doc) => string | null = () => null): LocalModel {
   const index = modelIndex(doc);
   const selecting = (pick: (lists: ReturnType<typeof viewLists>) => readonly string[], id: string): string[] => list(doc['diagrams']).flatMap((diagram) => (
     isRecord(diagram) && isViewKind(diagram) && isRecord(diagram[VIEW_FIELD]) && pick(viewLists(diagram)).includes(id) && typeof diagram['id'] === 'string' ? [diagram['id']] : []));
@@ -156,7 +156,7 @@ export function localModelOf(doc: Doc, baseEnd: (end: Doc) => string = () => '')
     relationships: index.relationships.map(({ relationship, derived }) => {
       const id = text(relationship['id']) ?? '';
       // A base end (version 2.35) is written as the fact identity it resolves to at this render, never as the path the draft wrote.
-      const end = (value: unknown): string => (isBaseEnd(value) ? baseEnd(value) : text(value) ?? '');
+      const end = (value: unknown): string | null => (isBaseEnd(value) ? baseEnd(value) : text(value) ?? '');
       return { id, from: end(relationship['from']), to: end(relationship['to']), relation: text(relationship['relation']) ?? '', basis: derived ? 'derived' as const : 'cited' as const,
         views: selecting((lists) => lists.relationships, id) };
     }),
