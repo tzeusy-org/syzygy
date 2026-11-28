@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""syzygy-5dhm.26: build REQ-polaris-generation-033 version 2.41 from version 2.31's bytes.
+"""syzygy-5dhm.26: build REQ-polaris-generation-033 version 2.45 from version 2.31's bytes.
 
 Usage: session_usage_build_spec.py <worktree> <out>
 Reads openspec/changes/dossier-step-measures/proposed/polaris-generation/spec.md (version 2.31, A-310) and writes the successor: the
@@ -16,8 +16,8 @@ OLD_TITLE = '# Dossier close timings and review round counts\n'
 NEW_TITLE = '# Dossier session usage and the cost line\n'
 OLD_BANNER = ('Candidate version 2.31. One MODIFIED requirement, REQ-polaris-generation-033, after scripted benchmark grading version 2.30. '
               'A reviewed source, its agent adoption row and its version tag establish applicability.\n')
-NEW_BANNER = ('Candidate version 2.41. One MODIFIED requirement, REQ-polaris-generation-033, after close step measures version 2.31 (A-310). '
-              'It binds through its agent adoption row and the annotated tag `polaris-dossier-session-usage-v2.41`. It adds the session usage '
+NEW_BANNER = ('Candidate version 2.45. One MODIFIED requirement, REQ-polaris-generation-033, after close step measures version 2.31 (A-310). '
+              'It binds through its agent adoption row and the annotated tag `polaris-dossier-session-usage-v2.45`. It adds the session usage '
               'Syzygy reads from a launched run\'s own transcripts to the Execution Record, and one cost line to close, status and the review '
               'page; it changes no gate, no check and no rendered byte outside the review page\'s review-status region.\n')
 
@@ -25,7 +25,7 @@ ANCHOR = 'For reviewer rounds, tally fidelity and design separately.'
 
 PARAGRAPHS = [
     # Session usage in the Execution Record.
-    'Since version 2.41, close SHALL also write a `sessionUsage` member of `record.json`, read by Syzygy at close and never typed by the '
+    'Since version 2.45, close SHALL also write a `sessionUsage` member of `record.json`, read by Syzygy at close and never typed by the '
     'operator. For a run whose launched marker is absent it SHALL be Unknown as a whole with the fixed reason `operator-started`, and for '
     'one whose marker cannot be read with `launched-marker-unreadable`: Syzygy attributes no transcript to a session it did not start. For '
     'a launched run it SHALL carry one row for each role the supervisor starts, in the order author, inventory, fidelity, design, read from '
@@ -79,7 +79,7 @@ SCENARIOS = '''
 
 - **WHEN** a run is rendered and closed
 - **THEN** the review page's review-status region carries the cost line and no other page carries it
-- **AND** status gives the closed record's cost line, `not recorded` for a record closed before version 2.41, and before close the line read then'''
+- **AND** status gives the closed record's cost line, `not recorded` for a record closed before version 2.45, and before close the line read then'''
 
 BULLET_ANCHOR = '- **Case, oracle and falsifier (close step measures):**'
 BULLET = ('- **Case, oracle and falsifier (session usage):** Synthetic agent homes whose transcripts carry token counts and instants '

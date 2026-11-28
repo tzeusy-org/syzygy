@@ -32,7 +32,7 @@ import { costLine, sessionUsage } from './session-usage.js';
  * recorded and that Syzygy cannot observe it. Everything else the record carries from the run directory (the configuration, the brief's
  * execution rule, the agent's reported commands, the step instants and the step measures derived from the same read, the breach log) is a stored record within the agent sessions' write
  * reach, and Inferred. The record copies no file body: no brief, prompt or transcript body enters it, only each stored file's digest.
- * Since version 2.41 (syzygy-5dhm.26) the record also carries `sessionUsage`: for a launched run, each role's token counts, model
+ * Since version 2.45 (syzygy-5dhm.26) the record also carries `sessionUsage`: for a launched run, each role's token counts, model
  * responses and span, read by Syzygy from the agent tool's own transcripts in the home Syzygy gave that session, with a run total, all
  * Inferred because each session can write its home; for a run the operator started, Unknown (`session-usage.ts`). Only numbers and fixed
  * reasons enter it. The operator's declared figure and the step measures' `toolOwnedUsage` keep their meaning: a transcript is no receipt.
@@ -84,7 +84,7 @@ export interface CloseReport {
   readonly record: string;
   readonly closedAt: string;
   readonly usage: AgentUsage;
-  /** The one cost line, from the session usage this record carries (version 2.41). */
+  /** The one cost line, from the session usage this record carries (version 2.45). */
   readonly cost: string;
   readonly credential: CredentialStepResult;
   readonly storedFiles: number;

@@ -876,17 +876,17 @@ STEP_MEASURES_SUBJECTS = {
     STEP_MEASURES_SPEC: "f7ff5706c26b937d991e24183d5dcb29091fefe580b066ccbfc32540fde7ea05",
 }
 STEP_MEASURES_BOUND_PARTS = len(STEP_MEASURES_SUBJECTS)
-# The v2.41 session usage and cost line (syzygy-5dhm.26): one MODIFIED REQ-polaris-generation-033
+# The v2.45 session usage and cost line (syzygy-5dhm.26): one MODIFIED REQ-polaris-generation-033
 # after the v2.31 close step measures, adopted by an agent row and its version tag.
 SESSION_USAGE_CHANGE = "dossier-session-usage"
 SESSION_USAGE_HOME = f"{CHANGES}/{SESSION_USAGE_CHANGE}"
 SESSION_USAGE_SPEC = f"{SESSION_USAGE_HOME}/proposed/polaris-generation/spec.md"
 SESSION_USAGE_UNION = f"{SESSION_USAGE_HOME}/GOVERNING-DEPENDENCIES.json"
-SESSION_USAGE_TAG = "polaris-dossier-session-usage-v2.41"
-SESSION_USAGE_STATUS_PREFIX = f"[Session usage amendment 2.41]({SESSION_USAGE_HOME})"
+SESSION_USAGE_TAG = "polaris-dossier-session-usage-v2.45"
+SESSION_USAGE_STATUS_PREFIX = f"[Session usage amendment 2.45]({SESSION_USAGE_HOME})"
 SESSION_USAGE_REPLACES = (POLARIS_ID + "033",)
 SESSION_USAGE_SUBJECTS = {
-    SESSION_USAGE_SPEC: "756108258cf7321d56f0edc282e283fec5b1c32a11c9327ba633b07312bb0c81",
+    SESSION_USAGE_SPEC: "e0de4aa4a0667fae7bbb4dc6cf86bb053ea3bab8211fefab025ebcdf52c1f826",
 }
 SESSION_USAGE_BOUND_PARTS = len(SESSION_USAGE_SUBJECTS)
 # The v2.28 coverage-hold amendment (syzygy-5dhm.29): one MODIFIED
@@ -3367,7 +3367,7 @@ def session_usage_binding(root):
     return _reviewed_version_binding(
         root, session_usage_rows(root), session_usage_disposition,
         version_tag=SESSION_USAGE_TAG, subjects_map=SESSION_USAGE_SUBJECTS, spec=SESSION_USAGE_SPEC,
-        predecessor=step_measures_binding, predecessor_label="v2.31 close measures", version="v2.41",
+        predecessor=step_measures_binding, predecessor_label="v2.31 close measures", version="v2.45",
         label="dossier session usage",
     )
 
@@ -5223,7 +5223,7 @@ def check_outcomes(root, report):
     if step_measures_retired_by:
         retirement += f"; v2.31 inactive by {step_measures_retired_by}"
     if session_usage_retired_by:
-        retirement += f"; v2.41 inactive by {session_usage_retired_by}"
+        retirement += f"; v2.45 inactive by {session_usage_retired_by}"
     if readmit_retired_by:
         retirement += f"; v2.13 inactive by {readmit_retired_by}"
     report.add("R1", "terminal outcome for every child", records, r1,
@@ -7996,17 +7996,17 @@ def check_routes(root, pop, report):
         examined += 2
         if not any(Path(AGENT_ADOPTIONS).name in line and SESSION_USAGE_TAG in line
                    for line in rows.get(SESSION_USAGE_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` does not route dossier session usage v2.41 "
+            findings.append(f"`{OPENSPEC_README}` does not route dossier session usage v2.45 "
                             f"to `{AGENT_ADOPTIONS}` and its version tag")
         identity = session_usage_rows(root)[0][0]
         if AGENT_ADOPTIONS not in status or session_usage_fields != [f"{SESSION_USAGE_STATUS_PREFIX} is agent-adopted in {identity}."]:
-            findings.append(f"`{STATUS}` does not route dossier session usage v2.41 and its adoption {identity}")
+            findings.append(f"`{STATUS}` does not route dossier session usage v2.45 and its adoption {identity}")
     elif SESSION_USAGE_CHANGE in changes:
         examined += 2
         if any("is agent-adopted" in field for field in session_usage_fields):
-            findings.append(f"`{STATUS}` calls dossier session usage v2.41 adopted while it is not in force")
+            findings.append(f"`{STATUS}` calls dossier session usage v2.45 adopted while it is not in force")
         if any("Agent adoption" in line for line in rows.get(SESSION_USAGE_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` calls dossier session usage v2.41 adopted while it is not in force")
+            findings.append(f"`{OPENSPEC_README}` calls dossier session usage v2.45 adopted while it is not in force")
     covhold_amendment, _records, _subjects = covhold_binding(root)
     covhold_fields = [line.strip() for line in visible_route_lines(status)
                      if line.strip().startswith(COVHOLD_STATUS_PREFIX)]

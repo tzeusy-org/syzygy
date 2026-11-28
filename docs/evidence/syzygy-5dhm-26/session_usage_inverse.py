@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""syzygy-5dhm.26: recover REQ-polaris-generation-033 version 2.31 from version 2.41's bytes, and compare.
+"""syzygy-5dhm.26: recover REQ-polaris-generation-033 version 2.31 from version 2.45's bytes, and compare.
 
 Usage: session_usage_inverse.py <worktree>
 Removes each addition session_usage_build_spec.py makes (its literals, imported from it), asserting each is found exactly once, restores

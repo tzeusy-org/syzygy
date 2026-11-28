@@ -5,7 +5,7 @@ import { tempDir } from '@syzygy/test-kit';
 import { writeLaunchedMarker } from './launched.js';
 import { costLine, grouped, isSessionUsage, sessionUsage, spanWords } from './session-usage.js';
 
-// REQ-polaris-generation-033 version 2.41 (syzygy-5dhm.26): per-session usage read from the agent tool's own transcripts in each launched
+// REQ-polaris-generation-033 version 2.45 (syzygy-5dhm.26): per-session usage read from the agent tool's own transcripts in each launched
 // session's private home, a run total and the one cost line. Every expected figure below is a literal fixed before the code ran.
 
 type Doc = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -66,7 +66,7 @@ beforeEach(() => {
   fs.mkdirSync(run);
 });
 
-describe('session usage (REQ-polaris-generation-033 v2.41)', () => {
+describe('session usage (REQ-polaris-generation-033 v2.45)', () => {
   it('reads each launched session\'s literal figures, a run total and the cost line, copying no text', () => {
     fixture();
     const read = sessionUsage(run);
