@@ -1,0 +1,47 @@
+{
+  "generated": "Union of proposed/polaris-generation/spec.md per-requirement warrants; no second normative declaration",
+  "warrants": {
+    "doctrine": [
+      "SEC-2",
+      "SEC-3",
+      "SEC-4",
+      "SEC-5",
+      "VIS-1",
+      "VIS-2",
+      "VIS-4",
+      "VIS-6",
+      "VIS-7"
+    ],
+    "contracts": [
+      "RFC1-2",
+      "RFC2-13",
+      "RFC3-30",
+      "RFC3-7",
+      "RFC4-2",
+      "RFC4-3",
+      "RFC4-4",
+      "RFC5-11",
+      "RFC5-12",
+      "RFC5-13",
+      "RFC5-14",
+      "RFC5-15",
+      "RFC5-16",
+      "RFC5-17",
+      "RFC5-25"
+    ],
+    "policies": [
+      "CC-REV-2",
+      "CC-SPEC-2",
+      "CC-SPEC-3",
+      "CC-SPEC-4"
+    ],
+    "decisions": [
+      "GOVERNANCE-SIMPLIFICATION-D10"
+    ],
+    "topology": [],
+    "parent_requirements": [
+      "REQ-polaris-generation-033",
+      "REQ-polaris-generation-046"
+    ]
+  }
+}
