@@ -81,7 +81,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Effect on bytes
 
-[Inferred] As `design.md` D3 states: none. The brief already issues the corrected paragraph (`WALK_PARAGRAPH`, asserted equal by the build script) and the walk layer already takes the pointer over every box (`.walk-node{{…pointer-events:auto…}}`), so no finding, check record, `machine.json`, `dossier.json`, page, brief, record or provider-mode byte moves.
+[Inferred] As `design.md` D4 states: none. The brief already issues the corrected paragraph (`WALK_PARAGRAPH`, asserted equal by the build script) and the walk layer already takes the pointer over every box (`.walk-node{{…pointer-events:auto…}}`), so no finding, check record, `machine.json`, `dossier.json`, page, brief, record or provider-mode byte moves.
 '''
 (W / 'openspec/changes/dossier-walk-errata/SEMANTIC-DELTA.md').write_text(out, encoding='utf-8')
 print('changed', len(changed), 'kept', kept, 'scenarios', len(scen))

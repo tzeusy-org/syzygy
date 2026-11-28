@@ -15,16 +15,16 @@
 
 - The brief v24 paragraph is quoted with bare quotation marks, byte-equal to `WALK_PARAGRAPH` in `packages/polaris-dossier/src/brief.ts`. One sentence records that 2.40 to 2.51 wrote an escape that no brief issued.
 - One sentence after the walk rendering paragraph states the following:
-  - every box of a walk's layer takes the pointer, so a walked figure's drawing shows no per-node tooltip under it;
+  - as the walk style rules of 2.40 make every box of a walk's layer take the pointer, a walked figure's drawing shows no per-node tooltip under it;
   - why that trade-off is kept;
-  - where the tooltip's label and marking stay visible;
-  - that a figure with no walk keeps its tooltips.
-- No scenario is added: the brief paragraph and the walk style rules are already pinned by literal tests (design D3).
+  - what the drawing still shows (the marking, and the label or its shortened start), and that the full label and marking stay in the figure's list behind its disclosure;
+  - that a figure with no walk keeps its tooltips, save over a 2.50 zoom link's mark.
+- No scenario is added: the brief paragraph and the walk style rules are already pinned by literal tests (design D4, D5).
 
 ## Non-goals
 
 [Inferred] The following are left out:
-- narrowing the pointer to the walked boxes, or to boxes with content (design D2 says why);
+- narrowing the pointer to the walked boxes, or to boxes with content (design D3 says why);
 - a tooltip of the layer's own, such as a `title` on each box or link;
 - any brief, draft schema or page byte;
 - the other R88 residuals (the 1048-px scenario, the unreachable link arm, the browser test's scripts), which are test-harness matters and not statements of the spec.

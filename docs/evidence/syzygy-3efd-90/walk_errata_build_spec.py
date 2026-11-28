@@ -5,9 +5,9 @@ Built from the walk advice 2.51 bytes by anchored edits; every edit asserts its 
 Usage: walk_errata_build_spec.py <worktree> <out>.
 
 1. The brief v24 paragraph is quoted with bare quotation marks, the bytes `brief.ts` issues (asserted here against
-   `WALK_PARAGRAPH`), where 2.40 wrote a backslash before each of twelve (design.md D1).
+   `WALK_PARAGRAPH`), where 2.40 wrote a backslash before each of twelve (design.md D2).
 2. Every walk box takes the pointer, so a walked figure's drawing shows no per-node tooltip under the pointer: the
-   trade-off is accepted and stated, and no code changes (design.md D2).
+   trade-off is accepted and stated, and no code changes (design.md D3).
 """
 import pathlib
 import sys
@@ -15,7 +15,12 @@ import sys
 V = '2.53'
 W = pathlib.Path(sys.argv[1])
 out = pathlib.Path(sys.argv[2])
+# The predecessor: its path, the start of its title line, its version and the change name the preamble gives it. A rebind
+# over another predecessor (design.md D1) changes these four, and nothing else in this script.
 PREDECESSOR = 'openspec/changes/dossier-walk-advice/proposed/polaris-generation/spec.md'
+PRED_TITLE = '# Dossier walk advice'
+PRED_VERSION = '2.51'
+PRED_NAME = 'walk advice'
 src = (W / PREDECESSOR).read_text(encoding='utf-8')
 text = src
 BS = chr(0x5c)
@@ -30,12 +35,12 @@ def replace(old, new):
 
 
 lines = text.split('\n')
-assert lines[0].startswith('# Dossier walk advice'), lines[0]
-assert lines[2].startswith('Candidate version 2.51;'), lines[2][:40]
+assert lines[0].startswith(PRED_TITLE), lines[0]
+assert lines[2].startswith(f'Candidate version {PRED_VERSION}'), lines[2][:40]
 lines[0] = '# Dossier walk errata: the brief v24 paragraph\'s quotation marks, and the walk layer over the drawing\'s tooltips'
 lines[2] = (f"Candidate version {V}; binds nothing until its agent adoption row in AGENT-ADOPTIONS.md and its version tag. One "
-            "MODIFIED requirement, REQ-polaris-generation-034, whose complete text below replaces the effective text that walk "
-            "advice version 2.51 gave it. It corrects two statements of the figure walks of version 2.40 to the behaviour "
+            "MODIFIED requirement, REQ-polaris-generation-034, whose complete text below replaces the effective text that "
+            f"{PRED_NAME} version {PRED_VERSION} gave it. It corrects two statements of the figure walks of version 2.40 to the behaviour "
             "Syzygy ships: the brief v24 paragraph is quoted with the bare quotation marks the brief issues, and the walk "
             "layer's boxes all take the pointer, so a walked figure's drawing shows no per-node tooltip under it, which is "
             "now stated as a trade-off. No finding, record, page, brief byte, draft schema or brief version moves, and no "
@@ -71,13 +76,15 @@ replace(LAST, LAST + (f' From version {V}, the paragraph quoted above is that pa
 
 # 2. The walk layer takes the pointer over every box; the drawing's own tooltips give way.
 END = 'A walk adds no read, no source, no label and no claim, and no text of the draft but the element labels the figure\'s lists already show.'
-replace(END, END + (f' Every box of a walk\'s layer takes the pointer, whether or not it holds a badge or a link (version {V}), so on '
-                    'a walked figure the drawing\'s own tooltip for a node, the `<title>` the drawing gives it, does not show '
-                    'under the pointer. This is a trade-off, kept for two reasons: a box\'s `walk-source` link fills the box and '
-                    'takes the pointer to be followed, and the outline under the pointer marks every box of a walked figure '
-                    'alike; the label and marking such a tooltip carries stay shown by the node\'s box in the drawing and by its '
-                    'item in the figure\'s list of every component and relationship. A figure with no walk keeps its tooltips, '
-                    'and so does a box version 2.50 lets pass the pointer to the drawing.'))
+replace(END, END + (' As the walk style rules of version 2.40 make every box of a walk\'s layer take the pointer, whether or not '
+                    f'it holds a badge or a link, the drawing\'s own tooltip for a node, the `<title>` the drawing gives it, '
+                    f'does not show under the pointer on a walked figure (stated from version {V}). This is a trade-off, kept '
+                    'for two reasons: a box\'s `walk-source` link fills the box and takes the pointer to be followed, and the '
+                    'outline under the pointer marks every box of a walked figure alike. What such a tooltip carries is the '
+                    'node\'s label and marking. The node\'s box in the drawing shows the marking and the label, or, where the '
+                    'label is longer than the box holds, its first lines ending in an ellipsis; the full label and the marking '
+                    'stay in the figure\'s list of every component and relationship, behind that list\'s disclosure. A figure '
+                    'with no walk keeps its tooltips, save over the mark of a zoom link that version 2.50 sets on a box.'))
 
 assert '2.NN' not in text and text.count(escaped) == 0
 out.parent.mkdir(parents=True, exist_ok=True)
