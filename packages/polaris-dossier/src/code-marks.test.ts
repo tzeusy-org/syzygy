@@ -14,6 +14,7 @@ import { buildDossierScreen } from './screen.js';
 import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 import { measureDraft } from './rerender-measure.js';
 import { packetDraftView } from './review-packet.js';
+import { codeMarkFieldVersionPaths, codeMarkFindings, codeMarksAt } from './code-marks.js';
 
 // A code excerpt's highlights and margin notes (REQ-polaris-generation-034 version 2.54, schema v18, syzygy-3efd.33): each scenario over a
 // pinned tree built here with the git CLI, checked and rendered through the real pipeline. Every expected finding, detail and markup is a
@@ -377,6 +378,47 @@ describe('code excerpt marks: check (version 2.54)', () => {
     expect(measureDraft(new TextEncoder().encode(JSON.stringify(doc)), undefined)).toEqual(measureDraft(new TextEncoder().encode(JSON.stringify(bare)), undefined));
     const record = async (d: Doc): Promise<Doc> => { const { run } = await checked(A, d); return JSON.parse(fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8')); };
     expect(plain(JSON.stringify({ ...(await record(excerptDraft([MARKED()]))), draft: null }))).toBe(plain(JSON.stringify({ ...(await record(excerptDraft([code('x', 10, 20)]))), draft: null })));
+  });
+});
+
+// The module's own entry points, read without the pipeline (review R33-code findings 10 and 11): each holds without a caller stripping first.
+describe('code excerpt marks: the module alone (version 2.54)', () => {
+  it('takes no field-version finding in a v18 draft, though nothing stripped its marks', () => {
+    expect(codeMarkFieldVersionPaths(excerptDraft([MARKED()]))).toEqual([]);
+    expect(codeMarkFieldVersionPaths(excerptDraft([MARKED()], V17))).toEqual(['$.sections[0].paragraphs[2].highlights', '$.sections[0].paragraphs[2].notes']);
+  });
+
+  it('skips an excerpt whose citation is not an object, or whose lines are not integers from 1', () => {
+    const outside = { highlights: [{ startLine: 80, endLine: 80 }] };
+    for (const citation of ['src/pool.ts', null, [1, 2], { path: 'src/pool.ts', startLine: 1.5, endLine: 5 }, { path: 'src/pool.ts', startLine: 1 }]) {
+      expect(codeMarkFindings(excerptDraft([{ kind: 'code', id: 'x', citation, ...outside }]), []), JSON.stringify(citation)).toEqual([]);
+    }
+    expect(codeMarkFindings(excerptDraft([{ kind: 'code', id: 'x', citation: { path: 'src/pool.ts', startLine: 1, endLine: 5 }, ...outside }]), [])).toEqual([
+      { kind: 'code-highlight', at: '$.sections[0].paragraphs[2].highlights[0]', detail: "`highlights[0]` lies outside the excerpt's lines 1 to 5" },
+    ]);
+  });
+
+  it('skips an excerpt whose citation drew range-invalid or code-excerpt-too-long', () => {
+    const doc = excerptDraft([code('x', 1, 5, { highlights: [{ startLine: 80, endLine: 80 }] })]);
+    for (const kind of ['range-invalid', 'code-excerpt-too-long']) {
+      expect(codeMarkFindings(doc, [{ kind, at: '$.sections[0].paragraphs[2].citation', detail: 'd' }] as never), kind).toEqual([]);
+    }
+    expect(codeMarkFindings(doc, [{ kind: 'range-invalid', at: '$.sections[0].paragraphs[1].citation', detail: 'd' }] as never)).toHaveLength(1);
+  });
+
+  it('gives the render the marks of the first excerpt of each string identity, and only well-formed entries', () => {
+    const marks = codeMarksAt(excerptDraft([
+      code('x', 10, 20, { highlights: [{ startLine: 12, endLine: 13 }, { startLine: 0, endLine: 1 }, 'h', { startLine: 14, endLine: 1.5 }],
+        notes: [{ line: 12, block: 'p-pool' }, { line: 12, block: 7 }, { line: -1, block: 'p-pool' }, null] }),
+      code('x', 10, 20, { highlights: [{ startLine: 19, endLine: 19 }] }),
+      { ...code('y', 10, 20, { highlights: [{ startLine: 19, endLine: 19 }] }), id: 9 },
+      code('z', 10, 20),
+    ]));
+    expect([...marks.entries()]).toEqual([
+      ['x', { highlights: [{ startLine: 12, endLine: 13 }], notes: [{ line: 12, block: 'p-pool' }] }],
+      ['z', { highlights: [], notes: [] }],
+    ]);
+    expect(codeMarksAt(excerptDraft([MARKED()], V17)).size).toBe(0);
   });
 });
 

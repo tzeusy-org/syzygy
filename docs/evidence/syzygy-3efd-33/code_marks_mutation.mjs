@@ -16,6 +16,8 @@
 // fragments that rewrite moved keep their ids. Run 3 (at 10c68e629, code-marks-mutation-run3-2026-11-28.json) killed 56 of 57: a test of
 // an excerpt in a subsection (subsections-not-read) repairs it.
 // Run 4 (at 689fa3be7, code-marks-mutation-run4-2026-11-28.json) killed 57 of 57.
+// Team-lead's disposition of the review: field-version-in-v18 now runs against a test of the module alone, and the render-side identity
+// and entry filters and the gutter's and bands' user-select rules each get a mutant. Run 5 records them.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -90,6 +92,13 @@ const MUTANTS = [
   ['details-not-read', MARKS, "else if (entry['kind'] === 'details') entries(entry['elements'],", "else if (false) entries(entry['elements'],"],
   ['subsections-not-read', MARKS, "else if (field === SUBSECTIONS_FIELD && key === 'sections') {", "else if (false) {"],
   ['too-long-guard-dropped', MARKS, '|| s > t || t - s + 1 > CODE_EXCERPT_MAX_LINES) return undefined;', '|| s > t) return undefined;'],
+  ['field-version-in-v18', MARKS, 'if (hasExcerptMarkForm(version) || version', 'if (version'],
+  ['repeated-id-overwrites', MARKS, "if (typeof id !== 'string' || out.has(id)) continue;", "if (typeof id !== 'string') continue;"],
+  ['any-id-marked', MARKS, "if (typeof id !== 'string' || out.has(id)) continue;", 'if (out.has(id)) continue;'],
+  ['render-highlight-unfiltered', MARKS, "isRecord(entry) && lineOf(entry['startLine']) !== undefined && lineOf(entry['endLine']) !== undefined\n", "isRecord(entry)\n"],
+  ['render-note-unfiltered', MARKS, "isRecord(entry) && lineOf(entry['line']) !== undefined && typeof entry['block'] === 'string'\n", "isRecord(entry)\n"],
+  ['gutter-selectable', STYLE, 'color:var(--muted);user-select:none}', 'color:var(--muted)}'],
+  ['bands-selectable', STYLE, 'user-select:none;pointer-events:none;position:static}', 'pointer-events:none;position:static}'],
   ['reversed-guard-dropped', MARKS, '|| s > t || t - s + 1 > CODE_EXCERPT_MAX_LINES) return undefined;', '|| t - s + 1 > CODE_EXCERPT_MAX_LINES) return undefined;'],
   ['v2-takes-field-version', MARKS, '|| version === LOCAL_DRAFT_SCHEMA_VERSION_V2 ||', '||'],
   ['findings-in-every-version', MARKS, "  if (!hasExcerptMarkForm(doc['schemaVersion'])) return [];\n  const out: CheckFinding[] = [];", '  const out: CheckFinding[] = [];'],
@@ -134,8 +143,6 @@ const EQUIVALENT = [
     reason: 'Run 1 (at df0a36131) ran it and it survived: the frame\'s second column is `minmax(max-content, 1fr)`, at least as wide as the excerpt\'s longest line, so a line of the excerpt never meets the edge it would wrap at, whatever `white-space` says; the rule stays as the requirement\'s "no wrapping". The browser test measures 11 lines at 390 px, where line 15 is wider than the viewport.' },
   { id: 'refused-dropped', file: MARKS, old: 'return refused ? undefined : { s, t };', new: 'return { s, t };',
     reason: 'range-invalid is drawn exactly where a line is not an integer from 1 or startLine is after endLine (check-derive.ts), and code-excerpt-too-long where the range holds more than 60 lines: the guard above the reading refuses each first. The reading binds the requirement\'s own words; bad-citation-not-skipped removes both and is killed.' },
-  { id: 'field-version-in-v18', file: MARKS, old: 'if (hasExcerptMarkForm(version) || version', new: 'if (version',
-    reason: 'codeMarkFieldVersionPaths and codeMarkFieldVersionFindings are read only inside deriveFindings, which reads the draft after withoutCodeMarks; in a v18 draft that removes every `highlights` and `notes`, so with the version arm gone the functions still find no member to report.' },
 ];
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const files = [...new Set(MUTANTS.map(([, file]) => file))].sort();

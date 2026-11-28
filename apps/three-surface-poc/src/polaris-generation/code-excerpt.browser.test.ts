@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { expect, it } from 'vitest';
 import { findBrowserExecutable, launchBrowser, type Browser, type BrowserPage } from '../cdp-browser.js';
-import { POOL_LINES, codeExcerptInput, type ExcerptVariant } from './dossier-reading.testkit.js';
+import { codeExcerptInput, excerptShape, poolLines, type ExcerptVariant } from './dossier-reading.testkit.js';
 import { renderLocalDossier } from './dossier-site.js';
 
 const executable = findBrowserExecutable();
@@ -22,7 +22,7 @@ interface Measure {
 }
 /** Every line's number, band and text, read from the page's own layout. A line's text box is the rect of a range over its first character,
  * none for an empty line. */
-const MEASURE = `(() => {
+const MEASURE = (n: number) => `(() => {
   const frame = document.querySelector("#element-x .code-frame");
   const [gutter, pre, bands] = frame.querySelectorAll(":scope > pre");
   const style = getComputedStyle(pre);
@@ -36,7 +36,7 @@ const MEASURE = `(() => {
       if (c !== "\\r" && starts[line] === null) starts[line] = [node, i];
     }
   }
-  if (starts.length > 11) starts.length = 11;
+  if (starts.length > ${n}) starts.length = ${n};
   const text = starts.map((at) => { if (at === null) return null; const r = document.createRange(); r.setStart(at[0], at[1]); r.setEnd(at[0], at[1] + 1); const b = r.getBoundingClientRect(); return { top: b.top, height: b.height }; });
   const box = (e) => e.getBoundingClientRect();
   const p = box(pre);
@@ -51,12 +51,14 @@ const MEASURE = `(() => {
 const near = (a: number, b: number): boolean => Math.abs(a - b) < 0.5;
 
 /** Each number and band on its line, and each band across the excerpt's whole width. */
-async function aligned(page: BrowserPage, label: string): Promise<Measure> {
-  const m = await page.evaluate<Measure>(MEASURE);
-  expect(m.lines, label).toBe(11);
-  expect([m.numbers.length, m.bands.length], label).toEqual([11, 11]);
-  expect(m.bands.map((b) => b.banded), label).toEqual([false, false, true, true, false, false, false, false, true, false, false]);
-  for (let k = 0; k < 11; k++) {
+async function aligned(page: BrowserPage, label: string, variant: ExcerptVariant): Promise<Measure> {
+  const { startLine, endLine, highlights } = excerptShape(variant);
+  const n = endLine - startLine + 1;
+  const m = await page.evaluate<Measure>(MEASURE(n));
+  expect(m.lines, label).toBe(n);
+  expect([m.numbers.length, m.bands.length], label).toEqual([n, n]);
+  expect(m.bands.map((b) => b.banded), label).toEqual(Array.from({ length: n }, (_, k) => highlights.some((h) => startLine + k >= h.startLine && startLine + k <= h.endLine)));
+  for (let k = 0; k < n; k++) {
     // A number is set in the excerpt's font, size and line height: its box is its line's text box (an empty line has none to measure).
     const text = m.text[k];
     if (text !== null && text !== undefined) expect([near(m.numbers[k]!.top, text.top), near(m.numbers[k]!.height, text.height)], `${label}: number of shown line ${k + 1}`).toEqual([true, true]);
@@ -104,7 +106,8 @@ it.skipIf(executable === undefined)('sets each number and band on its line at 39
   const directories: string[] = [];
   try {
     browser = await launchBrowser(executable);
-    const cases: [boolean, ExcerptVariant][] = [[false, 'lf'], [true, 'lf'], [false, 'crlf'], [false, 'tabs'], [false, 'empty-last']];
+    const cases: [boolean, ExcerptVariant][] = [[false, 'lf'], [true, 'lf'], [false, 'crlf'], [false, 'tabs'], [false, 'empty-first'], [false, 'empty-last'],
+      [false, 'no-final-newline'], [false, 'long-line'], [false, 'sixty']];
     for (const [split, variant] of cases) {
       for (const width of [390, 1440]) {
         const directory = await mkdtemp(join(tmpdir(), 'polaris-code-excerpt-browser-'));
@@ -112,37 +115,42 @@ it.skipIf(executable === undefined)('sets each number and band on its line at 39
         const page = await open(browser, directory, split, width, variant);
         try {
           const label = `${split ? 'two parts' : 'one part'}, ${variant}, at ${width}`;
+          const { startLine, endLine } = excerptShape(variant);
+          const n = endLine - startLine + 1;
           expect(await page.evaluate('document.scripts.length'), label).toBe(0);
           expect(await page.evaluate('document.querySelectorAll("#element-x .code-frame > pre:not([class]) > code.verified-quote").length'), label).toBe(split ? 2 : 1);
           // Line 10, shown line 1, is not highlighted: the bands open with its empty element, and the parser has dropped no line feed.
           expect(await page.evaluate('(() => { const b = document.querySelector("#element-x .code-bands"); return [b.firstChild.nodeType, b.firstChild.className, b.childElementCount, b.textContent.split("\\n").length]; })()'), label)
-            .toEqual([1, 'code-unbanded', 11, 11]);
+            .toEqual([1, 'code-unbanded', n, n]);
           await page.evaluate('document.querySelector("#element-x").scrollIntoView({ block: "start", behavior: "instant" })');
-          const before = await aligned(page, `${label}, unscrolled`);
+          const before = await aligned(page, `${label}, unscrolled`, variant);
           if (width === 390) expect(before.overflow, label).toBe(true);
           await page.evaluate('(() => { const f = document.querySelector("#element-x .code-frame"); f.scrollLeft = f.scrollWidth; })()');
           if (width === 390) expect(await page.evaluate<boolean>('document.querySelector("#element-x .code-frame").scrollLeft > 0'), label).toBe(true);
-          await aligned(page, `${label}, scrolled to its end`);
+          await aligned(page, `${label}, scrolled to its end`, variant);
           await page.evaluate('document.querySelector("#element-x .code-frame").scrollLeft = 0');
           // Shown line 3 (line 12) is banded: at a point between two of its characters the band is the topmost element painting a
           // background, and the excerpt's text lies above it, so no background hides the band and the band hides no character.
-          const stack = await page.evaluate<[string, boolean][]>(STACK(2));
+          const stack = await page.evaluate<[string, boolean][]>(STACK(12 - startLine));
           const band = stack.findIndex(([name]) => name === 'span.code-band');
           expect(band, label).toBeGreaterThan(0);
           expect(stack.slice(0, band).some(([, painted]) => painted), `${label}: ${JSON.stringify(stack)}`).toBe(false);
           expect(stack[band]![1], label).toBe(true);
           expect(stack.slice(0, band).map(([name]) => name), label).toContain('code.verified-quote');
           // Shown line 1 (line 10) is not banded: its band line paints nothing.
-          const plain = await page.evaluate<[string, boolean][]>(STACK(0));
-          expect(plain.some(([name]) => name === 'span.code-band'), label).toBe(false);
-          expect(plain.find(([name]) => name === 'span.code-unbanded')?.[1] ?? false, label).toBe(false);
+          if (variant !== 'empty-first') {
+            const plain = await page.evaluate<[string, boolean][]>(STACK(0));
+            expect(plain.some(([name]) => name === 'span.code-band'), label).toBe(false);
+            expect(plain.find(([name]) => name === 'span.code-unbanded')?.[1] ?? false, label).toBe(false);
+          }
           // Selecting the whole frame and copying takes the cited lines alone: no number, mark or band.
           const copied = await page.evaluate<string>(`(() => { const s = getSelection(); s.removeAllRanges(); const r = document.createRange();
             r.selectNodeContents(document.querySelector("#element-x .code-frame")); s.addRange(r); return s.toString(); })()`);
           // The browser's serialization drops a selection's final line feed, as it does for the excerpt's `<pre>` selected alone.
           const alone = await page.evaluate<string>(`(() => { const s = getSelection(); s.removeAllRanges(); const r = document.createRange();
             r.selectNodeContents(document.querySelector("#element-x .code-frame > pre:not([class])")); s.addRange(r); return s.toString(); })()`);
-          if (variant === 'lf') expect([copied, alone], label).toEqual([POOL_LINES.slice(9, 20).join('\n'), POOL_LINES.slice(9, 20).join('\n')]);
+          const cited = poolLines(variant).slice(startLine - 1, endLine).join('\n');
+          if (variant !== 'crlf') expect([copied, alone], label).toEqual([cited, cited]);
           else expect(copied, label).toBe(alone);
           // Following `Read note 2` makes p-free's block the page's target.
           await page.evaluate('document.querySelectorAll("#element-x a.code-note")[1].focus()');
@@ -159,4 +167,4 @@ it.skipIf(executable === undefined)('sets each number and band on its line at 39
     await browser?.close();
     for (const directory of directories) await rm(directory, { recursive: true, force: true });
   }
-}, 120_000);
+}, 300_000);
