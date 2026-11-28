@@ -648,6 +648,67 @@ describe('walk advice on check\'s report (version 2.51, syzygy-3efd.35)', () => 
     } finally { walkAdviceFails.on = false; }
   });
 
+  it('reads a walk whatever the disposition of its figure or its place (review R35, note 6)', async () => {
+    const OMITTED = { kind: 'omitted', reason: 'Not drawn here.', citations: [] };
+    const figureOmitted = walking(walkDraft(WRITE(), WRITE_RELS(), [writeView('f', { disposition: OMITTED })],
+      [section('s1', [para('p1', 1, { text: 'The client.' }), para('p2', 1, { text: 'The log.' }), para('p3', 2, { text: 'A replica serves reads.' })])]),
+    { figure: 'f', steps: STEPS() });
+    expect((await reportOf(A, figureOmitted))['walkAdvice']).toEqual({ rules: RULES, examined: 3, advisories: [
+      { rule: 'walk-step-restates-label', at: '$.sections[0].walk.steps[0]', detail: DETAIL('f', 1, 'p1') },
+      { rule: 'walk-step-restates-label', at: '$.sections[0].walk.steps[1]', detail: DETAIL('f', 2, 'p2') }] });
+    const dive = { id: 'dd', title: 'Deeper', sectionId: 's1', paragraphs: [para('d1', 1, { text: 'The client.' }), para('d2', 1, { text: 'Every write lands here first.' })],
+      disposition: OMITTED };
+    const view = writeView('f', { home: { kind: 'deep-dive', target: 'dd' } });
+    const plan = [...planOf(S1(), []), { home: { kind: 'deep-dive', target: 'dd' }, question: 'How does a write travel?', kind: 'flow', figure: 'f' }];
+    const placeOmitted = walking({ ...walkDraft(WRITE(), WRITE_RELS(), [view]), deepDives: [dive], figurePlan: plan },
+      { figure: 'f', steps: [{ element: 'client', block: 'd1' }, { element: 'log', block: 'd2' }] }, 0, 'deepDives');
+    expect((await reportOf(A, placeOmitted))['walkAdvice']).toEqual({ rules: RULES, examined: 2, advisories: [
+      { rule: 'walk-step-restates-label', at: '$.deepDives[0].walk.steps[0]', detail: DETAIL('f', 1, 'd1') }] });
+  });
+
+  it('writes the same bytes into the run and the site with the advice computed as with it forced off (review R35, note 7)', async () => {
+    // Forced off: the mocked module throws, so check leaves the member out. The exit status reads the outcome alone (cli.ts, `check`), and
+    // readiness reads the run's files, so equal outcomes and equal run bytes leave both unchanged.
+    const doc = advised(['The client.', 'The log.', 'The replica.']);
+    const filesUnder = (root: string): Map<string, string> => {
+      const out = new Map<string, string>();
+      const walk = (dir: string): void => {
+        for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+          const full = path.join(dir, entry.name);
+          if (entry.isDirectory()) walk(full); else out.set(path.relative(root, full), fs.readFileSync(full, 'utf8'));
+        }
+      };
+      walk(root);
+      return out;
+    };
+    const once = async (): Promise<{ report: Doc; run: Map<string, string>; site: Map<string, string> }> => {
+      const { run, result } = await checked(A, doc);
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const runFiles = filesUnder(run);
+      const out = await renderRun(run, { sources: sources(A.commit), now: () => LATER, probe: neverProbe, loadScreen: async () => SCREEN, renderer: renderLocalDossier });
+      if (!out.ok) throw new Error(out.refusal.reason);
+      return { report: result.report as unknown as Doc, run: runFiles, site: filesUnder(out.report.site) };
+    };
+    const on = await once();
+    walkAdviceFails.on = true;
+    let off: Awaited<ReturnType<typeof once>>;
+    try { off = await once(); } finally { walkAdviceFails.on = false; }
+    expect([on.report['walkAdvice']['advisories'].length, Object.hasOwn(off.report, 'walkAdvice')]).toEqual([3, false]);
+    expect([on.report['outcome'], off.report['outcome']]).toEqual(['passed', 'passed']);
+    expect(on.run.size).toBeGreaterThan(3);
+    expect(on.site.size).toBeGreaterThan(3);
+    expect([...on.run.keys()]).toEqual([...off.run.keys()]);
+    // `run.json`, `brief.json` and `brief.md` are written when the run is set up, before check, and name each run's own temporary clone (or
+    // its digest); every file check writes is compared.
+    const setUp = ['brief.json', 'brief.md', 'run.json'];
+    expect([...on.run.keys()].filter((file) => !setUp.includes(file))).toEqual(['checks/rev-0.json', 'derived/rev-0.json', 'draft.schema.json',
+      'drafts/next.json', 'drafts/rev-0.json', 'run-advice.json', 'steps.jsonl']);
+    expect(setUp.every((file) => on.run.has(file))).toBe(true);
+    for (const [file, bytes] of on.run) if (!setUp.includes(file)) expect(bytes, file).toBe(off.run.get(file));
+    expect([...on.site.keys()]).toEqual([...off.site.keys()]);
+    for (const [file, bytes] of on.site) expect(bytes, file).toBe(off.site.get(file));
+  });
+
   describe('a base element\'s step reads Syzygy\'s label', () => {
     let D: Pinned;
     beforeAll(() => {
@@ -668,6 +729,40 @@ describe('walk advice on check\'s report (version 2.51, syzygy-3efd.35)', () => 
       // The third listing, the structure derivation's, fails: the directory map is not established, so neither base step is read.
       const report = await reportOf(D, dirs('src: 2 files.'), { openReader: unlistedAfter(2) });
       expect([report['outcome'], report['structureRecord']['state'], report['walkAdvice']]).toEqual(['passed', 'unknown', { rules: RULES, examined: 0, advisories: [] }]);
+    });
+  });
+
+  describe('under the committed dossier policy, a directory withheld at check is not read (review R35, notes 1 and 2)', () => {
+    // The real policy denies `kubeconfig` as a path (a denied basename) and every path below `.ssh` (a denied directory name). Neither is a
+    // secret path, so the directory map still names both; the walk advice reads neither step and counts neither.
+    const REAL_SCREEN = buildDossierScreen(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json')),
+      true, null, 'public');
+    if (!SCREEN.ok) throw new Error(SCREEN.why);
+    const SCREEN_OF = SCREEN.screen;
+    let K: Pinned;
+    beforeAll(() => {
+      K = pinnedTree({ 'README.md': TREE_A['README.md']!, 'src/a.ts': 'export const a = 1;\n', 'kubeconfig/a.ts': 'export const k = 1;\n',
+        '.ssh/a.ts': 'export const s = 1;\n' });
+    });
+    const walked = (texts: [string, string, string]): Doc => walking(walkDraft([], [], [dirsGraph('d', { select: ['src', 'kubeconfig', '.ssh'],
+      restReason: 'Rest', names: [nameOf('src', 'Sources')] }, [], [])], [section('s1', [para('p1', 1, { text: texts[0] }), para('p2', 1, { text: texts[1] }),
+      para('p3', 1, { text: texts[2] })])]),
+    { figure: 'd', steps: [{ element: { map: 'directories', path: 'src' }, block: 'p1' }, { element: { map: 'directories', path: 'kubeconfig' }, block: 'p2' },
+      { element: { map: 'directories', path: '.ssh' }, block: 'p3' }] });
+
+    it('reads only the `src` step, whichever rule withholds the others', async () => {
+      if (!REAL_SCREEN.ok) throw new Error(REAL_SCREEN.why);
+      // The committed policy's rules under the fixture's binding: the run binds the fixture policy's bytes, so the screen carries their identity.
+      const bound = { ok: true as const, screen: { ...REAL_SCREEN.screen, policyId: SCREEN_OF.policyId, policyVersion: SCREEN_OF.policyVersion, policySha256: SCREEN_OF.policySha256 } };
+      const report = await reportOf(K, walked(['src: 1 file.', 'kubeconfig: 1 file.', '.ssh: 1 file.']), { loadScreen: async () => bound });
+      expect([report['outcome'], report['walkAdvice']]).toEqual(['passed', { rules: RULES, examined: 1,
+        advisories: [{ rule: 'walk-step-restates-label', at: '$.sections[0].walk.steps[0]', detail: DETAIL('d', 1, 'p1') }] }]);
+    });
+
+    it('reads all three steps under the fixture policy, which denies neither', async () => {
+      const report = await reportOf(K, walked(['src: 1 file.', 'kubeconfig: 1 file.', '.ssh: 1 file.']));
+      expect([report['outcome'], report['walkAdvice']['examined'], report['walkAdvice']['advisories'].map((entry: Doc) => entry['at'])])
+        .toEqual(['passed', 3, ['$.sections[0].walk.steps[0]', '$.sections[0].walk.steps[1]', '$.sections[0].walk.steps[2]']]);
     });
   });
 });

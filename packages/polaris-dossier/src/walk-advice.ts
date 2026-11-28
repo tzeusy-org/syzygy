@@ -67,12 +67,16 @@ function paragraphText(block: Doc): string {
 /** Whether a finding lies at or below a walk's path. */
 const under = (at: string, walkAt: string): boolean => at === walkAt || at.startsWith(`${walkAt}.`) || at.startsWith(`${walkAt}[`);
 
-/** What check knows of a base element's screening: `hidden` for a path left out or denied, `admit` for a label it would carry. */
-export interface WalkAdviceScreen { readonly admit: Admit; readonly hidden: (repositoryPath: string) => boolean }
+/** What check knows of a base element's screening: `hidden` for a path left out or denied, `deniesBelow` for a directory every path below
+ * which a denied-directory rule denies, `admit` for a label it would carry. */
+export interface WalkAdviceScreen { readonly admit: Admit; readonly hidden: (repositoryPath: string) => boolean; readonly deniesBelow: (directory: string) => boolean }
 
 /** The walk advice of a draft at check (version 2.51), or undefined where it carries none: a draft not of a walk schema, or one with a
  * `schema` finding. `findings` are every finding check reports for the draft; `maps` the base maps as check derived them, each absent where
- * not established; `screen` what check knows of a base element's screening. A walk with any finding at or below its path is not read. */
+ * not established; `screen` what check knows of a base element's screening. A walk with any finding at or below its path is not read.
+ * Called directly, it reads only what it can read: a walk that is malformed, whose figure is missing or of no graph kind, or a step whose
+ * element or block it cannot find, is skipped and counted nowhere; check passes `findings` that hold the walk findings of the same draft,
+ * which already name each of those. */
 export function walkAdvice(doc: Doc, findings: readonly CheckFinding[], maps: BaseMaps, screen: WalkAdviceScreen): WalkAdvice | undefined {
   if (!hasWalkForm(doc['schemaVersion']) || findings.some((finding) => finding.kind === 'schema')) return undefined;
   const diagrams = list(doc['diagrams']);
@@ -99,7 +103,9 @@ export function walkAdvice(doc: Doc, findings: readonly CheckFinding[], maps: Ba
 }
 
 /** The label a step's element carries for the rule, or undefined where the step is not read: a base element whose map is not established at
- * check, or that is left out, denied, withheld or Unknown in screening there. A model element's and a node's label are the draft's words. */
+ * check, or that is withheld at check. A base element is withheld at check where its path (a unit's manifest path) is left out or denied
+ * as a file path, where it is a directory a denied-directory rule names (so every file below it is denied: `.ssh`, `.kube`), or where its
+ * path or its label is withheld or Unknown in screening. A model element's and a node's label are the draft's words. */
 function stepLabel(doc: Doc, diagram: Doc, element: Parameters<typeof baseStep>[2] | { readonly kind: 'identity'; readonly id: string },
   elements: ReturnType<typeof modelIndex>['elementById'], maps: BaseMaps, screen: WalkAdviceScreen): string | undefined {
   if (element.kind === 'identity') {
@@ -112,6 +118,7 @@ function stepLabel(doc: Doc, diagram: Doc, element: Parameters<typeof baseStep>[
   const base = maps[element.map === 'units' ? 'units' : 'directories']?.elements.find((entry) => entry.factId === found.factId);
   if (base === undefined) return undefined;
   const repositoryPath = base.manifest ?? base.path;
-  if (screen.hidden(repositoryPath) || screen.admit(repositoryPath) !== 'admitted' || screen.admit(base.label) !== 'admitted') return undefined;
+  if (screen.hidden(repositoryPath) || (base.manifest === undefined && screen.deniesBelow(repositoryPath))) return undefined;
+  if (screen.admit(repositoryPath) !== 'admitted' || screen.admit(base.label) !== 'admitted') return undefined;
   return base.label;
 }

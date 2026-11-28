@@ -67,6 +67,10 @@ export interface DossierScreen {
   readonly projectDocumentation: boolean;
   /** Why a path is excluded before any read, or undefined when its blob may be read. */
   readonly screenPath: (repositoryPath: string) => ScreenExclusion | undefined;
+  /** Whether a `deniedDirectoryNames` rule names a segment of this directory's path, so that every path below it is denied (dossier policy
+   * 2.0.0 and later; false under a policy with no such rule). The directory's own path is not a blob path, and `screenPath` never reads its
+   * final segment as a directory. */
+  readonly deniesBelow: (directory: string) => boolean;
   /** The content class `screenPath` admits a path under, or undefined when it excludes the path. */
   readonly contentClass: (repositoryPath: string) => PublicSourceContentClass | undefined;
   /** Whether the policy declares the version-3 code-content exemption. */
@@ -270,6 +274,7 @@ export function buildDossierScreen(policy: Uint8Array, projectDocumentationEnabl
       configurationDetectors: configurationRead.detectors.length,
       twoStage,
       screenPath,
+      deniesBelow: (directory) => deniedDirectory(`${directory}/-`, directories),
       contentClass,
       stageOf: (repositoryPath) => admittedDecision(repositoryPath)?.stage,
       screenBody: (body, repositoryPath) => detectSecrets(stageTwo(repositoryPath) ? stageTwoDetectors : detectors, body) !== undefined ? 'secret-detector-match'

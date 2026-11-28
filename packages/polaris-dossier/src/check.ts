@@ -495,7 +495,8 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     try {
       const isSecretPath = secretPathOf(screen);
       walks = computeWalkAdvice(walked, findings, checkBaseMaps(treeFacts, manifestFacts), { admit: admitOf(screen),
-        hidden: (repositoryPath) => secretOrUnder(repositoryPath.split('/'), isSecretPath) || screen.screenPath(repositoryPath) === 'denied-path' });
+        hidden: (repositoryPath) => secretOrUnder(repositoryPath.split('/'), isSecretPath) || screen.screenPath(repositoryPath) === 'denied-path',
+        deniesBelow: screen.deniesBelow });
     } catch { walks = undefined; }
   }
   return { ok: true, report: {

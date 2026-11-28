@@ -374,6 +374,8 @@ describe('inventory-check', () => {
     const report = passed(await checkInventory(run, {}, deps()));
     expect(report).toMatchObject({ command: 'inventory-check', format: 'polaris-dossier-inventory-check/1', outcome: 'passed', revision: 0, supersedes: null, label: 'Inferred' });
     expect(report.findings).toEqual([]);
+    // The walk advice is check's alone (REQ-polaris-generation-034 version 2.51): the inventory's report never carries it (review R35, note 6).
+    expect(Object.hasOwn(report, 'walkAdvice')).toBe(false);
     expect(report.inventory).toMatchObject({ file: 'inventory/rev-0.json', bytes: Buffer.byteLength(text) });
     expect(report.session).toEqual({ number: 1, sessionId: 'inventory-1', declaredBy: 'the inventory session', label: 'Inferred', distinctFrom: 'every session identifier declared by the 1 frozen draft revision(s)' });
     expect(report.quotations).toEqual([expect.objectContaining({ blockId: 'e-purpose', citationId: 'c-e1', path: 'src/kestrel.c', byteRange: [3, 37] })]);

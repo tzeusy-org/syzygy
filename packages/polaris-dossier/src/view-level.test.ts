@@ -630,6 +630,8 @@ describe('walk advice over a levelled view (version 2.51, syzygy-3efd.35)', () =
     const [report, explained] = [await reportOf(doc), await reportOf(walked('The app serves every request users send.'))];
     expect(report['walkAdvice']).toEqual(ADVISED);
     expect(explained['walkAdvice']).toEqual({ rules: RULES, examined: 2, advisories: [] });
+    // The exit status reads the outcome alone (cli.ts, `check`), so equal outcomes give equal exit statuses; readiness reads the run's files,
+    // which walk.test.ts compares byte for byte with the advice computed and forced off (review R35, note 6).
     expect([report['outcome'], report['findings']]).toEqual([explained['outcome'], explained['findings']]);
     expect(report['outcome']).toBe('passed');
     // The zoom link is drawn on the walked box as version 2.50 draws it, and no page, machine view or record carries the advice.

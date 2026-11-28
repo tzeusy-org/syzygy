@@ -57,7 +57,7 @@ describe('the words of a text (version 2.51)', () => {
   });
 });
 
-const NO_SCREEN: WalkAdviceScreen = { admit: () => 'admitted', hidden: () => false };
+const NO_SCREEN: WalkAdviceScreen = { admit: () => 'admitted', hidden: () => false, deniesBelow: () => false };
 const V15 = 'polaris-dossier-local-draft-v15', V16 = 'polaris-dossier-local-draft-v16';
 const block = (id: string, text: string, children: string[] = []): Doc => ({ id, label: 'inferred', basis: 'source', text, citations: [{ id: `c-${id}` }],
   quotations: [], children: children.map((child, k) => ({ id: `${id}-${k}`, label: 'inferred', text: child })) });
@@ -127,6 +127,40 @@ describe('walk advice over a draft (version 2.51)', () => {
   });
 });
 
+describe('walk advice called directly, with no finding to skip a walk by (review R35, note 4)', () => {
+  const NONE = { rules: RULES, examined: 0, advisories: [] };
+  it('skips a walk whose figure is of no graph kind, missing, or whose walk is malformed, and counts it nowhere', () => {
+    const sequence = ROUTING();
+    sequence['diagrams'][0]['kind'] = 'sequence';
+    expect(walkAdvice(sequence, [], {}, NO_SCREEN)).toEqual(NONE);
+    const missing = ROUTING();
+    missing['sections'][0]['walk']['figure'] = 'elsewhere';
+    expect(walkAdvice(missing, [], {}, NO_SCREEN)).toEqual(NONE);
+    const malformed = ROUTING();
+    malformed['sections'][0]['walk']['steps'] = 'steps';
+    expect(walkAdvice(malformed, [], {}, NO_SCREEN)).toEqual(NONE);
+  });
+
+  it('skips a step whose block or node it cannot find, and reads the walk\'s other steps', () => {
+    const noBlock = ROUTING();
+    noBlock['sections'][0]['walk']['steps'][1]['block'] = 'b-gone';
+    expect(walkAdvice(noBlock, [], {}, NO_SCREEN)).toEqual({ rules: RULES, examined: 2, advisories: [] });
+    const noNode = ROUTING();
+    noNode['diagrams'][0] = { id: 'routing', kind: 'flow', home: { kind: 'section', target: 's1' },
+      nodes: [{ id: 'client', label: 'Client' }, { id: 'handler', label: 'Handler' }] };
+    expect(walkAdvice(noNode, [], {}, NO_SCREEN)).toEqual({ rules: RULES, examined: 2, advisories: [] });
+  });
+
+  it('labels by the figure\'s own node where a view kind carries no view, never by the model element of that id', () => {
+    const doc = ROUTING();
+    doc['diagrams'][0] = { id: 'routing', kind: 'boundary', home: { kind: 'section', target: 's1' },
+      nodes: [{ id: 'client', label: 'Client' }, { id: 'router', label: 'Front door' }, { id: 'handler', label: 'Handler' }] };
+    expect(walkAdvice(doc, [], {}, NO_SCREEN)).toEqual({ rules: RULES, examined: 3, advisories: [] });
+    doc['sections'][0]['paragraphs'][1]['text'] = 'The front door.';
+    expect(walkAdvice(doc, [], {}, NO_SCREEN)?.advisories).toEqual([ROUTER_ADVISORY]);
+  });
+});
+
 describe('a base element\'s step (version 2.51)', () => {
   const unit = (manifest: string, name: string) => ({ path: `${manifest}#1`, factId: `_manifest-${name}`, label: name, name, compared: name,
     epistemic: 'inferred' as const, unknownReason: null, unit: { kind: 'package-manifest' as const, path: manifest }, manifest });
@@ -159,5 +193,27 @@ describe('a base element\'s step (version 2.51)', () => {
     expect(walkAdvice(doc('The api.'), [], MAPS, { ...NO_SCREEN, admit: (v) => (v === 'api' ? 'unavailable' : 'admitted') })).toEqual(notRead);
     // Another element's screening does not reach this step.
     expect(walkAdvice(doc('The api.'), [], MAPS, { ...NO_SCREEN, hidden: (p) => p === 'web/package.json' })).toEqual(ADVISED);
+  });
+
+  it('asks of a directory, never of a unit\'s manifest path, whether a denied-directory rule names it (version 2.51 as 2.55 reads it)', () => {
+    // A unit's manifest path is a file path: a denied-directory answer for it does not withhold the step.
+    expect(walkAdvice(doc('The api.'), [], MAPS, { ...NO_SCREEN, deniesBelow: (p) => p === 'api/package.json' })).toEqual(ADVISED);
+    const directory = (path: string) => ({ path, factId: `_derived-${path}`, label: `${path}/ (1 file)`, name: `${path}/`, compared: path,
+      epistemic: 'observed' as const, unknownReason: null, unit: { kind: 'top-level-directory' as const, path } });
+    const DIRS: BaseMaps = { directories: { map: 'directories', elements: [directory('src'), directory('.kube')], contains: [],
+      notListed: { facts: 0, unknownFiles: 0, secretPathsLeftOut: 0 } } };
+    const walked: Doc = {
+      schemaVersion: V16,
+      model: { elements: [element('runtime', 'Runtime')], relationships: [] },
+      diagrams: [{ id: 'dirs', kind: 'boundary', home: { kind: 'section', target: 's1' }, view: { elements: ['runtime'], relationships: [],
+        base: { map: 'directories', select: ['src', '.kube'], restReason: 'Rest', names: [] } } }],
+      sections: [{ id: 's1', paragraphs: [block('b-kube', 'The kube.'), block('b-run', 'Runs everything.')],
+        walk: { figure: 'dirs', steps: steps([{ map: 'directories', path: '.kube' }, 'b-kube'], ['runtime', 'b-run']) } }],
+      deepDives: [],
+    };
+    expect(walkAdvice(walked, [], DIRS, NO_SCREEN)).toEqual({ rules: RULES, examined: 2, advisories: [{ rule: 'walk-step-restates-label',
+      at: '$.sections[0].walk.steps[0]', detail: 'dirs step 1: paragraph b-kube adds no word to its element\'s label; say what a reader learns about that element at this step' }] });
+    expect(walkAdvice(walked, [], DIRS, { ...NO_SCREEN, deniesBelow: (p) => p === '.kube' })).toEqual({ rules: RULES, examined: 1, advisories: [] });
+    expect(walkAdvice(walked, [], DIRS, { ...NO_SCREEN, deniesBelow: (p) => p === 'src' })?.examined).toBe(2);
   });
 });
