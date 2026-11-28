@@ -55,7 +55,6 @@ const MUTANTS = [
   ['source-example-not-v15', CHECK, " && version !== 'polaris-dossier-local-draft-v15') return;", ") return;"],
   // --- the paths
   ['root-path-any', BASE, "const at = path === '.' ? map.elements.findIndex((element) => element.root === true)", "const at = path === '' ? map.elements.findIndex((element) => element.root === true)"],
-  ['numbered-leading-zero', BASE, "/^[1-9]\\d*$/u.test(numbered[2]!)", "/^\\d+$/u.test(numbered[2]!)"],
   ['manifest-path-first-only', BASE, "return map.elements.flatMap((element, i) => (element.manifest === path ? [i] : []));", "{ const i = map.elements.findIndex((element) => element.manifest === path); return i === -1 ? [] : [i]; }"],
   // --- the findings
   ['reference-absent-silent', BASE, "    if (named.length === 0) {\n      return { kind: 'base-reference'", "    if (false) {\n      return { kind: 'base-reference'"],
@@ -91,7 +90,10 @@ const MUTANTS = [
 ].filter(([id]) => only === null || only.has(id));
 
 // A mutant no test can kill, with the reason; recorded, never run and never counted as killed.
-const EQUIVALENT = [];
+const EQUIVALENT = [
+  { id: 'numbered-leading-zero', file: BASE, old: "/^[1-9]\\d*$/u.test(numbered[2]!)", new: "/^\\d+$/u.test(numbered[2]!)",
+    reason: 'A numbered path resolves only where it equals an element path, and the unit map writes every element path with k from 1 and no leading zero, so `#0` and `#02` name nothing with or without the digit test. Run 1 of this record (36 of 39 killed) recorded it as surviving; the test is kept as a statement of the rule.' },
+];
 
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const files = [...new Set(MUTANTS.map(([, file]) => file))].sort();

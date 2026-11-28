@@ -268,6 +268,8 @@ describe('schema v15: a view starting from a derived base (version 2.35)', () =>
     expect(await findingsOf(D, doc)).toEqual(PASSED);
     const { files, machine } = await rendered(D, doc);
     const fig = figureOf(files.get('index.html')!, 'dirs');
+    expect(fig).toContain('<figure data-visual-provenance="curated" data-base-map="directories" id="figure-dirs"><figcaption id="diagram-title-0">Figure dirs</figcaption>'
+      + '<p class="base-chip" data-visual-provenance="computed">Showing 2 of 2 top-level directories, with the repository root, from the <a href="maps/directories.html">Directory map</a>; none hidden.</p>');
     expect(fig).toContain('<g class="node observed" data-visual-provenance="computed" data-derived-id="_tree-unit-2"><title>src/ (40 files) (observed)</title><rect x="24" y="268" width="200" height="56" rx="6"/>'
       + '<rect class="double-inner" x="27" y="271" width="194" height="50" rx="3"/><text x="124" y="301" text-anchor="middle"><tspan x="124" dy="0">src/ (40 files)</tspan></text>'
       + '<text class="called" x="124" y="340" text-anchor="middle" data-visual-provenance="curated" data-name="dirs:name:1" data-epistemic="inferred">called Server code</text></g>');
@@ -289,6 +291,12 @@ describe('schema v15: a view starting from a derived base (version 2.35)', () =>
     expect(fig).toContain('<ul class="figure-outline"><li class="inferred">Runtime<ul><li class="inferred">Syzygy: api</li></ul></li><li class="inferred">Syzygy: web</li></ul>');
     expect(fig).toContain('<li class="base-hidden" data-hidden-count="2">Not shown here: 2 packages and modules: docs, worker. This dossier\'s reason: Tooling</li>');
     expect(await findingsOf(U, doc(['docs/package.json']))).toEqual({ outcome: 'findings', findings: [{ kind: 'base-conflict', at: '$.diagrams[0].view.base.group[0].paths[0]', detail: CONFLICT_DETAIL }] });
+  });
+
+  it('a base element selected twice in one list is a base-conflict at the second path', async () => {
+    const doc = baseDraft([], [], [unitsGraph('pkgs', { select: ['api/package.json', 'api/package.json#1'], restReason: 'Rest' })]);
+    expect(await findingsOf(U, doc)).toEqual({ outcome: 'findings', findings: [{ kind: 'base-conflict', at: '$.diagrams[0].view.base.select[1]',
+      detail: 'pkgs: a base element is selected, hidden, grouped or named at most once, and grouped or named only where shown' }] });
   });
 
   it('Base element hidden and grouped refused', async () => {
