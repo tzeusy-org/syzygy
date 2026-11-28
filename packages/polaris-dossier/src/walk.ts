@@ -2,7 +2,7 @@ import { DIAGRAM_KINDS, type LocalWalkStep } from '@syzygy/polaris-generation-co
 import { isRecord } from '@syzygy/support';
 import type { CheckFinding } from './check-model.js';
 import { type BaseMaps, type ResolvedBase, baseOf, resolveBasePath, shownOf } from './derived-base.js';
-import { LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V16, SUBSECTIONS_FIELD, WALK_FIELD, hasWalkForm } from './draft-schema.js';
+import { LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V16, PRESENTATION_ELEMENT_KINDS, SUBSECTIONS_FIELD, WALK_FIELD, hasWalkForm } from './draft-schema.js';
 import { isViewKind, modelIndex, viewLists } from './system-model.js';
 
 /** The figure walk of a schema-v16 draft (REQ-polaris-generation-034 version 2.40, syzygy-3efd.88).
@@ -18,8 +18,8 @@ const text = (value: unknown): string | undefined => (typeof value === 'string' 
 
 /** The six graph kinds a walk's figure may be. */
 const GRAPH_KINDS: ReadonlySet<unknown> = new Set(DIAGRAM_KINDS);
-/** The presentation elements of a place's `paragraphs`: a block inside one is never a step's paragraph. */
-const PRESENTATION_KINDS: ReadonlySet<string> = new Set(['table', 'callout', 'steps', 'definitions', 'cards', 'details', 'code']);
+/** The presentation elements of a place's `paragraphs` (draft-schema.ts, the set check reads): a block inside one is never a step's paragraph. */
+const PRESENTATION_KINDS = PRESENTATION_ELEMENT_KINDS;
 /** A walk's bounds: two to twelve steps. */
 export const WALK_STEPS = Object.freeze([2, 12] as const);
 /** The places that may carry a walk, sections' before deep dives'. */
@@ -176,15 +176,21 @@ export function walkFindings(doc: Doc, maps: BaseMaps): CheckFinding[] {
   return out;
 }
 
+/** Whether a section or deep dive renders the draft's content: its disposition is `produced`. */
+const producedPlace = (place: Doc): boolean => isRecord(place['disposition']) && place['disposition']['kind'] === 'produced';
+
 /** A v16 draft's walks at a render (version 2.40), by the identity of the figure each walks: each step's node in the figure as this render
- * draws it and its block. `bases` are the views' bases as this render resolved them, by diagram index. The draft passed check, so every
+ * draws it and its block, for a place whose content renders (its disposition `produced`). `bases` are the views' bases as this render resolved them, by diagram index. The draft passed check, so every
  * identity resolves; a base end is resolved again here, and a walk one of whose base ends names no base element the figure shows, or one an
  * earlier step names, is left out, so it renders nowhere. Empty for any other draft. */
 export function walksAt(doc: Doc, bases: ReadonlyMap<number, ResolvedBase>): ReadonlyMap<string, readonly LocalWalkStep[]> {
   const out = new Map<string, readonly LocalWalkStep[]>();
   if (!hasWalkForm(doc['schemaVersion'])) return out;
   const diagrams = list(doc['diagrams']);
-  for (const { walk } of walksOf(doc)) {
+  for (const { place, walk } of walksOf(doc)) {
+    // A place whose disposition is not `produced` renders none of the draft's content, so none of the paragraphs its steps link to: its
+    // walk renders nowhere, wherever its figure is drawn (review R88, finding 1).
+    if (!producedPlace(place)) continue;
     const read = wellFormed(walk);
     if (read === undefined) continue;
     const index = diagrams.findIndex((entry) => isRecord(entry) && entry['id'] === read.figure);

@@ -2,7 +2,7 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { checkShape, ref, handle, leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText, type Schema } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { hasFigurePlanForm, CONTAINMENT_BOUNDS, CONTAINMENT_KIND, figureMembersOf, hasContainmentForm, hasModelForm, LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V13, LOCAL_DRAFT_SCHEMA_VERSION_V14, FIGURE_PLAN_FIELD, issuedDraftSchema, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, RELATION_FIELD, UNIT_FIELD, hasRelationForm, hasHeroForm, heroOf, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, QUESTION_KINDS_FIELD, hasWorthKnowingForm, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
+import { hasFigurePlanForm, PRESENTATION_ELEMENT_KINDS, CONTAINMENT_BOUNDS, CONTAINMENT_KIND, figureMembersOf, hasContainmentForm, hasModelForm, LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V13, LOCAL_DRAFT_SCHEMA_VERSION_V14, FIGURE_PLAN_FIELD, issuedDraftSchema, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, RELATION_FIELD, UNIT_FIELD, hasRelationForm, hasHeroForm, heroOf, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, QUESTION_KINDS_FIELD, hasWorthKnowingForm, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
 import { isEntryPoint } from './derive.js';
 import { admitOf, baseFieldVersionFindings, baseSchemaReading } from './derived-base.js';
 import { walkFieldVersionFindings, walkFieldVersionPaths, withoutWalks } from './walk.js';
@@ -26,7 +26,7 @@ export const CODE_EXCERPT_MAX_LINES = 60;
 const LABEL_MARKUP = /[<>&`]|!?\[[^\]\n]*\]\(|(?:^|[\s(])(?:\*{1,2}|_{1,2})(?=\S)|(?<=\S)(?:\*{1,2}|_{1,2})(?:$|[\s).,;:!?])/u;
 
 /** The JSON path of every presentation element in the draft. */
-const ELEMENT_KINDS = new Set(['table', 'callout', 'steps', 'definitions', 'cards', 'details', 'code']);
+const ELEMENT_KINDS = PRESENTATION_ELEMENT_KINDS;
 function elementEntries(doc: Readonly<Record<string, unknown>>): string[] {
   const out: string[] = [];
   walk(doc, '$', (value, at) => { if (ELEMENT_KINDS.has(text(value['kind']) ?? '') && /\.(?:paragraphs|elements|children)\[\d+\]$/u.test(at)) out.push(at); });

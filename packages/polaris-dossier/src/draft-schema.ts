@@ -214,6 +214,9 @@ export const MODEL_BOUNDS = Object.freeze({ elements: [0, 200] as const, relatio
 /** A v16 section's or deep dive's `walk` (version 2.40): the member, and the description the schema document gives it; the document admits
  * any value there, every failure of its form being a `walk` finding (walk.ts). */
 export const WALK_FIELD = 'walk';
+/** The seven presentation element kinds a `paragraphs` list may hold beside claim blocks: check's presentation-element paths (check-derive.ts)
+ * and the blocks a walk's step may not name (walk.ts) read this one set. */
+export const PRESENTATION_ELEMENT_KINDS: ReadonlySet<string> = new Set(['table', 'callout', 'steps', 'definitions', 'cards', 'details', 'code']);
 export const WALK_DESCRIPTION = 'Optional. One reading path through one graph figure drawn in this place: {"figure": <that diagram\'s id>, "steps": [{"element", "block"}, ...]}, two to twelve steps in reading order, each naming one element the figure draws (a base element as {"map", "path"}) and one of this place\'s paragraphs that cites its sources. Syzygy numbers each step\'s element, lists the steps beside the figure and highlights an element when its step is chosen; the walk states nothing itself.';
 /** A v15 view's `base` (version 2.35): the member, the two maps it may name, and its bounds. */
 export const BASE_FIELD = 'base';

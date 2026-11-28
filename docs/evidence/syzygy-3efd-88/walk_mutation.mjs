@@ -4,6 +4,8 @@
 // source in `finally`. `--dry` only asserts that every fragment occurs exactly once. Never edit or commit while it runs.
 // Adapted from docs/evidence/syzygy-3efd-38/derived_base_mutation.mjs: the same method, these files and mutants. The browser test runs
 // in the render groups, so SYZYGY_POC_BROWSER must name a Chrome; a run without one skips it and is recorded as such by its test count.
+// The run refuses to start without SYZYGY_POC_BROWSER, and each baseline records the passed tests of every file, so the record shows the
+// browser test passed (never skipped) in each group that lists it (review R88, finding 9).
 // Run 1 (at 747d8024a) killed 52 of 58; the four test repairs that followed it kill four of the six survivors, and the other two are listed
 // in EQUIVALENT with their reasons.
 import { spawn } from 'node:child_process';
@@ -18,6 +20,7 @@ const only = onlyAt === -1 ? null : new Set(args[onlyAt + 1].split(','));
 const [root, out, scratch] = args.filter((arg, i) => !arg.startsWith('--') && (onlyAt === -1 || i !== onlyAt + 1));
 if (!root || !out || !scratch) throw new Error('usage: node walk_mutation.mjs <worktree> <out.json> <scratch-dir> [--dry] [--only ids]');
 fs.mkdirSync(scratch, { recursive: true });
+if (!dry && !process.env['SYZYGY_POC_BROWSER']) throw new Error('SYZYGY_POC_BROWSER must name a Chrome: the render and style groups run the browser test');
 
 const PKG = 'packages/polaris-dossier/src';
 const APP = 'apps/three-surface-poc/src/polaris-generation';
@@ -30,6 +33,8 @@ const BRIEF = `${PKG}/brief.ts`;
 const SITE = `${APP}/dossier-site.ts`;
 const LAYOUT = `${APP}/diagram-layout.ts`;
 const STYLE = `${APP}/dossier-walk.ts`;
+const PACKET = `${PKG}/review-packet.ts`;
+const MEASURE = `${PKG}/rerender-measure.ts`;
 
 const SCENARIOS = `${PKG}/walk.test.ts`;
 const PAGE = `${APP}/dossier-walk.test.ts`;
@@ -44,12 +49,16 @@ const TESTS = {
   [SITE]: [PAGE, SCENARIOS, BROWSER],
   [LAYOUT]: [PAGE, SCENARIOS, BROWSER],
   [STYLE]: [PAGE, BROWSER],
+  [PACKET]: [SCENARIOS],
+  [MEASURE]: [SCENARIOS],
 };
 const TIMEOUT_MS = 600_000;
 
 const MUTANTS = [
   // --- a walk's form
   ['extra-member-admitted', WALK, "isRecord(value) && Object.keys(value).length === members.length && ", "isRecord(value) && "],
+  ['steps-not-list-admitted', WALK, " || !Array.isArray(walk['steps'])) return undefined;", ") return undefined;"],
+  ['base-map-not-string-admitted', WALK, "typeof element['map'] === 'string' && ", ""],
   ['figure-not-string-admitted', WALK, "typeof walk['figure'] !== 'string' || ", ""],
   ['one-step-admitted', WALK, "if (steps.length < WALK_STEPS[0] || steps.length > WALK_STEPS[1]) return undefined;", "if (steps.length > WALK_STEPS[1]) return undefined;"],
   ['thirteen-steps-admitted', WALK, "if (steps.length < WALK_STEPS[0] || steps.length > WALK_STEPS[1]) return undefined;", "if (steps.length < WALK_STEPS[0]) return undefined;"],
@@ -61,6 +70,7 @@ const MUTANTS = [
   ['deep-dives-first', WALK, "const PLACES = ['sections', 'deepDives'] as const;", "const PLACES = ['deepDives', 'sections'] as const;"],
   ['walks-not-stripped', WALK, "if (!isRecord(doc) || !hasWalkForm(doc['schemaVersion'])) return doc;\n  const strip", "return doc;\n  const strip"],
   ['field-version-paths-none', WALK, "return walksOf(doc).map((entry) => entry.at);", "return [];"],
+  ['field-version-unknown-version', WALK, "if (hasWalkForm(doc['schemaVersion']) || !LOCAL_DRAFT_SCHEMA_VERSIONS.some((known) => known === doc['schemaVersion'])) return [];", "if (hasWalkForm(doc['schemaVersion'])) return [];"],
   ['walk-findings-any-version', WALK, "if (!hasWalkForm(doc['schemaVersion'])) return [];\n  const out: CheckFinding[]", "const out: CheckFinding[]"],
   // --- the figure
   ['home-unchecked', WALK, "if (!homedAt(diagram, place, part)) out.push(", "if (false) out.push("],
@@ -72,6 +82,7 @@ const MUTANTS = [
   ['base-map-unmatched', WALK, "if (base === undefined || base.map !== element.map) return { state: 'absent' };", "if (base === undefined) return { state: 'absent' };"],
   ['unestablished-as-absent', WALK, "if (map === undefined) return { state: 'unestablished' };", "if (map === undefined) return { state: 'absent' };"],
   ['base-unshown-admitted', WALK, "named.length === 1 && shownOf(base, map).includes(named[0]!) ? { state: 'shown'", "named.length === 1 ? { state: 'shown'"],
+  ['base-several-admitted', WALK, "named.length === 1 && shownOf(base, map).includes(named[0]!) ? { state: 'shown'", "shownOf(base, map).includes(named[0]!) ? { state: 'shown'"],
   ['base-repeat-by-path', WALK, "{ key: `base:${found.factId}`, name:", "{ key: `base:${element.path}`, name:"],
   ['base-repeat-names-path', WALK, "name: `\\`walk.steps[${k}].element\\`` }", "name: element.path }"],
   ['repeat-silent', WALK, "if (named.has(resolved.key)) out.push(", "if (false) out.push("],
@@ -82,6 +93,14 @@ const MUTANTS = [
   ['subsections-unread', WALK, "if (part === 'sections') for (const subsection", "if (false) for (const subsection"],
   // --- at the render
   ['render-partial-walk', WALK, "if (node === undefined || seen.has(node)) { steps.length = 0; break; }", "if (node === undefined || seen.has(node)) continue;"],
+  ['render-unproduced-place', WALK, "    if (!producedPlace(place)) continue;\n", ""],
+  ['render-repeat-kept', WALK, "if (node === undefined || seen.has(node))", "if (node === undefined)"],
+  ['render-base-map-unmatched', WALK, "else if (resolved !== undefined && resolved.spec.map === step.element.map) {", "else if (resolved !== undefined) {"],
+  ['render-base-unshown-admitted', WALK, "node = named.length === 1 && resolved.shown.includes(named[0]!) ?", "node = named.length === 1 ?"],
+  ['render-base-several-admitted', WALK, "node = named.length === 1 && resolved.shown.includes(named[0]!) ?", "node = resolved.shown.includes(named[0]!) ?"],
+  ['packet-walks-kept', PACKET, "withoutWalks(withoutFigurePlan(draftDoc))", "withoutFigurePlan(draftDoc)"],
+  ['measure-walks-kept', MEASURE, "doc = withoutWalks(withoutFigurePlan(doc));", "doc = withoutFigurePlan(doc);"],
+  ['presentation-kinds-without-table', SCHEMA, "new Set(['table', 'callout', 'steps', 'definitions', 'cards', 'details', 'code'])", "new Set(['callout', 'steps', 'definitions', 'cards', 'details', 'code'])"],
   ['render-walks-dropped', RENDER, "...(walks.size === 0 ? {} : { walks })", ""],
   // --- check and its version rules
   ['check-walk-findings-dropped', CHECK, "findings.push(...walkFindings(walked, checkBaseMaps(treeFacts, manifestFacts)));", ""],
@@ -118,6 +137,10 @@ const MUTANTS = [
 const EQUIVALENT = [
   { id: 'check-walks-not-stripped', file: CHECK, old: "  doc = withoutWalks(doc);\n", new: "\n",
     reason: '[Inferred] Every reader of the draft after this line in check either strips the walks itself (deriveFindings, check-derive.ts) or reads named members other than `walk` (the schema document admits any `walk` value on a v16 section or deep dive). The strip is kept so that a reader added later cannot see a walk. Run 1 of this record (52 of 58 killed) recorded it as surviving.' },
+  { id: 'width-guard-deleted', file: SITE, old: "    if (!walkableWidth(geometry.width)) return undefined;\n", new: "",
+    reason: 'No drawing the readable layout draws through a dossier is 1048 px wide: it stacks every graph figure into a column (248 px wide for 1 to 12 nodes as isolated nodes, a fan and pairs, per review R88 finding 2, and the comment in dossier-site.ts on the operator-agent layout), so no input reaches the guard. The rule itself is pinned at the helper (`walkableWidth`, mutant `width-rule-off-by-one`). A change that lets a drawing reach 1048 px makes this mutant killable and must add the scenario.' },
+  { id: 'drawn-nodes-arm-empty', file: WALK, old: "return new Set(list(diagram['nodes']).flatMap((node) => (isRecord(node) && typeof node['id'] === 'string' ? [node['id']] : [])));", new: "return new Set<string>();",
+    reason: 'The `nodes` arm of drawnIdentities serves a figure that is not a view. A v16 draft carries the model form (hasModelForm), and every graph figure a v16 draft may walk is a view, so no v16 walk reaches the arm (review R88, finding 7). It is kept so that a walk never names a node a non-view figure does not draw.' },
   { id: 'base-box-linked', file: SITE, old: "if (isBase(n.id) || held(n.id) !== undefined", new: "if (held(n.id) !== undefined",
     reason: 'A base element\'s node carries no citation (derived-base.ts writes `citations: []` for every base element, so its `sourceIds` is empty), so the `first === undefined` arm already gives its box no link. The `isBase` arm states the rule directly. Run 1 of this record recorded it as surviving.' },
 ];
@@ -148,17 +171,19 @@ async function runTests(tag, tests) {
   clearTimeout(timer);
   try { process.kill(-child.pid, 'SIGKILL'); } catch { /* gone */ }
   const failedTests = [];
+  const perFile = {};
   let total = null;
   if (fs.existsSync(report)) {
     const json = JSON.parse(fs.readFileSync(report, 'utf8'));
     total = json.numTotalTests;
     for (const result of json.testResults) {
       const failed = result.assertionResults.filter((a) => a.status === 'failed').map((a) => `${path.relative(root, result.name)} > ${a.fullName}`);
+      perFile[path.relative(root, result.name)] = { passed: result.assertionResults.filter((a) => a.status === 'passed').length, skipped: result.assertionResults.filter((a) => a.status === 'skipped' || a.status === 'pending').length };
       for (const name of failed) failedTests.push(name);
       if (failed.length === 0 && result.status === 'failed') failedTests.push(`${path.relative(root, result.name)} (file failed: ${String(result.message).slice(0, 200)})`);
     }
   }
-  return { code, timedOut, failedTests, total };
+  return { code, timedOut, failedTests, total, perFile };
 }
 
 const head = await new Promise((resolve) => { const c = spawn('git', ['-C', root, 'rev-parse', 'HEAD']); let s = ''; c.stdout.on('data', (d) => { s += d; }); c.on('exit', () => resolve(s.trim())); });
@@ -178,8 +203,9 @@ const record = {
 try {
   for (const file of files) {
     const baseline = await runTests(`baseline-${path.basename(file)}`, TESTS[file]);
-    record.baselines.push({ file, exitCode: baseline.code, tests: baseline.total, failedTests: baseline.failedTests });
+    record.baselines.push({ file, exitCode: baseline.code, tests: baseline.total, perFile: baseline.perFile, failedTests: baseline.failedTests });
     if (baseline.code !== 0) throw new Error(`the baseline for ${file} fails: ${baseline.failedTests.join('; ')}`);
+    if (TESTS[file].includes(BROWSER) && (baseline.perFile[BROWSER]?.passed ?? 0) !== 1) throw new Error(`the browser test did not pass in the baseline for ${file}: ${JSON.stringify(baseline.perFile[BROWSER])}`);
   }
   for (const [id, file, old, replacement] of MUTANTS) {
     const started = Date.now();

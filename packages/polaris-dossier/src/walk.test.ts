@@ -12,6 +12,10 @@ import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
 import { GIT_ENV, tempDir } from '@syzygy/test-kit';
+import { baseOf, shownOf, type BaseMaps, type ResolvedBase } from './derived-base.js';
+import { measureDraft } from './rerender-measure.js';
+import { packetDraftView } from './review-packet.js';
+import { walkFindings, walksAt } from './walk.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 
 // Figure walks (REQ-polaris-generation-034 version 2.40, schema v16, syzygy-3efd.88): each scenario over a pinned tree built here with the
@@ -325,16 +329,19 @@ describe('schema v16: a walk through a figure (version 2.40)', () => {
       { figure: 'f', steps: [{ element: 'log', block: 'p1' }, { element: 'cache', block: 'p2' }] });
     expect(await findingsOf(B, doc)).toEqual(PASSED);
     const fig = figureOf((await rendered(B, doc)).files.get('index.html')!, 'f');
-    const boxes = new Map(boxesOf(fig).map((box) => [box.split('|')[0]!, box.split('|')[2]!]));
-    const link = (title: string): string | undefined => /<a class="walk-source" href="([^"]*)">/u.exec(boxes.get(rectStyle(fig, title))!)?.[1];
-    expect(link('Log')).toBe(citeHref(fig, 'log'));
-    expect(link('Log')).toMatch(/^sources\/[0-9a-f]{24}\.html#L2$/u);
-    expect(link('Server')).toBe(citeHref(fig, 'server'));
-    expect(link('Server')).toMatch(/#L2$/u);
-    expect(link('Withheld item')).toBeUndefined();
+    // The four nodes stacked one to a row, each 200 x 56 at x 24, rows 122 px apart from y 24. Each link is the address the node's first
+    // citation link carries in the figure's list: the README's source page (B's tree), at the first citation's line.
+    const page = 'sources/02d409a05b345a9f2719c37c.html';
+    expect(boxesOf(fig)).toEqual([
+      `left:24px;top:24px;width:200px;height:56px||<a class="walk-source" href="${page}#L1"><span class="visually-hidden">Client: cited lines</span></a>`,
+      `left:24px;top:146px;width:200px;height:56px||<a class="walk-source" href="${page}#L2"><span class="visually-hidden">Server: cited lines</span></a>`,
+      `left:24px;top:268px;width:200px;height:56px|id="walk-f-1"|<span class="walk-badge" aria-hidden="true">1</span><a class="walk-source" href="${page}#L2"><span class="visually-hidden">Log: cited lines</span></a>`,
+      'left:24px;top:390px;width:200px;height:56px|id="walk-f-2"|<span class="walk-badge" aria-hidden="true">2</span>']);
+    // The same addresses the list's citation links carry, and the boxes lie on the drawing's rects.
+    for (const [claim, line] of [['client', 1], ['server', 2], ['log', 2]] as const) expect(citeHref(fig, claim)).toBe(`${page}#L${line}`);
+    for (const [title, top] of [['Client', 24], ['Server', 146], ['Log', 268], ['Withheld item', 390]] as const) expect(rectStyle(fig, title)).toBe(`left:24px;top:${top}px;width:200px;height:56px`);
     // The withheld node's step reads as the drawing names it.
     expect(fig).toContain('<li><a href="#walk-f-2">Withheld item</a> <a class="walk-text" href="#block-p2">Read step 2</a></li>');
-    expect(boxes.get(rectStyle(fig, 'Log'))).toContain('<span class="visually-hidden">Log: cited lines</span>');
     expect(fig.slice(fig.indexOf('<svg'), fig.indexOf('</svg>'))).not.toContain('href');
   });
 
@@ -349,8 +356,12 @@ describe('schema v16: a walk through a figure (version 2.40)', () => {
     const v2 = figureOf(page, 'v2');
     expect(v2).toContain('<li>Log, as shown in <a href="#figure-v1">Figure v1</a></li>');
     expect(v2).toContain('<li><a href="#walk-v2-2">Log</a> <a class="walk-text" href="#block-q2">Read step 2</a></li>');
-    const logBox = boxesOf(v2).find((box) => box.startsWith(rectStyle(v2, 'Log')))!;
-    expect(logBox).toContain(`<a class="walk-source" href="${citeHref(figureOf(page, 'v1'), 'log')}">`);
+    // Log's box links where its claim's citation link in v1 lands: the README's source page (A's tree), line 2.
+    expect(boxesOf(v2)).toEqual([
+      'left:24px;top:24px;width:200px;height:56px|id="walk-v2-1"|<span class="walk-badge" aria-hidden="true">1</span><a class="walk-source" href="sources/5fca1f3b8db960c97170434f.html#L1"><span class="visually-hidden">Client: cited lines</span></a>',
+      'left:24px;top:146px;width:200px;height:56px||<a class="walk-source" href="sources/5fca1f3b8db960c97170434f.html#L1"><span class="visually-hidden">Server: cited lines</span></a>',
+      'left:24px;top:268px;width:200px;height:56px|id="walk-v2-2"|<span class="walk-badge" aria-hidden="true">2</span><a class="walk-source" href="sources/5fca1f3b8db960c97170434f.html#L2"><span class="visually-hidden">Log: cited lines</span></a>']);
+    expect(citeHref(figureOf(page, 'v1'), 'log')).toBe('sources/5fca1f3b8db960c97170434f.html#L2');
     expect(page.match(/data-claim-id="log"/gu)).toHaveLength(1);
   });
 
@@ -363,10 +374,10 @@ describe('schema v16: a walk through a figure (version 2.40)', () => {
     expect(await findingsOf(U, doc)).toEqual(PASSED);
     const page = (await rendered(U, doc)).files.get('index.html')!;
     const fig = figureOf(page, 'd');
-    const box = boxesOf(fig).find((entry) => entry.includes('id="walk-d-1"'))!;
-    expect(box).toBe(`${rectStyle(fig, 'api')}|id="walk-d-1"|<span class="walk-badge" aria-hidden="true">1</span>`);
-    // Every box lies on its node's rect, the base element's `called` line pushing the rows below it down.
-    expect(boxesOf(fig).map((entry) => entry.split('|')[0]).sort()).toEqual([rectStyle(fig, 'api'), rectStyle(fig, 'Service')].sort());
+    // Two unconnected nodes stacked: the base box at y 24 with the id and badge and no link, Service 120 px below (56 + the 64 px gap).
+    expect(boxesOf(fig)).toEqual(['left:24px;top:24px;width:200px;height:56px|id="walk-d-1"|<span class="walk-badge" aria-hidden="true">1</span>',
+      'left:24px;top:144px;width:200px;height:56px|id="walk-d-2"|<span class="walk-badge" aria-hidden="true">2</span><a class="walk-source" href="sources/f048e4ce3107f376b4b1588a.html#L1"><span class="visually-hidden">Service: cited lines</span></a>']);
+    expect([rectStyle(fig, 'api'), rectStyle(fig, 'Service')]).toEqual(['left:24px;top:24px;width:200px;height:56px', 'left:24px;top:144px;width:200px;height:56px']);
     expect(fig).toContain('<ol class="figure-walk" aria-label="Walk through this figure"><li><a href="#walk-d-1">api</a> <a class="walk-text" href="#block-p1">Read step 1</a></li>');
     expect(fig).toContain('called Core');
     const third = async (element: unknown) => walkFindingsOf(U, walking(plain, { figure: 'd', steps: [...steps, { element, block: 'p3' }] }));
@@ -424,7 +435,7 @@ describe('schema v16: a walk through a figure (version 2.40)', () => {
       { kind: 'walk', at: '$.sections[3].walk.figure', detail: 't: a walk\'s figure is of a graph kind' },
     ]);
     // A section walking a flow homed in it with the disposition `omitted` raises no finding for that disposition.
-    const omitted = walking(walkDraft(WRITE(), WRITE_RELS(), [writeView('f', { disposition: { kind: 'omitted', reason: 'Not drawn here.', references: [] } })]), { figure: 'f', steps: STEPS() });
+    const omitted = walking(walkDraft(WRITE(), WRITE_RELS(), [writeView('f', { disposition: { kind: 'omitted', reason: 'Not drawn here.', citations: [] } })]), { figure: 'f', steps: STEPS() });
     expect(await walkFindingsOf(A, omitted)).toEqual([]);
   });
 
@@ -496,5 +507,81 @@ describe('schema v16: a walk through a figure (version 2.40)', () => {
     expect(files.get('deep-dives/dd.html')).toContain('<li><a href="#walk-f-2">Log</a> <a class="walk-text" href="#block-d2">Read step 2</a></li>');
     expect(files.get('deep-dives/dd.html')).toContain('.walk-node:target{');
     expect(files.get('index.html')).not.toContain('walk-');
+  });
+
+  it('A walk whose place is not produced renders nowhere: an omitted deep dive walking a produced figure homed in it moves no byte', async () => {
+    const dive = { id: 'dd', title: 'Deeper', sectionId: 's1', paragraphs: [para('d1'), para('d2')], disposition: { kind: 'omitted', reason: 'Not needed here.', citations: [] } };
+    const view = writeView('f', { home: { kind: 'deep-dive', target: 'dd' } });
+    const plan = [...planOf(S1(), []), { home: { kind: 'deep-dive', target: 'dd' }, question: 'How does a write travel?', kind: 'flow', figure: 'f' }];
+    const plain = { ...walkDraft(WRITE(), WRITE_RELS(), [view]), deepDives: [dive], figurePlan: plan };
+    const doc = walking(plain, { figure: 'f', steps: [{ element: 'client', block: 'd1' }, { element: 'log', block: 'd2' }] }, 0, 'deepDives');
+    // A place's disposition raises no walk finding.
+    expect(await walkFindingsOf(A, doc)).toEqual([]);
+    expect((await findingsOf(A, doc)).findings).toEqual((await findingsOf(A, plain)).findings);
+    const [withWalk, without] = [(await rendered(A, doc)).files, (await rendered(A, plain)).files];
+    // The figure is drawn on its section's page, which holds none of the dive's paragraphs, and no file moves.
+    expect(without.get('index.html')).toContain('id="figure-f"');
+    expect(without.get('index.html')).not.toContain('id="block-d1"');
+    expect(withWalk).toEqual(without);
+  });
+
+  it('More malformed walks: `steps` not a list, a base end whose map is not a string, and a walk in a draft of an unknown schema', async () => {
+    const plain = walkDraft(WRITE(), WRITE_RELS(), [writeView()]);
+    const step = { element: 'client', block: 'p1' };
+    for (const walk of [{ figure: 'f', steps: { length: 3, 0: step, 1: step, 2: step } }, { figure: 'f', steps: [step, { element: { map: 7, path: 'api/package.json' }, block: 'p2' }] }]) {
+      expect((await findingsOf(A, walking(plain, walk))).findings.filter((finding) => finding.at.startsWith('$.sections[0].walk')), JSON.stringify(walk))
+        .toEqual([{ kind: 'walk', at: '$.sections[0].walk', detail: 'a walk is {"figure", "steps"}, its steps a list of 2 to 12 {"element", "block"}' }]);
+    }
+    // An unknown schema version keeps its own findings: a schema finding at the walk, never a field-version one.
+    const unknown = walking({ ...plain, schemaVersion: 'polaris-dossier-local-draft-v17' }, { figure: 'f', steps: STEPS() });
+    expect((await findingsOf(A, unknown)).findings.filter((finding) => finding.at.startsWith('$.sections[0].walk')))
+      .toEqual([{ kind: 'schema', at: '$.sections[0].walk', detail: 'is not a field of this form' }]);
+  });
+
+  it('The fidelity packet\'s draft and the rerender measure carry no walk: a walked v16 draft reads as the same draft without it', () => {
+    const plain = walkDraft(WRITE(), WRITE_RELS(), [writeView()]);
+    const dive = { id: 'dd', title: 'Deeper', sectionId: 's1', paragraphs: [para('d1'), para('d2')], disposition: { kind: 'produced', assetIds: ['dd'] } };
+    const both = walking(walking({ ...plain, deepDives: [dive] }, { figure: 'f', steps: STEPS() }), { figure: 'f', steps: [{ element: 'client', block: 'd1' }, { element: 'log', block: 'd2' }] }, 0, 'deepDives');
+    const view = packetDraftView(both);
+    expect(JSON.stringify(view).includes('"walk"')).toBe(false);
+    expect(view).toEqual(packetDraftView({ ...plain, deepDives: [dive] }));
+    const bytes = (doc: Doc): Uint8Array => new TextEncoder().encode(JSON.stringify({ ...doc, pinnedRevision: 'a'.repeat(40) }));
+    expect(measureDraft(bytes(both), undefined)).toEqual(measureDraft(bytes({ ...plain, deepDives: [dive] }), undefined));
+  });
+});
+
+describe('a step\'s base end against a unit map of one manifest declaring two packages (version 2.40, D10)', () => {
+  const unit = (manifest: string, k: number, name: string) => ({ path: `${manifest}#${k}`, factId: `_manifest-${name}`, label: name, name, compared: name, epistemic: 'inferred' as const,
+    unknownReason: null, unit: { kind: 'package-manifest' as const, path: manifest }, manifest });
+  const MAPS: BaseMaps = { units: { map: 'units', elements: [unit('two/Cargo.toml', 1, 'first'), unit('two/Cargo.toml', 2, 'second'), unit('api/package.json', 1, 'api')], contains: [],
+    notListed: { facts: 0, unknownFiles: 0, secretPathsLeftOut: 0 } } };
+  const view = unitsGraph('pkgs', { hide: [{ paths: ['api/package.json'], reason: 'Not this figure.' }] }, ['svc']);
+  const docOf = (steps: unknown[], disposition: Doc = { kind: 'produced', assetIds: ['s1'] }): Doc => ({ schemaVersion: V16, model: { elements: [el('svc', 'Service', 'service')], relationships: [] },
+    diagrams: [view], sections: [section('s1', [para('p1'), para('p2'), para('p3')], { disposition, walk: { figure: 'pkgs', steps } })], deepDives: [] });
+  const base = (element: unknown, k = 0) => ({ element, block: `p${k + 1}` });
+  const findings = (steps: unknown[]) => walkFindings(docOf(steps), MAPS).map(({ at, detail }) => `${at} ${detail}`);
+  const resolved = (doc: Doc): Map<number, ResolvedBase> => {
+    const spec = baseOf(doc, view)!;
+    return new Map([[0, { spec, map: MAPS.units!, shown: shownOf(spec, MAPS.units!), groupOf: new Map(), names: [] }]]);
+  };
+  const walks = (steps: unknown[], disposition?: Doc) => { const doc = docOf(steps, disposition); return [...walksAt(doc, resolved(doc))]; };
+  const svc = { element: 'svc', block: 'p2' };
+
+  it('at check: a bare path naming both packages, and a path naming one the view hides, name no element drawn; `#2` names the second', () => {
+    expect(findings([base({ map: 'units', path: 'two/Cargo.toml' }), svc])).toEqual(['$.sections[0].walk.steps[0].element `walk.steps[0].element` names no element drawn in pkgs']);
+    expect(findings([base({ map: 'units', path: 'api/package.json' }), svc])).toEqual(['$.sections[0].walk.steps[0].element `walk.steps[0].element` names no element drawn in pkgs']);
+    expect(findings([base({ map: 'units', path: 'two/Cargo.toml#2' }), svc])).toEqual([]);
+  });
+
+  it('at the render: each step\'s node is the fact its base end names; a walk with a step naming nothing shown, or another map, or a repeat, renders nowhere', () => {
+    expect(walks([base({ map: 'units', path: 'two/Cargo.toml#2' }), svc])).toEqual([['pkgs', [{ node: '_manifest-second', block: 'p1' }, { node: 'svc', block: 'p2' }]]]);
+    expect(walks([base({ map: 'units', path: 'two/Cargo.toml' }), svc])).toEqual([]);
+    expect(walks([base({ map: 'units', path: 'api/package.json' }), svc])).toEqual([]);
+    expect(walks([base({ map: 'directories', path: 'two/Cargo.toml#2' }), svc])).toEqual([]);
+    expect(walks([base({ map: 'units', path: 'two/Cargo.toml#2' }), base({ map: 'units', path: 'two/Cargo.toml#2' }, 1), svc])).toEqual([]);
+  });
+
+  it('at the render: a section whose disposition is not produced renders no walk', () => {
+    expect(walks([base({ map: 'units', path: 'two/Cargo.toml#1' }), svc], { kind: 'omitted', reason: 'Not here.', citations: [] })).toEqual([]);
   });
 });
