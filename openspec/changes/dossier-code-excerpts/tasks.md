@@ -5,5 +5,5 @@
 - [x] Wire the overlay into `scripts/check_spec_reconciliation.py` (pending until its row) and `scripts/count_polaris_effective_scenarios.py`, with selftest cases (`codeex_cases`).
 - [x] Append the agent-adoption row naming the installing commit, with its revert command (A-345).
 - [ ] Create the version tag `polaris-dossier-code-excerpts-v2.54` at the installing commit once it is on the default branch.
-- [ ] One independent fresh-context review (CC-REV-4), arranged by the lead; raw retained (`docs/reviews/syzygy-3efd-33/`), findings dispositioned in `design.md` and repaired.
+- [x] One independent fresh-context review (CC-REV-4), arranged by the lead; raw retained (`docs/reviews/syzygy-3efd-33/`), findings dispositioned (beside the raw and in `design.md`) and repaired; the install moved to `cb2e966c3`.
 - [ ] The code change (`design.md` D8): schema v18 and brief v26, the findings, the frame, gutter, bands, sentence and list with no script, the fallback, literal tests and a browser test, the quote-fidelity tests and the provider golden unchanged, and a rule-6 mutation record.
