@@ -86,11 +86,15 @@ export const LOCAL_DRAFT_SCHEMA_VERSION_V16 = 'polaris-dossier-local-draft-v16';
  * Brief v25 issues it. A v16 or earlier draft still checks and renders as before, and in a v12, v14, v15 or v16 draft either member is
  * field-version. */
 export const LOCAL_DRAFT_SCHEMA_VERSION_V17 = 'polaris-dossier-local-draft-v17';
-/** The schema the brief issues: v17. */
-export const LOCAL_DRAFT_SCHEMA_VERSION = LOCAL_DRAFT_SCHEMA_VERSION_V17;
+/** v18 (REQ-polaris-generation-034 version 2.54, syzygy-3efd.33): a schema-v17 draft in every respect but one. A code excerpt may carry
+ * `highlights`, ranges of its lines, and `notes`, each tying one of its lines to a cited paragraph of its place (code-marks.ts). Brief v26
+ * issues it. A v17 or earlier draft still checks and renders as before, and in a v3 to v17 draft either member is field-version. */
+export const LOCAL_DRAFT_SCHEMA_VERSION_V18 = 'polaris-dossier-local-draft-v18';
+/** The schema the brief issues: v18. */
+export const LOCAL_DRAFT_SCHEMA_VERSION = LOCAL_DRAFT_SCHEMA_VERSION_V18;
 export { CONTAINMENT_KIND };
 /** Every draft schema version `check` reads. */
-export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION_V11, LOCAL_DRAFT_SCHEMA_VERSION_V12, LOCAL_DRAFT_SCHEMA_VERSION_V13, LOCAL_DRAFT_SCHEMA_VERSION_V14, LOCAL_DRAFT_SCHEMA_VERSION_V15, LOCAL_DRAFT_SCHEMA_VERSION_V16, LOCAL_DRAFT_SCHEMA_VERSION_V17] as const);
+export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION_V11, LOCAL_DRAFT_SCHEMA_VERSION_V12, LOCAL_DRAFT_SCHEMA_VERSION_V13, LOCAL_DRAFT_SCHEMA_VERSION_V14, LOCAL_DRAFT_SCHEMA_VERSION_V15, LOCAL_DRAFT_SCHEMA_VERSION_V16, LOCAL_DRAFT_SCHEMA_VERSION_V17, LOCAL_DRAFT_SCHEMA_VERSION_V18] as const);
 /** The versions the schemas before v11 and v13's name in `schemaVersion`: all but v11 and v12, which no brief issues (see their
  * constants). The v11, v12 and v14 schemas name every version; only v14's is published. */
 const NAMED_SCHEMA_VERSIONS: readonly string[] = Object.freeze(LOCAL_DRAFT_SCHEMA_VERSIONS.filter((version) => version !== LOCAL_DRAFT_SCHEMA_VERSION_V11
@@ -122,8 +126,11 @@ export const hasBaseForm = (version: unknown): boolean => version === LOCAL_DRAF
 /** Whether a section or deep dive may carry `walk`: v16 (version 2.40), and v17 (version 2.50, which reads every rule naming schema v16 as
  * naming v17 too). */
 export const hasWalkForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V16 || hasLevelForm(version);
-/** Whether a graph or containment view may carry `level` and `scope`: v17 (version 2.50). */
-export const hasLevelForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V17;
+/** Whether a graph or containment view may carry `level` and `scope`: v17 (version 2.50), and v18 (version 2.54, which reads every rule
+ * naming schema v17 as naming v18 too). */
+export const hasLevelForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V17 || hasExcerptMarkForm(version);
+/** Whether a code excerpt may carry `highlights` and `notes`, and a verified one renders with numbered lines: v18 (version 2.54). */
+export const hasExcerptMarkForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V18;
 /** Whether a draft carries `figurePlan`, read by check alone: v14 (version 2.33), v15 (version 2.35), v16 (version 2.40) and v17 (version 2.50). */
 export const hasFigurePlanForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V14 || hasBaseForm(version);
 /** Whether a draft is of a known version that has no system model and is not v13, so `model` or a diagram's `view` in it is field-version
@@ -576,7 +583,28 @@ export function draftSchemaDocument(parameters: DraftSchemaParameters): Record<s
   const planned = { ...object, properties: { ...object.properties, [FIGURE_PLAN_FIELD]: { description: FIGURE_PLAN_DESCRIPTION },
     diagrams: withLevels(withBaseViews(object.properties['diagrams'] as ArraySchema)), [MODEL_FIELD]: withBaseEnds(object.properties[MODEL_FIELD] as ObjectSchema),
     sections: withWalk(object.properties['sections'] as ArraySchema), deepDives: withWalk(object.properties['deepDives'] as ArraySchema) } } as unknown as DraftSchema;
-  return schemaDocument(LOCAL_DRAFT_SCHEMA_VERSION, 'Polaris dossier local-agent draft', { root: planned, defs });
+  return schemaDocument(LOCAL_DRAFT_SCHEMA_VERSION, 'Polaris dossier local-agent draft', { root: planned, defs: withExcerptMarks(defs) });
+}
+
+/** A v18 code excerpt's highlights and notes (version 2.54, code-marks.ts). */
+export const HIGHLIGHTS_FIELD = 'highlights';
+export const NOTES_FIELD = 'notes';
+/** Each list holds 1 to 12 entries. */
+export const EXCERPT_MARK_BOUNDS = Object.freeze([1, 12] as const);
+/** The schemas a `highlights` and a `notes` are read against: a list of 1 to 12 entries, each an object of exactly its members, each an
+ * integer from 1 but `block`, a handle. */
+export const HIGHLIGHTS_SCHEMA: DraftSchema = list(object({ startLine: line, endLine: line }), ...EXCERPT_MARK_BOUNDS);
+export const NOTES_SCHEMA: DraftSchema = list(object({ line, block: handle }), ...EXCERPT_MARK_BOUNDS);
+export const HIGHLIGHTS_DESCRIPTION = 'Optional. 1 to 12 ranges `{"startLine", "endLine"}` of the excerpt\'s lines, in the file\'s own line numbers, inside the cited '
+  + 'lines, in order and not overlapping: the lines the reader\'s eye is drawn to.';
+export const NOTES_DESCRIPTION = 'Optional. 1 to 12 margin notes `{"line", "block"}` in order of `line`, one to a line: `line` a line of the excerpt, `block` a cited '
+  + 'paragraph of the same section or deep dive, never a block inside an element, which explains that line.';
+
+/** The v18 document's code element (version 2.54): it may carry `highlights` and `notes`. */
+function withExcerptMarks(defs: Readonly<Record<string, DraftSchema>>): Readonly<Record<string, DraftSchema>> {
+  const code = defs['code'] as ObjectSchema;
+  return { ...defs, code: { ...code, properties: { ...code.properties, [HIGHLIGHTS_FIELD]: { ...HIGHLIGHTS_SCHEMA, description: HIGHLIGHTS_DESCRIPTION },
+    [NOTES_FIELD]: { ...NOTES_SCHEMA, description: NOTES_DESCRIPTION } } } as DraftSchema };
 }
 
 /** A v17 view's level and scope (version 2.50, view-level.ts). */

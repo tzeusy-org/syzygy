@@ -1,0 +1,962 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-28T15:07:06.920Z",
+  "commit": "df0a36131582c2278c6285c91618db198509dec3",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.ts": "e4019653e696a852c39d84932c14adde08cc4d29cdfd9d0355f64e540586a4ee",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "c5b96b2498a19f77cf6c80d0dbb7ed2f7d61c255bb07563a57d39c49e1433c90",
+    "packages/polaris-dossier/src/brief.ts": "62d4622de9196193084447e688ac7e02796e50dfd4c6bec93d2e126b7f338bb3",
+    "packages/polaris-dossier/src/check-derive.ts": "435dab44f2ecd7210a7f0c796852dc4e08a5fa12024d5d3f15d8eb3aeae3b1c1",
+    "packages/polaris-dossier/src/check.ts": "128948659c359cb6ccb3051fc9839200aa41c64dea813eb038dab82454d62f22",
+    "packages/polaris-dossier/src/code-marks.ts": "d3a5173d570d2f7a9fc6b79cf91226936c7a4851f04152c84d330b817388f2cc",
+    "packages/polaris-dossier/src/draft-schema.ts": "609a02ccf0339d93af5fc9545eb974d011b05a0333ab0a961485a2cd46b2b822",
+    "packages/polaris-dossier/src/render.ts": "ea717e951070a18202910ca397748460db1eecc6d308a553fa04b02249c2c9c3",
+    "packages/polaris-dossier/src/rerender-measure.ts": "1daf075ee7cec12c1695408909bf90a980bafb081942ec409c955db8bc11c8ca",
+    "packages/polaris-dossier/src/review-packet.ts": "2252fa5cff39f657ab991dfe29c1fe5db4b21fe484b9985152ae17d3ac37de31"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 600 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/code-marks.ts": [
+      "packages/polaris-dossier/src/code-marks.test.ts"
+    ],
+    "packages/polaris-dossier/src/check.ts": [
+      "packages/polaris-dossier/src/code-marks.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/code-marks.test.ts"
+    ],
+    "packages/polaris-dossier/src/render.ts": [
+      "packages/polaris-dossier/src/code-marks.test.ts"
+    ],
+    "packages/polaris-dossier/src/draft-schema.ts": [
+      "packages/polaris-dossier/src/code-marks.test.ts",
+      "packages/polaris-dossier/src/draft-schema.test.ts"
+    ],
+    "packages/polaris-dossier/src/brief.ts": [
+      "packages/polaris-dossier/src/brief.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts",
+      "packages/polaris-dossier/src/code-marks.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/code-excerpt.browser.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.ts": [
+      "apps/three-surface-poc/src/polaris-generation/code-excerpt.browser.test.ts"
+    ],
+    "packages/polaris-dossier/src/review-packet.ts": [
+      "packages/polaris-dossier/src/code-marks.test.ts"
+    ],
+    "packages/polaris-dossier/src/rerender-measure.ts": [
+      "packages/polaris-dossier/src/code-marks.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.ts",
+      "exitCode": 0,
+      "tests": 1,
+      "perFile": {
+        "apps/three-surface-poc/src/polaris-generation/code-excerpt.browser.test.ts": {
+          "passed": 1,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "exitCode": 0,
+      "tests": 20,
+      "perFile": {
+        "packages/polaris-dossier/src/code-marks.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        },
+        "apps/three-surface-poc/src/polaris-generation/code-excerpt.browser.test.ts": {
+          "passed": 1,
+          "skipped": 0
+        },
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts": {
+          "passed": 5,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "exitCode": 0,
+      "tests": 42,
+      "perFile": {
+        "packages/polaris-dossier/src/brief.test.ts": {
+          "passed": 42,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "exitCode": 0,
+      "tests": 14,
+      "perFile": {
+        "packages/polaris-dossier/src/code-marks.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.ts",
+      "exitCode": 0,
+      "tests": 14,
+      "perFile": {
+        "packages/polaris-dossier/src/code-marks.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "exitCode": 0,
+      "tests": 14,
+      "perFile": {
+        "packages/polaris-dossier/src/code-marks.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "exitCode": 0,
+      "tests": 78,
+      "perFile": {
+        "packages/polaris-dossier/src/code-marks.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        },
+        "packages/polaris-dossier/src/draft-schema.test.ts": {
+          "passed": 64,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.ts",
+      "exitCode": 0,
+      "tests": 14,
+      "perFile": {
+        "packages/polaris-dossier/src/code-marks.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "exitCode": 0,
+      "tests": 14,
+      "perFile": {
+        "packages/polaris-dossier/src/code-marks.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "exitCode": 0,
+      "tests": 14,
+      "perFile": {
+        "packages/polaris-dossier/src/code-marks.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "bounds-admit-13",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "EXCERPT_MARK_BOUNDS = Object.freeze([1, 12] as const);",
+      "new": "EXCERPT_MARK_BOUNDS = Object.freeze([1, 13] as const);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 78,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Malformed lists are schema findings, and a bad citation or list skips this version's checks",
+        "packages/polaris-dossier/src/draft-schema.test.ts > draft.schema.json is a JSON Schema 2020-12 document carrying the version, the revision and closed objects"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "bounds-admit-0",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "EXCERPT_MARK_BOUNDS = Object.freeze([1, 12] as const);",
+      "new": "EXCERPT_MARK_BOUNDS = Object.freeze([0, 12] as const);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 78,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Malformed lists are schema findings, and a bad citation or list skips this version's checks",
+        "packages/polaris-dossier/src/draft-schema.test.ts > draft.schema.json is a JSON Schema 2020-12 document carrying the version, the revision and closed objects"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "published-schema-unmarked",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "defs: withExcerptMarks(defs) });",
+      "new": "defs });",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 78,
+      "failedTests": [
+        "packages/polaris-dossier/src/draft-schema.test.ts > draft.schema.json is a JSON Schema 2020-12 document carrying the version, the revision and closed objects"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "highlight-start-unchecked",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "else if (start < s || end > t)",
+      "new": "else if (end > t)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) A highlight outside the excerpt or out of order is refused",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) refuses at a render a v18 draft whose check record was altered to passed, from its highlight finding found again"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "highlight-end-unchecked",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "else if (start < s || end > t)",
+      "new": "else if (start < s)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) A highlight outside the excerpt or out of order is refused",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Malformed lists are schema findings, and a bad citation or list skips this version's checks",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Findings follow the draft's order, and a note may name a subsection's paragraph"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "backwards-unchecked",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "if (start > end) out.push({ kind: 'code-highlight', at: entryAt, detail: CODE_MARK_DETAIL.backwards(k) });\n        else if",
+      "new": "if (false) out.push({ kind: 'code-highlight', at: entryAt, detail: CODE_MARK_DETAIL.backwards(k) });\n        else if",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) A highlight outside the excerpt or out of order is refused"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "overlap-strict",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "start <= (highlights[k - 1]!['endLine'] as number)",
+      "new": "start < (highlights[k - 1]!['endLine'] as number)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) A highlight outside the excerpt or out of order is refused"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "overlap-loose",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "start <= (highlights[k - 1]!['endLine'] as number)",
+      "new": "start <= (highlights[k - 1]!['endLine'] as number) + 1",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) A highlight outside the excerpt or out of order is refused"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "note-low-unchecked",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "if (line < s || line > t)",
+      "new": "if (line > t)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) A note outside the excerpt, out of order or without a cited paragraph is refused",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Malformed lists are schema findings, and a bad citation or list skips this version's checks",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Findings follow the draft's order, and a note may name a subsection's paragraph"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "note-high-unchecked",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "if (line < s || line > t)",
+      "new": "if (line < s)",
+      "killed": false,
+      "killedBy": null,
+      "tests": 14,
+      "failedTests": [],
+      "seconds": 5
+    },
+    {
+      "id": "note-order-strict",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "line <= (notes[k - 1]!['line'] as number)",
+      "new": "line < (notes[k - 1]!['line'] as number)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) A note outside the excerpt, out of order or without a cited paragraph is refused"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "note-uncited-unchecked",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "else if (list(paragraph['citations']).length === 0)",
+      "new": "else if (false)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) A note outside the excerpt, out of order or without a cited paragraph is refused"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "note-resolves-anything",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "const paragraph = paragraphs.get(block);",
+      "new": "const paragraph = paragraphs.get(block) ?? { citations: [1] };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) A note outside the excerpt, out of order or without a cited paragraph is refused",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Findings follow the draft's order, and a note may name a subsection's paragraph"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "place-not-tracked",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "isRecord(entry) ? entry : undefined, key));",
+      "new": "undefined, key));",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) passes a v18 draft whose excerpt highlights and notes lie inside its lines, in order, naming cited paragraphs",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) A note outside the excerpt, out of order or without a cited paragraph is refused",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Malformed lists are schema findings, and a bad citation or list skips this version's checks",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Findings follow the draft's order, and a note may name a subsection's paragraph",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) hands every other reader the draft without the members",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) Highlights and notes mark the lines and link their paragraphs",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) Notes in a collapsible section add no fragment target there",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) A withheld excerpt renders no numbers, highlights or notes, and its page carries no frame style",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) A line a browser counts otherwise leaves the excerpt unnumbered; line feeds and CRLF number"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "bad-citation-not-skipped",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "if (s === undefined || t === undefined || s > t || t - s + 1 > CODE_EXCERPT_MAX_LINES) return undefined;\n  const refused = prior.some((finding) => (finding.kind === 'range-invalid' || finding.kind === 'code-excerpt-too-long') && finding.at === `${at}.citation`);\n  return refused ? undefined : { s, t };",
+      "new": "if (s === undefined || t === undefined) return undefined;\n  return { s, t };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Malformed lists are schema findings, and a bad citation or list skips this version's checks"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "schema-fault-not-skipping",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "sound.set(member, faults.length === 0);",
+      "new": "sound.set(member, true);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Malformed lists are schema findings, and a bad citation or list skips this version's checks"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "schema-path-unmapped",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "${fault.path.slice(1)}",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Malformed lists are schema findings, and a bad citation or list skips this version's checks"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "excerpts-reversed",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "visit(doc, '$', undefined, undefined);\n  return out;",
+      "new": "visit(doc, '$', undefined, undefined);\n  return out.reverse();",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Findings follow the draft's order, and a note may name a subsection's paragraph"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "strip-nothing",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "const code = value['kind'] === 'code';",
+      "new": "const code = false;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) passes a v18 draft whose excerpt highlights and notes lie inside its lines, in order, naming cited paragraphs",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) A highlight outside the excerpt or out of order is refused",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) A note outside the excerpt, out of order or without a cited paragraph is refused",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Malformed lists are schema findings, and a bad citation or list skips this version's checks",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Findings follow the draft's order, and a note may name a subsection's paragraph",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) refuses at a render a v18 draft whose check record was altered to passed, from its highlight finding found again",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) hands every other reader the draft without the members",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) Highlights and notes mark the lines and link their paragraphs",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) Notes in a collapsible section add no fragment target there",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) A withheld excerpt renders no numbers, highlights or notes, and its page carries no frame style",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) A line a browser counts otherwise leaves the excerpt unnumbered; line feeds and CRLF number"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "v2-takes-field-version",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "|| version === LOCAL_DRAFT_SCHEMA_VERSION_V2 ||",
+      "new": "||",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) a v2 draft carrying a code element with highlights keeps its element-version finding and takes none of this version"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "findings-in-every-version",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "  if (!hasExcerptMarkForm(doc['schemaVersion'])) return [];\n  const out: CheckFinding[] = [];",
+      "new": "  const out: CheckFinding[] = [];",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) a v2 draft carrying a code element with highlights keeps its element-version finding and takes none of this version",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Earlier schemas take highlights and notes as a field-version"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "numbered-in-every-version",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "  if (!hasExcerptMarkForm(doc['schemaVersion'])) return out;",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) A code excerpt's lines are numbered from Syzygy's read"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "check-findings-dropped",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "findings.push(...codeMarkFindings(walked, findings));",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 0,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts (file failed: Transform failed with 1 error:\n/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-3efd.33-code/packages/polaris-dossier/src/check.ts:380:2: ERROR: Cannot use a declaration in a single-s)"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "check-not-stripped",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "doc = withoutCodeMarks(withoutLevels(withoutWalks(doc)));",
+      "new": "doc = withoutLevels(withoutWalks(doc));",
+      "killed": false,
+      "killedBy": null,
+      "tests": 14,
+      "failedTests": [],
+      "seconds": 6
+    },
+    {
+      "id": "field-version-dropped",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "      for (const finding of codeMarkFieldVersionFindings(doc)) add(finding);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Earlier schemas take highlights and notes as a field-version"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "field-version-path-not-excused",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "      for (const at of codeMarkFieldVersionPaths(doc)) subsectionPaths.add(at);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) Earlier schemas take highlights and notes as a field-version"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "render-findings-dropped",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "  findings.push(...codeMarkFindings(walked, findings));\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) refuses at a render a v18 draft whose check record was altered to passed, from its highlight finding found again"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "render-marks-not-passed",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": ", ...(codeMarks.size === 0 ? {} : { codeMarks })",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) A code excerpt's lines are numbered from Syzygy's read",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) Highlights and notes mark the lines and link their paragraphs",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) Notes in a collapsible section add no fragment target there",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) A line a browser counts otherwise leaves the excerpt unnumbered; line feeds and CRLF number"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "render-not-stripped",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "doc = withoutCodeMarks(withoutLevels(withoutWalks(doc)));",
+      "new": "doc = withoutLevels(withoutWalks(doc));",
+      "killed": false,
+      "killedBy": null,
+      "tests": 14,
+      "failedTests": [],
+      "seconds": 6
+    },
+    {
+      "id": "packet-not-stripped",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "old": "withoutCodeMarks(withoutLevels(withoutWalks(withoutFigurePlan(draftDoc))))",
+      "new": "withoutLevels(withoutWalks(withoutFigurePlan(draftDoc)))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) hands every other reader the draft without the members"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "measure-not-stripped",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "doc = withoutCodeMarks(withoutLevels(withoutWalks(withoutFigurePlan(doc))));",
+      "new": "doc = withoutLevels(withoutWalks(withoutFigurePlan(doc)));",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: check (version 2.54) hands every other reader the draft without the members"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "brief-paragraph-dropped",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    EXCERPT_PARAGRAPH,\n    '',\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 42,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, containment, system-model, figure-plan, derived-base, walk, level and excerpt paragraphs, task-routes section, worth-knowing paragraph and question-kinds paragraph"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "brief-version-kept",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "BRIEF_VERSION = 'polaris-dossier-brief-v26';",
+      "new": "BRIEF_VERSION = 'polaris-dossier-brief-v25';",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 42,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued writes the brief, the schema and the brief record, binding the run, the pinned revision and the schema version",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, containment, system-model, figure-plan, derived-base, walk, level and excerpt paragraphs, task-routes section, worth-knowing paragraph and question-kinds paragraph"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "number-not-weighted",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${covered ? ' code-highlighted' : ''}",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 20,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) Highlights and notes mark the lines and link their paragraphs",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) frames the excerpt: gutter, the unchanged pre, bands opening with line 10's empty element, then the sentence and the notes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) reads two quotation parts as one excerpt, each its own code element in the one pre"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "note-mark-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${note === -1 ? '' : ` <span class=\"code-note-mark\">${note + 1}</span>`}",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 20,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) Highlights and notes mark the lines and link their paragraphs",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) frames the excerpt: gutter, the unchanged pre, bands opening with line 10's empty element, then the sentence and the notes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) reads two quotation parts as one excerpt, each its own code element in the one pre"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "unbanded-empty",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": ": '<span class=\"code-unbanded\"></span>');",
+      "new": ": '');",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 20,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) Highlights and notes mark the lines and link their paragraphs",
+        "apps/three-surface-poc/src/polaris-generation/code-excerpt.browser.test.ts > sets each number and band on its line at 390 and 1440 px, scrolled and not, in one quotation part or two",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) frames the excerpt: gutter, the unchanged pre, bands opening with line 10's empty element, then the sentence and the notes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) reads two quotation parts as one excerpt, each its own code element in the one pre"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "shown-off-by-one",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const shown = (n: number): number => n - s + 1;",
+      "new": "const shown = (n: number): number => n - s;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 20,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) Highlights and notes mark the lines and link their paragraphs",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) Notes in a collapsible section add no fragment target there",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) A line a browser counts otherwise leaves the excerpt unnumbered; line feeds and CRLF number",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) frames the excerpt: gutter, the unchanged pre, bands opening with line 10's empty element, then the sentence and the notes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) leaves an excerpt whose lines hold a byte a browser may count otherwise unnumbered, keeping the sentence and the notes"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "fallback-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (CODE_LINE_BREAK_UNCERTAIN.test(text)) return",
+      "new": "if (false) return",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 20,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) A line a browser counts otherwise leaves the excerpt unnumbered; line feeds and CRLF number",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) leaves an excerpt whose lines hold a byte a browser may count otherwise unnumbered, keeping the sentence and the notes"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "bands-not-hidden",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<pre class=\"code-bands\" aria-hidden=\"true\">",
+      "new": "<pre class=\"code-bands\">",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 20,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) Highlights and notes mark the lines and link their paragraphs",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) frames the excerpt: gutter, the unchanged pre, bands opening with line 10's empty element, then the sentence and the notes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) reads two quotation parts as one excerpt, each its own code element in the one pre"
+      ],
+      "seconds": 8
+    },
+    {
+      "id": "gutter-not-hidden",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<pre class=\"code-gutter\" aria-hidden=\"true\">",
+      "new": "<pre class=\"code-gutter\">",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 20,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) A code excerpt's lines are numbered from Syzygy's read",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) Highlights and notes mark the lines and link their paragraphs",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) A line a browser counts otherwise leaves the excerpt unnumbered; line feeds and CRLF number",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) frames the excerpt: gutter, the unchanged pre, bands opening with line 10's empty element, then the sentence and the notes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) reads two quotation parts as one excerpt, each its own code element in the one pre"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "bands-without-highlights",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const banded = marks.highlights.length === 0 ? '' :",
+      "new": "const banded = false ? '' :",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 20,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) A code excerpt's lines are numbered from Syzygy's read"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "single-line-as-range",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${s === t ? `line ${s}` : `lines ${s}–${t}`}",
+      "new": "${`lines ${s}–${t}`}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 20,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) A line a browser counts otherwise leaves the excerpt unnumbered; line feeds and CRLF number"
+      ],
+      "seconds": 8
+    },
+    {
+      "id": "style-on-every-page",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${codeFramePages.has(path) ? CODE_FRAME_CSS : ''}",
+      "new": "${CODE_FRAME_CSS}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 20,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) A code excerpt's lines are numbered from Syzygy's read",
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) A withheld excerpt renders no numbers, highlights or notes, and its page carries no frame style",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) carries the style rules only on a page holding a frame",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) leaves an excerpt whose lines hold a byte a browser may count otherwise unnumbered, keeping the sentence and the notes"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "style-on-no-page",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${codeFramePages.has(path) ? CODE_FRAME_CSS : ''}",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 20,
+      "failedTests": [
+        "packages/polaris-dossier/src/code-marks.test.ts > code excerpt marks: render (version 2.54) Highlights and notes mark the lines and link their paragraphs",
+        "apps/three-surface-poc/src/polaris-generation/code-excerpt.browser.test.ts > sets each number and band on its line at 390 and 1440 px, scrolled and not, in one quotation part or two",
+        "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.test.ts > numbered code excerpt (version 2.54) frames the excerpt: gutter, the unchanged pre, bands opening with line 10's empty element, then the sentence and the notes"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "code-laid-out-as-blocks",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.ts",
+      "old": "pre code{display:inline;",
+      "new": "pre code{display:block;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 1,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/code-excerpt.browser.test.ts > sets each number and band on its line at 390 and 1440 px, scrolled and not, in one quotation part or two"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "gutter-padded-otherwise",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.ts",
+      "old": "pre.code-gutter{grid-area:gutter;position:static;",
+      "new": "pre.code-gutter{grid-area:gutter;position:static;padding-top:0;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 1,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/code-excerpt.browser.test.ts > sets each number and band on its line at 390 and 1440 px, scrolled and not, in one quotation part or two"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "gutter-sized-otherwise",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.ts",
+      "old": "pre.code-gutter{grid-area:gutter;position:static;",
+      "new": "pre.code-gutter{grid-area:gutter;position:static;font-size:.7rem;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 1,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/code-excerpt.browser.test.ts > sets each number and band on its line at 390 and 1440 px, scrolled and not, in one quotation part or two"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "bands-in-another-cell",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.ts",
+      "old": ">pre{grid-area:lines;",
+      "new": ">pre{",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 1,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/code-excerpt.browser.test.ts > sets each number and band on its line at 390 and 1440 px, scrolled and not, in one quotation part or two"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "pre-paints-background",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.ts",
+      "old": "background:none;overflow:visible;",
+      "new": "background:var(--d-surface-2);overflow:visible;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 1,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/code-excerpt.browser.test.ts > sets each number and band on its line at 390 and 1440 px, scrolled and not, in one quotation part or two"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "text-under-bands",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.ts",
+      "old": "white-space:pre;position:relative}",
+      "new": "white-space:pre;position:static}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 1,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/code-excerpt.browser.test.ts > sets each number and band on its line at 390 and 1440 px, scrolled and not, in one quotation part or two"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "lines-wrap",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.ts",
+      "old": "white-space:pre;position:relative}",
+      "new": "white-space:pre-wrap;position:relative}",
+      "killed": false,
+      "killedBy": null,
+      "tests": 1,
+      "failedTests": [],
+      "seconds": 3
+    },
+    {
+      "id": "band-as-wide-as-a-space",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.ts",
+      "old": ".code-band{display:inline-block;width:${tokens.length.full};",
+      "new": ".code-band{display:inline-block;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 1,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/code-excerpt.browser.test.ts > sets each number and band on its line at 390 and 1440 px, scrolled and not, in one quotation part or two"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "frame-does-not-scroll",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-code-frame.ts",
+      "old": "overflow-x:auto;background:var(--d-surface-2)",
+      "new": "overflow-x:visible;background:var(--d-surface-2)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 1,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/code-excerpt.browser.test.ts > sets each number and band on its line at 390 and 1440 px, scrolled and not, in one quotation part or two"
+      ],
+      "seconds": 2
+    }
+  ],
+  "equivalent": [
+    {
+      "id": "derive-not-stripped",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "const subject = withoutCodeMarks(withoutLevels(withoutWalks(given)));",
+      "new": "const subject = withoutLevels(withoutWalks(given));",
+      "reason": "Both callers that can hand deriveFindings a v18 draft strip its marks first (check.ts and render.ts, each `doc = withoutCodeMarks(withoutLevels(withoutWalks(doc)))` before the call; check-not-stripped and render-not-stripped show both paths run), and the third, verify-text.ts, passes a synthetic subject with no sections. The strip inside deriveFindings is the contract for a later caller."
+    },
+    {
+      "id": "too-long-guard-dropped",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "|| s > t || t - s + 1 > CODE_EXCERPT_MAX_LINES) return undefined;",
+      "new": "|| s > t) return undefined;",
+      "reason": "An excerpt of more than 60 lines always draws code-excerpt-too-long at its citation, which the next line reads, so the length guard and that reading each skip it alone; bad-citation-not-skipped removes both and is killed."
+    },
+    {
+      "id": "refused-dropped",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "return refused ? undefined : { s, t };",
+      "new": "return { s, t };",
+      "reason": "range-invalid is drawn exactly where a line is not an integer from 1 or startLine is after endLine (check-derive.ts), and code-excerpt-too-long where the range holds more than 60 lines: the guard above the reading refuses each first. The reading binds the requirement's own words; bad-citation-not-skipped removes both and is killed."
+    },
+    {
+      "id": "field-version-in-v18",
+      "file": "packages/polaris-dossier/src/code-marks.ts",
+      "old": "if (hasExcerptMarkForm(version) || version",
+      "new": "if (version",
+      "reason": "codeMarkFieldVersionPaths and codeMarkFieldVersionFindings are read only inside deriveFindings, which reads the draft after withoutCodeMarks; in a v18 draft that removes every `highlights` and `notes`, so with the version arm gone the functions still find no member to report."
+    }
+  ],
+  "summary": {
+    "mutants": 53,
+    "killed": 49,
+    "survived": 4,
+    "byTimeout": 0,
+    "equivalentNotRun": 4
+  }
+}
