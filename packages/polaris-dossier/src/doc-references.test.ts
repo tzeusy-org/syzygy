@@ -150,6 +150,12 @@ describe('docsAndCode: doc-reference v1 under declared-source policy 2.0.0', () 
     expect(JSON.stringify(m)).not.toContain(SECRET_NAME);
   });
 
+  it('reaches a symbolic link by a span tail and a submodule by a link (mutation run 2)', async () => {
+    const tree: Tree = { 'README.md': '`guide/x.md` and [s](deps/libfoo/x.md).\n', 'docs/guide': { mode: '120000' }, 'deps/libfoo': { mode: '160000' } };
+    const m = derived(await derive(fixture(tree, ['README.md'])));
+    expect(m.rows.map((r) => [r.value, r.outcome, r.unknownReason])).toEqual([['guide/x.md', 'unknown', 'symbolic-link'], ['deps/libfoo/x.md', 'unknown', 'submodule']]);
+  });
+
   it('resolves a name only a comment or a string of a lexed file holds, saying so, and prefers the code text (R-DOCS-AND-CODE-1 F2)', async () => {
     const tree: Tree = {
       'README.md': '`DATABASE_URL`, `max_retries` and `run_it`.\n',
