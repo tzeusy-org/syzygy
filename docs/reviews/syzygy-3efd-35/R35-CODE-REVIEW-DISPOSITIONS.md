@@ -98,5 +98,5 @@ Repaired or answered:
 Repaired.
 
 - A new test in `walk.test.ts` checks and renders the same draft twice: once with the advice computed (3 advisories), and once with it forced off through the mocked module.
-- It compares byte for byte every file check writes into the run: `checks/rev-0.json`, `derived/rev-0.json`, `draft.schema.json`, `drafts/next.json`, `drafts/rev-0.json`, `run-advice.json` and `steps.jsonl`. It also compares every file of the rendered site.
+- It compares byte for byte every file check writes into the run: the run's check record and derived record of revision 0, its draft schema, its next and revision-0 drafts, its run advice and its step log. It also compares every file of the rendered site.
 - Three files are not compared: `brief.json`, `brief.md` and `run.json`. Run setup writes them before check, and each names its run's own temporary clone or that clone's digest.
