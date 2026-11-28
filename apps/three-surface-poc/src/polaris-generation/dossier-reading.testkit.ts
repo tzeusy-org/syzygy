@@ -323,3 +323,59 @@ export function zoomContainmentInput(): { readonly local: LocalRenderInput; read
   return { sources, local: { ...local, draft: { ...draft, diagrams: [...(draft['diagrams'] as unknown[]), inside] } as unknown as LocalRenderInput['draft'],
     viewLevels: new Map([['inside-web', { level: 'component', scope: 'web' }]]) } };
 }
+
+/** A numbered code excerpt (REQ-polaris-generation-034 version 2.54, syzygy-3efd.33) on section one of the reading dossier: `src/pool.ts`
+ * lines 10 to 20, whose line 15 is wider than a phone, highlighted on lines 12 to 13 and 18 and noted on 12 and 18, the notes naming the
+ * section's paragraphs `p-pool` and `p-free`. With `split`, the excerpt's bytes are two quotation parts, the first ending inside line 15,
+ * as the render adapter gives them where a source piece ends there. */
+export const POOL_LINES: readonly string[] = Array.from({ length: 25 }, (_, k) => (k + 1 === 15
+  ? 'export const slot15 = \'a slot of the pool whose name runs long enough to scroll the frame at a phone width, and then some more\';'
+  : `export const slot${k + 1} = ${k + 1};`));
+/** How the excerpt's lines are written (review R33-code finding 7): with line feeds; with CRLF; each between tabs; with its first or its
+ * last line empty; with no line feed after line 20, the blob's last; with line 11 600 characters long; or `sixty`, an excerpt of lines 1 to
+ * 60 of a 65-line blob, highlighted also on 59 to 60, so a pitch that drifted per line would show at its foot. */
+export type ExcerptVariant = 'lf' | 'crlf' | 'tabs' | 'empty-first' | 'empty-last' | 'no-final-newline' | 'long-line' | 'sixty';
+/** The excerpt's first and last lines and its highlights, for a variant. */
+export const excerptShape = (variant: ExcerptVariant): { readonly startLine: number; readonly endLine: number; readonly highlights: readonly { readonly startLine: number; readonly endLine: number }[] } =>
+  (variant === 'sixty'
+    ? { startLine: 1, endLine: 60, highlights: [{ startLine: 12, endLine: 13 }, { startLine: 18, endLine: 18 }, { startLine: 59, endLine: 60 }] }
+    : { startLine: 10, endLine: 20, highlights: [{ startLine: 12, endLine: 13 }, { startLine: 18, endLine: 18 }] });
+/** The blob's lines for a variant, before any line ending. */
+export function poolLines(variant: ExcerptVariant): string[] {
+  const count = variant === 'sixty' ? 65 : variant === 'no-final-newline' ? 20 : POOL_LINES.length;
+  return Array.from({ length: count }, (_, k) => {
+    const text = POOL_LINES[k] ?? `export const slot${k + 1} = ${k + 1};`;
+    if (variant === 'tabs') return `\t${text}\t`;
+    if ((variant === 'empty-first' && k + 1 === 10) || (variant === 'empty-last' && k + 1 === 20)) return '';
+    if (variant === 'long-line' && k + 1 === 11) return `export const slot11 = '${'w'.repeat(574)}';`;
+    return text;
+  });
+}
+export function codeExcerptInput(split = false, variant: ExcerptVariant = 'lf'): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {
+  const { local, sources } = readingInput();
+  const ending = variant === 'crlf' ? '\r\n' : '\n';
+  const lines = poolLines(variant);
+  const shape = excerptShape(variant);
+  const body = variant === 'no-final-newline' ? lines.join(ending) : lines.map((text) => `${text}${ending}`).join('');
+  const base = { repositoryId: 'synthetic:reading', revision: REVISION, path: 'src/pool.ts', objectId: gitBlobObjectId(body) };
+  const size = Buffer.byteLength(body);
+  const pool: GenerationSource = { ...base, sourceId: 'src-00000000000000000000pool', evaluationId: 'synthetic-evaluation:pool', classificationBasis: 'body',
+    exclusion: { excluded: false }, body, spans: [{ anchorId: generationAnchorId(base, 0, size), start: 0, end: size, text: body }] };
+  const offset = (line: number): number => Math.min(size, Buffer.byteLength(lines.slice(0, line - 1).map((text) => `${text}${ending}`).join('')));
+  const start = offset(shape.startLine), end = offset(shape.endLine + 1), cut = offset(15) + 30;
+  const part = (from: number, to: number) => ({ kind: 'quotation' as const, sourceId: pool.sourceId, start: from, end: to,
+    text: Buffer.from(body).subarray(from, to).toString('utf8'), anchor: { ...anchor(pool), fragment: `${from}-${to}` } });
+  const parts = split ? [part(start, cut), part(cut, end)] : [part(start, end)];
+  const sourceIds = [READING_SOURCE.sourceId];
+  const draft = local.draft as unknown as Record<string, unknown>;
+  const sections = draft['sections'] as Record<string, unknown>[];
+  const excerpt = { id: 'x', text: '', sourceIds: [], children: [], element: { kind: 'code', language: 'TypeScript', path: 'src/pool.ts', startLine: shape.startLine, endLine: shape.endLine, parts } };
+  const one = { ...sections[0]!, paragraphs: [{ id: 'p-pool', text: 'x', sourceIds, children: [] }, { id: 'p-free', text: 'x', sourceIds, children: [] }, excerpt] };
+  const blocks = new Map(local.blocks as ReadonlyMap<string, unknown>);
+  blocks.set('p-pool', claim('The pool hands out slots.'));
+  blocks.set('p-free', claim('A freed slot goes back to the pool.'));
+  return { sources: [...sources, pool], local: { ...local, blocks: blocks as LocalRenderInput['blocks'],
+    sourceAnchors: new Map([...local.sourceAnchors, [pool.sourceId, anchor(pool)]]),
+    draft: { ...draft, sections: [one, ...sections.slice(1)] } as unknown as LocalRenderInput['draft'],
+    codeMarks: new Map([['x', { highlights: [...shape.highlights], notes: [{ line: 12, block: 'p-pool' }, { line: 18, block: 'p-free' }] }]]) } };
+}

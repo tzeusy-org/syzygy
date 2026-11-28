@@ -75,6 +75,7 @@ describe('status (REQ-polaris-generation-033)', () => {
         deadline: 'PT3H; not started (no brief recorded)',
         agentUsage: 'not recorded; Syzygy cannot observe the agent sessions\' usage, and the run is not closed',
       },
+      cost: 'Cost: Unknown. Syzygy did not start this run\'s sessions, so it reads no usage of theirs; money Unknown (no price receipt). (read now, before close; the run total may still grow)',
       executionRecord: 'not written: the run is not closed',
       openFindings: 'not recorded',
       reviewsStillRequired: ['inventory', 'fidelity review', 'rendered-design review'],
