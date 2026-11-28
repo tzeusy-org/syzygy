@@ -733,8 +733,8 @@ describe('walk advice on check\'s report (version 2.51, syzygy-3efd.35)', () => 
   });
 
   describe('under the committed dossier policy, a directory withheld at check is not read (review R35, notes 1 and 2)', () => {
-    // The real policy denies `kubeconfig` as a path (a denied basename) and every path below `.ssh` (a denied directory name). Neither is a
-    // secret path, so the directory map still names both; the walk advice reads neither step and counts neither.
+    // The real policy denies `kubeconfig` as a path (a denied basename) and every path below `.ssh` and `.kube` (denied directory names).
+    // None is a secret path, so the directory map still names all three; the walk advice reads none of their steps and counts none.
     const REAL_SCREEN = buildDossierScreen(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json')),
       true, null, 'public');
     if (!SCREEN.ok) throw new Error(SCREEN.why);
@@ -742,27 +742,27 @@ describe('walk advice on check\'s report (version 2.51, syzygy-3efd.35)', () => 
     let K: Pinned;
     beforeAll(() => {
       K = pinnedTree({ 'README.md': TREE_A['README.md']!, 'src/a.ts': 'export const a = 1;\n', 'kubeconfig/a.ts': 'export const k = 1;\n',
-        '.ssh/a.ts': 'export const s = 1;\n' });
+        '.ssh/a.ts': 'export const s = 1;\n', '.kube/notes': 'Cluster notes.\n' });
     });
-    const walked = (texts: [string, string, string]): Doc => walking(walkDraft([], [], [dirsGraph('d', { select: ['src', 'kubeconfig', '.ssh'],
+    const walked = (texts: [string, string, string, string]): Doc => walking(walkDraft([], [], [dirsGraph('d', { select: ['src', 'kubeconfig', '.ssh', '.kube'],
       restReason: 'Rest', names: [nameOf('src', 'Sources')] }, [], [])], [section('s1', [para('p1', 1, { text: texts[0] }), para('p2', 1, { text: texts[1] }),
-      para('p3', 1, { text: texts[2] })])]),
+      para('p3', 1, { text: texts[2] }), para('p4', 1, { text: texts[3] })])]),
     { figure: 'd', steps: [{ element: { map: 'directories', path: 'src' }, block: 'p1' }, { element: { map: 'directories', path: 'kubeconfig' }, block: 'p2' },
-      { element: { map: 'directories', path: '.ssh' }, block: 'p3' }] });
+      { element: { map: 'directories', path: '.ssh' }, block: 'p3' }, { element: { map: 'directories', path: '.kube' }, block: 'p4' }] });
 
     it('reads only the `src` step, whichever rule withholds the others', async () => {
       if (!REAL_SCREEN.ok) throw new Error(REAL_SCREEN.why);
       // The committed policy's rules under the fixture's binding: the run binds the fixture policy's bytes, so the screen carries their identity.
       const bound = { ok: true as const, screen: { ...REAL_SCREEN.screen, policyId: SCREEN_OF.policyId, policyVersion: SCREEN_OF.policyVersion, policySha256: SCREEN_OF.policySha256 } };
-      const report = await reportOf(K, walked(['src: 1 file.', 'kubeconfig: 1 file.', '.ssh: 1 file.']), { loadScreen: async () => bound });
+      const report = await reportOf(K, walked(['src: 1 file.', 'kubeconfig: 1 file.', '.ssh: 1 file.', '.kube: 1 file.']), { loadScreen: async () => bound });
       expect([report['outcome'], report['walkAdvice']]).toEqual(['passed', { rules: RULES, examined: 1,
         advisories: [{ rule: 'walk-step-restates-label', at: '$.sections[0].walk.steps[0]', detail: DETAIL('d', 1, 'p1') }] }]);
     });
 
-    it('reads all three steps under the fixture policy, which denies neither', async () => {
-      const report = await reportOf(K, walked(['src: 1 file.', 'kubeconfig: 1 file.', '.ssh: 1 file.']));
+    it('reads all four steps under the fixture policy, which denies none of them', async () => {
+      const report = await reportOf(K, walked(['src: 1 file.', 'kubeconfig: 1 file.', '.ssh: 1 file.', '.kube: 1 file.']));
       expect([report['outcome'], report['walkAdvice']['examined'], report['walkAdvice']['advisories'].map((entry: Doc) => entry['at'])])
-        .toEqual(['passed', 3, ['$.sections[0].walk.steps[0]', '$.sections[0].walk.steps[1]', '$.sections[0].walk.steps[2]']]);
+        .toEqual(['passed', 4, ['$.sections[0].walk.steps[0]', '$.sections[0].walk.steps[1]', '$.sections[0].walk.steps[2]', '$.sections[0].walk.steps[3]']]);
     });
   });
 });
