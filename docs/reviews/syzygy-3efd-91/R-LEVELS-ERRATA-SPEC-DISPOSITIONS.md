@@ -23,9 +23,10 @@ Repaired.
 
 Repaired.
 
-- The row's revert column now runs newest first: `960433d94` (a census note made after merging main), `041073ce8`, `02234e39b`, `fe32fd9f4`, `be6c1d7ce`, then the wiring commit `d7c42eb6b` with the adoption log restored from `HEAD`, then the first install `4ae2baf18`.
+- The row's revert column now runs newest first: `1243b1b3e` (the README's rollback note), `960433d94` (a census note made after merging main), `041073ce8`, `02234e39b`, `fe32fd9f4`, `be6c1d7ce`, then the wiring commit `d7c42eb6b` with the adoption log restored from `HEAD`, then the first install `4ae2baf18`.
 - The README's "Rollback after a veto" gives the `d7c42eb6b` step as three commands. It says that this commit holds the census, status and index lines and the checker's count constants, and that it comes before the first install's revert.
-- [Observed] The chain was run in a scratch clone at the branch head named in the PR body. Every revert applied; the `d7c42eb6b` step stopped on a conflict in the adoption log alone, which the checkout resolved. The result differs from the merge base `3f04944bb` only by the kept row and this review's three files.
+- The README's "Rollback after a veto" also says how to resolve a conflict with another change's later edit of the same lines: keep the later side and delete only this version's own lines and names. After the merge of main that brought in session usage 2.45, the wiring revert conflicts in `PROJECT-STATUS.md`, and the first install's revert conflicts in both checker scripts.
+- [Observed] The chain was run by that procedure in a scratch clone at the branch head named in the PR body. The result differs from the default branch only by the kept row and this review's three files. Every revert applied; the `d7c42eb6b` step stopped on a conflict in the adoption log alone, which the checkout resolved. The result differs from the merge base `3f04944bb` only by the kept row and this review's three files.
 
 ## 4. Note: the refusal sentence has no named means of verification
 
