@@ -3688,7 +3688,7 @@ DOCCODE_REPLACES = (POLARIS_ID + "034",)
 DOCCODE_COUNT_SCOPE = "With the docs and code"
 DOCCODE_COUNT_PREFIX = "With the docs and code version effective, Polaris has "
 DOCCODE_SUBJECTS = {
-    DOCCODE_SPEC: "0d4098ddf94bc092c600faed71a007d0da24a32a6cefa33386f7a248de690d18",
+    DOCCODE_SPEC: "edbdc31130cd9043da7223dd846e9d9d42e74a3a63a7141d713de9cec6fc1e3b",
 }
 DOCCODE_BOUND_PARTS = len(DOCCODE_SUBJECTS)
 

@@ -39,6 +39,9 @@ describe('doc-reference v1: code spans', () => {
       ['path', 'code-span', 'Node.js', 4, [], 'Node.js', false, true, false],
     ]);
     expect(r.spansNotChecked).toBe(10);
+    // A space, or a `.` or `..` segment after the first, makes no path (mutation run 1).
+    const odd = read('`src/my file.py`, `a/./b.md`, `src/../x.py`\n');
+    expect([odd.candidates.length, odd.spansNotChecked]).toEqual([0, 3]);
     expect(r.linksNotChecked).toBe(0);
   });
 
@@ -63,6 +66,8 @@ describe('doc-reference v1: code spans', () => {
       ['a/b.md', true, late.slice(54)], ['c/d.md', true, early.slice(0, 256)], ['e/f.md', true, pair.slice(56, 311)], ['g/i.md', true, cut.slice(0, 255)],
     ]);
     expect(read('`g/h.md`\n').candidates[0]!.quoteExcerpt).toBe(false);
+    const middle = `${'m'.repeat(300)} \`k/l.md\` ${'n'.repeat(300)}`;
+    expect(read(`${middle}\n`).candidates.map((c) => c.quote)).toEqual([middle.slice(237, 493)]);
   });
 
   it('refuses a body whose code contexts are malformed', () => {

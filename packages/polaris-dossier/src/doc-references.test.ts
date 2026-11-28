@@ -175,6 +175,26 @@ describe('docsAndCode: doc-reference v1 under declared-source policy 2.0.0', () 
     expect(JSON.stringify(m)).not.toContain(SECRET_NAME);
   });
 
+  it('leaves out a link whose decoded path a secret detector matches, and a bare name only a secret path holds (mutation run 1)', async () => {
+    const encoded = `%${SECRET_NAME.charCodeAt(0).toString(16)}${SECRET_NAME.slice(1)}`;
+    const tree: Tree = { 'README.md': `[k](${encoded}/x.md), \`k.go\` and \`kept.md\`.\n`, [`keys/${SECRET_NAME}/k.go`]: 'package k\n' };
+    const f = fixture(tree, ['README.md']);
+    const admitting = { ...V2, screenTargetBody: () => ({ kind: 'admitted' as const }) };
+    const m = derived(await deriveDocsAndCode({ entries: f.entries, screen: admitting, consented: BOTH, read: f.read }));
+    expect(m.rows.map((r) => [r.value, r.outcome])).toEqual([['kept.md', 'document-only']]);
+    expect(m.documents.valuesLeftOut).toBe(2);
+    expect(JSON.stringify(m)).not.toContain(SECRET_NAME);
+  });
+
+  it('reads no body the screen redacts, and matches a token only at an identifier boundary (mutation run 1)', async () => {
+    const redacting = { ...V2, screenTargetBody: () => ({ kind: 'redacted' as const }) };
+    const f = fixture({ 'README.md': '`a.md`\n' }, ['README.md']);
+    const m = derived(await deriveDocsAndCode({ entries: f.entries, screen: redacting as unknown as typeof V2, consented: BOTH, read: f.read }));
+    expect([m.documents.observed, m.documents.files[0]!.unknownReason, m.rows.length]).toEqual([0, 'redacted-body', 0]);
+    const glued = derived(await derive(fixture({ 'README.md': '`fooBar`\n', 'src/a.c': 'int v = 1fooBar;\n' }, ['README.md', 'src/a.c'])));
+    expect(glued.rows.map((r) => r.outcome)).toEqual(['document-only']);
+  });
+
   it('leaves a secret path out unnamed, sets apart vendored and generated documents, and names the rest Unknown with their reasons', async () => {
     const tree: Tree = {
       [`keys/${SECRET_NAME}/k.md`]: '`a.md`\n', 'vendor/x/v.md': '`a.md`\n', 'dist/a.md': '`a.md`\n',

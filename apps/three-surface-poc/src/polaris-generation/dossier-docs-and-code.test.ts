@@ -82,6 +82,8 @@ describe('the docs-and-code reference page (version 2.48)', () => {
     if (MEMBER.state !== 'derived') throw new Error('fixture');
     const page = site({ ...MEMBER, code: { ...MEMBER.code, read: false, observed: 0 } }).get(PAGE)!;
     expect(page).toContain('No row is an identifier, so no code file was read (1 candidate).');
+    const secretOnly = site({ ...MEMBER, documents: { ...MEMBER.documents, unknown: 0, secretPathsLeftOut: 1, files: [MEMBER.documents.files[0]!] } }).get(PAGE)!;
+    expect(secretOnly).toContain('What 1 document that was not read names is in no row');
     expect(() => site({ ...MEMBER, rows: [{ ...MEMBER.rows[3]!, unknownReason: 'guessed' }] })).toThrow('docs and code: a row reason this version does not name');
   });
 

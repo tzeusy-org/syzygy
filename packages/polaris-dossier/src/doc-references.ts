@@ -186,12 +186,13 @@ export async function deriveDocsAndCode(inputs: ManifestInputs): Promise<DocsAnd
   // tails (the whole path, and the text after each `/`), the first such file and directory in the order of the sorted file paths.
   // A symbolic link is listed as a file, and a path at or under it whose own entry is not listed is Unknown: the link is not followed.
   // A submodule's ancestors are directories; the submodule and what lies under it are Unknown. A directory that holds only paths a secret
-  // detector matches is in no listing: a row naming it is left out and counted, never document-only.
+  // detector matches is in no listing, nor is a file such a path holds: a row naming either, by a path or a tail, is left out and
+  // counted, never document-only.
   const files = new Set<string>(), directories = new Set<string>(['']);
   const fileByTail = new Map<string, string>(), directoryByTail = new Map<string, string>();
   const symlinks = new Set<string>(), symlinkByTail = new Map<string, string>();
   const submoduleSet = new Set<string>(), submoduleByTail = new Map<string, string>();
-  const secretDirectories = new Set<string>(), secretDirectoryByTail = new Map<string, string>();
+  const secretDirectories = new Set<string>(), secretDirectoryByTail = new Map<string, string>(), secretFileByTail = new Map<string, string>();
   const addDirectories = (segments: readonly string[]): void => {
     for (let i = 1; i < segments.length; i++) {
       const directory = segments.slice(0, i).join('/');
@@ -214,6 +215,7 @@ export async function deriveDocsAndCode(inputs: ManifestInputs): Promise<DocsAnd
         const directory = segments.slice(0, i).join('/');
         if (!secretDirectories.has(directory)) { secretDirectories.add(directory); tails(directory, secretDirectoryByTail); }
       }
+      tails(path, secretFileByTail);
       continue;
     }
     files.add(path);
@@ -237,7 +239,7 @@ export async function deriveDocsAndCode(inputs: ManifestInputs): Promise<DocsAnd
   };
   const secretOnlyDirectory = (c: Extract<DocCandidate, { form: 'path' }>): boolean =>
     c.tryPaths.some((p) => secretDirectories.has(p) && !directories.has(p))
-    || (c.tail !== null && secretDirectoryByTail.has(c.tail) && !directoryByTail.has(c.tail) && !fileByTail.has(c.tail));
+    || (c.tail !== null && (secretDirectoryByTail.has(c.tail) || secretFileByTail.has(c.tail)) && !directoryByTail.has(c.tail) && !fileByTail.has(c.tail));
 
   // The documents.
   const docCandidates = blobs.filter((entry) => isDocument(entry.path));
