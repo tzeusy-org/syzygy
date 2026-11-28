@@ -41,7 +41,7 @@ const MANIFEST: WitnessInputs['manifest'] = {
     { rule: 'compose-file', ruleVersion: 1, files: [{ path: 'compose.yaml', epistemic: 'inferred', valuesLeftOut: 0 }] },
   ],
 };
-const inputs = (over: Partial<WitnessInputs> = {}): WitnessInputs => ({ structure: complete, manifest: MANIFEST, hidden: () => false, ...over });
+const inputs = (over: Partial<WitnessInputs> = {}): WitnessInputs => ({ structure: complete, manifest: MANIFEST, imports: { state: 'unknown' }, hidden: () => false, ...over });
 /** A table holding every recognizer the rows name, so the rule's search and coverage for a recognizer's relation can be exercised: no
  * version of the requirement adopts it, and the rule never runs with it outside these tests. */
 const EVERY: readonly EligibilityRow[] = ['top-level-unit', 'npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow', 'compose-file']
@@ -81,8 +81,8 @@ describe('rule relation-witness version 1: the order it decides in', () => {
     expect(decideWitness(edge('calls', undefined, undefined, { asserted: false }), inputs({ structure: { state: 'unknown' } }))).toEqual({ state: 'unknown', reason: 'edge-not-inferred' });
   });
 
-  it('gives no-witness-rule for each of the seven relation types no fact witnesses, whatever its ends', () => {
-    for (const relation of ['calls', 'imports', 'reads', 'writes', 'sends-to', 'starts', 'relates-to'] as const) {
+  it('gives no-witness-rule for each of the six relation types no fact witnesses or corroborates, whatever its ends (imports has a row since version 2)', () => {
+    for (const relation of ['calls', 'reads', 'writes', 'sends-to', 'starts', 'relates-to'] as const) {
       expect(decideWitness(edge(relation, ROOT, tld('src')), inputs()), relation).toEqual({ state: 'unknown', reason: 'no-witness-rule' });
       expect(decideWitness(edge(relation, undefined, undefined), inputs()), relation).toEqual({ state: 'unknown', reason: 'no-witness-rule' });
     }
@@ -236,5 +236,46 @@ describe('the eligibility table', () => {
     expect(staleEligibilityRecords([{ ...table[0]!, record: { path: 'docs/bad.json', sha256: sha('{') } }], read)).toEqual(['docs/bad.json']);
     files.set('docs/empty.json', '{"modules":[]}');
     expect(staleEligibilityRecords([{ ...table[0]!, record: { path: 'docs/empty.json', sha256: sha('{"modules":[]}') } }], read)).toEqual(['docs/empty.json']);
+  });
+});
+
+describe('rule relation-witness version 2: the imports row (REQ-polaris-generation-034 version 2.49, syzygy-3efd.89)', () => {
+  const REL = { rule: 'typescript-relative-import', ruleVersion: 1 };
+  const PKG = { rule: 'typescript-package-import', ruleVersion: 1 };
+  const fact = (id: string, over: Record<string, unknown>) => ({ id, ...REL, form: 'import', outcome: 'edge', from: 'web/package.json', to: 'core/package.json', ...over });
+  const imports = (...facts: ReturnType<typeof fact>[]): WitnessInputs['imports'] => ({ state: 'derived', facts });
+  const i1 = edge('imports', pkg('web/package.json'), pkg('core/package.json'));
+
+  it('corroborates by the first edge fact joining the two units, in facts order, naming its fact, form, rule and version', () => {
+    const facts = imports(fact('_import-1', { outcome: 'same-unit', to: 'web/package.json' }), fact('_import-2', { from: 'core/package.json', to: 'web/package.json' }), fact('_import-3', {}), fact('_import-4', { ...PKG }));
+    expect(decideWitness(i1, inputs({ imports: facts }))).toEqual({ state: 'corroborated', reason: null, fact: '_import-3', form: 'import', rule: 'typescript-relative-import', ruleVersion: 1 });
+    expect(decideWitness(i1, inputs({ imports: imports(fact('_import-3', { ...PKG, form: 'import-type' })) }))).toEqual({ state: 'corroborated', reason: null, fact: '_import-3', form: 'import-type', rule: 'typescript-package-import', ruleVersion: 1 });
+  });
+
+  it('is unknown with coverage-partial, never challenged, where no edge fact joins them in that direction, or by another rule or version', () => {
+    for (const facts of [imports(), imports(fact('_import-1', { from: 'core/package.json', to: 'web/package.json' })), imports(fact('_import-1', { outcome: 'external', to: null })),
+      imports(fact('_import-1', { ruleVersion: 2 })), imports(fact('_import-1', { rule: 'python-import' }))]) {
+      expect(decideWitness(i1, inputs({ imports: facts }))).toEqual({ state: 'unknown', reason: 'coverage-partial' });
+    }
+    expect(decideWitness(edge('imports', pkg('web/package.json'), pkg('web/package.json')), inputs({ imports: imports(fact('_import-1', { outcome: 'same-unit', to: 'web/package.json' })) })))
+      .toEqual({ state: 'unknown', reason: 'coverage-partial' });
+  });
+
+  it('decides in order: edge-not-inferred, endpoint-without-unit, endpoint-unit-invalid, endpoint-kind-mismatch, facts-unknown', () => {
+    const facts = imports(fact('_import-3', {}));
+    expect(decideWitness({ ...i1, asserted: false }, inputs({ imports: facts }))).toEqual({ state: 'unknown', reason: 'edge-not-inferred' });
+    expect(decideWitness(edge('imports', undefined, pkg('core/package.json')), inputs({ imports: facts }))).toEqual({ state: 'unknown', reason: 'endpoint-without-unit' });
+    expect(decideWitness({ ...i1, from: end(pkg('web/package.json'), true) }, inputs({ imports: facts }))).toEqual({ state: 'unknown', reason: 'endpoint-unit-invalid' });
+    expect(decideWitness(edge('imports', tld('web'), pkg('core/package.json')), inputs({ imports: facts }))).toEqual({ state: 'unknown', reason: 'endpoint-kind-mismatch' });
+    expect(decideWitness(i1, inputs({ imports: { state: 'unknown' } }))).toEqual({ state: 'unknown', reason: 'facts-unknown' });
+  });
+
+  it('never gives no-witness-rule or recognizer-not-eligible for imports, whatever the eligibility table', () => {
+    expect(decideWitness(i1, inputs({ imports: { state: 'unknown' } }), [])).toEqual({ state: 'unknown', reason: 'facts-unknown' });
+    expect(decideWitness(i1, inputs({ imports: imports(fact('_import-3', {})) }), [])).toMatchObject({ state: 'corroborated', fact: '_import-3' });
+  });
+
+  it('leaves imports underivable and without Syzygy\'s words, as version 1 did', () => {
+    expect(witnessWords('imports')).toBe(undefined);
   });
 });
