@@ -2,7 +2,7 @@
 
 Review: `R-LEVELS-ERRATA-SPEC-1-RAW.md` in this directory, verdict `REVISE` (line 2), over `02234e39b` (install `fe32fd9f4`). It has one blocking finding and six notes. One round; no confirmation review follows (D10).
 
-The spec repairs are in install commit `041073ce8`, made by the package's anchored build script, with the delta regenerated and `VLERR_SUBJECTS` rebound. Row A-346 is rebound to that install at the row commit that follows it.
+The spec repairs are in install commit `041073ce8`, made by the package's anchored build script, with the delta regenerated and `VLERR_SUBJECTS` rebound. Row A-346 names `1243b1b3e`, the package's last commit (its README's rollback note); the spec is unchanged since `041073ce8`.
 
 ## 1. Blocking: "four produced graphs" with `hidden` omitted
 
