@@ -529,7 +529,7 @@ function claudeExecutable(): string {
  * 2026-11-28). The directories must be spelled exactly as `sessionClaudeArgs` passes them. */
 export function agentHomeSeed(cwd: string, addedDirs: readonly string[]): Record<string, unknown> {
   const projects: Record<string, Record<string, boolean>> = { [cwd]: { hasTrustDialogAccepted: true, hasCompletedProjectOnboarding: true } };
-  for (const dir of addedDirs) projects[dir] = { hasTrustDialogAccepted: true };
+  for (const dir of addedDirs) projects[dir] = { ...projects[dir], hasTrustDialogAccepted: true };
   return { hasCompletedOnboarding: true, lastOnboardingVersion: '2.1.299', theme: 'dark', projects };
 }
 
@@ -539,14 +539,14 @@ export function sessionAddedDirs(role: ViewRole, clone: string): string[] {
 }
 
 /** The session's private home: a copy of the operator's Claude Code credentials and the seed config `agentHomeSeed` writes. */
-function prepareAgentHome(stateRoot: string, runId: string, role: ViewRole, cwd: string, addedDirs: readonly string[]): string {
+function prepareAgentHome(stateRoot: string, runId: string, role: ViewRole, cwd: string, clone: string): string {
   const home = path.join(stateRoot, `${runId}.agents`, role);
   const config = path.join(home, '.claude');
   fs.mkdirSync(config, { recursive: true, mode: 0o700 });
   const credentials = path.join(os.homedir(), '.claude', '.credentials.json');
   if (fs.existsSync(credentials) && !fs.existsSync(path.join(config, '.credentials.json'))) fs.copyFileSync(credentials, path.join(config, '.credentials.json'));
   if (fs.existsSync(path.join(config, '.credentials.json'))) fs.chmodSync(path.join(config, '.credentials.json'), 0o600);
-  const seed = agentHomeSeed(cwd, addedDirs);
+  const seed = agentHomeSeed(cwd, sessionAddedDirs(role, clone));
   const seedFile = path.join(config, '.claude.json');
   if (!fs.existsSync(seedFile)) fs.writeFileSync(seedFile, JSON.stringify(seed, null, 2), { mode: 0o600 });
   return home;
@@ -587,7 +587,7 @@ export function sessionClaudeArgs(plan: Pick<SessionPlan, 'role' | 'prompt' | 'a
 
 function launchSession(options: Options, ports: CliPorts, state: SupervisorState, plan: SessionPlan, brokers: Map<ViewRole, Broker>, screen: Screen): string | null {
   const executable = claudeExecutable();
-  const agentHome = prepareAgentHome(options.stateRoot, state.runId, plan.role, plan.directory, sessionAddedDirs(plan.role, state.clone));
+  const agentHome = prepareAgentHome(options.stateRoot, state.runId, plan.role, plan.directory, state.clone);
   const shimDir = prepareShim(options.stateRoot, state.runId);
   // A Unix socket path is limited to about 108 bytes, so the socket lives in a short per-session runtime directory, bound into that
   // session's view alone.

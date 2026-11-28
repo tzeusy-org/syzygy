@@ -111,6 +111,10 @@ describe('the directories a session is trusted with (syzygy-k54o.3.6)', () => {
       for (const dir of Object.keys(projects)) expect(projects[dir]?.['hasTrustDialogAccepted']).toBe(true);
     }
   });
+  it('keeps the working directory\'s onboarding mark if an added directory is the working directory', () => {
+    const projects = agentHomeSeed('/same', ['/same'])['projects'] as Record<string, Record<string, boolean>>;
+    expect(projects['/same']).toEqual({ hasTrustDialogAccepted: true, hasCompletedProjectOnboarding: true });
+  });
   it('gives the clone to the author and inventory sessions alone', () => {
     expect(sessionAddedDirs('author', '/clones/x-trunk-abc')).toEqual(['/clones/x-trunk-abc']);
     expect(sessionAddedDirs('inventory', '/clones/x-trunk-abc')).toEqual(['/clones/x-trunk-abc']);
