@@ -29,10 +29,16 @@ const ATTRIBUTES = new Set([
   // A schema-v12 element or relationship more than one view selects (version 2.24): its identity, which the draft schema's identity
   // pattern bounds and the value pattern below checks again, never a draft's free text.
   'data-element', 'data-relationship',
+  // A v15 view's base element and its display-name line (version 2.35): the provenance word (`computed` or `curated`), and the name's
+  // claim identity `<diagram>:name:<k>`, built from an identity the value pattern below checks again, never a draft's free text.
+  'data-visual-provenance', 'data-name',
 ]);
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
 /** Attribute values the renderer emits: numbers, path commands, ids, class names. */
 const VALUE = /^[A-Za-z0-9 #().,_-]*$/u;
+/** A display name's claim identity, `<diagram>:name:<k>` (version 2.35): the one attribute value that may hold a colon, so every other
+ * attribute, and every drawing of a draft before schema v15, keeps the grammar above byte for byte (R38 finding 3). */
+const NAME_VALUE = /^[A-Za-z0-9_.:-]+:name:[1-9]\d*$/u;
 const LOCAL_URL = /url\(#([A-Za-z0-9_-]+)\)/gu;
 const TOKEN = /<(\/?)([A-Za-z][A-Za-z0-9:-]*)((?:\s+[^\s=/>"']+="[^"]*")*)\s*(\/?)>|[^<>]+/uy;
 const ATTRIBUTE = /\s+([^\s=/>"']+)="([^"]*)"/gu;
@@ -60,7 +66,7 @@ function assertAttribute(element: string, name: string, value: string, isRoot: b
     return;
   }
   if (/javascript:|vbscript:|data:|https?:/iu.test(value) || value.includes('&')) unsafe();
-  if (!VALUE.test(value)) unsafe();
+  if (!(name === 'data-name' ? NAME_VALUE : VALUE).test(value)) unsafe();
   // A witness attribute holds one closed form whatever else `VALUE` admits: words in it would be text no screen read (syzygy-3efd.89).
   const closed = WITNESS_VALUES[name];
   if (closed !== undefined && !closed.test(value)) unsafe();

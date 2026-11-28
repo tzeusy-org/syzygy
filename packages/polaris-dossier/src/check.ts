@@ -29,8 +29,10 @@ import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type Ma
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type BoundedCheckRecord, type RecordMeasure, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type MechanismAdvice, type ReviewVisibility, type SourceExampleAdvice, STEP_LOG_FORMAT, type VerifiedQuotation, errno, list, reviewVisibility, text } from './check-model.js';
 import { type Derived, type SubjectRules, applyHeroFindings, containmentRelationFindings, deriveFindings, draftRules, relationDecisions, relationFindings, type RelationDecisions } from './check-derive.js';
 import { applyContainmentFindings, containmentStructuralFindings, undecidedContainments } from './containment.js';
+import { BASE_BASIS, type BaseContext, type ResolvedBase, admitOf, baseNestingFindings, checkBaseMaps, readBases } from './derived-base.js';
 import { expandModel, modelDecisions, modelFindings, modelIndex, modelRelationFindings, modelUndecided, undecidedViews } from './system-model.js';
 import { hasModelForm, hasRelationForm, hasWithheldHeroIdentity } from './draft-schema.js';
+import { walkFindings, withoutWalks } from './walk.js';
 import { figureAdvice as computeFigureAdvice, figurePlanFindings, plansFigures, withoutFigurePlan, type FigureAdvice } from './figure-plan.js';
 import { BLOB_MODES } from './git-object-reader.js';
 import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
@@ -210,6 +212,9 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // draft without it. The frozen bytes keep it.
   const planned = plan.command === 'check' && parseFault === null && plansFigures(doc) ? doc : undefined;
   if (planned !== undefined) doc = withoutFigurePlan(planned);
+  // A v16 draft's walks (version 2.40) are read by their own findings alone; every other reader is handed the draft without them.
+  const walked = doc;
+  doc = withoutWalks(doc);
 
   const gate = plan.gate(run, parseFault === null ? doc : undefined);
   if (!gate.ok) return refuse(gate.stage, gate.reason);
@@ -295,6 +300,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // are decided only for a draft with no schema finding; an `unknown` state is never a finding. Check reads no currency policy for them.
   // A v11 draft's group units and nestings (version 2.23), decided here and reported after its structural containment findings below.
   let containmentDecisions: Pick<RelationDecisions, 'groupUnits' | 'nestings'> | undefined;
+  let checkedBases: ReadonlyMap<number, ResolvedBase> = new Map();
   if (plan.command === 'check' && parseFault === null && isRecord(doc) && hasRelationForm(doc['schemaVersion'])) {
     const isSecretPath = secretPathOf(screen);
     const blobs = new Set(listedEntries?.filter((entry) => BLOB_MODES.has(entry.mode)).map((entry) => entry.path));
@@ -333,26 +339,35 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     const blobs = new Set(listedEntries?.filter((entry) => BLOB_MODES.has(entry.mode)).map((entry) => entry.path));
     const hidden = (repositoryPath: string): boolean => secretOrUnder(repositoryPath.split('/'), isSecretPath) || screen.screenPath(repositoryPath) === 'denied-path';
     const tree = listedEntries === undefined ? undefined : { hidden, isBlob: (repositoryPath: string) => blobs.has(repositoryPath) };
-    findings.push(...modelFindings(doc, new Set(findings.filter((finding) => finding.kind === 'schema').map((finding) => finding.at)), tree));
+    // A v15 draft's bases read against the maps this check derived (version 2.35), their details screened.
+    const baseContext: BaseContext = { maps: checkBaseMaps(treeFacts, manifestFacts), admit: admitOf(screen), hidden };
+    const schemaSet = new Set(findings.filter((finding) => finding.kind === 'schema').map((finding) => finding.at));
+    findings.push(...modelFindings(doc, schemaSet, tree, baseContext));
+    checkedBases = readBases(doc, baseContext, schemaSet).resolved;
     if (!modelUndecided(findings)) {
       const reach = { citedBlobs, admitted, screen, consented: checked.contentClasses };
       const elements = modelIndex(doc).elementById;
       const held = (element: Readonly<Record<string, unknown>>): boolean => isWithheldElement(element, reach);
       const endHeld = (id: unknown): boolean => { const entry = typeof id === 'string' ? elements.get(id) : undefined; return entry !== undefined && held(entry.element); };
-      const expanded = expandModel(doc).doc;
-      // A relationship either of whose elements renders as a withheld item is unasserted (`edge-not-inferred`), as a withheld edge is.
-      const decisions = relationDecisions(expanded, (edge) => edge['epistemic'] === 'inferred' && !held(edge) && !endHeld(edge['from']) && !endHeld(edge['to']), tree, {
+      const expanded = expandModel(doc, checkedBases).doc;
+      // A relationship either of whose elements renders as a withheld item is unasserted (`edge-not-inferred`), as a withheld edge is. A base
+      // element is Syzygy's (version 2.35): only its nesting inside an element of the model, which a `group` entry states, is the draft's claim.
+      const decisions = relationDecisions(expanded, (edge) => (edge['basis'] === BASE_BASIS ? edge['grouped'] === true
+        : edge['epistemic'] === 'inferred' && !held(edge) && !endHeld(edge['from']) && !endHeld(edge['to'])), tree, {
         structure: treeFacts === undefined ? { state: 'unknown' } : { state: 'derived', ...treeFacts },
         manifest: manifestFacts === undefined || manifestFacts.state !== 'derived' ? { state: 'unknown' } : manifestFacts,
         imports: importFacts === undefined || importFacts.state !== 'derived' ? { state: 'unknown' } : importFacts,
         hidden,
       }, held, undecidedViews(findings));
       findings.push(...modelRelationFindings(modelDecisions(doc, decisions.edges, decisions.nestings)));
+      findings.push(...baseNestingFindings(doc, checkedBases, decisions.nestings, baseContext.admit));
     }
   }
 
   // Version 2.33: after every finding version 2.32 reports, a v14 draft's figure-plan findings.
   if (planned !== undefined) findings.push(...figurePlanFindings(planned));
+  // Version 2.40: after every other finding, a v16 draft's walk findings, its base ends read against the maps this check derived.
+  if (plan.command === 'check' && parseFault === null && isRecord(walked)) findings.push(...walkFindings(walked, checkBaseMaps(treeFacts, manifestFacts)));
 
   const frozen = path.join(frozenDir, `rev-${revision}.json`), checkFile = path.join(checksDir, `rev-${revision}.json`);
   // A derived record already in place for this revision (planted, or left by a crash) is never overwritten or adopted: refused here,
@@ -390,7 +405,8 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // this one; an inventory check record carries none, and a draft that does not parse states nothing about fit.
   // A v12 draft's figures, their advice and its reading ledger are its views' expansion's (version 2.24); an advisory's path is moved back
   // to the model or view member it reads, and the ledger locates it at the diagram it was found in, as the expansion's own draft would.
-  const viewed = parseFault === null && isRecord(doc) && hasModelForm(doc['schemaVersion']) ? expandModel(doc) : undefined;
+  // A v15 view whose base resolved at this check is drawn with its base elements (version 2.35).
+  const viewed = parseFault === null && isRecord(doc) && hasModelForm(doc['schemaVersion']) ? expandModel(doc, checkedBases) : undefined;
   // A v14 draft's expansion keeps its own schema, so the rules that name schema v13 or v14 read it as render does (version 2.33); a v12
   // draft's stays v11's, as version 2.24 reports it.
   const figureDoc = viewed === undefined ? doc : planned !== undefined && isRecord(doc) ? { ...viewed.doc, schemaVersion: doc['schemaVersion'] } : viewed.doc;
@@ -482,7 +498,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
 /** The existing shape check has established the eligible lists before we look for a selection. */
 function sourceExampleAdvice(doc: Readonly<Record<string, unknown>>): SourceExampleAdvice | undefined {
   const version = doc['schemaVersion'];
-  if (version !== 'polaris-dossier-local-draft-v13' && version !== 'polaris-dossier-local-draft-v14') return;
+  if (version !== 'polaris-dossier-local-draft-v13' && version !== 'polaris-dossier-local-draft-v14' && version !== 'polaris-dossier-local-draft-v15' && version !== 'polaris-dossier-local-draft-v16') return;
   const isCode = (item: unknown): boolean => isRecord(item) && item['kind'] === 'code';
   const selectsCode = (part: unknown): boolean => isRecord(part) && list(part['paragraphs']).some(item =>
     isCode(item) || (isRecord(item) && item['kind'] === 'details' && list(item['elements']).some(isCode)));

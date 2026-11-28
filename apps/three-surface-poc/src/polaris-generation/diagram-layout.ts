@@ -58,7 +58,9 @@ export const DEFAULT_SPACING: DiagramSpacing = { gapX: 120, gapY: 40, stackWider
  * is stacked to fit the phone's column, because the one drawing serves every screen width (syzygy-3efd.66). */
 export const READABLE_SPACING: DiagramSpacing = { gapX: 200, gapY: 64, stackWiderThan: STACK_COLUMN, edgeChars: 22, edgeLines: 3, charWidth: 7.9, labelsOnTop: true, backEdgeStep: 56 };
 
-interface LayoutNodeInput { readonly id: string }
+/** `below`: extra height a node's slot takes under its box and any note, for a line drawn there (a base element's display name, version
+ * 2.35); absent or 0 for every other node, so every other layout keeps its numbers. */
+interface LayoutNodeInput { readonly id: string; readonly below?: number }
 interface LayoutEdgeInput { readonly id: string; readonly from: string; readonly to: string }
 interface LaidOutNode { readonly id: string; readonly layer: number; readonly row: number; readonly x: number; readonly y: number }
 interface LaidOutEdge {
@@ -170,9 +172,11 @@ export function layoutDiagram(nodes: readonly LayoutNodeInput[], edges: readonly
       labelX: (sx + tx) / 2, labelY: spacing.labelsOnTop ? contentBottom + BACK_LABEL_CLEARANCE + lane * spacing.backEdgeStep : (sy + ty + 6 * depth) / 8 };
   });
   const lowestBackEdge = backCount === 0 ? contentBottom + (spacing.labelsOnTop ? 32 : 24) : contentBottom + BACK_EDGE_DROP + (backCount - 1) * spacing.backEdgeStep;
+  // A line drawn under a box (version 2.35) lengthens the drawing by the most any node takes; every row gap already holds it.
+  const below = Math.max(0, ...nodes.map(node => node.below ?? 0));
   return {
     width,
-    height: Math.ceil(lowestBackEdge + MARGIN),
+    height: Math.ceil(lowestBackEdge + MARGIN + below),
     nodeWidth: NODE_WIDTH,
     nodes: laidNodes,
     edges: laidEdges,
@@ -266,7 +270,8 @@ function stackDiagram(
   const slotHeight = spacing.edgeLines * 15 + 6 + LABEL_CLEARANCE + 1;
   const connected = new Set(ends.flatMap(end => [end.from, end.to]));
   // The note under a node with no edges takes the top of the gap below it.
-  const noteAbove = Array.from({ length: order.length + 1 }, (_, g) => g > 0 && !connected.has(order[g - 1]!) ? noteHeight(nodeWidth) : 0);
+  const noteAbove = Array.from({ length: order.length + 1 }, (_, g) => g === 0 ? 0
+    : (!connected.has(order[g - 1]!) ? noteHeight(nodeWidth) : 0) + (nodes[order[g - 1]!]!.below ?? 0));
   const slots = Array.from({ length: order.length + 1 }, () => 0);
   const slotOf = ends.map((end, e) => {
     const gap = back[e] ? position[end.to]! + 1 : position[end.to]!;
@@ -458,8 +463,10 @@ export function renderDiagramSvg(
   spacing: DiagramSpacing = DEFAULT_SPACING,
   /** Attributes Syzygy adds to each drawn element's group, by element id (built by the caller from Syzygy's own values, escaped). */
   elementAttributes: (id: string) => string = () => '',
+  /** A base element's double border and its display-name line (version 2.35), by node id; none for every other node. */
+  decorate: (id: string) => BoxDecoration | undefined = () => undefined,
 ): string {
-  const layout = layoutDiagram(diagram.nodes, diagram.edges, spacing);
+  const layout = layoutDiagram(diagram.nodes.map(node => ({ ...node, below: decorate(node.id)?.called === undefined ? 0 : CALLED_HEIGHT })), diagram.edges, spacing);
   const markerId = `arrow-${index}`;
   const connected = new Set(diagram.edges.flatMap(edge => [edge.from, edge.to]));
   const shown = (label: string, marking: EpistemicMarking, maxChars: number, maxLines: number): string[] => {
@@ -476,10 +483,15 @@ export function renderDiagramSvg(
     const lines = shown(node.label, node.epistemic, nodeChars, 2);
     const baseline = at.y + NODE_HEIGHT / 2 + 5 - (lines.length - 1) * 8;
     const noteX = num(at.x + nodeWidth / 2);
+    const decoration = decorate(node.id);
+    // A display name's line sits directly under the box, above any note, which moves down by its height (version 2.35).
+    const called = decoration?.called === undefined ? '' : calledLine(decoration.called, at.x + nodeWidth / 2, at.y + NODE_HEIGHT + 16, escape);
+    const noteTop = at.y + NODE_HEIGHT + (decoration?.called === undefined ? 0 : CALLED_HEIGHT);
     const note = connected.has(node.id) ? '' : nodeWidth < NOTE_ONE_LINE
-      ? `<text class="note" x="${noteX}" y="${num(at.y + NODE_HEIGHT + 18)}" text-anchor="middle"><tspan x="${noteX}" dy="0">No relationship</tspan><tspan x="${noteX}" dy="16">supplied</tspan></text>`
-      : `<text class="note" x="${noteX}" y="${num(at.y + NODE_HEIGHT + 18)}" text-anchor="middle">No relationship supplied</text>`;
-    return `<g class="node ${node.epistemic}"${elementAttributes(node.id)}><title>${escape(node.label)} (${node.epistemic})</title><rect x="${num(at.x)}" y="${num(at.y)}" width="${nodeWidth}" height="${NODE_HEIGHT}" rx="6"/>${textLines(lines, at.x + nodeWidth / 2, baseline, 16)}${note}</g>`;
+      ? `<text class="note" x="${noteX}" y="${num(noteTop + 18)}" text-anchor="middle"><tspan x="${noteX}" dy="0">No relationship</tspan><tspan x="${noteX}" dy="16">supplied</tspan></text>`
+      : `<text class="note" x="${noteX}" y="${num(noteTop + 18)}" text-anchor="middle">No relationship supplied</text>`;
+    const inner = decoration?.double === true ? doubleRect(at.x, at.y, nodeWidth, NODE_HEIGHT) : '';
+    return `<g class="node ${node.epistemic}"${elementAttributes(node.id)}><title>${escape(node.label)} (${node.epistemic})</title><rect x="${num(at.x)}" y="${num(at.y)}" width="${nodeWidth}" height="${NODE_HEIGHT}" rx="6"/>${inner}${textLines(lines, at.x + nodeWidth / 2, baseline, 16)}${called}${note}</g>`;
   }).join('');
   const edgeLines = diagram.edges.map(edge => shown(edge.label, edge.epistemic, spacing.edgeChars, spacing.edgeLines));
   const wanted = edgeLines.map((lines, i) => ({
@@ -488,7 +500,7 @@ export function renderDiagramSvg(
   }));
   const standing = diagram.nodes.map((node, i) => {
     const at = layout.nodes[i]!;
-    return { left: at.x, top: at.y, right: at.x + nodeWidth, bottom: at.y + NODE_HEIGHT + (connected.has(node.id) ? 0 : noteHeight(nodeWidth)) };
+    return { left: at.x, top: at.y, right: at.x + nodeWidth, bottom: at.y + NODE_HEIGHT + (connected.has(node.id) ? 0 : noteHeight(nodeWidth)) + (decorate(node.id)?.called === undefined ? 0 : CALLED_HEIGHT) };
   });
   const placed: { x: number; y: number }[] = [...(spacing.labelsOnTop ? placeEdgeLabels(wanted, standing, layout.width) : wanted)].map(({ x, y }) => ({ x, y }));
   const curves = spacing.labelsOnTop ? layout.edges.map(edge => curveSamples(edge.d)) : [];
@@ -551,6 +563,25 @@ export function renderDiagramSvg(
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${layout.width} ${height}" width="${layout.width}" height="${height}" role="img" aria-labelledby="diagram-title-${index}" aria-describedby="diagram-text-${index}"><defs><marker id="${markerId}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z"/></marker></defs>${lines}${nodes}${labels}</svg>`;
 }
 
+/** The box each node of a graph figure is drawn in, in the drawing's node order and its own coordinates, and the drawing's width
+ * (REQ-polaris-generation-034 version 2.40): from the same layout `renderDiagramSvg` draws with the same inputs, each box the node's `rect`
+ * (a base element's outer border, never its `called` line). Each number is written as the drawing writes it. */
+export function diagramNodeBoxes(
+  diagram: { readonly nodes: readonly RenderableNode[]; readonly edges: readonly RenderableEdge[] },
+  spacing: DiagramSpacing = DEFAULT_SPACING,
+  decorate: (id: string) => BoxDecoration | undefined = () => undefined,
+): { readonly width: number; readonly boxes: readonly { readonly id: string; readonly x: string; readonly y: string; readonly width: string; readonly height: string }[] } {
+  const layout = layoutDiagram(diagram.nodes.map(node => ({ ...node, below: decorate(node.id)?.called === undefined ? 0 : CALLED_HEIGHT })), diagram.edges, spacing);
+  return { width: layout.width, boxes: diagram.nodes.map((node, i) => ({ id: node.id, x: num(layout.nodes[i]!.x), y: num(layout.nodes[i]!.y), width: num(layout.nodeWidth), height: num(NODE_HEIGHT) })) };
+}
+/** Whether a walk renders over a drawing this wide (version 2.40): every width but 1048 px, the one width version 2.2 lets shrink to its
+ * column, where the layer's CSS pixels would no longer be the drawing's. */
+export const walkableWidth = (width: number): boolean => width !== 1048;
+/** A walk box's position and size as the `style` its layer gives it (version 2.40): the layout's own coordinates, which the readable layout
+ * draws at CSS pixels (it never scales a drawing but one 1048 px wide, which no walk is laid over). Layout data, not a design value. */
+export const walkBoxStyle = (box: { readonly x: string; readonly y: string; readonly width: string; readonly height: string }): string =>
+  `left:${box.x}px;top:${box.y}px;width:${box.width}px;height:${box.height}px`;
+
 /**
  * The figure kinds' fixed-pitch layouts (REQ-polaris-generation-034 version 2.5, syzygy-3efd.30). Each reads identities, references and
  * counts, never a label's width, so the same record always gives the same coordinates. With n participants or lanes in draft order,
@@ -564,6 +595,17 @@ export function renderDiagramSvg(
  * A layout throws where a count is outside its bounds, an identity repeats, a reference names nothing in its own figure, or a participant
  * or lane is named by nothing: the figure is then not drawn, and its fit is Unknown.
  */
+/** A base element's box (REQ-polaris-generation-034 version 2.35): a double border, an inner line 3 px inside the box's own, in the same
+ * line style; and, where the draft names it, the `called <name>` line under the box in the figure's 13 px italic text (the page's `called`
+ * rule), its slot `CALLED_HEIGHT` taller. `attributes` are Syzygy's, built and escaped by the caller. */
+export interface BoxDecoration { readonly double: boolean; readonly called?: { readonly text: string; readonly attributes: string } }
+export const CALLED_HEIGHT = 18;
+const DOUBLE_GAP = 3;
+const doubleRect = (x: number, y: number, width: number, height: number): string =>
+  `<rect class="double-inner" x="${num(x + DOUBLE_GAP)}" y="${num(y + DOUBLE_GAP)}" width="${num(width - 2 * DOUBLE_GAP)}" height="${num(height - 2 * DOUBLE_GAP)}" rx="3"/>`;
+const calledLine = (called: NonNullable<BoxDecoration['called']>, x: number, y: number, escape: (value: string) => string): string =>
+  `<text class="called" x="${num(x)}" y="${num(y)}" text-anchor="middle"${called.attributes}>${escape(called.text)}</text>`;
+
 export const FIGURE_COLUMN = 176;
 const FIGURE_PITCH = 184;
 const FIGURE_BOX = 56;
@@ -740,7 +782,7 @@ const CONTAINMENT_NARROWING = 24;
 /** A group's label wraps at 19, 16 or 13 characters at level 1, 2 or 3. */
 const CONTAINMENT_CHARS = [19, 16, 13] as const;
 
-export interface ContainmentGroupInput { readonly id: string; readonly children: readonly ContainmentGroupInput[] }
+export interface ContainmentGroupInput { readonly id: string; readonly children: readonly ContainmentGroupInput[]; readonly below?: number }
 export interface ContainmentBox { readonly id: string; readonly level: number; readonly x: number; readonly y: number; readonly width: number; readonly height: number; readonly leaf: boolean }
 export interface ContainmentLayout { readonly width: number; readonly height: number; readonly levels: number; readonly boxes: readonly ContainmentBox[] }
 
@@ -755,12 +797,13 @@ export function layoutContainment(groups: readonly ContainmentGroupInput[]): Con
     seen.add(group.id);
     levels = Math.max(levels, level);
     if (group.children.length === 0) return CONTAINMENT_LEAF;
-    const inner = group.children.reduce((sum, child) => sum + heightOf(child, level + 1), 0);
+    // A child's slot takes the line drawn under its box (version 2.35).
+    const inner = group.children.reduce((sum, child) => sum + heightOf(child, level + 1) + (child.below ?? 0), 0);
     return CONTAINMENT_HEAD + inner + CONTAINMENT_GAP * (group.children.length - 1) + CONTAINMENT_FOOT;
   };
   const heights = new Map<ContainmentGroupInput, number>();
   const tallest = Math.max(...groups.map(group => {
-    const height = heightOf(group, 1);
+    const height = heightOf(group, 1) + (group.below ?? 0);
     heights.set(group, height);
     return height;
   }));
@@ -770,7 +813,7 @@ export function layoutContainment(groups: readonly ContainmentGroupInput[]): Con
     const box = { id: group.id, level, x: columnX(column) + CONTAINMENT_INDENT * (level - 1), y, width: FIGURE_COLUMN - CONTAINMENT_NARROWING * (level - 1), height: 0, leaf: group.children.length === 0 };
     boxes.push(box);
     let top = y + CONTAINMENT_HEAD;
-    for (const child of group.children) top = place(child, level + 1, column, top) + CONTAINMENT_GAP;
+    for (const child of group.children) top = place(child, level + 1, column, top) + (child.below ?? 0) + CONTAINMENT_GAP;
     const height = group.children.length === 0 ? CONTAINMENT_LEAF : top - CONTAINMENT_GAP + CONTAINMENT_FOOT - y;
     boxes[boxes.indexOf(box)] = { ...box, height };
     return y + height;
@@ -785,8 +828,11 @@ export function layoutContainment(groups: readonly ContainmentGroupInput[]): Con
 export function renderContainmentSvg(roots: readonly ContainmentClaim[], index: number | string, escape: (value: string) => string,
   /** Attributes Syzygy adds to each group's box, by group id (built by the caller from Syzygy's own values, escaped): a v12 shared element's
    * `data-element` (version 2.24). */
-  elementAttributes: (id: string) => string = () => ''): string {
-  const layout = layoutContainment(roots);
+  elementAttributes: (id: string) => string = () => '',
+  /** A base element's double border and display-name line (version 2.35), by group id. */
+  decorate: (id: string) => BoxDecoration | undefined = () => undefined): string {
+  const below = (group: ContainmentClaim): ContainmentGroupInput => ({ id: group.id, children: group.children.map(below), below: decorate(group.id)?.called === undefined ? 0 : CALLED_HEIGHT });
+  const layout = layoutContainment(roots.map(below));
   const claims: ContainmentClaim[] = [];
   const visit = (group: ContainmentClaim): void => { claims.push(group); group.children.forEach(visit); };
   roots.forEach(visit);
@@ -795,7 +841,10 @@ export function renderContainmentSvg(roots: readonly ContainmentClaim[], index: 
     const lines = figureLines(group, CONTAINMENT_CHARS[at.level - 1]!);
     const band = at.leaf ? CONTAINMENT_LEAF : CONTAINMENT_HEAD;
     const baseline = at.y + band / 2 + 5 - (lines.length - 1) * 8;
-    return `<g class="node ${group.epistemic}"${elementAttributes(group.id)}><title>${escape(group.label)} (${group.epistemic})</title><rect x="${num(at.x)}" y="${num(at.y)}" width="${at.width}" height="${at.height}" rx="6"/>${figureText(lines, at.x + at.width / 2, baseline, 16, escape)}</g>`;
+    const decoration = decorate(group.id);
+    const inner = decoration?.double === true ? doubleRect(at.x, at.y, at.width, at.height) : '';
+    const called = decoration?.called === undefined ? '' : calledLine(decoration.called, at.x + at.width / 2, at.y + at.height + 14, escape);
+    return `<g class="node ${group.epistemic}"${elementAttributes(group.id)}><title>${escape(group.label)} (${group.epistemic})</title><rect x="${num(at.x)}" y="${num(at.y)}" width="${at.width}" height="${at.height}" rx="6"/>${inner}${figureText(lines, at.x + at.width / 2, baseline, 16, escape)}${called}</g>`;
   }).join('');
   // No marker is defined: the drawing has no arrow to head.
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${layout.width} ${layout.height}" width="${layout.width}" height="${layout.height}" role="img" aria-labelledby="diagram-title-${index}" aria-describedby="diagram-text-${index}">${body}</svg>`;

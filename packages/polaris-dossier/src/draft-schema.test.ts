@@ -72,7 +72,7 @@ describe('local-agent draft schema', () => {
     ['a non-normative block carries a citation', (d) => { d.sections[0].paragraphs[0].children[1].citations = [cite('x')]; }, { path: '$.sections[0].paragraphs[0].children[1].citations', detail: 'is not a field of this form' }],
     ['an execution-based claim names no execution', (d) => { d.sections[0].paragraphs[0].children[2].executionIds = []; }, { path: '$.sections[0].paragraphs[0].children[2].executionIds', detail: 'must hold 1 to 20 items; holds 0' }],
     ['the draft names another revision', (d) => { d.pinnedRevision = 'a'.repeat(40); }, { path: '$.pinnedRevision', detail: `must be one of ${REV}` }],
-    ['the draft names another schema version', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v0'; }, { path: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13, polaris-dossier-local-draft-v14' }],
+    ['the draft names another schema version', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v0'; }, { path: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13, polaris-dossier-local-draft-v14, polaris-dossier-local-draft-v15, polaris-dossier-local-draft-v16' }],
     ['the understanding record omits an item', (d) => { delete d.understanding.tradeOffs; }, { path: '$.understanding.tradeOffs', detail: 'is required' }],
     ['an understanding item is left empty rather than Unknown', (d) => { d.understanding.limits = []; }, { path: '$.understanding.limits', detail: 'must hold 1 to 100 items; holds 0' }],
     ['the draft has no understanding record', (d) => { delete d.understanding; }, { path: '$.understanding', detail: 'is required' }],
@@ -178,7 +178,7 @@ describe('draft.schema.json', () => {
 
   it('is a JSON Schema 2020-12 document carrying the version, the revision and closed objects', () => {
     expect(document['$schema']).toBe('https://json-schema.org/draft/2020-12/schema');
-    expect(document['$id']).toBe('urn:syzygy:polaris-dossier:polaris-dossier-local-draft-v14');
+    expect(document['$id']).toBe('urn:syzygy:polaris-dossier:polaris-dossier-local-draft-v16');
     expect(document['additionalProperties']).toBe(false);
     expect((document['properties'] as Record<string, unknown>)['pinnedRevision']).toMatchObject({ enum: [REV] });
     expect(JSON.parse(JSON.stringify(document))).toEqual(document);
@@ -187,6 +187,15 @@ describe('draft.schema.json', () => {
   it('admits any value at an optional `figurePlan` and describes the plan to the authoring session (version 2.33)', () => {
     expect((document['properties'] as Record<string, unknown>)['figurePlan']).toEqual({ description: 'Required. Your figure plan, written before the prose: one entry for the overview, each section and each deep dive, its `home` written as a diagram\'s `home` is. An entry is {"home", "question", "kind", "figure"}, the one question a picture there answers better than text, the figure kind it needs and the diagram, homed there and of that kind, that answers it; or {"home", "omitted"}, why the place has no planned figure. The plan is never rendered or published; `syzygy dossier check` reads it.' });
     expect(document['required']).not.toContain('figurePlan');
+  });
+
+  it('admits any value at an optional `walk` on a section and a deep dive, and on nothing else (version 2.40)', () => {
+    const properties = document['properties'] as Record<string, { items: { properties: Record<string, unknown>; required: string[] } }>;
+    for (const place of ['sections', 'deepDives']) {
+      expect(properties[place]!.items.properties['walk']).toEqual({ description: 'Optional. One reading path through one graph figure drawn in this place: {"figure": <that diagram\'s id>, "steps": [{"element", "block"}, ...]}, two to twelve steps in reading order, each naming one element the figure draws (a base element as {"map", "path"}) and one of this place\'s paragraphs that cites its sources. Syzygy numbers each step\'s element, lists the steps beside the figure and highlights an element when its step is chosen; the walk states nothing itself.' });
+      expect(properties[place]!.items.required).not.toContain('walk');
+    }
+    expect(Object.keys(document['properties'] as object)).not.toContain('walk');
   });
 
   it('resolves every $ref to a definition it carries, and uses them all', () => {
@@ -243,11 +252,11 @@ describe('local-agent draft schema: the worth-knowing mark (v13)', () => {
     ]);
   });
 
-  it('names neither v11 nor v12, which no brief issues, so neither reads as v13; it names v14, the issued schema (version 2.33)', () => {
+  it('names neither v11 nor v12, which no brief issues, so neither reads as v13; it names v14, v15 and v16, the issued schema (versions 2.33, 2.35 and 2.40)', () => {
     for (const version of ['polaris-dossier-local-draft-v11', 'polaris-dossier-local-draft-v12']) {
       const errors = checkDraftShape(SCHEMA, mutate((d) => { d.schemaVersion = version; }));
       expect(errors.map(({ path }) => path), version).toEqual(['$.schemaVersion']);
-      expect(errors[0]!.detail).toBe('must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13, polaris-dossier-local-draft-v14');
+      expect(errors[0]!.detail).toBe('must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13, polaris-dossier-local-draft-v14, polaris-dossier-local-draft-v15, polaris-dossier-local-draft-v16');
     }
   });
 

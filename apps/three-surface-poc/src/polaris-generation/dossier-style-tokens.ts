@@ -140,6 +140,10 @@ export const DOSSIER_STYLE = {
     poleHeading: '1.05rem',
     subsectionHeading: '1.1rem',
     figureStepper: '13px',
+    // A base element's display-name line under its box (version 2.35).
+    baseCalled: '13px',
+    // A walk's step badge on its box, in the figure's text size (version 2.40).
+    walkBadge: '13px',
     normalWeight: '400',
     strongWeight: '600',
     currentWeight: '700',

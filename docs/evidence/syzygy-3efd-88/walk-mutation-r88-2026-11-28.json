@@ -1,0 +1,1275 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-28T10:44:46.402Z",
+  "commit": "4be39564577f6ce83c31afdb94fd0c8d6fea7fbb",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "7e9a284bd40ff91ec5a3dfba5f7370b9810593896f326003b1ae0b282c95e128",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "e0383b600eb83e65534048f421938f589cfeca493e61e5451081053dc2f30f03",
+    "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts": "3d12b06e2b8c3cf9ea711f3e5937fddf5d84af139ebdc76266833cd22fda6c0e",
+    "packages/polaris-dossier/src/brief.ts": "d7cb97193cdb65d67b5e38562794234473d50131e7f2d5e874e40dfd6e0f5c28",
+    "packages/polaris-dossier/src/check-derive.ts": "a74b7a1a3fea10bce9a0d51b8548e6faf03a0868cc65dff2704aad1b72054c06",
+    "packages/polaris-dossier/src/check.ts": "6b9333f3ed2049d82f14a1e8f6cc8b5d69be98fb427a893c6193e9dc8405fe80",
+    "packages/polaris-dossier/src/draft-schema.ts": "f5ae8a3a2c6ddfdd06d707cb885ee8a8cfe0b58b00766f6cae6f15c1056e010a",
+    "packages/polaris-dossier/src/render.ts": "8d9dc520c7a5e34d98d0efcf27c8b182c11d83779401649c37a298e46c761271",
+    "packages/polaris-dossier/src/rerender-measure.ts": "8354b8b2b084342e616eb94d6ad54eaf43f9a6c3dca4e1609b9c40cea9c8c965",
+    "packages/polaris-dossier/src/review-packet.ts": "fe870dc29cbc973a55bd751d261eaeac1d5bf6da0914b72bda12d1bb508a7a0d",
+    "packages/polaris-dossier/src/walk.ts": "c79ed436107884cd1e168b4119f75eacf5d474b0ef0c7e8bca577b62982ce649"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 600 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/walk.ts": [
+      "packages/polaris-dossier/src/walk.test.ts"
+    ],
+    "packages/polaris-dossier/src/check.ts": [
+      "packages/polaris-dossier/src/walk.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/walk.test.ts"
+    ],
+    "packages/polaris-dossier/src/render.ts": [
+      "packages/polaris-dossier/src/walk.test.ts"
+    ],
+    "packages/polaris-dossier/src/draft-schema.ts": [
+      "packages/polaris-dossier/src/walk.test.ts",
+      "packages/polaris-dossier/src/draft-schema.test.ts"
+    ],
+    "packages/polaris-dossier/src/brief.ts": [
+      "packages/polaris-dossier/src/brief.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts",
+      "packages/polaris-dossier/src/walk.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts",
+      "packages/polaris-dossier/src/walk.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts"
+    ],
+    "packages/polaris-dossier/src/review-packet.ts": [
+      "packages/polaris-dossier/src/walk.test.ts"
+    ],
+    "packages/polaris-dossier/src/rerender-measure.ts": [
+      "packages/polaris-dossier/src/walk.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "exitCode": 0,
+      "tests": 31,
+      "perFile": {
+        "packages/polaris-dossier/src/walk.test.ts": {
+          "passed": 21,
+          "skipped": 0
+        },
+        "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts": {
+          "passed": 1,
+          "skipped": 0
+        },
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts": {
+          "passed": 9,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "exitCode": 0,
+      "tests": 31,
+      "perFile": {
+        "packages/polaris-dossier/src/walk.test.ts": {
+          "passed": 21,
+          "skipped": 0
+        },
+        "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts": {
+          "passed": 1,
+          "skipped": 0
+        },
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts": {
+          "passed": 9,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts",
+      "exitCode": 0,
+      "tests": 10,
+      "perFile": {
+        "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts": {
+          "passed": 1,
+          "skipped": 0
+        },
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts": {
+          "passed": 9,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "exitCode": 0,
+      "tests": 42,
+      "perFile": {
+        "packages/polaris-dossier/src/brief.test.ts": {
+          "passed": 42,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "exitCode": 0,
+      "tests": 21,
+      "perFile": {
+        "packages/polaris-dossier/src/walk.test.ts": {
+          "passed": 21,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.ts",
+      "exitCode": 0,
+      "tests": 21,
+      "perFile": {
+        "packages/polaris-dossier/src/walk.test.ts": {
+          "passed": 21,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "exitCode": 0,
+      "tests": 85,
+      "perFile": {
+        "packages/polaris-dossier/src/walk.test.ts": {
+          "passed": 21,
+          "skipped": 0
+        },
+        "packages/polaris-dossier/src/draft-schema.test.ts": {
+          "passed": 64,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.ts",
+      "exitCode": 0,
+      "tests": 21,
+      "perFile": {
+        "packages/polaris-dossier/src/walk.test.ts": {
+          "passed": 21,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "exitCode": 0,
+      "tests": 21,
+      "perFile": {
+        "packages/polaris-dossier/src/walk.test.ts": {
+          "passed": 21,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "exitCode": 0,
+      "tests": 21,
+      "perFile": {
+        "packages/polaris-dossier/src/walk.test.ts": {
+          "passed": 21,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "exitCode": 0,
+      "tests": 21,
+      "perFile": {
+        "packages/polaris-dossier/src/walk.test.ts": {
+          "passed": 21,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "extra-member-admitted",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "isRecord(value) && Object.keys(value).length === members.length && ",
+      "new": "isRecord(value) && ",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Malformed walk refused: one `walk` finding at the walk, and no other walk or schema finding at or below it"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "steps-not-list-admitted",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": " || !Array.isArray(walk['steps'])) return undefined;",
+      "new": ") return undefined;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) More malformed walks: `steps` not a list, a base end whose map is not a string, and a walk in a draft of an unknown schema"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "base-map-not-string-admitted",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "typeof element['map'] === 'string' && ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) More malformed walks: `steps` not a list, a base end whose map is not a string, and a walk in a draft of an unknown schema"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "figure-not-string-admitted",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "typeof walk['figure'] !== 'string' || ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Malformed walk refused: one `walk` finding at the walk, and no other walk or schema finding at or below it"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "one-step-admitted",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (steps.length < WALK_STEPS[0] || steps.length > WALK_STEPS[1]) return undefined;",
+      "new": "if (steps.length > WALK_STEPS[1]) return undefined;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Malformed walk refused: one `walk` finding at the walk, and no other walk or schema finding at or below it"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "thirteen-steps-admitted",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (steps.length < WALK_STEPS[0] || steps.length > WALK_STEPS[1]) return undefined;",
+      "new": "if (steps.length < WALK_STEPS[0]) return undefined;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Malformed walk refused: one `walk` finding at the walk, and no other walk or schema finding at or below it"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "block-not-string-admitted",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": " || typeof step['block'] !== 'string') return undefined;",
+      "new": ") return undefined;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Malformed walk refused: one `walk` finding at the walk, and no other walk or schema finding at or below it"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "base-end-without-path-admitted",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "typeof element['path'] === 'string'",
+      "new": "true",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Malformed walk refused: one `walk` finding at the walk, and no other walk or schema finding at or below it"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "malformed-silent",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (read === undefined) { out.push({ kind: 'walk', at, detail: WALK_DETAIL.malformed }); continue; }",
+      "new": "if (read === undefined) continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Malformed walk refused: one `walk` finding at the walk, and no other walk or schema finding at or below it",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) More malformed walks: `steps` not a list, a base end whose map is not a string, and a walk in a draft of an unknown schema"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "deep-dives-unread",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "const PLACES = ['sections', 'deepDives'] as const;",
+      "new": "const PLACES = ['sections'] as const;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's steps name the figure's elements and the place's cited paragraphs, in order, and a deep dive's walk follows the sections'",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Earlier schema keeps its findings with a walk added: `field-version` stands in place of the schema finding at the walk",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk on a deep dive renders on the deep dive's page",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk whose place is not produced renders nowhere: an omitted deep dive walking a produced figure homed in it moves no byte",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) The fidelity packet's draft and the rerender measure carry no walk: a walked v16 draft reads as the same draft without it"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "deep-dives-first",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "const PLACES = ['sections', 'deepDives'] as const;",
+      "new": "const PLACES = ['deepDives', 'sections'] as const;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's steps name the figure's elements and the place's cited paragraphs, in order, and a deep dive's walk follows the sections'"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "walks-not-stripped",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (!isRecord(doc) || !hasWalkForm(doc['schemaVersion'])) return doc;\n  const strip",
+      "new": "return doc;\n  const strip",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk ties a section's paragraphs to its figure's elements: the layer, its boxes, ids and badges, and the list",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk moves only its figure's page: no paragraph, drawing, machine form, check record or advice moves",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Walk ids stay unique on a page of several walked figures whose identities share a prefix, beside a paragraph named like one",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Each box links to the lines its first citation cites; a withheld node's box holds no link",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk through a later view of a shared element: its label alone, and its box linked to the first figure's citation",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step naming a base end over a map not established at check: no finding at check, and no walk at the render where it names nothing",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Malformed walk refused: one `walk` finding at the walk, and no other walk or schema finding at or below it",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's figure is drawn where the walk is, and is of a graph kind",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's steps name the figure's elements and the place's cited paragraphs, in order, and a deep dive's walk follows the sections'",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step may name a subsection's paragraph, a paragraph another step names, or one whose one citation is withheld",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk on a deep dive renders on the deep dive's page",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk whose place is not produced renders nowhere: an omitted deep dive walking a produced figure homed in it moves no byte",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) More malformed walks: `steps` not a list, a base end whose map is not a string, and a walk in a draft of an unknown schema",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) The fidelity packet's draft and the rerender measure carry no walk: a walked v16 draft reads as the same draft without it"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "field-version-paths-none",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "return walksOf(doc).map((entry) => entry.at);",
+      "new": "return [];",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Earlier schema keeps its findings with a walk added: `field-version` stands in place of the schema finding at the walk"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "field-version-unknown-version",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (hasWalkForm(doc['schemaVersion']) || !LOCAL_DRAFT_SCHEMA_VERSIONS.some((known) => known === doc['schemaVersion'])) return [];",
+      "new": "if (hasWalkForm(doc['schemaVersion'])) return [];",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) More malformed walks: `steps` not a list, a base end whose map is not a string, and a walk in a draft of an unknown schema"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "walk-findings-any-version",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (!hasWalkForm(doc['schemaVersion'])) return [];\n  const out: CheckFinding[]",
+      "new": "const out: CheckFinding[]",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Earlier schema keeps its findings with a walk added: `field-version` stands in place of the schema finding at the walk"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "home-unchecked",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (!homedAt(diagram, place, part)) out.push(",
+      "new": "if (false) out.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's figure is drawn where the walk is, and is of a graph kind",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's steps name the figure's elements and the place's cited paragraphs, in order, and a deep dive's walk follows the sections'"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "home-deep-dive-as-section",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "(part === 'sections' ? 'section' : 'deep-dive')",
+      "new": "'section'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk on a deep dive renders on the deep dive's page",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk whose place is not produced renders nowhere: an omitted deep dive walking a produced figure homed in it moves no byte"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "kind-unchecked",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (!GRAPH_KINDS.has(diagram['kind'])) out.push(",
+      "new": "if (false) out.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's figure is drawn where the walk is, and is of a graph kind"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "unresolved-silent",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (diagram === undefined) out.push({ kind: 'unresolved-reference', at: `${at}.figure`, detail: WALK_DETAIL.unresolved });",
+      "new": "if (diagram === undefined) {}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's figure is drawn where the walk is, and is of a graph kind"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "view-elements-whole-model",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "return new Set(viewLists(diagram).elements.filter((id) => elements.has(id)));",
+      "new": "return new Set(elements.keys());",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's steps name the figure's elements and the place's cited paragraphs, in order, and a deep dive's walk follows the sections'"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "base-map-unmatched",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (base === undefined || base.map !== element.map) return { state: 'absent' };",
+      "new": "if (base === undefined) return { state: 'absent' };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "unestablished-as-absent",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (map === undefined) return { state: 'unestablished' };",
+      "new": "if (map === undefined) return { state: 'absent' };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step naming a base end over a map not established at check: no finding at check, and no walk at the render where it names nothing"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "base-unshown-admitted",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "named.length === 1 && shownOf(base, map).includes(named[0]!) ? { state: 'shown'",
+      "new": "named.length === 1 ? { state: 'shown'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone",
+        "packages/polaris-dossier/src/walk.test.ts > a step's base end against a unit map of one manifest declaring two packages (version 2.40, D10) at check: a bare path naming both packages, and a path naming one the view hides, name no element drawn; `#2` names the second"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "base-several-admitted",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "named.length === 1 && shownOf(base, map).includes(named[0]!) ? { state: 'shown'",
+      "new": "shownOf(base, map).includes(named[0]!) ? { state: 'shown'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > a step's base end against a unit map of one manifest declaring two packages (version 2.40, D10) at check: a bare path naming both packages, and a path naming one the view hides, name no element drawn; `#2` names the second"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "base-repeat-by-path",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "{ key: `base:${found.factId}`, name:",
+      "new": "{ key: `base:${element.path}`, name:",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "base-repeat-names-path",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "name: `\\`walk.steps[${k}].element\\`` }",
+      "new": "name: element.path }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "repeat-silent",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (named.has(resolved.key)) out.push(",
+      "new": "if (false) out.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Malformed walk refused: one `walk` finding at the walk, and no other walk or schema finding at or below it",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's steps name the figure's elements and the place's cited paragraphs, in order, and a deep dive's walk follows the sections'"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "element-absent-silent",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (resolved === 'absent') out.push({ kind: 'walk', at: `${stepAt}.element`, detail: WALK_DETAIL.element(k, read.figure) });",
+      "new": "if (resolved === 'absent') {}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's steps name the figure's elements and the place's cited paragraphs, in order, and a deep dive's walk follows the sections'",
+        "packages/polaris-dossier/src/walk.test.ts > a step's base end against a unit map of one manifest declaring two packages (version 2.40, D10) at check: a bare path naming both packages, and a path naming one the view hides, name no element drawn; `#2` names the second"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "block-absent-silent",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (block === undefined) out.push({ kind: 'walk', at: `${stepAt}.block`, detail: WALK_DETAIL.block(k) });\n      else if",
+      "new": "if (block === undefined) {}\n      else if",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's steps name the figure's elements and the place's cited paragraphs, in order, and a deep dive's walk follows the sections'",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step may name a subsection's paragraph, a paragraph another step names, or one whose one citation is withheld"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "uncited-silent",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "else if (list(block['citations']).length === 0) out.push(",
+      "new": "else if (false) out.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's steps name the figure's elements and the place's cited paragraphs, in order, and a deep dive's walk follows the sections'"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "presentation-blocks-admitted",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (!isRecord(entry) || PRESENTATION_KINDS.has(text(entry['kind']) ?? '')) continue;",
+      "new": "if (!isRecord(entry)) continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's steps name the figure's elements and the place's cited paragraphs, in order, and a deep dive's walk follows the sections'"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "subsections-unread",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (part === 'sections') for (const subsection",
+      "new": "if (false) for (const subsection",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step may name a subsection's paragraph, a paragraph another step names, or one whose one citation is withheld"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "render-partial-walk",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (node === undefined || seen.has(node)) { steps.length = 0; break; }",
+      "new": "if (node === undefined || seen.has(node)) continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step naming a base end over a map not established at check: no finding at check, and no walk at the render where it names nothing",
+        "packages/polaris-dossier/src/walk.test.ts > a step's base end against a unit map of one manifest declaring two packages (version 2.40, D10) at the render: each step's node is the fact its base end names; a walk with a step naming nothing shown, or another map, or a repeat, renders nowhere"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "render-unproduced-place",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "    if (!producedPlace(place)) continue;\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk whose place is not produced renders nowhere: an omitted deep dive walking a produced figure homed in it moves no byte",
+        "packages/polaris-dossier/src/walk.test.ts > a step's base end against a unit map of one manifest declaring two packages (version 2.40, D10) at the render: a section whose disposition is not produced renders no walk"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "render-repeat-kept",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "if (node === undefined || seen.has(node))",
+      "new": "if (node === undefined)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > a step's base end against a unit map of one manifest declaring two packages (version 2.40, D10) at the render: each step's node is the fact its base end names; a walk with a step naming nothing shown, or another map, or a repeat, renders nowhere"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "render-base-map-unmatched",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "else if (resolved !== undefined && resolved.spec.map === step.element.map) {",
+      "new": "else if (resolved !== undefined) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > a step's base end against a unit map of one manifest declaring two packages (version 2.40, D10) at the render: each step's node is the fact its base end names; a walk with a step naming nothing shown, or another map, or a repeat, renders nowhere"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "render-base-unshown-admitted",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "node = named.length === 1 && resolved.shown.includes(named[0]!) ?",
+      "new": "node = named.length === 1 ?",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > a step's base end against a unit map of one manifest declaring two packages (version 2.40, D10) at the render: each step's node is the fact its base end names; a walk with a step naming nothing shown, or another map, or a repeat, renders nowhere"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "render-base-several-admitted",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "node = named.length === 1 && resolved.shown.includes(named[0]!) ?",
+      "new": "node = resolved.shown.includes(named[0]!) ?",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > a step's base end against a unit map of one manifest declaring two packages (version 2.40, D10) at the render: each step's node is the fact its base end names; a walk with a step naming nothing shown, or another map, or a repeat, renders nowhere"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "packet-walks-kept",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "old": "withoutWalks(withoutFigurePlan(draftDoc))",
+      "new": "withoutFigurePlan(draftDoc)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) The fidelity packet's draft and the rerender measure carry no walk: a walked v16 draft reads as the same draft without it"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "measure-walks-kept",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "doc = withoutWalks(withoutFigurePlan(doc));",
+      "new": "doc = withoutFigurePlan(doc);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) The fidelity packet's draft and the rerender measure carry no walk: a walked v16 draft reads as the same draft without it"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "presentation-kinds-without-table",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "new Set(['table', 'callout', 'steps', 'definitions', 'cards', 'details', 'code'])",
+      "new": "new Set(['callout', 'steps', 'definitions', 'cards', 'details', 'code'])",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 85,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's steps name the figure's elements and the place's cited paragraphs, in order, and a deep dive's walk follows the sections'"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "render-walks-dropped",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "...(walks.size === 0 ? {} : { walks })",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk ties a section's paragraphs to its figure's elements: the layer, its boxes, ids and badges, and the list",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk moves only its figure's page: no paragraph, drawing, machine form, check record or advice moves",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Walk ids stay unique on a page of several walked figures whose identities share a prefix, beside a paragraph named like one",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Each box links to the lines its first citation cites; a withheld node's box holds no link",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk through a later view of a shared element: its label alone, and its box linked to the first figure's citation",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step naming a base end over a map not established at check: no finding at check, and no walk at the render where it names nothing",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk on a deep dive renders on the deep dive's page"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "check-walk-findings-dropped",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "findings.push(...walkFindings(walked, checkBaseMaps(treeFacts, manifestFacts)));",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 0,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts (file failed: Transform failed with 1 error:\n/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-3efd.88/packages/polaris-dossier/src/check.ts:361:2: ERROR: Cannot use a declaration in a single-statem)"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "check-maps-unread",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "walkFindings(walked, checkBaseMaps(treeFacts, manifestFacts))",
+      "new": "walkFindings(walked, {})",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "source-example-not-v16",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": " && version !== 'polaris-dossier-local-draft-v16') return;",
+      "new": ") return;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A v16 draft with no source example and no Pole choices gets the 2.36 source-example advice and a choice-floor member, as a v15 draft does"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "field-version-not-emitted",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "for (const finding of walkFieldVersionFindings(doc)) add(finding);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Earlier schema keeps its findings with a walk added: `field-version` stands in place of the schema finding at the walk"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "field-version-schema-too",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "for (const at of walkFieldVersionPaths(doc)) subsectionPaths.add(at);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Earlier schema keeps its findings with a walk added: `field-version` stands in place of the schema finding at the walk"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "walk-form-never",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "export const hasWalkForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V16;",
+      "new": "export const hasWalkForm = (version: unknown): boolean => false;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 85,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk ties a section's paragraphs to its figure's elements: the layer, its boxes, ids and badges, and the list",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk moves only its figure's page: no paragraph, drawing, machine form, check record or advice moves",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A v16 draft without a walk renders as the same draft in schema v15, apart from the bytes naming its schema or digest",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Walk ids stay unique on a page of several walked figures whose identities share a prefix, beside a paragraph named like one",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Each box links to the lines its first citation cites; a withheld node's box holds no link",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk through a later view of a shared element: its label alone, and its box linked to the first figure's citation",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step naming a base end over a map not established at check: no finding at check, and no walk at the render where it names nothing",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Malformed walk refused: one `walk` finding at the walk, and no other walk or schema finding at or below it",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's figure is drawn where the walk is, and is of a graph kind",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk's steps name the figure's elements and the place's cited paragraphs, in order, and a deep dive's walk follows the sections'",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step may name a subsection's paragraph, a paragraph another step names, or one whose one citation is withheld",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A v16 draft with no source example and no Pole choices gets the 2.36 source-example advice and a choice-floor member, as a v15 draft does",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk on a deep dive renders on the deep dive's page",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk whose place is not produced renders nowhere: an omitted deep dive walking a produced figure homed in it moves no byte",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) More malformed walks: `steps` not a list, a base end whose map is not a string, and a walk in a draft of an unknown schema",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) The fidelity packet's draft and the rerender measure carry no walk: a walked v16 draft reads as the same draft without it",
+        "packages/polaris-dossier/src/walk.test.ts > a step's base end against a unit map of one manifest declaring two packages (version 2.40, D10) at check: a bare path naming both packages, and a path naming one the view hides, name no element drawn; `#2` names the second",
+        "packages/polaris-dossier/src/walk.test.ts > a step's base end against a unit map of one manifest declaring two packages (version 2.40, D10) at the render: each step's node is the fact its base end names; a walk with a step naming nothing shown, or another map, or a repeat, renders nowhere",
+        "packages/polaris-dossier/src/walk.test.ts > a step's base end against a unit map of one manifest declaring two packages (version 2.40, D10) at the render: a section whose disposition is not produced renders no walk"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "base-form-not-v16",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "version === LOCAL_DRAFT_SCHEMA_VERSION_V15 || hasWalkForm(version);",
+      "new": "version === LOCAL_DRAFT_SCHEMA_VERSION_V15;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 85,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk ties a section's paragraphs to its figure's elements: the layer, its boxes, ids and badges, and the list",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk moves only its figure's page: no paragraph, drawing, machine form, check record or advice moves",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A v16 draft without a walk renders as the same draft in schema v15, apart from the bytes naming its schema or digest",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Walk ids stay unique on a page of several walked figures whose identities share a prefix, beside a paragraph named like one",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Each box links to the lines its first citation cites; a withheld node's box holds no link",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk through a later view of a shared element: its label alone, and its box linked to the first figure's citation",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step naming a base end over a map not established at check: no finding at check, and no walk at the render where it names nothing",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A v16 draft with no source example and no Pole choices gets the 2.36 source-example advice and a choice-floor member, as a v15 draft does",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk on a deep dive renders on the deep dive's page",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk whose place is not produced renders nowhere: an omitted deep dive walking a produced figure homed in it moves no byte",
+        "packages/polaris-dossier/src/walk.test.ts > a step's base end against a unit map of one manifest declaring two packages (version 2.40, D10) at check: a bare path naming both packages, and a path naming one the view hides, name no element drawn; `#2` names the second",
+        "packages/polaris-dossier/src/walk.test.ts > a step's base end against a unit map of one manifest declaring two packages (version 2.40, D10) at the render: each step's node is the fact its base end names; a walk with a step naming nothing shown, or another map, or a repeat, renders nowhere",
+        "packages/polaris-dossier/src/walk.test.ts > a step's base end against a unit map of one manifest declaring two packages (version 2.40, D10) at the render: a section whose disposition is not produced renders no walk"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "schema-sections-no-walk",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "sections: withWalk(object.properties['sections'] as ArraySchema), ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 85,
+      "failedTests": [
+        "packages/polaris-dossier/src/draft-schema.test.ts > draft.schema.json admits any value at an optional `walk` on a section and a deep dive, and on nothing else (version 2.40)"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "brief-no-walk-paragraph",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    WALK_PARAGRAPH,\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 42,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, containment, system-model, figure-plan, derived-base and walk paragraphs, task-routes section, worth-knowing paragraph and question-kinds paragraph"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "width-rule-off-by-one",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "width !== 1048;",
+      "new": "width !== 1047;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 31,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) lays a walk over every drawing width but 1048 px, the one width that shrinks to its column"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "box-ignores-called",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "const layout = layoutDiagram(diagram.nodes.map(node => ({ ...node, below: decorate(node.id)?.called === undefined ? 0 : CALLED_HEIGHT })), diagram.edges, spacing);\n  return { width: layout.width, boxes:",
+      "new": "const layout = layoutDiagram(diagram.nodes.map(node => ({ ...node, below: 0 })), diagram.edges, spacing);\n  return { width: layout.width, boxes:",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 31,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) places a box below a base element's `called` line where the drawing does: 18 px further down in a connected pair"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "box-x-y-swapped",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "`left:${box.x}px;top:${box.y}px;",
+      "new": "`left:${box.y}px;top:${box.x}px;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 31,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk ties a section's paragraphs to its figure's elements: the layer, its boxes, ids and badges, and the list",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Each box links to the lines its first citation cites; a withheld node's box holds no link",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk through a later view of a shared element: its label alone, and its box linked to the first figure's citation",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone",
+        "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts > highlights a step's box by :target with no script, and the next Tab reaches its source link",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) wraps the drawing, byte for byte, with a layer of one box per node in node order, and lists the steps after it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) links a box to the address its node's first citation link carries in the figure's list, and gives a withheld node's box none",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) moves only the page that draws the figure, and only by the wrapper, the layer, the list and the walk style rules"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "stray-node-renders",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (steps.some(step => !nodes.has(step.node))) return undefined;",
+      "new": "if (steps.every(step => !nodes.has(step.node))) return undefined;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 31,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) renders no walk, and moves no byte, where its figure is not produced or a step names no node the figure draws"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "withheld-box-linked",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (isBase(n.id) || held(n.id) !== undefined || first",
+      "new": "if (isBase(n.id) || first",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 31,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts > highlights a step's box by :target with no script, and the next Tab reaches its source link",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) wraps the drawing, byte for byte, with a layer of one box per node in node order, and lists the steps after it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) links a box to the address its node's first citation link carries in the figure's list, and gives a withheld node's box none",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) moves only the page that draws the figure, and only by the wrapper, the layer, the list and the walk style rules"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "box-link-no-lines",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "lineFragment(first, local?.citationLines?.get(n.id)?.get(first))",
+      "new": "lineFragment(first, undefined)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 31,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Each box links to the lines its first citation cites; a withheld node's box holds no link",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk through a later view of a shared element: its label alone, and its box linked to the first figure's citation",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone",
+        "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts > highlights a step's box by :target with no script, and the next Tab reaches its source link",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) wraps the drawing, byte for byte, with a layer of one box per node in node order, and lists the steps after it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) moves only the page that draws the figure, and only by the wrapper, the layer, the list and the walk style rules"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "box-id-off-by-one",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "` id=\"walk-${escape(d.id)}-${number}\"`",
+      "new": "` id=\"walk-${escape(d.id)}-${number - 1}\"`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 31,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk ties a section's paragraphs to its figure's elements: the layer, its boxes, ids and badges, and the list",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Walk ids stay unique on a page of several walked figures whose identities share a prefix, beside a paragraph named like one",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Each box links to the lines its first citation cites; a withheld node's box holds no link",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk through a later view of a shared element: its label alone, and its box linked to the first figure's citation",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone",
+        "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts > highlights a step's box by :target with no script, and the next Tab reaches its source link",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) wraps the drawing, byte for byte, with a layer of one box per node in node order, and lists the steps after it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) links a box to the address its node's first citation link carries in the figure's list, and gives a withheld node's box none",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) moves only the page that draws the figure, and only by the wrapper, the layer, the list and the walk style rules",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) gives each id on the page once, and every walk id is a step of the figure it names",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) keeps ids unique for two walked figures whose identities share a prefix, beside a paragraph named like a walk id"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "badge-on-every-box",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const badge = number === undefined ? '' :",
+      "new": "const badge = number === undefined ? '<span class=\"walk-badge\" aria-hidden=\"true\"></span>' :",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 31,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Each box links to the lines its first citation cites; a withheld node's box holds no link",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk through a later view of a shared element: its label alone, and its box linked to the first figure's citation",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) wraps the drawing, byte for byte, with a layer of one box per node in node order, and lists the steps after it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) moves only the page that draws the figure, and only by the wrapper, the layer, the list and the walk style rules"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "list-text-link-to-figure",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<a class=\"walk-text\" href=\"#block-${escape(step.block)}\">",
+      "new": "<a class=\"walk-text\" href=\"#figure-${escape(d.id)}\">",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 31,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk ties a section's paragraphs to its figure's elements: the layer, its boxes, ids and badges, and the list",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Walk ids stay unique on a page of several walked figures whose identities share a prefix, beside a paragraph named like one",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Each box links to the lines its first citation cites; a withheld node's box holds no link",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk through a later view of a shared element: its label alone, and its box linked to the first figure's citation",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk on a deep dive renders on the deep dive's page",
+        "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts > highlights a step's box by :target with no script, and the next Tab reaches its source link",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) wraps the drawing, byte for byte, with a layer of one box per node in node order, and lists the steps after it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) moves only the page that draws the figure, and only by the wrapper, the layer, the list and the walk style rules",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) keeps ids unique for two walked figures whose identities share a prefix, beside a paragraph named like a walk id"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "style-never-carried",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "    walkPages.add(from);\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 31,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk on a deep dive renders on the deep dive's page",
+        "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts > highlights a step's box by :target with no script, and the next Tab reaches its source link",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) carries the walk style rules on the page holding a walk and on no other page"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "style-on-every-page",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${walkPages.has(path) ? WALK_FIGURE_CSS : ''}",
+      "new": "${WALK_FIGURE_CSS}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 31,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk moves only its figure's page: no paragraph, drawing, machine form, check record or advice moves",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step naming a base end over a map not established at check: no finding at check, and no walk at the render where it names nothing",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk on a deep dive renders on the deep dive's page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) moves only the page that draws the figure, and only by the wrapper, the layer, the list and the walk style rules",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) carries the walk style rules on the page holding a walk and on no other page"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "layer-not-drawn",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const drawing = walked === undefined ? svg : `<div class=\"walk-figure\">${svg}${walked.layer}</div>`;",
+      "new": "const drawing = svg;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 31,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk ties a section's paragraphs to its figure's elements: the layer, its boxes, ids and badges, and the list",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk moves only its figure's page: no paragraph, drawing, machine form, check record or advice moves",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Walk ids stay unique on a page of several walked figures whose identities share a prefix, beside a paragraph named like one",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) Each box links to the lines its first citation cites; a withheld node's box holds no link",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk through a later view of a shared element: its label alone, and its box linked to the first figure's citation",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A step names a base element: its box takes the id and the badge, never a link; its findings name the step by index alone",
+        "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts > highlights a step's box by :target with no script, and the next Tab reaches its source link",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) wraps the drawing, byte for byte, with a layer of one box per node in node order, and lists the steps after it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) links a box to the address its node's first citation link carries in the figure's list, and gives a withheld node's box none",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) gives each id on the page once, and every walk id is a step of the figure it names",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) keeps ids unique for two walked figures whose identities share a prefix, beside a paragraph named like a walk id"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "list-before-drawing",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const drawing = walked === undefined ? svg : `<div class=\"walk-figure\">${svg}${walked.layer}</div>`;",
+      "new": "const drawing = walked === undefined ? svg : `${walked.list}<div class=\"walk-figure\">${svg}${walked.layer}</div>`;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 31,
+      "failedTests": [
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk ties a section's paragraphs to its figure's elements: the layer, its boxes, ids and badges, and the list",
+        "packages/polaris-dossier/src/walk.test.ts > schema v16: a walk through a figure (version 2.40) A walk moves only its figure's page: no paragraph, drawing, machine form, check record or advice moves",
+        "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts > highlights a step's box by :target with no script, and the next Tab reaches its source link",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) wraps the drawing, byte for byte, with a layer of one box per node in node order, and lists the steps after it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) moves only the page that draws the figure, and only by the wrapper, the layer, the list and the walk style rules"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "target-solid",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts",
+      "old": ".walk-node:target{outline:${tokens.line.emphasis} dashed",
+      "new": ".walk-node:target{outline:${tokens.line.emphasis} solid",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 10,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts > highlights a step's box by :target with no script, and the next Tab reaches its source link",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) moves only the page that draws the figure, and only by the wrapper, the layer, the list and the walk style rules",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) carries the walk style rules on the page holding a walk and on no other page"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "target-on-hover-only",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts",
+      "old": ".walk-node:target{",
+      "new": ".walk-node:hover:target{",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 10,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts > highlights a step's box by :target with no script, and the next Tab reaches its source link",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) moves only the page that draws the figure, and only by the wrapper, the layer, the list and the walk style rules",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) carries the walk style rules on the page holding a walk and on no other page"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "layer-not-relative",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts",
+      "old": ".walk-figure{position:relative;",
+      "new": ".walk-figure{",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 10,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/walk.browser.test.ts > highlights a step's box by :target with no script, and the next Tab reaches its source link",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) moves only the page that draws the figure, and only by the wrapper, the layer, the list and the walk style rules",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) carries the walk style rules on the page holding a walk and on no other page"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "layer-takes-pointer",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts",
+      "old": "height:${tokens.length.full};pointer-events:none}",
+      "new": "height:${tokens.length.full}}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 10,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) moves only the page that draws the figure, and only by the wrapper, the layer, the list and the walk style rules",
+        "apps/three-surface-poc/src/polaris-generation/dossier-walk.test.ts > a figure walk (version 2.40) carries the walk style rules on the page holding a walk and on no other page"
+      ],
+      "seconds": 2
+    }
+  ],
+  "equivalent": [
+    {
+      "id": "check-walks-not-stripped",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "  doc = withoutWalks(doc);\n",
+      "new": "\n",
+      "reason": "[Inferred] Every reader of the draft after this line in check either strips the walks itself (deriveFindings, check-derive.ts) or reads named members other than `walk` (the schema document admits any `walk` value on a v16 section or deep dive). The strip is kept so that a reader added later cannot see a walk. Run 1 of this record (52 of 58 killed) recorded it as surviving."
+    },
+    {
+      "id": "width-guard-deleted",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "    if (!walkableWidth(geometry.width)) return undefined;\n",
+      "new": "",
+      "reason": "No drawing the readable layout draws through a dossier is 1048 px wide: it stacks every graph figure into a column (248 px wide for 1 to 12 nodes as isolated nodes, a fan and pairs, per review R88 finding 2, and the comment in dossier-site.ts on the operator-agent layout), so no input reaches the guard. The rule itself is pinned at the helper (`walkableWidth`, mutant `width-rule-off-by-one`). A change that lets a drawing reach 1048 px makes this mutant killable and must add the scenario."
+    },
+    {
+      "id": "drawn-nodes-arm-empty",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "return new Set(list(diagram['nodes']).flatMap((node) => (isRecord(node) && typeof node['id'] === 'string' ? [node['id']] : [])));",
+      "new": "return new Set<string>();",
+      "reason": "The `nodes` arm of drawnIdentities serves a figure that is not a view. A v16 draft carries the model form (hasModelForm), and every graph figure a v16 draft may walk is a view, so no v16 walk reaches the arm (review R88, finding 7). It is kept so that a walk never names a node a non-view figure does not draw."
+    },
+    {
+      "id": "base-box-linked",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (isBase(n.id) || held(n.id) !== undefined",
+      "new": "if (held(n.id) !== undefined",
+      "reason": "A base element's node carries no citation (derived-base.ts writes `citations: []` for every base element, so its `sourceIds` is empty), so the `first === undefined` arm already gives its box no link. The `isBase` arm states the rule directly. Run 1 of this record recorded it as surviving."
+    }
+  ],
+  "summary": {
+    "mutants": 68,
+    "killed": 68,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 4
+  }
+}

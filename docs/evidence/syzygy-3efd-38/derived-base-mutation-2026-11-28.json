@@ -1,0 +1,645 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-28T03:48:57.789Z",
+  "commit": "79626ed2bd93d51dbfa2de22b3e5486e537aec92",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "759dd854ebd1ef2b591728c3df4d9cdf010ab1c888e3f60a6c3630eff33127b7",
+    "apps/three-surface-poc/src/polaris-generation/dossier-base.ts": "0f4063f5e9fc228ee9ab2aaedd7927cb33b3fca11d704194951ba45c55a08a76",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "0f909901eacb880f408cbaa236813160d90c0f63843336654e1d64f92fe113b2",
+    "packages/polaris-dossier/src/brief.ts": "9e1a44a1021746c7d1c2a5a40e97ab952bd7b7fa271dc4dc386935e6f212cbe2",
+    "packages/polaris-dossier/src/check-derive.ts": "04c949af760fe303922fa5a896fe0031f3f613121a8dc4c19f50916ec644c461",
+    "packages/polaris-dossier/src/check.ts": "edba0b9a81aacbfa61b419a47c24c750f6f6e4995b45273b02876d3a288418dc",
+    "packages/polaris-dossier/src/derived-base.ts": "c7d66dc85a63677533a76a630351063c89f59f152605e3d91122ba2e274f8858",
+    "packages/polaris-dossier/src/draft-schema.ts": "38fb6dd144a2f01543b50421e5c1e68c2646580ef5546312e0a2bf0de0f6d3b9",
+    "packages/polaris-dossier/src/figure-plan.ts": "cde07f25bc270b346c95d12d6b402394f278865e698dffe3fed8a7c36f38c1ec"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 600 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/derived-base.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "packages/polaris-dossier/src/draft-schema.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "packages/polaris-dossier/src/check.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "packages/polaris-dossier/src/figure-plan.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "packages/polaris-dossier/src/system-model.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "packages/polaris-dossier/src/brief.ts": [
+      "packages/polaris-dossier/src/brief.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-base.ts": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts",
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "exitCode": 0,
+      "tests": 18,
+      "failedTests": []
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "exitCode": 0,
+      "tests": 21,
+      "failedTests": []
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "exitCode": 0,
+      "tests": 18,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "exitCode": 0,
+      "tests": 42,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "exitCode": 0,
+      "tests": 18,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.ts",
+      "exitCode": 0,
+      "tests": 18,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "exitCode": 0,
+      "tests": 18,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "exitCode": 0,
+      "tests": 18,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "exitCode": 0,
+      "tests": 18,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "select-without-rest-admitted",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (Object.hasOwn(base, 'select') && !Object.hasOwn(base, 'restReason')) out.push(",
+      "new": "if (false) out.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Hide without a reason refused: each malformed base is a schema finding at its member"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "rest-without-select-admitted",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (Object.hasOwn(base, 'restReason') && !Object.hasOwn(base, 'select')) out.push(",
+      "new": "if (false) out.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Hide without a reason refused: each malformed base is a schema finding at its member"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "field-version-v14-silent",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "`${name}: \\`${BASE_FIELD}\\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V15}`",
+      "new": "`${name}: \\`${BASE_FIELD}\\` is not supported`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Schema v12 and v14 get a field-version finding at the view's base in place of the schema finding"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "field-version-not-emitted",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "for (const finding of baseFieldVersionFindings(doc, inputs === undefined ? () => 'unavailable' : admitOf(inputs.screen))) add(finding);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Schema v12 and v14 get a field-version finding at the view's base in place of the schema finding"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "base-form-v14",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "export const hasBaseForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V15;",
+      "new": "export const hasBaseForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V14;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Hide without a reason refused: each malformed base is a schema finding at its member",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group places base elements in the draft's element: the two packages inside `runtime`, the third its own group, none witnessed",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element keeps Syzygy's words: `src/ (40 files)` Observed with a double border, and the display name under it",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Select and group together: no conflict where `select` names the grouped path, a base-conflict where it does not",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) a base element selected twice in one list is a base-conflict at the second path",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element hidden and grouped refused",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group into a third-level element refused, and into an element the view does not select",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Directory containment keeps the root: base-root without `.`, the root framing `src/` and `docs/` with it",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Path the map does not list refused",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Draft element taking a base element's name refused: a model element, a display name and a relationship label",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Too many base elements refused: 60 packages, none hidden",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Cited arrow joins two base elements: drawn in the draft's marking, authored, between derived boxes",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Schema v12 and v14 get a field-version finding at the view's base in place of the schema finding",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Figure advice reads no base view: two views examined, none naming the base view",
+        "packages/polaris-dossier/src/derived-base.test.ts > the derived base under source screening (version 2.35) A base-reference finding admits dynamic detail only through the existing screen: a secret-matched path keeps the fixed detail",
+        "packages/polaris-dossier/src/derived-base.test.ts > the derived base under source screening (version 2.35) Hide and remainder reasons are screened: a detector-matching reason refuses the figure in both forms, with neither the text nor a base claim"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "worth-knowing-not-v15",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "hasWorthKnowingForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V13 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14\n  || version === LOCAL_DRAFT_SCHEMA_VERSION_V15;",
+      "new": "hasWorthKnowingForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V13 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > the 2.36 and 2.37 advice on a v15 draft a v15 draft with no source example and no Pole choices gets the source-example advice and a choice-floor member, as a v14 draft does"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "source-example-not-v15",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": " && version !== 'polaris-dossier-local-draft-v15') return;",
+      "new": ") return;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > the 2.36 and 2.37 advice on a v15 draft a v15 draft with no source example and no Pole choices gets the source-example advice and a choice-floor member, as a v14 draft does"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "root-path-any",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "const at = path === '.' ? map.elements.findIndex((element) => element.root === true)",
+      "new": "const at = path === '' ? map.elements.findIndex((element) => element.root === true)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Directory containment keeps the root: base-root without `.`, the root framing `src/` and `docs/` with it"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "manifest-path-first-only",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "return map.elements.flatMap((element, i) => (element.manifest === path ? [i] : []));",
+      "new": "{ const i = map.elements.findIndex((element) => element.manifest === path); return i === -1 ? [] : [i]; }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > the unit map path (version 2.35) One manifest declaring two packages: the bare path names both, `#2` the second, `#0` and `#02` nothing"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "reference-absent-silent",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "    if (named.length === 0) {\n      return { kind: 'base-reference'",
+      "new": "    if (false) {\n      return { kind: 'base-reference'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Path the map does not list refused",
+        "packages/polaris-dossier/src/derived-base.test.ts > the derived base under source screening (version 2.35) A base-reference finding admits dynamic detail only through the existing screen: a secret-matched path keeps the fixed detail"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "reference-detail-unscreened",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "`${owner}: ${entry.path} names no element of the ${mapWord} map at this revision`, BASE_REFERENCE_UNAVAILABLE, evidence) };",
+      "new": "`${owner}: ${entry.path} names no element of the ${mapWord} map at this revision`, `${owner}: ${entry.path} names no element of the ${mapWord} map at this revision`, evidence) };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > the derived base under source screening (version 2.35) A base-reference finding admits dynamic detail only through the existing screen: a secret-matched path keeps the fixed detail"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "conflict-repeat-ignored",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (repeated || unshown) findings.push(conflict(entry));",
+      "new": "if (repeated) findings.push(conflict(entry));",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Select and group together: no conflict where `select` names the grouped path, a base-conflict where it does not",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element hidden and grouped refused"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "conflict-across-lists",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "const repeated = named.some((k) => seen[entry.list].has(k));",
+      "new": "const repeated = false;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) a base element selected twice in one list is a base-conflict at the second path"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "root-select-ignored",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (base.select !== undefined && !base.select.some((path) => resolveBasePath(map, path).includes(root))) findings.push(",
+      "new": "if (false) findings.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Directory containment keeps the root: base-root without `.`, the root framing `src/` and `docs/` with it"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "group-third-level",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (level === undefined || level > 2) {",
+      "new": "if (level === undefined || level > 3) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group into a third-level element refused, and into an element the view does not select"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "group-unselected",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (level === undefined || level > 2) {",
+      "new": "if (level !== undefined && level > 2) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group into a third-level element refused, and into an element the view does not select"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "size-bound-60",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (boxes === 0 || boxes > BASE_BOUNDS.boxes) {",
+      "new": "if (boxes === 0 || boxes > 60) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Too many base elements refused: 60 packages, none hidden"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "label-case-kept",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "return (trimmed.endsWith('/') ? trimmed.slice(0, -1) : trimmed).toLowerCase(); };",
+      "new": "return trimmed.endsWith('/') ? trimmed.slice(0, -1) : trimmed; };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Draft element taking a base element's name refused: a model element, a display name and a relationship label"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "label-trim-dropped",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "export const labelKey = (value: string): string => { const trimmed = value.trim();",
+      "new": "export const labelKey = (value: string): string => { const trimmed = value;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Draft element taking a base element's name refused: a model element, a display name and a relationship label"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "label-contains-ignored",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (label !== undefined && labelKey(label) === 'contains') findings.push(",
+      "new": "if (false) findings.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Draft element taking a base element's name refused: a model element, a display name and a relationship label"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "label-element-ignored",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (label !== undefined && baseNames.has(labelKey(label))) findings.push(",
+      "new": "if (false) findings.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Draft element taking a base element's name refused: a model element, a display name and a relationship label"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "reason-withheld-drawn",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (screened.includes('withheld')) { refused.set(i, BASE_REASON_WITHHELD); return; }",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > the derived base under source screening (version 2.35) Hide and remainder reasons are screened: a detector-matching reason refuses the figure in both forms, with neither the text nor a base claim"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "figure-advice-reads-base",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "    if (carriesBase(source)) return;\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Figure advice reads no base view: two views examined, none naming the base view"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "chip-hidden-count",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "const hidden = base.total - base.shown;",
+      "new": "const hidden = base.total;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group places base elements in the draft's element: the two packages inside `runtime`, the third its own group, none witnessed",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element keeps Syzygy's words: `src/ (40 files)` Observed with a double border, and the display name under it",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Directory containment keeps the root: base-root without `.`, the root framing `src/` and `docs/` with it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Chip links from a deeper page: `../maps/directories.html`, and the map's own uncounted sentence",
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Pruned view prints its chip: 9 of 31 packages, no further sentence, and the base tally"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "chip-not-listed-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "return `<p class=\"base-chip\" data-visual-provenance=\"computed\">${head}${notListedSentence(base)}</p>`;",
+      "new": "return `<p class=\"base-chip\" data-visual-provenance=\"computed\">${head}</p>`;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Chip links from a deeper page: `../maps/directories.html`, and the map's own uncounted sentence"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "chip-href-flat",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "`${'../'.repeat(from.split('/').length - 1)}maps/",
+      "new": "`maps/",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Chip links from a deeper page: `../maps/directories.html`, and the map's own uncounted sentence",
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Unknown base renders a notice and a `base` member of three fields alone; an unresolved base names no path"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "hidden-twelve-names",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "const NAMES_LISTED = 12;",
+      "new": "const NAMES_LISTED = 13;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Chip links from a deeper page: `../maps/directories.html`, and the map's own uncounted sentence",
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Pruned view prints its chip: 9 of 31 packages, no further sentence, and the base tally"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "hidden-reason-unescaped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "This dossier's reason: ${escape(item.reason)}</li>",
+      "new": "This dossier's reason: ${item.reason}</li>",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group places base elements in the draft's element: the two packages inside `runtime`, the third its own group, none witnessed"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "notice-unknown-words",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "which is Unknown at this render: ${escape(unknown.words)}. ${see}",
+      "new": "which is Unknown at this render. ${see}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Unknown base renders a notice and a `base` member of three fields alone; an unresolved base names no path"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "machine-unknown-extra",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "return { map: base.map, established: false, reason: base.state === 'unknown' ? unknownReason : 'source-uncaptured-or-unreachable' };",
+      "new": "return { map: base.map, established: false, reason: unknownReason, shown: 0 };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Unknown base renders a notice and a `base` member of three fields alone; an unresolved base names no path"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "tally-base-marks",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "${count('observed')} observed, ${count('inferred')} inferred, ${count('unknown')} unknown.`;\n}",
+      "new": "${count('inferred')} observed, ${count('observed')} inferred, ${count('unknown')} unknown.`;\n}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 21,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group places base elements in the draft's element: the two packages inside `runtime`, the third its own group, none witnessed",
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Pruned view prints its chip: 9 of 31 packages, no further sentence, and the base tally"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "outline-syzygy-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${isBase(group.id) ? 'Syzygy: ' : ''}",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group places base elements in the draft's element: the two packages inside `runtime`, the third its own group, none witnessed",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Select and group together: no conflict where `select` names the grouped path, a base-conflict where it does not",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Directory containment keeps the root: base-root without `.`, the root framing `src/` and `docs/` with it"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "called-claim-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const called = name === undefined ? '' : ` ${claim('span', name.id, name.epistemic,",
+      "new": "const called = true ? '' : ` ${claim('span', name.id, name.epistemic,",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element keeps Syzygy's words: `src/ (40 files)` Observed with a double border, and the display name under it"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "provenance-derived-as-authored",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "nodes: d.nodes.map(n => ({ id: n.id, provenance: isBase(n.id) ? 'derived' : 'authored' }))",
+      "new": "nodes: d.nodes.map(n => ({ id: n.id, provenance: 'authored' }))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Cited arrow joins two base elements: drawn in the draft's marking, authored, between derived boxes"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "chip-not-drawn",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const baseMap = drawnBase === undefined ? '' : ` data-base-map=\"${drawnBase.map}\"`, chip = drawnBase === undefined ? '' : baseChip(drawnBase, from);",
+      "new": "const baseMap = drawnBase === undefined ? '' : ` data-base-map=\"${drawnBase.map}\"`, chip = '';",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element keeps Syzygy's words: `src/ (40 files)` Observed with a double border, and the display name under it"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "double-border-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "const inner = decoration?.double === true ? doubleRect(at.x, at.y, nodeWidth, NODE_HEIGHT) : '';",
+      "new": "const inner = '';",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element keeps Syzygy's words: `src/ (40 files)` Observed with a double border, and the display name under it"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "called-line-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "const called = decoration?.called === undefined ? '' : calledLine(decoration.called, at.x + nodeWidth / 2, at.y + NODE_HEIGHT + 16, escape);",
+      "new": "const called = '';",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 18,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element keeps Syzygy's words: `src/ (40 files)` Observed with a double border, and the display name under it"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "brief-paragraph-dropped",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    DERIVED_BASE_PARAGRAPH,\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 42,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, containment, system-model, figure-plan and derived-base paragraphs, task-routes section, worth-knowing paragraph and question-kinds paragraph"
+      ],
+      "seconds": 2
+    }
+  ],
+  "equivalent": [
+    {
+      "id": "numbered-leading-zero",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "/^[1-9]\\d*$/u.test(numbered[2]!)",
+      "new": "/^\\d+$/u.test(numbered[2]!)",
+      "reason": "A numbered path resolves only where it equals an element path, and the unit map writes every element path with k from 1 and no leading zero, so `#0` and `#02` name nothing with or without the digit test. Run 1 of this record (36 of 39 killed) recorded it as surviving; the test is kept as a statement of the rule."
+    }
+  ],
+  "summary": {
+    "mutants": 38,
+    "killed": 38,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 1
+  }
+}

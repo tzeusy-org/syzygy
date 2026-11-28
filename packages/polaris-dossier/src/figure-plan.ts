@@ -1,7 +1,8 @@
 import { CONTAINMENT_KIND, DIAGRAM_KINDS, FIGURE_KINDS } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
 import type { CheckFinding } from './check-model.js';
-import { FIGURE_PLAN_FIELD, LOCAL_DRAFT_SCHEMA_VERSION_V14 } from './draft-schema.js';
+import { FIGURE_PLAN_FIELD, hasFigurePlanForm } from './draft-schema.js';
+import { carriesBase } from './derived-base.js';
 import { expandModel, isViewKind, modelIndex } from './system-model.js';
 
 /** The figure plan of a schema-v14 draft and the figure advice (REQ-polaris-generation-034 version 2.33, syzygy-3efd.84).
@@ -24,8 +25,8 @@ export const FIGURE_PLAN_DETAIL = Object.freeze({
   malformed: 'a plan entry is {"home", "question", "kind", "figure"} or {"home", "omitted"}',
 });
 
-/** Whether a draft is one whose `figurePlan` check reads: schema v14. */
-export const plansFigures = (doc: unknown): doc is Doc => isRecord(doc) && doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION_V14;
+/** Whether a draft is one whose `figurePlan` check reads: schema v14, and schema v15 (version 2.35). */
+export const plansFigures = (doc: unknown): doc is Doc => isRecord(doc) && hasFigurePlanForm(doc['schemaVersion']);
 
 /** A v14 draft without its plan, which every reader but the plan's own findings is handed; any other draft unchanged. */
 export function withoutFigurePlan<T>(doc: T): T {
@@ -270,7 +271,7 @@ function mixedLevels(figure: Figure, parentOf: (id: string) => string | undefine
   return undefined;
 }
 
-/** The figure advice of a v14 draft (version 2.33): Inferred, from the draft's bytes alone. Undefined for any other draft; a caller
+/** The figure advice of a v14 or v15 draft (versions 2.33 and 2.35), reading no figure whose view carries a `base`: Inferred, from the draft's bytes alone. Undefined for any other draft; a caller
  * reports it only where check reports no `schema` finding, and a throw means no advice, never a failed check. */
 export function figureAdvice(doc: unknown): FigureAdvice | undefined {
   if (!plansFigures(doc)) return undefined;
@@ -289,6 +290,8 @@ export function figureAdvice(doc: unknown): FigureAdvice | undefined {
     const family = familyOf(diagram['kind']);
     if (family === undefined) return;
     const source = original[index_];
+    // A figure whose view carries a `base` draws boxes only a computed map holds: the advice reads it not at all (version 2.35).
+    if (carriesBase(source)) return;
     figures.push({ index: index_, id: String(diagram['id']), diagram, family, viewed: isRecord(source) && isViewKind(source) });
   });
   const keyed = figures.map((figure) => ({ figure, ...keysOf(figure) }));
