@@ -379,6 +379,13 @@ lines are numbered, its highlights marked and named, and its notes linked to cit
 (draft schema v18, brief v26).
 
 With the code excerpts version effective, Polaris has 39 requirements and 669 scenarios.
+
+[View levels errata amendment 2.55](openspec/changes/dossier-view-levels-errata) is agent-adopted in A-346.
+It replaces REQ-polaris-generation-034 from version 2.54, the code excerpts (348 to 349 scenarios): the view levels
+text agrees with itself and the code on a deep-dive address, walks on a section, an omitted view, a dropped 1048 px
+clause and a refused render for a zoom target that fails the inertness check, and a denied-path directory stays named.
+
+With the levels errata version effective, Polaris has 39 requirements and 670 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and

@@ -3787,8 +3787,8 @@ VLERR_TAG = "polaris-dossier-view-levels-errata-v2.55"
 VLERR_STATUS_PREFIX = f"[View levels errata amendment 2.55]({VLERR_HOME})"
 VLERR_INDEX_PREFIX = f"| [`{VLERR_CHANGE}`]("
 VLERR_REPLACES = (POLARIS_ID + "034",)
-VLERR_COUNT_SCOPE = "With the view levels errata"
-VLERR_COUNT_PREFIX = "With the view levels errata version effective, Polaris has "
+VLERR_COUNT_SCOPE = "With the levels errata"
+VLERR_COUNT_PREFIX = "With the levels errata version effective, Polaris has "
 VLERR_SUBJECTS = {
     VLERR_SPEC: "343daa34088f46aa7ec4dbd49c10aca67415cef3abaacb31f72bd329f3008e4a",
 }
