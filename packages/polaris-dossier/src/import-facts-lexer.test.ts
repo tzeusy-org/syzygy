@@ -197,6 +197,8 @@ describe('scanImports: the token rule, branch by branch (syzygy-3efd.89 review 1
     expect(ops(`const r = /[/]import a from 'b'/;${AFTER}`)).toEqual(['./z']);
     expect(ops(`const r = /\\/import a from 'b'/;${AFTER}`)).toEqual(['./z']);
     expect(ops(`const r = /x/gimsuy;${AFTER}`)).toEqual(['./z']);
+    // Flags are identifier parts of the literal, never a word after it: `/x/in /` divides, as after any literal.
+    expect(ops(`const r = /x/in / 2; import c from './c';${AFTER}`)).toEqual(['./c', './z']);
     expect(scanImports(`const r = /a\\\nb/;${AFTER}`)).toEqual({ complete: false, outsideGrammar: 0, statements: [] });
   });
 
@@ -206,6 +208,8 @@ describe('scanImports: the token rule, branch by branch (syzygy-3efd.89 review 1
     expect(ops(`const s = 'a\\\r\nimport b from "./b"';${AFTER}`)).toEqual(['./z']);
     expect(scanImports("import a from './a\u2028';\n")).toEqual({ complete: true, outsideGrammar: 1, statements: [] });
     expect(scanImports("const s = 'a\nimport b from './b';\n")).toEqual({ complete: false, outsideGrammar: 0, statements: [] });
+    // A line terminator ends the scan inside a string even where a later quote would close it.
+    expect(scanImports("const s = 'a\nimport b from \"./b\"; x';\n")).toEqual({ complete: false, outsideGrammar: 0, statements: [] });
   });
 
   it('skips a hashbang, after a byte-order mark too, and reads a comment to its end', () => {
@@ -217,6 +221,7 @@ describe('scanImports: the token rule, branch by branch (syzygy-3efd.89 review 1
   it('reads a unicode-escaped identifier as a word that is not the keyword, a private name as an operand, and ?. apart from ?.5', () => {
     expect(scanImports("\\u0069mport a from './a';\n")).toEqual({ complete: true, outsideGrammar: 0, statements: [] });
     expect(ops(`class A { #x = 1; m() { return this.#x / 2 / 3; } }${AFTER}`)).toEqual(['./z']);
+    expect(ops(`class A { #x = 1; m() { return this.#x / 2; } } import c from './c';${AFTER}`)).toEqual(['./c', './z']);
     expect(ops(`const a = b?.5:1; import c from './c';${AFTER}`)).toEqual(['./c', './z']);
     expect(ops(`const a = b?.c / 2; import c from './c';${AFTER}`)).toEqual(['./c', './z']);
   });
