@@ -40,9 +40,9 @@ MUTANTS = [
      '                b, extra_b = compose_figure_by_name(b, cliffs_amendment, CLIFFS_REPLACES)\n',
      '                extra_a = extra_b = []\n', CHECK_RUN, 'FAIL  R3'),
     ('expected-skips-cliffs', CHECK, '        n_scen += cliffs_delta(root, findings)\n', '        pass\n', CHECK_RUN, 'FAIL  R3'),
-    ('projection-skips-cliffs', CHECK, '                                                    findings.append("POLARIS cliffs: selected census projections disagree")\n'
-     '                                                selected_population = by_id\n',
-     '                                                    findings.append("POLARIS cliffs: selected census projections disagree")\n',
+    ('projection-skips-cliffs', CHECK, '                                                        findings.append("POLARIS cliffs: selected census projections disagree")\n'
+     '                                                    selected_population = by_id\n',
+     '                                                        findings.append("POLARIS cliffs: selected census projections disagree")\n',
      CHECK_RUN, 'selected census differs'),
     ('status-want-unadjusted', CHECK, "            want = (want[0], str(int(want[1]) - cliffs_delta(root, findings)))\n", '',
      CHECK_RUN, 'FAIL  R5'),
