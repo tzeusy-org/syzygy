@@ -386,6 +386,13 @@ text agrees with itself and the code on a deep-dive address, walks on a section,
 clause and a refused render for a zoom target that fails the inertness check, and a denied-path directory stays named.
 
 With the levels errata version effective, Polaris has 39 requirements and 670 scenarios.
+
+[Code excerpts errata amendment 2.56](openspec/changes/dossier-code-excerpts-errata) is agent-adopted in A-348.
+It replaces REQ-polaris-generation-034 from version 2.55, the view levels errata (349 scenarios, unchanged): the code
+excerpts text agrees with itself and the code on the skip rule, the order of schema findings, range-beyond-blob, the
+10,000,000 line bound and the line boxes of bands and gutter numbers.
+
+With the excerpts errata version effective, Polaris has 39 requirements and 670 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
