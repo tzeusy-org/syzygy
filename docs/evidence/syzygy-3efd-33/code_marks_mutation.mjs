@@ -6,6 +6,9 @@
 // browser test alone, so each layout rule is shown to be pinned by the measured layout and not only by the unit test's literals; the site's
 // group runs it too. The run refuses to start without SYZYGY_POC_BROWSER, and each baseline records the passed tests of every file, so the
 // record shows the browser test passed (never skipped) in each group that lists it.
+// Run 1 (at df0a36131) killed 49 of 53. Repairs: a test of a highlight and a note past the excerpt's last line (note-high-unchecked);
+// deriveFindings no longer strips the marks itself, so check's and render's strips are each the one that keeps them from the schema read
+// (check-not-stripped, render-not-stripped; the strip in deriveFindings made both redundant); lines-wrap moved to EQUIVALENT.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -109,15 +112,14 @@ const MUTANTS = [
   ['bands-in-another-cell', STYLE, '>pre{grid-area:lines;', '>pre{'],
   ['pre-paints-background', STYLE, 'background:none;overflow:visible;', 'background:var(--d-surface-2);overflow:visible;'],
   ['text-under-bands', STYLE, 'white-space:pre;position:relative}', 'white-space:pre;position:static}'],
-  ['lines-wrap', STYLE, 'white-space:pre;position:relative}', 'white-space:pre-wrap;position:relative}'],
   ['band-as-wide-as-a-space', STYLE, '.code-band{display:inline-block;width:${tokens.length.full};', '.code-band{display:inline-block;'],
   ['frame-does-not-scroll', STYLE, 'overflow-x:auto;background:var(--d-surface-2)', 'overflow-x:visible;background:var(--d-surface-2)'],
 ].filter(([id]) => only === null || only.has(id));
 
 // A mutant no test can kill, with the reason; recorded, never run and never counted as killed.
 const EQUIVALENT = [
-  { id: 'derive-not-stripped', file: DERIVE, old: 'const subject = withoutCodeMarks(withoutLevels(withoutWalks(given)));', new: 'const subject = withoutLevels(withoutWalks(given));',
-    reason: 'Both callers that can hand deriveFindings a v18 draft strip its marks first (check.ts and render.ts, each `doc = withoutCodeMarks(withoutLevels(withoutWalks(doc)))` before the call; check-not-stripped and render-not-stripped show both paths run), and the third, verify-text.ts, passes a synthetic subject with no sections. The strip inside deriveFindings is the contract for a later caller.' },
+  { id: 'lines-wrap', file: STYLE, old: 'white-space:pre;position:relative}', new: 'white-space:pre-wrap;position:relative}',
+    reason: 'Run 1 (at df0a36131) ran it and it survived: the frame\'s second column is `minmax(max-content, 1fr)`, at least as wide as the excerpt\'s longest line, so a line of the excerpt never meets the edge it would wrap at, whatever `white-space` says; the rule stays as the requirement\'s "no wrapping". The browser test measures 11 lines at 390 px, where line 15 is wider than the viewport.' },
   { id: 'too-long-guard-dropped', file: MARKS, old: '|| s > t || t - s + 1 > CODE_EXCERPT_MAX_LINES) return undefined;', new: '|| s > t) return undefined;',
     reason: 'An excerpt of more than 60 lines always draws code-excerpt-too-long at its citation, which the next line reads, so the length guard and that reading each skip it alone; bad-citation-not-skipped removes both and is killed.' },
   { id: 'refused-dropped', file: MARKS, old: 'return refused ? undefined : { s, t };', new: 'return { s, t };',

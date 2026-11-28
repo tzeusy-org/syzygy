@@ -216,6 +216,11 @@ describe('code excerpt marks: check (version 2.54)', () => {
     expect((await findingsOf(A, excerptDraft([code('x', 10, 20, { highlights: [{ startLine: 12, endLine: 14 }, { startLine: 14, endLine: 16 }] })]))).findings).toEqual([
       { kind: 'code-highlight', at: '$.sections[0].paragraphs[2].highlights[1]', detail: '`highlights[1]` starts after the highlight before it ends' },
     ]);
+    // A highlight ending past the excerpt's last line lies outside it too.
+    expect((await findingsOf(A, excerptDraft([code('x', 10, 20, { highlights: [{ startLine: 20, endLine: 21 }], notes: [{ line: 21, block: 'p-pool' }] })]))).findings).toEqual([
+      { kind: 'code-highlight', at: '$.sections[0].paragraphs[2].highlights[0]', detail: "`highlights[0]` lies outside the excerpt's lines 10 to 20" },
+      { kind: 'code-note', at: '$.sections[0].paragraphs[2].notes[0].line', detail: "`notes[0].line` lies outside the excerpt's lines 10 to 20" },
+    ]);
     // Touching, not overlapping: a highlight may start on the line after the one before it ends.
     expect(await findingsOf(A, excerptDraft([code('x', 10, 20, { highlights: [{ startLine: 10, endLine: 10 }, { startLine: 11, endLine: 20 }] })]))).toEqual(PASSED);
   });

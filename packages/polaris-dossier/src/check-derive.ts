@@ -6,7 +6,7 @@ import { hasFigurePlanForm, PRESENTATION_ELEMENT_KINDS, CONTAINMENT_BOUNDS, CONT
 import { isEntryPoint } from './derive.js';
 import { admitOf, baseFieldVersionFindings, baseSchemaReading } from './derived-base.js';
 import { levelFieldVersionFindings, levelFieldVersionPaths, withoutLevels } from './view-level.js';
-import { codeMarkFieldVersionFindings, codeMarkFieldVersionPaths, withoutCodeMarks } from './code-marks.js';
+import { codeMarkFieldVersionFindings, codeMarkFieldVersionPaths } from './code-marks.js';
 import { walkFieldVersionFindings, walkFieldVersionPaths, withoutWalks } from './walk.js';
 import { expandModel, modelFieldVersionFindings, modelFieldVersionPaths, modelIndex } from './system-model.js';
 import { containmentName, containmentDiagrams, containmentFieldVersionFindings, containmentFieldVersionPaths, containmentStructuralFindings, groupName, groupsOf } from './containment.js';
@@ -134,8 +134,9 @@ type BlobState =
 export async function deriveFindings(given: unknown, inputs: DeriveInputs, rules: SubjectRules): Promise<Derived> {
   // A v16 draft's walks (version 2.40) and a v17 draft's view levels (version 2.50) are presentation, read by their own findings alone: no
   // other check reads them.
-  // A v18 draft's code excerpts' highlights and notes (version 2.54) likewise.
-  const subject = withoutCodeMarks(withoutLevels(withoutWalks(given)));
+  // A v18 draft's code excerpts' highlights and notes (version 2.54) are stripped by both callers that can hand it one (check.ts and
+  // render.ts), whose own readers of the draft need them stripped too; this subject does not strip them again.
+  const subject = withoutLevels(withoutWalks(given));
   const findings: CheckFinding[] = [];
   const add = (finding: CheckFinding): void => { findings.push(finding); };
   const { noun } = rules;
