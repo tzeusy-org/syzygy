@@ -83,6 +83,11 @@ describe('resolveRevision: the commit a run pins', () => {
     const both = resolveRevision(URL, 'x', git({ status: 0, stdout: `${COMMIT}\trefs/heads/x\n${OTHER}\trefs/tags/x\n` }).deps);
     expect(both).toBe(`x names more than one ref at ${URL} (refs/heads/x, refs/tags/x); give the full ref or a full commit`);
   });
+  it.each(['--upload-pack=touch /tmp/x', '-x', 'a..b', 'a b', 'refs/heads/x/', 'x@{1}', ''])('refuses %j before running git', (name) => {
+    const { ran, deps: d } = git({ status: 0, stdout: `${COMMIT}\tHEAD\n` });
+    expect(resolveRevision(URL, name, d)).toMatch(/is not a branch, tag or full commit name$/u);
+    expect(ran).toEqual([]);
+  });
   it('refuses a URL that does not answer without a credential, naming --clone', () => {
     const out = resolveRevision(URL, undefined, git({ status: 128, stdout: '', stderr: 'Authentication failed' }).deps);
     expect(typeof out === 'string' && out).toContain('Authentication failed');

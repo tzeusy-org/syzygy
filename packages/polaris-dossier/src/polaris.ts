@@ -386,6 +386,7 @@ export function urlSlug(url: string): string {
 }
 
 const FULL_COMMIT = /^[0-9a-f]{40}$/u;
+const REF_NAME = /^(?!-)(?!.*\.\.)(?!.*\/\/)(?!.*@\{)[A-Za-z0-9._/-]{1,200}(?<![./])$/u;
 
 /** The commit a run pins, read with no credential (D10, VIS-4: reading a repository needs no record). With no `--revision` it is trunk,
  * the commit the remote's HEAD names (syzygy-pdja.36); a branch or tag name is resolved the same way, a tag to the commit it peels to;
@@ -393,6 +394,8 @@ const FULL_COMMIT = /^[0-9a-f]{40}$/u;
  * naming --clone. */
 export function resolveRevision(url: string, revision: string | undefined, deps: Pick<CloneDeps, 'git'>): { readonly label: string; readonly commit: string } | string {
   const wanted = revision ?? 'HEAD';
+  // A name git could read as an option, or that no ref can carry, never reaches git (git check-ref-format's rules, conservatively).
+  if (revision !== undefined && !FULL_COMMIT.test(revision) && !REF_NAME.test(revision)) return `--revision ${JSON.stringify(revision.slice(0, 80))} is not a branch, tag or full commit name`;
   const r = deps.git(['-c', 'credential.helper=', 'ls-remote', url, ...(FULL_COMMIT.test(wanted) ? ['HEAD'] : [wanted])]);
   if (r.status !== 0) return `${url} cannot be read without a credential (${r.stderr.trim() || 'git ls-remote failed'}); for a private repository make a one-commit clone yourself and pass --clone <dir>`;
   if (FULL_COMMIT.test(wanted)) return { label: `commit-${wanted.slice(0, 12)}`, commit: wanted };
