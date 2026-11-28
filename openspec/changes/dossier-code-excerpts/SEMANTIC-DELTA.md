@@ -12,7 +12,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Carried unchanged
 
-[Observed] Of the predecessor requirement's 2311 lines, 2307 appear byte for byte and in order in the new text; 4 lines are amended in place and none is removed. Below, each edit is one item, so a line edited in several places gives several items (4 items over 4 lines). All 336 predecessor scenarios are carried with their blocks byte for byte. The new text was built from the predecessor bytes by a script that replaces or inserts only at anchors it asserts occur exactly once (`docs/evidence/syzygy-3efd-33/code_excels_build_spec.py`, which reproduces the spec byte for byte).
+[Observed] Of the predecessor requirement's 2311 lines, 2307 appear byte for byte and in order in the new text; 4 lines are amended in place and none is removed. Below, each edit is one item, so a line edited in several places gives several items (4 items over 4 lines). All 336 predecessor scenarios are carried with their blocks byte for byte. The new text was built from the predecessor bytes by a script that replaces or inserts only at anchors it asserts occur exactly once (`docs/evidence/syzygy-3efd-33/code_excerpts_build_spec.py`, which reproduces the spec byte for byte).
 
 ## Amended in place
 
