@@ -19,13 +19,14 @@ Repaired. `derived-base.ts` now names the relationship by `handleOr(relationship
 
 ## 3. Blocking: no adoption row or spec version records the changed details
 
-Repaired, with a follow-up:
+Repaired:
 
 - Row A-347 in `decisions/AGENT-ADOPTIONS.md` records the behaviour change and its revert command. It strengthens screening only. Every identity detail it changes was untested before, so no existing literal moved. The one literal that moved is a `path-absent` detail naming a denied path, now withheld (note 4).
-- The spec delta is a follow-up bead for team-lead. It should state:
+- The spec delta rides in REQ-034 version 2.56 (syzygy-3efd.94, row A-348, `dossier-code-excerpts-errata`, design D9), at the lead's direction, so this change lands with or after that version. It states:
   - (a) a finding detail names a draft identity only where it is a handle, and otherwise names the member's path or the words "named here", with the fallback fixed per detail family (finding 11);
   - (b) every detail is screened whole and word by word against the detectors, and each word against the denied-path rules. A match, or a case screening cannot decide, is replaced by `Finding detail withheld under source screening.`, keeping kind and `at`;
-  - (c) the per-builder fallback words as built (listed in the PR body).
+  - (c) the per-family fallback words as built (note 11), and that `at`, `blockId`, `citationId` and the advisories lie outside the rule;
+  - and one scenario, whose literals are this branch's tests.
 - No spec text was edited in this code lane.
 
 ## 4. Note: denied paths in a detail
@@ -35,20 +36,20 @@ Changed: the screen now withholds them. `screenFindingDetails` takes a `deniedWo
 - The predicate reads words only. A whole sentence is no path.
 - A throw in either predicate withholds the detail.
 - Tests cover all three denied ids through check, and the unit block covers the rule and its throw.
-- This is stricter than the derived-base screening adopted in 2.35, which still admits denied paths in its own details. The spec delta should state both.
+- This is stricter than the derived-base screening adopted in 2.35, which still admits denied paths in its own details. Version 2.56 states the word rule, and the 2.35 qualified details are screened by it as any detail is.
 - One pinned literal moves with it, and only tighter. In `render.test.ts`'s two-stage table, a `path-absent` finding on a denied path that is absent (`denied/gone`) quoted the path, and now its detail is withheld. The table's own no-looser comparison against the predecessor still passes.
 
 ## 5. Note: false positives
 
-Accepted and documented in the PR body. A diagram or element whose id is `token`, `secret`, `password`, `passwd` or `api-key`, followed by a word of 8 or more characters, can match `credential-assignment`. The detail is then withheld, failing safe, and the finding keeps its kind and `at`. Quoting every bare `<id>:` form would change many adopted detail literals, so that is left to the spec delta.
+Accepted and documented in the PR body. A diagram or element whose id is `token`, `secret`, `password`, `passwd` or `api-key`, followed by a word of 8 or more characters, can match `credential-assignment`. The detail is then withheld, failing safe, and the finding keeps its kind and `at`. Quoting every bare `<id>:` form would change many adopted detail literals, so version 2.56 states the false positive as failing toward withholding.
 
 ## 6. Note: `at`, `blockId`, `citationId` and advisories carry draft values
 
-These pre-date this change and are not changed here. They go to a follow-up bead (P2) to screen `at` segments, `blockId`, `citationId`, the worth-knowing and reader-advice members, the figure advice's `diagram`, and the record's `sessionId`.
+These pre-date this change and are not changed here. They are filed as syzygy-3efd.95 (P1), with note 7: screen `at` segments, `blockId`, `citationId`, the worth-knowing and reader-advice members, the figure advice's `diagram`, and the record's `sessionId`.
 
 ## 7. Note: a passing draft renders token-shaped handle ids
 
-This pre-dates the change and is not changed here. It goes to a high-priority follow-up bead: at check, an identity the screen withholds draws a finding with a fixed detail, so such a draft cannot pass. Renaming at render would break anchors and claim parity.
+This pre-dates the change and is not changed here. It is filed as syzygy-3efd.95 (P1). A suggested fix: at check, an identity the screen withholds draws a finding with a fixed detail, so such a draft cannot pass. Renaming at render would break anchors and claim parity.
 
 ## 8. Note: test rigor
 
@@ -88,7 +89,7 @@ No change needed.
 
 ## 11. Note: wording consistency
 
-Routed to the spec delta of finding 3. The fallbacks as built:
+Stated in version 2.56 (finding 3). The fallbacks as built:
 
 - the path for bare `<id>:` forms (hero, figure plan, model, walk);
 - "named here" for identity references;
