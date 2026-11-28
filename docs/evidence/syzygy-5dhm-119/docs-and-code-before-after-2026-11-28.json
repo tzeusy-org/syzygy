@@ -1,0 +1,253 @@
+{
+  "subject": {
+    "tree": "syzygy (this repository)",
+    "commit": "0980dfd79b9770002906d7591e889d1ac0c9e2c2",
+    "policy": "polaris-butlers-project-shape-secrets dossier-declared-source/2.0.0",
+    "policySha256": "8c10531f57d129ad5d402e53d7d9fdc741387f6eaab701bbdb46419181b11967"
+  },
+  "before": {
+    "rowsResolved": 0,
+    "pagesListingRows": 0,
+    "basis": "no rule before REQ-polaris-generation-034 version 2.48 resolved a document's path or identifier against the tree"
+  },
+  "afterNoStatement": {
+    "consented": null,
+    "documents": {
+      "candidates": 3244,
+      "secretPathsLeftOut": 0,
+      "setApart": 0,
+      "observed": 0,
+      "unknown": 3244,
+      "filesNotListed": 2244,
+      "spansNotChecked": 0,
+      "linksNotChecked": 0,
+      "valuesLeftOut": 0
+    },
+    "documentUnknownByReason": {
+      "class-not-consented": 15,
+      "unknown-extraction-class": 985
+    },
+    "code": {
+      "read": false,
+      "candidates": 2391,
+      "secretPathsLeftOut": 0,
+      "setApart": 0,
+      "observed": 0,
+      "unknown": 0,
+      "filesNotListed": 0
+    },
+    "codeUnknownListedByReason": {},
+    "counts": {
+      "resolves": 0,
+      "documentOnly": 0,
+      "unknown": 0
+    },
+    "rowsListed": 0,
+    "rowsNotListed": 0,
+    "listedByFormAndOutcome": {},
+    "firstDocumentOnlyListed": [],
+    "deriveElapsedMs": 3515
+  },
+  "afterBothClassesListed": {
+    "consented": [
+      "code-content",
+      "project-documentation"
+    ],
+    "documents": {
+      "candidates": 3244,
+      "secretPathsLeftOut": 0,
+      "setApart": 0,
+      "observed": 958,
+      "unknown": 2286,
+      "filesNotListed": 2244,
+      "spansNotChecked": 55116,
+      "linksNotChecked": 64,
+      "valuesLeftOut": 57
+    },
+    "documentUnknownByReason": {
+      "unknown-extraction-class": 42
+    },
+    "code": {
+      "read": true,
+      "candidates": 2391,
+      "secretPathsLeftOut": 0,
+      "setApart": 0,
+      "observed": 967,
+      "unknown": 1424,
+      "filesNotListed": 1174
+    },
+    "codeUnknownListedByReason": {
+      "unknown-extraction-class": 3,
+      "over-read-limit": 247
+    },
+    "counts": {
+      "resolves": 26393,
+      "documentOnly": 3055,
+      "unknown": 5936
+    },
+    "rowsListed": 2000,
+    "rowsNotListed": 33384,
+    "listedByFormAndOutcome": {
+      "path/code-span/resolves": 1432,
+      "path/code-span/document-only": 54,
+      "path/link/resolves": 219,
+      "path/link/document-only": 46,
+      "identifier/code-span/unknown/code-not-fully-read": 81,
+      "identifier/code-span/resolves": 155,
+      "path/code-span/unknown/ambiguous-form": 13
+    },
+    "firstDocumentOnlyListed": [
+      {
+        "document": ".claude/skills/heart-and-soul/SKILL.md",
+        "line": 18,
+        "value": "about/",
+        "written": "code-span"
+      },
+      {
+        "document": ".claude/skills/polaris-dossier/references/reader-standards.md",
+        "line": 49,
+        "value": "replication.c",
+        "written": "code-span"
+      },
+      {
+        "document": ".claude/skills/th-engineering/SKILL.md",
+        "line": 52,
+        "value": "subskills/code-readability/SKILL.md",
+        "written": "link"
+      },
+      {
+        "document": ".claude/skills/th-engineering/SKILL.md",
+        "line": 55,
+        "value": "subskills/documentation/SKILL.md",
+        "written": "link"
+      },
+      {
+        "document": ".claude/skills/th-engineering/SKILL.md",
+        "line": 56,
+        "value": "subskills/diagnosis/SKILL.md",
+        "written": "link"
+      },
+      {
+        "document": ".claude/skills/th-engineering/SKILL.md",
+        "line": 57,
+        "value": "subskills/cruft-cleanup/SKILL.md",
+        "written": "link"
+      },
+      {
+        "document": ".claude/skills/th-engineering/SKILL.md",
+        "line": 58,
+        "value": "subskills/skill-standards/SKILL.md",
+        "written": "link"
+      },
+      {
+        "document": ".claude/skills/th-engineering/SKILL.md",
+        "line": 59,
+        "value": "subskills/excalidraw-diagram/SKILL.md",
+        "written": "link"
+      },
+      {
+        "document": ".claude/skills/th-engineering/SKILL.md",
+        "line": 101,
+        "value": "about/craft-and-care/",
+        "written": "code-span"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/dependency-hygiene/SKILL.md",
+        "line": 32,
+        "value": "../code-readability/SKILL.md",
+        "written": "link"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/dependency-hygiene/SKILL.md",
+        "line": 33,
+        "value": "../cruft-cleanup/SKILL.md",
+        "written": "link"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/dependency-hygiene/SKILL.md",
+        "line": 71,
+        "value": "references/seams-and-dependencies.md",
+        "written": "code-span"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/dependency-hygiene/SKILL.md",
+        "line": 71,
+        "value": "./references/seams-and-dependencies.md",
+        "written": "link"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/dependency-hygiene/SKILL.md",
+        "line": 76,
+        "value": "DEPENDENCIES.md",
+        "written": "code-span"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/dependency-hygiene/SKILL.md",
+        "line": 84,
+        "value": "../excalidraw-diagram/SKILL.md",
+        "written": "code-span"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/dependency-hygiene/SKILL.md",
+        "line": 93,
+        "value": "references/seams-and-dependencies.md",
+        "written": "code-span"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/dependency-hygiene/SKILL.md",
+        "line": 93,
+        "value": "./references/seams-and-dependencies.md",
+        "written": "link"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/engineering-bar/SKILL.md",
+        "line": 21,
+        "value": "about/craft-and-care/",
+        "written": "code-span"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/engineering-bar/SKILL.md",
+        "line": 31,
+        "value": "about/craft-and-care/",
+        "written": "code-span"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/engineering-bar/SKILL.md",
+        "line": 41,
+        "value": "../code-readability/SKILL.md",
+        "written": "link"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/engineering-bar/SKILL.md",
+        "line": 44,
+        "value": "../cruft-cleanup/SKILL.md",
+        "written": "link"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/engineering-bar/SKILL.md",
+        "line": 49,
+        "value": "about/craft-and-care/",
+        "written": "code-span"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/engineering-bar/SKILL.md",
+        "line": 57,
+        "value": "../cruft-cleanup/SKILL.md",
+        "written": "link"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/engineering-bar/SKILL.md",
+        "line": 62,
+        "value": "../code-readability/SKILL.md",
+        "written": "link"
+      },
+      {
+        "document": ".claude/skills/th-engineering/subskills/engineering-bar/SKILL.md",
+        "line": 81,
+        "value": "../documentation/SKILL.md",
+        "written": "link"
+      }
+    ],
+    "deriveElapsedMs": 41418
+  }
+}
