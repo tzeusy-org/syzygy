@@ -366,6 +366,12 @@ It replaces REQ-polaris-generation-034 from version 2.50, the view levels (329 t
 advises on a walk step whose paragraph adds no word to its element's label, and the advice gates nothing.
 
 With the walk advice version effective, Polaris has 39 requirements and 657 scenarios.
+
+[Walk errata amendment 2.53](openspec/changes/dossier-walk-errata) is agent-adopted in A-344.
+It replaces REQ-polaris-generation-034 from version 2.51, the walk advice (336 scenarios, none added): the brief v24
+paragraph is quoted as the brief issues it, and a walked figure's loss of the drawing's tooltips is stated as a trade-off.
+
+With the walk errata version effective, Polaris has 39 requirements and 657 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
