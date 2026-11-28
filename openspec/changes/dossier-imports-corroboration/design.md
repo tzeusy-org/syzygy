@@ -1,10 +1,10 @@
-# Design — imports corroboration (version 2.45)
+# Design — imports corroboration (version 2.49)
 
-[Inferred] Version 2.45 of REQ-polaris-generation-034, for syzygy-3efd.86. It was drafted on `agent/syzygy-3efd.86` as 2.42 over migration bounds 2.41, rebuilt as 2.44 over migration bounds 2.43, and is rebuilt again over rough-edge markers 2.44 (`dossier-rough-edges`, row A-338, tag `polaris-dossier-rough-edges-v2.44`), the newest REQ-034 on main.
+[Inferred] Version 2.49 of REQ-polaris-generation-034, for syzygy-3efd.86. It was drafted on `agent/syzygy-3efd.86` as 2.42 over migration bounds 2.41, rebuilt as 2.44 over migration bounds 2.43 and as 2.45 over rough-edge markers 2.44, and is rebuilt again over docs and code 2.48 (`dossier-docs-and-code`, row A-342, tag `polaris-dossier-docs-and-code-v2.48`), the newest REQ-034 on main.
 
 ## D1. The version label and the predecessor
 
-- [Observed] At drafting, 2.39 (import facts, A-270) was on main, 2.40 (figure walks, A-271) in PR #1040, and 2.41 (migration bounds, A-272) on `agent/syzygy-3efd.87`, so this change took 2.42. Test-name recognizers then reached main as 2.42 (A-337, PR #1037) over 2.40, and migration bounds was rebuilt over it as 2.43. This change took 2.44, but rough-edge markers reached main as 2.44 first (A-338, PR #1047), so it moved to 2.45 over that version, with the tag `polaris-dossier-imports-corroboration-v2.45`.
+- [Observed] At drafting, 2.39 (import facts, A-270) was on main, 2.40 (figure walks, A-271) in PR #1040, and 2.41 (migration bounds, A-272) on `agent/syzygy-3efd.87`, so this change took 2.42. Test-name recognizers then reached main as 2.42 (A-337, PR #1037) over 2.40, and migration bounds was rebuilt over it as 2.43. This change took 2.44, but rough-edge markers reached main as 2.44 first (A-338, PR #1047), so it moved to 2.45 over that version; then docs and code reached main as 2.48 over 2.44 (A-342, PR #1048), so it moved again, to 2.49 over 2.48, with the tag `polaris-dossier-imports-corroboration-v2.49`.
 - [Observed] The build script (`docs/evidence/syzygy-3efd-86/imports_witness_build_spec.py`) edits the predecessor's bytes at anchors it asserts occur exactly once:
   - 2.39's sentence that nothing reads `importFacts`;
   - one carried scenario's THEN line;
@@ -14,7 +14,8 @@
 - [Observed] First installed at `4115d9817` over the 2.41 text as first installed (sha256 `87d64cdd…6e93`; this spec then `134fe229…c4ee`). It was rebuilt over the 2.41 text as repaired after that version's review (sha256 `64869dc9…0b4c`). The same script ran with one anchor moved: the Falsifier line's 2.41 sentence now ends "a nesting is counted as a relationship, or the migration yields no draft for it.". The other 2.41 repairs (line 142, line 252 and the 2.41 scenario) fall on text this version does not edit, so they are carried.
 - [Observed] Rebuilt again over migration bounds 2.43 (sha256 `bbc1ab47…cf02`) as 2.44, with only the version labels changed: every anchor still occurs once, because 2.43 ends each Form line with its own sentence and leaves 2.19's text, 2.39's sentence and the carried scenario as 2.41 had them. That build hashed to `5b13a3998bfa9b2b05361ef5f7523b8a7ae58a3d074a440b22e870571d933955` (298 to 301 scenarios) and is the text review 1 read.
 - [Observed] Repaired after review 1 (section "Review") by edits to the same build script, over the same predecessor bytes. The spec now hashes to `d60afad88bc72dde63ad597d2b9a5fa646143e4b68f89202ffcaff8742068c4d`; REQ-034 goes from 298 to 302 scenarios.
-- [Observed] Rebuilt over rough-edge markers 2.44 (sha256 `3c03ebff…61c1`) as 2.45 by the same script, with only the predecessor path, its head assertions and the version labels changed: every anchor still occurs once, because 2.44 edits none of them. The spec now hashes to `a7b05a9615c3350b2d861ef0f68e33b752f4dc7ed6ab03b895eab8c758dc537b`; REQ-034 goes from 305 to 309 scenarios. No review has read this rebuild.
+- [Observed] Rebuilt over rough-edge markers 2.44 (sha256 `3c03ebff…61c1`) as 2.45 by the same script, with only the predecessor path, its head assertions and the version labels changed: every anchor still occurs once, because 2.44 edits none of them. The spec now hashes to `a7b05a9615c3350b2d861ef0f68e33b752f4dc7ed6ab03b895eab8c758dc537b`; REQ-034 goes from 305 to 309 scenarios. No review read that rebuild.
+- [Observed] Rebuilt over docs and code 2.48 (sha256 `19a2fe88…62bf`) as 2.49 by the same script, with only the predecessor path, its head assertions and the version labels changed: every anchor still occurs once. The spec now hashes to `d17fe4b412dc0885b3e71bac54dc358156317dffafef546fb0535c3cc0a7d2db`; REQ-034 goes from 313 to 317 scenarios. No review has read this rebuild.
 
 ## D2. Corroborate, never witness
 
@@ -62,7 +63,7 @@
   - the renderer's attributes and evidence text, and the `machine.json` `witness` state.
 - [Inferred] Tests: literal conformance tests for each scenario and each reason in the order, and rule-6 mutants. The mutants should make a corroborated arrow Observed, accept a non-`edge` fact, swap `from` and `to`, give `challenged` under `complete` coverage, or read the `edges` list.
 
-## D7. Composition with versions 2.35 to 2.44
+## D7. Composition with versions 2.35 to 2.48
 
 - [Inferred] 2.35 (screening): no draft-supplied value reaches a new sink. The evidence text carries a fact identity Syzygy writes, a rule name, the revision and a digest.
 - [Inferred] 2.36 and 2.37 read no witness.
@@ -71,6 +72,7 @@
 - [Inferred] 2.40 (walks): a walk step may name a corroborated arrow's end elements as before. Walks name elements, not edges.
 - [Inferred] 2.42 (test-name recognizers) publishes declared test names on their own page and reads no witness; `imports` arrows and test names share nothing.
 - [Inferred] 2.44 (rough-edge markers) publishes lexical markers per unit on their own page and reads no witness; `imports` arrows and markers share nothing.
+- [Inferred] 2.46 (URL lean run) changes REQ-025 and 047 alone. 2.48 (docs and code) publishes the paths and identifiers Markdown documents name on their own page and reads no witness; `imports` arrows and those references share nothing.
 
 ## Review
 

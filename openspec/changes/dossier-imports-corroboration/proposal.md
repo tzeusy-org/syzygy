@@ -1,6 +1,6 @@
-# Dossier imports corroboration — version 2.45
+# Dossier imports corroboration — version 2.49
 
-[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10, built over rough-edge markers 2.44 (design D1; first built as 2.42 over 2.41, then as 2.44 over 2.43).
+[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10, built over docs and code 2.48 (design D1; first built as 2.42 over 2.41, then as 2.44 over 2.43 and as 2.45 over 2.44).
 
 ## Why
 
