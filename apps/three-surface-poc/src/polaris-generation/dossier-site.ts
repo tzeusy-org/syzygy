@@ -10,6 +10,7 @@ import {
 import { sha256 } from '@syzygy/support';
 import { READABLE_SPACING, layoutContainment, layoutDiagram, layoutSequence, layoutSwimlane, renderContainmentSvg, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg, type ContainmentClaim } from './diagram-layout.js';
 import { TEST_NAMES_LEGEND, TEST_NAMES_PAGE, testNamesMachine, testNamesPage } from './dossier-test-names.js';
+import { ROUGH_EDGES_LEGEND, ROUGH_EDGES_PAGE, roughEdgesMachine, roughEdgesPage } from './dossier-rough-edges.js';
 import { FINDING_CSS, FIND_BY_TASK_PAGE, NAME_INDEX_PAGE, NO_TASK_ROUTES, TASK_ROUTES_WITHHELD, buildNameIndex, glossaryDisplayName, glossaryNameForms, indexLinkCount, renderNameIndex, type IndexTarget, type IndexedBlock } from './dossier-finding.js';
 import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureList, regionMarkup } from './dossier-render-local.js';
 import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as escape } from './draft-preview.js';
@@ -970,7 +971,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const maps = local?.derivedStructure !== undefined && local.manifestFacts !== undefined ? { derived: local.derivedStructure, manifests: local.manifestFacts } : undefined;
   // Version 2.38: the test-names reference page, after the maps, only where the render derived the member and holds a derived record.
   const testNames = local?.derivedStructure !== undefined && local.testNames !== undefined ? { derived: local.derivedStructure, member: local.testNames } : undefined;
-  const referenceLinks = testNames === undefined ? [] : [TEST_NAMES_PAGE];
+  // Version 2.43: the rough-edges reference page, after the test-names page, under the same condition on its own member.
+  const roughEdges = local?.derivedStructure !== undefined && local.roughEdges !== undefined ? { derived: local.derivedStructure, member: local.roughEdges } : undefined;
+  const referenceLinks = [...(testNames === undefined ? [] : [TEST_NAMES_PAGE]), ...(roughEdges === undefined ? [] : [ROUGH_EDGES_PAGE])];
   const findingLinks = local === undefined ? [] : [{ path: FIND_BY_TASK_PAGE, title: 'Find by task' }, { path: NAME_INDEX_PAGE, title: 'Index' }];
   const readingGroups = [
     ...[overview, ...findingLinks].map(link => ({ title: link.title, link, dives: [], hue: null })),
@@ -1038,6 +1041,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const legended = (path: string, main: string): string => narrative(path) ? `${READING_LEGEND}${main}`
     : MAP_PATHS.has(path) ? `${MAP_READING_LEGEND}${main}`
     : testNames !== undefined && path === TEST_NAMES_PAGE.path ? `${TEST_NAMES_LEGEND}${main}`
+    : roughEdges !== undefined && path === ROUGH_EDGES_PAGE.path ? `${ROUGH_EDGES_LEGEND}${main}`
     : local !== undefined && main.includes('class="redaction-mark"')
     ? `${main}<p class="redaction-legend"><span aria-hidden="true">†N</span> on a citation: N lines of that file are withheld by screening. Its source page marks where.</p>` : main;
   const deferredSourceLeaves = new Map<string, () => string>();
@@ -1360,6 +1364,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
 
   // --- the test-names reference page (version 2.42), after the maps.
   if (testNames !== undefined) add(TEST_NAMES_PAGE.path, 1, TEST_NAMES_PAGE.title, testNamesPage(testNames.member, testNames.derived.revision));
+  // --- the rough-edges reference page (version 2.43), after the test-names page.
+  if (roughEdges !== undefined) add(ROUGH_EDGES_PAGE.path, 1, ROUGH_EDGES_PAGE.title, roughEdgesPage(roughEdges.member, roughEdges.derived.revision));
 
   // --- the operator-agent run's own pages: understanding, discovery, clarifications, executions, review
   for (const localPage of localPages) {
@@ -1428,6 +1434,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       ...(local.derivedStructure === undefined ? {} : { derivedStructure: derivedMachine(local.derivedStructure) }),
       ...(maps === undefined || mapFigures === undefined ? {} : { computedMaps: computedMapsMachine(maps.derived, maps.manifests, mapFigures) }),
       ...(testNames === undefined ? {} : { testNames: testNamesMachine(testNames.member) }),
+      ...(roughEdges === undefined ? {} : { roughEdges: roughEdgesMachine(roughEdges.member) }),
       // Present only for a render holding a sequence or swimlane figure (version 2.5), so every other machine view keeps its bytes.
       ...(figureStructures.length === 0 ? {} : { figureStructures: [...figureStructures].sort((a, b) => a.index - b.index).map(({ entry }) => entry) }),
       // Present only for a schema-v9 draft (version 2.19): each graph edge as drawn, with its relation and witness state. A witnessed edge is
