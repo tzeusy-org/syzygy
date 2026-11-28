@@ -5,6 +5,7 @@
 - [x] Draft the complete MODIFIED REQ-polaris-generation-034 on the version 2.54 text (code excerpts) by an anchored script (`docs/evidence/syzygy-3efd-91/view_levels_errata_build_spec.py`), and generate its semantic delta from the bytes (`view_levels_errata_delta.py`).
 - [x] Wire the overlay into `scripts/check_spec_reconciliation.py` (pending until its row) and `scripts/count_polaris_effective_scenarios.py`, with selftest cases (`vlerr_cases`).
 - [x] Append the agent-adoption row naming the installing commit, with its revert command (A-346).
-- [ ] Create the version tag `polaris-dossier-view-levels-errata-v2.55` at the installing commit once it is on the default branch.
+- [ ] Create the version tag `polaris-dossier-view-levels-errata-v2.55` at the installing commit once it is on the default branch, after syzygy-3efd.35's code has landed (design D7).
 - [ ] One independent fresh-context review (CC-REV-4), arranged by the lead; raw retained (`docs/reviews/syzygy-3efd-91/`), findings dispositioned in `design.md` and repaired.
+- [ ] Code follow-up for the refusal sentence of design D6: a test that makes the inertness check fail for a chosen zoom target (a renderer fault, which no checked draft reaches) and asserts the `render` refusal and that no site is written.
 - [ ] Code follow-up for the added scenario: a literal test of the directory map and of the walk advice over a denied-path directory under the bound policy, once syzygy-3efd.35's code lands (design D7).

@@ -33,7 +33,7 @@
 
 ## D4. "Inside a collapsible section": the scenario restated, the paragraph says so
 
-- [Observed] No figure of this renderer is drawn inside a `<details>` (`dossier-site.ts:889-890`, and the test "draws no figure inside a collapsible section on any page of a levelled site", `view-level.test.ts:482`, added for R39 finding 5). So the scenario's view `hidden`, "whose figure renders inside a collapsible section", cannot be built.
+- [Observed] No figure of this renderer is drawn inside a `<details>` (`dossier-site.ts:889-890` at `3f04944bb`, and the test "draws no figure inside a collapsible section on any page of a levelled site", `view-level.test.ts:482`, added for R39 finding 5). So the scenario's view `hidden`, "whose figure renders inside a collapsible section", cannot be built.
 - [Observed] The code's test stands an omitted view (disposition `omitted`) in that place (`view-level.test.ts:548`), and a second test makes a view a notice by leaving its base not drawn at the render (`:565`).
 - [Inferred] The scenario's `hidden` is now an omitted view, as the test builds it. The paragraph keeps its clause and gains a sentence: no figure renders inside a collapsible section, so that clause passes no view over; and it names the notices that are passed over: a figure not produced, not on a page the render draws, or with a base not drawn at the render; and where the draft layer is withheld, no element has a zoom target (`dossier-site.ts:894`, `!withheld`).
 
@@ -45,7 +45,7 @@
 
 ## D6. A zoom target that fails the inertness check: the text follows the code
 
-- [Observed] The code chooses each zoom target before it draws any figure, from what it knows then: a figure produced, on a page the render draws, with its base drawn (`dossier-site.ts:893-901`). After drawing every page, a chosen target that the inertness guard turned into a notice refuses the render (`dossier-site.ts:1591-1593`). 2.50's text passed such a view over.
+- [Observed] The code chooses each zoom target before it draws any figure, from what it knows then: a figure produced, on a page the render draws, with its base drawn (`dossier-site.ts:893-901` at `3f04944bb`, about 925-932 on main at `edb073890`: the `zoomTargets` choice). After drawing every page, a chosen target that the inertness guard turned into a notice, and so is missing from `drawnFigures`, refuses the render (`dossier-site.ts:1591-1593` at `3f04944bb`, about 1624 at `edb073890`). 2.50's text passed such a view over.
 - [Inferred] The text now says the render is refused and no page is written. This is the fail-closed choice, and the bead prefers it:
   - the other way round, choosing targets after drawing, would reorder the render to serve a case no checked draft reaches: every drawing the renderer makes from a checked draft passes its own inertness check (R39 note 4; `target-guard-dropped` stays equivalent in the .39 mutation record, with the review's agreement in its finding 10);
   - passing the view over after links to it were written would leave links to a fragment no page carries.
@@ -59,12 +59,13 @@
   - the directory map elements `kubeconfig/ (1 file)` and `.kube/ (2 files)`, with `secretPathsLeftOut` 0;
   - `screenPath('kubeconfig')` = `denied-path`, `screenPath('.kube')` = `unknown-extraction-class`, and `screenPath('.kube/config')` = `denied-path`;
   - so check's `hidden` predicate (a secret path, or `screenPath` = `denied-path`) holds for `kubeconfig` and not for `.kube`.
-- [Observed] The R35 code review of syzygy-3efd.35 (note 2; its raw is retained beside that code, on branch `agent/syzygy-3efd.35-code`, under the bead's review directory) found that inconsistent: of two directories the policy denies by name, `kubeconfig` was withheld from the walk advice and `.ssh` was read, and 2.51 does not say what "withheld at check" means for a directory.
+- [Observed] The R35 code review of syzygy-3efd.35 (note 2; its raw, `R35-CODE-REVIEW-RAW.md` under `docs/reviews/syzygy-3efd-35/`, is committed at `6842f9a56` on the pushed branch `agent/syzygy-3efd.35-code`, not yet on main) found that inconsistent: of two directories the policy denies by name, `kubeconfig` was withheld from the walk advice and `.ssh` was read, and 2.51 does not say what "withheld at check" means for a directory.
 - [Inferred] This version defines it, fail-closed, as one of the two readings the lead offered: a top-level directory is withheld at check where a denied-path rule names its own path, or where a `deniedDirectoryNames` entry names it, so that every path below it is denied. The other reading, a directory every file of which is denied, is not taken:
   - it is decided by the files the tree holds, so the same directory would be read in one revision and withheld in the next as files come and go;
   - wherever a `deniedDirectoryNames` entry names a directory, every file below it is denied, so the two readings agree on every directory the policy denies by name;
   - they differ only for a directory that happens to hold nothing but denied basenames (`.env` files, say); its name says nothing the policy screens, and the walk advice names no label or path in a detail in any case.
-- [Observed] The code of syzygy-3efd.35 follows it on branch `agent/syzygy-3efd.35-code` (the screen's `deniesBelow`, after the R35 repair): fewer steps read, nothing more named. Its check-level test, under the committed policy, reads `src` and neither `kubeconfig` nor `.ssh`.
+- [Observed] The code of syzygy-3efd.35 follows it on the pushed branch `agent/syzygy-3efd.35-code`: the screen's `deniesBelow`, from repair commit `0fbcadcc4`; the branch head when this was written is `3760f645d`. Fewer steps are read, and nothing more is named. Its check-level test under the committed policy (`0fb0fd9b3`) reads `src` and none of `kubeconfig`, `.ssh` and `.kube`. That code is not on main, so this version is tagged only once syzygy-3efd.35's code lands, and this package lands after it.
+- [Observed] Under the bound policy, `kubeconfig/notes` is not itself a denied path (`unknown-extraction-class`): basename rules read a path's final segment, so `kubeconfig` in `deniedPathBasenames` names only the directory's own path. The scenario says so (R-LEVELS-ERRATA-SPEC-1, note 6). No policy change is implied.
 - [Observed] The scenario's map statements are observed at `3f04944bb`. Its walk advice line states code not yet on main (syzygy-3efd.35); `tasks.md` lists the literal test of this scenario's tree as a follow-up.
 - [Inferred] Hiding such a directory instead would be stricter than the text, not looser, and is not taken: the text names it on purpose. Nothing here weakens what the policy hides (SEC-5).
 
