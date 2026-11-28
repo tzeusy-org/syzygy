@@ -287,98 +287,121 @@ authority and no model yet called on the current path.
     Figure plan 2.33 supplies the fallback REQ-polaris-generation-034 until a corrected version takes effect. The A-267 source retains its 250-scenario proposed
     replacement and the independent screening findings explain why the version was withheld.
     [Derived-base screening 2.35](openspec/changes/dossier-derived-base-screening) records A-333. The correction applies when its protected adoption and exact version tag are verified.
-    Before the derived-base screening version is effective, Polaris has 39 requirements and 579 scenarios.
-    With the derived-base screening version effective, Polaris has 39 requirements and 603 scenarios.
+    Before the derived-base screening version is effective, Polaris has 39 requirements and 582 scenarios.
+    *(2026-11-28: the predecessor figure of 579 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
+    With the derived-base screening version effective, Polaris has 39 requirements and 606 scenarios.
+    *(2026-11-28: the predecessor figure of 603 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
 [Source-example advice](openspec/changes/polaris-source-example-advice) records A-334. The advisory applies when its protected adoption and exact version tag are verified.
 
-With the source-example advice version effective, Polaris has 39 requirements and 610 scenarios.
+With the source-example advice version effective, Polaris has 39 requirements and 613 scenarios.
+*(2026-11-28: the predecessor figure of 610 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
 [Choice floor amendment 2.37](openspec/changes/dossier-choice-floor) is agent-adopted in A-336.
 It replaces REQ-polaris-generation-034 from version 2.36, the source-example advice (263 to 265 scenarios): check advises each Pole
 of a v13, v14 or v15 draft with fewer than three choices or trade-offs on record in the understanding record.
 
-With the choice floor version effective, Polaris has 39 requirements and 612 scenarios.
+With the choice floor version effective, Polaris has 39 requirements and 615 scenarios.
+*(2026-11-28: the predecessor figure of 612 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
 [Migration parity amendment 2.38](openspec/changes/dossier-migration-parity) is agent-adopted in A-269.
 It replaces REQ-polaris-generation-034 from version 2.37, the choice floor (265 to 266 scenarios): the byte parity
 of the v10 and v11 migration excludes a figure that draws a witnessed edge to a withheld node; the 2.24 rule is kept.
 
-With the migration parity version effective, Polaris has 39 requirements and 613 scenarios.
+With the migration parity version effective, Polaris has 39 requirements and 616 scenarios.
+*(2026-11-28: the predecessor figure of 613 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
 [Import facts amendment 2.39](openspec/changes/dossier-import-facts) is agent-adopted in A-270.
 It replaces REQ-polaris-generation-034 from version 2.38, the migration parity (266 to 278 scenarios): check stores the
 lexical import facts of every TypeScript file the bound screen admits whole as the check record's `importFacts`, read by nothing else.
 
-With the import facts version effective, Polaris has 39 requirements and 625 scenarios.
+With the import facts version effective, Polaris has 39 requirements and 628 scenarios.
+*(2026-11-28: the predecessor figure of 625 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
 [Figure walks amendment 2.40](openspec/changes/dossier-figure-walks) is agent-adopted in A-271.
 It replaces REQ-polaris-generation-034 from version 2.39, the import facts (278 to 291 scenarios): a schema-v16 section
 or deep dive may walk one graph figure in numbered steps, linking each step to its element and paragraph with no script.
 
-With the figure walks version effective, Polaris has 39 requirements and 638 scenarios.
+With the figure walks version effective, Polaris has 39 requirements and 641 scenarios.
+*(2026-11-28: the predecessor figure of 638 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
 [Test-name recognizers amendment 2.42](openspec/changes/dossier-test-names) is agent-adopted in A-337.
 It replaces REQ-polaris-generation-034 from version 2.40, the figure walks (291 to 297 scenarios): each operator-agent
 render reads declared test names lexically and publishes them per unit on `reference/test-names.html`.
 
-With the test-name recognizers version effective, Polaris has 39 requirements and 644 scenarios.
+With the test-name recognizers version effective, Polaris has 39 requirements and 647 scenarios.
+*(2026-11-28: the predecessor figure of 644 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
 [Migration bounds amendment 2.43](openspec/changes/dossier-migration-bounds) is agent-adopted in A-272.
 It replaces REQ-polaris-generation-034 from version 2.42, the test-name recognizers (297 to 298 scenarios): the v10
 and v11 migration keeps its parity only where the migrated model fits the v12 bounds of 200 elements and 400 relationships.
 
-With the migration bounds version effective, Polaris has 39 requirements and 645 scenarios.
+With the migration bounds version effective, Polaris has 39 requirements and 648 scenarios.
+*(2026-11-28: the predecessor figure of 645 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
 [Rough-edge markers amendment 2.44](openspec/changes/dossier-rough-edges) is agent-adopted in A-338.
 It replaces REQ-polaris-generation-034 from version 2.43, the migration bounds (298 to 305 scenarios): each operator-agent
 render reads TODO, FIXME, HACK, deprecation markers and issue references lexically and publishes them per unit on `reference/rough-edges.html`.
 
-With the rough-edge markers version effective, Polaris has 39 requirements and 652 scenarios.
+With the rough-edge markers version effective, Polaris has 39 requirements and 655 scenarios.
+*(2026-11-28: the predecessor figure of 652 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
 [URL lean run amendment 2.46](openspec/changes/dossier-url-lean-run) is agent-adopted in A-340.
 It replaces REQ-polaris-generation-025 and 047 from URL dossier 2.1 (14 to 6 and 24 to 6 scenarios): a URL run pins
 one commit by anonymous `git ls-remote`, fetches it with no credential and reads no record.
 
-With the URL lean run version effective, Polaris has 39 requirements and 626 scenarios.
+With the URL lean run version effective, Polaris has 39 requirements and 629 scenarios.
+*(2026-11-28: the predecessor figure of 626 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
 [Docs and code amendment 2.48](openspec/changes/dossier-docs-and-code) is agent-adopted in A-342.
 It replaces REQ-polaris-generation-034 from version 2.44, the rough-edge markers (305 to 313 scenarios): each operator-agent
 render resolves the paths and identifiers its Markdown documents name against the pinned tree and publishes them on `reference/docs-and-code.html`.
 
-With the docs and code version effective, Polaris has 39 requirements and 634 scenarios.
+With the docs and code version effective, Polaris has 39 requirements and 637 scenarios.
+*(2026-11-28: the predecessor figure of 634 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
 [Imports corroboration amendment 2.49](openspec/changes/dossier-imports-corroboration) is agent-adopted in A-273.
 It replaces REQ-polaris-generation-034 from version 2.48, the docs and code (313 to 317 scenarios): an `imports`
 arrow that a stored lexical import fact joins is corroborated, never Observed, and every other one stays Unknown.
 
-With the imports corroboration version effective, Polaris has 39 requirements and 638 scenarios.
+With the imports corroboration version effective, Polaris has 39 requirements and 641 scenarios.
+*(2026-11-28: the predecessor figure of 638 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
 [View levels amendment 2.50](openspec/changes/dossier-view-levels) is agent-adopted in A-274.
 It replaces REQ-polaris-generation-034 from version 2.49, the imports corroboration (317 to 329 scenarios): a view
 may carry a level and a scope, checked by element type and by parent, and a box whose element has its own view
 links to it with no script (draft schema v17, brief v25).
 
-With the view levels version effective, Polaris has 39 requirements and 650 scenarios.
+With the view levels version effective, Polaris has 39 requirements and 653 scenarios.
+*(2026-11-28: the predecessor figure of 650 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
 [Walk advice amendment 2.51](openspec/changes/dossier-walk-advice) is agent-adopted in A-275.
 It replaces REQ-polaris-generation-034 from version 2.50, the view levels (329 to 336 scenarios): check's report
 advises on a walk step whose paragraph adds no word to its element's label, and the advice gates nothing.
 
-With the walk advice version effective, Polaris has 39 requirements and 657 scenarios.
+With the walk advice version effective, Polaris has 39 requirements and 660 scenarios.
+*(2026-11-28: the predecessor figure of 657 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
 [Walk errata amendment 2.53](openspec/changes/dossier-walk-errata) is agent-adopted in A-344.
 It replaces REQ-polaris-generation-034 from version 2.51, the walk advice (336 scenarios, none added): the brief v24
 paragraph is quoted as the brief issues it, and a walked figure's loss of the drawing's tooltips is stated as a trade-off.
 
-With the walk errata version effective, Polaris has 39 requirements and 657 scenarios.
+With the walk errata version effective, Polaris has 39 requirements and 660 scenarios.
+*(2026-11-28: the predecessor figure of 657 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
 [Code excerpts amendment 2.54](openspec/changes/dossier-code-excerpts) is agent-adopted in A-345.
 It replaces REQ-polaris-generation-034 from version 2.53, the walk errata (336 to 348 scenarios): a code excerpt's
 lines are numbered, its highlights marked and named, and its notes linked to cited paragraphs, with no script
 (draft schema v18, brief v26).
 
-With the code excerpts version effective, Polaris has 39 requirements and 669 scenarios.
+With the code excerpts version effective, Polaris has 39 requirements and 672 scenarios.
+*(2026-11-28: the predecessor figure of 669 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
+
+[Session usage amendment 2.45](openspec/changes/dossier-session-usage) is agent-adopted in A-339.
+It replaces REQ-polaris-generation-033 from version 2.31, the close measures (25 to 28 scenarios): close records a launched run's
+per-session token counts, read by Syzygy from each session's own transcripts, with a run total; close, status and the review
+page give one cost line, money Unknown. Every composition state above contains REQ-033, so each figure above counts its three
+added scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and

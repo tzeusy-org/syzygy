@@ -17,7 +17,7 @@ import { isCheckRecordOf, readCheckRecord } from './check-record-read.js';
 import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
 import { RUN_TREE_BOUNDS, isMissingEntry, readBoundedText } from './run-tree-read.js';
-import { readRecord } from './run-dir.js';
+import { agentHome, agentsRoot, readRecord } from './run-dir.js';
 
 /** `syzygy polaris <url>`: the one-command dossier run, stated by the adopted REQ-polaris-generation-048 ("Declared URL dossier
  * supervisor"; first built from the one-command-run candidates of `polaris-dossier-one-command-run/` as a prototype under owner direction
@@ -539,8 +539,9 @@ export function sessionAddedDirs(role: ViewRole, clone: string): string[] {
 }
 
 /** The session's private home: a copy of the operator's Claude Code credentials and the seed config `agentHomeSeed` writes. */
-function prepareAgentHome(stateRoot: string, runId: string, role: ViewRole, cwd: string, clone: string): string {
-  const home = path.join(stateRoot, `${runId}.agents`, role);
+function prepareAgentHome(run: string, role: ViewRole, cwd: string, clone: string): string {
+  // The session-usage reader finds this home by the same rule (agentHome), so the two never name different directories.
+  const home = agentHome(run, role);
   const config = path.join(home, '.claude');
   fs.mkdirSync(config, { recursive: true, mode: 0o700 });
   const credentials = path.join(os.homedir(), '.claude', '.credentials.json');
@@ -552,8 +553,8 @@ function prepareAgentHome(stateRoot: string, runId: string, role: ViewRole, cwd:
   return home;
 }
 
-function prepareShim(stateRoot: string, runId: string): string {
-  const dir = path.join(stateRoot, `${runId}.agents`, 'bin');
+function prepareShim(run: string): string {
+  const dir = path.join(agentsRoot(run), 'bin');
   fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
   fs.writeFileSync(path.join(dir, 'syzygy'), `#!/bin/sh\nexec ${process.execPath} ${BROKER_CLIENT} "$@"\n`, { mode: 0o700 });
   return dir;
@@ -587,8 +588,8 @@ export function sessionClaudeArgs(plan: Pick<SessionPlan, 'role' | 'prompt' | 'a
 
 function launchSession(options: Options, ports: CliPorts, state: SupervisorState, plan: SessionPlan, brokers: Map<ViewRole, Broker>, screen: Screen): string | null {
   const executable = claudeExecutable();
-  const agentHome = prepareAgentHome(options.stateRoot, state.runId, plan.role, plan.directory, state.clone);
-  const shimDir = prepareShim(options.stateRoot, state.runId);
+  const agentHome = prepareAgentHome(state.run, plan.role, plan.directory, state.clone);
+  const shimDir = prepareShim(state.run);
   // A Unix socket path is limited to about 108 bytes, so the socket lives in a short per-session runtime directory, bound into that
   // session's view alone.
   // Without XDG_RUNTIME_DIR, an unpredictable private directory under the temporary directory, not a guessable shared path.

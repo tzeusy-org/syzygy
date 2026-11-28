@@ -2,7 +2,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {
-  backtickSpans, excludedSourceId, spanTouchesWithheld, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
+  backtickSpans, COST_STATUS_ID, excludedSourceId, spanTouchesWithheld, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
   type EpistemicMarking, type EvidenceAnchor, type GenerationExclusionReason, type GenerationSource, type LocalBlock,
   type LocalBase, type LocalDerivedFact, type LocalDerivedStructure, type LocalDisclosureItem, type LocalDraftLayer, type LocalEdgeRelation, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment, type WithheldNote,
   type DossierDraft, type DraftBlock, type DraftDiagramHome, type DraftContainmentGroup, type DraftFigure, type DraftFigureElement, type DraftParagraph,
@@ -40,6 +40,7 @@ import { designReviewOfRecord, latestPassedDraft, reviewOfRecord, type DesignRev
 import type { ReverifyRefusal } from './reverify.js';
 import { readRunRecord } from './run-record.js';
 import { NO_WORK_ITEM_REASON } from './run-record.js';
+import { costLine, sessionUsage } from './session-usage.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass, unconsentedText } from './class-gate.js';
 import { placementSubjectOf, screenLoaderOf, type DossierScreen, type ScreenExclusion } from './screen.js';
 import { readBriefRecord } from './run-dir.js';
@@ -1150,6 +1151,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
       ? { id: 'review-status/fidelity', text: `Fidelity review: one counts, bound to packet ${review.packetSha256} rebuilt at this render; its verdict, ${review.verdict.readiness}, is the review session's.${fidelityContinuation!.continuing ? ' Its reviewer continued across revisions (see the review page).' : ''}`, label: 'Inferred' }
       : { id: 'review-status/fidelity', text: `Fidelity review: none counts (${review.why}).`, label: 'Unknown' },
     designStatusItem(design, run),
+    costStatusItem(run),
   ];
 
   const declaredHero = heroOf(doc);
@@ -1251,7 +1253,15 @@ export function designStatusItem(design: DesignReviewOfRecord | undefined, run: 
   return { id: 'review-status/design', text: `Rendered-design review: one counts, bound to packet ${design.packetSha256}, which Syzygy built at this render from these pages outside this region; its verdict, ${design.verdict.readiness}${design.verdict.blocking ? ' beside a blocking finding' : ''}, is the review session's. ${continuation.text} (Inferred, from ${continuation.basis}.)`, label: 'Inferred' };
 }
 
-const UNDERSTANDING_HEADINGS: Readonly<Record<(typeof UNDERSTANDING_ITEMS)[number], string>> = {
+/** The cost line, read at this render from the launched sessions' own transcripts (version 2.45, `session-usage.ts`). It lives in the
+ * review-status region, the only part of a page a later render may change without retiring the rendered-design review, since every render
+ * reads it anew; the renderer shows it on the review page alone. */
+export function costStatusItem(run: string): LocalDisclosureItem {
+  const line = costLine(sessionUsage(run));
+  return { id: COST_STATUS_ID, text: `${line.text.replace(/\.$/u, '')}, as read at this render.`, label: line.label };
+}
+
+const UNDERSTANDING_HEADINGS:Readonly<Record<(typeof UNDERSTANDING_ITEMS)[number], string>> = {
   purpose: 'Purpose', beneficiary: 'Beneficiary', proposition: 'Proposition', capabilities: 'Capabilities', components: 'Components and relationships',
   choices: 'Choices and alternatives', tradeOffs: 'Trade-offs', limits: 'Limits', terminology: 'Terminology', contradictions: 'Contradictory accounts', openQuestions: 'Open questions',
 };
