@@ -545,7 +545,11 @@ describe('R38 repairs: every derived-base finding screens its submitted identity
     const nine = pinnedTree({ 'README.md': TREE_A['README.md']!, ...Object.fromEntries(Array.from({ length: 9 }, (_, k) => [`d${k}/x.md`, 'x\n'])) });
     const finding = { kind: 'view-shape', at: '$.diagrams[0].view.elements', detail: 'figa: a containment view shows one to five outermost elements and at most eight inside any one' };
     expect((await screenedCheck(nine, baseDraft([], [], [dirsContain('figa', {})]), fabricated([], []))).report).toEqual([finding]);
-    expect((await screenedCheck(nine, baseDraft([], [], [dirsContain('figw', {})]), fabricated([], ['figw']))).report).toEqual([{ ...finding, detail: FIXED }]);
+    // A withheld identity is also a schema finding at each member that holds it, after every other finding (syzygy-3efd.95).
+    const ID = 'is withheld under source screening: a secret detector matches it, so it cannot be an identity; choose another';
+    expect((await screenedCheck(nine, baseDraft([], [], [dirsContain('figw', {})]), fabricated([], ['figw']))).report).toEqual([{ ...finding, detail: FIXED },
+      { kind: 'schema', at: '$.diagrams[0].id', detail: ID }, { kind: 'schema', at: '$.diagrams[0].disposition.assetIds[0]', detail: ID },
+      { kind: 'schema', at: '$.figurePlan[1].figure', detail: ID }]);
   });
 
   it('a base end that names nothing is a base-reference at the relationship\'s end, `model:`, screened by its path', async () => {

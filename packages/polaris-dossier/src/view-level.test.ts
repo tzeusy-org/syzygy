@@ -16,6 +16,7 @@ import { measureDraft } from './rerender-measure.js';
 import { packetDraftView } from './review-packet.js';
 import { withoutLevels } from './view-level.js';
 import { issuedDraftSchema } from './draft-schema.js';
+import { IDENTITY_MEMBERS } from './identity-screen.js';
 import { handle as HANDLE_SCHEMA } from '@syzygy/polaris-generation-core/live';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 
@@ -682,6 +683,8 @@ describe('secret-shaped identities never pass check or reach an output (syzygy-3
     visit(schema.root as Doc);
     for (const def of Object.values(schema.defs)) visit(def as Doc);
     expect([...found].filter((key) => !ID_KEYS.includes(key))).toEqual([]);
+    // The module screens exactly the members this test walks.
+    expect([...IDENTITY_MEMBERS].sort()).toEqual([...ID_KEYS].sort());
     expect(found.size).toBeGreaterThan(10);
   });
 

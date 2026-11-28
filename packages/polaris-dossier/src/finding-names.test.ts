@@ -494,12 +494,13 @@ describe('the identity and location screens alone (syzygy-3efd.95)', () => {
   const DETAIL = 'is withheld under source screening: a secret detector matches it, so it cannot be an identity; choose another';
 
   it('finds every handle-shaped string the screen withholds, at any member, in document order, and names no value', () => {
-    const doc = { id: 'ok', a: [{ id: 'hush-1' }, 'hush-2', 'no hush here'], b: { c: { deep: 'undecided' }, d: 'hush-1' }, e: 7, f: null, g: 'hush/path' };
+    const doc = { id: 'ok', elements: [{ id: 'hush-1' }, 'hush-2', 'no hush here'], b: { c: { parent: 'undecided' }, to: 'hush-1', label: 'hush-3' }, e: 7, f: null, id2: 'hush/path', from: 'hush/path' };
     const { findings, values } = withheldIdentityFindings(doc, admit);
-    // A string with a space or a slash is no handle: the schema check, not this one, answers for it.
+    // A string with a space or a slash is no handle, so the schema check, not this one, answers for it; a string at any member but an
+    // identity's (`label`, `id2`) is not read.
     expect(findings).toEqual([
-      { kind: 'schema', at: '$.a[0].id', detail: DETAIL }, { kind: 'schema', at: '$.a[1]', detail: DETAIL },
-      { kind: 'schema', at: '$.b.c.deep', detail: DETAIL }, { kind: 'schema', at: '$.b.d', detail: DETAIL },
+      { kind: 'schema', at: '$.elements[0].id', detail: DETAIL }, { kind: 'schema', at: '$.elements[1]', detail: DETAIL },
+      { kind: 'schema', at: '$.b.c.parent', detail: DETAIL }, { kind: 'schema', at: '$.b.to', detail: DETAIL },
     ]);
     expect([...values]).toEqual(['hush-1', 'hush-2', 'undecided']);
   });
@@ -507,10 +508,10 @@ describe('the identity and location screens alone (syzygy-3efd.95)', () => {
   it('screens each distinct value once, fails closed where the screen throws, and reads a deep document on its own stack', () => {
     let calls = 0;
     const counting = (value: string) => { calls++; return admit(value); };
-    withheldIdentityFindings(Array.from({ length: 50_000 }, () => 'same'), counting);
+    withheldIdentityFindings({ elements: Array.from({ length: 50_000 }, () => 'same') }, counting);
     expect(calls).toBe(1);
     expect(withheldIdentityFindings({ id: 'x' }, () => { throw new Error('screen'); }).findings).toEqual([{ kind: 'schema', at: '$.id', detail: DETAIL }]);
-    let deep: unknown = 'hush';
+    let deep: unknown = { id: 'hush' };
     for (let k = 0; k < 200_000; k++) deep = [deep];
     expect(withheldIdentityFindings(deep, admit).findings).toHaveLength(1);
   });
