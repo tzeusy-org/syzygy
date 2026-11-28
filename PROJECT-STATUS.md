@@ -336,18 +336,23 @@ render reads TODO, FIXME, HACK, deprecation markers and issue references lexical
 
 With the rough-edge markers version effective, Polaris has 39 requirements and 652 scenarios.
 
-[Imports corroboration amendment 2.45](openspec/changes/dossier-imports-corroboration) is agent-adopted in A-273.
-It replaces REQ-polaris-generation-034 from version 2.44, the rough-edge markers (305 to 309 scenarios): an `imports`
+[URL lean run amendment 2.46](openspec/changes/dossier-url-lean-run) is agent-adopted in A-340.
+It replaces REQ-polaris-generation-025 and 047 from URL dossier 2.1 (14 to 6 and 24 to 6 scenarios): a URL run pins
+one commit by anonymous `git ls-remote`, fetches it with no credential and reads no record.
+
+With the URL lean run version effective, Polaris has 39 requirements and 626 scenarios.
+
+[Docs and code amendment 2.48](openspec/changes/dossier-docs-and-code) is agent-adopted in A-342.
+It replaces REQ-polaris-generation-034 from version 2.44, the rough-edge markers (305 to 313 scenarios): each operator-agent
+render resolves the paths and identifiers its Markdown documents name against the pinned tree and publishes them on `reference/docs-and-code.html`.
+
+With the docs and code version effective, Polaris has 39 requirements and 634 scenarios.
+
+[Imports corroboration amendment 2.49](openspec/changes/dossier-imports-corroboration) is agent-adopted in A-273.
+It replaces REQ-polaris-generation-034 from version 2.48, the docs and code (313 to 317 scenarios): an `imports`
 arrow that a stored lexical import fact joins is corroborated, never Observed, and every other one stays Unknown.
 
-With the imports corroboration version effective, Polaris has 39 requirements and 656 scenarios.
-
-[View levels amendment 2.47](openspec/changes/dossier-view-levels) is agent-adopted in A-274.
-It replaces REQ-polaris-generation-034 from version 2.45, the imports corroboration (309 to 321 scenarios): a view
-may carry a level and a scope, checked by element type and by parent, and a box whose element has its own view
-links to it with no script (draft schema v17, brief v25).
-
-With the view levels version effective, Polaris has 39 requirements and 668 scenarios.
+With the imports corroboration version effective, Polaris has 39 requirements and 638 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and

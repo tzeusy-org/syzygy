@@ -1,5 +1,7 @@
 # dossier-url-declared-source-run
 
+**Narrowed by 2.46 (A-340, 2026-11-28).** The native URL runtime this package specified was never landed (draft PR #839 closed as superseded; bead `syzygy-k54o.3`). Version 2.46 (`dossier-url-lean-run`) restates REQ-polaris-generation-025 and 047 as the runtime that is built; this package's 033, 035 and 048 stay effective until `syzygy-k54o.3.4` narrows them. Everything below is unchanged history.
+
 [Inferred] Candidate2.1 binds nothing. Complete025/033/035/047 replacements plus048 add one bounded declared URL dossier chain with unavoidable checked provider transport, strict four-tool MCP, distinct declared/screened/audited metadata-only Git source transport and strict memory-only whole-closure admission before any owned source storage, no observed-code execution and preserved direct-local compatibility. The proposed origin/species policy preserves base detector/private-exclusion bytes; actual implementation/enforcement/provider activation remain unproved here.
 
 [Inferred] F6 adds only an explicitly different reversible URL design-review representation: original035 subject/digest/denominator retained, raw active finding still FAILED, proven local renderer/sink handling and complete unchanged secret/generic-view/request gates. F5 confirmed offering remains immutable and unadopted.

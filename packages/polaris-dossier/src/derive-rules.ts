@@ -138,5 +138,25 @@ export const ROUGH_EDGE_MARKER = {
   kinds: ['todo', 'fixme', 'hack', 'deprecation', 'issue-reference'],
 } as const;
 
+/** The document-reference recognizer (REQ-polaris-generation-034 version 2.48, syzygy-5dhm.119), version 1: the paths and identifiers an
+ * admitted Markdown document names in its inline code spans and the relative targets of its inline links, each resolved against the
+ * pinned tree (`doc-references-*.ts`). A path resolves against the tree listing; an identifier against the identifier tokens of the code
+ * files read. It reads bodies, so it is outside `DERIVE_RULES`. A change to a form, a list here or a resolution rule is a new version. */
+export const DOC_REFERENCE = {
+  id: 'doc-reference', version: 1,
+  /** A document: a basename longer than one of these extensions, compared without case. */
+  documentExtensions: ['.md', '.markdown'],
+  /** A bare name (no slash) in a code span is a path when its last extension, compared without case, is one of these. */
+  bareExtensions: ['c', 'h', 'cc', 'cpp', 'cxx', 'hpp', 'hh', 'md', 'markdown', 'txt', 'rst', 'conf', 'cfg', 'ini', 'json', 'yaml', 'yml',
+    'toml', 'xml', 'py', 'pyi', 'tcl', 'mjs', 'cjs', 'mts', 'cts', 'tsx', 'jsx', 'rs', 'go', 'java', 'kt', 'rb', 'php', 'sh', 'bash', 'lua',
+    'mk', 'cmake', 'html', 'css', 'scss', 'sql', 'proto', 'lock', 'gradle', 'swift', 'cs', 'env'],
+  /** A bare name with one of these extensions is as often a name in prose (`Node.js`) as a file: it resolves or is Unknown, never
+   * document-only. */
+  weakExtensions: ['js', 'ts', 'in'],
+  /** The languages (rule `language-by-extension`) whose files are searched for identifiers: every language in its table but these. */
+  notSearched: ['Markdown', 'reStructuredText', 'AsciiDoc', 'Plain text', 'JSON', 'YAML', 'TOML', 'XML', 'INI'],
+  outcomes: ['resolves', 'document-only', 'unknown'],
+} as const;
+
 export const DERIVE_RULES: readonly DeriveRuleId[] = [VENDORED_PATH, GENERATED_PATH, LANGUAGE_BY_EXTENSION, DOCS_TREE, TESTS_PATH, MANIFEST_NAMES, TOP_LEVEL_UNIT, SERVER_ENTRY]
   .map(({ id, version }) => ({ id, version }));

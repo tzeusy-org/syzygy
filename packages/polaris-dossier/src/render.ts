@@ -25,6 +25,7 @@ import { GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
 import { deriveTestNames, testNamesUnknown, type TestNames } from './test-names.js';
 import { deriveRoughEdges, roughEdgesUnknown, type RoughEdges } from './rough-edges.js';
+import { deriveDocsAndCode, docsAndCodeUnknown, type DocsAndCode } from './doc-references.js';
 import { errno, latestInventorySession, logStep, openRun, promptRecordName, readRecord, type OpenedRun } from './inventory.js';
 import { briefStandardsOf, buildDesignPacket, standardsInput } from './design-review.js';
 import { derivedStructureAt, readCurrencyPolicy, secretPathOf, type CurrencyPolicy } from './derived-record.js';
@@ -228,7 +229,9 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const testNames = await renderTestNames(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
   // Version 2.43 (syzygy-5dhm.46): the rough-edge markers, derived here the same way, for the rough-edges reference page.
   const roughEdges = await renderRoughEdges(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
-  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, roughEdges, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }), ...(model === undefined ? {} : { model }) } };
+  // Version 2.48 (syzygy-5dhm.119): the documents' paths and identifiers, resolved here the same way, for the docs-and-code page.
+  const docsAndCode = await renderDocsAndCode(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
+  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, roughEdges, docsAndCode, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }), ...(model === undefined ? {} : { model }) } };
 
   const renderer = deps.renderer;
   const draw = (local: LocalRenderInput): ReadonlyMap<string, string> | string => {
@@ -392,6 +395,21 @@ export async function renderRoughEdges(clonePath: string, pinned: string, deps: 
   }
   const markerReader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(clonePath, '.git'), revision: pinned, maxObjectBytes: MANIFEST_BLOB_LIMIT });
   return deriveRoughEdges({ entries, screen, consented, read: async (sourcePath) => (await markerReader.readBlobs([sourcePath]))[0]! });
+}
+
+/** The render's own docs-and-code member (version 2.48): as `renderRoughEdges`, each document and code file read alone through its own
+ * pinned reader whose object bound is `MANIFEST_BLOB_LIMIT`; `unknown` where the tree cannot be listed. */
+export async function renderDocsAndCode(clonePath: string, pinned: string, deps: Pick<RenderDeps, 'openReader'>, screen: DossierScreen,
+  consented: readonly string[] | null, reader: { readonly listTree: () => Promise<readonly TreeEntry[]> }): Promise<DocsAndCode> {
+  let entries: readonly TreeEntry[];
+  try {
+    entries = await reader.listTree();
+  } catch (cause) {
+    if (!(cause instanceof GitObjectReadRefusal)) throw cause;
+    return docsAndCodeUnknown(cause.reason);
+  }
+  const bodyReader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(clonePath, '.git'), revision: pinned, maxObjectBytes: MANIFEST_BLOB_LIMIT });
+  return deriveDocsAndCode({ entries, screen, consented, read: async (blobPath) => (await bodyReader.readBlobs([blobPath]))[0]! });
 }
 
 /** Write the site into a new numbered directory under `site/`, through a staging directory renamed into place only when every file is
