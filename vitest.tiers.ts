@@ -90,6 +90,7 @@ export const INTEGRATION_TESTS: readonly string[] = [
   'packages/polaris-dossier/src/close.test.ts',
   'packages/polaris-dossier/src/containment-figure.test.ts',
   'packages/polaris-dossier/src/coverage-hold-flow.test.ts',
+  'packages/polaris-dossier/src/derived-base.test.ts',
   'packages/polaris-dossier/src/derived-record.test.ts',
   'packages/polaris-dossier/src/execution-flags.test.ts',
   'packages/polaris-dossier/src/gate-acts.test.ts',

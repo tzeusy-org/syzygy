@@ -3,8 +3,9 @@ import { type CheckFinding, list } from './check-model.js';
 import { containmentName } from './containment.js';
 import {
   CONTAINMENT_BOUNDS, CONTAINMENT_KIND, ELEMENT_TYPES, LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION_V11, LOCAL_DRAFT_SCHEMA_VERSION_V12,
-  MODEL_FIELD, UNIT_FIELD, UNIT_KIND_TYPES, VIEW_FIELD, hasModelForm, precedesModel,
+  BASE_FIELD, MODEL_FIELD, UNIT_FIELD, UNIT_KIND_TYPES, VIEW_FIELD, hasModelForm, precedesModel,
 } from './draft-schema.js';
+import { BASE_BASIS, type BaseContext, type ResolvedBase, baseEndElement, baseEndFindings, baseNode, baseOf, isBaseEnd, readBases, screenedViewDetail } from './derived-base.js';
 import { DIAGRAM_KINDS, type LocalModel } from '@syzygy/polaris-generation-core/live';
 import { type RelationType, type UnitFault, type UnitTree, type WitnessDecision, UNIT_FAULT_WORDS, derivable, unitFault, unitOf, witnessWords } from './relation-witness.js';
 
@@ -64,7 +65,7 @@ export type PathMove = (at: string) => string;
  * `inferred` as the rule reads it, no citation and `"basis": "derived"`), and each containment view `groups` (the selected elements whose
  * parent is absent or not selected, in view order, each holding the selected elements whose parent it is). An entry naming nothing in the
  * model is left out (a finding's matter). `move` maps a path into the expansion back to the model or view member it came from. */
-export function expandModel(doc: Doc): { readonly doc: Record<string, unknown>; readonly move: PathMove } {
+export function expandModel(doc: Doc, bases: ReadonlyMap<number, ResolvedBase> = new Map()): { readonly doc: Record<string, unknown>; readonly move: PathMove } {
   const index = modelIndex(doc);
   const moves = new Map<string, string>();
   const diagrams = list(doc['diagrams']).map((diagram, i) => {
@@ -72,6 +73,9 @@ export function expandModel(doc: Doc): { readonly doc: Record<string, unknown>; 
     const { [VIEW_FIELD]: _view, ...shared } = diagram;
     const lists = viewLists(diagram);
     const selected = lists.elements.flatMap((id) => { const entry = index.elementById.get(id); return entry === undefined ? [] : [{ id, ...entry }]; });
+    // A view with a `base` resolved against an established map (version 2.35): its base elements, in Syzygy's words, join the figure.
+    const base = bases.get(i);
+    const baseAt = `$.diagrams[${i}].${VIEW_FIELD}.${BASE_FIELD}`;
     if (diagram['kind'] === CONTAINMENT_KIND) {
       const chosen = new Set(selected.map(({ id }) => id));
       const placed = new Set<string>();
@@ -79,24 +83,53 @@ export function expandModel(doc: Doc): { readonly doc: Record<string, unknown>; 
         placed.add(entry.id);
         moves.set(at, entry.at);
         const children = selected.filter((child) => !placed.has(child.id) && text(child.element['parent']) === entry.id);
-        return { ...claimOf(entry.element), children: children.map((child, k) => groupOf(child, `${at}.children[${k}]`)) };
+        const own = children.map((child, k) => groupOf(child, `${at}.children[${k}]`));
+        // The base elements a `group` entry places inside this element, after the children the expansion gives it.
+        const grouped = base === undefined ? [] : base.shown.filter((k) => base.groupOf.get(k) === entry.id);
+        grouped.forEach((k, n) => moves.set(`${at}.children[${own.length + n}]`, baseAt));
+        return { ...claimOf(entry.element), children: [...own, ...grouped.map((k) => baseNode(base!, k, [], true))] };
       };
       const tops = selected.filter((entry) => { const parent = text(entry.element['parent']); return parent === undefined || !chosen.has(parent) || parent === entry.id; });
       const groups: Record<string, unknown>[] = [];
       for (const entry of tops) if (!placed.has(entry.id)) groups.push(groupOf(entry, `$.diagrams[${i}].groups[${groups.length}]`));
+      if (base !== undefined) {
+        const ungrouped = base.shown.filter((k) => !base.groupOf.has(k));
+        const root = ungrouped.find((k) => base.map.elements[k]!.root === true);
+        const outer = base.map.map === 'directories' && root !== undefined
+          ? [baseNode(base, root, ungrouped.filter((k) => k !== root).map((k) => baseNode(base, k, [])))]
+          : ungrouped.map((k) => baseNode(base, k, []));
+        for (const group of outer) { moves.set(`$.diagrams[${i}].groups[${groups.length}]`, baseAt); groups.push(group); }
+      }
       return { ...shared, groups };
     }
     const chosen = new Set(selected.map(({ id }) => id));
-    const nodes = selected.map((entry, k) => { moves.set(`$.diagrams[${i}].nodes[${k}]`, entry.at); return claimOf(entry.element); });
+    const baseNodes = base === undefined ? [] : base.shown.map((k) => baseNode(base, k));
+    const shownBase = new Set(base?.shown ?? []);
+    // A base end names the factual element it resolves to among those the view shows; any other end leaves the relationship out.
+    const endOf = (end: unknown): string | undefined => {
+      if (typeof end === 'string') return chosen.has(end) ? end : undefined;
+      const k = baseEndElement(end, base?.spec, base?.map, shownBase);
+      return k === undefined ? undefined : base!.map.elements[k]!.factId;
+    };
+    baseNodes.forEach((_, k) => moves.set(`$.diagrams[${i}].nodes[${k}]`, baseAt));
+    const nodes = [...baseNodes, ...selected.map((entry, k) => { moves.set(`$.diagrams[${i}].nodes[${baseNodes.length + k}]`, entry.at); return claimOf(entry.element); })];
+    // The directory map's `contains` facts joining two shown base elements, in Syzygy's words, before the relationships the view selects.
+    const shownFacts = new Set(baseNodes.map((node) => node['id']));
+    const rootFact = base?.map.elements.find((element) => element.root === true)?.factId;
+    const containsEdges = base === undefined || rootFact === undefined || !shownFacts.has(rootFact) ? [] : base.map.contains.filter((fact) => shownFacts.has(fact.to))
+      .map((fact) => ({ id: fact.factId, from: rootFact, to: fact.to, relation: 'contains', label: 'contains', epistemic: fact.epistemic, citations: [], basis: BASE_BASIS }));
+    containsEdges.forEach((_, k) => moves.set(`$.diagrams[${i}].edges[${k}]`, baseAt));
     const edges = lists.relationships.flatMap((id) => {
       const entry = index.relationshipById.get(id);
-      if (entry === undefined || !chosen.has(text(entry.relationship['from']) ?? '') || !chosen.has(text(entry.relationship['to']) ?? '')) return [];
+      if (entry === undefined) return [];
+      const from = endOf(entry.relationship['from']), to = endOf(entry.relationship['to']);
+      if (from === undefined || to === undefined) return [];
       const { relationship } = entry;
       return [{ entry, edge: entry.derived
         ? { id: relationship['id'], from: relationship['from'], to: relationship['to'], relation: relationship['relation'], label: derivedWords(relationship['relation']), epistemic: 'inferred', citations: [], basis: 'derived' }
-        : { ...relationship } }];
-    }).map(({ entry, edge }, k) => { moves.set(`$.diagrams[${i}].edges[${k}]`, entry.at); return edge; });
-    return { ...shared, nodes, edges };
+        : { ...relationship, from, to } }];
+    }).map(({ entry, edge }, k) => { moves.set(`$.diagrams[${i}].edges[${containsEdges.length + k}]`, entry.at); return edge; });
+    return { ...shared, nodes, edges: [...containsEdges, ...edges] };
   });
   const { [MODEL_FIELD]: _model, ...rest } = doc;
   const move: PathMove = (at) => {
@@ -111,7 +144,7 @@ export function expandModel(doc: Doc): { readonly doc: Record<string, unknown>; 
 
 /** The model a render hands the site (version 2.24): each element and relationship in model order, with the diagrams whose view selects
  * it, in diagram order. A render follows a passing check, so every identity, type and relation here is the schema's. */
-export function localModelOf(doc: Doc): LocalModel {
+export function localModelOf(doc: Doc, baseEnd: (end: Doc) => string | null = () => null): LocalModel {
   const index = modelIndex(doc);
   const selecting = (pick: (lists: ReturnType<typeof viewLists>) => readonly string[], id: string): string[] => list(doc['diagrams']).flatMap((diagram) => (
     isRecord(diagram) && isViewKind(diagram) && isRecord(diagram[VIEW_FIELD]) && pick(viewLists(diagram)).includes(id) && typeof diagram['id'] === 'string' ? [diagram['id']] : []));
@@ -122,7 +155,9 @@ export function localModelOf(doc: Doc): LocalModel {
     }),
     relationships: index.relationships.map(({ relationship, derived }) => {
       const id = text(relationship['id']) ?? '';
-      return { id, from: text(relationship['from']) ?? '', to: text(relationship['to']) ?? '', relation: text(relationship['relation']) ?? '', basis: derived ? 'derived' as const : 'cited' as const,
+      // A base end (version 2.35) is written as the fact identity it resolves to at this render, never as the path the draft wrote.
+      const end = (value: unknown): string | null => (isBaseEnd(value) ? baseEnd(value) : text(value) ?? '');
+      return { id, from: end(relationship['from']), to: end(relationship['to']), relation: text(relationship['relation']) ?? '', basis: derived ? 'derived' as const : 'cited' as const,
         views: selecting((lists) => lists.relationships, id) };
     }),
   };
@@ -162,8 +197,10 @@ function containmentShape(expanded: Doc): { readonly tops: number; readonly wide
  * parent, `element-type`, `unit-reference`, `element-parent`), the relationships' (`unresolved-reference` at an end,
  * `relationship-not-derivable`), each view's (`unresolved-reference`, `view-duplicate`, `view-relationship`, `view-shape`,
  * `containment-flat`), then `model-unviewed`. Each is computed only where the members it reads have no `schema` finding (`schemaPaths`). */
-export function modelFindings(doc: Doc, schemaPaths: ReadonlySet<string>, tree: UnitTree | undefined): CheckFinding[] {
+export function modelFindings(doc: Doc, schemaPaths: ReadonlySet<string>, tree: UnitTree | undefined, baseContext?: BaseContext): CheckFinding[] {
   if (!hasModelForm(doc['schemaVersion'])) return [];
+  // A v15 draft's bases (version 2.35), read where the caller states the maps: never where it does not (a base is then left unresolved).
+  const bases = baseContext === undefined ? undefined : readBases(doc, baseContext, schemaPaths);
   const index = modelIndex(doc);
   const out: CheckFinding[] = [];
   const clean = (at: string): boolean => !touchesSchema(at, schemaPaths);
@@ -212,10 +249,12 @@ export function modelFindings(doc: Doc, schemaPaths: ReadonlySet<string>, tree: 
       out.push({ kind: 'relationship-not-derivable', at, detail: `${idOr(relationship, at)}: a derived relationship needs two ends whose units a row of rule relation-witness version 1 joins by its relation` });
     }
   }
+  // The findings at base ends follow the relationships' findings, in model order (version 2.35).
+  if (baseContext !== undefined) out.push(...baseEndFindings(doc, baseContext.maps, schemaPaths, baseContext.admit, baseContext.hidden));
   const elementOrParentFault = out.slice(0, elementFindings).some((finding) => finding.kind === 'element-parent' || (finding.kind === 'unresolved-reference' && finding.at.endsWith('.parent')));
 
   // Each view, in diagram order.
-  const expanded = list(expandModel(doc).doc['diagrams']);
+  const expanded = list(expandModel(doc, bases?.resolved).doc['diagrams']);
   let anyViewSchema = false;
   list(doc['diagrams']).forEach((diagram, i) => {
     if (!isRecord(diagram) || !isViewKind(diagram) || !Object.hasOwn(diagram, VIEW_FIELD)) return;
@@ -234,7 +273,9 @@ export function modelFindings(doc: Doc, schemaPaths: ReadonlySet<string>, tree: 
       }
     }
     out.push(...unresolvedHere);
-    if (!listsClean) return;
+    const base = baseOf(doc, diagram);
+    const baseFindings = bases?.findings.get(i) ?? [];
+    if (!listsClean) { out.push(...baseFindings); return; }
     for (const member of ['elements', 'relationships'] as const) {
       const seen = new Set<string>();
       for (const { value, at: entryAt } of entries(member)) {
@@ -244,19 +285,34 @@ export function modelFindings(doc: Doc, schemaPaths: ReadonlySet<string>, tree: 
       }
     }
     const selected = new Set(entries('elements').flatMap(({ value }) => (typeof value === 'string' ? [value] : [])));
+    // A base end (version 2.35) is shown where the view's base shows the one element it names; where the view's base is not resolved (its
+    // map not established, or a base-reference or base-conflict finding standing) an end of its map is left undecided, never a finding.
+    const resolved = bases?.resolved.get(i);
+    const shownEnd = (end: unknown): boolean => {
+      if (!isBaseEnd(end)) return selected.has(text(end) ?? '');
+      if (base === undefined || end['map'] !== base.map) return false;
+      if (resolved === undefined) return true;
+      return baseEndElement(end, base, resolved.map, new Set(resolved.shown)) !== undefined;
+    };
     for (const { value, at: entryAt } of entries('relationships')) {
       const entry = typeof value === 'string' ? index.relationshipById.get(value) : undefined;
       if (entry === undefined) continue;
-      if (!selected.has(text(entry.relationship['from']) ?? '') || !selected.has(text(entry.relationship['to']) ?? '')) {
+      if (!shownEnd(entry.relationship['from']) || !shownEnd(entry.relationship['to'])) {
         out.push({ kind: 'view-relationship', at: entryAt, detail: `${name}: a view shows a relationship only where it shows both its ends` });
       }
     }
-    if (diagram['kind'] !== CONTAINMENT_KIND || elementOrParentFault || unresolvedHere.length > 0) return;
-    const shape = containmentShape(isRecord(expanded[i]) ? expanded[i] : {});
-    if (shape.tops > CONTAINMENT_BOUNDS.groups[1] || shape.widest > CONTAINMENT_BOUNDS.children[1]) {
-      out.push({ kind: 'view-shape', at: `${at}.elements`, detail: `${name}: a containment view shows one to five outermost elements and at most eight inside any one` });
+    // A view with a `base` takes `view-shape` and `containment-flat` only where its base is clear, over its figure base elements included,
+    // their details screened (version 2.35); then its base findings.
+    const shaped = base === undefined || bases?.clear.has(i) === true;
+    if (diagram['kind'] === CONTAINMENT_KIND && !elementOrParentFault && unresolvedHere.length === 0 && shaped) {
+      const said = (detail: string): string => (base === undefined || baseContext === undefined ? detail : screenedViewDetail(baseContext.admit, name, detail));
+      const shape = containmentShape(isRecord(expanded[i]) ? expanded[i] : {});
+      if (shape.tops > CONTAINMENT_BOUNDS.groups[1] || shape.widest > CONTAINMENT_BOUNDS.children[1]) {
+        out.push({ kind: 'view-shape', at: `${at}.elements`, detail: said(`${name}: a containment view shows one to five outermost elements and at most eight inside any one`) });
+      }
+      if (!shape.nested) out.push({ kind: 'containment-flat', at: `${at}.elements`, detail: said(`${name}: a containment nests at least one group in another`) });
     }
-    if (!shape.nested) out.push({ kind: 'containment-flat', at: `${at}.elements`, detail: `${name}: a containment nests at least one group in another` });
+    out.push(...baseFindings);
   });
 
   // Every element and relationship some view selects, whatever its diagram's disposition.
