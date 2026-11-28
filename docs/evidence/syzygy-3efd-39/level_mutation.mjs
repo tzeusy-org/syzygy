@@ -6,6 +6,9 @@
 // render and style groups, so the run refuses to start without SYZYGY_POC_BROWSER, and each baseline records the passed tests of every
 // file, so the record shows the browser test passed (never skipped) in each group that lists it. Design D8's four named mutants are
 // `container-drops-system` (a type dropped from the table), `parent-walk-skipped`, `link-to-self` and the 1048 px pair in EQUIVALENT.
+// Run 1 (at f50dad4b4) killed 46 of 51. Three test repairs followed (a component view showing a system; a containment view's attributes;
+// a figure that is its own element's target, graph and containment) for component-admits-system, containment-attrs-dropped and
+// link-to-self; the other two survivors are listed in EQUIVALENT with their reasons.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -76,10 +79,8 @@ const MUTANTS = [
   ['root-typed-directory', LEVEL, "(element.root === true ? 'system' : 'directory')", "'directory'"],
   // --- where the findings and the stripping happen
   ['check-level-findings-dropped', CHECK, "findings.push(...levelFindings(walked, findings, checkBaseMaps(treeFacts, manifestFacts)));", "void 0;"],
-  ['derive-levels-not-stripped', DERIVE, "const subject = withoutLevels(withoutWalks(given));", "const subject = withoutWalks(given);"],
   ['field-version-path-not-replaced', DERIVE, "      for (const at of levelFieldVersionPaths(doc)) subsectionPaths.add(at);\n", ""],
   ['field-version-not-reported', DERIVE, "      for (const finding of levelFieldVersionFindings(doc)) add(finding); },", "      },"],
-  ['field-version-in-v17', LEVEL, "if (!hasModelForm(version) || hasLevelForm(version)) return [];", "if (!hasModelForm(version)) return [];"],
   ['v17-not-v16', SCHEMA, "version === LOCAL_DRAFT_SCHEMA_VERSION_V16 || hasLevelForm(version);", "version === LOCAL_DRAFT_SCHEMA_VERSION_V16;"],
   ['schema-document-no-levels', SCHEMA, "diagrams: withLevels(withBaseViews(object.properties['diagrams'] as ArraySchema)),", "diagrams: (withBaseViews(object.properties['diagrams'] as ArraySchema)),"],
   ['render-levels-not-passed', RENDER, "...(viewLevels.size === 0 ? {} : { viewLevels })", "...{}"],
@@ -115,6 +116,10 @@ const MUTANTS = [
 
 // A mutant no test can kill, with the reason; recorded, never run and never counted as killed.
 const EQUIVALENT = [
+  { id: 'derive-levels-not-stripped', file: DERIVE, old: "const subject = withoutLevels(withoutWalks(given));", new: "const subject = withoutWalks(given);",
+    reason: 'Both callers that can hand deriveFindings a v17 draft strip its levels first (check.ts and render.ts, each `doc = withoutLevels(withoutWalks(doc))` before the call; the mutants check-level-findings-dropped and render-levels-not-passed show both paths run), and the third caller, verify-text.ts, passes a synthetic subject with no diagrams. The strip inside deriveFindings is the documented contract for any later caller, not reachable today.' },
+  { id: 'field-version-in-v17', file: LEVEL, old: "if (!hasModelForm(version) || hasLevelForm(version)) return [];", new: "if (!hasModelForm(version)) return [];",
+    reason: 'levelFieldVersionPaths and levelFieldVersionFindings are read only inside deriveFindings, which reads the draft after withoutLevels; in a v17 draft that removes every `level` and `scope`, so with the version arm gone the functions still find no member to report.' },
   { id: 'graph-layer-on-1048', file: SITE, old: "    if (!walkableWidth(geometry.width)) return undefined;\n", new: "",
     reason: 'Design D8\'s "put the layer on a 1048 px drawing". No drawing the readable layout draws through an operator-agent dossier is 1048 px wide: it stacks every graph figure into a column (the R88 record\'s equivalent `width-guard-deleted`, the same guard, which a zoom-only layer now shares). `walkableWidth` itself is pinned at 1047, 1048 and 1049 by dossier-walk.test.ts.' },
   { id: 'containment-layer-on-1048', file: SITE, old: " && walkableWidth(layout.width);", new: ";",

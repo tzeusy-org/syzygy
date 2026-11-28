@@ -107,6 +107,22 @@ describe('zoom links (version 2.50)', () => {
     expect(figureOf(files.get('index.html')!, 'inside-web').startsWith('<figure data-visual-provenance="curated" data-view-level="component" data-view-scope="web" id="figure-inside-web">')).toBe(true);
   });
 
+  it('carries a containment view\'s level and scope before its id, and never links a figure to itself', () => {
+    const base = zoomContainmentInput();
+    const levelled = { ...base, local: { ...base.local, viewLevels: new Map([['workspace', { level: 'container', scope: 'packages' }], ...base.local.viewLevels!]) } } as Input;
+    const files = site(levelled), plain = site(withoutLevels(levelled));
+    const opening = (fig: string): string => fig.slice(0, fig.indexOf('>') + 1);
+    const was = opening(figureOf(plain.get('index.html')!, 'workspace'));
+    expect(was.endsWith(' id="figure-workspace">')).toBe(true);
+    expect(opening(figureOf(files.get('index.html')!, 'workspace')))
+      .toBe(was.replace(' id="figure-workspace">', ' data-view-level="container" data-view-scope="packages" id="figure-workspace">'));
+    // The workspace view is the target for packages, which it draws itself: no figure links to it.
+    for (const [file, text] of files) expect(text, file).not.toContain('href="#figure-workspace"');
+    // A graph view about b that draws b: its own target, so it carries no zoom link and no layer.
+    const own = { ...zoomInput(), local: { ...zoomInput().local, viewLevels: new Map([['flow', { level: 'container', scope: 'b' }]]) } } as Input;
+    for (const [file, text] of site(own)) if (file.endsWith('.html')) expect(text, file).not.toContain('zoom-');
+  });
+
   it('gives no zoom link where the element\'s own view is not produced, or the only view about it is a context view', () => {
     const { local, sources } = zoomInput();
     const draft = local.draft as unknown as { diagrams: Record<string, unknown>[] };

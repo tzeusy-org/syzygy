@@ -306,10 +306,11 @@ describe('schema v17: a view\'s level and scope (version 2.50)', () => {
   it('A view\'s level refuses an element of another level', async () => {
     const doc = levelDraft(MODEL(), [graphView('all', ['app', 'api', 'router', 'user'], []),
       lv(graphView('parts', ['api', 'router'], []), 'container', 'app'), lv(graphView('ctxv', ['app', 'api'], []), 'context', 'app'),
-      lv(graphView('comp', ['router', 'user'], []), 'component', 'api')]);
+      lv(graphView('comp', ['router', 'user'], []), 'component', 'api'), lv(graphView('compsys', ['router', 'app'], []), 'component', 'api')]);
     expect(await levelFindingsOf(A, doc)).toEqual([
       { kind: 'view-level', at: '$.diagrams[1].view.elements[1]', detail: 'parts: a container view shows no element of type module' },
       { kind: 'view-level', at: '$.diagrams[2].view.elements[1]', detail: 'ctxv: a context view shows no element of type package' },
+      { kind: 'view-level', at: '$.diagrams[4].view.elements[1]', detail: 'compsys: a component view shows no element of type system' },
     ]);
     // Without its levels the draft passes: the findings are this version's alone.
     expect(await findingsOf(A, unlevelled(doc))).toEqual(PASSED);
