@@ -1,14 +1,15 @@
-# Design — walk advice (version 2.48)
+# Design — walk advice (version 2.51)
 
-[Inferred] Version 2.48 of REQ-polaris-generation-034, for syzygy-3efd.35. It is drafted on `agent/syzygy-3efd.35` over view levels 2.47 (`dossier-view-levels`, row A-274, tag `polaris-dossier-view-levels-v2.47` once merged), which stands on imports corroboration 2.45 (A-273).
+[Inferred] Version 2.51 of REQ-polaris-generation-034, for syzygy-3efd.35. It is drafted on `agent/syzygy-3efd.35` over view levels 2.50 (`dossier-view-levels`, row A-274, tag `polaris-dossier-view-levels-v2.50` once merged), which stands on imports corroboration 2.49 (A-273).
 
 ## D1. The version label, the predecessor and the numbers
 
-- [Observed] This change first claimed 2.47 over view levels 2.45, and moved to 2.48 when rough-edge markers took 2.44 on main (A-338, PR #1047) and pushed imports corroboration to 2.45 and view levels to 2.47 (PR #1046); 2.46 stays claimed by the URL lean run (REQ-025 and 047, row A-340 on open PR #1045). Its tag is `polaris-dossier-walk-advice-v2.48`.
+- [Observed] This change first claimed 2.47 over view levels 2.45, and moved to 2.48 when rough-edge markers took 2.44 on main (A-338, PR #1047) and pushed imports corroboration to 2.45 and view levels to 2.47 (PR #1046); 2.46 stays claimed by the URL lean run (REQ-025 and 047, row A-340 on open PR #1045). Then docs and code took 2.48 on main (A-342, PR #1048), moving imports corroboration to 2.49 and view levels to 2.50, so this change moved again, to 2.51. Its tag is `polaris-dossier-walk-advice-v2.51`.
 - [Observed] No draft schema or brief version is taken: the draft states nothing new and the brief carries no rule of check's advice (D2).
-- [Observed] The build script (`docs/evidence/syzygy-3efd-35/walk_advice_build_spec.py`) edits the predecessor's bytes at anchors it asserts occur exactly once: the end of 2.47's earlier-schema paragraph ("no migration yields a v17 draft."), after which the three new paragraphs go, and the four Form lines, each extended after its 2.47 sentence. The scenarios precede the one Form line. If another REQ-034 version lands first, the script is re-run over it with the predecessor path changed.
-- [Observed] REQ-034 goes from 321 to 328 scenarios.
-- [Observed] Rebuilt by the same script over view levels 2.47 (sha256 `ccf8e2d4…c41c`) with only the version labels changed: every anchor still occurs once. This spec now hashes to `cec47eee01fe6f2a43b3ffbcf68b18dfb33cdcae68605ea33bf97acb312bc401`; the text review 1 read and the repairs after it are carried with their version numbers relabelled (2.45 to 2.47, 2.47 to 2.48). No review has read the repairs or this rebuild.
+- [Observed] The build script (`docs/evidence/syzygy-3efd-35/walk_advice_build_spec.py`) edits the predecessor's bytes at anchors it asserts occur exactly once: the end of 2.50's earlier-schema paragraph ("no migration yields a v17 draft."), after which the three new paragraphs go, and the four Form lines, each extended after its 2.50 sentence. The scenarios precede the one Form line. If another REQ-034 version lands first, the script is re-run over it with the predecessor path changed.
+- [Observed] REQ-034 goes from 329 to 336 scenarios.
+- [Observed] Rebuilt by the same script over view levels 2.47 (sha256 `ccf8e2d4…c41c`) with only the version labels changed: every anchor still occurs once. This spec now hashes to `cec47eee01fe6f2a43b3ffbcf68b18dfb33cdcae68605ea33bf97acb312bc401`; the text review 1 read and the repairs after it are carried with their version numbers relabelled (2.45 to 2.47, 2.47 to 2.48). No review read that rebuild.
+- [Observed] Rebuilt again by the same script over view levels 2.50 (sha256 `4e291b8d…3f9d`) with only the version labels changed: every anchor still occurs once. This spec now hashes to `84ed7449a67e00da17c03ec921e5b419d06f17c1f04df55c0d548abdaa8d62ca`, with the version numbers relabelled again (2.47 to 2.50, 2.48 to 2.51). No review has read the repairs or the rebuilds.
 
 ## D2. Advice on the report, not a reader standard
 
@@ -31,9 +32,9 @@
 ## D5. Composition and bytes
 
 - [Inferred] 2.40 walks: only walks with no finding at or below their path are read, so every step's element and block resolve. Disposition does not matter: a walk on a figure not produced is still the author's text and may be produced later.
-- [Inferred] 2.47 levels: the rule reads no `level`, `scope`, zoom link or `data-view-*`.
-- [Inferred] 2.35 screening: the detail names `<diagram>` and `<block>`, identities as 2.40 and 2.47 treat them, and a step number; never a paragraph word, a label, a base path or a display name. 2.35's own screening is narrower (details its derived-base rules introduce) and is not claimed for every detail. A base element that is withheld, Unknown in screening or not admitted for output at check is not read, so the advisory is never a one-bit signal about a base label 2.35 keeps back.
-- [Inferred] Bytes: only the report's `walkAdvice`. Findings, records, `figureAdvice`, `readerAdvice`, `run-advice.json`, `machine.json`, `dossier.json`, reading ledger, size report, pages, brief and provider mode are 2.47's. The earlier "checked exactly as" statements compare findings, records and rendered bytes; the spec says they do not reach this member, as 2.37's `choiceFloor` added a report member for existing schemas.
+- [Inferred] 2.50 levels: the rule reads no `level`, `scope`, zoom link or `data-view-*`.
+- [Inferred] 2.35 screening: the detail names `<diagram>` and `<block>`, identities as 2.40 and 2.50 treat them, and a step number; never a paragraph word, a label, a base path or a display name. 2.35's own screening is narrower (details its derived-base rules introduce) and is not claimed for every detail. A base element that is withheld, Unknown in screening or not admitted for output at check is not read, so the advisory is never a one-bit signal about a base label 2.35 keeps back.
+- [Inferred] Bytes: only the report's `walkAdvice`. Findings, records, `figureAdvice`, `readerAdvice`, `run-advice.json`, `machine.json`, `dossier.json`, reading ledger, size report, pages, brief and provider mode are 2.50's. The earlier "checked exactly as" statements compare findings, records and rendered bytes; the spec says they do not reach this member, as 2.37's `choiceFloor` added a report member for existing schemas.
 
 ## D6. Scenarios
 
@@ -51,11 +52,11 @@
 | Finding | Disposition |
 |---|---|
 | 1: the "one new word" cases carry two new words | Repaired: `The request router, 2.` and `The request router and the handler.`, each with exactly one new word; the reference script adds both and a digits-dropped mutant that the first kills; D7 lists the mutant. |
-| 2: "schema v15 or earlier" read through the forwarding rules | Repaired: "a draft whose schema is earlier than v16 (the readings of versions 2.40 and 2.47 that extend a named schema do not apply to this sentence)". |
+| 2: "schema v15 or earlier" read through the forwarding rules | Repaired: "a draft whose schema is earlier than v16 (the readings of versions 2.40 and 2.50 that extend a named schema do not apply to this sentence)". |
 | 3: characters, "digit", Unicode version and normalization | Repaired: code point by code point with lone surrogates neither L nor N; "a letter nor a number"; the runtime's Unicode version and no normalization form, stated with its consequence (D3). |
 | 4: case folding of A to Z only | No repair: intended and stated, as the reviewer records. |
 | 5: degenerate inputs | Repaired: a paragraph with no word restates any label, and a label with no word is restated only by such a paragraph or one of filler alone. |
-| 6: the 2.35 claim overstated; withheld base labels | Repaired: the detail treats identities as 2.40 and 2.47 do and carries no value 2.35 screens; a withheld, screening-Unknown or unadmitted base element's step is not read or counted; the base scenario adds the withheld case (D5). |
+| 6: the 2.35 claim overstated; withheld base labels | Repaired: the detail treats identities as 2.40 and 2.50 do and carries no value 2.35 screens; a withheld, screening-Unknown or unadmitted base element's step is not read or counted; the base scenario adds the withheld case (D5). |
 | 7: no deep dive walk or cross-walk order | Repaired: the first scenario adds a deep dive's walk, its path and its place after the section's. |
 | 8 to 11: passes | No repair. |
 | 12: prose | Repaired: "with a threshold of zero new words"; the base-end exception is its own sentence. |

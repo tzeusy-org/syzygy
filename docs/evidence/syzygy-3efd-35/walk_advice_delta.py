@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Generate SEMANTIC-DELTA.md for the walk advice version (over view levels 2.47) from the bytes of the predecessor and the new text. Usage: walk_advice_delta.py <worktree>."""
+"""Generate SEMANTIC-DELTA.md for the walk advice version (over view levels 2.50) from the bytes of the predecessor and the new text. Usage: walk_advice_delta.py <worktree>."""
 import difflib
 import hashlib
 import pathlib
 import sys
 
 W = pathlib.Path(sys.argv[1])
-V = '2.48'
+V = '2.51'
 PRED = 'openspec/changes/dossier-view-levels/proposed/polaris-generation/spec.md'
 NEW = 'openspec/changes/dossier-walk-advice/proposed/polaris-generation/spec.md'
 pb, nb_ = (W / PRED).read_bytes(), (W / NEW).read_bytes()
@@ -59,7 +59,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `{PRED}` (dossier view levels version 2.47, row A-274, tag `polaris-dossier-view-levels-v2.47`; sha256 `{sha(pb)}`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces that text, composed after version 2.47. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.47's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `{PRED}` (dossier view levels version 2.50, row A-274, tag `polaris-dossier-view-levels-v2.50`; sha256 `{sha(pb)}`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces that text, composed after version 2.50. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.50's, byte for byte.
 
 ## Carried unchanged
 
