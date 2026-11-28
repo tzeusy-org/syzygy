@@ -5,11 +5,12 @@ import {
   CONTAINMENT_KIND, DOSSIER_FORMAT, OWNER_TOPICS, PAGE_SINK_CONTRACT, checkDraftQuotes, diagramToMermaid, figureToMermaid, isDossierPagePath, parseDossierManifest, readerCost, reviewVerdict, scanDossierPage, sourceTextById, withoutReviewStatusRegion,
   generationSourceIdentity, generationSpanRange, validateGenerationSources,
   type DossierDraft, type DossierManifest, type DraftBlock, type DraftContainmentGroup, type DraftDiagram, type DraftElement, type DraftFigure, type DraftFigureElement, type DraftParagraph, type EpistemicMarking, type GenerationSource, type LocalPageItem,
-  type LocalBase, type LocalBlock, type LocalDerivedFact, type LocalDerivedStructure, type LocalManifestFact, type LocalManifestFacts, type LocalManifestFileEntry, type LocalManifestRecognizerEntry, type LocalEdgeRelation, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
+  type LocalBase, type LocalCodeMarks, type LocalBlock, type LocalDerivedFact, type LocalDerivedStructure, type LocalManifestFact, type LocalManifestFacts, type LocalManifestFileEntry, type LocalManifestRecognizerEntry, type LocalEdgeRelation, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { CALLED_HEIGHT, READABLE_SPACING, containmentBoxStyle, diagramNodeBoxes, walkBoxStyle, walkableWidth, layoutContainment, layoutDiagram, layoutSequence, layoutSwimlane, renderContainmentSvg, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg, type BoxDecoration, type ContainmentClaim, type ContainmentGroupInput } from './diagram-layout.js';
 import { figureLayerCss } from './dossier-walk.js';
+import { CODE_FRAME_CSS, CODE_LINE_BREAK_UNCERTAIN } from './dossier-code-frame.js';
 import { BASE_FIGURE_CSS, baseChip, baseHiddenItems, baseLegendEntry, baseMachine, baseNotice, baseTallyClause } from './dossier-base.js';
 import { TEST_NAMES_LEGEND, TEST_NAMES_PAGE, testNamesMachine, testNamesPage } from './dossier-test-names.js';
 import { ROUGH_EDGES_LEGEND, ROUGH_EDGES_PAGE, roughEdgesMachine, roughEdgesPage } from './dossier-rough-edges.js';
@@ -737,6 +738,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
         }
         // Entity-encoded text, so a cited `<`, `&` or `</pre>` is shown, never parsed (v1.3 note 1).
         const lines = located.map(part => `<code class="verified-quote" data-quote-source="${escape(part.sourceId)}" data-quote-start="${part.start}" data-quote-end="${part.end}">${escape(part.text).replace(/\r/gu, '&#13;')}</code>`).join('');
+        const marks = local?.codeMarks?.get(id);
+        if (marks !== undefined) {
+          return claim('figure', id, 'observed', `${caption}${numberedExcerpt(from, e.path, e.startLine, e.endLine, located.map(part => part.text).join(''), lines, marks)}<p class="code-anchor">${mark(from, 'observed')} ${located.map(part => anchorLink(from, part)).join(' ')}</p>`, ` class="code-excerpt"${attrs}${curated}`);
+        }
         return claim('figure', id, 'observed', `${caption}<pre>${lines}</pre><p class="code-anchor">${mark(from, 'observed')} ${located.map(part => anchorLink(from, part)).join(' ')}</p>`, ` class="code-excerpt"${attrs}${curated}`);
       }
     }
@@ -798,6 +803,32 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   };
   // A v16 figure walk (version 2.40): the pages holding one carry its style rules.
   const walkPages = new Set<string>();
+  // A schema-v18 draft's verified code excerpt (REQ-polaris-generation-034 version 2.54, syzygy-3efd.33): the frame of a gutter of the
+  // file's own line numbers, the excerpt's `<pre>` byte for byte, and bands under its highlighted lines; then the sentence naming the
+  // highlighted lines and the list of notes. Where the lines hold a byte a browser may count otherwise than Syzygy (a carriage return no
+  // line feed follows, U+000B, U+000C, U+0085, U+2028 or U+2029), no frame: the `<pre>` alone, then the sentence and the list. A page
+  // holding a frame carries the frame's style rules.
+  const codeFramePages = new Set<string>();
+  const numberedExcerpt = (from: string, path: string, s: number, t: number, text: string, pre: string, marks: LocalCodeMarks): string => {
+    const where = `${escape(path)}, ${s === t ? `line ${s}` : `lines ${s}–${t}`}`;
+    const shown = (n: number): number => n - s + 1;
+    const sentence = marks.highlights.length === 0 ? '' : `<p class="code-highlights">Highlighted: ${marks.highlights.map(h => (h.startLine === h.endLine
+      ? `line ${h.startLine} (shown line ${shown(h.startLine)})` : `lines ${h.startLine}–${h.endLine} (shown lines ${shown(h.startLine)}–${shown(h.endLine)})`)).join(', ')}.</p>`;
+    const notes = marks.notes.length === 0 ? '' : `<ol class="code-notes" aria-label="Notes on ${where}">${marks.notes.map((note, k) =>
+      `<li>Line ${note.line} (shown line ${shown(note.line)}) <a class="code-note" href="#block-${escape(note.block)}">Read note ${k + 1}<span class="visually-hidden"> on ${where}</span></a></li>`).join('')}</ol>`;
+    if (CODE_LINE_BREAK_UNCERTAIN.test(text)) return `<pre>${pre}</pre>${sentence}${notes}`;
+    codeFramePages.add(from);
+    const numbers: string[] = [];
+    const bands: string[] = [];
+    for (let n = s; n <= t; n++) {
+      const covered = marks.highlights.some(h => h.startLine <= n && n <= h.endLine);
+      const note = marks.notes.findIndex(entry => entry.line === n);
+      numbers.push(`<span class="code-number${covered ? ' code-highlighted' : ''}">${n}</span>${note === -1 ? '' : ` <span class="code-note-mark">${note + 1}</span>`}`);
+      bands.push(covered ? '<span class="code-band"> </span>' : '<span class="code-unbanded"></span>');
+    }
+    const banded = marks.highlights.length === 0 ? '' : `<pre class="code-bands" aria-hidden="true">${bands.join('\n')}</pre>`;
+    return `<div class="code-frame"><pre class="code-gutter" aria-hidden="true">${numbers.join('\n')}</pre><pre>${pre}</pre>${banded}</div>${sentence}${notes}`;
+  };
   // A walk over a figure drawn on `from`, where the draft walks it and its drawing is not 1048 px wide: the layer laid over the drawing,
   // one box per node in the drawing's node order, and the walk's list. A box takes its step's id and badge, and a link to the cited lines
   // its node's first citation's link lands on, where the node is not withheld, not a base element and that citation has a source page:
@@ -1239,7 +1270,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const add = (path: string, depth: number, pageTitle: string, main: string | (() => { markup: string; styles: string }), mapCss = ''): void => {
     pageTitles.set(path, pageTitle);
     const draw = (markup: string, styles: string): string =>
-      page(`${pageTitle} — ${title}`, path, nav(path), legended(path, markup), chrome, `${figureKindsCss(figurePages.has(path), containmentPages.has(path))}${basePages.has(path) ? BASE_FIGURE_CSS : ''}${figureLayerCss(walkPages.has(path), zoomPages.has(path))}`, styles, subsectionPages.has(path));
+      page(`${pageTitle} — ${title}`, path, nav(path), legended(path, markup), chrome, `${figureKindsCss(figurePages.has(path), containmentPages.has(path))}${basePages.has(path) ? BASE_FIGURE_CSS : ''}${figureLayerCss(walkPages.has(path), zoomPages.has(path))}${codeFramePages.has(path) ? CODE_FRAME_CSS : ''}`, styles, subsectionPages.has(path));
     if (typeof main === 'string') files.set(path, draw(main, mapCss));
     else {
       files.set(path, '');

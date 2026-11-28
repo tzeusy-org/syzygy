@@ -8,10 +8,13 @@ import type { RunConfigRefusal } from './run-config.js';
 import { readRunRecord, type RecordedRunConfig } from './run-record.js';
 import { REVIEW_PACKET_DIR, REVIEW_VERDICT_FILE, REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
+import { costLine, isSessionUsage, sessionUsage } from './session-usage.js';
+import { isRecord } from '@syzygy/support';
 import { RUN_TREE_BOUNDS, readBoundedText, readCause } from './run-tree-read.js';
 
 /** `syzygy dossier status <run>`: the run's state, limits spent, open findings and reviews still
- * required, read from the run directory. Status reads and writes nothing else. Everything it reports
+ * required, read from the run directory; before close, a launched run's cost line is also read from the sessions' transcripts under
+ * its agents root (version 2.45, `session-usage.ts`). Status reads nothing else and writes nothing. Everything it reports
  * comes from stored files the agent sessions can write, so every value is labelled Inferred
  * (owner direction `POLARIS-DOSSIER-LOCAL-AGENT-RECORDS-2026-10-05`). */
 
@@ -55,6 +58,9 @@ export interface StatusReport {
     readonly deadline: string;
     readonly agentUsage: string;
   };
+  /** The one cost line (version 2.45): from the session usage the Execution Record carries once the run is closed; before that, read now
+   * from the launched sessions' own transcripts, and said to be read now. */
+  readonly cost: string;
   /** Whether the run's Execution Record exists, and when it does not, why: not closed yet, or never, because the deadline passed first. */
   readonly executionRecord: string;
   readonly openFindings: string;
@@ -93,6 +99,19 @@ export function closedUsage(file: string): string {
     }
   }
   return `${NOT_RECORDED}; the Execution Record carries no usage in the form close writes`;
+}
+
+export const COST_NOT_IN_RECORD = 'Cost: not recorded. This run was closed before the Execution Record carried session usage (version 2.45), and status does not read it again.';
+export const COST_RECORD_UNREADABLE = 'Cost: Unknown. The Execution Record cannot be read, or carries session usage in no form close writes.';
+export const COST_READ_NOW = 'read now, before close; the run total may still grow';
+
+/** The cost line of a closed run, from the session usage its Execution Record carries. */
+export function closedCost(file: string): string {
+  let record: unknown;
+  try { record = parseBoundedJson(readBoundedText(file, CLOSE_RECORD_MAX_BYTES), CLOSE_RECORD_JSON_LIMITS); } catch { return COST_RECORD_UNREADABLE; }
+  if (!isRecord(record)) return COST_RECORD_UNREADABLE;
+  if (!Object.hasOwn(record, 'sessionUsage')) return COST_NOT_IN_RECORD;
+  return isSessionUsage(record['sessionUsage']) ? costLine(record['sessionUsage']).text : COST_RECORD_UNREADABLE;
 }
 
 export const NO_RECORD_DEADLINE_PASSED = 'not written, and it will not be: the deadline passed before the run was closed, and close, like every step, refuses after it; the agent usage is therefore not recorded';
@@ -185,6 +204,7 @@ export function runStatus(runDir: string, now: () => number = Date.now): StatusR
           : passed ? `${NOT_RECORDED}; the deadline passed before the run was closed, so no Execution Record will carry it, and Syzygy cannot observe the agent sessions' usage`
             : 'not recorded; Syzygy cannot observe the agent sessions\' usage, and the run is not closed',
       },
+      cost: steps.closed ? closedCost(path.join(run, RUN_LAYOUT.record)) : `${costLine(sessionUsage(run)).text} (${COST_READ_NOW})`,
       executionRecord: steps.closed ? `written at close: ${RUN_LAYOUT.record}` : passed ? NO_RECORD_DEADLINE_PASSED : 'not written: the run is not closed',
       openFindings: NOT_RECORDED,
       reviewsStillRequired: ['inventory', 'fidelity review', 'rendered-design review'],

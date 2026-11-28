@@ -876,6 +876,19 @@ STEP_MEASURES_SUBJECTS = {
     STEP_MEASURES_SPEC: "f7ff5706c26b937d991e24183d5dcb29091fefe580b066ccbfc32540fde7ea05",
 }
 STEP_MEASURES_BOUND_PARTS = len(STEP_MEASURES_SUBJECTS)
+# The v2.45 session usage and cost line (syzygy-5dhm.26): one MODIFIED REQ-polaris-generation-033
+# after the v2.31 close step measures, adopted by an agent row and its version tag.
+SESSION_USAGE_CHANGE = "dossier-session-usage"
+SESSION_USAGE_HOME = f"{CHANGES}/{SESSION_USAGE_CHANGE}"
+SESSION_USAGE_SPEC = f"{SESSION_USAGE_HOME}/proposed/polaris-generation/spec.md"
+SESSION_USAGE_UNION = f"{SESSION_USAGE_HOME}/GOVERNING-DEPENDENCIES.json"
+SESSION_USAGE_TAG = "polaris-dossier-session-usage-v2.45"
+SESSION_USAGE_STATUS_PREFIX = f"[Session usage amendment 2.45]({SESSION_USAGE_HOME})"
+SESSION_USAGE_REPLACES = (POLARIS_ID + "033",)
+SESSION_USAGE_SUBJECTS = {
+    SESSION_USAGE_SPEC: "e0de4aa4a0667fae7bbb4dc6cf86bb053ea3bab8211fefab025ebcdf52c1f826",
+}
+SESSION_USAGE_BOUND_PARTS = len(SESSION_USAGE_SUBJECTS)
 # The v2.28 coverage-hold amendment (syzygy-5dhm.29): one MODIFIED
 # REQ-polaris-generation-035 (the fidelity review waits until every listed
 # inventory entry has an outcome) after its v2.18 run-tree read-bounds text,
@@ -3332,6 +3345,33 @@ def step_measures_binding(root):
     )
 
 
+def is_session_usage_row(line):
+    return _is_reviewed_version_row(line, SESSION_USAGE_TAG, SESSION_USAGE_SUBJECTS)
+
+
+def session_usage_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_session_usage_row(line)]
+
+
+def session_usage_disposition(root, rows):
+    if SESSION_USAGE_TAG is not None and len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), SESSION_USAGE_TAG,
+                                    SESSION_USAGE_SUBJECTS, plain_revert=True)
+    return None
+
+
+def session_usage_binding(root):
+    """Apply session usage only over the effective close-measures REQ-033."""
+    return _reviewed_version_binding(
+        root, session_usage_rows(root), session_usage_disposition,
+        version_tag=SESSION_USAGE_TAG, subjects_map=SESSION_USAGE_SUBJECTS, spec=SESSION_USAGE_SPEC,
+        predecessor=step_measures_binding, predecessor_label="v2.31 close measures", version="v2.45",
+        label="dossier session usage",
+    )
+
+
 def is_covhold_row(line):
     """A ledger row claiming the v2.28 coverage-hold amendment, well formed or not."""
     if not line.startswith("|"):
@@ -5541,6 +5581,15 @@ def check_outcomes(root, report):
         subjects_seen += STEP_MEASURES_BOUND_PARTS
     r1 += step_measures_records
     r2 += step_measures_subjects
+    session_usage_retired_by = session_usage_disposition(root, session_usage_rows(root))
+    session_usage_amendment, session_usage_records, session_usage_subjects = session_usage_binding(root)
+    if session_usage_retired_by:
+        records += 2
+    elif session_usage_amendment is not None or session_usage_records or session_usage_subjects:
+        records += 1
+        subjects_seen += SESSION_USAGE_BOUND_PARTS
+    r1 += session_usage_records
+    r2 += session_usage_subjects
     covhold_retired_by = covhold_disposition(root, covhold_rows(root))
     covhold_amendment, covhold_records, covhold_subjects = covhold_binding(root)
     if covhold_retired_by:
@@ -5820,6 +5869,8 @@ def check_outcomes(root, report):
         retirement += f"; v2.30 inactive by {scripted_grade_retired_by}"
     if step_measures_retired_by:
         retirement += f"; v2.31 inactive by {step_measures_retired_by}"
+    if session_usage_retired_by:
+        retirement += f"; v2.45 inactive by {session_usage_retired_by}"
     if readmit_retired_by:
         retirement += f"; v2.13 inactive by {readmit_retired_by}"
     report.add("R1", "terminal outcome for every child", records, r1,
@@ -7041,6 +7092,16 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, step_measures_amendment, STEP_MEASURES_REPLACES)
                 pa += extra_a
                 pb += extra_b
+        session_usage_amendment, session_usage_records, session_usage_subjects = session_usage_binding(root)
+        findings += session_usage_records + session_usage_subjects
+        if session_usage_amendment is not None:
+            if step_measures_amendment is None:
+                findings.append("POLARIS: dossier session usage requires effective close measures v2.31")
+            else:
+                a, extra_a = compose_figure_by_id(a, session_usage_amendment, SESSION_USAGE_REPLACES)
+                b, extra_b = compose_figure_by_name(b, session_usage_amendment, SESSION_USAGE_REPLACES)
+                pa += extra_a
+                pb += extra_b
         covhold_amendment, covhold_records, covhold_subjects = covhold_binding(root)
         findings += covhold_records + covhold_subjects
         if covhold_amendment is not None:
@@ -7805,6 +7866,18 @@ def polaris_expected(root, findings):
             findings.append("POLARIS dossier close measures: cannot count predecessor and successor for 033")
         else:
             n_scen += current[ident] - prior[ident]
+    session_usage_amendment, _records, _subjects = session_usage_binding(root)
+    if session_usage_amendment is not None:
+        # Only 033 moves, after close measures v2.31.
+        ident = SESSION_USAGE_REPLACES[0]
+        prior = {b["ids"][0]: len(b["scenarios"]) for b in _polaris_blocks_manual(step_measures_amendment or "")
+                 if len(b["ids"]) == 1}
+        current = {b["ids"][0]: len(b["scenarios"]) for b in _polaris_blocks_manual(session_usage_amendment)
+                   if len(b["ids"]) == 1}
+        if set(current) != {ident} or ident not in prior:
+            findings.append("POLARIS dossier session usage: cannot count predecessor and successor for 033")
+        else:
+            n_scen += current[ident] - prior[ident]
     covhold_amendment, _records, _subjects = covhold_binding(root)
     if covhold_amendment is not None:
         # Only 035 moves, after the run-tree read bounds v2.18.
@@ -8144,6 +8217,9 @@ def check_generated(root, pop, report):
     step_measures_amendment, _records, _subjects = step_measures_binding(root)
     if step_measures_amendment is not None:
         files += tracked(root, STEP_MEASURES_HOME)
+    session_usage_amendment, _records, _subjects = session_usage_binding(root)
+    if session_usage_amendment is not None:
+        files += tracked(root, SESSION_USAGE_HOME)
     covhold_amendment, _records, _subjects = covhold_binding(root)
     if covhold_amendment is not None:
         files += tracked(root, COVHOLD_HOME)
@@ -8271,6 +8347,7 @@ def check_generated(root, pop, report):
                         (qfile_amendment, QFILE_UNION),
                         (scripted_grade_amendment, SCRIPTED_GRADE_UNION),
                         (step_measures_amendment, STEP_MEASURES_UNION),
+                        (session_usage_amendment, SESSION_USAGE_UNION),
                         (covhold_amendment, COVHOLD_UNION),
                         (term_brief_amendment, TERM_BRIEF_UNION),
                         (qkind_amendment, QKIND_UNION),
@@ -8812,6 +8889,24 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls dossier close measures v2.31 adopted while it is not in force")
         if any("Agent adoption" in line for line in rows.get(STEP_MEASURES_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls dossier close measures v2.31 adopted while it is not in force")
+    session_usage_amendment, _records, _subjects = session_usage_binding(root)
+    session_usage_fields = [line.strip() for line in visible_route_lines(status)
+                            if line.strip().startswith(SESSION_USAGE_STATUS_PREFIX)]
+    if session_usage_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and SESSION_USAGE_TAG in line
+                   for line in rows.get(SESSION_USAGE_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route dossier session usage v2.45 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = session_usage_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or session_usage_fields != [f"{SESSION_USAGE_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route dossier session usage v2.45 and its adoption {identity}")
+    elif SESSION_USAGE_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in session_usage_fields):
+            findings.append(f"`{STATUS}` calls dossier session usage v2.45 adopted while it is not in force")
+        if any("Agent adoption" in line for line in rows.get(SESSION_USAGE_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls dossier session usage v2.45 adopted while it is not in force")
     covhold_amendment, _records, _subjects = covhold_binding(root)
     covhold_fields = [line.strip() for line in visible_route_lines(status)
                      if line.strip().startswith(COVHOLD_STATUS_PREFIX)]
@@ -9766,6 +9861,7 @@ def inputs(root):
     paths |= {QFILE_UNION, *QFILE_SUBJECTS}
     paths |= {SCRIPTED_GRADE_UNION, *SCRIPTED_GRADE_SUBJECTS}
     paths |= {STEP_MEASURES_UNION, *STEP_MEASURES_SUBJECTS}
+    paths |= {SESSION_USAGE_UNION, *SESSION_USAGE_SUBJECTS}
     paths |= {COVHOLD_UNION, *COVHOLD_SUBJECTS}
     paths |= {TERM_BRIEF_UNION, *TERM_BRIEF_SUBJECTS}
     paths |= {QKIND_UNION, *QKIND_SUBJECTS}
@@ -10179,6 +10275,10 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     step_retired = step_measures_disposition(tree, step_rows)
     step_records = 2 if step_retired else int(bool(step_rows))
     step_subjects = STEP_MEASURES_BOUND_PARTS if step_rows and not step_retired else 0
+    usage_rows_now = session_usage_rows(tree)
+    usage_retired = session_usage_disposition(tree, usage_rows_now)
+    usage_records = 2 if usage_retired else int(bool(usage_rows_now))
+    usage_subjects = SESSION_USAGE_BOUND_PARTS if usage_rows_now and not usage_retired else 0
     qkind_rows_now = qkind_rows(tree)
     qkind_retired = qkind_disposition(tree, qkind_rows_now)
     qkind_records = 2 if qkind_retired else int(bool(qkind_rows_now))
@@ -10263,7 +10363,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                             and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_readmit_row(line) and not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_impwit_row(line) and not is_viewlvl_row(line) and not is_walkadv_row(line) and not is_walkerr_row(line) and not is_codeex_row(line) and not is_vlerr_row(line) and not is_leanrun_row(line)
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_session_usage_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_impwit_row(line) and not is_viewlvl_row(line) and not is_walkadv_row(line) and not is_walkerr_row(line) and not is_codeex_row(line) and not is_vlerr_row(line) and not is_leanrun_row(line)
                       and not is_infra_row(line)
                       and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line) and not is_worth_row(line)
                       and not is_edit_account_row(line))
@@ -10279,8 +10379,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records - step_records - qkind_records - figplan_records - vbase_records - choice_records - migpar_records - impfacts_records - walk_records - tnames_records - migbound_records - rough_records - doccode_records - impwit_records - viewlvl_records - walkadv_records - walkerr_records - codeex_records - vlerr_records - leanrun_records
-            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects - step_subjects - qkind_subjects - figplan_subjects - vbase_subjects - choice_subjects - migpar_subjects - impfacts_subjects - walk_subjects - tnames_subjects - migbound_subjects - rough_subjects - doccode_subjects - impwit_subjects - viewlvl_subjects - walkadv_subjects - walkerr_subjects - codeex_subjects - vlerr_subjects - leanrun_subjects
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records - step_records - usage_records - qkind_records - figplan_records - vbase_records - choice_records - migpar_records - impfacts_records - walk_records - tnames_records - migbound_records - rough_records - doccode_records - impwit_records - viewlvl_records - walkadv_records - walkerr_records - codeex_records - vlerr_records - leanrun_records
+            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects - step_subjects - usage_subjects - qkind_subjects - figplan_subjects - vbase_subjects - choice_subjects - migpar_subjects - impfacts_subjects - walk_subjects - tnames_subjects - migbound_subjects - rough_subjects - doccode_subjects - impwit_subjects - viewlvl_subjects - walkadv_subjects - walkerr_subjects - codeex_subjects - vlerr_subjects - leanrun_subjects
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
             - (DERIVED_BOUND_PARTS if had_derived else 0)
@@ -10438,7 +10538,7 @@ def url_source_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_url_source_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_impwit_row(line) and not is_viewlvl_row(line) and not is_walkadv_row(line) and not is_walkerr_row(line) and not is_codeex_row(line) and not is_vlerr_row(line) and not is_leanrun_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_session_usage_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_impwit_row(line) and not is_viewlvl_row(line) and not is_walkadv_row(line) and not is_walkerr_row(line) and not is_codeex_row(line) and not is_vlerr_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -13419,7 +13519,7 @@ def reach_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_reach_row(line) and not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_impwit_row(line) and not is_viewlvl_row(line) and not is_walkadv_row(line) and not is_walkerr_row(line) and not is_codeex_row(line) and not is_vlerr_row(line) and not is_leanrun_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_session_usage_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_impwit_row(line) and not is_viewlvl_row(line) and not is_walkadv_row(line) and not is_walkerr_row(line) and not is_codeex_row(line) and not is_vlerr_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -13539,7 +13639,7 @@ def raw_read_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_impwit_row(line) and not is_viewlvl_row(line) and not is_walkadv_row(line) and not is_walkerr_row(line) and not is_codeex_row(line) and not is_vlerr_row(line) and not is_leanrun_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_session_usage_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_impwit_row(line) and not is_viewlvl_row(line) and not is_walkadv_row(line) and not is_walkerr_row(line) and not is_codeex_row(line) and not is_vlerr_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "01234567"
@@ -13611,7 +13711,7 @@ def treeread_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_impwit_row(line) and not is_viewlvl_row(line) and not is_walkadv_row(line) and not is_walkerr_row(line) and not is_codeex_row(line) and not is_vlerr_row(line) and not is_leanrun_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_session_usage_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_impwit_row(line) and not is_viewlvl_row(line) and not is_walkadv_row(line) and not is_walkerr_row(line) and not is_codeex_row(line) and not is_vlerr_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "89abcdef"
@@ -13696,7 +13796,7 @@ def verify_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line))
+                      if not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_session_usage_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -13826,7 +13926,7 @@ def qfile_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line))
+                      if not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_session_usage_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -13957,7 +14057,7 @@ def scripted_grade_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_scripted_grade_row(line) and not is_step_measures_row(line))
+                      if not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_session_usage_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -14051,7 +14151,7 @@ def step_measures_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_step_measures_row(line))
+                      if not is_step_measures_row(line) and not is_session_usage_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -14126,6 +14226,100 @@ def step_measures_cases(tmp, base, witnesses, failures):
             and not found and retired["POLARIS"] == prior)
     record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 033", found, held, baseline=True)
 
+
+
+def session_usage_cases(tmp, base, witnesses, failures):
+    """Guard the REQ033 succession over close measures, the checked spec bytes and retirement."""
+    original = read_text(base, SESSION_USAGE_SPEC)
+    if original is None or SESSION_USAGE_TAG is None or step_measures_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expected, found, held, baseline=False):
+        mutant = f"session-usage-{name}"
+        witnesses.append({"mutant": mutant, "path": rel, "old": old, "new": new,
+                          "expected": expected, "failed": found,
+                          "outcome": ("held" if baseline else "killed") if held else "SURVIVED"})
+        if not held:
+            failures.append(mutant)
+
+    tree = Path(tmp) / "dossier-session-usage"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_session_usage_row(line))
+    ledger.write_text(pending)
+    before, before_findings = census(tree)
+    prior = before["POLARIS"]
+    requirement = SESSION_USAGE_REPLACES[0]
+    held = (session_usage_binding(tree) == (None, [], []) and not before_findings
+            and len(prior[requirement]["scenarios"]) == 25)
+    record("pending", AGENT_ADOPTIONS, "<no row>", "<unchanged>", "prior 033 has 25 scenarios",
+           before_findings, held, baseline=True)
+
+    oid = "0123456789abcdef0123456789abcdef01234567"
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{SESSION_USAGE_SPEC}"
+    row = (f"| A-999 | 2026-11-27 | `{oid}` | [spec]({snapshot}) | Selftest | "
+           f"`git revert -m 1 {oid}` | `{SESSION_USAGE_TAG}` |\n")
+    later = "f" * 40
+    unrelated = f"| A-1001 | 2026-11-27 | `{later}` | "
+    citations = (
+        ("prior-snapshot", unrelated + f"[prior spec]({snapshot}) | Other work | `git revert {later}` | — |\n"),
+        ("tag-in-reason", unrelated + f"Other work | `{SESSION_USAGE_TAG}` | `git revert {later}` | — |\n"),
+    )
+    for state, prefix, expected in (("pending", pending, None), ("adopted", pending + row, original)):
+        for name, citation in citations:
+            ledger.write_text(prefix + citation)
+            text, r1, r2 = session_usage_binding(tree)
+            record(f"{state}-{name}", AGENT_ADOPTIONS, "<no citation>", citation,
+                   "an unrelated row does not claim this adoption", r1 + r2,
+                   text == expected and not r1 and not r2, baseline=True)
+
+    ledger.write_text(pending + row)
+    after, after_findings = census(tree)
+    effective = after["POLARIS"]
+    held = (session_usage_binding(tree) == (original, [], []) and not after_findings
+            and len(effective[requirement]["scenarios"]) == 28
+            and set(prior) == set(effective)
+            and all(prior[other] == body for other, body in effective.items() if other != requirement))
+    record("adopted", AGENT_ADOPTIONS, "<no row>", row, "only 033 moves from 25 to 28 scenarios",
+           after_findings, held, baseline=True)
+
+    for name, old, new, detail in (
+        ("duplicate-row", row, row + row, "seven-column"),
+        ("malformed-tagged", "| Selftest | ", "| ", "seven-column"),
+        ("wrong-tag", SESSION_USAGE_TAG, SESSION_USAGE_TAG + "-wrong", "malformed"),
+        ("wrong-snapshot", snapshot, snapshot.replace("/blob/", "/tree/"), "does not name"),
+        ("wrong-revert", f"git revert -m 1 {oid}", f"git revert {'0' * 40}", "revert"),
+    ):
+        assert row.count(old) == 1 and old != new
+        ledger.write_text(pending + row.replace(old, new, 1))
+        text, r1, r2 = session_usage_binding(tree)
+        record(name, AGENT_ADOPTIONS, old, new, f"R1 refusal mentioning {detail}", r1 + r2,
+               text is None and not r2 and any(detail in finding for finding in r1))
+
+    predecessor = next(line for line in pending.splitlines(keepends=True) if is_step_measures_row(line))
+    ledger.write_text(pending.replace(predecessor, "", 1) + row)
+    text, r1, r2 = session_usage_binding(tree)
+    record("prior-unavailable", AGENT_ADOPTIONS, predecessor, "", "R1 requires effective v2.31", r1 + r2,
+           text is None and not r2 and any("prior v2.31" in finding for finding in r1))
+
+    ledger.write_text(pending + row)
+    spec = tree / SESSION_USAGE_SPEC
+    current = "Money SHALL always be Unknown (`no-price-receipt`)."
+    changed = "Money SHALL be estimated from a price list."
+    assert original.count(current) == 1
+    spec.write_text(original.replace(current, changed, 1))
+    text, r1, r2 = session_usage_binding(tree)
+    record("modified-money", SESSION_USAGE_SPEC, current, changed, "R2 bound-subject refusal",
+           r1 + r2, text is None and not r1 and len(r2) == 1 and SESSION_USAGE_SPEC in r2[0])
+    spec.write_text(original)
+
+    veto = "| A-1000 | 2026-11-27 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n"
+    ledger.write_text(pending + row + veto)
+    retired, found = census(tree)
+    held = (session_usage_disposition(tree, session_usage_rows(tree)) == "A-1000"
+            and not found and retired["POLARIS"] == prior)
+    record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 033", found, held, baseline=True)
 
 
 def qkind_cases(tmp, base, witnesses, failures):
@@ -16057,7 +16251,7 @@ def readmit_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_impwit_row(line) and not is_viewlvl_row(line) and not is_walkadv_row(line) and not is_walkerr_row(line) and not is_codeex_row(line) and not is_vlerr_row(line) and not is_leanrun_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_session_usage_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_impwit_row(line) and not is_viewlvl_row(line) and not is_walkadv_row(line) and not is_walkerr_row(line) and not is_codeex_row(line) and not is_vlerr_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -17303,6 +17497,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     families += [
         lambda w, f: _scripted_addition_cases(tmp, added, w, f),
         lambda w, f: step_measures_cases(tmp, base, w, f),
+        lambda w, f: session_usage_cases(tmp, base, w, f),
         lambda w, f: qkind_cases(tmp, base, w, f),
         lambda w, f: figplan_cases(tmp, base, w, f),
         lambda w, f: choice_cases(tmp, base, w, f),

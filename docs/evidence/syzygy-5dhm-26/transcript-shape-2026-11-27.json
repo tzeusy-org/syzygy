@@ -1,0 +1,49 @@
+{
+  "bead": "syzygy-5dhm.26",
+  "subject": {
+    "what": "one Claude Code session transcript of this operator (a coordinator session, not a dossier run)",
+    "agentTool": "claude-code 2.1.332",
+    "bytes": 62426272,
+    "sha256": "f730b791c75c9d2545b3943233b46bb83fcbc0b2b00812fc6d6db6a7fcfa6483"
+  },
+  "label": "Observed",
+  "basis": "counted by this script from the transcript bytes; no string value of the transcript is stored",
+  "entryTypes": {
+    "ai-title": 1004,
+    "api-request": 1876,
+    "api-request-blob": 1205,
+    "api-request-shape": 17,
+    "assistant": 3327,
+    "atis-latch": 1005,
+    "attachment": 8321,
+    "bridge-session": 1012,
+    "data-flow-incomplete": 2,
+    "data-flow-records": 2745,
+    "derived-from": 6,
+    "file-history-delta": 61,
+    "file-history-snapshot": 46,
+    "history-suppression": 524,
+    "last-prompt": 1006,
+    "mode": 1005,
+    "permission-mode": 1005,
+    "pr-link": 979,
+    "queue-operation": 294,
+    "session-owner": 1005,
+    "system": 287,
+    "tools-used": 17,
+    "user": 2005
+  },
+  "unparsableLines": 0,
+  "entriesWithUtcInstant": 17167,
+  "assistant": {
+    "responsesWithoutIdentity": 0,
+    "syntheticNotices": 2,
+    "usageShapes": {
+      "{\"cache_creation_input_tokens\": \"int\", \"cache_read_input_tokens\": \"int\", \"input_tokens\": \"int\", \"output_tokens\": \"int\"}": 3325
+    },
+    "entries": 3325,
+    "distinctIdentities": 1861,
+    "identitiesWithSeveralEntries": 1231,
+    "ofThoseWhoseCountsAgree": 1231
+  }
+}
