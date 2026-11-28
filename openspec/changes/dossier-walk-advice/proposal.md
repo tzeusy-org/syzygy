@@ -13,12 +13,12 @@
 
 - Check's report gains a member `walkAdvice`, `{"rules": [{"id": "walk-step-restates-label", "version": 1}], "examined", "advisories"}`, for a v16 or v17 draft with no `schema` finding, in the manner of 2.33's `figureAdvice`.
 - Rule `walk-step-restates-label` version 1 reads each step of each walk with no finding, comparing the paragraph's words with the label's words:
-  - both texts are lowercased A to Z, every character that is not a letter or digit becomes a space, and the result is split into words;
+  - both texts are read code point by code point, lowercased A to Z, every code point that is not a letter or number (Unicode L and N, the runtime's Unicode version, no normalization form) becomes a space, and the result is split into words;
   - 30 listed filler words of the paragraph are ignored;
   - a paragraph word matches a label word where they are equal or one is the other plus `s` or `es`;
   - the step is advised on where every non-filler paragraph word matches; one new word stops it (threshold zero).
-- The label is the draft's `label` for a model element or node, the expansion's for an expansion node, and Syzygy's label (2.40) for a base element, never a `names` display name.
-- The advisory's detail names the figure, the step number and the paragraph's identity, never a word of the draft or a path (2.35 screening).
+- The label is the draft's `label` for a model element or node, the expansion's for an expansion node, and Syzygy's label (2.40) for a base element, never a `names` display name; a base element that is withheld, Unknown in screening or not admitted for output at check is not read.
+- The advisory's detail names the figure, the step number and the paragraph's identity, never a word of the draft or a path; it treats identities as 2.40 and 2.45 do and carries no value 2.35 screens.
 - It gates nothing and moves no finding, record, page or brief; a failure to compute it leaves no member. It reads no 2.45 `level`, `scope` or zoom link.
 - Seven scenarios are added, and the four Form lines are extended.
 

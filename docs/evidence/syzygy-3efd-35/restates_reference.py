@@ -40,8 +40,29 @@ CASES = [
     ('The request router retries.', 'Request router', False),
     ('The request router, 2 of them.', 'Request router', False),
     ('The request router calls the handler.', 'Request router', False),
+    ('The request router, 2.', 'Request router', False),
+    ('The request router and the handler.', 'Request router', False),
+    ('The.', '\u2014', True),
+    ('Router.', '\u2014', False),
+    ('', 'Router', True),
     ('src: 12 files.', 'src/ (12 files)', True),
     ('The src directory holds the sources.', 'src/ (12 files)', False),
 ]
 bad = [(p, l, e) for p, l, e in CASES if restates(p, l) != e]
 print('cases', len(CASES), 'disagree', bad)
+
+
+def words_digits_dropped(s):
+    # Rule-6 mutant: letters only (category L), so a number is no word.
+    return [w for w in ''.join(ch.lower() if 'A' <= ch <= 'Z' else ch if unicodedata.category(ch)[0] == 'L' else ' '
+                               for ch in s).split(' ') if w]
+
+
+def restates_digits_dropped(paragraph, label):
+    lw = words_digits_dropped(label)
+    return all(any(match(p, l) for l in lw) for p in words_digits_dropped(paragraph) if p not in FILLER)
+
+
+killed = [(p, l) for p, l, e in CASES if restates_digits_dropped(p, l) != e]
+print('digits-dropped mutant killed by', killed)
+assert killed, 'no case distinguishes a number from a dropped code point'

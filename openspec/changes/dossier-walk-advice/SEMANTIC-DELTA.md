@@ -8,7 +8,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-view-levels/proposed/polaris-generation/spec.md` (dossier view levels version 2.45, row A-274, tag `polaris-dossier-view-levels-v2.45`; sha256 `50eefcc8e96886bd39c66b9fcc09300b4c308b90d4b8a760e1f0f9ad37e58afa`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-walk-advice/proposed/polaris-generation/spec.md`, sha256 `0a6de8d08ec810bb23b36eb518ff3a47b5f1be5837e33b57e8e3a13b3946ea67`) replaces that text, composed after version 2.45. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.45's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-view-levels/proposed/polaris-generation/spec.md` (dossier view levels version 2.45, row A-274, tag `polaris-dossier-view-levels-v2.45`; sha256 `50eefcc8e96886bd39c66b9fcc09300b4c308b90d4b8a760e1f0f9ad37e58afa`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-walk-advice/proposed/polaris-generation/spec.md`, sha256 `341ac6541dd62d24c0ddf8d6b30ade2596e2ef5fbc4f48030a179ec63605531a`) replaces that text, composed after version 2.45. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.45's, byte for byte.
 
 ## Carried unchanged
 
