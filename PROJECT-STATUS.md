@@ -374,11 +374,11 @@ paragraph is quoted as the brief issues it, and a walked figure's loss of the dr
 With the walk errata version effective, Polaris has 39 requirements and 657 scenarios.
 
 [Code excerpts amendment 2.54](openspec/changes/dossier-code-excerpts) is agent-adopted in A-345.
-It replaces REQ-polaris-generation-034 from version 2.53, the walk errata (336 to 346 scenarios): a code excerpt's
+It replaces REQ-polaris-generation-034 from version 2.53, the walk errata (336 to 348 scenarios): a code excerpt's
 lines are numbered, its highlights marked and named, and its notes linked to cited paragraphs, with no script
 (draft schema v18, brief v26).
 
-With the code excerpts version effective, Polaris has 39 requirements and 667 scenarios.
+With the code excerpts version effective, Polaris has 39 requirements and 669 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and

@@ -3773,7 +3773,7 @@ CODEEX_REPLACES = (POLARIS_ID + "034",)
 CODEEX_COUNT_SCOPE = "With the code excerpts"
 CODEEX_COUNT_PREFIX = "With the code excerpts version effective, Polaris has "
 CODEEX_SUBJECTS = {
-    CODEEX_SPEC: "8c8fe7189a44050ea699b5693f7feb60129d247849098eeb422c2c5e6a35f278",
+    CODEEX_SPEC: "24132cde379082c2667057c3a2e326f22fe0cf89426b256436dc84d8a92facd3",
 }
 CODEEX_BOUND_PARTS = len(CODEEX_SUBJECTS)
 
@@ -14610,8 +14610,8 @@ def codeex_cases(tmp, base, witnesses, failures):
 
     ledger.write_text(pending + row)
     spec = tree / CODEEX_SPEC
-    current_bound = "for a line that a highlight covers and nothing for any other"
-    changed = "for a line that a highlight covers and an empty band for any other"
+    current_bound = "so that every line of the bands, as every line of the gutter, opens with an element"
+    changed = "so that every line of the bands, as every line of the gutter, may open with a line feed"
     assert original.count(current_bound) == 1
     spec.write_text(original.replace(current_bound, changed, 1))
     text, r1, r2 = codeex_binding(tree)
