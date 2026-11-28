@@ -25,7 +25,7 @@ const RENDERER_MODULE = pathToFileURL(path.join(REAL_ROOT, 'apps/three-surface-p
 const NOW = Date.UTC(2026, 10, 23, 12, 0, 0);
 const LATER = NOW + 60_000;
 const RUN_ID = `run-${'e'.repeat(32)}`;
-const V11 = 'polaris-dossier-local-draft-v11', V12 = 'polaris-dossier-local-draft-v12', V14 = 'polaris-dossier-local-draft-v14', V15 = 'polaris-dossier-local-draft-v15', V16 = 'polaris-dossier-local-draft-v16';
+const V11 = 'polaris-dossier-local-draft-v11', V12 = 'polaris-dossier-local-draft-v12', V14 = 'polaris-dossier-local-draft-v14', V15 = 'polaris-dossier-local-draft-v15', V16 = 'polaris-dossier-local-draft-v16', V18 = 'polaris-dossier-local-draft-v18';
 
 const LIVE_POLICY = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'), 'utf8'));
 const POLICY = new TextEncoder().encode(JSON.stringify({
@@ -276,6 +276,42 @@ describe('finding details name identities and nothing a detector matches (syzygy
         { kind: 'duplicate-id', at: '$.sections[0].paragraphs[1]', detail: WITHHELD },
       ]);
     }
+  });
+
+  it("runs the 2.56 scenario's one draft: three deep-dive references and a repeated id_rsa, neither value in the report or any written file (R-EXCERPTS-ERRATA-SPEC-1 note 3)", async () => {
+    const dive = (sectionId: string, k: number): Doc => ({ id: `dd${k}`, title: 'Deeper', sectionId, paragraphs: [], disposition: { kind: 'omitted', reason: 'Not needed here.', citations: [] } });
+    const doc: Doc = { ...draftOf([]), deepDives: [dive(PATHLIKE, 0), dive(TOKEN, 1), dive('s9', 2)] };
+    const p = doc.sections[0].paragraphs[0];
+    doc.sections[0].paragraphs = [{ ...p, id: 'id_rsa' }, { ...p, id: 'id_rsa', citations: [cite('c-p9', 2, 2)] }];
+    const { run, result } = await checked(A, doc);
+    if (!result.ok || !('quotations' in result.report)) throw new Error('the check must report in full');
+    expect(result.report.outcome).toBe('findings');
+    const findings = result.report.findings.map(({ kind, at, detail }) => ({ kind, at, detail }));
+    expect(findings.filter((f) => (f.kind === 'unresolved-reference' && f.at.startsWith('$.deepDives')) || f.kind === 'duplicate-id')).toEqual([
+      { kind: 'duplicate-id', at: '$.sections[0].paragraphs[1]', detail: WITHHELD },
+      { kind: 'unresolved-reference', at: '$.deepDives[0].sectionId', detail: 'no section has the identity named here' },
+      { kind: 'unresolved-reference', at: '$.deepDives[1].sectionId', detail: WITHHELD },
+      { kind: 'unresolved-reference', at: '$.deepDives[2].sectionId', detail: 'no section has the identity "s9"' },
+    ]);
+    const draft = fs.readFileSync(path.join(run, 'drafts', 'next.json'), 'utf8');
+    for (const value of [PATHLIKE, TOKEN]) {
+      expect(JSON.stringify(result.report), value).not.toContain(value);
+      const files = writtenFiles(run, draft);
+      expect(files.size).toBeGreaterThan(0);
+      for (const [file, text] of files) expect(text, `${file}: ${value}`).not.toContain(value);
+    }
+  });
+
+  it("keeps a code excerpt's note detail naming a handle intact through the screen (R-EXCERPTS-ERRATA-SPEC-1 note 4)", async () => {
+    const doc = draftOf([], V18);
+    const bare = { id: 'p-bare', label: 'unknown', reason: 'missing-evidence', text: 'Nothing says.', citations: [] };
+    const excerpt = { kind: 'code', id: 'x', citation: { id: 'c-x', path: 'README.md', startLine: 1, endLine: 2 }, notes: [{ line: 1, block: 'p-bare' }] };
+    doc.sections[0].paragraphs = [...doc.sections[0].paragraphs, bare, excerpt];
+    const PLAN = [{ home: { kind: 'overview' }, omitted: 'The overview reads better as prose here.' }, { home: { kind: 'section', target: 's1' }, omitted: 'No picture answers better here.' }];
+    const findings = (await findingsOf(A, { ...doc, figurePlan: PLAN, model: { elements: [], relationships: [] } })).findings;
+    expect(findings.filter((f) => f.kind === 'code-note')).toEqual([
+      { kind: 'code-note', at: '$.sections[0].paragraphs[2].notes[0].block', detail: "p-bare: a note's paragraph cites its sources" },
+    ]);
   });
 
   it('withholds a detail a detector matches only across its words', async () => {

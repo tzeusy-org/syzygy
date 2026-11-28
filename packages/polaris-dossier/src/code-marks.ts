@@ -37,8 +37,9 @@ interface Excerpt { readonly element: Doc; readonly at: string; readonly place: 
 /** Every code element of a draft at a position where the draft admits one: an entry of a section's, a subsection's or a deep dive's
  * `paragraphs`, or of a `details` element's `elements` there. They come in the order a depth-first reading of the draft as submitted meets
  * them (list entries in index order, an object's members in the order the draft writes them), each with the section or deep dive that holds
- * it. A `code` object anywhere else (a callout's `children`, say) is no excerpt: 2.53's schema finding at its parent stands for it, and this
- * version neither reads nor strips its members (review R33-code finding 3). */
+ * it. A `code` object anywhere else (a callout's `children`, say) is no excerpt: 2.53's schema finding stands for it, at the object's own path or
+ * within it (a callout's first child at `….children[0]`), and this version neither reads nor strips its members (review R33-code finding
+ * 3; R-EXCERPTS-ERRATA-SPEC-1 finding 2). */
 function excerptsOf(doc: Doc): Excerpt[] {
   const out: Excerpt[] = [];
   const entries = (value: unknown, at: string, place: Doc, part: Part): void => {
