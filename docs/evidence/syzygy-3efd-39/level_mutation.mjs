@@ -8,10 +8,11 @@
 // `container-drops-system` (a type dropped from the table), `parent-walk-skipped`, `link-to-self` and the 1048 px pair in EQUIVALENT.
 // Run 1 (at f50dad4b4) killed 46 of 51. Three test repairs followed (a component view showing a system; a containment view's attributes;
 // a figure that is its own element's target, graph and containment) for component-admits-system, containment-attrs-dropped and
-// link-to-self; the other two survivors are listed in EQUIVALENT with their reasons. Run 2 (at 26e15b7b0) killed 49 of 49. Review R39
+// link-to-self; the other two survivors are listed in EQUIVALENT with their reasons. Run 2 (at 461ce95f0) killed 49 of 49. Review R39
 // (docs/reviews/syzygy-3efd-39/) found that EQUIVALENT's `render-rederive-levels-dropped` was no such thing: a check record altered to
 // passed reaches the render with a level finding, and only that line refuses it. It is now a mutant, killed by the altered-record test,
 // with six more over the review's repairs; the browser file holds two tests, each of which must pass in every baseline that runs it.
+// Run 3 (at afdfeb969, level-mutation-r39-2026-11-28.json) killed 55 of 55; run 2's record keeps its path, which the review cites.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
