@@ -41,11 +41,10 @@ export const DOSSIER_USAGE = `syzygy dossier — operator-agent dossier runs
 Usage: syzygy dossier <command> [--json] [arguments]
 
 Commands:
-  preflight <url>     report whether the observation consent, the source-acquisition
-                      registry entry and the classification and screening policy are
-                      in force for the repository, the revisions the consent names,
-                      any per-project statement, and whether D9 and the RFC7-20
-                      reading are in force; the URL is parsed, never fetched
+  preflight <url>     report whether a run can start for the repository: the locator
+                      is admitted and the committed screening policy is readable; no
+                      consent, registry, statement or act record is read; the URL is
+                      parsed, never fetched
   init <clone> [--url <url>] --config <run.json> [--state-root <dir>] [--revision <rev>] [--identity <id>] [--upstream <url>] [--visibility public|private]
                       record a declared local source and full pinned HEAD under the
                       committed dossier screening policy. --visibility public|private
@@ -195,10 +194,6 @@ export interface CliPorts {
    * but only where the gate sources are this checkout's too; with injected sources and no launch ports, `init` takes another act's
    * consent only. */
   readonly launch?: InitPorts['launch'];
-  /** The pair-visibility decision `syzygy polaris` asks before it fetches a pair (screening scope version 8, edit 4). By default this
-   * checkout's records, but only where the gate sources are this checkout's too; with injected sources and no decision, it fetches
-   * nothing. */
-  readonly visibilityOf?: VisibilityOf;
 }
 
 /** The Syzygy checkout this package belongs to: packages/polaris-dossier/{src,dist} → the repository root. */
@@ -207,9 +202,6 @@ const RECORDS_ROOT = fileURLToPath(new URL('../../..', import.meta.url));
 /** The gate sources the commands read: the injected ones, or the records in this Syzygy checkout. */
 export const cliGateSources = (ports: CliPorts): GateSources => ports.sources
   ?? withLaunchRecords(createPackageGateSources({ root: RECORDS_ROOT, now: ports.now ?? Date.now }), { home: RECORDS_ROOT, now: ports.now ?? Date.now });
-/** The visibility decision the supervisor fetches by: the injected one, or this checkout's where the sources are this checkout's too. */
-export const cliVisibilityOf = (ports: CliPorts): VisibilityOf | undefined =>
-  ports.visibilityOf ?? (ports.sources === undefined ? (subject => pairVisibilityAt(subject, { root: RECORDS_ROOT, now: (ports.now ?? Date.now)() })) : undefined);
 /** The launch ports `init` uses: the injected ones, or the process's own where the sources are this checkout's. */
 const cliLaunchPorts = (ports: CliPorts): InitPorts['launch'] =>
   ports.launch ?? (ports.sources === undefined ? processLaunchPorts(RECORDS_ROOT, ports.now ?? Date.now) : undefined);
@@ -297,7 +289,7 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     synopsis: 'preflight <url>',
     args: { kind: 'one', noun: 'the repository URL' },
     run: async ({ positional: [url] }, ctx) => {
-      const result = await preflight(url!, ctx.sources(), ctx.now());
+      const result = await preflight(url!, ctx.sources());
       if (!result.ok) return ctx.refused(result.refusal);
       return ctx.report(result.report, result.report.outcome === 'ready' ? EXIT.clean : EXIT.refused);
     },

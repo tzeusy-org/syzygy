@@ -15,7 +15,10 @@ export interface StringToken {
    * line break, which the recognizers do not read. */
   readonly value: string | null;
 }
-export type Scanned = { readonly ok: true; readonly code: string; readonly strings: readonly StringToken[] } | { readonly ok: false; readonly fault: 'unterminated' };
+/** A comment's span (version 2.43, syzygy-5dhm.46): the whole comment, and its content between the delimiters (`#`, `//`, or `/*` and
+ * `*\/`). A regular-expression literal is blanked in the code text and is no comment. */
+export interface CommentToken { readonly start: number; readonly end: number; readonly contentStart: number; readonly contentEnd: number }
+export type Scanned = { readonly ok: true; readonly code: string; readonly strings: readonly StringToken[]; readonly comments: readonly CommentToken[] } | { readonly ok: false; readonly fault: 'unterminated' };
 
 /** Every UTF-16 code unit but a line break becomes one space, so the code text keeps every offset of the body: no `u` flag, which
  * would turn a surrogate pair into one space and move every later offset (R-TEST-NAMES-1 F1). */
@@ -38,13 +41,18 @@ function plainValue(inner: string): string | null {
 class Builder {
   readonly parts: string[] = [];
   readonly strings: StringToken[] = [];
+  readonly comments: CommentToken[] = [];
   code(text: string): void { this.parts.push(text); }
-  comment(text: string): void { this.parts.push(blank(text)); }
+  comment(text: string, start: number, open: number, close: number): void {
+    this.parts.push(blank(text));
+    this.comments.push({ start, end: start + text.length, contentStart: start + open, contentEnd: start + text.length - close });
+  }
+  regex(text: string): void { this.parts.push(blank(text)); }
   string(open: string, inner: string, close: string, start: number, raw = false): void {
     this.parts.push(open + blank(inner) + close);
     this.strings.push({ start, end: start + open.length + inner.length + close.length, value: raw ? (/[\r\n]/u.test(inner) ? null : inner) : plainValue(inner) });
   }
-  done(): Scanned { return { ok: true, code: this.parts.join(''), strings: this.strings }; }
+  done(): Scanned { return { ok: true, code: this.parts.join(''), strings: this.strings, comments: this.comments }; }
 }
 
 /** The end of a quoted literal opened at `from` (after its opening quote) by `quote`, honouring backslash escapes; -1 when the body ends
@@ -55,6 +63,38 @@ function closeOf(text: string, from: number, quote: string, singleLine: boolean)
     if (c === '\\') { i++; continue; }
     if (singleLine && (c === '\n' || c === '\r')) return -1;
     if (text.startsWith(quote, i)) return i;
+  }
+  return -1;
+}
+
+/** The offset of the backtick closing a template literal whose interior starts at `from`, honouring backslash escapes and reading each
+ * `${ }` substitution through `substitutionEnd`; -1 when the body ends first. */
+function templateEnd(text: string, from: number): number {
+  for (let i = from; i < text.length; i++) {
+    const c = text[i]!;
+    if (c === '\\') { i++; continue; }
+    if (c === '`') return i;
+    if (c === '$' && text[i + 1] === '{') {
+      const end = substitutionEnd(text, i + 2);
+      if (end < 0) return -1;
+      i = end - 1;
+    }
+  }
+  return -1;
+}
+
+/** The offset one past the `}` closing a substitution whose expression starts at `from`: braces are counted, and quoted strings, nested
+ * templates and comments inside it are skipped whole, so none of their characters closes it; -1 when the body ends first. */
+function substitutionEnd(text: string, from: number): number {
+  let depth = 1;
+  for (let i = from; i < text.length; i++) {
+    const c = text[i]!;
+    if (c === '{') depth++;
+    else if (c === '}') { if (--depth === 0) return i + 1; }
+    else if (c === '"' || c === '\'') { const end = closeOf(text, i + 1, c, true); if (end < 0) return -1; i = end; }
+    else if (c === '`') { const end = templateEnd(text, i + 1); if (end < 0) return -1; i = end; }
+    else if (c === '/' && text[i + 1] === '/') { while (i < text.length && text[i] !== '\n' && text[i] !== '\r') i++; }
+    else if (c === '/' && text[i + 1] === '*') { const end = text.indexOf('*/', i + 2); if (end < 0) return -1; i = end + 1; }
   }
   return -1;
 }
@@ -114,7 +154,7 @@ export function scanCLike(text: string, options: CLikeOptions = {}): Scanned {
       flush(i);
       let end = i;
       while (end < text.length && text[end] !== '\n' && text[end] !== '\r') end++;
-      out.comment(text.slice(i, end));
+      out.comment(text.slice(i, end), i, 2, 0);
       i = codeStart = end;
       continue;
     }
@@ -122,7 +162,7 @@ export function scanCLike(text: string, options: CLikeOptions = {}): Scanned {
       flush(i);
       const end = text.indexOf('*/', i + 2);
       if (end < 0) return { ok: false, fault: 'unterminated' };
-      out.comment(text.slice(i, end + 2));
+      out.comment(text.slice(i, end + 2), i, 2, 2);
       i = codeStart = end + 2;
       continue;
     }
@@ -143,8 +183,9 @@ export function scanCLike(text: string, options: CLikeOptions = {}): Scanned {
         i = codeStart = end + 1;
         continue;
       }
-      // A template literal may span lines; its substitutions are left blank with it, so a call inside one is never read.
-      const end = closeOf(text, i + 1, c, c !== '`');
+      // A template literal may span lines; its substitutions are left blank with it, so a call inside one is never read. Its end is
+      // found past every substitution, so a template nested in one never ends it (R-ROUGH-EDGES-1 F1).
+      const end = c === '`' ? templateEnd(text, i + 1) : closeOf(text, i + 1, c, true);
       if (end < 0) return { ok: false, fault: 'unterminated' };
       out.string(c, text.slice(i + 1, end), c, i);
       i = codeStart = end + 1;
@@ -154,7 +195,7 @@ export function scanCLike(text: string, options: CLikeOptions = {}): Scanned {
       const end = regexEnd(text, i);
       if (end > 0) {
         flush(i);
-        out.comment(text.slice(i, end));
+        out.regex(text.slice(i, end));
         i = codeStart = end;
         continue;
       }
@@ -177,7 +218,7 @@ export function scanPython(text: string): Scanned {
       flush(i);
       let end = i;
       while (end < text.length && text[end] !== '\n' && text[end] !== '\r') end++;
-      out.comment(text.slice(i, end));
+      out.comment(text.slice(i, end), i, 1, 0);
       i = codeStart = end;
       continue;
     }

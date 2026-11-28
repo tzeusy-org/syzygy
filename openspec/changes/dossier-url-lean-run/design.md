@@ -2,7 +2,7 @@
 
 ## D1 — The label
 
-[Observed] The newest version on main is 2.43 (A-272). Another change holds 2.44 and 2.45, which have not reached main, so this one takes 2.46. Its tag is `polaris-dossier-url-lean-run-v2.46`.
+[Observed] When this was drafted the newest version on main was 2.43 (A-272), and another change held 2.44 and 2.45; 2.44 has since landed as A-338. So this one takes 2.46. Its tag is `polaris-dossier-url-lean-run-v2.46`.
 
 ## D2 — Restate over 2.1, do not retire it
 
@@ -10,11 +10,11 @@
 
 ## D3 — Composition
 
-[Observed] The checker composes 2.46 last, after 2.43, once `url_source_binding` is effective. It replaces exactly 025 and 047 by ID (method A) and by name (method B), and the two must agree. The scenario change is counted from the 2.1 and 2.46 texts, never written in: 025 goes from 14 to 6 and 047 from 24 to 5, so the change is −27.
+[Observed] The checker composes 2.46 last, after 2.44, once `url_source_binding` is effective. It replaces exactly 025 and 047 by ID (method A) and by name (method B), and the two must agree. The scenario change is counted from the 2.1 and 2.46 texts, never written in: 025 goes from 14 to 6 and 047 from 24 to 5, so the change is −27.
 
 [Observed] The derived-base screening projection keeps the census of its own time. It restores 025 and 047 to the 2.1 texts, read by both parsers, before it projects, and applies 2.46 after the projection like every later version. So the two screening sentences in `PROJECT-STATUS.md` (579 and 603 scenarios) and the generated census files do not move.
 
-[Observed] The status count sentence for this version comes after the migration bounds sentence. So the selftest's projected history, which drops 2.36 and every version after it, drops this row and its routes too. The `leanrun_cases` family puts the row back over the projected base, where 2.1 is effective, and checks five things:
+[Observed] The status count sentence for this version comes after the rough-edge markers sentence. So the selftest's projected history, which drops 2.36 and every version after it, drops this row and its routes too. The `leanrun_cases` family puts the row back over the projected base, where 2.1 is effective, and checks five things:
 
 - the pending state;
 - the effective state (025 and 047 replaced, nothing else changes);

@@ -122,5 +122,21 @@ export const JUNIT_TEST_METHOD = {
   annotations: ['Test', 'ParameterizedTest', 'RepeatedTest', 'TestFactory', 'TestTemplate'],
 } as const;
 
+/** The rough-edge marker recognizer (REQ-polaris-generation-034 version 2.43, syzygy-5dhm.46), version 1: the TODO, FIXME and HACK
+ * markers, the deprecation markers and the issue references one admitted source file writes, read lexically by `rough-edges-*.ts` through
+ * the test-name lexer, so a marker is read only where the listed form says (a comment, or for two deprecation forms the code text) and
+ * never in a string. It reads bodies, so it is outside `DERIVE_RULES`. A change to a candidate extension or a pattern is a new version. */
+export const ROUGH_EDGE_MARKER = {
+  id: 'rough-edge-marker', version: 1,
+  /** A candidate: a basename ending one of these extensions, read by the lexer of its language. */
+  languages: {
+    python: ['.py'],
+    javascript: ['.js', '.jsx', '.mjs', '.cjs', '.ts', '.tsx', '.mts', '.cts'],
+    go: ['.go'],
+    java: ['.java'],
+  },
+  kinds: ['todo', 'fixme', 'hack', 'deprecation', 'issue-reference'],
+} as const;
+
 export const DERIVE_RULES: readonly DeriveRuleId[] = [VENDORED_PATH, GENERATED_PATH, LANGUAGE_BY_EXTENSION, DOCS_TREE, TESTS_PATH, MANIFEST_NAMES, TOP_LEVEL_UNIT, SERVER_ENTRY]
   .map(({ id, version }) => ({ id, version }));
