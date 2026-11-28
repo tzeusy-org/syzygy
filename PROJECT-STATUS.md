@@ -353,6 +353,13 @@ It replaces REQ-polaris-generation-034 from version 2.48, the docs and code (313
 arrow that a stored lexical import fact joins is corroborated, never Observed, and every other one stays Unknown.
 
 With the imports corroboration version effective, Polaris has 39 requirements and 638 scenarios.
+
+[View levels amendment 2.50](openspec/changes/dossier-view-levels) is agent-adopted in A-274.
+It replaces REQ-polaris-generation-034 from version 2.49, the imports corroboration (317 to 329 scenarios): a view
+may carry a level and a scope, checked by element type and by parent, and a box whose element has its own view
+links to it with no script (draft schema v17, brief v25).
+
+With the view levels version effective, Polaris has 39 requirements and 650 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
