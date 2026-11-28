@@ -1,0 +1,171 @@
+{
+  "format": "measurement/1",
+  "bead": "syzygy-3efd.89",
+  "date": "2026-11-28",
+  "about": "REQ-polaris-generation-034 version 2.39 tasks.md item \"Measure the scan's time and the member's size on a large synthetic tree and on this repository\" (review 1 note 9): the wall time of deriveImportFacts alone (the tree listed and manifestFacts derived beforehand, outside the timer) and the member's bytes as the check record holds them, three runs each",
+  "codeAt": "a8433cb53dfffb33b757441e8bf5f57a8c3fd4c3",
+  "codeSubject": {
+    "packages/polaris-dossier/src/import-facts.ts": "be7a27d155176001758daed13b9771fe5fbdaef99bf729a3ce5784f10a564d4e",
+    "packages/polaris-dossier/src/import-facts-lexer.ts": "59b978c57da1d54563eeddae7408bc4fb46f80f39f4cf34094ecd50a0d820f11"
+  },
+  "policy": ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json",
+  "consented": null,
+  "driver": {
+    "command": "npx vite-node measure-import-facts.ts -- <gitDir> <commit> <out.json> <worktree root>, from the worktree root",
+    "sha256": "248b946fb768bf406ffa0f51667506e69c1a0d1c67f7999104af281ebde6f9ef",
+    "source": "// Timing and size of the importFacts member (REQ-polaris-generation-034 version 2.39, syzygy-3efd.89 review 1 note 9).\n// Run from the worktree root: npx vite-node <this file> -- <gitDir> <commit> <out.json>\nimport { readFileSync, writeFileSync } from 'node:fs';\nimport * as path from 'node:path';\nimport { performance } from 'node:perf_hooks';\nimport { openPinnedObjectReader } from '/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-3efd.89/packages/polaris-dossier/src/git-object-reader.js';\nimport { IMPORT_BLOB_LIMIT, deriveImportFacts, type ImportFacts } from '/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-3efd.89/packages/polaris-dossier/src/import-facts.js';\nimport { MANIFEST_BLOB_LIMIT, deriveManifestFacts } from '/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-3efd.89/packages/polaris-dossier/src/manifest-facts.js';\nimport { buildDossierScreen } from '/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-3efd.89/packages/polaris-dossier/src/screen.js';\n\nconst [gitDir, commit, out, root] = process.argv.slice(-4);\nconst policy = new Uint8Array(readFileSync(path.join(root!, '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json')));\nconst load = buildDossierScreen(policy, true, { repository: 'repository:measure', commit: commit! }, 'public');\nif (!load.ok) throw new Error(load.why);\nconst screen = load.screen;\nconst memberBytes = (member: ImportFacts): number => new TextEncoder().encode(JSON.stringify(member, null, 2).replace(/\\n/gu, '\\n  ')).length;\n\nconst runs: unknown[] = [];\nfor (let k = 0; k < 3; k++) {\n  const lister = openPinnedObjectReader({ gitDir: gitDir!, revision: commit! });\n  const entries = await lister.listTree();\n  const manifestReader = openPinnedObjectReader({ gitDir: gitDir!, revision: commit!, maxObjectBytes: MANIFEST_BLOB_LIMIT });\n  const manifestFacts = await deriveManifestFacts({ entries, screen, consented: null, read: async (p) => (await manifestReader.readBlobs([p]))[0]! });\n  const reader = openPinnedObjectReader({ gitDir: gitDir!, revision: commit!, maxObjectBytes: IMPORT_BLOB_LIMIT });\n  const t0 = performance.now();\n  const member = await deriveImportFacts({ entries, screen, consented: null, manifestFacts, read: async (p) => (await reader.readBlobs([p]))[0]! });\n  const ms = performance.now() - t0;\n  if (member.state !== 'derived') throw new Error('member unknown');\n  runs.push({ milliseconds: Math.round(ms), memberBytes: memberBytes(member), entries: entries.length, candidates: member.candidates, scanned: member.scanned,\n    incomplete: member.incomplete, unknown: member.unknown, setApart: member.setApart, statements: member.statements, outsideGrammar: member.outsideGrammar,\n    edges: member.edges.length, facts: member.facts.length, factsNotListed: member.factsNotListed, coverage: member.coverage });\n}\nwriteFileSync(out!, `${JSON.stringify({ gitDir: path.basename(path.dirname(gitDir!)), commit, runs }, null, 2)}\\n`);\n"
+  },
+  "subjects": [
+    {
+      "name": "this repository",
+      "commit": "e2aa8b8537deeced504feda0d0755a1fd1acf90d",
+      "runs": [
+        {
+          "milliseconds": 5726,
+          "memberBytes": 923317,
+          "entries": 11211,
+          "candidates": 821,
+          "scanned": 360,
+          "incomplete": 45,
+          "unknown": 15,
+          "setApart": 401,
+          "statements": {
+            "edge": 284,
+            "sameUnit": 1111,
+            "external": 385,
+            "noUnit": 0,
+            "unknown": 7
+          },
+          "outsideGrammar": 30,
+          "edges": 27,
+          "facts": 1787,
+          "factsNotListed": 0,
+          "coverage": "partial"
+        },
+        {
+          "milliseconds": 5639,
+          "memberBytes": 923317,
+          "entries": 11211,
+          "candidates": 821,
+          "scanned": 360,
+          "incomplete": 45,
+          "unknown": 15,
+          "setApart": 401,
+          "statements": {
+            "edge": 284,
+            "sameUnit": 1111,
+            "external": 385,
+            "noUnit": 0,
+            "unknown": 7
+          },
+          "outsideGrammar": 30,
+          "edges": 27,
+          "facts": 1787,
+          "factsNotListed": 0,
+          "coverage": "partial"
+        },
+        {
+          "milliseconds": 5631,
+          "memberBytes": 923317,
+          "entries": 11211,
+          "candidates": 821,
+          "scanned": 360,
+          "incomplete": 45,
+          "unknown": 15,
+          "setApart": 401,
+          "statements": {
+            "edge": 284,
+            "sameUnit": 1111,
+            "external": 385,
+            "noUnit": 0,
+            "unknown": 7
+          },
+          "outsideGrammar": 30,
+          "edges": 27,
+          "facts": 1787,
+          "factsNotListed": 0,
+          "coverage": "partial"
+        }
+      ]
+    },
+    {
+      "name": "synthetic tree at both read caps: 2,000 named files, 16,776,000 bytes",
+      "commit": "a65fc90eecbfd211911db5caed349849e19143fa",
+      "generator": "# 2,000 TypeScript files in 20 units, 8,388 bytes each (2,000 x 8,388 = 16,776,000, within 16,777,216): 40 import statements each, then code.\nfor u in range(20):\n    os.makedirs(f'u{u:02d}/src', exist_ok=True)\n    open(f'u{u:02d}/package.json','w').write('{ \"name\": \"@s/u%02d\" }\\n' % u)\nfor k in range(2000):\n    u=k%20\n    lines=[]\n    for j in range(40):\n        t=(k+j+1)%2000; tu=t%20\n        lines.append(f\"import {{ v{j} }} from '../../u{tu:02d}/src/f{t:04d}.js';\" if j%2==0 else f\"import {{ w{j} }} from '@s/u{(u+j)%20:02d}';\")\n    body='\\n'.join(lines)+'\\n'\n    filler='export const value = (a: number, b: number): number => (a + b) / 2; // filler\\n'\n    while len(body.encode())+len(filler) <= 8388: body+=filler\n    body+= ' '*(8388-len(body.encode())-1)+'\\n'\n    open(f'u{u:02d}/src/f{k:04d}.ts','w').write(body)\n# then: git init, git add -A, git commit (user t, t@example.invalid)",
+      "runs": [
+        {
+          "milliseconds": 8721,
+          "memberBytes": 1900793,
+          "entries": 2020,
+          "candidates": 2000,
+          "scanned": 2000,
+          "incomplete": 0,
+          "unknown": 0,
+          "setApart": 0,
+          "statements": {
+            "edge": 80000,
+            "sameUnit": 0,
+            "external": 0,
+            "noUnit": 0,
+            "unknown": 0
+          },
+          "outsideGrammar": 0,
+          "edges": 200,
+          "facts": 3884,
+          "factsNotListed": 76116,
+          "coverage": "complete"
+        },
+        {
+          "milliseconds": 8668,
+          "memberBytes": 1900793,
+          "entries": 2020,
+          "candidates": 2000,
+          "scanned": 2000,
+          "incomplete": 0,
+          "unknown": 0,
+          "setApart": 0,
+          "statements": {
+            "edge": 80000,
+            "sameUnit": 0,
+            "external": 0,
+            "noUnit": 0,
+            "unknown": 0
+          },
+          "outsideGrammar": 0,
+          "edges": 200,
+          "facts": 3884,
+          "factsNotListed": 76116,
+          "coverage": "complete"
+        },
+        {
+          "milliseconds": 8530,
+          "memberBytes": 1900793,
+          "entries": 2020,
+          "candidates": 2000,
+          "scanned": 2000,
+          "incomplete": 0,
+          "unknown": 0,
+          "setApart": 0,
+          "statements": {
+            "edge": 80000,
+            "sameUnit": 0,
+            "external": 0,
+            "noUnit": 0,
+            "unknown": 0
+          },
+          "outsideGrammar": 0,
+          "edges": 200,
+          "facts": 3884,
+          "factsNotListed": 76116,
+          "coverage": "complete"
+        }
+      ]
+    }
+  ],
+  "readings": [
+    "[Observed] this repository: about 5.6 s per derivation, a member of 923,317 bytes; 821 candidates, 401 set apart, 360 scanned, 45 incomplete and 15 Unknown, so coverage partial.",
+    "[Observed] the synthetic tree at both caps: about 8.6 s, all 2,000 files scanned and coverage complete; 80,000 edge statements, 3,884 facts listed and 76,116 counted unlisted; the member takes 1,900,793 bytes, under the 2,000,000 the listing scenario bounds.",
+    "[Unknown] how the time splits between reads (each file is its own pinned-reader call) and the scan; it was not measured apart. The whole is added to every draft check that lists the tree.",
+    "[Observed] 45 of the 405 files read on this repository stop incomplete; which stop each hit is not recorded here."
+  ]
+}

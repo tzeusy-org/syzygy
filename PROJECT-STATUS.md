@@ -375,6 +375,28 @@ links to it with no script (draft schema v17, brief v25).
 With the view levels version effective, Polaris has 39 requirements and 653 scenarios.
 *(2026-11-28: the predecessor figure of 650 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
+[Walk advice amendment 2.51](openspec/changes/dossier-walk-advice) is agent-adopted in A-275.
+It replaces REQ-polaris-generation-034 from version 2.50, the view levels (329 to 336 scenarios): check's report
+advises on a walk step whose paragraph adds no word to its element's label, and the advice gates nothing.
+
+With the walk advice version effective, Polaris has 39 requirements and 660 scenarios.
+*(2026-11-28: the predecessor figure of 657 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
+
+[Walk errata amendment 2.53](openspec/changes/dossier-walk-errata) is agent-adopted in A-344.
+It replaces REQ-polaris-generation-034 from version 2.51, the walk advice (336 scenarios, none added): the brief v24
+paragraph is quoted as the brief issues it, and a walked figure's loss of the drawing's tooltips is stated as a trade-off.
+
+With the walk errata version effective, Polaris has 39 requirements and 660 scenarios.
+*(2026-11-28: the predecessor figure of 657 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
+
+[Code excerpts amendment 2.54](openspec/changes/dossier-code-excerpts) is agent-adopted in A-345.
+It replaces REQ-polaris-generation-034 from version 2.53, the walk errata (336 to 348 scenarios): a code excerpt's
+lines are numbered, its highlights marked and named, and its notes linked to cited paragraphs, with no script
+(draft schema v18, brief v26).
+
+With the code excerpts version effective, Polaris has 39 requirements and 672 scenarios.
+*(2026-11-28: the predecessor figure of 669 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
+
 [Session usage amendment 2.45](openspec/changes/dossier-session-usage) is agent-adopted in A-339.
 It replaces REQ-polaris-generation-033 from version 2.31, the close measures (25 to 28 scenarios): close records a launched run's
 per-session token counts, read by Syzygy from each session's own transcripts, with a run total; close, status and the review

@@ -8,6 +8,8 @@ import { collectCitations, declaredSessionId, nextRevision } from './check.js';
 import { NotARegularFileError, isCheckRecordOf, readBoundedFile, readCheckRecord } from './check-record-read.js';
 import { DRAFT_MAX_BYTES } from './check-model.js';
 import { withoutFigurePlan } from './figure-plan.js';
+import { withoutLevels } from './view-level.js';
+import { withoutWalks } from './walk.js';
 import { DEFICIENT_SUBJECTS, GROUPS_FIELD, UNIT_FIELD, VERDICT_QUOTATION_FORM, hasHeroForm, hasModelForm, hasRelationForm, hasWithheldHeroIdentity, membersOfKind, verdictSchemaDocument } from './draft-schema.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { BLOB_MODES, GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './git-object-reader.js';
@@ -97,6 +99,14 @@ function withheldDiagramUnits(draft: Readonly<Record<string, unknown>>, screen: 
 
 /** Build the fidelity packet from the current frozen subject, reading every cited span now. Pure of the stored packet: a packet on disk
  * is never read back. */
+/** The draft a fidelity packet carries: without its read account, so the packet carries no discovery account, transcript or authoring
+ * exchange; nor a v14 draft's figure plan, which check alone reads (version 2.33); nor a v16 draft's walks, which enter no fidelity entry
+ * (version 2.40). */
+export function packetDraftView(draftDoc: Readonly<Record<string, unknown>>): Readonly<Record<string, unknown>> {
+  const { discovery: _readAccount, ...draftView } = withoutLevels(withoutWalks(withoutFigurePlan(draftDoc)));
+  return draftView;
+}
+
 export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true }>, deps: ReviewDeps): Promise<PacketBuild> {
   const { run, runId, subject } = opened;
   const pinned = subject.pinnedRevision.commit;
@@ -112,9 +122,7 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
   const inventoryDoc = parseSubject(inventoryBytes);
   if (inventoryDoc === undefined) return { ok: false, stage: 'inventory', reason: `the frozen inventory ${counted.file} is not one bounded JSON object` };
 
-  // The draft without its read account: the packet carries no discovery account, transcript or authoring exchange. Nor a v14 draft's
-  // figure plan, which check alone reads (version 2.33).
-  const { discovery: _readAccount, ...draftView } = withoutFigurePlan(draftDoc);
+  const draftView = packetDraftView(draftDoc);
 
   const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, deps.now())(placementSubjectOf(subject));
   if (!screenLoad.ok) return { ok: false, stage: 'screen', reason: screenLoad.why };

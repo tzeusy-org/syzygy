@@ -1,0 +1,982 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-28T13:22:48.292Z",
+  "commit": "461ce95f0f4084508ea93b69be2fa8f4f1c0dc03",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "8a37dc65f71a26eac0a1efb40a479a3ca44b529bed4d370b69435cbe6ab8dca2",
+    "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts": "e573c24dd539dccf20f51ac0f2cba5e924fddca737de10c5e73040c4d8fd009f",
+    "packages/polaris-dossier/src/brief.ts": "3f8fe5080826276c3bc0502629a4b8e51bff6879ddffd095ab016d8a6bcc0437",
+    "packages/polaris-dossier/src/check-derive.ts": "e6c5c21e11540feea4be00f572a6377ce05e759415a30d9e8f75ce87a36133a1",
+    "packages/polaris-dossier/src/check.ts": "b0a9c2f0f299075dec7bc36443b3a1ff2306753fa543ad89131020e0a6c02e18",
+    "packages/polaris-dossier/src/draft-schema.ts": "d3c02ff6e1263479ae55dd007ac949f6acc7333559db5084594fca210dab28de",
+    "packages/polaris-dossier/src/render.ts": "fadaddbc9d531d4a13284b55b59547fac550674a6ee717721828acb44e7c6bd2",
+    "packages/polaris-dossier/src/rerender-measure.ts": "566baec6b2a1799be790f91326044c62b6b8ead7d74800adc460d40ed49b4693",
+    "packages/polaris-dossier/src/review-packet.ts": "2012e34d54658456ff78eeb7167f54f1a3f7f72650a133738ef0f38e001d7dd2",
+    "packages/polaris-dossier/src/view-level.ts": "7824caac1bda9578c159ac76cf84432c915720697b959d994047d7eaada81d99"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 600 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/view-level.ts": [
+      "packages/polaris-dossier/src/view-level.test.ts"
+    ],
+    "packages/polaris-dossier/src/check.ts": [
+      "packages/polaris-dossier/src/view-level.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/view-level.test.ts"
+    ],
+    "packages/polaris-dossier/src/render.ts": [
+      "packages/polaris-dossier/src/view-level.test.ts"
+    ],
+    "packages/polaris-dossier/src/draft-schema.ts": [
+      "packages/polaris-dossier/src/view-level.test.ts",
+      "packages/polaris-dossier/src/draft-schema.test.ts"
+    ],
+    "packages/polaris-dossier/src/brief.ts": [
+      "packages/polaris-dossier/src/brief.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts",
+      "packages/polaris-dossier/src/view-level.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/zoom.browser.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/zoom.browser.test.ts"
+    ],
+    "packages/polaris-dossier/src/review-packet.ts": [
+      "packages/polaris-dossier/src/view-level.test.ts"
+    ],
+    "packages/polaris-dossier/src/rerender-measure.ts": [
+      "packages/polaris-dossier/src/view-level.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "exitCode": 0,
+      "tests": 23,
+      "perFile": {
+        "packages/polaris-dossier/src/view-level.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        },
+        "apps/three-surface-poc/src/polaris-generation/zoom.browser.test.ts": {
+          "passed": 1,
+          "skipped": 0
+        },
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts": {
+          "passed": 8,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts",
+      "exitCode": 0,
+      "tests": 9,
+      "perFile": {
+        "apps/three-surface-poc/src/polaris-generation/zoom.browser.test.ts": {
+          "passed": 1,
+          "skipped": 0
+        },
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts": {
+          "passed": 8,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "exitCode": 0,
+      "tests": 42,
+      "perFile": {
+        "packages/polaris-dossier/src/brief.test.ts": {
+          "passed": 42,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "exitCode": 0,
+      "tests": 14,
+      "perFile": {
+        "packages/polaris-dossier/src/view-level.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.ts",
+      "exitCode": 0,
+      "tests": 14,
+      "perFile": {
+        "packages/polaris-dossier/src/view-level.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "exitCode": 0,
+      "tests": 78,
+      "perFile": {
+        "packages/polaris-dossier/src/view-level.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        },
+        "packages/polaris-dossier/src/draft-schema.test.ts": {
+          "passed": 64,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.ts",
+      "exitCode": 0,
+      "tests": 14,
+      "perFile": {
+        "packages/polaris-dossier/src/view-level.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "exitCode": 0,
+      "tests": 14,
+      "perFile": {
+        "packages/polaris-dossier/src/view-level.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "exitCode": 0,
+      "tests": 14,
+      "perFile": {
+        "packages/polaris-dossier/src/view-level.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "exitCode": 0,
+      "tests": 14,
+      "perFile": {
+        "packages/polaris-dossier/src/view-level.test.ts": {
+          "passed": 14,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "container-drops-system",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "container: new Set(['system', 'external',",
+      "new": "container: new Set(['external',",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A level without its scope, a level of no level, a scope not a string and a scope not an identity are each one finding and nothing more",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's level and the mixed-levels advice read different things",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) The zoom target is the first rendered container view, never a context view and never a view rendered as a notice",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A container view whose base is not drawn at the render renders as a notice, and is no zoom target"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "container-admits-module",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "'job', 'store']),\n  component:",
+      "new": "'job', 'store', 'module']),\n  component:",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's level refuses an element of another level",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A level without its scope, a level of no level, a scope not a string and a scope not an identity are each one finding and nothing more"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "context-admits-package",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "context: new Set(['system', 'external', 'person']),",
+      "new": "context: new Set(['system', 'external', 'person', 'package']),",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's level refuses an element of another level"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "component-admits-system",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "component: new Set(['external',",
+      "new": "component: new Set(['system', 'external',",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's level refuses an element of another level"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "scope-type-unchecked",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "if (scopeType !== undefined && (level === 'component'",
+      "new": "if (false && (level === 'component'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's scope is of its level and bounds what it shows"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "component-scope-any-but-module",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "? !CONTAINER_TYPES.has(scopeType) : scopeType !== 'system'",
+      "new": "? scopeType === 'module' : scopeType !== 'system'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's scope is of its level and bounds what it shows"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "context-unselected-unchecked",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "if (level === 'context' && !entries.some(",
+      "new": "if (false && !entries.some(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's scope is of its level and bounds what it shows"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "unresolved-scope-continues",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "LEVEL_DETAIL.unresolved(named) });\n      continue;",
+      "new": "LEVEL_DETAIL.unresolved(named) });",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's scope is of its level and bounds what it shows",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A level without its scope, a level of no level, a scope not a string and a scope not an identity are each one finding and nothing more"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "ill-formed-scope-named",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "const named = checkShape({ root: handle, defs: {} }, scope).length === 0 ? scope : `${at}.${SCOPE_FIELD}`;",
+      "new": "const named = scope;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A level without its scope, a level of no level, a scope not a string and a scope not an identity are each one finding and nothing more"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "alone-unreported",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "if (hasLevel !== hasScope) own.push(",
+      "new": "if (false) own.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A level without its scope, a level of no level, a scope not a string and a scope not an identity are each one finding and nothing more"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "list-schema-ignored",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "if (own.length > 0 || touched(`${at}.elements`) || ",
+      "new": "if (own.length > 0 || ",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A level without its scope, a level of no level, a scope not a string and a scope not an identity are each one finding and nothing more"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "type-schema-ignored",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "return entry === undefined || touched(`${entry.at}.type`) ? undefined",
+      "new": "return entry === undefined ? undefined",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A level without its scope, a level of no level, a scope not a string and a scope not an identity are each one finding and nothing more"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "parent-fault-ignored",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "if (parentFault || level === 'context') continue;",
+      "new": "if (level === 'context') continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) Computes no view-scope-outside finding where the draft holds an element-parent finding"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "parent-walk-skipped",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "if (bounded && !below(entry.id, scope, parentOf, (id) => index.elementById.has(id)))",
+      "new": "if (bounded && false)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's scope is of its level and bounds what it shows",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) Computes no view-scope-outside finding where the draft holds an element-parent finding"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "parent-walk-one-step",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "    reached.add(parent);\n    at = parent;",
+      "new": "    return false;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's level and the mixed-levels advice read different things"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "outside-reads-every-type",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "const bounded = level === 'container' ? type !== undefined && CONTAINER_TYPES.has(type) : type === 'module';",
+      "new": "const bounded = type !== undefined;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's level refuses an element of another level",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's scope is of its level and bounds what it shows",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A containment figure's layer holds a box per group, at the box the layout draws each in, and its drawing keeps its bytes"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "base-level-unchecked",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "if (base !== undefined && map !== undefined && !baseBlocked) {",
+      "new": "if (false) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A base view's level types its base elements; a map not established at check computes no finding at the base"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "root-typed-directory",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "(element.root === true ? 'system' : 'directory')",
+      "new": "'directory'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A base view's level types its base elements; a map not established at check computes no finding at the base"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-level-findings-dropped",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "findings.push(...levelFindings(walked, findings, checkBaseMaps(treeFacts, manifestFacts)));",
+      "new": "void 0;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's level refuses an element of another level",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's scope is of its level and bounds what it shows",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A level without its scope, a level of no level, a scope not a string and a scope not an identity are each one finding and nothing more",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) Computes no view-scope-outside finding where the draft holds an element-parent finding",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A base view's level types its base elements; a map not established at check computes no finding at the base"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "field-version-path-not-replaced",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "      for (const at of levelFieldVersionPaths(doc)) subsectionPaths.add(at);\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A v16 draft takes level and scope as field-version, in place of the schema finding, and v12, v14 and v15 alike"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "field-version-not-reported",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "      for (const finding of levelFieldVersionFindings(doc)) add(finding); },",
+      "new": "      },",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A v16 draft takes level and scope as field-version, in place of the schema finding, and v12, v14 and v15 alike"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "v17-not-v16",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "version === LOCAL_DRAFT_SCHEMA_VERSION_V16 || hasLevelForm(version);",
+      "new": "version === LOCAL_DRAFT_SCHEMA_VERSION_V16;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 78,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's level refuses an element of another level",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A level without its scope, a level of no level, a scope not a string and a scope not an identity are each one finding and nothing more",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) Computes no view-scope-outside finding where the draft holds an element-parent finding",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A base view's level types its base elements; a map not established at check computes no finding at the base",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: a view's level and scope (version 2.50) A view's level and the mixed-levels advice read different things",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A box whose element has its own view links to it, and nothing but the pages moves",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) Zoom links and a walk share one layer: the box holds its badge, its source link, then its zoom link",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A walked figure and a zoom-only figure share one page: the positioning rules once, the walk rules, then the zoom and pass-through rules",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) The zoom target is the first rendered container view, never a context view and never a view rendered as a notice",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A container view whose base is not drawn at the render renders as a notice, and is no zoom target",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A containment figure's layer holds a box per group, at the box the layout draws each in, and its drawing keeps its bytes",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) No zoom target, no zoom link; and a v17 draft with no level or scope renders as the same draft in schema v16"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "schema-document-no-levels",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "diagrams: withLevels(withBaseViews(object.properties['diagrams'] as ArraySchema)),",
+      "new": "diagrams: (withBaseViews(object.properties['diagrams'] as ArraySchema)),",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 78,
+      "failedTests": [
+        "packages/polaris-dossier/src/draft-schema.test.ts > draft.schema.json is a JSON Schema 2020-12 document carrying the version, the revision and closed objects"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "render-levels-not-passed",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "...(viewLevels.size === 0 ? {} : { viewLevels })",
+      "new": "...{}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A box whose element has its own view links to it, and nothing but the pages moves",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) Zoom links and a walk share one layer: the box holds its badge, its source link, then its zoom link",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A walked figure and a zoom-only figure share one page: the positioning rules once, the walk rules, then the zoom and pass-through rules",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) The zoom target is the first rendered container view, never a context view and never a view rendered as a notice",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A container view whose base is not drawn at the render renders as a notice, and is no zoom target",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A containment figure's layer holds a box per group, at the box the layout draws each in, and its drawing keeps its bytes"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "packet-levels-kept",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "old": "withoutLevels(withoutWalks(withoutFigurePlan(draftDoc)))",
+      "new": "withoutWalks(withoutFigurePlan(draftDoc))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A box whose element has its own view links to it, and nothing but the pages moves"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "measure-levels-kept",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "doc = withoutLevels(withoutWalks(withoutFigurePlan(doc)));",
+      "new": "doc = withoutWalks(withoutFigurePlan(doc));",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 14,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A box whose element has its own view links to it, and nothing but the pages moves"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "brief-paragraph-missing",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    WALK_PARAGRAPH,\n    '',\n    LEVEL_PARAGRAPH,\n",
+      "new": "    WALK_PARAGRAPH,\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 42,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, containment, system-model, figure-plan, derived-base, walk and level paragraphs, task-routes section, worth-knowing paragraph and question-kinds paragraph"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "brief-version-v24",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "export const BRIEF_VERSION = 'polaris-dossier-brief-v25';",
+      "new": "export const BRIEF_VERSION = 'polaris-dossier-brief-v24';",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 42,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued writes the brief, the schema and the brief record, binding the run, the pinned revision and the schema version",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, containment, system-model, figure-plan, derived-base, walk and level paragraphs, task-routes section, worth-knowing paragraph and question-kinds paragraph"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "context-view-a-target",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (v === undefined || v.level === 'context' || zoomTargets.has(v.scope)) continue;",
+      "new": "if (v === undefined || zoomTargets.has(v.scope)) continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 23,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A box whose element has its own view links to it, and nothing but the pages moves",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) Zoom links and a walk share one layer: the box holds its badge, its source link, then its zoom link",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A walked figure and a zoom-only figure share one page: the positioning rules once, the walk rules, then the zoom and pass-through rules",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) The zoom target is the first rendered container view, never a context view and never a view rendered as a notice",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A container view whose base is not drawn at the render renders as a notice, and is no zoom target",
+        "apps/three-surface-poc/src/polaris-generation/zoom.browser.test.ts > reaches the zoom link first by keyboard, outlines it, follows it to its target, and passes the pointer through",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) links a box whose element has its own view to that view, in a zoom-only layer and in its list item, and gives the views their attributes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) carries the positioning, zoom and pass-through rules on the page holding a zoom link, and no other rule of a layer",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) shares one walked layer with a walk: the box holds its badge, its source link, then its zoom link, and the walk rules stay byte for byte"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "last-own-view-wins",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (v === undefined || v.level === 'context' || zoomTargets.has(v.scope)) continue;",
+      "new": "if (v === undefined || v.level === 'context') continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 23,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) The zoom target is the first rendered container view, never a context view and never a view rendered as a notice"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "notice-a-target",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (page === undefined || (based !== undefined && based.state !== 'drawn')) continue;",
+      "new": "if (page === undefined) continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 23,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A container view whose base is not drawn at the render renders as a notice, and is no zoom target"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "link-to-self",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (target === undefined || target.index === index) return undefined;",
+      "new": "if (target === undefined) return undefined;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 23,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) carries a containment view's level and scope before its id, and never links a figure to itself"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "withheld-targets",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (viewLevels !== undefined && !withheld) {",
+      "new": "if (viewLevels !== undefined) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 23,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) gives no zoom link, and renders, where the draft layer is withheld and no figure is drawn"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "zoom-text-missing",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "(zoom === undefined ? item : `${item.slice(0, -'</li>'.length)}",
+      "new": "(true ? item : `${item.slice(0, -'</li>'.length)}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 23,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A box whose element has its own view links to it, and nothing but the pages moves",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) The zoom target is the first rendered container view, never a context view and never a view rendered as a notice",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) links a box whose element has its own view to that view, in a zoom-only layer and in its list item, and gives the views their attributes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) shares one walked layer with a walk: the box holds its badge, its source link, then its zoom link, and the walk rules stay byte for byte",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) gives a containment a zoom-only layer of one box per group in preorder, at the boxes its layout draws"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "zoom-text-first",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "`${item.slice(0, -'</li>'.length)} <a class=\"zoom-text\" href=\"${escape(zoom.href)}\">Zoom in: ${escape(zoom.title)}</a></li>`",
+      "new": "item.replace('>', `><a class=\"zoom-text\" href=\"${escape(zoom.href)}\">Zoom in: ${escape(zoom.title)}</a> `)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 23,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A box whose element has its own view links to it, and nothing but the pages moves",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) The zoom target is the first rendered container view, never a context view and never a view rendered as a notice",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) links a box whose element has its own view to that view, in a zoom-only layer and in its list item, and gives the views their attributes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) moves the pages holding a levelled figure and the size report, and nothing else: no machine view, no other page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) shares one walked layer with a walk: the box holds its badge, its source link, then its zoom link, and the walk rules stay byte for byte",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) gives a containment a zoom-only layer of one box per group in preorder, at the boxes its layout draws"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "zoom-link-label-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<span class=\"visually-hidden\">Zoom in to ${escape(label)}: ${escape(zoom.title)}</span>",
+      "new": "<span class=\"visually-hidden\">Zoom in: ${escape(zoom.title)}</span>",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 23,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A box whose element has its own view links to it, and nothing but the pages moves",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) Zoom links and a walk share one layer: the box holds its badge, its source link, then its zoom link",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) The zoom target is the first rendered container view, never a context view and never a view rendered as a notice",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A container view whose base is not drawn at the render renders as a notice, and is no zoom target",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A containment figure's layer holds a box per group, at the box the layout draws each in, and its drawing keeps its bytes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) links a box whose element has its own view to that view, in a zoom-only layer and in its list item, and gives the views their attributes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) moves the pages holding a levelled figure and the size report, and nothing else: no machine view, no other page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) shares one walked layer with a walk: the box holds its badge, its source link, then its zoom link, and the walk rules stay byte for byte",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) gives a containment a zoom-only layer of one box per group in preorder, at the boxes its layout draws"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "zoom-only-class-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "return { wrapper: '<div class=\"walk-figure zoom-only\">',",
+      "new": "return { wrapper: '<div class=\"walk-figure\">',",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 23,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A box whose element has its own view links to it, and nothing but the pages moves",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A walked figure and a zoom-only figure share one page: the positioning rules once, the walk rules, then the zoom and pass-through rules",
+        "apps/three-surface-poc/src/polaris-generation/zoom.browser.test.ts > reaches the zoom link first by keyboard, outlines it, follows it to its target, and passes the pointer through",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) links a box whose element has its own view to that view, in a zoom-only layer and in its list item, and gives the views their attributes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) moves the pages holding a levelled figure and the size report, and nothing else: no machine view, no other page"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "zoom-link-before-badge",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${badge}${sourceLink(n)}${zoomAt(box.id)}</span>",
+      "new": "${zoomAt(box.id)}${badge}${sourceLink(n)}</span>",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 23,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) Zoom links and a walk share one layer: the box holds its badge, its source link, then its zoom link",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) shares one walked layer with a walk: the box holds its badge, its source link, then its zoom link, and the walk rules stay byte for byte"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "graph-zoom-page-unmarked",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "    if (zooms.size > 0) zoomPages.add(from);\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 23,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A box whose element has its own view links to it, and nothing but the pages moves",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A walked figure and a zoom-only figure share one page: the positioning rules once, the walk rules, then the zoom and pass-through rules",
+        "apps/three-surface-poc/src/polaris-generation/zoom.browser.test.ts > reaches the zoom link first by keyboard, outlines it, follows it to its target, and passes the pointer through",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) carries the positioning, zoom and pass-through rules on the page holding a zoom link, and no other rule of a layer",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) shares one walked layer with a walk: the box holds its badge, its source link, then its zoom link, and the walk rules stay byte for byte"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "containment-box-shifted",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${zooms[k] === undefined ? '' : zoomLink(preorder[k]!.group.label, zooms[k]!)}",
+      "new": "${zooms[k + 1] === undefined ? '' : zoomLink(preorder[k + 1]!.group.label, zooms[k + 1]!)}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 23,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) The zoom target is the first rendered container view, never a context view and never a view rendered as a notice",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A containment figure's layer holds a box per group, at the box the layout draws each in, and its drawing keeps its bytes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) gives a containment a zoom-only layer of one box per group in preorder, at the boxes its layout draws"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "containment-no-layer",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const drawing = !zoomed ? svg :",
+      "new": "const drawing = true ? svg :",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 23,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) The zoom target is the first rendered container view, never a context view and never a view rendered as a notice",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A containment figure's layer holds a box per group, at the box the layout draws each in, and its drawing keeps its bytes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) gives a containment a zoom-only layer of one box per group in preorder, at the boxes its layout draws"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "view-attrs-after-id",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${curated}${baseMap}${viewAttrs(d.id)}${local === undefined ? '' : ` id=\"figure-${escape(d.id)}\"`}>",
+      "new": "${curated}${baseMap}${local === undefined ? '' : ` id=\"figure-${escape(d.id)}\"`}${viewAttrs(d.id)}>",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 23,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A box whose element has its own view links to it, and nothing but the pages moves",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) Zoom links and a walk share one layer: the box holds its badge, its source link, then its zoom link",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A walked figure and a zoom-only figure share one page: the positioning rules once, the walk rules, then the zoom and pass-through rules",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) The zoom target is the first rendered container view, never a context view and never a view rendered as a notice",
+        "packages/polaris-dossier/src/view-level.test.ts > schema v17: zoom links (version 2.50) A container view whose base is not drawn at the render renders as a notice, and is no zoom target",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) links a box whose element has its own view to that view, in a zoom-only layer and in its list item, and gives the views their attributes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) shares one walked layer with a walk: the box holds its badge, its source link, then its zoom link, and the walk rules stay byte for byte",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) gives a containment a zoom-only layer of one box per group in preorder, at the boxes its layout draws"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "containment-attrs-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "` data-base-map=\"${drawnBase.map}\"`}${viewAttrs(d.id)}",
+      "new": "` data-base-map=\"${drawnBase.map}\"`}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 23,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) carries a containment view's level and scope before its id, and never links a figure to itself"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "pass-through-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts",
+      "old": "${zoom ? `${ZOOM_LINK_CSS}${ZOOM_PASS_THROUGH_CSS}` : ''}",
+      "new": "${zoom ? `${ZOOM_LINK_CSS}` : ''}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 9,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/zoom.browser.test.ts > reaches the zoom link first by keyboard, outlines it, follows it to its target, and passes the pointer through",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) carries the positioning, zoom and pass-through rules on the page holding a zoom link, and no other rule of a layer",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) moves the pages holding a levelled figure and the size report, and nothing else: no machine view, no other page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) shares one walked layer with a walk: the box holds its badge, its source link, then its zoom link, and the walk rules stay byte for byte"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "positioning-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts",
+      "old": "${walk ? WALK_FIGURE_CSS : zoom ? LAYER_POSITIONING_CSS : ''}",
+      "new": "${walk ? WALK_FIGURE_CSS : ''}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 9,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/zoom.browser.test.ts > reaches the zoom link first by keyboard, outlines it, follows it to its target, and passes the pointer through",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) carries the positioning, zoom and pass-through rules on the page holding a zoom link, and no other rule of a layer",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) moves the pages holding a levelled figure and the size report, and nothing else: no machine view, no other page"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "zoom-rules-everywhere",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts",
+      "old": "${zoom ? `${ZOOM_LINK_CSS}${ZOOM_PASS_THROUGH_CSS}` : ''}",
+      "new": "${`${ZOOM_LINK_CSS}${ZOOM_PASS_THROUGH_CSS}`}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 9,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) links a box whose element has its own view to that view, in a zoom-only layer and in its list item, and gives the views their attributes",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) carries the positioning, zoom and pass-through rules on the page holding a zoom link, and no other rule of a layer",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) moves the pages holding a levelled figure and the size report, and nothing else: no machine view, no other page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) carries a containment view's level and scope before its id, and never links a figure to itself",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) gives no zoom link where the element's own view is not produced, or the only view about it is a context view",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) gives no zoom link, and renders, where the draft layer is withheld and no figure is drawn"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "focus-outline-on-hover",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts",
+      "old": ".zoom-link:focus-visible{outline:",
+      "new": ".zoom-link:hover{outline:",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 9,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) carries the positioning, zoom and pass-through rules on the page holding a zoom link, and no other rule of a layer",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) moves the pages holding a levelled figure and the size report, and nothing else: no machine view, no other page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) shares one walked layer with a walk: the box holds its badge, its source link, then its zoom link, and the walk rules stay byte for byte"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "layer-passes-no-pointer",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts",
+      "old": "'.zoom-only .walk-layer,.zoom-only .walk-node{pointer-events:none}'",
+      "new": "''",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 9,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/zoom.browser.test.ts > reaches the zoom link first by keyboard, outlines it, follows it to its target, and passes the pointer through",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) carries the positioning, zoom and pass-through rules on the page holding a zoom link, and no other rule of a layer",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) moves the pages holding a levelled figure and the size report, and nothing else: no machine view, no other page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) shares one walked layer with a walk: the box holds its badge, its source link, then its zoom link, and the walk rules stay byte for byte"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "zoom-link-top-left",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-walk.ts",
+      "old": ".zoom-link{position:absolute;right:${tokens.length.none};",
+      "new": ".zoom-link{position:absolute;left:${tokens.length.none};",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 9,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/zoom.browser.test.ts > reaches the zoom link first by keyboard, outlines it, follows it to its target, and passes the pointer through",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) carries the positioning, zoom and pass-through rules on the page holding a zoom link, and no other rule of a layer",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) moves the pages holding a levelled figure and the size report, and nothing else: no machine view, no other page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-zoom.test.ts > zoom links (version 2.50) shares one walked layer with a walk: the box holds its badge, its source link, then its zoom link, and the walk rules stay byte for byte"
+      ],
+      "seconds": 2
+    }
+  ],
+  "equivalent": [
+    {
+      "id": "derive-levels-not-stripped",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "const subject = withoutLevels(withoutWalks(given));",
+      "new": "const subject = withoutWalks(given);",
+      "reason": "Both callers that can hand deriveFindings a v17 draft strip its levels first (check.ts and render.ts, each `doc = withoutLevels(withoutWalks(doc))` before the call; the mutants check-level-findings-dropped and render-levels-not-passed show both paths run), and the third caller, verify-text.ts, passes a synthetic subject with no diagrams. The strip inside deriveFindings is the documented contract for any later caller, not reachable today."
+    },
+    {
+      "id": "field-version-in-v17",
+      "file": "packages/polaris-dossier/src/view-level.ts",
+      "old": "if (!hasModelForm(version) || hasLevelForm(version)) return [];",
+      "new": "if (!hasModelForm(version)) return [];",
+      "reason": "levelFieldVersionPaths and levelFieldVersionFindings are read only inside deriveFindings, which reads the draft after withoutLevels; in a v17 draft that removes every `level` and `scope`, so with the version arm gone the functions still find no member to report."
+    },
+    {
+      "id": "graph-layer-on-1048",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "    if (!walkableWidth(geometry.width)) return undefined;\n",
+      "new": "",
+      "reason": "Design D8's \"put the layer on a 1048 px drawing\". No drawing the readable layout draws through an operator-agent dossier is 1048 px wide: it stacks every graph figure into a column (the R88 record's equivalent `width-guard-deleted`, the same guard, which a zoom-only layer now shares). `walkableWidth` itself is pinned at 1047, 1048 and 1049 by dossier-walk.test.ts."
+    },
+    {
+      "id": "containment-layer-on-1048",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": " && walkableWidth(layout.width);",
+      "new": ";",
+      "reason": "A containment drawing is 40 + 184 n px wide for its one to five top-level groups (diagram-layout.ts `figureWidth`), at most 960 px, so no containment is 1048 px wide and the guard never fails."
+    },
+    {
+      "id": "base-node-zoomed",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const zoom = isBase(n.id) ? undefined : zoomOf(from, n.id, index);",
+      "new": "const zoom = zoomOf(from, n.id, index);",
+      "reason": "A base node's identity is a fact identity, which starts with `_` (derived-base.ts), while a zoom target is keyed by a `scope`, a model element's identity, which check resolves against the model alone and which the identity schema never lets start with `_`; so `zoomOf` finds no target for a base node either way."
+    },
+    {
+      "id": "target-guard-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (!drawnFigures.has(target.id)) throw new Error(",
+      "new": "if (false) throw new Error(",
+      "reason": "The guard refuses a render whose zoom target the inertness check turned into a notice. A checked draft's labels pass label-markup and the drawing is built from escaped text only, so assertInertSvg never refuses a checked figure, and no test can reach the guard through the pipeline."
+    },
+    {
+      "id": "render-rederive-levels-dropped",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "  findings.push(...levelFindings(walked, findings, {}));\n",
+      "new": "",
+      "reason": "The render re-derives a passed revision's findings; a draft that check passed has no level finding, and check's and the render's derivations read the same frozen bytes (only the base view-level depends on the maps, which the render passes as unestablished), so a passed draft reaches render with none to find."
+    }
+  ],
+  "summary": {
+    "mutants": 49,
+    "killed": 49,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 7
+  }
+}

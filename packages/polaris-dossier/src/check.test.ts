@@ -535,7 +535,8 @@ describe('check: reading ledger', () => {
     const stored = [0, 1].map((n) => JSON.parse(read(run, `checks/rev-${n}.json`)) as Record<string, unknown>);
     expect(stored[0]!['readingLedger']).toEqual(LEDGER);
     expect(JSON.stringify(stored[1]!['readingLedger'])).toBe(JSON.stringify(stored[0]!['readingLedger']));
-    expect(Object.keys(stored[0]!).slice(-3)).toEqual(['figureFit', 'readingLedger', 'manifestFacts']);
+    // Version 2.39 (syzygy-3efd.89): importFacts sits immediately before manifestFacts, which stays last.
+    expect(Object.keys(stored[0]!).slice(-4)).toEqual(['figureFit', 'readingLedger', 'importFacts', 'manifestFacts']);
     expect(stored[0]!).not.toHaveProperty('readingDifference');
     expect(first.readingLedger).toEqual(LEDGER);
     // Advice: no outcome or finding changes; the first run of the repository has no earlier ledger, so its difference is Unknown.
@@ -1980,7 +1981,7 @@ describe('check: the record within its read bound (version 2.10)', () => {
       expect(read(run, 'checks/rev-0.json')).toBe(`${JSON.stringify(record, null, 2)}\n`);
       // The report carries the record written and every finding the full record would have held (none here), and no fit advice.
       expect(result.report).toMatchObject({ outcome: 'findings', findings: record.findings, findingsLeftOut: [] });
-      for (const member of ['figureFit', 'mechanismAdvice', 'readingLedger', 'manifestFacts', 'quotations', 'citedBlobs', 'executionFlags', 'excludedContent']) expect(result.report).not.toHaveProperty(member);
+      for (const member of ['figureFit', 'mechanismAdvice', 'readingLedger', 'importFacts', 'manifestFacts', 'quotations', 'citedBlobs', 'executionFlags', 'excludedContent']) expect(result.report).not.toHaveProperty(member);
       // The advice it computes from the draft itself is unchanged, and the derived record is written as before.
       expect(result.report).toHaveProperty('readerAdvice');
       expect(result.report).toHaveProperty('structureRecord');
@@ -2311,11 +2312,11 @@ describe('check: the worth-knowing mark (schema v13)', () => {
     }
   });
 
-  it('refuses a draft naming v15, a number another change holds and this code does not implement, as an unknown version, never as v10 or v13', async () => {
-    for (const version of ['polaris-dossier-local-draft-v15']) {
+  it('refuses a draft naming v18, a number another change holds and this code does not implement, as an unknown version, never as v10 or v13', async () => {
+    for (const version of ['polaris-dossier-local-draft-v18']) {
       const result = await findingsOf(drafted(version, (d) => { d.hero = HERO_OMITTED; d.sections[0].paragraphs[0].worthKnowing = true; }));
       expect(result.outcome, version).toBe('findings');
-      expect(listed(result).filter(({ at }) => at === '$.schemaVersion'), version).toEqual([{ kind: 'schema', at: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13, polaris-dossier-local-draft-v14' }]);
+      expect(listed(result).filter(({ at }) => at === '$.schemaVersion'), version).toEqual([{ kind: 'schema', at: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13, polaris-dossier-local-draft-v14, polaris-dossier-local-draft-v15, polaris-dossier-local-draft-v16, polaris-dossier-local-draft-v17' }]);
     }
   });
   // Version 2.37 (syzygy-5dhm.43): the choice floor on check's report, from the understanding record, never in the check record.
@@ -2534,11 +2535,11 @@ describe('check: source-example advice', () => {
     expect(JSON.stringify(refused)).not.toContain('sourceExampleAdvice');
   });
 
-  it('omits advice for an earlier schema, unsupported v15 and the bounded check', async () => {
+  it('omits advice for an earlier schema, unsupported v18 and the bounded check', async () => {
     const earlier = report(await runCheck(drafted(draft => { draft.schemaVersion = 'polaris-dossier-local-draft-v10'; })));
     expect(earlier.findings).toEqual([]);
     expect(earlier).not.toHaveProperty('sourceExampleAdvice');
-    const unsupported = report(await runCheck(drafted(draft => { draft.schemaVersion = 'polaris-dossier-local-draft-v15'; })));
+    const unsupported = report(await runCheck(drafted(draft => { draft.schemaVersion = 'polaris-dossier-local-draft-v18'; })));
     expect(unsupported.findings).toContainEqual(expect.objectContaining({ kind: 'schema', at: '$.schemaVersion' }));
     expect(unsupported).not.toHaveProperty('sourceExampleAdvice');
 

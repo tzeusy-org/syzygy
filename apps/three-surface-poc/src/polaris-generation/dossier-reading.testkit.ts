@@ -121,6 +121,18 @@ export function figureKindsInput(): { readonly local: LocalRenderInput; readonly
   }] } as unknown as LocalRenderInput['draft'] } };
 }
 
+/** A figure walk (REQ-polaris-generation-034 version 2.40, syzygy-3efd.88) over the reading dossier's flow on section one: the five-node chain
+ * `a` to `e`, its node `b` citing lines 1 to 1 of the reading source and `d` withheld, walked in three steps, `b`, `e` and `d`, each with the
+ * section's one paragraph `forms`. */
+export function walkInput(): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {
+  const { local, sources } = readingInput();
+  return { sources, local: { ...local,
+    citationLines: new Map([...(local.citationLines ?? new Map()), ['b', new Map([[READING_SOURCE.sourceId, [{ start: 1, end: 1 }]]])]]),
+    withheldElements: new Map([['d', { sources: 1, named: [] }]]),
+    walks: new Map([['flow', [{ node: 'b', block: 'forms' }, { node: 'e', block: 'forms' }, { node: 'd', block: 'forms' }]]]),
+  } };
+}
+
 /** A containment (REQ-polaris-generation-034 version 2.23, syzygy-3efd.31) on the reading dossier's first section: two top-level groups, the
  * first holding two (one of them holding one more, Unknown), so its drawing is 408 px wide and three levels deep. */
 export function containmentInput(): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {
@@ -262,4 +274,52 @@ export function lineCitationInput() {
 export function splitLineCitationInput() {
   const body = Array.from({ length: 1200 }, (_, index) => `# synthetic setting ${index + 1}`.padEnd(99, ' ') + '\n').join('');
   return lineCitationFixture(body, [{ start: 999, end: 1002 }], [{ start: 998, end: 1004 }]);
+}
+
+/** View levels and zoom links (REQ-polaris-generation-034 version 2.50, syzygy-3efd.39) over the reading dossier: its flow on section one
+ * becomes a context view about node `b`, and a deep dive `runtime` of section one draws `parts`, a container view about `b`, so `b`'s zoom
+ * target is `parts` on `deep-dives/runtime.html`. With `walked`, the flow also carries the walk of `walkInput`. */
+export function zoomInput(walked = false): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {
+  const { local, sources } = walked ? walkInput() : readingInput();
+  const sourceIds = [READING_SOURCE.sourceId];
+  const draft = local.draft as unknown as Record<string, unknown>;
+  const parts = { id: 'parts', sectionId: 'one', home: { kind: 'deep-dive', id: 'runtime' }, kind: 'boundary', title: 'Parts of <b>', relationship: 'what b is built of',
+    disposition: { kind: 'produced', assetIds: [] },
+    nodes: [{ id: 'p1', label: 'Part one', epistemic: 'inferred', sourceIds }, { id: 'p2', label: 'Part two', epistemic: 'inferred', sourceIds }],
+    edges: [{ id: 'p-edge', from: 'p1', to: 'p2', label: 'feeds', epistemic: 'inferred', sourceIds }] };
+  const dive = { id: 'runtime', title: 'Runtime', sectionId: 'one', disposition: { kind: 'produced', assetIds: [] }, paragraphs: [{ id: 'dive-p', text: 'x', sourceIds, children: [] }] };
+  const blocks = new Map(local.blocks as ReadonlyMap<string, unknown>);
+  blocks.set('dive-p', { marking: 'inferred', unknownReason: null, basis: 'fixture', executions: [], segments: [{ kind: 'prose', text: 'The runtime holds two parts.' }] });
+  return { sources, local: { ...local, blocks: blocks as LocalRenderInput['blocks'],
+    draft: { ...draft, diagrams: [...(draft['diagrams'] as unknown[]), parts], deepDives: [dive] } as unknown as LocalRenderInput['draft'],
+    viewLevels: new Map([['flow', { level: 'context', scope: 'b' }], ['parts', { level: 'container', scope: 'b' }]]) } };
+}
+
+/** A walked figure and a zoom-only figure on one page (version 2.50, review R39 finding 6): `zoomInput(true)`, whose `flow` carries the walk
+ * on section one, with a second figure `more` on the same section, unwalked, which draws `b` and so carries a zoom-only layer. */
+export function zoomMixedInput(): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {
+  const { local, sources } = zoomInput(true);
+  const sourceIds = [READING_SOURCE.sourceId];
+  const draft = local.draft as unknown as Record<string, unknown>;
+  const more = { id: 'more', sectionId: 'one', kind: 'boundary', title: 'More of b', relationship: 'what b talks to', disposition: { kind: 'produced', assetIds: [] },
+    nodes: [{ id: 'b', label: 'Node b', epistemic: 'inferred', sourceIds }, { id: 'm-peer', label: 'Peer', epistemic: 'inferred', sourceIds }],
+    edges: [{ id: 'm-peer-edge', from: 'b', to: 'm-peer', label: 'talks to', epistemic: 'inferred', sourceIds }] };
+  // `b` is one element both views select (version 2.24): its claim renders once, in `flow`, and `more` lists it as shown there.
+  const element = (id: string, views: string[]) => ({ id, type: 'service', parent: null, views });
+  const model = { elements: [...['a', 'c', 'd', 'e'].map(id => element(id, ['flow'])), element('b', ['flow', 'more']), element('m-peer', ['more']),
+    element('p1', ['parts']), element('p2', ['parts'])], relationships: [] };
+  return { sources, local: { ...local, model, draft: { ...draft, diagrams: [...(draft['diagrams'] as unknown[]), more] } as unknown as LocalRenderInput['draft'] } };
+}
+
+/** A containment's layer (version 2.50): `containmentInput`'s workspace with `web` the scope of a component view `inside-web` on section
+ * two, so the containment's box for `web` links to `#figure-inside-web` on that section's page. */
+export function zoomContainmentInput(): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {
+  const { local, sources } = containmentInput();
+  const sourceIds = [READING_SOURCE.sourceId];
+  const draft = local.draft as unknown as Record<string, unknown>;
+  const inside = { id: 'inside-web', sectionId: 'two', kind: 'boundary', title: 'Inside the web front end', relationship: 'what web holds', disposition: { kind: 'produced', assetIds: [] },
+    nodes: [{ id: 'm1', label: 'Module one', epistemic: 'inferred', sourceIds }, { id: 'm2', label: 'Module two', epistemic: 'inferred', sourceIds }],
+    edges: [{ id: 'm-edge', from: 'm1', to: 'm2', label: 'imports', epistemic: 'inferred', sourceIds }] };
+  return { sources, local: { ...local, draft: { ...draft, diagrams: [...(draft['diagrams'] as unknown[]), inside] } as unknown as LocalRenderInput['draft'],
+    viewLevels: new Map([['inside-web', { level: 'component', scope: 'web' }]]) } };
 }

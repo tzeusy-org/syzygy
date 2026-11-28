@@ -2,8 +2,11 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { checkShape, ref, handle, leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText, type Schema } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { CONTAINMENT_BOUNDS, CONTAINMENT_KIND, figureMembersOf, hasContainmentForm, hasModelForm, LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V13, LOCAL_DRAFT_SCHEMA_VERSION_V14, FIGURE_PLAN_FIELD, issuedDraftSchema, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, RELATION_FIELD, UNIT_FIELD, hasRelationForm, hasHeroForm, heroOf, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, QUESTION_KINDS_FIELD, hasWorthKnowingForm, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
+import { hasFigurePlanForm, PRESENTATION_ELEMENT_KINDS, CONTAINMENT_BOUNDS, CONTAINMENT_KIND, figureMembersOf, hasContainmentForm, hasModelForm, LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V13, LOCAL_DRAFT_SCHEMA_VERSION_V14, FIGURE_PLAN_FIELD, issuedDraftSchema, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, RELATION_FIELD, UNIT_FIELD, hasRelationForm, hasHeroForm, heroOf, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, QUESTION_KINDS_FIELD, hasWorthKnowingForm, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
 import { isEntryPoint } from './derive.js';
+import { admitOf, baseFieldVersionFindings, baseSchemaReading } from './derived-base.js';
+import { levelFieldVersionFindings, levelFieldVersionPaths, withoutLevels } from './view-level.js';
+import { walkFieldVersionFindings, walkFieldVersionPaths, withoutWalks } from './walk.js';
 import { expandModel, modelFieldVersionFindings, modelFieldVersionPaths, modelIndex } from './system-model.js';
 import { containmentName, containmentDiagrams, containmentFieldVersionFindings, containmentFieldVersionPaths, containmentStructuralFindings, groupName, groupsOf } from './containment.js';
 import { UNIT_FAULT_WORDS, UNIT_TEXT_LIMIT, decideWitness, unitFault, unitOf, type EdgeEnd, type RelationType, type UnitFault, type UnitTree, type WitnessDecision, type WitnessInputs } from './relation-witness.js';
@@ -24,7 +27,7 @@ export const CODE_EXCERPT_MAX_LINES = 60;
 const LABEL_MARKUP = /[<>&`]|!?\[[^\]\n]*\]\(|(?:^|[\s(])(?:\*{1,2}|_{1,2})(?=\S)|(?<=\S)(?:\*{1,2}|_{1,2})(?:$|[\s).,;:!?])/u;
 
 /** The JSON path of every presentation element in the draft. */
-const ELEMENT_KINDS = new Set(['table', 'callout', 'steps', 'definitions', 'cards', 'details', 'code']);
+const ELEMENT_KINDS = PRESENTATION_ELEMENT_KINDS;
 function elementEntries(doc: Readonly<Record<string, unknown>>): string[] {
   const out: string[] = [];
   walk(doc, '$', (value, at) => { if (ELEMENT_KINDS.has(text(value['kind']) ?? '') && /\.(?:paragraphs|elements|children)\[\d+\]$/u.test(at)) out.push(at); });
@@ -107,7 +110,7 @@ export interface SubjectRules {
   /** The declared clarification-question limit, where the subject records questions. */
   readonly maxQuestions: number | null;
   /** The subject's references and required records, after identities are checked. */
-  readonly structural: (doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void) => void;
+  readonly structural: (doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void, inputs?: Pick<DeriveInputs, 'screen'>) => void;
   readonly blocks: (doc: Readonly<Record<string, unknown>>) => readonly SubjectBlock[];
   /** The self-reported account of what the session read: its key, and the parts other than `inspected` that list `{path, reason}`. */
   readonly account: { readonly key: string; readonly parts: readonly string[] };
@@ -126,7 +129,10 @@ type BlobState =
 /** Every check over a parsed subject. Each walker tolerates a subject of the wrong shape, so one submission reports every finding it
  * carries, not only its schema faults. It freezes and writes nothing: `checkSubject` freezes, and `render` derives again from a frozen
  * revision with it. */
-export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rules: SubjectRules): Promise<Derived> {
+export async function deriveFindings(given: unknown, inputs: DeriveInputs, rules: SubjectRules): Promise<Derived> {
+  // A v16 draft's walks (version 2.40) and a v17 draft's view levels (version 2.50) are presentation, read by their own findings alone: no
+  // other check reads them.
+  const subject = withoutLevels(withoutWalks(given));
   const findings: CheckFinding[] = [];
   const add = (finding: CheckFinding): void => { findings.push(finding); };
   const { noun } = rules;
@@ -153,7 +159,7 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
     else add({ kind: 'duplicate-id', at, detail: `the identity ${JSON.stringify(id)} is already used at ${first}` });
   });
 
-  rules.structural(doc, add);
+  rules.structural(doc, add, inputs);
   const executionIds = new Set(list(doc['executions']).flatMap((execution) => (isRecord(execution) && text(execution['id']) !== undefined ? [text(execution['id'])!] : [])));
 
   // A presentation element's short labels are plain text that claims nothing: markup in one is a finding at its path.
@@ -642,7 +648,7 @@ export interface RelationDecisions {
   readonly nestings: readonly { readonly at: string; readonly id: string; readonly parentId: string; readonly diagram: number; readonly diagramName: string; readonly decision: WitnessDecision }[];
 }
 
-/** Rule `relation-witness` version 1 over a v9 draft (version 2.19): `asserted` says whether the draft asserts an edge (labelled Inferred and
+/** Rule `relation-witness` version 2 (version 1 plus the `imports` row, version 2.49) over a v9 draft (version 2.19): `asserted` says whether the draft asserts an edge (labelled Inferred and
  * not a withheld item), `tree` is the blob test's view of the pinned tree (undefined where it could not be listed), and `facts` the facts
  * the caller derived. A unit is tested only where it is one of the six forms; an edge is decided only in a produced graph diagram. Empty for
  * any other draft. */
@@ -766,7 +772,7 @@ function questionKindsFieldVersionPaths(doc: Readonly<Record<string, unknown>>):
 /** A `figurePlan` in a draft of schema v13 or earlier: a field-version finding at `$.figurePlan`, in place of the schema finding there
  * (version 2.33). A v14 draft's plan is read by its own findings (figure-plan.ts), never here. */
 function figurePlanFieldVersionPaths(doc: Readonly<Record<string, unknown>>): string[] {
-  return doc['schemaVersion'] !== LOCAL_DRAFT_SCHEMA_VERSION_V14 && LOCAL_DRAFT_SCHEMA_VERSIONS.some((known) => known === doc['schemaVersion'])
+  return !hasFigurePlanForm(doc['schemaVersion']) && LOCAL_DRAFT_SCHEMA_VERSIONS.some((known) => known === doc['schemaVersion'])
     && Object.hasOwn(doc, FIGURE_PLAN_FIELD) ? [`$.${FIGURE_PLAN_FIELD}`] : [];
 }
 
@@ -841,10 +847,17 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
       for (const at of questionKindsFieldVersionPaths(doc)) subsectionPaths.add(at);
       // A `figurePlan` in a v13 or earlier draft: likewise (version 2.33).
       for (const at of figurePlanFieldVersionPaths(doc)) subsectionPaths.add(at);
+      // A section's or deep dive's `walk` in a v15 or earlier draft: likewise (version 2.40).
+      for (const at of walkFieldVersionPaths(doc)) subsectionPaths.add(at);
+      // A view's `level` or `scope` in a v12, v14, v15 or v16 draft: likewise (version 2.50).
+      for (const at of levelFieldVersionPaths(doc)) subsectionPaths.add(at);
       // A containment kind or `groups` in a v10 or earlier draft: likewise (version 2.23).
       for (const at of containmentFieldVersionPaths(doc)) subsectionPaths.add(at);
       // `model` or a diagram's `view` in a v11 or earlier draft: likewise (version 2.24).
       for (const at of modelFieldVersionPaths(doc)) subsectionPaths.add(at);
+      // A view's `base` or a relationship's base end in a v12 or v14 draft: likewise; in a v15 draft, each read by its own form (version 2.35).
+      const baseReading = baseSchemaReading(doc, current.defs);
+      for (const at of baseReading.fieldVersioned) subsectionPaths.add(at);
       const fieldVersioned = (path: string): boolean => subsectionPaths.has(path) || relationPaths.has(path)
         || (hasHeroForm(version) && (path === '$.hero' || path === '$.hero.figure'));
       if (hasFigureKindForm(version)) {
@@ -868,14 +881,15 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
         // A v9 or later node's `unit` of any other form or carrying any other member is one schema finding at the node's `unit` (version 2.19),
         // whatever fault within it the generic check names: each fault below a unit is reported once, at the unit, with the oneOf detail.
         const unitsReported = new Set<string>();
-        const replaced = !hasRelationForm(version) ? unnamed : (error: { readonly path: string; readonly detail: string }) => (unnamed(error) ?? [error]).flatMap((fault) => {
+        const unitsRead = !hasRelationForm(version) ? unnamed : (error: { readonly path: string; readonly detail: string }) => (unnamed(error) ?? [error]).flatMap((fault) => {
           const unit = UNIT_FAULT_PATH.exec(fault.path)?.[1];
           if (unit === undefined) return [fault];
           if (unitsReported.has(unit)) return [];
           unitsReported.add(unit);
           return [{ path: unit, detail: unitFormsDetail }];
         });
-        const schema = version === LOCAL_DRAFT_SCHEMA_VERSION_V14 ? current : hasWorthKnowingForm(version) ? v13 : hasModelForm(version) ? v12 : hasContainmentForm(version) ? v11 : hasHeroForm(version) ? v10 : hasRelationForm(version) ? v9 : version === LOCAL_DRAFT_SCHEMA_VERSION_V8 ? v8 : v7;
+        const replaced = (error: { readonly path: string; readonly detail: string }) => baseReading.replaced(error) ?? unitsRead(error);
+        const schema = hasFigurePlanForm(version) ? current : hasWorthKnowingForm(version) ? v13 : hasModelForm(version) ? v12 : hasContainmentForm(version) ? v11 : hasHeroForm(version) ? v10 : hasRelationForm(version) ? v9 : version === LOCAL_DRAFT_SCHEMA_VERSION_V8 ? v8 : v7;
         return { schema, reported: { test: (path) => standing.has(path) || fieldVersioned(path) }, replaced };
       }
       const fieldVersion = new Set(figureFieldVersionPaths(doc));
@@ -884,7 +898,13 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
     },
     maxQuestions,
     // A v12 draft's diagram references and produced dispositions are read from its views' expansion (version 2.24), each path moved back.
-    structural: (doc, add) => { if (hasModelForm(doc['schemaVersion'])) { const { doc: expanded, move } = expandModel(doc); draftStructure(expanded, (finding) => add({ ...finding, at: move(finding.at) }), poleLimit); } else draftStructure(doc, add, poleLimit); thesisStructure(doc, add); figureStructure(doc, add); subsectionStructure(doc, add); relationStructure(doc, add); worthKnowingStructure(doc, add); },
+    structural: (doc, add, inputs) => { if (hasModelForm(doc['schemaVersion'])) { const { doc: expanded, move } = expandModel(doc); draftStructure(expanded, (finding) => add({ ...finding, at: move(finding.at) }), poleLimit); } else draftStructure(doc, add, poleLimit); thesisStructure(doc, add); figureStructure(doc, add); subsectionStructure(doc, add); relationStructure(doc, add); worthKnowingStructure(doc, add);
+      // Version 2.35: a v12 or v14 draft's `base` and base ends, each `field-version`, its detail screened.
+      for (const finding of baseFieldVersionFindings(doc, inputs === undefined ? () => 'unavailable' : admitOf(inputs.screen))) add(finding);
+      // Version 2.40: a v15 or earlier draft's `walk`, `field-version`.
+      for (const finding of walkFieldVersionFindings(doc)) add(finding);
+      // Version 2.50: a v12, v14, v15 or v16 draft's view `level` and `scope`, `field-version`.
+      for (const finding of levelFieldVersionFindings(doc)) add(finding); },
     blocks: collectBlocks,
     account: { key: 'discovery', parts: ['selected', 'excluded', 'unresolved', 'deferred'] },
   };

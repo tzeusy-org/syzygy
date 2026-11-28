@@ -72,11 +72,25 @@ export const LOCAL_DRAFT_SCHEMA_VERSION_V13 = 'polaris-dossier-local-draft-v13';
  * `worthKnowingNone` and `questionKinds`), and that carries one member more, the required `figurePlan`, read by check alone. Brief v22
  * issues it. A v13 or earlier draft still checks and renders as before, and `figurePlan` in one is field-version. */
 export const LOCAL_DRAFT_SCHEMA_VERSION_V14 = 'polaris-dossier-local-draft-v14';
-/** The schema the brief issues: v14. */
-export const LOCAL_DRAFT_SCHEMA_VERSION = LOCAL_DRAFT_SCHEMA_VERSION_V14;
+/** v15 (REQ-polaris-generation-034 version 2.35, syzygy-3efd.38): a schema-v14 draft in every respect but two. A graph or containment
+ * `view` may carry `base`, which starts its figure from the directory map or the unit map (derived-base.ts), and a cited relationship's
+ * `from` or `to` may be a base end `{"map", "path"}`. Brief v23 issues it. A v14 or earlier draft still checks and renders as before, and in
+ * a v12 or v14 draft either member is field-version. */
+export const LOCAL_DRAFT_SCHEMA_VERSION_V15 = 'polaris-dossier-local-draft-v15';
+/** v16 (REQ-polaris-generation-034 version 2.40, syzygy-3efd.88): a schema-v15 draft in every respect but one. A section or a deep dive may
+ * carry `walk`, one reading path through one graph figure drawn there, in numbered steps (walk.ts). Brief v24 issues it. A v15 or earlier
+ * draft still checks and renders as before, and `walk` in one is field-version. */
+export const LOCAL_DRAFT_SCHEMA_VERSION_V16 = 'polaris-dossier-local-draft-v16';
+/** v17 (REQ-polaris-generation-034 version 2.50, syzygy-3efd.39): a schema-v16 draft in every respect but one. A graph or containment
+ * `view` may carry `level` and `scope`, the two together or neither: its level of abstraction and the element it is about (view-level.ts).
+ * Brief v25 issues it. A v16 or earlier draft still checks and renders as before, and in a v12, v14, v15 or v16 draft either member is
+ * field-version. */
+export const LOCAL_DRAFT_SCHEMA_VERSION_V17 = 'polaris-dossier-local-draft-v17';
+/** The schema the brief issues: v17. */
+export const LOCAL_DRAFT_SCHEMA_VERSION = LOCAL_DRAFT_SCHEMA_VERSION_V17;
 export { CONTAINMENT_KIND };
 /** Every draft schema version `check` reads. */
-export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION_V11, LOCAL_DRAFT_SCHEMA_VERSION_V12, LOCAL_DRAFT_SCHEMA_VERSION_V13, LOCAL_DRAFT_SCHEMA_VERSION_V14] as const);
+export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION_V11, LOCAL_DRAFT_SCHEMA_VERSION_V12, LOCAL_DRAFT_SCHEMA_VERSION_V13, LOCAL_DRAFT_SCHEMA_VERSION_V14, LOCAL_DRAFT_SCHEMA_VERSION_V15, LOCAL_DRAFT_SCHEMA_VERSION_V16, LOCAL_DRAFT_SCHEMA_VERSION_V17] as const);
 /** The versions the schemas before v11 and v13's name in `schemaVersion`: all but v11 and v12, which no brief issues (see their
  * constants). The v11, v12 and v14 schemas name every version; only v14's is published. */
 const NAMED_SCHEMA_VERSIONS: readonly string[] = Object.freeze(LOCAL_DRAFT_SCHEMA_VERSIONS.filter((version) => version !== LOCAL_DRAFT_SCHEMA_VERSION_V11
@@ -100,7 +114,18 @@ export const hasHeroForm = (version: unknown): boolean => version === LOCAL_DRAF
 export const hasContainmentForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V11 || hasModelForm(version);
 /** Whether a draft carries the system model and draws its graph and containment figures as views of it: v12 (version 2.24) and v14
  * (version 2.33). */
-export const hasModelForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V12 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14;
+export const hasModelForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V12 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14
+  || hasBaseForm(version);
+/** Whether a draft's views may carry `base` and its cited relationships base ends: v15 (version 2.35), and v16 (version 2.40, which reads
+ * every rule naming schema v15 as naming v16 too). */
+export const hasBaseForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V15 || hasWalkForm(version);
+/** Whether a section or deep dive may carry `walk`: v16 (version 2.40), and v17 (version 2.50, which reads every rule naming schema v16 as
+ * naming v17 too). */
+export const hasWalkForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V16 || hasLevelForm(version);
+/** Whether a graph or containment view may carry `level` and `scope`: v17 (version 2.50). */
+export const hasLevelForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V17;
+/** Whether a draft carries `figurePlan`, read by check alone: v14 (version 2.33), v15 (version 2.35), v16 (version 2.40) and v17 (version 2.50). */
+export const hasFigurePlanForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V14 || hasBaseForm(version);
 /** Whether a draft is of a known version that has no system model and is not v13, so `model` or a diagram's `view` in it is field-version
  * (version 2.24, "a draft of schema v11 or earlier"). v13 is not one: it reports either as v13 did before. */
 export const precedesModel = (version: unknown): boolean => !hasModelForm(version) && !hasWorthKnowingForm(version)
@@ -111,7 +136,8 @@ export const precedesContainment = (version: unknown): boolean => !hasContainmen
   && LOCAL_DRAFT_SCHEMA_VERSIONS.some((known) => known === version);
 /** Whether a draft's version has the worth-knowing mark, a Pole's `worthKnowingNone` and `questionKinds`: v13 (version 2.26) and v14
  * (version 2.33, which reads every rule naming schema v13 alone as naming v13 or v14). */
-export const hasWorthKnowingForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V13 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14;
+export const hasWorthKnowingForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V13 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14
+  || hasBaseForm(version);
 /** The v14 draft's figure plan (version 2.33): the authoring session's working record, read by check alone (figure-plan.ts). */
 export const FIGURE_PLAN_FIELD = 'figurePlan';
 export const FIGURE_PLAN_DESCRIPTION = 'Required. Your figure plan, written before the prose: one entry for the overview, each section and each deep dive, its `home` written as a diagram\'s `home` is. An entry is {"home", "question", "kind", "figure"}, the one question a picture there answers better than text, the figure kind it needs and the diagram, homed there and of that kind, that answers it; or {"home", "omitted"}, why the place has no planned figure. The plan is never rendered or published; `syzygy dossier check` reads it.';
@@ -193,6 +219,19 @@ export const UNIT_KIND_TYPES: Readonly<Record<string, ElementType>> = Object.fre
  * elements and one to 80 relationships; a containment view two to 40 elements. */
 export const MODEL_BOUNDS = Object.freeze({ elements: [0, 200] as const, relationships: [0, 400] as const, graphElements: [1, 40] as const,
   graphRelationships: [1, 80] as const, containmentElements: [2, 40] as const });
+/** A v16 section's or deep dive's `walk` (version 2.40): the member, and the description the schema document gives it; the document admits
+ * any value there, every failure of its form being a `walk` finding (walk.ts). */
+export const WALK_FIELD = 'walk';
+/** The seven presentation element kinds a `paragraphs` list may hold beside claim blocks: check's presentation-element paths (check-derive.ts)
+ * and the blocks a walk's step may not name (walk.ts) read this one set. */
+export const PRESENTATION_ELEMENT_KINDS: ReadonlySet<string> = new Set(['table', 'callout', 'steps', 'definitions', 'cards', 'details', 'code']);
+export const WALK_DESCRIPTION = 'Optional. One reading path through one graph figure drawn in this place: {"figure": <that diagram\'s id>, "steps": [{"element", "block"}, ...]}, two to twelve steps in reading order, each naming one element the figure draws (a base element as {"map", "path"}) and one of this place\'s paragraphs that cites its sources. Syzygy numbers each step\'s element, lists the steps beside the figure and highlights an element when its step is chosen; the walk states nothing itself.';
+/** A v15 view's `base` (version 2.35): the member, the two maps it may name, and its bounds. */
+export const BASE_FIELD = 'base';
+export const BASE_MAPS = Object.freeze(['directories', 'units'] as const);
+export type BaseMapName = typeof BASE_MAPS[number];
+export const BASE_BOUNDS = Object.freeze({ hide: [1, 20] as const, hidePaths: [1, 40] as const, select: [1, 40] as const, group: [1, 5] as const,
+  groupPaths: [1, 8] as const, names: [1, 40] as const, reason: [1, 200] as const, viewElements: [0, 40] as const, viewRelationships: [0, 80] as const, boxes: 40 });
 /** The bounds of the v7 figure kinds' lists. */
 export const FIGURE_BOUNDS: Readonly<Record<Exclude<FigureMember, 'nodes' | 'edges' | 'groups' | 'view'>, readonly [number, number]>> = Object.freeze({
   participants: [2, 5], messages: [1, 30], lanes: [2, 5], steps: [2, 20],
@@ -317,6 +356,24 @@ const understandingItem: DraftSchema = { oneOf: [
   object({ id: handle, label: one('unknown'), reason, statement: text, scope: text, citations: citations(0) }),
 ] };
 const pathReason = object({ path: repoPath, reason: text });
+
+/** A base path (version 2.35): `.`, a top-level directory's path, a manifest file's path, or that path and `#<k>`. Whether it names an
+ * element of the map is check's (derived-base.ts). */
+const basePath: DraftSchema = { type: 'string', minLength: 1, maxLength: 1024 };
+/** A `reason` or `restReason`: one to 200 characters of the draft's own words, at least one of them not white space. */
+const baseReason: DraftSchema = { type: 'string', minLength: BASE_BOUNDS.reason[0], maxLength: BASE_BOUNDS.reason[1], pattern: '\\S' };
+/** A v15 view's `base` (version 2.35), every member but `map` optional; which members may stand together is check's (derived-base.ts). A
+ * display name is a node's claim, its `path` naming the one base element it names. */
+export const BASE_SCHEMA: DraftSchema = object({
+  map: choice(BASE_MAPS),
+  hide: list(object({ paths: list(basePath, ...BASE_BOUNDS.hidePaths), reason: baseReason }), ...BASE_BOUNDS.hide),
+  select: list(basePath, ...BASE_BOUNDS.select),
+  restReason: baseReason,
+  group: list(object({ element: handle, paths: list(basePath, ...BASE_BOUNDS.groupPaths) }), ...BASE_BOUNDS.group),
+  names: list(object({ path: basePath, label: text, epistemic: choice(['inferred', 'unknown']), citations: list(ref('citation'), 1, 50) }), ...BASE_BOUNDS.names),
+}, ['hide', 'select', 'restReason', 'group', 'names']);
+/** A cited relationship's base end (version 2.35): a map and the path of the one base element it names. */
+export const BASE_END_SCHEMA: DraftSchema = object({ map: choice(BASE_MAPS), path: basePath });
 
 /** Shared definitions, written once in the document and reached by `$ref`. `marked` says whether the claim forms take the worth-knowing
  * mark (v13) or have no such member (v10 and earlier). */
@@ -515,9 +572,67 @@ export const issuedDraftSchema = (parameters: DraftSchemaParameters): DraftSchem
  * document admits any value at `figurePlan`, every failure of the plan's form being a figure-plan finding (version 2.33). */
 export function draftSchemaDocument(parameters: DraftSchemaParameters): Record<string, unknown> {
   const { root, defs } = issuedDraftSchema(parameters);
-  const object = root as Extract<DraftSchema, { readonly type: 'object' }>;
-  const planned = { ...object, properties: { ...object.properties, [FIGURE_PLAN_FIELD]: { description: FIGURE_PLAN_DESCRIPTION } } } as unknown as DraftSchema;
+  const object = root as ObjectSchema;
+  const planned = { ...object, properties: { ...object.properties, [FIGURE_PLAN_FIELD]: { description: FIGURE_PLAN_DESCRIPTION },
+    diagrams: withLevels(withBaseViews(object.properties['diagrams'] as ArraySchema)), [MODEL_FIELD]: withBaseEnds(object.properties[MODEL_FIELD] as ObjectSchema),
+    sections: withWalk(object.properties['sections'] as ArraySchema), deepDives: withWalk(object.properties['deepDives'] as ArraySchema) } } as unknown as DraftSchema;
   return schemaDocument(LOCAL_DRAFT_SCHEMA_VERSION, 'Polaris dossier local-agent draft', { root: planned, defs });
+}
+
+/** A v17 view's level and scope (version 2.50, view-level.ts). */
+export const LEVEL_FIELD = 'level';
+export const SCOPE_FIELD = 'scope';
+/** The three levels, in the order the requirement names them. */
+export const VIEW_LEVELS = Object.freeze(['context', 'container', 'component'] as const);
+export type ViewLevel = typeof VIEW_LEVELS[number];
+/** The schema a `level` is read against: one of the three. A `scope` is read as any string. */
+export const LEVEL_SCHEMA = Object.freeze({ type: 'string' as const, minLength: 1, maxLength: 9, enum: VIEW_LEVELS });
+export const SCOPE_SCHEMA = Object.freeze({ type: 'string' as const, minLength: 0, maxLength: Number.MAX_SAFE_INTEGER });
+export const LEVEL_DESCRIPTION = 'Optional, with `scope`. The view\'s level of abstraction: `context` (a system with the people and other systems it deals with), '
+  + '`container` (the parts a system is built of) or `component` (the modules inside one part).';
+export const SCOPE_DESCRIPTION = 'Optional, with `level`. The id of the one element of the model the view is about: a `system` for a context or container view, a '
+  + 'directory, package, service, job or store for a component view; never a base element.';
+
+/** The v17 document's views (version 2.50): each graph or containment `view`, with or without `base`, may carry `level` and `scope`. */
+function withLevels(diagrams: ArraySchema): ArraySchema {
+  const arms = (diagrams.items as { readonly oneOf: readonly DraftSchema[] }).oneOf.map((arm) => {
+    const form = arm as ObjectSchema;
+    const views = form.properties[VIEW_FIELD] as { readonly oneOf: readonly ObjectSchema[] } | undefined;
+    if (views === undefined) return arm;
+    const levelled = views.oneOf.map((view) => ({ ...view, properties: { ...view.properties, [LEVEL_FIELD]: { ...LEVEL_SCHEMA, description: LEVEL_DESCRIPTION },
+      [SCOPE_FIELD]: { ...SCOPE_SCHEMA, description: SCOPE_DESCRIPTION } } }));
+    return { ...form, properties: { ...form.properties, [VIEW_FIELD]: { oneOf: levelled } } } as DraftSchema;
+  });
+  return { ...diagrams, items: { oneOf: arms } };
+}
+type ObjectSchema = Extract<DraftSchema, { readonly type: 'object' }>;
+/** The v16 document's sections and deep dives (version 2.40): each may carry `walk`, any value, optional. */
+function withWalk(places: ArraySchema): ArraySchema {
+  const item = places.items as ObjectSchema;
+  return { ...places, items: { ...item, properties: { ...item.properties, [WALK_FIELD]: { description: WALK_DESCRIPTION } } } } as unknown as ArraySchema;
+}
+type ArraySchema = Extract<DraftSchema, { readonly type: 'array' }>;
+/** The v15 document's views (version 2.35): each graph or containment `view` is the v14 view, or a view carrying `base` whose `elements` take
+ * zero to 40 entries and a graph view's `relationships` zero to 80. */
+function withBaseViews(diagrams: ArraySchema): ArraySchema {
+  const arms = (diagrams.items as { readonly oneOf: readonly DraftSchema[] }).oneOf.map((arm) => {
+    const form = arm as ObjectSchema;
+    const view = form.properties[VIEW_FIELD] as ObjectSchema | undefined;
+    if (view === undefined) return arm;
+    const relaxed = Object.fromEntries(Object.entries(view.properties).map(([key, value]) => [key, { ...(value as ArraySchema),
+      minItems: key === 'elements' ? BASE_BOUNDS.viewElements[0] : BASE_BOUNDS.viewRelationships[0],
+      maxItems: key === 'elements' ? BASE_BOUNDS.viewElements[1] : BASE_BOUNDS.viewRelationships[1] }]));
+    return { ...form, properties: { ...form.properties, [VIEW_FIELD]: { oneOf: [view, object({ ...relaxed, [BASE_FIELD]: BASE_SCHEMA })] } } } as DraftSchema;
+  });
+  return { ...diagrams, items: { oneOf: arms } };
+}
+/** The v15 document's model (version 2.35): a cited relationship's `from` or `to` is an element's identity or a base end. */
+function withBaseEnds(model: ObjectSchema): ObjectSchema {
+  const relationships = model.properties['relationships'] as ArraySchema;
+  const [cited, ...rest] = (relationships.items as { readonly oneOf: readonly DraftSchema[] }).oneOf;
+  const form = cited as ObjectSchema;
+  const end = { oneOf: [handle, BASE_END_SCHEMA] };
+  return { ...model, properties: { ...model.properties, relationships: { ...relationships, items: { oneOf: [{ ...form, properties: { ...form.properties, from: end, to: end } }, ...rest] } } } } as ObjectSchema;
 }
 
 /** The local-agent inventory schema (REQ-polaris-generation-035, 006). The inventory session prepares it from the clone without the

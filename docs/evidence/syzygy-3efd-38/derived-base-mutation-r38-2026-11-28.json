@@ -1,0 +1,1181 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-28T07:29:03.611Z",
+  "commit": "f781b49941d7e137487698b98f414a7d663b9fbb",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "759dd854ebd1ef2b591728c3df4d9cdf010ab1c888e3f60a6c3630eff33127b7",
+    "apps/three-surface-poc/src/polaris-generation/dossier-base.ts": "0f4063f5e9fc228ee9ab2aaedd7927cb33b3fca11d704194951ba45c55a08a76",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "7c2ee1eb5952e38df5a4485ba83c8a4dd022154cb498223dfc5de5615f10b483",
+    "apps/three-surface-poc/src/polaris-generation/svg-inert.ts": "2535f0ee3ad867c592591094e30a81004f4bb00608ad84a6973aa7710c8ed827",
+    "packages/polaris-dossier/src/brief.ts": "9e1a44a1021746c7d1c2a5a40e97ab952bd7b7fa271dc4dc386935e6f212cbe2",
+    "packages/polaris-dossier/src/check-derive.ts": "04c949af760fe303922fa5a896fe0031f3f613121a8dc4c19f50916ec644c461",
+    "packages/polaris-dossier/src/check.ts": "edba0b9a81aacbfa61b419a47c24c750f6f6e4995b45273b02876d3a288418dc",
+    "packages/polaris-dossier/src/derived-base.ts": "c7d66dc85a63677533a76a630351063c89f59f152605e3d91122ba2e274f8858",
+    "packages/polaris-dossier/src/draft-schema.ts": "38fb6dd144a2f01543b50421e5c1e68c2646580ef5546312e0a2bf0de0f6d3b9",
+    "packages/polaris-dossier/src/figure-plan.ts": "cde07f25bc270b346c95d12d6b402394f278865e698dffe3fed8a7c36f38c1ec",
+    "packages/polaris-dossier/src/render.ts": "baf3980488a4de6a068e2299d9c7de7a4e069f631b40dc2ecd4a4dc6f1fbf0f6",
+    "packages/polaris-dossier/src/system-model.ts": "530a86525b6f0a894fa3794b87455c28e7bdd3c2f49f7ccae536a0866fa98e4f"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 600 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/derived-base.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "packages/polaris-dossier/src/draft-schema.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "packages/polaris-dossier/src/check.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "packages/polaris-dossier/src/figure-plan.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "packages/polaris-dossier/src/system-model.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "packages/polaris-dossier/src/brief.ts": [
+      "packages/polaris-dossier/src/brief.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-base.ts": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts",
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "packages/polaris-dossier/src/render.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/svg-inert.ts": [
+      "packages/polaris-dossier/src/derived-base.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/svg-inert.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "exitCode": 0,
+      "tests": 47,
+      "failedTests": []
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "exitCode": 0,
+      "tests": 50,
+      "failedTests": []
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "exitCode": 0,
+      "tests": 47,
+      "failedTests": []
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/svg-inert.ts",
+      "exitCode": 0,
+      "tests": 78,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "exitCode": 0,
+      "tests": 42,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "exitCode": 0,
+      "tests": 47,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.ts",
+      "exitCode": 0,
+      "tests": 47,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "exitCode": 0,
+      "tests": 47,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "exitCode": 0,
+      "tests": 47,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "exitCode": 0,
+      "tests": 47,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.ts",
+      "exitCode": 0,
+      "tests": 47,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "exitCode": 0,
+      "tests": 47,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "select-without-rest-admitted",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (Object.hasOwn(base, 'select') && !Object.hasOwn(base, 'restReason')) out.push(",
+      "new": "if (false) out.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Hide without a reason refused: each malformed base is a schema finding at its member"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "rest-without-select-admitted",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (Object.hasOwn(base, 'restReason') && !Object.hasOwn(base, 'select')) out.push(",
+      "new": "if (false) out.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Hide without a reason refused: each malformed base is a schema finding at its member"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "field-version-v14-silent",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "`${name}: \\`${BASE_FIELD}\\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V15}`",
+      "new": "`${name}: \\`${BASE_FIELD}\\` is not supported`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Schema v12 and v14 get a field-version finding at the view's base in place of the schema finding",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) field-version: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "field-version-not-emitted",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "for (const finding of baseFieldVersionFindings(doc, inputs === undefined ? () => 'unavailable' : admitOf(inputs.screen))) add(finding);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Schema v12 and v14 get a field-version finding at the view's base in place of the schema finding",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) field-version: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) a v14 base end is a field-version finding at the end, screened by the relationship identity"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "base-form-v14",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "export const hasBaseForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V15;",
+      "new": "export const hasBaseForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V14;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Hide without a reason refused: each malformed base is a schema finding at its member",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group places base elements in the draft's element: the two packages inside `runtime`, the third its own group, none witnessed",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element keeps Syzygy's words: `src/ (40 files)` Observed with a double border, and the display name under it",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Select and group together: no conflict where `select` names the grouped path, a base-conflict where it does not",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) a base element selected twice in one list is a base-conflict at the second path",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element hidden and grouped refused",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group into a third-level element refused, and into an element the view does not select",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Directory containment keeps the root: base-root without `.`, the root framing `src/` and `docs/` with it",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Path the map does not list refused",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Draft element taking a base element's name refused: a model element, a display name and a relationship label",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Too many base elements refused: 60 packages, none hidden",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Cited arrow joins two base elements: drawn in the draft's marking, authored, between derived boxes",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Schema v12 and v14 get a field-version finding at the view's base in place of the schema finding",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Figure advice reads no base view: two views examined, none naming the base view",
+        "packages/polaris-dossier/src/derived-base.test.ts > the derived base under source screening (version 2.35) A base-reference finding admits dynamic detail only through the existing screen: a secret-matched path keeps the fixed detail",
+        "packages/polaris-dossier/src/derived-base.test.ts > the derived base under source screening (version 2.35) Hide and remainder reasons are screened: a detector-matching reason refuses the figure in both forms, with neither the text nor a base claim",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the root's nesting and grouped nestings (version 2.35) Directory containment keeps the root: each nesting is the record's `contains` fact in Syzygy's words, its witness and its tally",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the root's nesting and grouped nestings (version 2.35) a base element grouped inside a draft element keeps its relation-witness decision at render",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-conflict: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-root: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-group: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-size: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-label: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) containment-flat: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) field-version: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) a nine-child root is a view-shape finding over the expanded base, its detail screened",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) a base end that names nothing is a base-reference at the relationship's end, `model:`, screened by its path",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) a v14 base end is a field-version finding at the end, screened by the relationship identity",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) One manifest declaring two packages: a display name naming both is a base-reference; `#2` and `hide` are not",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) a path naming nothing, in select, hide, group and names: admitted literal; withheld, unavailable or a left-out path the fixed detail",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) a base end naming two elements or none, screened by its path and the evidence arm",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) the display-name label arms: another name, and a selected element's label",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base view lists' bounds (version 2.35) a base view's `elements` holds 0 to 40 and `relationships` 0 to 80",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) Unknown base renders a notice: the tree cannot be listed at the render, and the machine member is three fields",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) the late notice: the unit map not established at check, established at the render, and a path naming nothing",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) a finding at the render for a map check established is a rederive refusal, never the late notice",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) a graph view of the directory map without the root draws no `contains` arrow",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) a base end in machine.json is the fact it resolves to in the render's map, drawn or not",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) Hide and remainder reasons: an admitted reason byte for byte in both forms; an unclassifiable one refuses the figure, with no base member",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) The screening boundary: a valid base figure beside a refused one keeps its tally, reason and identities, and the map page its bytes",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) Pruned view prints its chip through a render: 9 of 31 packages, 22 hidden under one reason"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "worth-knowing-not-v15",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "hasWorthKnowingForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V13 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14\n  || version === LOCAL_DRAFT_SCHEMA_VERSION_V15;",
+      "new": "hasWorthKnowingForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V13 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > the 2.36 and 2.37 advice on a v15 draft a v15 draft with no source example and no Pole choices gets the source-example advice and a choice-floor member, as a v14 draft does"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "source-example-not-v15",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": " && version !== 'polaris-dossier-local-draft-v15') return;",
+      "new": ") return;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > the 2.36 and 2.37 advice on a v15 draft a v15 draft with no source example and no Pole choices gets the source-example advice and a choice-floor member, as a v14 draft does"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "root-path-any",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "const at = path === '.' ? map.elements.findIndex((element) => element.root === true)",
+      "new": "const at = path === '' ? map.elements.findIndex((element) => element.root === true)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Directory containment keeps the root: base-root without `.`, the root framing `src/` and `docs/` with it",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-root: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "manifest-path-first-only",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "return map.elements.flatMap((element, i) => (element.manifest === path ? [i] : []));",
+      "new": "{ const i = map.elements.findIndex((element) => element.manifest === path); return i === -1 ? [] : [i]; }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > the unit map path (version 2.35) One manifest declaring two packages: the bare path names both, `#2` the second, `#0` and `#02` nothing",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) One manifest declaring two packages: a display name naming both is a base-reference; `#2` and `hide` are not",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) a base end naming two elements or none, screened by its path and the evidence arm"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "reference-absent-silent",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "    if (named.length === 0) {\n      return { kind: 'base-reference'",
+      "new": "    if (false) {\n      return { kind: 'base-reference'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Path the map does not list refused",
+        "packages/polaris-dossier/src/derived-base.test.ts > the derived base under source screening (version 2.35) A base-reference finding admits dynamic detail only through the existing screen: a secret-matched path keeps the fixed detail",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) a path naming nothing, in select, hide, group and names: admitted literal; withheld, unavailable or a left-out path the fixed detail",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) the late notice: the unit map not established at check, established at the render, and a path naming nothing"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "reference-detail-unscreened",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "`${owner}: ${entry.path} names no element of the ${mapWord} map at this revision`, BASE_REFERENCE_UNAVAILABLE, evidence) };",
+      "new": "`${owner}: ${entry.path} names no element of the ${mapWord} map at this revision`, `${owner}: ${entry.path} names no element of the ${mapWord} map at this revision`, evidence) };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > the derived base under source screening (version 2.35) A base-reference finding admits dynamic detail only through the existing screen: a secret-matched path keeps the fixed detail",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) a path naming nothing, in select, hide, group and names: admitted literal; withheld, unavailable or a left-out path the fixed detail"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "conflict-repeat-ignored",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (repeated || unshown) findings.push(conflict(entry));",
+      "new": "if (repeated) findings.push(conflict(entry));",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Select and group together: no conflict where `select` names the grouped path, a base-conflict where it does not",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element hidden and grouped refused"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "conflict-across-lists",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "const repeated = named.some((k) => seen[entry.list].has(k));",
+      "new": "const repeated = false;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) a base element selected twice in one list is a base-conflict at the second path",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-conflict: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "root-select-ignored",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (base.select !== undefined && !base.select.some((path) => resolveBasePath(map, path).includes(root))) findings.push(",
+      "new": "if (false) findings.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Directory containment keeps the root: base-root without `.`, the root framing `src/` and `docs/` with it"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "group-third-level",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (level === undefined || level > 2) {",
+      "new": "if (level === undefined || level > 3) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group into a third-level element refused, and into an element the view does not select"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "group-unselected",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (level === undefined || level > 2) {",
+      "new": "if (level !== undefined && level > 2) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group into a third-level element refused, and into an element the view does not select",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-group: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "size-bound-60",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (boxes === 0 || boxes > BASE_BOUNDS.boxes) {",
+      "new": "if (boxes === 0 || boxes > 60) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Too many base elements refused: 60 packages, none hidden",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-size: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "label-case-kept",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "return (trimmed.endsWith('/') ? trimmed.slice(0, -1) : trimmed).toLowerCase(); };",
+      "new": "return trimmed.endsWith('/') ? trimmed.slice(0, -1) : trimmed; };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Draft element taking a base element's name refused: a model element, a display name and a relationship label",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-label: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) the display-name label arms: another name, and a selected element's label"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "label-trim-dropped",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "export const labelKey = (value: string): string => { const trimmed = value.trim();",
+      "new": "export const labelKey = (value: string): string => { const trimmed = value;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Draft element taking a base element's name refused: a model element, a display name and a relationship label",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) the display-name label arms: another name, and a selected element's label"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "label-contains-ignored",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (label !== undefined && labelKey(label) === 'contains') findings.push(",
+      "new": "if (false) findings.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Draft element taking a base element's name refused: a model element, a display name and a relationship label"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "label-element-ignored",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (label !== undefined && baseNames.has(labelKey(label))) findings.push(",
+      "new": "if (false) findings.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Draft element taking a base element's name refused: a model element, a display name and a relationship label",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-label: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "reason-withheld-drawn",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (screened.includes('withheld')) { refused.set(i, BASE_REASON_WITHHELD); return; }",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > the derived base under source screening (version 2.35) Hide and remainder reasons are screened: a detector-matching reason refuses the figure in both forms, with neither the text nor a base claim",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) The screening boundary: a valid base figure beside a refused one keeps its tally, reason and identities, and the map page its bytes"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "figure-advice-reads-base",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "    if (carriesBase(source)) return;\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Figure advice reads no base view: two views examined, none naming the base view"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "chip-hidden-count",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "const hidden = base.total - base.shown;",
+      "new": "const hidden = base.total;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group places base elements in the draft's element: the two packages inside `runtime`, the third its own group, none witnessed",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element keeps Syzygy's words: `src/ (40 files)` Observed with a double border, and the display name under it",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Directory containment keeps the root: base-root without `.`, the root framing `src/` and `docs/` with it",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) Pruned view prints its chip through a render: 9 of 31 packages, 22 hidden under one reason",
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Chip links from a deeper page: `../maps/directories.html`, and the map's own uncounted sentence",
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Pruned view prints its chip: 9 of 31 packages, no further sentence, and the base tally"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "chip-not-listed-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "return `<p class=\"base-chip\" data-visual-provenance=\"computed\">${head}${notListedSentence(base)}</p>`;",
+      "new": "return `<p class=\"base-chip\" data-visual-provenance=\"computed\">${head}</p>`;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Chip links from a deeper page: `../maps/directories.html`, and the map's own uncounted sentence"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "chip-href-flat",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "`${'../'.repeat(from.split('/').length - 1)}maps/",
+      "new": "`maps/",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Chip links from a deeper page: `../maps/directories.html`, and the map's own uncounted sentence",
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Unknown base renders a notice and a `base` member of three fields alone; an unresolved base names no path"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "hidden-twelve-names",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "const NAMES_LISTED = 12;",
+      "new": "const NAMES_LISTED = 13;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) Pruned view prints its chip through a render: 9 of 31 packages, 22 hidden under one reason",
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Chip links from a deeper page: `../maps/directories.html`, and the map's own uncounted sentence",
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Pruned view prints its chip: 9 of 31 packages, no further sentence, and the base tally"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "hidden-reason-unescaped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "This dossier's reason: ${escape(item.reason)}</li>",
+      "new": "This dossier's reason: ${item.reason}</li>",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group places base elements in the draft's element: the two packages inside `runtime`, the third its own group, none witnessed",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) Hide and remainder reasons: an admitted reason byte for byte in both forms; an unclassifiable one refuses the figure, with no base member"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "notice-unknown-words",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "which is Unknown at this render: ${escape(unknown.words)}. ${see}",
+      "new": "which is Unknown at this render. ${see}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) Unknown base renders a notice: the tree cannot be listed at the render, and the machine member is three fields",
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Unknown base renders a notice and a `base` member of three fields alone; an unresolved base names no path"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "machine-unknown-extra",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "return { map: base.map, established: false, reason: base.state === 'unknown' ? unknownReason : 'source-uncaptured-or-unreachable' };",
+      "new": "return { map: base.map, established: false, reason: unknownReason, shown: 0 };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) Unknown base renders a notice: the tree cannot be listed at the render, and the machine member is three fields",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) the late notice: the unit map not established at check, established at the render, and a path naming nothing",
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Unknown base renders a notice and a `base` member of three fields alone; an unresolved base names no path"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "tally-base-marks",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-base.ts",
+      "old": "${count('observed')} observed, ${count('inferred')} inferred, ${count('unknown')} unknown.`;\n}",
+      "new": "${count('inferred')} observed, ${count('observed')} inferred, ${count('unknown')} unknown.`;\n}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group places base elements in the draft's element: the two packages inside `runtime`, the third its own group, none witnessed",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the root's nesting and grouped nestings (version 2.35) Directory containment keeps the root: each nesting is the record's `contains` fact in Syzygy's words, its witness and its tally",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) The screening boundary: a valid base figure beside a refused one keeps its tally, reason and identities, and the map page its bytes",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) Pruned view prints its chip through a render: 9 of 31 packages, 22 hidden under one reason",
+        "apps/three-surface-poc/src/polaris-generation/dossier-base.test.ts > the derived base on the page (version 2.35) Pruned view prints its chip: 9 of 31 packages, no further sentence, and the base tally"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "outline-syzygy-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${isBase(group.id) ? 'Syzygy: ' : ''}",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group places base elements in the draft's element: the two packages inside `runtime`, the third its own group, none witnessed",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Select and group together: no conflict where `select` names the grouped path, a base-conflict where it does not",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Directory containment keeps the root: base-root without `.`, the root framing `src/` and `docs/` with it"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "called-claim-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const called = name === undefined ? '' : ` ${claim('span', name.id, name.epistemic,",
+      "new": "const called = true ? '' : ` ${claim('span', name.id, name.epistemic,",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element keeps Syzygy's words: `src/ (40 files)` Observed with a double border, and the display name under it"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "provenance-derived-as-authored",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "nodes: d.nodes.map(n => ({ id: n.id, provenance: isBase(n.id) ? 'derived' : 'authored' }))",
+      "new": "nodes: d.nodes.map(n => ({ id: n.id, provenance: 'authored' }))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Cited arrow joins two base elements: drawn in the draft's marking, authored, between derived boxes",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) a graph view of the directory map without the root draws no `contains` arrow"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "chip-not-drawn",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const baseMap = drawnBase === undefined ? '' : ` data-base-map=\"${drawnBase.map}\"`, chip = drawnBase === undefined ? '' : baseChip(drawnBase, from);",
+      "new": "const baseMap = drawnBase === undefined ? '' : ` data-base-map=\"${drawnBase.map}\"`, chip = '';",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element keeps Syzygy's words: `src/ (40 files)` Observed with a double border, and the display name under it",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) Pruned view prints its chip through a render: 9 of 31 packages, 22 hidden under one reason"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "double-border-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "const inner = decoration?.double === true ? doubleRect(at.x, at.y, nodeWidth, NODE_HEIGHT) : '';",
+      "new": "const inner = '';",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element keeps Syzygy's words: `src/ (40 files)` Observed with a double border, and the display name under it"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "called-line-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "const called = decoration?.called === undefined ? '' : calledLine(decoration.called, at.x + nodeWidth / 2, at.y + NODE_HEIGHT + 16, escape);",
+      "new": "const called = '';",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element keeps Syzygy's words: `src/ (40 files)` Observed with a double border, and the display name under it"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "brief-paragraph-dropped",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    DERIVED_BASE_PARAGRAPH,\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 42,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, containment, system-model, figure-plan and derived-base paragraphs, task-routes section, worth-knowing paragraph and question-kinds paragraph"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "r38-conflict-unscreened",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "detail: screened(admit, [name], `${name}: a base element is selected, hidden, grouped or named at most once, and grouped or named only where shown`, BASE_DETAIL_UNAVAILABLE) });",
+      "new": "detail: `${name}: a base element is selected, hidden, grouped or named at most once, and grouped or named only where shown` });",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-conflict: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-root-unscreened",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "const rootDetail = screened(admit, [name], `${name}: the repository root frames a containment of the directory map and is shown, never hidden or grouped`, BASE_DETAIL_UNAVAILABLE);",
+      "new": "const rootDetail = `${name}: the repository root frames a containment of the directory map and is shown, never hidden or grouped`;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-root: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-group-unscreened",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "detail: screened(admit, [name], `${name}: a group places base elements inside an element this view selects, at level 1 or 2`, BASE_DETAIL_UNAVAILABLE) });",
+      "new": "detail: `${name}: a group places base elements inside an element this view selects, at level 1 or 2` });",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-group: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-size-unscreened",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "detail: screened(admit, [name], `${name}: a view shows one to 40 boxes, its base elements included`, BASE_DETAIL_UNAVAILABLE) });",
+      "new": "detail: `${name}: a view shows one to 40 boxes, its base elements included` });",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-size: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-label-unscreened",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "const labelDetail = screened(admit, [name], `${name}: the draft's words never take the name of an element Syzygy draws in the same figure`, BASE_DETAIL_UNAVAILABLE);",
+      "new": "const labelDetail = `${name}: the draft's words never take the name of an element Syzygy draws in the same figure`;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-label: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-view-detail-unscreened",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "export const screenedViewDetail = (admit: Admit, name: string, detail: string): string => screened(admit, [name], detail, BASE_DETAIL_UNAVAILABLE);",
+      "new": "export const screenedViewDetail = (admit: Admit, name: string, detail: string): string => detail;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) containment-flat: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) a nine-child root is a view-shape finding over the expanded base, its detail screened"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-field-version-unscreened",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "detail: screened(admit, [name], `${name}: \\`${BASE_FIELD}\\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V15}`, BASE_DETAIL_UNAVAILABLE) });",
+      "new": "detail: `${name}: \\`${BASE_FIELD}\\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V15}` });",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) field-version: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-end-field-version-unscreened",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "detail: screened(admit, [id], `${id}: a base end needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V15}`, BASE_DETAIL_UNAVAILABLE) });",
+      "new": "detail: `${id}: a base end needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V15}` });",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) a v14 base end is a field-version finding at the end, screened by the relationship identity"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-view-evidence-ignored",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "const evidence = !hidden(entry.path);",
+      "new": "const evidence = true;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > the derived base under source screening (version 2.35) A base-reference finding admits dynamic detail only through the existing screen: a secret-matched path keeps the fixed detail",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) a path naming nothing, in select, hide, group and names: admitted literal; withheld, unavailable or a left-out path the fixed detail"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-end-evidence-ignored",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "const evidence = !hidden(path);",
+      "new": "const evidence = true;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) a base end naming two elements or none, screened by its path and the evidence arm"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-admit-throw-admitted",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "      return 'unavailable';\n",
+      "new": "      return 'admitted';\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-conflict: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-root: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-group: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-size: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-label: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) containment-flat: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) field-version: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) a nine-child root is a view-shape finding over the expanded base, its detail screened",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) a v14 base end is a field-version finding at the end, screened by the relationship identity"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-base-ends-silent",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "  if (!hasBaseForm(doc['schemaVersion'])) return [];\n  const model = isRecord(doc[MODEL_FIELD]) ? doc[MODEL_FIELD] : {};",
+      "new": "  return [];\n  const model = isRecord(doc[MODEL_FIELD]) ? doc[MODEL_FIELD] : {};",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) a base end that names nothing is a base-reference at the relationship's end, `model:`, screened by its path",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) a base end naming two elements or none, screened by its path and the evidence arm"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-ambiguous-ignored",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (many && named.length > 1) {",
+      "new": "if (false) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) One manifest declaring two packages: a display name naming both is a base-reference; `#2` and `hide` are not"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-end-ambiguous-ignored",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "      else if (named.length > 1) out.push(",
+      "new": "      else if (false) out.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) a base end naming two elements or none, screened by its path and the evidence arm"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-nesting-challenge-ignored",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (base === undefined || decision.state !== 'challenged') continue;",
+      "new": "if (true) continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the root's nesting and grouped nestings (version 2.35) a challenged grouped nesting is a relation-challenged finding at its first group path, its detail screened"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-unknown-arm-drawn",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (map === undefined) { pending.set(id, { state: 'unknown', map: base.map }); return; }",
+      "new": "if (map === undefined) return;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) Unknown base renders a notice: the tree cannot be listed at the render, and the machine member is three fields"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-late-arm-drawn",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (late.has(i)) { pending.set(id, { state: 'unresolved', map: base.map }); return; }",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) the late notice: the unit map not established at check, established at the render, and a path naming nothing"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-reason-unavailable-drawn",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (screened.includes('unavailable')) { refused.set(i, BASE_REASON_UNAVAILABLE); return; }",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) Hide and remainder reasons: an admitted reason byte for byte in both forms; an unclassifiable one refuses the figure, with no base member"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-bounds-not-rewritten",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "const [low, high] = bounded[2] === 'elements' ? BASE_BOUNDS.viewElements : BASE_BOUNDS.viewRelationships;",
+      "new": "const [low, high] = bounded[2] === 'elements' ? [1, 40] : [1, 80];",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Hide without a reason refused: each malformed base is a schema finding at its member",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element keeps Syzygy's words: `src/ (40 files)` Observed with a double border, and the display name under it",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) a base element selected twice in one list is a base-conflict at the second path",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Directory containment keeps the root: base-root without `.`, the root framing `src/` and `docs/` with it",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Path the map does not list refused",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Draft element taking a base element's name refused: a model element, a display name and a relationship label",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Too many base elements refused: 60 packages, none hidden",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Cited arrow joins two base elements: drawn in the draft's marking, authored, between derived boxes",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Figure advice reads no base view: two views examined, none naming the base view",
+        "packages/polaris-dossier/src/derived-base.test.ts > the derived base under source screening (version 2.35) A base-reference finding admits dynamic detail only through the existing screen: a secret-matched path keeps the fixed detail",
+        "packages/polaris-dossier/src/derived-base.test.ts > the derived base under source screening (version 2.35) Hide and remainder reasons are screened: a detector-matching reason refuses the figure in both forms, with neither the text nor a base claim",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the root's nesting and grouped nestings (version 2.35) Directory containment keeps the root: each nesting is the record's `contains` fact in Syzygy's words, its witness and its tally",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) containment-flat: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) a nine-child root is a view-shape finding over the expanded base, its detail screened",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) a base end that names nothing is a base-reference at the relationship's end, `model:`, screened by its path",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base view lists' bounds (version 2.35) a base view's `elements` holds 0 to 40 and `relationships` 0 to 80",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) Unknown base renders a notice: the tree cannot be listed at the render, and the machine member is three fields",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) the late notice: the unit map not established at check, established at the render, and a path naming nothing",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) a finding at the render for a map check established is a rederive refusal, never the late notice",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) a graph view of the directory map without the root draws no `contains` arrow",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) a base end in machine.json is the fact it resolves to in the render's map, drawn or not",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) Hide and remainder reasons: an admitted reason byte for byte in both forms; an unclassifiable one refuses the figure, with no base member",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) The screening boundary: a valid base figure beside a refused one keeps its tally, reason and identities, and the map page its bytes",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) Pruned view prints its chip through a render: 9 of 31 packages, 22 hidden under one reason"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "r38-root-hide-group-ignored",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if ((entry.list === 'hide' || entry.list === 'group') && resolveBasePath(map, entry.path).includes(root)) findings.push(",
+      "new": "if (false) findings.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: every derived-base finding screens its submitted identity (version 2.35) base-root: the admitted identity keeps its literal detail; a withheld or unclassified one the fixed detail, in report and record alike"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-label-other-names-ignored",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (baseNames.has(key) || selectedLabels.has(key) || another) findings.push(",
+      "new": "if (baseNames.has(key)) findings.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) the display-name label arms: another name, and a selected element's label"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-self-parent-dropped",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "if (parent === undefined || !chosen.has(parent) || parent === id) visit(id, 1);",
+      "new": "if (parent === undefined || !chosen.has(parent)) visit(id, 1);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) an element that names itself as its parent is a top-level group"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-touches-never",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "const touches = (at: string, schemaPaths: ReadonlySet<string>): boolean => [...schemaPaths].some(",
+      "new": "const touches = (at: string, schemaPaths: ReadonlySet<string>): boolean => false && [...schemaPaths].some(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: base-reference over every list, the ambiguous path and the evidence arm (version 2.35) no base finding where the base already has a schema finding"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-contains-without-root",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "const containsEdges = base === undefined || rootFact === undefined || !shownFacts.has(rootFact) ? []",
+      "new": "const containsEdges = base === undefined || rootFact === undefined ? []",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) a graph view of the directory map without the root draws no `contains` arrow"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-grouped-decisions-dropped",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "...decisions.nestings.filter(({ id }) => !id.startsWith('_') || grouped.has(id))",
+      "new": "...decisions.nestings.filter(({ id }) => !id.startsWith('_'))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Group places base elements in the draft's element: the two packages inside `runtime`, the third its own group, none witnessed",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the root's nesting and grouped nestings (version 2.35) a base element grouped inside a draft element keeps its relation-witness decision at render"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-root-contains-unstated",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (fact !== undefined) return [`<li",
+      "new": "if (false) return [`<li",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the root's nesting and grouped nestings (version 2.35) Directory containment keeps the root: each nesting is the record's `contains` fact in Syzygy's words, its witness and its tally"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-root-contains-no-witness",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "witness: rootContains(group, parent) !== undefined ? containsWitness(rootContains(group, parent)!) : relationOf(group.id)?.witness ?? null }])),",
+      "new": "witness: relationOf(group.id)?.witness ?? null }])),",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the root's nesting and grouped nestings (version 2.35) Directory containment keeps the root: each nesting is the record's `contains` fact in Syzygy's words, its witness and its tally",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the root's nesting and grouped nestings (version 2.35) a base element grouped inside a draft element keeps its relation-witness decision at render"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-colon-everywhere",
+      "file": "apps/three-surface-poc/src/polaris-generation/svg-inert.ts",
+      "old": "if (!(name === 'data-name' ? NAME_VALUE : VALUE).test(value)) unsafe();",
+      "new": "if (!(name === 'data-name' ? NAME_VALUE : /^[A-Za-z0-9 #().,:_-]*$/u).test(value)) unsafe();",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 78,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the root's nesting and grouped nestings (version 2.35) a pre-v15 drawing keeps its bytes: a colon identity is still the notice the inert check gives it"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-late-not-disagreement",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "return map !== undefined && established[map]; }).sort((a, b) => a - b);",
+      "new": "return false; }).sort((a, b) => a - b);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) a finding at the render for a map check established is a rederive refusal, never the late notice"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-units-always-established",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "units = isRecord(member) && member['state'] === 'derived';",
+      "new": "units = true;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) the late notice: the unit map not established at check, established at the render, and a path naming nothing"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-end-unresolved",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "return named.length === 1 ? map!.elements[named[0]!]!.factId : null;",
+      "new": "return null;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Cited arrow joins two base elements: drawn in the draft's marking, authored, between derived boxes",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the base's notices and reasons through a render (version 2.35) a base end in machine.json is the fact it resolves to in the render's map, drawn or not"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "r38-base-mark-from-draft",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "baseMarks.get(text(value['id']) ?? '') ?? (",
+      "new": "(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 47,
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Base element keeps Syzygy's words: `src/ (40 files)` Observed with a double border, and the display name under it",
+        "packages/polaris-dossier/src/derived-base.test.ts > schema v15: a view starting from a derived base (version 2.35) Directory containment keeps the root: base-root without `.`, the root framing `src/` and `docs/` with it",
+        "packages/polaris-dossier/src/derived-base.test.ts > R38 repairs: the root's nesting and grouped nestings (version 2.35) Directory containment keeps the root: each nesting is the record's `contains` fact in Syzygy's words, its witness and its tally"
+      ],
+      "seconds": 9
+    }
+  ],
+  "equivalent": [
+    {
+      "id": "numbered-leading-zero",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "/^[1-9]\\d*$/u.test(numbered[2]!)",
+      "new": "/^\\d+$/u.test(numbered[2]!)",
+      "reason": "A numbered path resolves only where it equals an element path, and the unit map writes every element path with k from 1 and no leading zero, so `#0` and `#02` name nothing with or without the digit test. Run 1 of this record (36 of 39 killed) recorded it as surviving; the test is kept as a statement of the rule."
+    }
+  ],
+  "summary": {
+    "mutants": 70,
+    "killed": 70,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 1
+  }
+}

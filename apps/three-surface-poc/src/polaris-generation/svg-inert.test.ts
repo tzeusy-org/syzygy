@@ -79,6 +79,18 @@ describe('assertInertSvg allow-list boundary', () => {
     expect(() => assertInertSvg(mutated)).toThrow('unsafe-svg');
   });
 
+  it('admits each witness attribute in its one closed form, and refuses words, another state or a malformed identity (syzygy-3efd.89)', () => {
+    const at = (attrs: string): string => replaceFirst('<path ', `<path ${attrs} `)(valid);
+    const good = 'data-witness-state="corroborated" data-witness-fact="_import-3" data-witness-rule="typescript-relative-import" data-witness-rule-version="1"';
+    expect(() => assertInertSvg(at(good))).not.toThrow();
+    expect(() => assertInertSvg(at('data-witness-fact="_tree-contains-12" data-witness-rule="top-level-unit" data-witness-rule-version="1"'))).not.toThrow();
+    for (const bad of ['data-witness-state="witnessed"', 'data-witness-state="corroborated by words"', 'data-witness-fact="PLANTED FREE TEXT"',
+      'data-witness-fact="_import-0"', 'data-witness-fact="import-3"', 'data-witness-rule="typescript relative import"', 'data-witness-rule-version="01"',
+      'data-witness-rule-version="1 2"']) {
+      expect(() => assertInertSvg(at(bad)), bad).toThrow('unsafe-svg');
+    }
+  });
+
   it('refuses non-SVG input outright', () => {
     for (const input of ['', '<g></g>', 'text', '<svg xmlns="http://www.w3.org/2000/svg"/>']) {
       expect(() => assertInertSvg(input)).toThrow('unsafe-svg');

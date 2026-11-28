@@ -1,0 +1,659 @@
+{
+  "format": "mutation-run/1",
+  "bead": "syzygy-3efd.89",
+  "date": "2026-11-28",
+  "ranAt": "4e00c59da51b57c85f2a29410638e77465b9d907",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "9f4ba556f5b8769e5be75a714820d5b165cd2086f5ac63ee0933085728b13fc1",
+    "apps/three-surface-poc/src/polaris-generation/svg-inert.ts": "63fbb424c4ecfab673735add91fb9f934b78903b977c9b4b28c605d6766098e7",
+    "packages/polaris-dossier/src/check.ts": "d210fc9e3a8f20df0ef2911c3d7b2f23df655ed6e7f8a0b0dbe63bbc0d4d9a32",
+    "packages/polaris-dossier/src/import-facts-lexer.test.ts": "0a27f76e418018ec1850754458aee530127bb1f3e1a6b0b667c4a114558e465d",
+    "packages/polaris-dossier/src/import-facts-lexer.ts": "3aa037bf1f5d29af5635cf507e81bcceb5ac36980c207de144eb2cd6cf4e3879",
+    "packages/polaris-dossier/src/import-facts.test.ts": "7a0f074ab2ee4ac13665cbb9cfdb4c0c745311eaf72b41cf922a5c74dbfe64b8",
+    "packages/polaris-dossier/src/import-facts.ts": "be7a27d155176001758daed13b9771fe5fbdaef99bf729a3ce5784f10a564d4e",
+    "packages/polaris-dossier/src/imports-corroboration.test.ts": "887f9e13435b770cdcaaa6968ed02577e9c56acd4435f184a529467b59124a1e",
+    "packages/polaris-dossier/src/relation-witness.test.ts": "47cfbe2be5db8d7eaecb77081ce2a1d3286acd326a3ffcc18b7221a68b15bc83",
+    "packages/polaris-dossier/src/relation-witness.ts": "1a4d2a4bd5203a6456eb03324095ccba873779b3a5d3a84b1471546f7828b66d",
+    "packages/polaris-dossier/src/render.ts": "30fd763290a8d861e4ea83416ff595f2987a66bee40335231afca68517e50b9f"
+  },
+  "command": "npx vitest run packages/polaris-dossier/src/import-facts-lexer.test.ts packages/polaris-dossier/src/import-facts.test.ts packages/polaris-dossier/src/relation-witness.test.ts packages/polaris-dossier/src/imports-corroboration.test.ts --reporter=json",
+  "method": "each mutant replaces old with new exactly once in file, runs the command, restores the file; killed means a non-zero exit, and failedTests records each failing test and the first line of its message, so a kill by an assertion is told apart from a kill by a throw; the baseline run at ranAt passed before any mutant",
+  "mutants": [
+    {
+      "id": "lexer-default-removed",
+      "file": "packages/polaris-dossier/src/import-facts-lexer.ts",
+      "old": "'case', 'default', 'do',",
+      "new": "'case', 'do',",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "reads a / after an if head and after default as a regular-expression literal, and after a ) of an expression as a division",
+          "message": "AssertionError: expected { complete: true, …(2) } to deeply equal { complete: true, …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "lexer-head-close-division",
+      "file": "packages/polaris-dossier/src/import-facts-lexer.ts",
+      "old": "if (before.value === ')') return before.headClose === true;",
+      "new": "if (before.value === ')') return false;",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "reads a / after an if head and after default as a regular-expression literal, and after a ) of an expression as a division",
+          "message": "AssertionError: expected { complete: true, …(2) } to deeply equal { complete: true, …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "lexer-bang-decidable",
+      "file": "packages/polaris-dossier/src/import-facts-lexer.ts",
+      "old": "const UNDECIDABLE_PUNCT = new Set(['}', '>', '!', '++', '--']);",
+      "new": "const UNDECIDABLE_PUNCT = new Set(['}', '>', '++', '--']);",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "stops at a / it cannot read either way: after !, ++, }, >, of, yield, await and an identifier after break",
+          "message": "AssertionError: const r = x! / 2 / 3;"
+        }
+      ]
+    },
+    {
+      "id": "lexer-backslash-operand-admitted",
+      "file": "packages/polaris-dossier/src/import-facts-lexer.ts",
+      "old": "if (t.kind !== 'string' || t.plain !== true) return 'outside';",
+      "new": "if (t.kind !== 'string') return 'outside';",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "counts the six forms the scan itself sets outside, and leaves the operands it reads for the rules",
+          "message": "AssertionError: expected { complete: true, …(2) } to deeply equal { complete: true, …(2) }"
+        },
+        {
+          "test": "counts thirteen forms, states no statement, and leaves coverage partial",
+          "message": "AssertionError: expected { path: 'src/f.ts', …(4) } to deeply equal { path: 'src/f.ts', …(4) }"
+        }
+      ]
+    },
+    {
+      "id": "lexer-attributes-admitted",
+      "file": "packages/polaris-dossier/src/import-facts-lexer.ts",
+      "old": "if ((isWord(next, 'with') || isWord(next, 'assert')) && isPunct(tokens[k + 2], '{')) return 'outside';",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "counts the six forms the scan itself sets outside, and leaves the operands it reads for the rules",
+          "message": "AssertionError: expected { complete: true, …(2) } to deeply equal { complete: true, …(2) }"
+        },
+        {
+          "test": "counts thirteen forms, states no statement, and leaves coverage partial",
+          "message": "AssertionError: expected { path: 'src/f.ts', …(4) } to deeply equal { path: 'src/f.ts', …(4) }"
+        }
+      ]
+    },
+    {
+      "id": "lexer-equals-require-double-counted",
+      "file": "packages/polaris-dossier/src/import-facts-lexer.ts",
+      "old": "if (module) equalsRequire.add(i + 3);",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "counts the six forms the scan itself sets outside, and leaves the operands it reads for the rules",
+          "message": "AssertionError: expected { Object (complete, statements, ...) } to deeply equal { complete: true, …(2) }"
+        },
+        {
+          "test": "counts thirteen forms, states no statement, and leaves coverage partial",
+          "message": "AssertionError: expected { path: 'src/f.ts', …(4) } to deeply equal { path: 'src/f.ts', …(4) }"
+        }
+      ]
+    },
+    {
+      "id": "lexer-nested-import-is-statement",
+      "file": "packages/polaris-dossier/src/import-facts-lexer.ts",
+      "old": "      if (t.depth > 0) {\n        if (match.kind === 'form'",
+      "new": "      if (false) {\n        if (match.kind === 'form'",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "counts the six forms the scan itself sets outside, and leaves the operands it reads for the rules",
+          "message": "AssertionError: expected { complete: true, …(2) } to deeply equal { complete: true, …(2) }"
+        },
+        {
+          "test": "counts thirteen forms, states no statement, and leaves coverage partial",
+          "message": "AssertionError: expected { path: 'src/f.ts', …(4) } to deeply equal { path: 'src/f.ts', …(4) }"
+        }
+      ]
+    },
+    {
+      "id": "lexer-member-access-not-skipped",
+      "file": "packages/polaris-dossier/src/import-facts-lexer.ts",
+      "old": "if (isPunct(prev, '.') || isPunct(prev, '?.')) continue;",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "reads neither a property call, a function named require, import.meta nor a namespace alias as a statement or a form",
+          "message": "AssertionError: expected { Object (complete, statements, ...) } to deeply equal { complete: true, …(2) }"
+        },
+        {
+          "test": "counts thirteen forms, states no statement, and leaves coverage partial",
+          "message": "AssertionError: expected { path: 'src/f.ts', …(4) } to deeply equal { path: 'src/f.ts', …(4) }"
+        },
+        {
+          "test": "gives coverage complete for the same file without the thirteen forms",
+          "message": "AssertionError: expected { path: 'src/f.ts', …(4) } to deeply equal { path: 'src/f.ts', …(4) }"
+        }
+      ]
+    },
+    {
+      "id": "facts-complete-ignores-outside-grammar",
+      "file": "packages/polaris-dossier/src/import-facts.ts",
+      "old": "incomplete === 0 && unknown === 0 && outsideGrammar === 0 &&",
+      "new": "incomplete === 0 && unknown === 0 &&",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "is unknown with coverage-partial and no finding over complete and partial coverage",
+          "message": "AssertionError: expected 'complete' to be 'partial' // Object.is equality"
+        },
+        {
+          "test": "counts thirteen forms, states no statement, and leaves coverage partial",
+          "message": "AssertionError: expected 'complete' to be 'partial' // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "facts-read-limit-off-by-one",
+      "file": "packages/polaris-dossier/src/import-facts.ts",
+      "old": "if (readable >= IMPORT_READ_LIMIT)",
+      "new": "if (readable > IMPORT_READ_LIMIT)",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "reads 2,000 named files and names the 2,001st over-read-limit without reading it",
+          "message": "AssertionError: expected [ 2001, +0, 2001, true ] to deeply equal [ 2000, 1, 2000, false ]"
+        }
+      ]
+    },
+    {
+      "id": "facts-budget-exclusive",
+      "file": "packages/polaris-dossier/src/import-facts.ts",
+      "old": "if (budget + blob.bytes.byteLength > IMPORT_BYTE_BUDGET)",
+      "new": "if (budget + blob.bytes.byteLength >= IMPORT_BYTE_BUDGET)",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "scans files whose bytes reach 16,777,216 exactly, and names the one that passes the total and every later file over-read-limit",
+          "message": "AssertionError: expected 'partial' to be 'complete' // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "facts-budget-not-sticky",
+      "file": "packages/polaris-dossier/src/import-facts.ts",
+      "old": "    if (spent) { outcomes.push(unknownFile(path, 'over-read-limit')); continue; }\n",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "scans files whose bytes reach 16,777,216 exactly, and names the one that passes the total and every later file over-read-limit",
+          "message": "AssertionError: expected [ 65, 1, 'partial' ] to deeply equal [ 64, 2, 'partial' ]"
+        }
+      ]
+    },
+    {
+      "id": "facts-set-apart-manifest-decides",
+      "file": "packages/polaris-dossier/src/import-facts.ts",
+      "old": "&& npm.secretPathsLeftOut === 0 && npm.setApart === 0 &&",
+      "new": "&& npm.secretPathsLeftOut === 0 &&",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "is undecidable, never external or edge, beside a set-apart package.json or an Unknown one",
+          "message": "AssertionError: expected { id: '_import-1', …(10) } to match object { outcome: 'unknown', …(1) }"
+        }
+      ]
+    },
+    {
+      "id": "facts-unknown-manifest-decides",
+      "file": "packages/polaris-dossier/src/import-facts.ts",
+      "old": "npm.setApart === 0 && npm.unknown === 0 &&",
+      "new": "npm.setApart === 0 &&",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "gives edge, same-unit, ambiguous, external and undecidable by the manifest facts",
+          "message": "AssertionError: expected { id: '_import-1', …(10) } to match object { outcome: 'unknown', …(1) }"
+        },
+        {
+          "test": "is undecidable, never external or edge, beside a set-apart package.json or an Unknown one",
+          "message": "AssertionError: expected { id: '_import-1', …(10) } to match object { outcome: 'unknown', …(1) }"
+        }
+      ]
+    },
+    {
+      "id": "facts-linked-directory-passed",
+      "file": "packages/polaris-dossier/src/import-facts.ts",
+      "old": "    if (throughLinkedDirectory) return { kind: 'unknown', reason: 'target-undecidable' };\n",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "is target-undecidable where the address is a symbolic link, or the path runs through one",
+          "message": "AssertionError: expected { id: '_import-1', …(10) } to match object { outcome: 'unknown', …(1) }"
+        }
+      ]
+    },
+    {
+      "id": "facts-unadmitted-address-passed",
+      "file": "packages/polaris-dossier/src/import-facts.ts",
+      "old": "return admittedBlob(address) ? { kind: 'file', path: address } : { kind: 'unknown', reason: 'target-undecidable' };",
+      "new": "if (admittedBlob(address)) return { kind: 'file', path: address };",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "is target-undecidable where the first address is held but not admitted, naming neither address",
+          "message": "AssertionError: expected [ [ 'app/m.ts', [ 1, 1 ], …(5) ] ] to deeply equal [ [ 'app/m.ts', [ 1, 1 ], …(5) ] ]"
+        }
+      ]
+    },
+    {
+      "id": "facts-ambiguous-threshold",
+      "file": "packages/polaris-dossier/src/import-facts.ts",
+      "old": "if (found.length > 1) return { kind: 'unknown', reason: 'target-ambiguous' };",
+      "new": "if (found.length > 2) return { kind: 'unknown', reason: 'target-ambiguous' };",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "gives edge, same-unit, ambiguous, external and undecidable by the manifest facts",
+          "message": "AssertionError: expected { id: '_import-1', …(10) } to match object { outcome: 'unknown', to: null, …(1) }"
+        }
+      ]
+    },
+    {
+      "id": "facts-source-undecidable-ignored",
+      "file": "packages/polaris-dossier/src/import-facts.ts",
+      "old": "  if (source.kind === 'undecidable') return unknown('source-unit-undecidable');\n",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "is source-unit-undecidable where the nearest package.json is a symbolic link; takes the root one where the directory holds none",
+          "message": "AssertionError: expected [ [ 'u/f.ts', 'unknown', …(1) ] ] to deeply equal [ [ 'u/f.ts', 'unknown', …(1) ] ]"
+        }
+      ]
+    },
+    {
+      "id": "facts-symlink-manifest-decides",
+      "file": "packages/polaris-dossier/src/import-facts.ts",
+      "old": "const decidable = FILE_MODES.has(mode) &&",
+      "new": "const decidable = BLOB_MODES.has(mode) &&",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "is source-unit-undecidable where the nearest package.json is a symbolic link; takes the root one where the directory holds none",
+          "message": "AssertionError: expected [ [ 'u/f.ts', 'same-unit', null ] ] to deeply equal [ [ 'u/f.ts', 'unknown', …(1) ] ]"
+        }
+      ]
+    },
+    {
+      "id": "facts-list-order",
+      "file": "packages/polaris-dossier/src/import-facts.ts",
+      "old": "listWithinBudget([edges, files, facts])",
+      "new": "listWithinBudget([facts, files, edges])",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "writes importFacts immediately before manifestFacts, the record's last member",
+          "message": "AssertionError: expected [ 'derived', 'complete', …(2) ] to deeply equal [ 'derived', 'complete', …(2) ]"
+        },
+        {
+          "test": "passes check with no finding for i1, and draws it with the draft's marking, label and citations and the fact's provenance",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to contain '<g class=\"edge inferred\" data-relatio…'"
+        },
+        {
+          "test": "names an import-type form, a package-import rule, and leaves a reversed edge fact unknown",
+          "message": "AssertionError: expected { i1: { state: 'unknown', …(4) } } to deeply equal { i1: { state: 'corroborated', …(4) } }"
+        },
+        {
+          "test": "renders the same draft migrated to schema v12 with byte-identical evidence text and figure",
+          "message": "AssertionError: expected [ { id: 'i1', from: 'web', …(5) } ] to deeply equal [ { id: 'i1', from: 'web', …(5) } ]"
+        },
+        {
+          "test": "carries the claim, citations and evidence text in deps, and as shown in deps in layers, both corroborated",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to contain '<span class=\"visually-hidden ev\"> Evi…'"
+        },
+        {
+          "test": "derives the member: three files scanned, two edge statements joining the two units, one same-unit, one external",
+          "message": "AssertionError: expected { …(21) } to deeply equal { …(21) }"
+        },
+        {
+          "test": "carries no operand text, and every line pair is a range of its file",
+          "message": "TypeError: Cannot read properties of undefined (reading '0')"
+        },
+        {
+          "test": "keeps the statement before an unterminated template, and is partial",
+          "message": "AssertionError: expected [] to deeply equal [ [ 'y/f.ts', [ 1, 1 ], …(5) ] ]"
+        },
+        {
+          "test": "is target-undecidable where the first address is held but not admitted, naming neither address",
+          "message": "AssertionError: expected [] to deeply equal [ [ 'app/m.ts', [ 1, 1 ], …(5) ] ]"
+        },
+        {
+          "test": "passes an absent address or a tree over, and resolves to lib/y/index.ts's unit",
+          "message": "AssertionError: expected { from: 'app/package.json', …(2) } to match object { outcome: 'edge', …(3) }"
+        },
+        {
+          "test": "is target-undecidable where the address is a symbolic link, or the path runs through one",
+          "message": "AssertionError: expected undefined to match object { outcome: 'unknown', to: null, …(1) }"
+        },
+        {
+          "test": "gives edge, same-unit, ambiguous, external and undecidable by the manifest facts",
+          "message": "AssertionError: expected { from: 'units/q/package.json', …(2) } to match object { outcome: 'edge', …(1) }"
+        },
+        {
+          "test": "is undecidable, never external or edge, beside a set-apart package.json or an Unknown one",
+          "message": "AssertionError: expected undefined to match object { outcome: 'unknown', …(1) }"
+        },
+        {
+          "test": "is source-unit-undecidable where the nearest package.json is a symbolic link; takes the root one where the directory holds none",
+          "message": "AssertionError: expected [] to deeply equal [ [ 'u/f.ts', 'unknown', …(1) ] ]"
+        },
+        {
+          "test": "lists edges, then files, then facts as the longest prefixes within 1,900,000 bytes and counts every statement",
+          "message": "AssertionError: expected [ 8000, 2, 4855, 1, 1 ] to deeply equal [ 8000, 2, +0, 2, +0 ]"
+        },
+        {
+          "test": "gives [2, 2] and [4, 6] with CRLF and U+FEFF, and the same facts with LF and none",
+          "message": "AssertionError: expected [] to deeply equal [ [ 'import', [ 2, 2 ] ], …(1) ]"
+        }
+      ]
+    },
+    {
+      "id": "facts-secret-candidate-read",
+      "file": "packages/polaris-dossier/src/import-facts.ts",
+      "old": "    if (secret(path)) { secretPathsLeftOut++; continue; }\n",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "names the body a detector matches Unknown, counts the secret path and the tests path alone, and is never complete",
+          "message": "Error: import facts: the path screen gave secret-detector-match for a path the secret test passed"
+        }
+      ]
+    },
+    {
+      "id": "witness-any-outcome-corroborates",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "inputs.imports.facts.find((f) => f.outcome === 'edge' && f.from",
+      "new": "inputs.imports.facts.find((f) => f.from",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "corroborates no imports edge from web to web by a same-unit statement",
+          "message": "AssertionError: expected { i1: { state: 'corroborated', …(4) } } to deeply equal { i1: { state: 'unknown', …(4) } }"
+        },
+        {
+          "test": "is unknown with coverage-partial, never challenged, where no edge fact joins them in that direction, or by another rule or version",
+          "message": "AssertionError: expected { state: 'corroborated', …(5) } to deeply equal { state: 'unknown', …(1) }"
+        }
+      ]
+    },
+    {
+      "id": "witness-direction-ignored",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "f.from === from.path && f.to === to.path",
+      "new": "[f.from, f.to].includes(from.path) && [f.from, f.to].includes(to.path)",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "names an import-type form, a package-import rule, and leaves a reversed edge fact unknown",
+          "message": "AssertionError: expected { i1: { state: 'corroborated', …(4) } } to deeply equal { i1: { state: 'unknown', …(4) } }"
+        },
+        {
+          "test": "corroborates no imports edge from web to web by a same-unit statement",
+          "message": "AssertionError: expected { i1: { state: 'corroborated', …(4) } } to deeply equal { i1: { state: 'unknown', …(4) } }"
+        },
+        {
+          "test": "corroborates by the first edge fact joining the two units, in facts order, naming its fact, form, rule and version",
+          "message": "AssertionError: expected { state: 'corroborated', …(5) } to deeply equal { state: 'corroborated', …(5) }"
+        },
+        {
+          "test": "is unknown with coverage-partial, never challenged, where no edge fact joins them in that direction, or by another rule or version",
+          "message": "AssertionError: expected { state: 'corroborated', …(5) } to deeply equal { state: 'unknown', …(1) }"
+        }
+      ]
+    },
+    {
+      "id": "witness-facts-unknown-skipped",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "  if (inputs.imports.state !== 'derived') return { state: 'unknown', reason: 'facts-unknown' };\n",
+      "new": "  if (inputs.imports.state !== 'derived') return { state: 'unknown', reason: 'coverage-partial' };\n",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "is facts-unknown where the record holds no member, or one in state unknown",
+          "message": "AssertionError: expected { i1: { state: 'unknown', …(4) } } to deeply equal { i1: { state: 'unknown', …(4) } }"
+        },
+        {
+          "test": "decides in order: edge-not-inferred, endpoint-without-unit, endpoint-unit-invalid, endpoint-kind-mismatch, facts-unknown",
+          "message": "AssertionError: expected { state: 'unknown', …(1) } to deeply equal { state: 'unknown', …(1) }"
+        },
+        {
+          "test": "never gives no-witness-rule or recognizer-not-eligible for imports, whatever the eligibility table",
+          "message": "AssertionError: expected { state: 'unknown', …(1) } to deeply equal { state: 'unknown', …(1) }"
+        }
+      ]
+    },
+    {
+      "id": "witness-kind-mismatch-skipped",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "if (from.kind !== 'package-manifest' || to.kind !== 'package-manifest')",
+      "new": "if (from.kind !== 'package-manifest' && to.kind !== 'package-manifest')",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "gives endpoint-kind-mismatch, endpoint-without-unit and edge-not-inferred before the facts are read",
+          "message": "AssertionError: endpoint-kind-mismatch: expected { i1: { state: 'unknown', …(4) } } to deeply equal { i1: { state: 'unknown', …(4) } }"
+        },
+        {
+          "test": "decides in order: edge-not-inferred, endpoint-without-unit, endpoint-unit-invalid, endpoint-kind-mismatch, facts-unknown",
+          "message": "AssertionError: expected { state: 'unknown', …(1) } to deeply equal { state: 'unknown', …(1) }"
+        }
+      ]
+    },
+    {
+      "id": "render-digest-unindented",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "replace(/\\n/gu, '\\n  ')",
+      "new": "replace(/\\n/gu, '\\n')",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "passes check with no finding for i1, and draws it with the draft's marking, label and citations and the fact's provenance",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "names an import-type form, a package-import rule, and leaves a reversed edge fact unknown",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to contain '<span class=\"visually-hidden ev\"> Evi…'"
+        },
+        {
+          "test": "carries the claim, citations and evidence text in deps, and as shown in deps in layers, both corroborated",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to contain '<span class=\"visually-hidden ev\"> Evi…'"
+        }
+      ]
+    },
+    {
+      "id": "render-imports-never-read",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "imports: inputs.imports?.state === 'derived' ? inputs.imports : { state: 'unknown' },",
+      "new": "imports: { state: 'unknown' },",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "passes check with no finding for i1, and draws it with the draft's marking, label and citations and the fact's provenance",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to contain '<g class=\"edge inferred\" data-relatio…'"
+        },
+        {
+          "test": "leaves the draft's counts, tally and legend equal to those of the same draft whose i1 is unknown",
+          "message": "AssertionError: expected { i1: { state: 'unknown', …(4) } } to deeply equal { i1: { state: 'unknown', …(4) } }"
+        },
+        {
+          "test": "names an import-type form, a package-import rule, and leaves a reversed edge fact unknown",
+          "message": "AssertionError: expected { i1: { state: 'unknown', …(4) } } to deeply equal { i1: { state: 'corroborated', …(4) } }"
+        },
+        {
+          "test": "renders the same draft migrated to schema v12 with byte-identical evidence text and figure",
+          "message": "AssertionError: expected [ { id: 'i1', from: 'web', …(5) } ] to deeply equal [ { id: 'i1', from: 'web', …(5) } ]"
+        },
+        {
+          "test": "is unknown with coverage-partial and no finding over complete and partial coverage",
+          "message": "AssertionError: expected { i1: { state: 'unknown', …(4) } } to deeply equal { i1: { state: 'unknown', …(4) } }"
+        },
+        {
+          "test": "corroborates no imports edge from web to web by a same-unit statement",
+          "message": "AssertionError: expected { i1: { state: 'unknown', …(4) } } to deeply equal { i1: { state: 'unknown', …(4) } }"
+        },
+        {
+          "test": "carries the claim, citations and evidence text in deps, and as shown in deps in layers, both corroborated",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to contain '<span class=\"visually-hidden ev\"> Evi…'"
+        }
+      ]
+    },
+    {
+      "id": "site-state-attribute-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": " data-witness-state=\"corroborated\" data-witness-fact=",
+      "new": " data-witness-fact=",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "passes check with no finding for i1, and draws it with the draft's marking, label and citations and the fact's provenance",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to contain '<g class=\"edge inferred\" data-relatio…'"
+        },
+        {
+          "test": "names an import-type form, a package-import rule, and leaves a reversed edge fact unknown",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to contain '<g class=\"edge inferred\" data-relatio…'"
+        },
+        {
+          "test": "carries the claim, citations and evidence text in deps, and as shown in deps in layers, both corroborated",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to match /<li data-relation=\"imports\" data-wit…/u"
+        }
+      ]
+    },
+    {
+      "id": "site-evidence-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${corroborated(relation) ? corroborationText(relation) : ''}`,",
+      "new": "`,",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "passes check with no finding for i1, and draws it with the draft's marking, label and citations and the fact's provenance",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "names an import-type form, a package-import rule, and leaves a reversed edge fact unknown",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to contain '<span class=\"visually-hidden ev\"> Evi…'"
+        },
+        {
+          "test": "carries the claim, citations and evidence text in deps, and as shown in deps in layers, both corroborated",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to contain '<span class=\"visually-hidden ev\"> Evi…'"
+        }
+      ]
+    },
+    {
+      "id": "site-as-shown-attributes-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "`<li${corroborated(relation) ? witnessAttrs(relation) : ''}>${ends}",
+      "new": "`<li>${ends}",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "carries the claim, citations and evidence text in deps, and as shown in deps in layers, both corroborated",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to contain '<li data-relation=\"imports\" data-witn…'"
+        }
+      ]
+    },
+    {
+      "id": "site-evidence-form-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "a lexical ${relation.corroboration.form} statement",
+      "new": "a lexical statement",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "passes check with no finding for i1, and draws it with the draft's marking, label and citations and the fact's provenance",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "names an import-type form, a package-import rule, and leaves a reversed edge fact unknown",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to contain '<span class=\"visually-hidden ev\"> Evi…'"
+        },
+        {
+          "test": "carries the claim, citations and evidence text in deps, and as shown in deps in layers, both corroborated",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to contain '<span class=\"visually-hidden ev\"> Evi…'"
+        }
+      ]
+    },
+    {
+      "id": "svg-state-not-allowed",
+      "file": "apps/three-surface-poc/src/polaris-generation/svg-inert.ts",
+      "old": "  'data-witness-state',\n",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "passes check with no finding for i1, and draws it with the draft's marking, label and citations and the fact's provenance",
+          "message": "Error: no figure f1"
+        },
+        {
+          "test": "leaves the draft's counts, tally and legend equal to those of the same draft whose i1 is unknown",
+          "message": "Error: no figure f1"
+        },
+        {
+          "test": "names an import-type form, a package-import rule, and leaves a reversed edge fact unknown",
+          "message": "AssertionError: expected {} to deeply equal { i1: { state: 'corroborated', …(4) } }"
+        },
+        {
+          "test": "renders the same draft migrated to schema v12 with byte-identical evidence text and figure",
+          "message": "Error: no figure f1"
+        },
+        {
+          "test": "carries the claim, citations and evidence text in deps, and as shown in deps in layers, both corroborated",
+          "message": "Error: no figure deps"
+        }
+      ]
+    },
+    {
+      "id": "check-member-after-manifest",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "...(importFacts === undefined ? {} : { importFacts }), ...(manifestFacts === undefined ? {} : { manifestFacts }),",
+      "new": "...(manifestFacts === undefined ? {} : { manifestFacts }), ...(importFacts === undefined ? {} : { importFacts }),",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "writes importFacts immediately before manifestFacts, the record's last member",
+          "message": "AssertionError: expected [ 'manifestFacts', 'importFacts' ] to deeply equal [ 'importFacts', 'manifestFacts' ]"
+        },
+        {
+          "test": "passes check with no finding for i1, and draws it with the draft's marking, label and citations and the fact's provenance",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "names an import-type form, a package-import rule, and leaves a reversed edge fact unknown",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to contain '<span class=\"visually-hidden ev\"> Evi…'"
+        },
+        {
+          "test": "carries the claim, citations and evidence text in deps, and as shown in deps in layers, both corroborated",
+          "message": "AssertionError: expected '<figure data-visual-provenance=\"curat…' to contain '<span class=\"visually-hidden ev\"> Evi…'"
+        }
+      ]
+    }
+  ],
+  "killed": 33,
+  "killedByAssertion": 32,
+  "total": 33
+}

@@ -5,10 +5,12 @@ import {
   CONTAINMENT_KIND, DOSSIER_FORMAT, OWNER_TOPICS, PAGE_SINK_CONTRACT, checkDraftQuotes, diagramToMermaid, figureToMermaid, isDossierPagePath, parseDossierManifest, readerCost, reviewVerdict, scanDossierPage, sourceTextById, withoutReviewStatusRegion,
   generationSourceIdentity, generationSpanRange, validateGenerationSources,
   type DossierDraft, type DossierManifest, type DraftBlock, type DraftContainmentGroup, type DraftDiagram, type DraftElement, type DraftFigure, type DraftFigureElement, type DraftParagraph, type EpistemicMarking, type GenerationSource, type LocalPageItem,
-  type LocalBlock, type LocalDerivedFact, type LocalDerivedStructure, type LocalManifestFact, type LocalManifestFacts, type LocalManifestFileEntry, type LocalManifestRecognizerEntry, type LocalEdgeRelation, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
+  type LocalBase, type LocalBlock, type LocalDerivedFact, type LocalDerivedStructure, type LocalManifestFact, type LocalManifestFacts, type LocalManifestFileEntry, type LocalManifestRecognizerEntry, type LocalEdgeRelation, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
-import { READABLE_SPACING, layoutContainment, layoutDiagram, layoutSequence, layoutSwimlane, renderContainmentSvg, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg, type ContainmentClaim } from './diagram-layout.js';
+import { CALLED_HEIGHT, READABLE_SPACING, containmentBoxStyle, diagramNodeBoxes, walkBoxStyle, walkableWidth, layoutContainment, layoutDiagram, layoutSequence, layoutSwimlane, renderContainmentSvg, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg, type BoxDecoration, type ContainmentClaim, type ContainmentGroupInput } from './diagram-layout.js';
+import { figureLayerCss } from './dossier-walk.js';
+import { BASE_FIGURE_CSS, baseChip, baseHiddenItems, baseLegendEntry, baseMachine, baseNotice, baseTallyClause } from './dossier-base.js';
 import { TEST_NAMES_LEGEND, TEST_NAMES_PAGE, testNamesMachine, testNamesPage } from './dossier-test-names.js';
 import { ROUGH_EDGES_LEGEND, ROUGH_EDGES_PAGE, roughEdgesMachine, roughEdgesPage } from './dossier-rough-edges.js';
 import { DOCS_AND_CODE_LEGEND, DOCS_AND_CODE_PAGE, docsAndCodeMachine, docsAndCodePage } from './dossier-docs-and-code.js';
@@ -759,10 +761,94 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // of the fact that witnesses it, not the draft's claim: drawn solid and Observed in Syzygy's words, with the fact's provenance in its
   // `data-witness-*` attributes, no claim anchor, and in none of the draft's counts. `machine.json` lists every such edge as drawn.
   const relationEdges: { readonly index: number; readonly entry: Record<string, unknown> }[] = [];
+  // A v15 view with a `base` (version 2.35): the pages drawing one carry its style rules; its elements are Syzygy's, by fact identity.
+  const basePages = new Set<string>();
+  const baseOf = (id: string): LocalBase | undefined => local?.bases?.get(id);
+  // The map's own reason and words where it is not established at this render, as its page states them.
+  const baseUnknown = (map: LocalBase['map']): { readonly reason: string; readonly words: string } => {
+    if (map === 'units') return { reason: 'source-uncaptured-or-unreachable', words: 'the pinned tree could not be listed' };
+    const derived = local?.derivedStructure;
+    return derived === undefined || derived.state === 'derived' ? { reason: 'missing-evidence', words: unknownWords.missing } : { reason: derived.unknownReason, words: unknownWords[derived.state] };
+  };
+  // The note the map's page carries at this render, word for word.
+  const baseNote = (map: LocalBase['map']): string => {
+    const derived = local?.derivedStructure, member = local?.manifestFacts;
+    if (map === 'directories') return derived?.state === 'derived' ? derivedNote(derived) : '';
+    return member?.state === 'derived' && derived !== undefined ? unitMapNote(member, derived.revision) : '';
+  };
+  // A base element's identity attributes, as its map draws them, with its computed provenance.
+  const baseIdAttrs = (map: LocalBase['map'], factId: string, unknownReason: string | null): string =>
+    ` data-visual-provenance="computed" data-${map === 'directories' ? 'derived' : 'manifest'}-id="${escape(factId)}"${unknownReason === null ? '' : ` data-unknown-reason="${escape(unknownReason)}"`}`;
+  const baseName = (base: Extract<LocalBase, { state: 'drawn' }>, factId: string) => base.names.find(name => name.factId === factId);
+  // Every fact identity a drawn base resolved: its shown elements and the record's `contains` facts joining the root to them.
+  const baseFacts = (base: Extract<LocalBase, { state: 'drawn' }>): ReadonlySet<string> =>
+    new Set(base.elements.flatMap(element => [element.factId, ...(element.contains === null ? [] : [element.contains.factId])]));
+  // A shown base element's box: a double border, and its display name's line under it.
+  const baseDecoration = (base: Extract<LocalBase, { state: 'drawn' }>, factId: string): BoxDecoration | undefined => {
+    if (!base.elements.some(element => element.factId === factId)) return undefined;
+    const name = baseName(base, factId);
+    return { double: true, ...(name === undefined ? {} : { called: { text: `called ${name.label}${name.epistemic === 'unknown' ? ' ?' : ''}`,
+      attributes: ` data-visual-provenance="curated" data-name="${escape(name.id)}" data-epistemic="${name.epistemic}"` } }) };
+  };
+  // A base element's list item: Syzygy's words, mark and identity, then the display name, the draft's claim, with its anchor and citations.
+  const baseItem = (from: string, base: Extract<LocalBase, { state: 'drawn' }>, factId: string, label: string, epistemic: EpistemicMarking, unknownReason: string | null, words = ''): string => {
+    const name = baseName(base, factId);
+    const called = name === undefined ? '' : ` ${claim('span', name.id, name.epistemic, `Called ${escape(name.label)} by this dossier. ${mark(from, name.epistemic)} ${refs(from, name.sourceIds, name.id)}`)}`;
+    return `<li${baseIdAttrs(base.map, factId, unknownReason)} data-epistemic="${epistemic}">${escape(label)}${words} ${mark(from, epistemic)} <span class="derived-mark">Derived by Syzygy</span>${called}</li>`;
+  };
+  // A v16 figure walk (version 2.40): the pages holding one carry its style rules.
+  const walkPages = new Set<string>();
+  // A walk over a figure drawn on `from`, where the draft walks it and its drawing is not 1048 px wide: the layer laid over the drawing,
+  // one box per node in the drawing's node order, and the walk's list. A box takes its step's id and badge, and a link to the cited lines
+  // its node's first citation's link lands on, where the node is not withheld, not a base element and that citation has a source page:
+  // the same address the citation link carries, which depends on the page alone, so a later figure's box lands where the first figure's
+  // link does. A v17 figure drawing an element with a zoom target (version 2.50) carries the same layer, each such element's box holding its
+  // zoom link after any badge and source link; with no walk, its wrapper is `zoom-only` and its boxes carry nothing else. Undefined where
+  // neither renders, so the page's bytes are those without it.
+  const walkOf = (from: string, d: DraftDiagram, index: number, isBase: (id: string) => boolean, decorate: ((id: string) => BoxDecoration | undefined) | undefined,
+    held: (id: string) => WithheldNote | undefined): { readonly wrapper: string; readonly layer: string; readonly list: string } | undefined => {
+    const nodes = new Map(d.nodes.map(n => [n.id, n]));
+    const given = local?.walks?.get(d.id);
+    const steps = given === undefined || given.some(step => !nodes.has(step.node)) ? undefined : given;
+    const zooms = new Map(d.nodes.flatMap(n => { const zoom = isBase(n.id) ? undefined : zoomOf(from, n.id, index); return zoom === undefined ? [] : [[n.id, zoom] as const]; }));
+    if (steps === undefined && zooms.size === 0) return undefined;
+    const geometry = diagramNodeBoxes(d, READABLE_SPACING, decorate);
+    if (!walkableWidth(geometry.width)) return undefined;
+    const zoomAt = (id: string): string => { const zoom = zooms.get(id); return zoom === undefined ? '' : zoomLink(nodes.get(id)!.label, zoom); };
+    if (zooms.size > 0) zoomPages.add(from);
+    if (steps === undefined) {
+      const boxes = geometry.boxes.map(box => `<span class="walk-node" style="${walkBoxStyle(box)}">${zoomAt(box.id)}</span>`).join('');
+      return { wrapper: '<div class="walk-figure zoom-only">', layer: `<div class="walk-layer">${boxes}</div>`, list: '' };
+    }
+    const numberOf = new Map(steps.map((step, k) => [step.node, k + 1]));
+    const sourceLink = (n: DraftDiagram['nodes'][number]): string => {
+      const first = n.sourceIds[0];
+      const target = first === undefined ? undefined : sourcePaths.get(first);
+      if (isBase(n.id) || held(n.id) !== undefined || first === undefined || target === undefined) return '';
+      const at = href(from, target, lineFragment(first, local?.citationLines?.get(n.id)?.get(first)));
+      return `<a class="walk-source" href="${escape(at)}"><span class="visually-hidden">${escape(n.label)}: cited lines</span></a>`;
+    };
+    const boxes = geometry.boxes.map(box => {
+      const n = nodes.get(box.id)!, number = numberOf.get(box.id);
+      const identity = number === undefined ? '' : ` id="walk-${escape(d.id)}-${number}"`;
+      const badge = number === undefined ? '' : `<span class="walk-badge" aria-hidden="true">${number}</span>`;
+      return `<span class="walk-node" style="${walkBoxStyle(box)}"${identity}>${badge}${sourceLink(n)}${zoomAt(box.id)}</span>`;
+    }).join('');
+    const items = steps.map((step, k) => `<li><a href="#walk-${escape(d.id)}-${k + 1}">${escape(nodes.get(step.node)!.label)}</a> <a class="walk-text" href="#block-${escape(step.block)}">Read step ${k + 1}</a></li>`).join('');
+    walkPages.add(from);
+    return { wrapper: '<div class="walk-figure">', layer: `<div class="walk-layer">${boxes}</div>`, list: `<ol class="figure-walk" aria-label="Walk through this figure">${items}</ol>` };
+  };
   const relationOf = (id: string): LocalEdgeRelation | undefined => local?.edgeRelations?.get(id);
   type WitnessedRelation = Extract<LocalEdgeRelation, { readonly evidence: object }>;
-  const witnessAttrs = (relation: LocalEdgeRelation): string => ` data-relation="${escape(relation.relation)}"${relation.evidence === undefined ? ''
-    : ` data-witness-fact="${escape(relation.witness.fact)}" data-witness-rule="${escape(relation.witness.rule)}" data-witness-rule-version="${relation.witness.ruleVersion}"`}`;
+  type CorroboratedRelation = Extract<LocalEdgeRelation, { readonly corroboration: object }>;
+  const corroborated = (relation: LocalEdgeRelation | undefined): relation is CorroboratedRelation => relation?.witness.state === 'corroborated';
+  // A corroborated `imports` edge (version 2.49) also carries `data-witness-state`, since it keeps the draft's marking: its import fact is
+  // named in its attributes and evidence text and changes no word, mark, count or legend of the draft's.
+  const witnessAttrs = (relation: LocalEdgeRelation): string => ` data-relation="${escape(relation.relation)}"${relation.evidence !== undefined
+    ? ` data-witness-fact="${escape(relation.witness.fact)}" data-witness-rule="${escape(relation.witness.rule)}" data-witness-rule-version="${relation.witness.ruleVersion}"`
+    : corroborated(relation) ? ` data-witness-state="corroborated" data-witness-fact="${escape(relation.witness.fact)}" data-witness-rule="${escape(relation.witness.rule)}" data-witness-rule-version="${relation.witness.ruleVersion}"` : ''}`;
+  const corroborationText = (relation: CorroboratedRelation): string =>
+    `<span class="visually-hidden ev"> ${escape(`Evidence: label Inferred, as the draft marks it; corroborated by import fact ${relation.witness.fact}, a lexical ${relation.corroboration.form} statement found by Syzygy by rule ${relation.witness.rule} version ${relation.witness.ruleVersion} at revision ${relation.corroboration.revision}; import facts sha256:${relation.corroboration.importFactsSha256}.`)}</span>`;
   // A schema-v12 draft's model (version 2.24): its figures arrive as their views' expansions. An element or cited relationship more than one
   // view selects carries `data-element` or `data-relationship` in every figure drawing it, and its claim renders once, in its first figure:
   // the first, in draft diagram order, whose view selects it and that renders as a `<figure>`; each later figure lists it `as shown in` that
@@ -797,8 +883,47 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     return `, as shown in <a href="${escape(link)}">${escape(target.title)}</a>`;
   };
   const sharedAttr = (id: string, kind: 'element' | 'relationship'): string => (shared(id) ? ` data-${kind}="${escape(id)}"` : '');
+  // A v17 draft's view levels (version 2.50). A view's `level` and `scope` give its `<figure>` two attributes, after every attribute version
+  // 2.35 gives it and before its `id`. An element's own view is a container view of it (a system) or a component view of it (a container
+  // type; check's `view-scope` keeps every scope of its level's type), never a context view; its zoom target is the first such view, in
+  // draft order, whose figure renders as a `<figure>`: produced, on a page this render draws and, for a base view, its base drawn. No figure
+  // of this renderer is drawn inside a `<details>`. A target that the inertness guard then turns into a notice refuses the render (below).
+  const viewLevels = local?.viewLevels;
+  const viewAttrs = (id: string): string => { const v = viewLevels?.get(id); return v === undefined ? '' : ` data-view-level="${escape(v.level)}" data-view-scope="${escape(v.scope)}"`; };
+  const zoomTargets = new Map<string, { readonly index: number; readonly id: string; readonly title: string; readonly page: string }>();
+  if (viewLevels !== undefined && !withheld) {
+    for (const [i, d] of draft.diagrams.entries()) {
+      const v = viewLevels.get(d.id);
+      if (v === undefined || v.level === 'context' || zoomTargets.has(v.scope)) continue;
+      const page = figurePage(d), based = baseOf(d.id);
+      if (page === undefined || (based !== undefined && based.state !== 'drawn')) continue;
+      zoomTargets.set(v.scope, { index: i, id: d.id, title: d.title, page });
+    }
+  }
+  const drawnFigures = new Set<string>();
+  // The zoom link an element drawn in figure `index` on `from` takes: undefined where it has no target, or this figure is its target.
+  const zoomOf = (from: string, id: string, index: number): { readonly href: string; readonly title: string } | undefined => {
+    const target = zoomTargets.get(id);
+    if (target === undefined || target.index === index) return undefined;
+    return { href: target.page === from ? `#figure-${target.id}` : href(from, target.page, `figure-${target.id}`), title: target.title };
+  };
+  // A list item gains, after everything it holds, one space and its `zoom-text` link.
+  const zoomText = (item: string, zoom: { readonly href: string; readonly title: string } | undefined): string =>
+    (zoom === undefined ? item : `${item.slice(0, -'</li>'.length)} <a class="zoom-text" href="${escape(zoom.href)}">Zoom in: ${escape(zoom.title)}</a></li>`);
+  const zoomLink = (label: string, zoom: { readonly href: string; readonly title: string }): string =>
+    `<a class="zoom-link" href="${escape(zoom.href)}"><span aria-hidden="true">+</span><span class="visually-hidden">Zoom in to ${escape(label)}: ${escape(zoom.title)}</span></a>`;
+  // The pages holding a `zoom-link` (version 2.50) carry the positioning, zoom and pass-through rules.
+  const zoomPages = new Set<string>();
   const diagram = (from: string, asDrafted: DraftDiagram, index: number, asHero = false): string => {
     if (asDrafted.disposition.kind !== 'produced') return notice(from, asDrafted.id, asDrafted.disposition, asHero);
+    // A view whose base is not drawn at this render (version 2.35): the notice alone, and no element of the view.
+    const based = baseOf(asDrafted.id);
+    if (based !== undefined && based.state !== 'drawn') {
+      basePages.add(from);
+      const unknown = baseUnknown(based.map);
+      figureStructures.push({ index, entry: { diagram: asDrafted.id, kind: asDrafted.figure?.kind ?? asDrafted.kind, page: from, base: baseMachine(based, [], unknown.reason) } });
+      return baseNotice(based, from, unknown);
+    }
     if (asDrafted.figure?.kind === CONTAINMENT_KIND) return containmentFigure(from, asDrafted, asDrafted.figure.groups, index);
     if (asDrafted.figure !== undefined) return kindedFigure(from, asDrafted, asDrafted.figure, index);
     // `d` is the figure as drawn: a witnessed edge in Syzygy's words and marked Observed, every other element keeping the draft's label
@@ -812,12 +937,20 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const held = (id: string): WithheldNote | undefined => local?.withheldElements?.get(id);
     const heldText = (id: string): string => held(id) === undefined ? '' : ` <span class="withheld-note">${escape(withheldWords(held(id)!))}</span>`;
     const heldAttrs = (id: string): string => held(id) === undefined ? '' : ' data-unknown-reason="excluded-content"';
-    const nodeList = d.nodes.map(n => { const shown = asShown(from, n.id, index); return shown !== undefined ? `<li>${escape(n.label)}${shown}</li>` : claim('li', n.id, n.epistemic, `${escape(n.label)}${heldText(n.id)} ${mark(from, n.epistemic)} ${refs(from, n.sourceIds, n.id)}`, heldAttrs(n.id), held(n.id) === undefined ? null : 'excluded-content', held(n.id) === undefined ? undefined : { withheldSources: held(n.id)!.sources }); }).join('');
+    const drawnBase = based?.state === 'drawn' ? based : undefined;
+    // A base element or a base `contains` arrow, by the fact identities the render resolved (R38 note 10).
+    const isBase = (id: string): boolean => drawnBase !== undefined && baseFacts(drawnBase).has(id);
+    const baseElement = (id: string) => drawnBase?.elements.find(element => element.factId === id);
+    const nodeList = d.nodes.map(n => { if (isBase(n.id)) { const element = baseElement(n.id)!; return baseItem(from, drawnBase!, n.id, element.label, n.epistemic, element.unknownReason); }
+      const shown = asShown(from, n.id, index); return shown !== undefined ? `<li>${escape(n.label)}${shown}</li>` : claim('li', n.id, n.epistemic, `${escape(n.label)}${heldText(n.id)} ${mark(from, n.epistemic)} ${refs(from, n.sourceIds, n.id)}`, heldAttrs(n.id), held(n.id) === undefined ? null : 'excluded-content', held(n.id) === undefined ? undefined : { withheldSources: held(n.id)!.sources }); })
+      .map((item, k) => zoomText(item, isBase(d.nodes[k]!.id) ? undefined : zoomOf(from, d.nodes[k]!.id, index))).join('');
     const witnessItem = (e: DraftDiagram['edges'][number], relation: WitnessedRelation): string =>
       `<li${witnessAttrs(relation)} data-epistemic="observed">${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(relation.evidence.words)} <span class="derived-mark">Witnessed by Syzygy</span>`
       + `<span class="visually-hidden ev"> ${escape(`Evidence: label Observed; witnessed by fact ${relation.witness.fact} (${relation.evidence.factKind}), derived by Syzygy by rule ${relation.witness.rule} version ${relation.witness.ruleVersion} at revision ${relation.evidence.revision}; record sha256:${relation.evidence.recordSha256}.`)}</span></li>`;
     const diagramRelationEdges: typeof relationEdges = [];
     const edgeList = d.edges.map(e => {
+      // The directory map's `contains` fact, in Syzygy's words, with its mark and identity (version 2.35).
+      if (isBase(e.id)) return `<li${baseIdAttrs('directories', e.id, null)} data-epistemic="${e.epistemic}">Repository root contains ${escape(baseElement(e.to)?.name ?? '')}. ${mark(from, e.epistemic)} <span class="derived-mark">Derived by Syzygy</span></li>`;
       const relation = relationOf(e.id);
       if (relation !== undefined) diagramRelationEdges.push({ index, entry: { diagram: d.id, page: from, id: e.id, from: e.from, to: e.to, epistemic: e.epistemic, text: e.label, ...(derivedIds.has(e.id) ? { basis: 'derived' } : {}), relation: relation.relation, witness: relation.witness } });
       if (relation?.evidence !== undefined) return witnessItem(e, relation);
@@ -828,13 +961,15 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
         return `<li data-relation="${escape(relation?.relation ?? '')}" data-unknown-reason="${escape(reason)}">${ends}: Syzygy could not derive this relation (${escape(reason)})</li>`;
       }
       const shown = asShown(from, e.id, index);
-      if (shown !== undefined) return `<li>${ends}: ${escape(e.label)}${shown}</li>`;
-      return claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)}${heldText(e.id)} ${mark(from, e.epistemic)} ${refs(from, e.sourceIds, e.id)}`, `${heldAttrs(e.id)}${relation === undefined ? '' : witnessAttrs(relation)}`, held(e.id) === undefined ? null : 'excluded-content', held(e.id) === undefined ? undefined : { withheldSources: held(e.id)!.sources });
+      if (shown !== undefined) return `<li${corroborated(relation) ? witnessAttrs(relation) : ''}>${ends}: ${escape(e.label)}${shown}</li>`;
+      return claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)}${heldText(e.id)} ${mark(from, e.epistemic)} ${refs(from, e.sourceIds, e.id)}${corroborated(relation) ? corroborationText(relation) : ''}`, `${heldAttrs(e.id)}${relation === undefined ? '' : witnessAttrs(relation)}`, held(e.id) === undefined ? null : 'excluded-content', held(e.id) === undefined ? undefined : { withheldSources: held(e.id)!.sources });
     }).join('');
     // A witnessed arrow's group also carries `data-epistemic="observed"`; its line style is the `observed` class every arrow's marking gives.
     // Keyed by edge id: `renderDiagramSvg` asks the hook for nodes too, which get nothing here because check's `duplicate-id` keeps every
     // identity of a rendered (passed) draft unique, so no node shares an edge's id.
-    const edgeAttrs = new Map([...d.nodes.flatMap(n => (shared(n.id) ? [[n.id, sharedAttr(n.id, 'element')] as const] : [])), ...d.edges.flatMap(e => {
+    const edgeAttrs = new Map([...d.nodes.flatMap(n => (isBase(n.id) ? [[n.id, baseIdAttrs(drawnBase!.map, n.id, baseElement(n.id)?.unknownReason ?? null)] as const]
+      : shared(n.id) ? [[n.id, sharedAttr(n.id, 'element')] as const] : [])), ...d.edges.flatMap(e => {
+      if (isBase(e.id)) return [[e.id, baseIdAttrs('directories', e.id, null)] as const];
       const relation = relationOf(e.id);
       const marking = relation?.evidence !== undefined ? ' data-epistemic="observed"' : derivedIds.has(e.id) ? ' data-epistemic="unknown"' : '';
       const attrs = `${sharedAttr(e.id, 'relationship')}${relation === undefined ? '' : witnessAttrs(relation)}${marking}`;
@@ -842,7 +977,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     })]);
     let svg: string;
     try {
-      svg = edgeAttrs.size === 0 ? renderDiagramSvg(d, index, escape, local === undefined ? undefined : READABLE_SPACING)
+      svg = drawnBase !== undefined ? renderDiagramSvg(d, index, escape, READABLE_SPACING, id => edgeAttrs.get(id) ?? '', id => baseDecoration(drawnBase, id))
+        : edgeAttrs.size === 0 ? renderDiagramSvg(d, index, escape, local === undefined ? undefined : READABLE_SPACING)
         : renderDiagramSvg(d, index, escape, READABLE_SPACING, id => edgeAttrs.get(id) ?? '');
       assertInertSvg(svg);
     } catch {
@@ -851,11 +987,27 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     for (const entry of diagramRelationEdges) relationEdges.push(entry);
     // The provider mode keeps its fixed legend (its bytes are pinned); an operator-agent figure legends only the styles it draws, with a
     // tally of its boxes and arrows by marking (syzygy-3efd.17): no figure element is observed there, so "Solid: observed" was false.
-    const legend = local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend([...d.nodes, ...d.edges].map(element => element.epistemic), d.nodes.length, d.edges.length);
+    const own = { nodes: d.nodes.filter(n => !isBase(n.id)), edges: d.edges.filter(e => !isBase(e.id)) };
+    const legend = local === undefined ? FIXED_DIAGRAM_LEGEND : drawnBase !== undefined
+      ? baseLegend([...d.nodes, ...d.edges].map(element => element.epistemic), [...own.nodes, ...own.edges].map(element => element.epistemic), own.nodes.length, own.edges.length, undefined, drawnBase.map,
+        [...d.nodes, ...d.edges].filter(element => isBase(element.id)).map(element => element.epistemic), d.nodes.length - own.nodes.length, d.edges.length - own.edges.length, baseNote(drawnBase.map))
+      : figureLegend([...d.nodes, ...d.edges].map(element => element.epistemic), d.nodes.length, d.edges.length);
+    if (drawnBase !== undefined) {
+      basePages.add(from);
+      figureStructures.push({ index, entry: { diagram: d.id, kind: d.kind, page: from,
+        nodes: d.nodes.map(n => ({ id: n.id, provenance: isBase(n.id) ? 'derived' : 'authored' })), edges: d.edges.map(e => ({ id: e.id, provenance: isBase(e.id) ? 'derived' : 'authored' })),
+        base: baseMachine(drawnBase, d.nodes.filter(n => isBase(n.id)).map(n => n.id), '') } });
+    }
     // An operator-agent figure is a fragment target, so the index can send a reader to it; it is never drawn inside a folded element.
     if (local !== undefined) figureHomes.push({ id: d.id, title: d.title, home: { page: from, fragment: `figure-${d.id}`, label: 'Figure' } });
     const ids = figureIds(index);
-    return `<figure${asHero ? heroFigureAttribute : ''}${curated}${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${nodeList}</ul><ol>${edgeList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
+    const baseMap = drawnBase === undefined ? '' : ` data-base-map="${drawnBase.map}"`, chip = drawnBase === undefined ? '' : baseChip(drawnBase, from);
+    const hidden = drawnBase === undefined ? '' : baseHiddenItems(drawnBase);
+    // A v16 walk (version 2.40): the drawing, byte for byte, wrapped with the layer over it, and the walk's list after it.
+    const walked = local === undefined ? undefined : walkOf(from, d, index, isBase, drawnBase === undefined ? undefined : id => baseDecoration(drawnBase, id), held);
+    const drawing = walked === undefined ? svg : `${walked.wrapper}${svg}${walked.layer}</div>`;
+    drawnFigures.add(d.id);
+    return `<figure${asHero ? heroFigureAttribute : ''}${curated}${baseMap}${viewAttrs(d.id)}${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption>${chip}<p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${drawing}</div>${walked?.list ?? ''}${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${nodeList}${hidden}</ul><ol>${edgeList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
   };
   // A v7 sequence or swimlane (REQ-polaris-generation-034 version 2.5): the figure a graph figure with its home takes, holding its drawing and
   // its phone form, of which the stylesheet displays one by the width of the `figure-forms` box. Each participant, lane and step is a claim
@@ -879,39 +1031,74 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       for (const child of group.children) visit(child, group, level + 1);
     };
     for (const group of groups) visit(group, undefined, 1);
+    // A v15 containment's base groups (version 2.35): Syzygy's, by the fact identities the render resolved.
+    const based = baseOf(d.id), drawnBase = based?.state === 'drawn' ? based : undefined;
+    const isBase = (id: string): boolean => drawnBase !== undefined && baseFacts(drawnBase).has(id);
+    // The root's nesting of a shown directory is the record's `contains` fact (version 2.35, R38 finding 1): stated in Syzygy's words with
+    // the fact's mark, as version 2.23 states a witnessed nesting, and carried as the nesting's witness.
+    const rootContains = (group: DraftContainmentGroup, parent: DraftContainmentGroup | undefined) =>
+      (drawnBase?.map === 'directories' && parent !== undefined && isBase(parent.id) && isBase(group.id) ? baseElement(group.id)?.contains ?? undefined : undefined);
+    const containsWitness = (fact: { readonly factId: string; readonly epistemic: EpistemicMarking }) => ({ state: fact.epistemic === 'observed' ? 'witnessed' : 'unknown',
+      reason: fact.epistemic === 'observed' ? null : 'fact-not-current', fact: fact.factId, rule: 'top-level-unit', ruleVersion: 1 });
+    const baseElement = (id: string) => drawnBase?.elements.find(element => element.factId === id);
+    const below = (group: DraftContainmentGroup): ContainmentGroupInput => ({ id: group.id, children: group.children.map(below), below: drawnBase !== undefined && baseDecoration(drawnBase, group.id)?.called !== undefined ? CALLED_HEIGHT : 0 });
     let svg: string, layout: ReturnType<typeof layoutContainment>;
     try {
-      svg = renderContainmentSvg(groups, index, escape, id => sharedAttr(id, 'element'));
+      svg = drawnBase === undefined ? renderContainmentSvg(groups, index, escape, id => sharedAttr(id, 'element'))
+        : renderContainmentSvg(groups, index, escape, id => isBase(id) ? baseIdAttrs(drawnBase.map, id, baseElement(id)?.unknownReason ?? null) : sharedAttr(id, 'element'), id => baseDecoration(drawnBase, id));
       assertInertSvg(svg);
-      layout = layoutContainment(groups);
+      layout = layoutContainment(drawnBase === undefined ? groups : groups.map(below));
     } catch {
       return notice(from, d.id, { kind: 'unresolved', reason: 'diagram could not be rendered inertly', references: [...new Set(preorder.flatMap(({ group }) => group.sourceIds))] });
     }
-    const listed = preorder.map(({ group, parent }) => { const shown = asShown(from, group.id, index); return shown !== undefined
+    const listed = preorder.map(({ group, parent }) => { if (isBase(group.id)) return baseItem(from, drawnBase!, group.id, group.label, group.epistemic, baseElement(group.id)?.unknownReason ?? null, parent === undefined ? '' : ` (in ${escape(parent.label)})`);
+      const shown = asShown(from, group.id, index); return shown !== undefined
       ? `<li>${escape(group.label)}${parent === undefined ? '' : ` (in ${escape(parent.label)})`}${shown}</li>` : claim('li', group.id, group.epistemic,
       `${escape(group.label)}${parent === undefined ? '' : ` (in ${escape(parent.label)})`}${heldText(group.id)} ${mark(from, group.epistemic)} ${refs(from, group.sourceIds, group.id)}`,
-      heldAttrs(group.id), held(group.id) === undefined ? null : 'excluded-content', held(group.id) === undefined ? undefined : { withheldSources: held(group.id)!.sources }); }).join('');
+      heldAttrs(group.id), held(group.id) === undefined ? null : 'excluded-content', held(group.id) === undefined ? undefined : { withheldSources: held(group.id)!.sources }); })
+      .map((item, k) => zoomText(item, isBase(preorder[k]!.group.id) ? undefined : zoomOf(from, preorder[k]!.group.id, index))).join('');
     const witnessed = preorder.flatMap(({ group, parent }) => {
+      const fact = rootContains(group, parent);
+      if (fact !== undefined) return [`<li${baseIdAttrs('directories', fact.factId, null)} data-epistemic="${fact.epistemic}">Repository root contains ${escape(baseElement(group.id)?.name ?? '')}. ${mark(from, fact.epistemic)} <span class="derived-mark">Derived by Syzygy</span></li>`];
       const relation = parent === undefined ? undefined : relationOf(group.id);
       return relation?.evidence === undefined ? [] : [`<li${witnessAttrs(relation)} data-epistemic="observed">${escape(parent!.label)} contains ${escape(group.label)}: <span class="derived-mark">Witnessed by Syzygy</span>`
         + `<span class="visually-hidden ev"> ${escape(`Evidence: label Observed; witnessed by fact ${relation.witness.fact} (${relation.evidence.factKind}), derived by Syzygy by rule ${relation.witness.rule} version ${relation.witness.ruleVersion} at revision ${relation.evidence.revision}; record sha256:${relation.evidence.recordSha256}.`)}</span></li>`];
     }).join('');
+    // On the phone form a base group's item begins "Syzygy: ", the double border's words where no border is drawn, and ends with its name.
+    const outlineCalled = (id: string): string => { const name = drawnBase === undefined || !isBase(id) ? undefined : baseName(drawnBase, id); return name === undefined ? '' : `, called ${escape(name.label)}`; };
     const outline = (group: DraftContainmentGroup): string =>
-      `<li class="${group.epistemic}">${escape(group.label)}${group.epistemic === 'unknown' ? ' ?' : ''}${group.children.length === 0 ? '' : `<ul>${group.children.map(outline).join('')}</ul>`}</li>`;
-    const witnesses = preorder.filter(({ group, parent }) => parent !== undefined && relationOf(group.id)?.evidence !== undefined).length;
+      `<li class="${group.epistemic}">${isBase(group.id) ? 'Syzygy: ' : ''}${escape(group.label)}${group.epistemic === 'unknown' ? ' ?' : ''}${outlineCalled(group.id)}${group.children.length === 0 ? '' : `<ul>${group.children.map(outline).join('')}</ul>`}</li>`;
+    const witnesses = preorder.filter(({ group, parent }) => parent !== undefined && (rootContains(group, parent) !== undefined ? rootContains(group, parent)!.epistemic === 'observed'
+      : relationOf(group.id)?.evidence !== undefined)).length;
     const tallyHead = `${counted(preorder.length, 'group', 'groups')} in ${counted(layout.levels, 'level', 'levels')}`;
-    const tally = figureLegend(preorder.map(({ group }) => group.epistemic), 0, 0, 'as marked', tallyHead);
+    const own = preorder.filter(({ group }) => !isBase(group.id));
+    const tally = drawnBase === undefined ? figureLegend(preorder.map(({ group }) => group.epistemic), 0, 0, 'as marked', tallyHead)
+      : baseLegend(preorder.map(({ group }) => group.epistemic), own.map(({ group }) => group.epistemic), 0, 0,
+        `${counted(own.length, 'group', 'groups')} in ${counted(layout.levels, 'level', 'levels')}`, drawnBase.map,
+        preorder.filter(({ group }) => isBase(group.id)).map(({ group }) => group.epistemic), preorder.length - own.length, 0, '');
     // ` {N} nestings witnessed by Syzygy.` follows the tally where at least one nesting is witnessed.
-    const legend = witnesses === 0 ? tally : tally.replace(/<\/p>$/u, ` ${counted(witnesses, 'nesting', 'nestings')} witnessed by Syzygy.</p>`);
+    const witnessedTally = witnesses === 0 ? tally : tally.replace(/<\/p>$/u, ` ${counted(witnesses, 'nesting', 'nestings')} witnessed by Syzygy.</p>`);
+    const legend = drawnBase === undefined ? witnessedTally : `${witnessedTally}${baseNote(drawnBase.map)}`;
     containmentPages.add(from);
+    if (drawnBase !== undefined) basePages.add(from);
     figureStructures.push({ index, entry: { diagram: d.id, kind: CONTAINMENT_KIND, page: from, laidOutPx: layout.width,
-      groups: preorder.map(({ group, parent, level }) => ({ id: group.id, parent: parent?.id ?? null, level })),
-      nestings: preorder.flatMap(({ group, parent }) => (parent === undefined ? [] : [{ parent: parent.id, child: group.id, witness: relationOf(group.id)?.witness ?? null }])) } });
+      groups: preorder.map(({ group, parent, level }) => ({ id: group.id, parent: parent?.id ?? null, level, ...(drawnBase === undefined ? {} : { provenance: isBase(group.id) ? 'derived' : 'authored' }) })),
+      nestings: preorder.flatMap(({ group, parent }) => (parent === undefined ? [] : [{ parent: parent.id, child: group.id,
+        witness: rootContains(group, parent) !== undefined ? containsWitness(rootContains(group, parent)!) : relationOf(group.id)?.witness ?? null }])),
+      ...(drawnBase === undefined ? {} : { base: baseMachine(drawnBase, preorder.filter(({ group }) => isBase(group.id)).map(({ group }) => group.id), '') }) } });
     if (local !== undefined) figureHomes.push({ id: d.id, title: d.title, home: { page: from, fragment: `figure-${d.id}`, label: 'Figure' } });
     const ids = figureIds(index);
-    return `<figure${curated} data-figure-kind="${CONTAINMENT_KIND}"${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${CONTAINMENT_KIND}</span> ${escape(d.relationship)}</p>`
-      + `<div class="figure-forms" data-figure-width="${layout.width}"><div class="diagram-scroll figure-drawing">${svg}</div><ul class="figure-outline">${groups.map(outline).join('')}</ul></div>`
-      + `${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${listed}${witnessed}</ul>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(figureToMermaid({ kind: CONTAINMENT_KIND, groups: [...groups] }))}</pre></details></details></figure>`;
+    // A v17 containment drawing a group with a zoom target (version 2.50): the drawing, byte for byte, in a `zoom-only` wrapper with a layer
+    // of one box per group in preorder, at the box the layout draws it in, where the drawing is not 1048 px wide.
+    const zooms = local === undefined ? [] : preorder.map(({ group }) => (isBase(group.id) ? undefined : zoomOf(from, group.id, index)));
+    const zoomed = zooms.some(zoom => zoom !== undefined) && walkableWidth(layout.width);
+    if (zoomed) zoomPages.add(from);
+    const drawing = !zoomed ? svg : `<div class="walk-figure zoom-only">${svg}<div class="walk-layer">${layout.boxes.map((box, k) =>
+      `<span class="walk-node" style="${containmentBoxStyle(box)}">${zooms[k] === undefined ? '' : zoomLink(preorder[k]!.group.label, zooms[k]!)}</span>`).join('')}</div></div>`;
+    drawnFigures.add(d.id);
+    return `<figure${curated} data-figure-kind="${CONTAINMENT_KIND}"${drawnBase === undefined ? '' : ` data-base-map="${drawnBase.map}"`}${viewAttrs(d.id)}${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption>${drawnBase === undefined ? '' : baseChip(drawnBase, from)}<p class="diagram-relationship"><span class="eyebrow">${CONTAINMENT_KIND}</span> ${escape(d.relationship)}</p>`
+      + `<div class="figure-forms" data-figure-width="${layout.width}"><div class="diagram-scroll figure-drawing">${drawing}</div><ul class="figure-outline">${groups.map(outline).join('')}</ul></div>`
+      + `${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${listed}${witnessed}${drawnBase === undefined ? '' : baseHiddenItems(drawnBase)}</ul>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(figureToMermaid({ kind: CONTAINMENT_KIND, groups: [...groups] }))}</pre></details></details></figure>`;
   };
   const kindedFigure = (from: string, d: DraftDiagram, figure: Exclude<DraftFigure, { readonly kind: typeof CONTAINMENT_KIND }>, index: number): string => {
     const held = (id: string): WithheldNote | undefined => local?.withheldElements?.get(id);
@@ -1052,7 +1239,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const add = (path: string, depth: number, pageTitle: string, main: string | (() => { markup: string; styles: string }), mapCss = ''): void => {
     pageTitles.set(path, pageTitle);
     const draw = (markup: string, styles: string): string =>
-      page(`${pageTitle} — ${title}`, path, nav(path), legended(path, markup), chrome, figureKindsCss(figurePages.has(path), containmentPages.has(path)), styles, subsectionPages.has(path));
+      page(`${pageTitle} — ${title}`, path, nav(path), legended(path, markup), chrome, `${figureKindsCss(figurePages.has(path), containmentPages.has(path))}${basePages.has(path) ? BASE_FIGURE_CSS : ''}${figureLayerCss(walkPages.has(path), zoomPages.has(path))}`, styles, subsectionPages.has(path));
     if (typeof main === 'string') files.set(path, draw(main, mapCss));
     else {
       files.set(path, '');
@@ -1401,6 +1588,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
 
   // Late run pages can cite sources too. Keep source leaves in their original manifest order and draw their highlights after those references.
   for (const [path, draw] of deferredSourceLeaves) files.set(path, draw());
+  // Every zoom target was chosen as a figure this render draws (version 2.50); one the inertness guard turned into a notice would leave
+  // links to a fragment no page carries, so the render is refused instead.
+  for (const target of zoomTargets.values()) if (!drawnFigures.has(target.id)) throw new Error(`zoom target ${target.id} did not render as a figure`);
 
   // The index is drawn last of the reading pages, since it lists every block, but it is read third: directly after find-by-task, as it
   // is listed in every page's navigation and on the contents page (the reader's edition, syzygy-5dhm.136).
@@ -1552,6 +1742,16 @@ export function figureLegend(markings: readonly EpistemicMarking[], boxes: numbe
     + (orderArrows ? ORDER_LEGEND_ENTRY : '');
   // A sequence or swimlane (version 2.5) names its own elements: `{P} participants and {M} messages` or `{L} lanes and {S} steps`.
   return `<ul class="diagram-legend" aria-label="Line styles">${entries}</ul><p class="diagram-tally">${head ?? `${counted(boxes, 'box', 'boxes')} and ${counted(arrows, 'arrow', 'arrows')}`}, ${how}: ${count('observed')} observed, ${count('inferred')} inferred, ${count('unknown')} unknown.</p>`;
+}
+
+/** A figure with a base's legend (version 2.35): an entry for each line style its drawing uses, base elements included, and the double
+ * border's; a tally counting the draft's elements alone, then the computed boxes and arrows by mark; then the map's note. */
+function baseLegend(drawn: readonly EpistemicMarking[], own: readonly EpistemicMarking[], boxes: number, arrows: number, head: string | undefined, map: LocalBase['map'],
+  computed: readonly EpistemicMarking[], computedBoxes: number, computedArrows: number, note: string): string {
+  const count = (m: EpistemicMarking): number => own.filter(x => x === m).length;
+  const entries = LEGEND_ENTRIES.filter(([m]) => drawn.includes(m)).map(([m, words]) => `<li><span class="legend-line ${m}" aria-hidden="true"></span>${words}</li>`).join('') + baseLegendEntry(map);
+  return `<ul class="diagram-legend" aria-label="Line styles">${entries}</ul><p class="diagram-tally">${head ?? `${counted(boxes, 'box', 'boxes')} and ${counted(arrows, 'arrow', 'arrows')}`}, as marked: ${count('observed')} observed, ${count('inferred')} inferred, ${count('unknown')} unknown.`
+    + `${baseTallyClause(map, computed as readonly ('observed' | 'inferred' | 'unknown')[], computedBoxes, computedArrows)}</p>${note}`;
 }
 
 /** A v7 figure kind's claims, participants or lanes then messages or steps; none for a graph figure. */
@@ -1891,11 +2091,17 @@ const manifestUnknown = (revision: string, files = 'manifest files'): string => 
 type DerivedManifests = Extract<LocalManifestFacts, { state: 'derived' }>;
 const recognizersOf = (member: DerivedManifests, rules: readonly string[]): readonly LocalManifestRecognizerEntry[] => member.recognizers.filter(r => rules.includes(r.rule));
 
+const manifestNote = (files: string, member: DerivedManifests, revision: string, ruleWords: string): string =>
+  `<p class="map-note">Computed by Syzygy at this render from the ${files} of the tree at revision ${escape(revision)} that the bound screening policy ${escape(member.screeningPolicy.policyId)} ${escape(member.screeningPolicy.policyVersion)} admits, read by rule ${ruleWords}, each at version 1. That revision fixes every input, so the map holds as of that revision at any instant. What a file declares, never what runs.</p>`;
+/** The unit map's note (version 2.35 repeats it under a figure drawn from that map). */
+const UNIT_MAP_RULE_WORDS = 'npm-package-manifest, cargo-manifest, python-project-manifest and go-module-manifest';
+const unitMapNote = (member: DerivedManifests, revision: string): string => manifestNote('manifest files', member, revision, UNIT_MAP_RULE_WORDS);
+
 /** A manifest map's note, coverage line (with `ending` appended) and closing list of Unknown files, around its own body. */
 function manifestPage(map: 'units' | 'ci' | 'infrastructure', title: string, member: DerivedManifests, revision: string, rules: readonly string[], ruleWords: string, ending: string, body: string): string {
   const recognizers = recognizersOf(member, rules);
   const files = map === 'infrastructure' ? 'infrastructure files' : 'manifest files';
-  const note = `<p class="map-note">Computed by Syzygy at this render from the ${files} of the tree at revision ${escape(revision)} that the bound screening policy ${escape(member.screeningPolicy.policyId)} ${escape(member.screeningPolicy.policyVersion)} admits, read by rule ${ruleWords}, each at version 1. That revision fixes every input, so the map holds as of that revision at any instant. What a file declares, never what runs.</p>`;
+  const note = manifestNote(files, member, revision, ruleWords);
   const clauses = [
     ...recognizers.map(r => `${r.rule}: ${counted(r.candidates, 'candidate file', 'candidate files')}; ${r.inferred} read for facts, ${r.unknown} Unknown with no facts taken; ${r.secretPathsLeftOut} left out and not named, because a secret detector matches their path; ${r.setApart} set apart as vendored, generated or test paths; ${counted(r.valuesLeftOut, 'value', 'values')} left out by the value checks; ${counted(r.facts, 'fact', 'facts')}.`),
     ...recognizers.filter(r => r.filesNotListed !== 0).map(r => r.filesNotListed === 1 ? `1 file of ${r.rule} is counted and not listed.` : `${r.filesNotListed} files of ${r.rule} are counted and not listed.`),
@@ -1950,7 +2156,7 @@ export function unitMap(member: LocalManifestFacts, derived: LocalDerivedStructu
   }).join('');
   const body = `${figures.map(f => f.html).join('')}<h2>Every declared fact</h2><ul class="map-facts">${list}</ul>`;
   return {
-    main: manifestPage('units', 'Unit map', member, revision, UNIT_MAP_RULES, 'npm-package-manifest, cargo-manifest, python-project-manifest and go-module-manifest', PLACES_SENTENCE, body),
+    main: manifestPage('units', 'Unit map', member, revision, UNIT_MAP_RULES, UNIT_MAP_RULE_WORDS, PLACES_SENTENCE, body),
     widths: figures.map(f => f.width), figures: figures.length,
   };
 }
