@@ -10,6 +10,7 @@ import {
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
 import { figurePlanFindings, withoutFigurePlan } from './figure-plan.js';
+import { levelFindings, viewLevelsAt, withoutLevels } from './view-level.js';
 import { walkFindings, walksAt, withoutWalks } from './walk.js';
 import { applyHeroFindings, relationDecisions } from './check-derive.js';
 import { applyContainmentFindings, groupsOf } from './containment.js';
@@ -189,7 +190,8 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   // other reader is handed the draft without them.
   const walked = doc;
   const walkFindingsNow = walkFindings(walked, {});
-  doc = withoutWalks(doc);
+  // A v17 draft's view levels (version 2.50) likewise: checked again after every other finding, without the maps.
+  doc = withoutLevels(withoutWalks(doc));
 
   const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, now)(placementSubjectOf(subject));
   if (!screenLoad.ok) return refuse('screen', screenLoad.why);
@@ -210,6 +212,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   if (hasModelForm(doc['schemaVersion'])) findings.push(...modelFindings(doc, new Set(findings.filter((finding) => finding.kind === 'schema').map((finding) => finding.at)), undefined));
   findings.push(...planFindings);
   findings.push(...walkFindingsNow);
+  findings.push(...levelFindings(walked, findings, {}));
   if (findings.length > 0) {
     return refuse('rederive', `draft revision ${draftRev.revision} passed its check, but checking it again at this render from the objects read now finds ${findings.length} finding(s); the stored result is not trusted, so nothing is rendered`,
       { reasons: findings.map((finding) => `${finding.kind} at ${finding.at}`) });
@@ -263,7 +266,9 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const docsAndCode = await renderDocsAndCode(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
   // Version 2.40: a v16 draft's walks, each step's node as this render draws it; a walk the render cannot resolve is left out.
   const walks = walksAt(walked, bases.resolved);
-  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, roughEdges, docsAndCode, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }), ...(model === undefined ? {} : { model }), ...(walks.size === 0 ? {} : { walks }) } };
+  // Version 2.50: a v17 draft's view levels, for its figures' two attributes and its zoom links.
+  const viewLevels = viewLevelsAt(walked);
+  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, roughEdges, docsAndCode, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }), ...(model === undefined ? {} : { model }), ...(walks.size === 0 ? {} : { walks }), ...(viewLevels.size === 0 ? {} : { viewLevels }) } };
 
   const renderer = deps.renderer;
   const draw = (local: LocalRenderInput): ReadonlyMap<string, string> | string => {

@@ -8,8 +8,8 @@ import {
   type LocalBase, type LocalBlock, type LocalDerivedFact, type LocalDerivedStructure, type LocalManifestFact, type LocalManifestFacts, type LocalManifestFileEntry, type LocalManifestRecognizerEntry, type LocalEdgeRelation, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
-import { CALLED_HEIGHT, READABLE_SPACING, diagramNodeBoxes, walkBoxStyle, walkableWidth, layoutContainment, layoutDiagram, layoutSequence, layoutSwimlane, renderContainmentSvg, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg, type BoxDecoration, type ContainmentClaim, type ContainmentGroupInput } from './diagram-layout.js';
-import { WALK_FIGURE_CSS } from './dossier-walk.js';
+import { CALLED_HEIGHT, READABLE_SPACING, containmentBoxStyle, diagramNodeBoxes, walkBoxStyle, walkableWidth, layoutContainment, layoutDiagram, layoutSequence, layoutSwimlane, renderContainmentSvg, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg, type BoxDecoration, type ContainmentClaim, type ContainmentGroupInput } from './diagram-layout.js';
+import { figureLayerCss } from './dossier-walk.js';
 import { BASE_FIGURE_CSS, baseChip, baseHiddenItems, baseLegendEntry, baseMachine, baseNotice, baseTallyClause } from './dossier-base.js';
 import { TEST_NAMES_LEGEND, TEST_NAMES_PAGE, testNamesMachine, testNamesPage } from './dossier-test-names.js';
 import { ROUGH_EDGES_LEGEND, ROUGH_EDGES_PAGE, roughEdgesMachine, roughEdgesPage } from './dossier-rough-edges.js';
@@ -802,15 +802,24 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // one box per node in the drawing's node order, and the walk's list. A box takes its step's id and badge, and a link to the cited lines
   // its node's first citation's link lands on, where the node is not withheld, not a base element and that citation has a source page:
   // the same address the citation link carries, which depends on the page alone, so a later figure's box lands where the first figure's
-  // link does. Undefined where no walk renders, so the page's bytes are those without it.
-  const walkOf = (from: string, d: DraftDiagram, isBase: (id: string) => boolean, decorate: ((id: string) => BoxDecoration | undefined) | undefined,
-    held: (id: string) => WithheldNote | undefined): { readonly layer: string; readonly list: string } | undefined => {
-    const steps = local?.walks?.get(d.id);
-    if (steps === undefined) return undefined;
+  // link does. A v17 figure drawing an element with a zoom target (version 2.50) carries the same layer, each such element's box holding its
+  // zoom link after any badge and source link; with no walk, its wrapper is `zoom-only` and its boxes carry nothing else. Undefined where
+  // neither renders, so the page's bytes are those without it.
+  const walkOf = (from: string, d: DraftDiagram, index: number, isBase: (id: string) => boolean, decorate: ((id: string) => BoxDecoration | undefined) | undefined,
+    held: (id: string) => WithheldNote | undefined): { readonly wrapper: string; readonly layer: string; readonly list: string } | undefined => {
+    const nodes = new Map(d.nodes.map(n => [n.id, n]));
+    const given = local?.walks?.get(d.id);
+    const steps = given === undefined || given.some(step => !nodes.has(step.node)) ? undefined : given;
+    const zooms = new Map(d.nodes.flatMap(n => { const zoom = isBase(n.id) ? undefined : zoomOf(from, n.id, index); return zoom === undefined ? [] : [[n.id, zoom] as const]; }));
+    if (steps === undefined && zooms.size === 0) return undefined;
     const geometry = diagramNodeBoxes(d, READABLE_SPACING, decorate);
     if (!walkableWidth(geometry.width)) return undefined;
-    const nodes = new Map(d.nodes.map(n => [n.id, n]));
-    if (steps.some(step => !nodes.has(step.node))) return undefined;
+    const zoomAt = (id: string): string => { const zoom = zooms.get(id); return zoom === undefined ? '' : zoomLink(nodes.get(id)!.label, zoom); };
+    if (zooms.size > 0) zoomPages.add(from);
+    if (steps === undefined) {
+      const boxes = geometry.boxes.map(box => `<span class="walk-node" style="${walkBoxStyle(box)}">${zoomAt(box.id)}</span>`).join('');
+      return { wrapper: '<div class="walk-figure zoom-only">', layer: `<div class="walk-layer">${boxes}</div>`, list: '' };
+    }
     const numberOf = new Map(steps.map((step, k) => [step.node, k + 1]));
     const sourceLink = (n: DraftDiagram['nodes'][number]): string => {
       const first = n.sourceIds[0];
@@ -823,11 +832,11 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       const n = nodes.get(box.id)!, number = numberOf.get(box.id);
       const identity = number === undefined ? '' : ` id="walk-${escape(d.id)}-${number}"`;
       const badge = number === undefined ? '' : `<span class="walk-badge" aria-hidden="true">${number}</span>`;
-      return `<span class="walk-node" style="${walkBoxStyle(box)}"${identity}>${badge}${sourceLink(n)}</span>`;
+      return `<span class="walk-node" style="${walkBoxStyle(box)}"${identity}>${badge}${sourceLink(n)}${zoomAt(box.id)}</span>`;
     }).join('');
     const items = steps.map((step, k) => `<li><a href="#walk-${escape(d.id)}-${k + 1}">${escape(nodes.get(step.node)!.label)}</a> <a class="walk-text" href="#block-${escape(step.block)}">Read step ${k + 1}</a></li>`).join('');
     walkPages.add(from);
-    return { layer: `<div class="walk-layer">${boxes}</div>`, list: `<ol class="figure-walk" aria-label="Walk through this figure">${items}</ol>` };
+    return { wrapper: '<div class="walk-figure">', layer: `<div class="walk-layer">${boxes}</div>`, list: `<ol class="figure-walk" aria-label="Walk through this figure">${items}</ol>` };
   };
   const relationOf = (id: string): LocalEdgeRelation | undefined => local?.edgeRelations?.get(id);
   type WitnessedRelation = Extract<LocalEdgeRelation, { readonly evidence: object }>;
@@ -867,6 +876,37 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     return `, as shown in <a href="${escape(link)}">${escape(target.title)}</a>`;
   };
   const sharedAttr = (id: string, kind: 'element' | 'relationship'): string => (shared(id) ? ` data-${kind}="${escape(id)}"` : '');
+  // A v17 draft's view levels (version 2.50). A view's `level` and `scope` give its `<figure>` two attributes, after every attribute version
+  // 2.35 gives it and before its `id`. An element's own view is a container view of it (a system) or a component view of it (a container
+  // type; check's `view-scope` keeps every scope of its level's type), never a context view; its zoom target is the first such view, in
+  // draft order, whose figure renders as a `<figure>`: produced, on a page this render draws and, for a base view, its base drawn. No figure
+  // of this renderer is drawn inside a `<details>`. A target that the inertness guard then turns into a notice refuses the render (below).
+  const viewLevels = local?.viewLevels;
+  const viewAttrs = (id: string): string => { const v = viewLevels?.get(id); return v === undefined ? '' : ` data-view-level="${escape(v.level)}" data-view-scope="${escape(v.scope)}"`; };
+  const zoomTargets = new Map<string, { readonly index: number; readonly id: string; readonly title: string; readonly page: string }>();
+  if (viewLevels !== undefined && !withheld) {
+    for (const [i, d] of draft.diagrams.entries()) {
+      const v = viewLevels.get(d.id);
+      if (v === undefined || v.level === 'context' || zoomTargets.has(v.scope)) continue;
+      const page = figurePage(d), based = baseOf(d.id);
+      if (page === undefined || (based !== undefined && based.state !== 'drawn')) continue;
+      zoomTargets.set(v.scope, { index: i, id: d.id, title: d.title, page });
+    }
+  }
+  const drawnFigures = new Set<string>();
+  // The zoom link an element drawn in figure `index` on `from` takes: undefined where it has no target, or this figure is its target.
+  const zoomOf = (from: string, id: string, index: number): { readonly href: string; readonly title: string } | undefined => {
+    const target = zoomTargets.get(id);
+    if (target === undefined || target.index === index) return undefined;
+    return { href: target.page === from ? `#figure-${target.id}` : href(from, target.page, `figure-${target.id}`), title: target.title };
+  };
+  // A list item gains, after everything it holds, one space and its `zoom-text` link.
+  const zoomText = (item: string, zoom: { readonly href: string; readonly title: string } | undefined): string =>
+    (zoom === undefined ? item : `${item.slice(0, -'</li>'.length)} <a class="zoom-text" href="${escape(zoom.href)}">Zoom in: ${escape(zoom.title)}</a></li>`);
+  const zoomLink = (label: string, zoom: { readonly href: string; readonly title: string }): string =>
+    `<a class="zoom-link" href="${escape(zoom.href)}"><span aria-hidden="true">+</span><span class="visually-hidden">Zoom in to ${escape(label)}: ${escape(zoom.title)}</span></a>`;
+  // The pages holding a `zoom-link` (version 2.50) carry the positioning, zoom and pass-through rules.
+  const zoomPages = new Set<string>();
   const diagram = (from: string, asDrafted: DraftDiagram, index: number, asHero = false): string => {
     if (asDrafted.disposition.kind !== 'produced') return notice(from, asDrafted.id, asDrafted.disposition, asHero);
     // A view whose base is not drawn at this render (version 2.35): the notice alone, and no element of the view.
@@ -895,7 +935,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const isBase = (id: string): boolean => drawnBase !== undefined && baseFacts(drawnBase).has(id);
     const baseElement = (id: string) => drawnBase?.elements.find(element => element.factId === id);
     const nodeList = d.nodes.map(n => { if (isBase(n.id)) { const element = baseElement(n.id)!; return baseItem(from, drawnBase!, n.id, element.label, n.epistemic, element.unknownReason); }
-      const shown = asShown(from, n.id, index); return shown !== undefined ? `<li>${escape(n.label)}${shown}</li>` : claim('li', n.id, n.epistemic, `${escape(n.label)}${heldText(n.id)} ${mark(from, n.epistemic)} ${refs(from, n.sourceIds, n.id)}`, heldAttrs(n.id), held(n.id) === undefined ? null : 'excluded-content', held(n.id) === undefined ? undefined : { withheldSources: held(n.id)!.sources }); }).join('');
+      const shown = asShown(from, n.id, index); return shown !== undefined ? `<li>${escape(n.label)}${shown}</li>` : claim('li', n.id, n.epistemic, `${escape(n.label)}${heldText(n.id)} ${mark(from, n.epistemic)} ${refs(from, n.sourceIds, n.id)}`, heldAttrs(n.id), held(n.id) === undefined ? null : 'excluded-content', held(n.id) === undefined ? undefined : { withheldSources: held(n.id)!.sources }); })
+      .map((item, k) => zoomText(item, isBase(d.nodes[k]!.id) ? undefined : zoomOf(from, d.nodes[k]!.id, index))).join('');
     const witnessItem = (e: DraftDiagram['edges'][number], relation: WitnessedRelation): string =>
       `<li${witnessAttrs(relation)} data-epistemic="observed">${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(relation.evidence.words)} <span class="derived-mark">Witnessed by Syzygy</span>`
       + `<span class="visually-hidden ev"> ${escape(`Evidence: label Observed; witnessed by fact ${relation.witness.fact} (${relation.evidence.factKind}), derived by Syzygy by rule ${relation.witness.rule} version ${relation.witness.ruleVersion} at revision ${relation.evidence.revision}; record sha256:${relation.evidence.recordSha256}.`)}</span></li>`;
@@ -956,9 +997,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const baseMap = drawnBase === undefined ? '' : ` data-base-map="${drawnBase.map}"`, chip = drawnBase === undefined ? '' : baseChip(drawnBase, from);
     const hidden = drawnBase === undefined ? '' : baseHiddenItems(drawnBase);
     // A v16 walk (version 2.40): the drawing, byte for byte, wrapped with the layer over it, and the walk's list after it.
-    const walked = local === undefined ? undefined : walkOf(from, d, isBase, drawnBase === undefined ? undefined : id => baseDecoration(drawnBase, id), held);
-    const drawing = walked === undefined ? svg : `<div class="walk-figure">${svg}${walked.layer}</div>`;
-    return `<figure${asHero ? heroFigureAttribute : ''}${curated}${baseMap}${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption>${chip}<p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${drawing}</div>${walked?.list ?? ''}${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${nodeList}${hidden}</ul><ol>${edgeList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
+    const walked = local === undefined ? undefined : walkOf(from, d, index, isBase, drawnBase === undefined ? undefined : id => baseDecoration(drawnBase, id), held);
+    const drawing = walked === undefined ? svg : `${walked.wrapper}${svg}${walked.layer}</div>`;
+    drawnFigures.add(d.id);
+    return `<figure${asHero ? heroFigureAttribute : ''}${curated}${baseMap}${viewAttrs(d.id)}${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption>${chip}<p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${drawing}</div>${walked?.list ?? ''}${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${nodeList}${hidden}</ul><ol>${edgeList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
   };
   // A v7 sequence or swimlane (REQ-polaris-generation-034 version 2.5): the figure a graph figure with its home takes, holding its drawing and
   // its phone form, of which the stylesheet displays one by the width of the `figure-forms` box. Each participant, lane and step is a claim
@@ -1006,7 +1048,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       const shown = asShown(from, group.id, index); return shown !== undefined
       ? `<li>${escape(group.label)}${parent === undefined ? '' : ` (in ${escape(parent.label)})`}${shown}</li>` : claim('li', group.id, group.epistemic,
       `${escape(group.label)}${parent === undefined ? '' : ` (in ${escape(parent.label)})`}${heldText(group.id)} ${mark(from, group.epistemic)} ${refs(from, group.sourceIds, group.id)}`,
-      heldAttrs(group.id), held(group.id) === undefined ? null : 'excluded-content', held(group.id) === undefined ? undefined : { withheldSources: held(group.id)!.sources }); }).join('');
+      heldAttrs(group.id), held(group.id) === undefined ? null : 'excluded-content', held(group.id) === undefined ? undefined : { withheldSources: held(group.id)!.sources }); })
+      .map((item, k) => zoomText(item, isBase(preorder[k]!.group.id) ? undefined : zoomOf(from, preorder[k]!.group.id, index))).join('');
     const witnessed = preorder.flatMap(({ group, parent }) => {
       const fact = rootContains(group, parent);
       if (fact !== undefined) return [`<li${baseIdAttrs('directories', fact.factId, null)} data-epistemic="${fact.epistemic}">Repository root contains ${escape(baseElement(group.id)?.name ?? '')}. ${mark(from, fact.epistemic)} <span class="derived-mark">Derived by Syzygy</span></li>`];
@@ -1038,8 +1081,16 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       ...(drawnBase === undefined ? {} : { base: baseMachine(drawnBase, preorder.filter(({ group }) => isBase(group.id)).map(({ group }) => group.id), '') }) } });
     if (local !== undefined) figureHomes.push({ id: d.id, title: d.title, home: { page: from, fragment: `figure-${d.id}`, label: 'Figure' } });
     const ids = figureIds(index);
-    return `<figure${curated} data-figure-kind="${CONTAINMENT_KIND}"${drawnBase === undefined ? '' : ` data-base-map="${drawnBase.map}"`}${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption>${drawnBase === undefined ? '' : baseChip(drawnBase, from)}<p class="diagram-relationship"><span class="eyebrow">${CONTAINMENT_KIND}</span> ${escape(d.relationship)}</p>`
-      + `<div class="figure-forms" data-figure-width="${layout.width}"><div class="diagram-scroll figure-drawing">${svg}</div><ul class="figure-outline">${groups.map(outline).join('')}</ul></div>`
+    // A v17 containment drawing a group with a zoom target (version 2.50): the drawing, byte for byte, in a `zoom-only` wrapper with a layer
+    // of one box per group in preorder, at the box the layout draws it in, where the drawing is not 1048 px wide.
+    const zooms = local === undefined ? [] : preorder.map(({ group }) => (isBase(group.id) ? undefined : zoomOf(from, group.id, index)));
+    const zoomed = zooms.some(zoom => zoom !== undefined) && walkableWidth(layout.width);
+    if (zoomed) zoomPages.add(from);
+    const drawing = !zoomed ? svg : `<div class="walk-figure zoom-only">${svg}<div class="walk-layer">${layout.boxes.map((box, k) =>
+      `<span class="walk-node" style="${containmentBoxStyle(box)}">${zooms[k] === undefined ? '' : zoomLink(preorder[k]!.group.label, zooms[k]!)}</span>`).join('')}</div></div>`;
+    drawnFigures.add(d.id);
+    return `<figure${curated} data-figure-kind="${CONTAINMENT_KIND}"${drawnBase === undefined ? '' : ` data-base-map="${drawnBase.map}"`}${viewAttrs(d.id)}${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption>${drawnBase === undefined ? '' : baseChip(drawnBase, from)}<p class="diagram-relationship"><span class="eyebrow">${CONTAINMENT_KIND}</span> ${escape(d.relationship)}</p>`
+      + `<div class="figure-forms" data-figure-width="${layout.width}"><div class="diagram-scroll figure-drawing">${drawing}</div><ul class="figure-outline">${groups.map(outline).join('')}</ul></div>`
       + `${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${listed}${witnessed}${drawnBase === undefined ? '' : baseHiddenItems(drawnBase)}</ul>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(figureToMermaid({ kind: CONTAINMENT_KIND, groups: [...groups] }))}</pre></details></details></figure>`;
   };
   const kindedFigure = (from: string, d: DraftDiagram, figure: Exclude<DraftFigure, { readonly kind: typeof CONTAINMENT_KIND }>, index: number): string => {
@@ -1181,7 +1232,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const add = (path: string, depth: number, pageTitle: string, main: string | (() => { markup: string; styles: string }), mapCss = ''): void => {
     pageTitles.set(path, pageTitle);
     const draw = (markup: string, styles: string): string =>
-      page(`${pageTitle} — ${title}`, path, nav(path), legended(path, markup), chrome, `${figureKindsCss(figurePages.has(path), containmentPages.has(path))}${basePages.has(path) ? BASE_FIGURE_CSS : ''}${walkPages.has(path) ? WALK_FIGURE_CSS : ''}`, styles, subsectionPages.has(path));
+      page(`${pageTitle} — ${title}`, path, nav(path), legended(path, markup), chrome, `${figureKindsCss(figurePages.has(path), containmentPages.has(path))}${basePages.has(path) ? BASE_FIGURE_CSS : ''}${figureLayerCss(walkPages.has(path), zoomPages.has(path))}`, styles, subsectionPages.has(path));
     if (typeof main === 'string') files.set(path, draw(main, mapCss));
     else {
       files.set(path, '');
@@ -1530,6 +1581,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
 
   // Late run pages can cite sources too. Keep source leaves in their original manifest order and draw their highlights after those references.
   for (const [path, draw] of deferredSourceLeaves) files.set(path, draw());
+  // Every zoom target was chosen as a figure this render draws (version 2.50); one the inertness guard turned into a notice would leave
+  // links to a fragment no page carries, so the render is refused instead.
+  for (const target of zoomTargets.values()) if (!drawnFigures.has(target.id)) throw new Error(`zoom target ${target.id} did not render as a figure`);
 
   // The index is drawn last of the reading pages, since it lists every block, but it is read third: directly after find-by-task, as it
   // is listed in every page's navigation and on the contents page (the reader's edition, syzygy-5dhm.136).

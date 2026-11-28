@@ -2311,11 +2311,11 @@ describe('check: the worth-knowing mark (schema v13)', () => {
     }
   });
 
-  it('refuses a draft naming v17, a number another change holds and this code does not implement, as an unknown version, never as v10 or v13', async () => {
-    for (const version of ['polaris-dossier-local-draft-v17']) {
+  it('refuses a draft naming v18, a number another change holds and this code does not implement, as an unknown version, never as v10 or v13', async () => {
+    for (const version of ['polaris-dossier-local-draft-v18']) {
       const result = await findingsOf(drafted(version, (d) => { d.hero = HERO_OMITTED; d.sections[0].paragraphs[0].worthKnowing = true; }));
       expect(result.outcome, version).toBe('findings');
-      expect(listed(result).filter(({ at }) => at === '$.schemaVersion'), version).toEqual([{ kind: 'schema', at: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13, polaris-dossier-local-draft-v14, polaris-dossier-local-draft-v15, polaris-dossier-local-draft-v16' }]);
+      expect(listed(result).filter(({ at }) => at === '$.schemaVersion'), version).toEqual([{ kind: 'schema', at: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13, polaris-dossier-local-draft-v14, polaris-dossier-local-draft-v15, polaris-dossier-local-draft-v16, polaris-dossier-local-draft-v17' }]);
     }
   });
   // Version 2.37 (syzygy-5dhm.43): the choice floor on check's report, from the understanding record, never in the check record.
@@ -2534,11 +2534,11 @@ describe('check: source-example advice', () => {
     expect(JSON.stringify(refused)).not.toContain('sourceExampleAdvice');
   });
 
-  it('omits advice for an earlier schema, unsupported v17 and the bounded check', async () => {
+  it('omits advice for an earlier schema, unsupported v18 and the bounded check', async () => {
     const earlier = report(await runCheck(drafted(draft => { draft.schemaVersion = 'polaris-dossier-local-draft-v10'; })));
     expect(earlier.findings).toEqual([]);
     expect(earlier).not.toHaveProperty('sourceExampleAdvice');
-    const unsupported = report(await runCheck(drafted(draft => { draft.schemaVersion = 'polaris-dossier-local-draft-v17'; })));
+    const unsupported = report(await runCheck(drafted(draft => { draft.schemaVersion = 'polaris-dossier-local-draft-v18'; })));
     expect(unsupported.findings).toContainEqual(expect.objectContaining({ kind: 'schema', at: '$.schemaVersion' }));
     expect(unsupported).not.toHaveProperty('sourceExampleAdvice');
 

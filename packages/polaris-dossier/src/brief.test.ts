@@ -99,14 +99,14 @@ describe('brief: issued', () => {
     const run = runDirectory();
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
     expect(result).toMatchObject({ ok: true, report: {
-      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v24', schemaVersion: 'polaris-dossier-local-draft-v16',
+      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v25', schemaVersion: 'polaris-dossier-local-draft-v17',
       pinnedRevision: REV, issuedAt: '2026-10-07T12:00:00.000Z', deadlineEndsAt: '2026-10-07T13:00:00.000Z', executionRule: { arm: 'sec-3' },
     } });
     const brief = read(run, 'brief.md'), schema = read(run, 'draft.schema.json');
     expect(brief).toContain('Repository role: observed-source (Inferred); governance-root material keeps this same repository identity.');
     expect(brief).toContain(`- Run: \`${RUN_ID}\``);
     expect(brief).toContain(`- Pinned revision: \`${REV}\` (label-in-run-json)`);
-    expect(brief).toContain(`- Draft schema: \`polaris-dossier-local-draft-v16\`, in \`draft.schema.json\` beside this brief (sha256 \`${sha(schema)}\`)`);
+    expect(brief).toContain(`- Draft schema: \`polaris-dossier-local-draft-v17\`, in \`draft.schema.json\` beside this brief (sha256 \`${sha(schema)}\`)`);
     expect(brief).toContain('Your draft names that revision in `pinnedRevision`');
     expect(brief).toContain('Write it to `drafts/next.json` in the run directory and run `syzygy dossier check <run>`;');
     // The one quotation form, with an example, and what quoted text without it is: the brief and the schema say the same.
@@ -129,8 +129,8 @@ describe('brief: issued', () => {
     expect(brief).toContain('The heading below names the digest of the skill\'s `references/reader-standards.md`; the text under it is that file without its version line and with every heading one level down, so it does not itself hash to that digest.');
     const record = JSON.parse(read(run, 'brief.json'));
     expect(record).toMatchObject({
-      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v24', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
-      schemaVersion: 'polaris-dossier-local-draft-v16', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
+      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v25', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
+      schemaVersion: 'polaris-dossier-local-draft-v17', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
       readerStandards: { version: 'polaris-reader-standards-v1', sha256: sha(STANDARDS) },
       deadline: { declared: 'PT1H', seconds: 3600, endsAt: '2026-10-07T13:00:00.000Z' },
       files: { brief: { name: 'brief.md', sha256: sha(brief) }, draftSchema: { name: 'draft.schema.json', sha256: sha(schema) } },
@@ -363,6 +363,8 @@ const MODEL_PARAGRAPH = 'Describe the system once, in `model`: its `elements`, e
 const DERIVED_BASE_PARAGRAPH = 'A graph or containment `view` may start from a computed map: give it `base` with `map` `directories` or `units`, and Syzygy draws that map\'s elements in its own words and marks, with a double border. Leave elements out with `hide` entries, each with its `paths` and a `reason` in your words (a reason is required), or instead list the ones to show in `select` with one `restReason` for the rest; the figure will print how many it shows of how many, and link to the full map. A unit-map path names every package and module of that manifest file; add `#<k>` to name the k-th alone. In a containment view, `group` places named paths inside one of your elements at level 1 or 2; a containment of the directory map always shows the repository root. `names` gives a base element a display name, which is your claim and is drawn below its box, never inside it. A cited relationship may join a base element by giving `{"map", "path"}` as its `from` or `to`. You cannot relabel, re-mark or add to a map\'s elements, and none of your elements or names may take the name of a base element the same figure shows.';
 // The walk paragraph of brief v24 (version 2.40), copied from the requirement, its quotation marks unescaped.
 const WALK_PARAGRAPH = 'Where a section or deep dive explains a graph figure drawn there step by step, you may give it one `walk`: `{"figure": <that diagram\'s id>, "steps": [{"element": <a node\'s id, for a view an element it shows, or for a view with a `base` a base element it shows as {"map", "path"}>, "block": <the id of one of that place\'s paragraphs, which cites its sources>}, ...]}`, two to twelve steps in reading order, each element once. The page then shows each step\'s number on its element, lists the steps beside the figure, highlights an element when its step is chosen, and links each box whose element is not withheld to the lines its first citation cites; a base element\'s box takes the number and the highlight, never a link. The walk states nothing itself: each step\'s paragraph is what the reader reads about that element.';
+// The level paragraph of brief v25 (version 2.50), copied from the requirement.
+const LEVEL_PARAGRAPH = 'A graph or containment `view` may say which level it shows and what it is about: a `level`, `context`, `container` or `component`, with a `scope`, the id of one element. A context view is about a `system` and shows it with the people and other systems around it (types system, external and person); a container view is about a `system` and shows its parts (directory, package, service, job and store), with the systems, people and externals they deal with; a component view is about one of those parts and shows the modules inside it, with parts, people and externals but no system. Every part a container view shows, and every module a component view shows, has the view\'s scope among its parents. Every other figure that draws a container view\'s system, or a component view\'s part, as a box then links that box, and its list item, to the first such view, so a reader can zoom in; a context view is never the view a box zooms to. Show a container or component view\'s scope only as the outer box of a containment or with `contains` arrows to what it holds, or leave it out. A scope is an element of the model, never a base element, so a context view over a base map also selects the system it is about.';
 const FIGURE_PLAN_PARAGRAPH = 'Plan the figures before you write the prose, in `figurePlan`: one entry for the overview, each section and each deep dive, its `home` written as a diagram\'s `home` is. For each place, write the one question a picture there answers better than text in `question`, the figure kind it needs in `kind`, and the diagram that answers it in `figure`, homed there and of that kind; for a graph or containment, that is the diagram whose `view` draws it. Where no picture would answer better than text, or the planned figure cannot be drawn, write `{"home": <place>, "omitted": "<why>"}` instead. The plan is not published. A draft whose plan misses a place, names one twice or names a figure that is not the one drawn there is refused; check only advises where a figure is a chain of three or fewer, draws nothing another figure does not, or draws a part beside a part of it, by `unit` or `parent`, without showing that one holds the other.';
 const QUESTION_KINDS_PARAGRAPH = 'A newcomer asks six kinds of question about each major part of a project: `purpose` (what it is for), `structure` (how its parts fit), `mechanism` (how it works), `rationale` (why it is built this way), `change` (where to change something) and `limits` (what it does not do and how it fails). In `questionKinds`, list each Inferred claim block that answers one: `{"blockId": "<the block\'s id>", "kinds": [...]}`, naming only the kinds it answers. Check counts these rows for the whole repository and for each top-level directory holding at least one twentieth of the files, a block counting for each such directory it cites a file inside, and advises the kinds no block answers there. It is advice, never a finding: write a block for a missing kind where the part has something to say, and never declare a kind a block does not answer. The rows are never rendered.';
 const SERVER_ONLY = ['Networking:', 'State and persistence:', 'Concurrency:', 'deployed and divided', '(server and'];
@@ -374,15 +376,15 @@ const briefOf = async (paths: readonly string[], name = RUN_ID): Promise<{ reado
 };
 
 describe('brief: shape packs (version 2.4)', () => {
-  it('a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, containment, system-model, figure-plan, derived-base and walk paragraphs, task-routes section, worth-knowing paragraph and question-kinds paragraph', async () => {
+  it('a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, containment, system-model, figure-plan, derived-base, walk and level paragraphs, task-routes section, worth-knowing paragraph and question-kinds paragraph', async () => {
     const { run, brief, record } = await briefOf(['src/server.c', 'README.md']);
     const golden: string = JSON.parse(fs.readFileSync(BRIEF_V10_GOLDEN, 'utf8')).brief;
     const schemaSha = sha(read(run, 'draft.schema.json'));
     const lines = golden.split('\n');
     const swap = (from: string, to: string): void => { const at = lines.indexOf(from); expect(at).toBeGreaterThan(-1); lines[at] = to; };
-    swap('- Brief version: `polaris-dossier-brief-v10`', '- Brief version: `polaris-dossier-brief-v24`');
+    swap('- Brief version: `polaris-dossier-brief-v10`', '- Brief version: `polaris-dossier-brief-v25`');
     swap('- Draft schema: `polaris-dossier-local-draft-v5`, in `draft.schema.json` beside this brief (sha256 `36320b3ee0ce3a85ef4b9148db5aa5e7c4689a1746a6d6cf21110dfb99538dcc`)',
-      `- Draft schema: \`polaris-dossier-local-draft-v16\`, in \`draft.schema.json\` beside this brief (sha256 \`${schemaSha}\`)`);
+      `- Draft schema: \`polaris-dossier-local-draft-v17\`, in \`draft.schema.json\` beside this brief (sha256 \`${schemaSha}\`)`);
     const sections = lines.findIndex((line) => line.startsWith('Write one section per topic, in this order, each section\'s `id` the topic\'s id'));
     expect(sections).toBeGreaterThan(-1);
     // Brief v11 (version 2.4) added the thesis paragraph; brief v12 (version 2.5) the figure-kinds paragraph immediately after it.
@@ -402,6 +404,8 @@ describe('brief: shape packs (version 2.4)', () => {
     lines.splice(lines.indexOf(FIGURE_PLAN_PARAGRAPH) + 2, 0, DERIVED_BASE_PARAGRAPH, '');
     // Brief v24 (version 2.40) added the walk paragraph immediately after the derived-base paragraph.
     lines.splice(lines.indexOf(DERIVED_BASE_PARAGRAPH) + 2, 0, WALK_PARAGRAPH, '');
+    // Brief v25 (version 2.50) added the level paragraph immediately after the walk paragraph.
+    lines.splice(lines.indexOf(WALK_PARAGRAPH) + 2, 0, LEVEL_PARAGRAPH, '');
     expect(lines[lines.indexOf(CONTAINMENT_PARAGRAPH) - 2]!.startsWith('Name the dossier\'s hero in `hero`')).toBe(true);
     // Brief v21 (version 2.32) added the question-kinds paragraph immediately after the worth-knowing paragraph.
     lines.splice(lines.indexOf('## Task routes'), 0, QUESTION_KINDS_PARAGRAPH, '');

@@ -581,6 +581,8 @@ export const walkableWidth = (width: number): boolean => width !== 1048;
  * draws at CSS pixels (it never scales a drawing but one 1048 px wide, which no walk is laid over). Layout data, not a design value. */
 export const walkBoxStyle = (box: { readonly x: string; readonly y: string; readonly width: string; readonly height: string }): string =>
   `left:${box.x}px;top:${box.y}px;width:${box.width}px;height:${box.height}px`;
+/** A containment group's layer box as its `style` (version 2.50): the box the layout draws the group in, in the drawing's coordinates. */
+export const containmentBoxStyle = (box: ContainmentBox): string => walkBoxStyle({ x: num(box.x), y: num(box.y), width: num(box.width), height: num(box.height) });
 
 /**
  * The figure kinds' fixed-pitch layouts (REQ-polaris-generation-034 version 2.5, syzygy-3efd.30). Each reads identities, references and

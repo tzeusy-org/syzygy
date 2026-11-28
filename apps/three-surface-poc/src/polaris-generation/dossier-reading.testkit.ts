@@ -275,3 +275,35 @@ export function splitLineCitationInput() {
   const body = Array.from({ length: 1200 }, (_, index) => `# synthetic setting ${index + 1}`.padEnd(99, ' ') + '\n').join('');
   return lineCitationFixture(body, [{ start: 999, end: 1002 }], [{ start: 998, end: 1004 }]);
 }
+
+/** View levels and zoom links (REQ-polaris-generation-034 version 2.50, syzygy-3efd.39) over the reading dossier: its flow on section one
+ * becomes a context view about node `b`, and a deep dive `runtime` of section one draws `parts`, a container view about `b`, so `b`'s zoom
+ * target is `parts` on `deep-dives/runtime.html`. With `walked`, the flow also carries the walk of `walkInput`. */
+export function zoomInput(walked = false): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {
+  const { local, sources } = walked ? walkInput() : readingInput();
+  const sourceIds = [READING_SOURCE.sourceId];
+  const draft = local.draft as unknown as Record<string, unknown>;
+  const parts = { id: 'parts', sectionId: 'one', home: { kind: 'deep-dive', id: 'runtime' }, kind: 'boundary', title: 'Parts of <b>', relationship: 'what b is built of',
+    disposition: { kind: 'produced', assetIds: [] },
+    nodes: [{ id: 'p1', label: 'Part one', epistemic: 'inferred', sourceIds }, { id: 'p2', label: 'Part two', epistemic: 'inferred', sourceIds }],
+    edges: [{ id: 'p-edge', from: 'p1', to: 'p2', label: 'feeds', epistemic: 'inferred', sourceIds }] };
+  const dive = { id: 'runtime', title: 'Runtime', sectionId: 'one', disposition: { kind: 'produced', assetIds: [] }, paragraphs: [{ id: 'dive-p', text: 'x', sourceIds, children: [] }] };
+  const blocks = new Map(local.blocks as ReadonlyMap<string, unknown>);
+  blocks.set('dive-p', { marking: 'inferred', unknownReason: null, basis: 'fixture', executions: [], segments: [{ kind: 'prose', text: 'The runtime holds two parts.' }] });
+  return { sources, local: { ...local, blocks: blocks as LocalRenderInput['blocks'],
+    draft: { ...draft, diagrams: [...(draft['diagrams'] as unknown[]), parts], deepDives: [dive] } as unknown as LocalRenderInput['draft'],
+    viewLevels: new Map([['flow', { level: 'context', scope: 'b' }], ['parts', { level: 'container', scope: 'b' }]]) } };
+}
+
+/** A containment's layer (version 2.50): `containmentInput`'s workspace with `web` the scope of a component view `inside-web` on section
+ * two, so the containment's box for `web` links to `#figure-inside-web` on that section's page. */
+export function zoomContainmentInput(): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {
+  const { local, sources } = containmentInput();
+  const sourceIds = [READING_SOURCE.sourceId];
+  const draft = local.draft as unknown as Record<string, unknown>;
+  const inside = { id: 'inside-web', sectionId: 'two', kind: 'boundary', title: 'Inside the web front end', relationship: 'what web holds', disposition: { kind: 'produced', assetIds: [] },
+    nodes: [{ id: 'm1', label: 'Module one', epistemic: 'inferred', sourceIds }, { id: 'm2', label: 'Module two', epistemic: 'inferred', sourceIds }],
+    edges: [{ id: 'm-edge', from: 'm1', to: 'm2', label: 'imports', epistemic: 'inferred', sourceIds }] };
+  return { sources, local: { ...local, draft: { ...draft, diagrams: [...(draft['diagrams'] as unknown[]), inside] } as unknown as LocalRenderInput['draft'],
+    viewLevels: new Map([['inside-web', { level: 'component', scope: 'web' }]]) } };
+}
