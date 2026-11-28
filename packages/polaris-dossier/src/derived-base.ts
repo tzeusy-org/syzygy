@@ -42,6 +42,8 @@ export interface BaseElement {
   readonly manifest?: string;
   /** For the directory map: whether it is the repository root. */
   readonly root?: boolean;
+  /** For the unit map: the fact it lists, `package` or `module`, which gives its type for a view's level (version 2.50). */
+  readonly unitFact?: 'package' | 'module';
 }
 
 /** A base map as check or render derives it: its elements and, for the directory map, the `contains` facts joining the root to each
@@ -90,7 +92,7 @@ export function unitBase(member: { readonly facts: readonly Readonly<Record<stri
       seen.set(manifest, k);
       const name = text(fact['name']) ?? '';
       return { path: `${manifest}#${k}`, factId: text(fact['id']) ?? '', label: name, name, compared: name, epistemic: 'inferred' as const, unknownReason: null,
-        unit: { kind: 'package-manifest' as const, path: manifest }, manifest };
+        unit: { kind: 'package-manifest' as const, path: manifest }, manifest, unitFact: fact['fact'] === 'module' ? 'module' as const : 'package' as const };
     });
   const read = member.recognizers.filter((entry) => UNIT_MAP_RULES.includes(entry.rule));
   return { map: 'units', elements, contains: [], notListed: { facts: member.factsNotListed, unknownFiles: read.reduce((sum, entry) => sum + entry.unknown, 0),
