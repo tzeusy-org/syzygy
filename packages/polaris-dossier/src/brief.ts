@@ -41,7 +41,9 @@ import { issuedBriefStatement } from './launch-statements.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-/** v23 (REQ-polaris-generation-034 version 2.35, syzygy-3efd.38): brief v22 with draft schema v15 and the one derived-base paragraph
+/** v24 (REQ-polaris-generation-034 version 2.40, syzygy-3efd.88): brief v23 with draft schema v16 and the one walk paragraph
+ * (`WALK_PARAGRAPH`) immediately after the derived-base paragraph, and this line changed.
+ * v23 (REQ-polaris-generation-034 version 2.35, syzygy-3efd.38): brief v22 with draft schema v15 and the one derived-base paragraph
  * (`DERIVED_BASE_PARAGRAPH`) immediately after the figure-plan paragraph, and this line changed.
  * v22 (REQ-polaris-generation-034 version 2.33, syzygy-3efd.84): brief v21 with draft schema v14 and three paragraphs immediately after
  * the hero paragraph, in this order: brief v17's containment paragraph (`CONTAINMENT_PARAGRAPH`), brief v18's system-model paragraph
@@ -58,7 +60,7 @@ import { issuedBriefStatement } from './launch-statements.js';
  * (`SUBSECTIONS_PARAGRAPH`) immediately after the figure-kinds paragraph, and this line changed. v13 (the index-and-task-routes change): brief v12 with the task-routes section (`TASK_ROUTES_RULE`) added after the Poles and this line
  * changed, and nothing else. v12 (REQ-polaris-generation-034 version 2.5): brief v11 with draft schema v7 and the one figure-kinds paragraph
  * (`FIGURE_KINDS_PARAGRAPH`) immediately after the thesis-basis paragraph. v11 (version 2.4) added schema v6 and `THESIS_BASIS_PARAGRAPH`. */
-export const BRIEF_VERSION = 'polaris-dossier-brief-v23';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v24';
 const HERO_PARAGRAPH = 'Name the dossier\'s hero in `hero`: `{"figure": "<diagram id>"}` for one diagram whose `home` is `{"kind": "overview"}` and whose `kind` is `flow`, `lifecycle`, `state-machine`, `boundary`, `dependency` or `placement`, showing the project\'s main parts and what surrounds them. Syzygy draws it first on the overview, after the introduction and any open questions. Where no such figure would be true, write `{"omitted": <block>}` instead, one inferred or unknown block saying why; the overview shows that reason where the figure would stand. A draft that does neither is refused.';
 
 /** The containment paragraph brief v17 places immediately after the hero paragraph (REQ-polaris-generation-034 version 2.23). Brief v17
@@ -75,6 +77,9 @@ export const FIGURE_PLAN_PARAGRAPH = 'Plan the figures before you write the pros
 
 /** The paragraph brief v23 adds immediately after the figure-plan paragraph, in the requirement's words (version 2.35). */
 export const DERIVED_BASE_PARAGRAPH = 'A graph or containment `view` may start from a computed map: give it `base` with `map` `directories` or `units`, and Syzygy draws that map\'s elements in its own words and marks, with a double border. Leave elements out with `hide` entries, each with its `paths` and a `reason` in your words (a reason is required), or instead list the ones to show in `select` with one `restReason` for the rest; the figure will print how many it shows of how many, and link to the full map. A unit-map path names every package and module of that manifest file; add `#<k>` to name the k-th alone. In a containment view, `group` places named paths inside one of your elements at level 1 or 2; a containment of the directory map always shows the repository root. `names` gives a base element a display name, which is your claim and is drawn below its box, never inside it. A cited relationship may join a base element by giving `{"map", "path"}` as its `from` or `to`. You cannot relabel, re-mark or add to a map\'s elements, and none of your elements or names may take the name of a base element the same figure shows.';
+
+/** The paragraph brief v24 adds immediately after the computed-map paragraph, in the requirement's words (version 2.40). */
+export const WALK_PARAGRAPH = 'Where a section or deep dive explains a graph figure drawn there step by step, you may give it one `walk`: `{"figure": <that diagram\'s id>, "steps": [{"element": <a node\'s id, for a view an element it shows, or for a view with a `base` a base element it shows as {"map", "path"}>, "block": <the id of one of that place\'s paragraphs, which cites its sources>}, ...]}`, two to twelve steps in reading order, each element once. The page then shows each step\'s number on its element, lists the steps beside the figure, highlights an element when its step is chosen, and links each box whose element is not withheld to the lines its first citation cites; a base element\'s box takes the number and the highlight, never a link. The walk states nothing itself: each step\'s paragraph is what the reader reads about that element.';
 
 /** The paragraph brief v21 adds immediately after the worth-knowing paragraph, in the requirement's words (version 2.32). It carries no
  * project content and none of the comprehension key's questions. */
@@ -226,6 +231,8 @@ export function renderBrief(input: BriefInput): string {
     FIGURE_PLAN_PARAGRAPH,
     '',
     DERIVED_BASE_PARAGRAPH,
+    '',
+    WALK_PARAGRAPH,
     '',
     '## Poles',
     '',

@@ -121,6 +121,18 @@ export function figureKindsInput(): { readonly local: LocalRenderInput; readonly
   }] } as unknown as LocalRenderInput['draft'] } };
 }
 
+/** A figure walk (REQ-polaris-generation-034 version 2.40, syzygy-3efd.88) over the reading dossier's flow on section one: the five-node chain
+ * `a` to `e`, its node `b` citing lines 1 to 1 of the reading source and `d` withheld, walked in three steps, `b`, `e` and `d`, each with the
+ * section's one paragraph `forms`. */
+export function walkInput(): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {
+  const { local, sources } = readingInput();
+  return { sources, local: { ...local,
+    citationLines: new Map([...(local.citationLines ?? new Map()), ['b', new Map([[READING_SOURCE.sourceId, [{ start: 1, end: 1 }]]])]]),
+    withheldElements: new Map([['d', { sources: 1, named: [] }]]),
+    walks: new Map([['flow', [{ node: 'b', block: 'forms' }, { node: 'e', block: 'forms' }, { node: 'd', block: 'forms' }]]]),
+  } };
+}
+
 /** A containment (REQ-polaris-generation-034 version 2.23, syzygy-3efd.31) on the reading dossier's first section: two top-level groups, the
  * first holding two (one of them holding one more, Unknown), so its drawing is 408 px wide and three levels deep. */
 export function containmentInput(): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {

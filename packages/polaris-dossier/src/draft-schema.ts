@@ -77,11 +77,15 @@ export const LOCAL_DRAFT_SCHEMA_VERSION_V14 = 'polaris-dossier-local-draft-v14';
  * `from` or `to` may be a base end `{"map", "path"}`. Brief v23 issues it. A v14 or earlier draft still checks and renders as before, and in
  * a v12 or v14 draft either member is field-version. */
 export const LOCAL_DRAFT_SCHEMA_VERSION_V15 = 'polaris-dossier-local-draft-v15';
-/** The schema the brief issues: v15. */
-export const LOCAL_DRAFT_SCHEMA_VERSION = LOCAL_DRAFT_SCHEMA_VERSION_V15;
+/** v16 (REQ-polaris-generation-034 version 2.40, syzygy-3efd.88): a schema-v15 draft in every respect but one. A section or a deep dive may
+ * carry `walk`, one reading path through one graph figure drawn there, in numbered steps (walk.ts). Brief v24 issues it. A v15 or earlier
+ * draft still checks and renders as before, and `walk` in one is field-version. */
+export const LOCAL_DRAFT_SCHEMA_VERSION_V16 = 'polaris-dossier-local-draft-v16';
+/** The schema the brief issues: v16. */
+export const LOCAL_DRAFT_SCHEMA_VERSION = LOCAL_DRAFT_SCHEMA_VERSION_V16;
 export { CONTAINMENT_KIND };
 /** Every draft schema version `check` reads. */
-export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION_V11, LOCAL_DRAFT_SCHEMA_VERSION_V12, LOCAL_DRAFT_SCHEMA_VERSION_V13, LOCAL_DRAFT_SCHEMA_VERSION_V14, LOCAL_DRAFT_SCHEMA_VERSION_V15] as const);
+export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION_V11, LOCAL_DRAFT_SCHEMA_VERSION_V12, LOCAL_DRAFT_SCHEMA_VERSION_V13, LOCAL_DRAFT_SCHEMA_VERSION_V14, LOCAL_DRAFT_SCHEMA_VERSION_V15, LOCAL_DRAFT_SCHEMA_VERSION_V16] as const);
 /** The versions the schemas before v11 and v13's name in `schemaVersion`: all but v11 and v12, which no brief issues (see their
  * constants). The v11, v12 and v14 schemas name every version; only v14's is published. */
 const NAMED_SCHEMA_VERSIONS: readonly string[] = Object.freeze(LOCAL_DRAFT_SCHEMA_VERSIONS.filter((version) => version !== LOCAL_DRAFT_SCHEMA_VERSION_V11
@@ -106,11 +110,14 @@ export const hasContainmentForm = (version: unknown): boolean => version === LOC
 /** Whether a draft carries the system model and draws its graph and containment figures as views of it: v12 (version 2.24) and v14
  * (version 2.33). */
 export const hasModelForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V12 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14
-  || version === LOCAL_DRAFT_SCHEMA_VERSION_V15;
-/** Whether a draft's views may carry `base` and its cited relationships base ends: v15 (version 2.35). */
-export const hasBaseForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V15;
-/** Whether a draft carries `figurePlan`, read by check alone: v14 (version 2.33) and v15 (version 2.35). */
-export const hasFigurePlanForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V14 || version === LOCAL_DRAFT_SCHEMA_VERSION_V15;
+  || hasBaseForm(version);
+/** Whether a draft's views may carry `base` and its cited relationships base ends: v15 (version 2.35), and v16 (version 2.40, which reads
+ * every rule naming schema v15 as naming v16 too). */
+export const hasBaseForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V15 || hasWalkForm(version);
+/** Whether a section or deep dive may carry `walk`: v16 (version 2.40). */
+export const hasWalkForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V16;
+/** Whether a draft carries `figurePlan`, read by check alone: v14 (version 2.33), v15 (version 2.35) and v16 (version 2.40). */
+export const hasFigurePlanForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V14 || hasBaseForm(version);
 /** Whether a draft is of a known version that has no system model and is not v13, so `model` or a diagram's `view` in it is field-version
  * (version 2.24, "a draft of schema v11 or earlier"). v13 is not one: it reports either as v13 did before. */
 export const precedesModel = (version: unknown): boolean => !hasModelForm(version) && !hasWorthKnowingForm(version)
@@ -122,7 +129,7 @@ export const precedesContainment = (version: unknown): boolean => !hasContainmen
 /** Whether a draft's version has the worth-knowing mark, a Pole's `worthKnowingNone` and `questionKinds`: v13 (version 2.26) and v14
  * (version 2.33, which reads every rule naming schema v13 alone as naming v13 or v14). */
 export const hasWorthKnowingForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V13 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14
-  || version === LOCAL_DRAFT_SCHEMA_VERSION_V15;
+  || hasBaseForm(version);
 /** The v14 draft's figure plan (version 2.33): the authoring session's working record, read by check alone (figure-plan.ts). */
 export const FIGURE_PLAN_FIELD = 'figurePlan';
 export const FIGURE_PLAN_DESCRIPTION = 'Required. Your figure plan, written before the prose: one entry for the overview, each section and each deep dive, its `home` written as a diagram\'s `home` is. An entry is {"home", "question", "kind", "figure"}, the one question a picture there answers better than text, the figure kind it needs and the diagram, homed there and of that kind, that answers it; or {"home", "omitted"}, why the place has no planned figure. The plan is never rendered or published; `syzygy dossier check` reads it.';
@@ -204,6 +211,10 @@ export const UNIT_KIND_TYPES: Readonly<Record<string, ElementType>> = Object.fre
  * elements and one to 80 relationships; a containment view two to 40 elements. */
 export const MODEL_BOUNDS = Object.freeze({ elements: [0, 200] as const, relationships: [0, 400] as const, graphElements: [1, 40] as const,
   graphRelationships: [1, 80] as const, containmentElements: [2, 40] as const });
+/** A v16 section's or deep dive's `walk` (version 2.40): the member, and the description the schema document gives it; the document admits
+ * any value there, every failure of its form being a `walk` finding (walk.ts). */
+export const WALK_FIELD = 'walk';
+export const WALK_DESCRIPTION = 'Optional. One reading path through one graph figure drawn in this place: {"figure": <that diagram\'s id>, "steps": [{"element", "block"}, ...]}, two to twelve steps in reading order, each naming one element the figure draws (a base element as {"map", "path"}) and one of this place\'s paragraphs that cites its sources. Syzygy numbers each step\'s element, lists the steps beside the figure and highlights an element when its step is chosen; the walk states nothing itself.';
 /** A v15 view's `base` (version 2.35): the member, the two maps it may name, and its bounds. */
 export const BASE_FIELD = 'base';
 export const BASE_MAPS = Object.freeze(['directories', 'units'] as const);
@@ -552,11 +563,17 @@ export function draftSchemaDocument(parameters: DraftSchemaParameters): Record<s
   const { root, defs } = issuedDraftSchema(parameters);
   const object = root as ObjectSchema;
   const planned = { ...object, properties: { ...object.properties, [FIGURE_PLAN_FIELD]: { description: FIGURE_PLAN_DESCRIPTION },
-    diagrams: withBaseViews(object.properties['diagrams'] as ArraySchema), [MODEL_FIELD]: withBaseEnds(object.properties[MODEL_FIELD] as ObjectSchema) } } as unknown as DraftSchema;
+    diagrams: withBaseViews(object.properties['diagrams'] as ArraySchema), [MODEL_FIELD]: withBaseEnds(object.properties[MODEL_FIELD] as ObjectSchema),
+    sections: withWalk(object.properties['sections'] as ArraySchema), deepDives: withWalk(object.properties['deepDives'] as ArraySchema) } } as unknown as DraftSchema;
   return schemaDocument(LOCAL_DRAFT_SCHEMA_VERSION, 'Polaris dossier local-agent draft', { root: planned, defs });
 }
 
 type ObjectSchema = Extract<DraftSchema, { readonly type: 'object' }>;
+/** The v16 document's sections and deep dives (version 2.40): each may carry `walk`, any value, optional. */
+function withWalk(places: ArraySchema): ArraySchema {
+  const item = places.items as ObjectSchema;
+  return { ...places, items: { ...item, properties: { ...item.properties, [WALK_FIELD]: { description: WALK_DESCRIPTION } } } } as unknown as ArraySchema;
+}
 type ArraySchema = Extract<DraftSchema, { readonly type: 'array' }>;
 /** The v15 document's views (version 2.35): each graph or containment `view` is the v14 view, or a view carrying `base` whose `elements` take
  * zero to 40 entries and a graph view's `relationships` zero to 80. */

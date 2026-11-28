@@ -492,11 +492,11 @@ describe('system model: migration', () => {
 });
 
 describe('system model: the brief paragraph', () => {
-  it('is kept verbatim, and brief v23 (version 2.35) issues it once', async () => {
+  it('is kept verbatim, and brief v24 (version 2.40) issues it once', async () => {
     expect(MODEL_PARAGRAPH).toBe('Describe the system once, in `model`: its `elements`, each with `id`, `label`, `type`, `epistemic` and `citations` as a node has, at most one `parent` (the element it is part of, at most two above it) and, where it stands for a part of the repository, a `unit`; and its `relationships`, each either cited, with `from`, `to`, `relation`, `label`, `epistemic` and `citations` as an arrow has, or derived, with `from`, `to`, `relation` and `basis` `derived` alone, which asks Syzygy to state the relation from what it derives (today only a top-level directory inside the repository root). The types are system, directory, package, module, service, job, store, external and person. Then draw each graph or containment figure as a `view` that lists the identities of the elements and relationships it shows: show an element in every figure that needs it, under the same identity, rather than redrawing it, and show every element and relationship in at least one view. A view shows a relationship only with both its ends; a containment view nests an element inside its parent when it shows both. Sequence and swimlane figures keep their own members.');
     const { run } = await checked(A, SYSTEM());
     const brief = fs.readFileSync(path.join(run, 'brief.md'), 'utf8');
-    expect(brief).toContain('polaris-dossier-brief-v23');
+    expect(brief).toContain('polaris-dossier-brief-v24');
     expect(brief.split('\n').filter((line) => line === MODEL_PARAGRAPH)).toHaveLength(1);
   });
 });
@@ -855,7 +855,7 @@ describe('schema v14: the model joined to the worth-knowing mark (version 2.33)'
   });
 
   it('keeps the schema finding at the plan of a draft of an unknown version: field-version is for v13 or earlier alone (R84 finding 5)', async () => {
-    const findings = (await findingsOf(A, joined('polaris-dossier-local-draft-v16'))).findings.filter((finding) => finding.at === '$.figurePlan');
+    const findings = (await findingsOf(A, joined('polaris-dossier-local-draft-v17'))).findings.filter((finding) => finding.at === '$.figurePlan');
     expect(findings.map(at)).toEqual(['schema $.figurePlan']);
   });
 
