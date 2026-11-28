@@ -24,7 +24,7 @@ $G revert -m 1 --no-commit "$merge" 2>&1 | tail -3
 git status --porcelain | grep '^UU' | sed 's/^/   conflict: /'
 git checkout -q "$merge" -- "$LEDGER"
 git add -A
-$G commit -q -m "trial: withdraw v2.49 (revert -m 1 of $merge), ledger kept"
+$G commit -q -m "trial: withdraw v2.50 (revert -m 1 of $merge), ledger kept"
 echo "== after revert $(git rev-parse HEAD); ledger as it stood: $(git diff --quiet "$merge" HEAD -- "$LEDGER" && echo yes || echo no); files changed: $(git diff --name-only "$merge" HEAD | wc -l)"
 python3 scripts/check_spec_reconciliation.py --check 2>&1 | grep -E '^(OK|FAIL|WARN) |^        |predicates' | grep -v 'pins sha'
 python3 scripts/count_polaris_effective_scenarios.py 2>&1 | tail -1

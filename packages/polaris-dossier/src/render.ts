@@ -232,7 +232,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const roughEdges = await renderRoughEdges(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
   // Version 2.48 (syzygy-5dhm.119): the documents' paths and identifiers, resolved here the same way, for the docs-and-code page.
   const docsAndCode = await renderDocsAndCode(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
-  // Version 2.49 (syzygy-5dhm.116): the limits and defaults, derived here the same way, for the cliffs page.
+  // Version 2.50 (syzygy-5dhm.116): the limits and defaults, derived here the same way, for the cliffs page.
   const limitsAndDefaults = await renderLimits(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
   const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, roughEdges, docsAndCode, limitsAndDefaults, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }), ...(model === undefined ? {} : { model }) } };
 
@@ -415,7 +415,7 @@ export async function renderDocsAndCode(clonePath: string, pinned: string, deps:
   return deriveDocsAndCode({ entries, screen, consented, read: async (blobPath) => (await bodyReader.readBlobs([blobPath]))[0]! });
 }
 
-/** The render's own limits-and-defaults member (version 2.49): as `renderDocsAndCode`, through its own pinned reader whose object bound is
+/** The render's own limits-and-defaults member (version 2.50): as `renderDocsAndCode`, through its own pinned reader whose object bound is
  * `MANIFEST_BLOB_LIMIT`, but `LIMITS_READ_BATCH` files to a call; `unknown` where the tree cannot be listed. */
 export async function renderLimits(clonePath: string, pinned: string, deps: Pick<RenderDeps, 'openReader'>, screen: DossierScreen,
   consented: readonly string[] | null, reader: { readonly listTree: () => Promise<readonly TreeEntry[]> }): Promise<LimitsAndDefaults> {

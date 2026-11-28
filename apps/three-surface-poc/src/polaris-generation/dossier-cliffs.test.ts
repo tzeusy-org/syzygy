@@ -3,7 +3,7 @@ import type { LocalDerivedStructure, LocalLimitsAndDefaults } from '@syzygy/pola
 import { readingInput } from './dossier-reading.testkit.js';
 import { renderLocalDossier } from './dossier-site.js';
 
-// syzygy-5dhm.116 (REQ-polaris-generation-034 version 2.49): the cliffs reference page and its machine member. Inputs are built here;
+// syzygy-5dhm.116 (REQ-polaris-generation-034 version 2.50): the cliffs reference page and its machine member. Inputs are built here;
 // every expected string and count is a literal written from the requirement's words before the renderer ran.
 
 const REV = 'c'.repeat(40);
@@ -45,7 +45,7 @@ const site = (limitsAndDefaults: LocalLimitsAndDefaults | undefined, structure: 
   return renderLocalDossier({ ...input, local: { ...input.local, ...(structure === null ? {} : { derivedStructure: structure }), ...(limitsAndDefaults === undefined ? {} : { limitsAndDefaults }) } }).files;
 };
 
-describe('the cliffs reference page (version 2.49)', () => {
+describe('the cliffs reference page (version 2.50)', () => {
   it('renders a per-unit table, every listed row with its value, type, quoted line and evidence, and the Unknown files', () => {
     const page = site(MEMBER).get(PAGE)!;
     expect(page).toContain('<section id="cliffs" data-reading-level="1" data-topics=""><h1>Cliffs</h1>');
