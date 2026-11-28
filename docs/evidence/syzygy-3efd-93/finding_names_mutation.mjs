@@ -6,6 +6,7 @@
 // docs/evidence/syzygy-3efd-33/code_marks_mutation.mjs, without the browser.
 // Run 1 (at 23f77f856) killed 10 of 12. Repairs: an unviewed relationship of a path-like identity (unviewed-relationship-unguarded), and a
 // screen whose body rule matches only across a detail's words (detail-not-screened-whole).
+// Run 2 (at 72f8cf464, finding-names-mutation-run2-2026-11-28.json) killed 12 of 12.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
