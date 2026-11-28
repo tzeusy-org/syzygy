@@ -224,6 +224,8 @@ it.skipIf(executable === undefined)('keeps every dossier reading page oriented a
   }
 }, 60_000);
 
+// It opens and measures every page of the dossier, as its siblings in this file do, and takes their limit: the default 5 s left it no room
+// on a loaded hosted runner (CI run 46164381249, 5010 ms, alongside the code-excerpt browser test's page loads), though it takes 1.5 s here.
 it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and shows both counted packet digests on Review', async () => {
   if (!executable) throw Error('Browser required');
   const { sources, local } = navigationInput();
@@ -484,7 +486,7 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
     if (browser !== undefined) await browser.close();
     await rm(directory, { recursive: true, force: true });
   }
-});
+}, 60_000);
 
 it.skipIf(executable === undefined)('follows a ranged source citation and highlights only its line span with scripts removed', async () => {
   if (!executable) throw Error('Browser required');

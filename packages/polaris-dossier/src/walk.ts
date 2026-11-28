@@ -91,7 +91,7 @@ export const walkFieldVersionFindings = (doc: Doc): CheckFinding[] =>
 
 /** The identities of the paragraphs a step may name in a place: the claim blocks its own `paragraphs` list holds and, for a section, those
  * its subsections' `paragraphs` lists hold; never a block inside a presentation element, a child of a block or a subsection's `answer`. */
-function paragraphsOf(place: Doc, part: typeof PLACES[number]): ReadonlyMap<string, Doc> {
+export function paragraphsOf(place: Doc, part: typeof PLACES[number]): ReadonlyMap<string, Doc> {
   const out = new Map<string, Doc>();
   const read = (entries: unknown): void => {
     for (const entry of list(entries)) {

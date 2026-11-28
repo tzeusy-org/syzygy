@@ -393,7 +393,7 @@ describe('schema v17: a view\'s level and scope (version 2.50)', () => {
       expect(after.filter((finding) => !/\.view\.(?:level|scope)$/u.test(finding.at)), version).toEqual(before);
     }
     // An unknown version is read against the schema of its own form, never as v16 or v17: no finding of this version.
-    const unknown = (await findingsOf(A, { ...levelled, schemaVersion: 'polaris-dossier-local-draft-v18' })).findings;
+    const unknown = (await findingsOf(A, { ...levelled, schemaVersion: 'polaris-dossier-local-draft-v19' })).findings;
     expect(unknown.filter((finding) => LEVEL_KINDS.has(finding.kind) || /\.view\.(?:level|scope)$/u.test(finding.at))).toEqual([]);
     // A v13 draft admits no view: the view is its own finding, and this version adds none.
     expect((await findingsOf(A, { ...levelled, schemaVersion: V13 })).findings.filter((finding) => finding.kind === 'field-version' && /\.view\.(?:level|scope)$/u.test(finding.at))).toEqual([]);
