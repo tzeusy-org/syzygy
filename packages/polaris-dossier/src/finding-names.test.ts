@@ -360,6 +360,35 @@ const WALK_SITES: [string, (value: string) => Doc, string, string][] = [
   'walk', '$.sections[0].walk.steps[1].block'],
 ];
 
+// Units, relation witnesses and containments (the harness is system-model.test.ts's and containment-figure.test.ts's).
+const derivedRel = (id: string, from: string, to: string): Doc => ({ id, from, to, relation: 'contains', basis: 'derived' });
+const containView = (id: string, elements: string[]): Doc => ({ id, title: `Figure ${id}`, home: { kind: 'section', target: 's1' }, kind: 'containment',
+  relationship: 'What sits inside what.', disposition: { kind: 'produced', assetIds: [id] }, view: { elements } });
+const system = (srcId: string, srcUnit: Doc, relId = 'repo-src'): Doc => modelDraft(
+  [el('repo', 'Repository', 'system', { unit: ROOT }), el(srcId, 'Source', 'directory', { parent: 'repo', unit: srcUnit }), el('api', 'API', 'module')],
+  [derivedRel(relId, 'repo', srcId), rel('src-api', srcId, 'api', 'calls', 'calls')],
+  [graphView('runtime', ['repo', srcId, 'api'], [relId, 'src-api']), containView('layout', ['repo', srcId])]);
+const group = (id: string, label: string, children: Doc[] = [], unit?: Doc): Doc => ({ id, label, epistemic: 'inferred', citations: [cite(`c-${id}`)], children, ...(unit === undefined ? {} : { unit }) });
+const containment = (id: string, groups: Doc[]): Doc => ({ id, title: `Figure ${id}`, home: { kind: 'section', target: 's1' }, kind: 'containment',
+  relationship: 'What sits inside what.', disposition: { kind: 'produced', assetIds: [id] }, groups });
+const boundary = (nodes: Doc[]): Doc => ({ id: 'b1', title: 'Figure b1', home: { kind: 'section', target: 's1' }, kind: 'boundary', relationship: 'What holds what.',
+  disposition: { kind: 'produced', assetIds: ['b1'] }, nodes, edges: [] });
+const UNIT_SITES: [string, (value: string) => Doc, string, string][] = [
+  ['a challenged derived relationship', (v) => system('src', tld('missing'), v), 'relation-challenged', '$.model.relationships[0]'],
+  ['a challenged model nesting', (v) => system(v, tld('missing')), 'relation-challenged', '$.model.elements[1].parent'],
+  ['an element\'s unit naming no unit', (v) => system(v, tld('a/b')), 'unit-reference', '$.model.elements[1].unit'],
+  ['a node\'s unit naming no unit', (v) => draftOf([boundary([{ ...fel(v, 'Source'), unit: tld('a/b') }, fel('n2', 'Other')])]), 'unit-reference', '$.diagrams[0].nodes[0].unit'],
+  ['a group\'s unit naming no unit', (v) => draftOf([containment('parts', [group('root', 'Repository', [group(v, 'Bad', [], tld('a/b'))], ROOT)])]), 'unit-reference', '$.diagrams[0].groups[0].children[0].unit'],
+  ['a challenged containment nesting', (v) => draftOf([containment('parts', [group('root', 'Repository', [group(v, 'Source', [], tld('missing'))], ROOT)])]),
+    'relation-challenged', '$.diagrams[0].groups[0].children[0]'],
+  ['a why section with no Poles', (v) => ({ ...draftOf([]), whySection: v }), 'unresolved-reference', '$.whySection'],
+  ['a v4 diagram\'s section', (v) => { const { home: _home, ...rest } = flow({ sectionId: v }); return { ...draftOf([rest]), schemaVersion: 'polaris-dossier-local-draft-v4' }; },
+    'unresolved-reference', '$.diagrams[0].sectionId'],
+  ['a task route step\'s target', (v) => ({ ...draftOf([]), taskRoutes: Array.from({ length: 8 }, (_unused, i) => ({ id: `route-${i + 1}`, task: `Add a command ${i + 1}`,
+    steps: [{ id: `r${i + 1}s1`, label: 'inferred', basis: 'source', text: 'Add the handler beside main.', citations: [cite(`c-r${i + 1}s1`, 2, 2)], quotations: [],
+      ...(i === 0 ? { see: { kind: 'section', target: v } } : {}) }] })) }), 'unresolved-reference', '$.taskRoutes[0].steps[0].see.target'],
+];
+
 const SITES: [string, (value: string) => Doc, string, string][] = [
   ['a quotation\'s citation', (v) => { const d = draftOf([]); d.sections[0].paragraphs[0] = { ...d.sections[0].paragraphs[0], text: 'The project states: "Nothing of the kind."', citations: [cite(v, 2, 2)], quotations: [v] }; return d; },
     'quotation-not-in-cited-file', '$.sections[0].paragraphs[0].text'],
@@ -396,6 +425,7 @@ const SITES: [string, (value: string) => Doc, string, string][] = [
     'unresolved-reference', '$.model.relationships[0].to'],
   ['an element whose type its unit refuses', (v) => modelDraft([el(v, 'Db', 'store', { unit: { kind: 'repository-root' } }), el('app', 'App', 'system')], [rel('r1', 'app', v, 'reads', 'Reads')], [graphView('all', [v, 'app'], ['r1'])]), 'element-type', '$.model.elements[0].type'],
   ...WALK_SITES,
+  ...UNIT_SITES,
   ['a base end in a v14 draft, named by its relationship', (v) => ({ ...draftOf([graphView('one', ['app'], [v])], V14),
     model: { elements: [el('app', 'App', 'system')], relationships: [rel(v, { map: 'units', path: 'api/package.json' } as never, 'app', 'calls', 'calls')] } }),
   'field-version', '$.model.relationships[0].from'],
@@ -410,8 +440,10 @@ describe('every builder site names neither value (review R93 finding 8)', () => 
       if (!result.ok) { if (JSON.stringify(result).includes(value)) wrong.push(`${value}: refusal ${JSON.stringify(result.refusal)}`); continue; }
       if (!('quotations' in result.report)) throw new Error('the bounded form was written');
       const findings = result.report.findings.map(({ kind: k, at: a, detail }) => ({ kind: k, at: a, detail }));
-      // A path-like value may instead draw the schema's finding at that member, and then no other: the schema refuses it first.
-      const reached = findings.some((f) => f.kind === kind && f.at === at) || (value === PATHLIKE && findings.some((f) => f.kind === 'schema' && f.at === at));
+      // A path-like value may instead draw the schema's finding at that member or its object's identity: the schema refuses it first.
+      const owner = at.replace(/\.[A-Za-z]+$/u, '');
+      const reached = findings.some((f) => f.kind === kind && f.at === at)
+        || (value === PATHLIKE && findings.some((f) => f.kind === 'schema' && (f.at === at || f.at.startsWith(`${owner}.`))));
       if (!reached) wrong.push(`${value}: no ${kind} at ${at}: ${JSON.stringify(findings)}`);
       for (const f of findings) if (f.detail.includes(value)) wrong.push(`${value}: ${JSON.stringify(f)}`);
     }

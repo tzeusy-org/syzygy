@@ -1,0 +1,1019 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-28T17:20:03.580Z",
+  "commit": "fbaec8e2cdb87c11caedb241700091d304c82462",
+  "subject": {
+    "packages/polaris-dossier/src/check-derive.ts": "acc938ef8a36c4a9609ab39ffbba1990ef52aaed769160012c8bf69606fb67ad",
+    "packages/polaris-dossier/src/check.ts": "8b77f08df0f6969465b68061d00b60b57ddeffa9c0f42f6a469bb00339f205d7",
+    "packages/polaris-dossier/src/containment.ts": "effb1c0d87173b185d8dc009368a3a8f2de1f53931784bdd95fc3d001ce173c9",
+    "packages/polaris-dossier/src/derived-base.ts": "7ee13d8c5e3dd01680e7a0f2ec61b40a99407a7524e6ca0d960d491b8142d952",
+    "packages/polaris-dossier/src/figure-plan.ts": "cf66b6a88d3e3f5e7c34bf5b828a499a2168ace62ea435717edc5467c6fb3b1f",
+    "packages/polaris-dossier/src/finding-names.ts": "390910784a3dde804e6ac2fb531db2707c0cf314e7425b34d74e6ac5234f414c",
+    "packages/polaris-dossier/src/system-model.ts": "90d8e7515b1220db0a2e246f94a52d036fcb5e7b41df844a6e8db0b0189e030d",
+    "packages/polaris-dossier/src/walk.ts": "2596595ae43d33202fe4f83b5086f17ffbd3faa13669c1a808df6f4c05a0a43b"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 600 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/finding-names.ts": [
+      "packages/polaris-dossier/src/finding-names.test.ts"
+    ],
+    "packages/polaris-dossier/src/system-model.ts": [
+      "packages/polaris-dossier/src/finding-names.test.ts",
+      "packages/polaris-dossier/src/system-model.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/finding-names.test.ts"
+    ],
+    "packages/polaris-dossier/src/check.ts": [
+      "packages/polaris-dossier/src/finding-names.test.ts"
+    ],
+    "packages/polaris-dossier/src/walk.ts": [
+      "packages/polaris-dossier/src/finding-names.test.ts"
+    ],
+    "packages/polaris-dossier/src/derived-base.ts": [
+      "packages/polaris-dossier/src/finding-names.test.ts"
+    ],
+    "packages/polaris-dossier/src/containment.ts": [
+      "packages/polaris-dossier/src/finding-names.test.ts"
+    ],
+    "packages/polaris-dossier/src/figure-plan.ts": [
+      "packages/polaris-dossier/src/finding-names.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "exitCode": 0,
+      "tests": 40,
+      "perFile": {
+        "packages/polaris-dossier/src/finding-names.test.ts": {
+          "passed": 40,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.ts",
+      "exitCode": 0,
+      "tests": 40,
+      "perFile": {
+        "packages/polaris-dossier/src/finding-names.test.ts": {
+          "passed": 40,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/containment.ts",
+      "exitCode": 0,
+      "tests": 40,
+      "perFile": {
+        "packages/polaris-dossier/src/finding-names.test.ts": {
+          "passed": 40,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "exitCode": 0,
+      "tests": 40,
+      "perFile": {
+        "packages/polaris-dossier/src/finding-names.test.ts": {
+          "passed": 40,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "exitCode": 0,
+      "tests": 40,
+      "perFile": {
+        "packages/polaris-dossier/src/finding-names.test.ts": {
+          "passed": 40,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "exitCode": 0,
+      "tests": 40,
+      "perFile": {
+        "packages/polaris-dossier/src/finding-names.test.ts": {
+          "passed": 40,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "exitCode": 0,
+      "tests": 94,
+      "perFile": {
+        "packages/polaris-dossier/src/finding-names.test.ts": {
+          "passed": 40,
+          "skipped": 0
+        },
+        "packages/polaris-dossier/src/system-model.test.ts": {
+          "passed": 54,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "exitCode": 0,
+      "tests": 40,
+      "perFile": {
+        "packages/polaris-dossier/src/finding-names.test.ts": {
+          "passed": 40,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "unviewed-element-unguarded",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "shown.elements.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${handleOr(id, at)}:",
+      "new": "shown.elements.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${id}:",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 94,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an unviewed element of a path-like identity by its path, and withholds the detail naming a token-shaped one"
+      ],
+      "seconds": 24
+    },
+    {
+      "id": "unviewed-relationship-unguarded",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "shown.relationships.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${handleOr(id, at)}:",
+      "new": "shown.relationships.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${id}:",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 94,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an unviewed element of a path-like identity by its path, and withholds the detail naming a token-shaped one"
+      ],
+      "seconds": 24
+    },
+    {
+      "id": "unviewed-named-by-path-always",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "shown.relationships.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${handleOr(id, at)}:",
+      "new": "shown.relationships.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${at}:",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 94,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names the identity of an unviewed element or relationship that is a handle, as before"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "any-string-is-a-handle",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "typeof value === 'string' && checkShape({ root: handle, defs: {} }, value).length === 0",
+      "new": "typeof value === 'string'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an unviewed element of a path-like identity by its path, and withholds the detail naming a token-shaped one",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a non-handle value at an identity reference as \"named here\", and withholds a detail naming a token",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an asset identity that is not a handle as the identity named here",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a repeated identity only where it is a handle",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a quotation's citation",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a message's sender",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a participant no message names",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a lane no step names",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a hero homed off the overview",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a hero of no graph kind",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a diagram's finding, named by the diagram",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a diagram's home target",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a deep-dive home target",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) an edge's end",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a list repeating no diagram",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a list repeating another section's diagram",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a Pole's section",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a section in no Pole",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a section in two Poles",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) the why section",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a planned figure homed elsewhere",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a planned figure of another kind",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) an element whose type its unit refuses",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a walk's figure homed elsewhere",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a walk's figure of no graph kind",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a step naming no element drawn in the figure",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a second step for one element",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a step's uncited paragraph",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a base end in a v14 draft, named by its relationship"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "no-string-is-a-handle",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "typeof value === 'string' && checkShape({ root: handle, defs: {} }, value).length === 0",
+      "new": "false",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an unviewed element of a path-like identity by its path, and withholds the detail naming a token-shaped one",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names the identity of an unviewed element or relationship that is a handle, as before",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a non-handle value at an identity reference as \"named here\", and withholds a detail naming a token",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail one of whose words names a secret path, though it is a handle",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail one of whose words is a path the policy denies (review R93 finding 4)",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail a detector matches only across its words",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail screening cannot decide, failing closed",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a repeated identity only where it is a handle"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "words-not-screened",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "clear(detail, false) && detail.split(DETAIL_WORD_BREAK).every((word) => word.length === 0 || clear(word, true));",
+      "new": "clear(detail, false);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail one of whose words names a secret path, though it is a handle",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail one of whose words is a path the policy denies (review R93 finding 4)",
+        "packages/polaris-dossier/src/finding-names.test.ts > the detail screen alone (review R93 finding 8) splits a detail at whitespace, quotes, backticks, parentheses, commas and semicolons",
+        "packages/polaris-dossier/src/finding-names.test.ts > the detail screen alone (review R93 finding 8) withholds a detail screening cannot decide, and one naming a denied word",
+        "packages/polaris-dossier/src/finding-names.test.ts > the detail screen alone (review R93 finding 8) keeps every finding in order, admitted ones unchanged, and fails closed where the screen throws",
+        "packages/polaris-dossier/src/finding-names.test.ts > the detail screen alone (review R93 finding 8) screens each distinct value once per call, and handles more findings than one call could spread"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "detail-not-screened-whole",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "const admitted = (detail: string): boolean => clear(detail, false) && detail.split(",
+      "new": "const admitted = (detail: string): boolean => detail.split(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail a detector matches only across its words",
+        "packages/polaris-dossier/src/finding-names.test.ts > the detail screen alone (review R93 finding 8) screens each distinct value once per call, and handles more findings than one call could spread"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "undecided-admitted",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "try { ok = admit(value) === 'admitted' && !(word && deniedWord(value)); }",
+      "new": "try { ok = admit(value) !== 'withheld' && !(word && deniedWord(value)); }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail screening cannot decide, failing closed",
+        "packages/polaris-dossier/src/finding-names.test.ts > the detail screen alone (review R93 finding 8) withholds a detail screening cannot decide, and one naming a denied word"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "backstop-dropped",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "  const screenedFindings = screenFindingDetails(findings, admitOf(screen), (word) => screen.screenPath(word) === 'denied-path');\n  for (let k = 0; k < screenedFindings.length; k++) findings[k] = screenedFindings[k]!;\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an unviewed element of a path-like identity by its path, and withholds the detail naming a token-shaped one",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a non-handle value at an identity reference as \"named here\", and withholds a detail naming a token",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail one of whose words names a secret path, though it is a handle",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail one of whose words is a path the policy denies (review R93 finding 4)",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail a detector matches only across its words",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail screening cannot decide, failing closed",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a repeated identity only where it is a handle",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a quotation's citation",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a message's sender",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a participant no message names",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a lane no step names",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a diagram's finding, named by the diagram",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a diagram's home target",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a deep-dive home target",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) an edge's end",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a list repeating no diagram",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a list repeating another section's diagram",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a Pole's section",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a section in no Pole",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a section in two Poles",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) the why section",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a planned figure homed elsewhere",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a planned figure of another kind",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) an element's parent",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a relationship's end",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) an element whose type its unit refuses",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a walk's figure homed elsewhere",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a walk's figure of no graph kind",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a step naming no element drawn in the figure",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a second step for one element",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a step's uncited paragraph"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "duplicate-id-unguarded",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "detail: `the identity ${identityWords(id)} is already used at ${first}`",
+      "new": "detail: `the identity ${JSON.stringify(id)} is already used at ${first}`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an unviewed element of a path-like identity by its path, and withholds the detail naming a token-shaped one",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a repeated identity only where it is a handle"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "dive-section-unguarded",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "at: `$.deepDives[${i}].sectionId`, detail: `no section has the identity ${identityWords(sectionId)}`",
+      "new": "at: `$.deepDives[${i}].sectionId`, detail: `no section has the identity ${JSON.stringify(sectionId)}`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a non-handle value at an identity reference as \"named here\", and withholds a detail naming a token"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "asset-unguarded",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "${isHandle(assetId) ? JSON.stringify(assetId) : 'the identity named here'} is not this asset",
+      "new": "${JSON.stringify(assetId)} is not this asset",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an asset identity that is not a handle as the identity named here"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-1",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "    else add({ kind: 'duplicate-id', at, detail: `the identity ${identityWords(id)} is already used at ${first}` });\n",
+      "new": "    else add({ kind: 'duplicate-id', at, detail: `the identity ${JSON.stringify(id)} is already used at ${first}` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an unviewed element of a path-like identity by its path, and withholds the detail naming a token-shaped one",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a repeated identity only where it is a handle"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-2",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "      add({ kind: located.kind, at: `${block.at}.${block.textKey}`, blockId, citationId, detail: `quotation ${index + 1} ${QUOTE_FAILURE[located.kind]} (citation ${identityWords(citationId)})` });\n",
+      "new": "      add({ kind: located.kind, at: `${block.at}.${block.textKey}`, blockId, citationId, detail: `quotation ${index + 1} ${QUOTE_FAILURE[located.kind]} (citation ${JSON.stringify(citationId)})` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a quotation's citation"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-3",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "        if (!known.has(target)) add({ kind: 'unresolved-reference', at: `$.diagrams[${i}].${uses}[${j}].${end}`, detail: `${name}: no ${owner} of this diagram has the identity ${identityWords(target)}` });\n",
+      "new": "        if (!known.has(target)) add({ kind: 'unresolved-reference', at: `$.diagrams[${i}].${uses}[${j}].${end}`, detail: `${name}: no ${owner} of this diagram has the identity ${JSON.stringify(target)}` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a message's sender"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-4",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "        ? `${name}: no message names the participant ${identityWords(id)} as its sender or receiver; every participant sends or receives a message`\n",
+      "new": "        ? `${name}: no message names the participant ${JSON.stringify(id)} as its sender or receiver; every participant sends or receives a message`\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a participant no message names"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-5",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "        : `${name}: no step names the lane ${identityWords(id)}; every lane holds a step` });\n",
+      "new": "        : `${name}: no step names the lane ${JSON.stringify(id)}; every lane holds a step` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a lane no step names"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-6",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "  (isHandle(element['id']) ? `the ${noun} ${JSON.stringify(element['id'])}` : `the ${noun} at ${at}`);\n",
+      "new": "  (true ? `the ${noun} ${JSON.stringify(element['id'])}` : `the ${noun} at ${at}`);\n",
+      "killed": false,
+      "killedBy": null,
+      "tests": 40,
+      "failedTests": [],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-7",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "      detail: `${diagramName}: no ${decision.factKind} fact joins the units of group ${handleOr(id, at)} and the group it is drawn in, in what rule ${decision.rule} version ${decision.ruleVersion} derived at the pinned revision; correct the nesting or its groups' units` }])),\n",
+      "new": "      detail: `${diagramName}: no ${decision.factKind} fact joins the units of group ${String(id)} and the group it is drawn in, in what rule ${decision.rule} version ${decision.ruleVersion} derived at the pinned revision; correct the nesting or its groups' units` }])),\n",
+      "killed": false,
+      "killedBy": null,
+      "tests": 40,
+      "failedTests": [],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-8",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "    findings.push({ kind: 'hero', at, detail: `${isHandle(hero.value) ? hero.value : at}: the hero is a figure homed on the overview` });\n",
+      "new": "    findings.push({ kind: 'hero', at, detail: `${true ? hero.value : at}: the hero is a figure homed on the overview` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a hero homed off the overview"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-9",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "    findings.push({ kind: 'hero', at, detail: `${isHandle(hero.value) ? hero.value : at}: the hero is a figure of a graph kind` });\n",
+      "new": "    findings.push({ kind: 'hero', at, detail: `${true ? hero.value : at}: the hero is a figure of a graph kind` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a hero of no graph kind"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-10",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "    add({ kind, at, detail: !isHandle(id) ? detail : `the diagram ${JSON.stringify(id)}: ${detail}` });\n",
+      "new": "    add({ kind, at, detail: !true ? detail : `the diagram ${JSON.stringify(id)}: ${detail}` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a diagram's finding, named by the diagram"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-11",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "      if (sectionId !== undefined && !sectionIds.has(sectionId)) add({ kind: 'unresolved-reference', at: `$.diagrams[${i}].sectionId`, detail: `no section has the identity ${identityWords(sectionId)}` });\n",
+      "new": "      if (sectionId !== undefined && !sectionIds.has(sectionId)) add({ kind: 'unresolved-reference', at: `$.diagrams[${i}].sectionId`, detail: `no section has the identity ${JSON.stringify(sectionId)}` });\n",
+      "killed": false,
+      "killedBy": null,
+      "tests": 40,
+      "failedTests": [],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-12",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "    if (sectionId !== undefined && !sectionIds.has(sectionId)) add({ kind: 'unresolved-reference', at: `$.deepDives[${i}].sectionId`, detail: `no section has the identity ${identityWords(sectionId)}` });\n",
+      "new": "    if (sectionId !== undefined && !sectionIds.has(sectionId)) add({ kind: 'unresolved-reference', at: `$.deepDives[${i}].sectionId`, detail: `no section has the identity ${JSON.stringify(sectionId)}` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a non-handle value at an identity reference as \"named here\", and withholds a detail naming a token"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-13",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "      else if (!(kind === 'section' ? sectionIds : diveIds).has(target)) diagramFinding(diagram, `${at}.home.target`, `no ${kind === 'section' ? 'section' : 'deep dive'} has the identity ${identityWords(target)}`, 'unresolved-reference');\n",
+      "new": "      else if (!(kind === 'section' ? sectionIds : diveIds).has(target)) diagramFinding(diagram, `${at}.home.target`, `no ${kind === 'section' ? 'section' : 'deep dive'} has the identity ${JSON.stringify(target)}`, 'unresolved-reference');\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a diagram's home target",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a deep-dive home target"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-14",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "        if (target !== undefined && !nodes.has(target)) add({ kind: 'unresolved-reference', at: `$.diagrams[${i}].edges[${j}].${end}`, detail: `no node of this diagram has the identity ${identityWords(target)}` });\n",
+      "new": "        if (target !== undefined && !nodes.has(target)) add({ kind: 'unresolved-reference', at: `$.diagrams[${i}].edges[${j}].${end}`, detail: `no node of this diagram has the identity ${JSON.stringify(target)}` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) an edge's end"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-15",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "        if (typeof assetId === 'string' && !own.has(assetId)) add({ kind: 'unresolved-reference', at: `$.${part}[${i}].disposition.assetIds[${k}]`, detail: `${isHandle(assetId) ? JSON.stringify(assetId) : 'the identity named here'} is not this asset or a part of it` });\n",
+      "new": "        if (typeof assetId === 'string' && !own.has(assetId)) add({ kind: 'unresolved-reference', at: `$.${part}[${i}].disposition.assetIds[${k}]`, detail: `${true ? JSON.stringify(assetId) : 'the identity named here'} is not this asset or a part of it` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an asset identity that is not a handle as the identity named here"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-16",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "        if (!diagramSections.has(named)) add({ kind: 'repeats-diagram', at: `${at}.repeatsDiagram`, detail: `no diagram has the identity ${identityWords(named)}` });\n",
+      "new": "        if (!diagramSections.has(named)) add({ kind: 'repeats-diagram', at: `${at}.repeatsDiagram`, detail: `no diagram has the identity ${JSON.stringify(named)}` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a list repeating no diagram"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-17",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "        else if (diagramSections.get(named) !== sectionId) add({ kind: 'repeats-diagram', at: `${at}.repeatsDiagram`, detail: `the diagram ${identityWords(named)} is not in this list's section; a list repeats a diagram of its own section` });\n",
+      "new": "        else if (diagramSections.get(named) !== sectionId) add({ kind: 'repeats-diagram', at: `${at}.repeatsDiagram`, detail: `the diagram ${JSON.stringify(named)} is not in this list's section; a list repeats a diagram of its own section` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a list repeating another section's diagram"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-18",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "        if (!sectionIds.has(id)) add({ kind: 'unresolved-reference', at: `$.poles[${i}].sections[${k}]`, detail: `no section has the identity ${identityWords(id)}` });\n",
+      "new": "        if (!sectionIds.has(id)) add({ kind: 'unresolved-reference', at: `$.poles[${i}].sections[${k}]`, detail: `no section has the identity ${JSON.stringify(id)}` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a Pole's section"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-19",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "      if (home.length === 0) add({ kind: 'pole', at: `$.sections[${i}]`, detail: `the section ${identityWords(id)} is in no Pole; with Poles, every section is in exactly one` });\n",
+      "new": "      if (home.length === 0) add({ kind: 'pole', at: `$.sections[${i}]`, detail: `the section ${JSON.stringify(id)} is in no Pole; with Poles, every section is in exactly one` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a section in no Pole"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-20",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "      else if (home.length > 1) add({ kind: 'pole', at: `$.sections[${i}]`, detail: `the section ${identityWords(id)} is in ${home.length} Poles (${home.map((n) => `$.poles[${n}]`).join(', ')}); every section is in exactly one` });\n",
+      "new": "      else if (home.length > 1) add({ kind: 'pole', at: `$.sections[${i}]`, detail: `the section ${JSON.stringify(id)} is in ${home.length} Poles (${home.map((n) => `$.poles[${n}]`).join(', ')}); every section is in exactly one` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a section in two Poles"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-21",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "    else if (!sectionIds.has(why)) add({ kind: 'pole', at: '$.whySection', detail: `\\`whySection\\` names ${isHandle(why) ? JSON.stringify(why) : 'a value'}, which is no section of this draft` });\n",
+      "new": "    else if (!sectionIds.has(why)) add({ kind: 'pole', at: '$.whySection', detail: `\\`whySection\\` names ${true ? JSON.stringify(why) : 'a value'}, which is no section of this draft` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) the why section"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-22",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "    add({ kind: 'unresolved-reference', at: '$.whySection', detail: `no section has the identity ${identityWords(text(doc['whySection']))}` });\n",
+      "new": "    add({ kind: 'unresolved-reference', at: '$.whySection', detail: `no section has the identity ${JSON.stringify(text(doc['whySection']))}` });\n",
+      "killed": false,
+      "killedBy": null,
+      "tests": 40,
+      "failedTests": [],
+      "seconds": 5
+    },
+    {
+      "id": "check-derive-site-23",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "      if (!(kind === 'section' ? sectionIds : diveIds).has(target)) add({ kind: 'unresolved-reference', at: `${at}.see.target`, detail: `no ${kind === 'section' ? 'section' : 'deep dive'} has the identity ${identityWords(target)}` });\n",
+      "new": "      if (!(kind === 'section' ? sectionIds : diveIds).has(target)) add({ kind: 'unresolved-reference', at: `${at}.see.target`, detail: `no ${kind === 'section' ? 'section' : 'deep dive'} has the identity ${JSON.stringify(target)}` });\n",
+      "killed": false,
+      "killedBy": null,
+      "tests": 40,
+      "failedTests": [],
+      "seconds": 5
+    },
+    {
+      "id": "system-model-site-1",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "  const idOr = (value: Doc, at: string): string => handleOr(value['id'], at);\n",
+      "new": "  const idOr = (value: Doc, at: string): string => String(value['id']);\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 94,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) an element whose type its unit refuses"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "system-model-site-2",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "    if (parentFaults.has(j)) out.push({ kind: 'unresolved-reference', at: `${at}.parent`, detail: `${handleOr(element['parent'], `${at}.parent`)}: no element of the model has this identity` });\n",
+      "new": "    if (parentFaults.has(j)) out.push({ kind: 'unresolved-reference', at: `${at}.parent`, detail: `${String(element['parent'])}: no element of the model has this identity` });\n",
+      "killed": false,
+      "killedBy": null,
+      "tests": 94,
+      "failedTests": [],
+      "seconds": 23
+    },
+    {
+      "id": "system-model-site-3",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "      if (fault !== undefined) out.push({ kind: 'unit-reference', at: `${at}.${UNIT_FIELD}`, detail: `the element ${identityWords(element['id'])}: its ${unit.kind} unit names no unit of that kind: ${UNIT_FAULT_WORDS[fault]}` });\n",
+      "new": "      if (fault !== undefined) out.push({ kind: 'unit-reference', at: `${at}.${UNIT_FIELD}`, detail: `the element ${JSON.stringify(element['id'])}: its ${unit.kind} unit names no unit of that kind: ${UNIT_FAULT_WORDS[fault]}` });\n",
+      "killed": false,
+      "killedBy": null,
+      "tests": 94,
+      "failedTests": [],
+      "seconds": 22
+    },
+    {
+      "id": "system-model-site-4",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "      if (named !== undefined && !index.elementById.has(named)) { resolved = false; out.push({ kind: 'unresolved-reference', at: `${at}.${end}`, detail: `${handleOr(named, `${at}.${end}`)}: no element of the model has this identity` }); }\n",
+      "new": "      if (named !== undefined && !index.elementById.has(named)) { resolved = false; out.push({ kind: 'unresolved-reference', at: `${at}.${end}`, detail: `${String(named)}: no element of the model has this identity` }); }\n",
+      "killed": false,
+      "killedBy": null,
+      "tests": 94,
+      "failedTests": [],
+      "seconds": 22
+    },
+    {
+      "id": "system-model-site-5",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "      if (id !== undefined && !shown.elements.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${handleOr(id, at)}: every element and relationship of the model is shown by at least one view` });\n",
+      "new": "      if (id !== undefined && !shown.elements.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${String(id)}: every element and relationship of the model is shown by at least one view` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 94,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an unviewed element of a path-like identity by its path, and withholds the detail naming a token-shaped one"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "system-model-site-6",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "      if (id !== undefined && !shown.relationships.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${handleOr(id, at)}: every element and relationship of the model is shown by at least one view` });\n",
+      "new": "      if (id !== undefined && !shown.relationships.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${String(id)}: every element and relationship of the model is shown by at least one view` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 94,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an unviewed element of a path-like identity by its path, and withholds the detail naming a token-shaped one"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "system-model-site-7",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "      detail: `the relationship ${identityWords(id)}, relation ${relation}: no ${decision.factKind} fact joins this edge's two units in what rule ${decision.rule} version ${decision.ruleVersion} derived at the pinned revision; correct the arrow, its relation or its units` }])),\n",
+      "new": "      detail: `the relationship ${JSON.stringify(id)}, relation ${relation}: no ${decision.factKind} fact joins this edge's two units in what rule ${decision.rule} version ${decision.ruleVersion} derived at the pinned revision; correct the arrow, its relation or its units` }])),\n",
+      "killed": false,
+      "killedBy": null,
+      "tests": 94,
+      "failedTests": [],
+      "seconds": 22
+    },
+    {
+      "id": "system-model-site-8",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "      detail: `model: no ${decision.factKind} fact joins the units of group ${handleOr(id, at)} and the group it is drawn in, in what rule ${decision.rule} version ${decision.ruleVersion} derived at the pinned revision; correct the nesting or its groups' units` }])),\n",
+      "new": "      detail: `model: no ${decision.factKind} fact joins the units of group ${String(id)} and the group it is drawn in, in what rule ${decision.rule} version ${decision.ruleVersion} derived at the pinned revision; correct the nesting or its groups' units` }])),\n",
+      "killed": false,
+      "killedBy": null,
+      "tests": 94,
+      "failedTests": [],
+      "seconds": 22
+    },
+    {
+      "id": "containment-site-1",
+      "file": "packages/polaris-dossier/src/containment.ts",
+      "old": "  (isHandle(group['id']) ? `the group ${JSON.stringify(group['id'])}` : `the group at ${at}`);\n",
+      "new": "  (true ? `the group ${JSON.stringify(group['id'])}` : `the group at ${at}`);\n",
+      "killed": false,
+      "killedBy": null,
+      "tests": 40,
+      "failedTests": [],
+      "seconds": 5
+    },
+    {
+      "id": "figure-plan-site-1",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "    if (resolved && !homed) findings.push({ kind: 'figure-plan', at: `${at}.figure`, detail: `${handleOr(figure, `${at}.figure`)}: a planned figure is homed at its plan entry's place` });\n",
+      "new": "    if (resolved && !homed) findings.push({ kind: 'figure-plan', at: `${at}.figure`, detail: `${String(figure)}: a planned figure is homed at its plan entry's place` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a planned figure homed elsewhere"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "figure-plan-site-2",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "    if (diagram['kind'] !== kind) findings.push({ kind: 'figure-plan', at: `${at}.figure`, detail: `${handleOr(figure, `${at}.figure`)}: a planned figure is of the kind its plan entry names` });\n",
+      "new": "    if (diagram['kind'] !== kind) findings.push({ kind: 'figure-plan', at: `${at}.figure`, detail: `${String(figure)}: a planned figure is of the kind its plan entry names` });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a planned figure of another kind"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "walk-site-1",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "      if (!homedAt(diagram, place, part)) out.push({ kind: 'walk', at: `${at}.figure`, detail: WALK_DETAIL.home(handleOr(read.figure, `${at}.figure`)) });\n",
+      "new": "      if (!homedAt(diagram, place, part)) out.push({ kind: 'walk', at: `${at}.figure`, detail: WALK_DETAIL.home(String(read.figure)) });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a walk's figure homed elsewhere"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "walk-site-2",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "      if (!GRAPH_KINDS.has(diagram['kind'])) out.push({ kind: 'walk', at: `${at}.figure`, detail: WALK_DETAIL.kind(handleOr(read.figure, `${at}.figure`)) });\n",
+      "new": "      if (!GRAPH_KINDS.has(diagram['kind'])) out.push({ kind: 'walk', at: `${at}.figure`, detail: WALK_DETAIL.kind(String(read.figure)) });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a walk's figure of no graph kind"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "walk-site-3",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "          ? (drawn.has(element.id) ? { key: `element:${element.id}`, name: handleOr(element.id, `${stepAt}.element`) } : 'absent')\n",
+      "new": "          ? (drawn.has(element.id) ? { key: `element:${element.id}`, name: String(element.id) } : 'absent')\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a second step for one element"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "walk-site-4",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "        if (resolved === 'absent') out.push({ kind: 'walk', at: `${stepAt}.element`, detail: WALK_DETAIL.element(k, handleOr(read.figure, `${at}.figure`)) });\n",
+      "new": "        if (resolved === 'absent') out.push({ kind: 'walk', at: `${stepAt}.element`, detail: WALK_DETAIL.element(k, String(read.figure)) });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a step naming no element drawn in the figure"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "walk-site-5",
+      "file": "packages/polaris-dossier/src/walk.ts",
+      "old": "      else if (list(block['citations']).length === 0) out.push({ kind: 'walk', at: `${stepAt}.block`, detail: WALK_DETAIL.uncited(handleOr(step.block, `${stepAt}.block`)) });\n",
+      "new": "      else if (list(block['citations']).length === 0) out.push({ kind: 'walk', at: `${stepAt}.block`, detail: WALK_DETAIL.uncited(String(step.block)) });\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a step's uncited paragraph"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "derived-base-site-1",
+      "file": "packages/polaris-dossier/src/derived-base.ts",
+      "old": "      const id = handleOr(relationship['id'], `$.${MODEL_FIELD}.relationships[${k}]`);\n",
+      "new": "      const id = String(relationship['id']);\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a base end in a v14 draft, named by its relationship"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "denied-word-ignored",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "(word) => screen.screenPath(word) === 'denied-path');",
+      "new": "() => false);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail one of whose words is a path the policy denies (review R93 finding 4)"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "screen-result-discarded",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "for (let k = 0; k < screenedFindings.length; k++) findings[k] = screenedFindings[k]!;",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an unviewed element of a path-like identity by its path, and withholds the detail naming a token-shaped one",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a non-handle value at an identity reference as \"named here\", and withholds a detail naming a token",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail one of whose words names a secret path, though it is a handle",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail one of whose words is a path the policy denies (review R93 finding 4)",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail a detector matches only across its words",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail screening cannot decide, failing closed",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a repeated identity only where it is a handle",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a quotation's citation",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a message's sender",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a participant no message names",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a lane no step names",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a diagram's finding, named by the diagram",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a diagram's home target",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a deep-dive home target",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) an edge's end",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a list repeating no diagram",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a list repeating another section's diagram",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a Pole's section",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a section in no Pole",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a section in two Poles",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) the why section",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a planned figure homed elsewhere",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a planned figure of another kind",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) an element's parent",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a relationship's end",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) an element whose type its unit refuses",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a walk's figure homed elsewhere",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a walk's figure of no graph kind",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a step naming no element drawn in the figure",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a second step for one element",
+        "packages/polaris-dossier/src/finding-names.test.ts > every builder site names neither value (review R93 finding 8) a step's uncited paragraph"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "delimiter-backtick-dropped",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "export const DETAIL_WORD_BREAK = /[\\s\"`'(),;]+/u;",
+      "new": "export const DETAIL_WORD_BREAK = /[\\s\"'(),;]+/u;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the detail screen alone (review R93 finding 8) splits a detail at whitespace, quotes, backticks, parentheses, commas and semicolons"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "delimiter-parentheses-dropped",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "export const DETAIL_WORD_BREAK = /[\\s\"`'(),;]+/u;",
+      "new": "export const DETAIL_WORD_BREAK = /[\\s\"`',;]+/u;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the detail screen alone (review R93 finding 8) splits a detail at whitespace, quotes, backticks, parentheses, commas and semicolons"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "delimiter-comma-dropped",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "export const DETAIL_WORD_BREAK = /[\\s\"`'(),;]+/u;",
+      "new": "export const DETAIL_WORD_BREAK = /[\\s\"`'();]+/u;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the detail screen alone (review R93 finding 8) splits a detail at whitespace, quotes, backticks, parentheses, commas and semicolons"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "delimiter-semicolon-dropped",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "export const DETAIL_WORD_BREAK = /[\\s\"`'(),;]+/u;",
+      "new": "export const DETAIL_WORD_BREAK = /[\\s\"`'(),]+/u;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the detail screen alone (review R93 finding 8) splits a detail at whitespace, quotes, backticks, parentheses, commas and semicolons"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "memo-shared-between-forms",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "const key = `${word ? 'w' : 'd'}${value}`;",
+      "new": "const key = value;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the detail screen alone (review R93 finding 8) keeps every finding in order, admitted ones unchanged, and fails closed where the screen throws"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "denied-throw-admitted",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "} catch { ok = false; }",
+      "new": "} catch { ok = true; }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 40,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the detail screen alone (review R93 finding 8) keeps every finding in order, admitted ones unchanged, and fails closed where the screen throws"
+      ],
+      "seconds": 5
+    }
+  ],
+  "equivalent": [],
+  "summary": {
+    "mutants": 60,
+    "killed": 49,
+    "survived": 11,
+    "byTimeout": 0,
+    "equivalentNotRun": 0
+  }
+}
