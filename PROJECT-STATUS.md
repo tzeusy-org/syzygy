@@ -337,10 +337,10 @@ render reads TODO, FIXME, HACK, deprecation markers and issue references lexical
 With the rough-edge markers version effective, Polaris has 39 requirements and 652 scenarios.
 
 [Docs and code amendment 2.48](openspec/changes/dossier-docs-and-code) is agent-adopted in A-342.
-It replaces REQ-polaris-generation-034 from version 2.44, the rough-edge markers (305 to 312 scenarios): each operator-agent
+It replaces REQ-polaris-generation-034 from version 2.44, the rough-edge markers (305 to 313 scenarios): each operator-agent
 render resolves the paths and identifiers its Markdown documents name against the pinned tree and publishes them on `reference/docs-and-code.html`.
 
-With the docs and code version effective, Polaris has 39 requirements and 659 scenarios.
+With the docs and code version effective, Polaris has 39 requirements and 660 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
