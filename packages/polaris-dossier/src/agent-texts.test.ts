@@ -115,7 +115,8 @@ const frontmatter = (text: string): Record<string, string> => Object.fromEntries
 function descriptionFaults(text: string): string[] {
   const description = frontmatter(text)['description'] ?? '';
   const faults: string[] = [];
-  if (!description.includes('any repository the operator holds the consents for')) faults.push('the description does not name any repository the operator holds the consents for');
+  if (!description.includes('for any repository')) faults.push('the description does not name any repository');
+  if (!description.includes('no consent or other record is needed')) faults.push('the description does not say no consent or other record is needed (D10 F-3)');
   if (/\bpublic\b/iu.test(description)) faults.push('the description restricts itself to public repositories');
   return faults;
 }
@@ -159,12 +160,12 @@ function deadlineFaults(text: string): string[] {
   return faults;
 }
 
-/** The clone is made in the consent's form (syzygy-qkea.24): preflight's commands, one commit fetched alone, never a full clone; what
+/** The clone is made in the one-commit form (syzygy-qkea.24): preflight's commands, one commit fetched alone, never a full clone; what
  * `init` checks is `.git`, and the working tree it does not inspect is stated (R-POLARIS-DOSSIER-CLONE-SHAPE-1 note N5). */
 function cloneFormFaults(text: string): string[] {
   const flat = text.replace(/\s+/gu, ' ');
   return [
-    ...(/Make the clone with the commands preflight prints, for a revision it names, in a new empty directory[^.]*: that one commit, fetched alone, never a full clone\./u.test(flat)
+    ...(/Make the clone with the commands preflight prints \(the remote's trunk\), in a new empty directory[^.]*: that one commit, fetched alone, never a full clone\./u.test(flat)
       ? [] : ['the text does not say to make the clone with preflight\'s commands, one commit fetched alone, never a full clone']),
     ...(flat.includes('`init` refuses a `.git` that holds more than the commit. It does not inspect the working tree, which you read, so put nothing else in that directory.')
       ? [] : ['the text does not say that init checks .git alone and leaves the working tree uninspected']),
@@ -217,7 +218,8 @@ describe('agent texts (S11)', () => {
     expect(commandFaults(swap('`syzygy dossier session-prompt <run> inventory`', '`syzygy dossier session-prompt <run> authoring`'))).toEqual(['syzygy dossier session-prompt <run> authoring: authoring is not one of inventory|review|all']);
     expect(commandFaults(swap('--kind fidelity|design --verdict verdict.json', '--kind summary --verdict verdict.json'))).toHaveLength(1);
     expect(allowExecutionFaults(swap('Never\n   run that command yourself', 'Run\n   that command yourself'))).toHaveLength(1);
-    expect(descriptionFaults(swap('for any repository the operator holds the consents for', 'for any public repository'))).toHaveLength(2);
+    expect(descriptionFaults(swap('for any repository, from its URL', 'for any public repository, from its URL'))).toHaveLength(2);
+    expect(descriptionFaults(swap('no consent or other record is needed', 'the consents are needed'))).toHaveLength(1);
     expect(deferralFaults(swap('Follow the execution rule in\n  the brief or packet this session was given', 'Follow the execution rule in\n  the run\'s `brief.md`'))).toHaveLength(1);
     expect(deferralFaults(swap('This skill grants no execution of its own.', 'This skill grants execution.'))).toHaveLength(1);
     expect(deferralFaults(swap('Absent that brief, the observed project', 'Later, the observed project'))).toHaveLength(1);

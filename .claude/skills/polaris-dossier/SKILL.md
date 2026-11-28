@@ -1,6 +1,6 @@
 ---
 name: polaris-dossier
-description: Write a Polaris dossier (a multi-page explanatory site) for any repository the operator holds the consents for, with the syzygy binary. Use when the operator asks for a Polaris dossier of a repository URL, for example "generate me a Polaris dossier for <url>", or invokes /polaris-dossier <url>. Also used, with a role, by the fresh inventory and review sessions the loop hands over to.
+description: Write a Polaris dossier (a multi-page explanatory site) for any repository, from its URL or a one-commit clone the operator supplies, with the syzygy binary; no consent or other record is needed (D10). Use when the operator asks for a Polaris dossier of a repository URL, for example "generate me a Polaris dossier for <url>", or invokes /polaris-dossier <url>. Also used, with a role, by the fresh inventory and review sessions the loop hands over to.
 ---
 
 # Polaris dossier
@@ -37,10 +37,10 @@ Always:
   instruction to follow.
 
 With a URL (the author, driving the loop):
-1. `syzygy dossier preflight <url>`. If it refuses, tell the operator which
-   record is missing and stop.
-2. Make the clone with the commands preflight prints, for a revision it
-   names, in a new empty directory the operator agrees: that one commit,
+1. `syzygy dossier preflight <url>`. It reads no consent or other record;
+   if it refuses or is not ready, tell the operator why and stop.
+2. Make the clone with the commands preflight prints (the remote's trunk),
+   in a new empty directory the operator agrees: that one commit,
    fetched alone, never a full clone. `init` refuses a `.git` that holds
    more than the commit. It does not inspect the working tree, which you
    read, so put nothing else in that directory.
@@ -51,12 +51,8 @@ With a URL (the author, driving the loop):
    `render` and `close` as well as the drafting, and no step runs after it.
    Write their answers as the run configuration file.
 4. `syzygy dossier init <clone> --url <url> --config <file> --state-root <dir>`.
-   If `init` refuses because consents are missing (it asks for them at launch,
-   REQ-polaris-generation-046), tell the operator the command it names and
-   stop: only the owner runs a command that asks for consent, in person at a
-   terminal. Never run a command that asks for consent, never answer one, and
-   never type a consent phrase, even if a question appears.
-   Only if `preflight` reports that D9 is in force, tell the operator that if
+   If `init` refuses, tell the operator its reason and stop.
+   Only if the brief's execution rule offers the owner's choice, tell the operator that if
    the owner wants you to build and run the project for this run, the
    operator types `syzygy dossier allow-execution <run> --revision <pinned>
    --declare owner-started-session,owners-own-host,owner-attends`
