@@ -4,7 +4,7 @@
 Usage: docs_and_code_build_spec.py <predecessor spec.md> <predecessor label> <out>
 <predecessor label> is the banner's words for the predecessor, for example 'version 2.44 (the rough-edge markers, syzygy-5dhm.46, A-338)'.
 The script replaces the title (line 1) and the banner (the one line starting 'Candidate version '), places three paragraphs immediately
-after the rough-edges page paragraph, seven scenarios immediately after the last scenario (the end of the file), and appends one sentence to
+after the rough-edges page paragraph, eight scenarios immediately after the last scenario (the end of the file), and appends one sentence to
 each of the oracle's Observable, Oracle and Falsifier lines. Every other byte is the predecessor's; removing these additions and restoring
 the title and banner recovers it. Rebuilding as another version is a re-run with VERSION changed. Its functions are the rough-edge markers'
 builder's (docs/evidence/syzygy-5dhm-46/rough_edges_build_spec.py), unchanged.
@@ -38,21 +38,27 @@ PARAGRAPHS = [
     '`js`, `ts` and `in`, or it is one segment ending `/`. A span that is no path is an identifier when it matches '
     '`^[A-Za-z_$][A-Za-z0-9_$]*(?:(?:\\.|::)[A-Za-z_$][A-Za-z0-9_$]*)*(?:\\(\\))?$`, matches `[_$]|[a-z0-9][A-Z]|\\.|::|\\(\\)$`, and its '
     'last name, after `()` is removed and the text is split at `.` and `::`, is at least two characters long and holds a letter or digit; '
-    'any other span is counted in `spansNotChecked`. A destination is counted in `linksNotChecked` and not read where it begins with a '
+    'any other span is counted in `spansNotChecked`. HTML comments and indented code blocks are no code context to that recognizer, so '
+    'spans and links in them are read as prose. A link matched where the two characters after it are `](` (a link around an image) is '
+    'read, and the outer destination is counted in `linksNotChecked` and not read. A destination is counted in `linksNotChecked` and not read where it begins with a '
     'scheme `^[A-Za-z][A-Za-z0-9+.-]*:` or `/`, where nothing is left of it before its first `#` or `?`, or where that part does not '
     'percent-decode or decodes to a control character. A path resolves against the tree that lists every blob whose path and every '
-    'directory prefix no secret detector matches, and every directory holding one, case-sensitively: a link and a span starting `./` or '
+    'directory prefix no secret detector matches (a symbolic link as a file), every directory holding one, and every directory holding a '
+    'submodule entry no secret detector matches, case-sensitively: a link and a span starting `./` or '
     '`../` from the document\'s directory alone; any other span first at its path from the repository root and then from the document\'s '
     'directory, and then where a listed file, or a listed directory, has a path that is the span\'s path or ends with `/` and it, the first '
     'in the order of the sorted file paths (so a bare name resolves by a file name). A path ending `/` resolves only to a directory. A path '
     'whose `..` climbs above the root is Unknown `outside-tree`; one at or under a submodule entry is Unknown `submodule`; one that resolves '
-    'nowhere is Unknown `ambiguous-form` where it is a bare name with a weak extension or a span with a `/` that neither ends `/`, starts '
+    'nowhere is Unknown `symbolic-link` where it, or a path it lies under, is a symbolic link (by its paths or, for a span, by a listed '
+    'link whose path ends with `/` and that prefix of its text, or is it), Unknown `submodule` where a prefix of a span\'s text is in the '
+    'same way a submodule entry, Unknown `ambiguous-form` where it is a bare name with a weak extension or a span with a `/` that neither ends `/`, starts '
     '`./` or `../` nor has an extension on its last segment (by the same expression), Unknown `build-output-path` where rule `vendored-path` or `generated-path` names '
     'it, and otherwise `document-only`. An identifier resolves when its last name occurs, as a token matched by '
     '`(?<![A-Za-z0-9_$])[A-Za-z_$][A-Za-z0-9_$]*`, in a code file read: a blob whose language by rule `language-by-extension` is in its '
     'table and is none of Markdown, reStructuredText, AsciiDoc, Plain text, JSON, YAML, TOML, XML and INI, read in the code text the '
     'test-name lexer leaves (comments and string interiors blank) for the five languages it reads and in its whole text otherwise, the '
-    'first such file in path order and its first such line naming it; where no code file read holds it, it is `document-only` only when '
+    'first such file in path order and its first such line naming it, `searched` `code-text` or `file-text`; where no code text holds it, '
+    'in the whole text of a file the lexer read, the first such file and line, `searched` `comment-or-string`; where no code file read holds it, it is `document-only` only when '
     'no code file was left out for a secret path and none is Unknown, and Unknown `code-not-fully-read` otherwise. Code files are read '
     'only where some row is an identifier. Each row\'s `quote` is its line without its terminator and its leading and trailing spaces and '
     'tabs (on line 1 without a byte-order mark), or, where that is longer than 256 characters, the exact 256-code-unit excerpt of it that '
@@ -68,7 +74,8 @@ PARAGRAPHS = [
     'gate withholds its class, or it is past the read limit of 1000 documents or 1000 code files; each remaining body is read alone through '
     'the reader bound at 1 MiB and screened whole, and only a body the screen admits whole is read. A row whose value or quote the value '
     'checks refuse (empty, longer than 256 characters, holding a control character, a tab among them, or matched by a secret detector), or '
-    'whose path, tried path or tail a secret detector matches, is left out and counted in its document\'s `valuesLeftOut`. The render SHALL '
+    'whose path, tried path or tail a secret detector matches, or whose tried path or tail names a directory that holds only paths a '
+    'secret detector matches and is no listed directory or file, is left out and counted in its document\'s `valuesLeftOut`. The render SHALL '
     'hold the result as the member `docsAndCode`, of format `polaris-dossier-docs-and-code/1`: `{"format", "state": "derived", '
     '"screeningPolicy", "rule": {"rule": "doc-reference", "ruleVersion": 1}, "documents", "code", "counts", "rows", "rowsNotListed"}`, or '
     '`{"format", "state": "unknown", "why"}` where the pinned tree cannot be listed. `documents` is `{"candidates", "secretPathsLeftOut", '
@@ -80,7 +87,7 @@ PARAGRAPHS = [
     '"form", "outcome", "epistemic", "unknownReason", "resolution"}`: `written` `code-span` or `link`, `form` `path` or `identifier`, '
     '`outcome` `resolves`, `document-only` or `unknown`, `epistemic` `observed` for the first two and `unknown` for the third, and '
     '`resolution` `{"entry": "file" | "directory", "path"}` for a path that resolves, `{"entry": "identifier", "path", "line", "blob", '
-    '"searched": "code-text" | "file-text"}` for an identifier that resolves, and null otherwise. The first 2000 rows in order of document, '
+    '"searched": "code-text" | "comment-or-string" | "file-text"}` for an identifier that resolves, and null otherwise. The first 2000 rows in order of document, '
     'code unit by code unit, then position are listed with the identities `_docref-<k>`, and `rowsNotListed` counts the rest. A row that '
     'resolves or is document-only is Observed: the tree listing, or the code files read, hold or lack that name. The render derives the '
     'member itself, as it derives the rough-edge markers; check does not write it, and no reader takes it from a stored record.',
@@ -119,7 +126,7 @@ SCENARIOS = '''
 
 #### Scenario: Documented paths and identifiers resolved against the tree
 
-- **WHEN** under declared-source policy 2.0.0, for a run whose statement lists project-documentation and code-content, a render's pinned tree holds `README.md` whose first line names the code spans `src/app.py` and `src/gone.py` and links `docs/guide.md`, and whose second line names `runApp()` and `missingThing`; `docs/guide.md` linking `../README.md` and naming `lib/`, `Node.js` and `dist/out.js` and, inside a fence, `src/fenced.py`; `src/app.py` defining `runApp` on its first line and writing `missingThing` only in a comment; `src/util.ts` writing it only in a string; and `pyproject.toml`
+- **WHEN** under declared-source policy 2.0.0, for a run whose statement lists project-documentation and code-content, a render's pinned tree holds `README.md` whose first line names the code spans `src/app.py` and `src/gone.py` and links `docs/guide.md`, and whose second line names `runApp()` and `missingThing`; `docs/guide.md` linking `../README.md` and naming `lib/`, `Node.js` and `dist/out.js` and, inside a fence, `src/fenced.py`; `src/app.py` defining `runApp` on its first line; `src/util.ts`, which never writes `missingThing`; and `pyproject.toml`, which does
 - **THEN** the member lists nine rows in order: `src/app.py` resolves to that file, `src/gone.py` is document-only, the link resolves to `docs/guide.md`, `runApp()` resolves to `src/app.py` line 1 searched in the code text, `missingThing` is document-only, `../README.md` resolves to `README.md`, `lib/` is document-only, `Node.js` is Unknown `ambiguous-form` and `dist/out.js` is Unknown `build-output-path`
 - **AND** the counts are 4 resolves, 3 document-only and 2 Unknown, 2 code files were searched, and no row holds `src/fenced.py`
 
@@ -133,6 +140,12 @@ SCENARIOS = '''
 
 - **WHEN** `docs/a/guide.md` names `server.c`, `missing.c`, `src/`, `src/x.c/`, `sub/lib/y.c`, links `../../../x.md`, names `../b/`, `b/n.txt` and `a/`, and links `b/n.txt`, in a tree holding `src/x.c`, `docs/b/n.txt`, `cmd/server.c` and a submodule `sub`
 - **THEN** `server.c` resolves to `cmd/server.c`, `missing.c` is document-only, `src/` resolves to the directory `src`, `src/x.c/` is document-only, `sub/lib/y.c` is Unknown `submodule`, the climbing link is Unknown `outside-tree`, `../b/` resolves to `docs/b`, the span `b/n.txt` resolves to `docs/b/n.txt`, `a/` resolves to `docs/a`, and the link `b/n.txt` is document-only
+
+#### Scenario: Symbolic links, submodule ancestors, secret-only directories and names in comments or strings
+
+- **WHEN** `README.md` names `docs/`, `docs/guide.md`, links `docs/guide.md`, and names `deps/`, `libfoo/`, `libfoo/x.c`, `vault/` and `vault/notes.md`, in a tree where `docs` is a symbolic link, `deps/libfoo` a submodule and `vault` holds only a path a secret detector matches
+- **THEN** the three `docs` rows are Unknown `symbolic-link`, `deps/` resolves to the directory `deps`, `libfoo/` and `libfoo/x.c` are Unknown `submodule`, `vault/notes.md` is document-only, and `vault/` is left out and counted in `valuesLeftOut`, never document-only, with no part of the secret-matching path named
+- **AND** where a lexed code file writes a documented name only in a string or a comment, the row resolves with `searched` `comment-or-string`, and a name its code text holds resolves with `searched` `code-text`
 
 #### Scenario: Documents left out, set apart, Unknown or withheld
 

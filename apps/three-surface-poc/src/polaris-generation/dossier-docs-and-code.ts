@@ -29,6 +29,7 @@ const ROW_REASON: Readonly<Record<string, { readonly reason: string; readonly wo
   'ambiguous-form': { reason: 'mapping-coverage-absent', words: 'its form is as often a name in prose as a path, and the tree lists no file or directory it names' },
   'outside-tree': { reason: 'source-uncaptured-or-unreachable', words: 'it climbs above the repository root, outside the tree' },
   submodule: { reason: 'source-uncaptured-or-unreachable', words: 'it lies in a submodule, whose tree is not in the clone' },
+  'symbolic-link': { reason: 'source-uncaptured-or-unreachable', words: 'it lies at or under a symbolic link, which the rule does not follow' },
   'build-output-path': { reason: 'source-uncaptured-or-unreachable', words: 'it is a vendored or generated path, which a build or an install may make and the tree need not hold' },
   'code-not-fully-read': { reason: 'mapping-coverage-absent', words: 'no code file read holds it, and not every code file the rule searches was read' },
 };
@@ -50,7 +51,7 @@ function rowEntry(row: LocalDocRow, revision: string): string {
   const held = row.outcome === 'document-only'
     ? (row.form === 'path' ? 'the pinned tree lists no file or directory at the path it names' : 'no code file the rule searches holds that name as an identifier token, and every one was read')
     : r === null ? '' : r.entry === 'identifier'
-      ? `the identifier token occurs in ${r.searched === 'code-text' ? 'the code text (comments and strings blanked)' : 'the file text'} of ${r.path} at line ${r.line}, blob ${r.blob}`
+      ? `the identifier token occurs in ${r.searched === 'code-text' ? 'the code text (comments and strings blanked)' : r.searched === 'comment-or-string' ? 'a comment or a string, not the code text,' : 'the file text'} of ${r.path} at line ${r.line}, blob ${r.blob}`
       : `the pinned tree lists a ${r.entry} at ${r.path}`;
   const outcome = row.outcome === 'document-only' ? 'Document only' : 'Resolves';
   return `${open}>${head} ${escape(`${outcome}.`)} <span class="derived-mark">Derived by Syzygy</span>`
@@ -83,7 +84,8 @@ export function docsAndCodePage(member: LocalDocsAndCode, revision: string): str
   const note = `<p class="map-note">${escape(`Computed by Syzygy at this render from the Markdown documents of the tree at revision ${revision} that the bound screening policy ${member.screeningPolicy.policyId} ${member.screeningPolicy.policyVersion} admits, read by rule ${member.rule.rule} version ${member.rule.ruleVersion}. `
     + 'It reads the content of each inline code span and the destination of each inline link outside fenced code, nothing else. A span is a path when it is slash-joined segments, a bare name with a listed extension, or a dotfile; an identifier when it is names joined by a dot or :: carrying an underscore, a capital after a lowercase letter, a separator or (). '
     + 'A path resolves when the tree lists a file or a directory at it, from the repository root or the document\'s directory (a link from the document\'s directory only), or, for a code span not starting ./ or ../, where a listed path ends with it after a slash, so a bare name resolves by a file name; otherwise it is document only. '
-    + 'An identifier resolves when its last name occurs as an identifier token in a code file read, in the code text with comments and strings blanked for Python, JavaScript, TypeScript, Go and Java and in the whole text otherwise; it is document only only when every code file the rule searches was read. '
+    + 'An identifier resolves when its last name occurs as an identifier token in a code file read, in the code text with comments and strings blanked for Python, JavaScript, TypeScript, Go and Java, then in their comments and strings, and in the whole text otherwise; it is document only only when every code file the rule searches was read. '
+    + 'A path at or under a symbolic link or a submodule is Unknown, and one naming a directory that holds only paths a secret detector matches is left out. HTML comments and indented code blocks are read as prose, and the outer link around a linked image is counted, not read. '
     + 'A row says what the tree holds, never that a document is wrong; no stated value is compared, so no row agrees or disagrees, and code that no document names is not listed at this version.')}</p>`;
   const coverage = `<p class="map-coverage" data-epistemic="observed">${escape([
     `Documents: ${counted(d.candidates, 'candidate', 'candidates')}; ${d.observed} read, ${d.unknown} Unknown; ${d.secretPathsLeftOut} left out and not named, because a secret detector matches their path; ${d.setApart} set apart as vendored or generated paths; ${counted(d.spansNotChecked, 'code span', 'code spans')} and ${counted(d.linksNotChecked, 'link', 'links')} of a form the rule does not read; ${counted(d.valuesLeftOut, 'row', 'rows')} left out because the value checks refuse it.`,

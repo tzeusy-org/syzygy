@@ -159,9 +159,13 @@ export function recognizeDocReferences(text: string, documentPath: string): Reco
 
   for (const m of text.matchAll(LINK)) {
     const destination = m[1]!;
+    // A link around an image (`[![alt](img.png)](page.md)`): the pattern reads the image, and the outer destination, which follows it at
+    // once, is counted as a link not read.
+    const nested = text.startsWith('](', m.index + m[0].length) && !isFencedAt(recognition, m.index + m[0].length);
     const destStart = m.index + m[0].indexOf('](') + 2;
     if (isFencedAt(recognition, m.index) || spanRangesWithin(recognition, m.index, m.index + 1).length > 0
       || spanRangesWithin(recognition, destStart, destStart + destination.length).length > 0) continue;
+    if (nested) linksNotChecked++;
     const at = lineOf(m.index);
     const target = destination.replace(/[#?].*$/s, '');
     let decoded: string | undefined;

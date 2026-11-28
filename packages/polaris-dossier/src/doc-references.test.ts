@@ -46,8 +46,8 @@ const rowsOf = (m: ReturnType<typeof derived>) => m.rows.map((r) => [r.document,
 const TREE: Tree = {
   'README.md': 'See `src/app.py`, `src/gone.py` and [the guide](docs/guide.md).\nCall `runApp()`; `missingThing` is gone.\n',
   'docs/guide.md': 'Back to [the readme](../README.md); `lib/`, `Node.js` and `dist/out.js`.\n```\n`src/fenced.py`\n```\n',
-  'src/app.py': 'def runApp():\n    pass\n# missingThing in a comment\n',
-  'src/util.ts': 'export const x = "missingThing";\n',
+  'src/app.py': 'def runApp():\n    pass\n# a comment\n',
+  'src/util.ts': 'export const x = "other";\n',
   'pyproject.toml': 'missingThing = 1\n',
 };
 const READ = ['README.md', 'docs/guide.md', 'src/app.py', 'src/util.ts'];
@@ -128,6 +128,39 @@ describe('docsAndCode: doc-reference v1 under declared-source policy 2.0.0', () 
       ['b/n.txt', 'resolves', null, { entry: 'file', path: 'docs/b/n.txt' }],
       ['a/', 'resolves', null, { entry: 'directory', path: 'docs/a' }],
       ['b/n.txt', 'document-only', null, null],
+    ]);
+  });
+
+  it('keeps a path at or under a symbolic link or a submodule Unknown, resolves a submodule\'s ancestor, and leaves out a directory only secret paths hold (R-DOCS-AND-CODE-1 F1)', async () => {
+    const tree: Tree = {
+      'README.md': '`docs/`, `docs/guide.md`, [g](docs/guide.md), `deps/`, `libfoo/`, `libfoo/x.c`, `vault/` and `vault/notes.md`.\n',
+      docs: { mode: '120000' }, 'deps/libfoo': { mode: '160000' }, [`vault/${SECRET_NAME}`]: 'k\n',
+    };
+    const m = derived(await derive(fixture(tree, ['README.md'])));
+    expect(m.rows.map((r) => [r.value, r.outcome, r.unknownReason, r.resolution])).toEqual([
+      ['docs/', 'unknown', 'symbolic-link', null],
+      ['docs/guide.md', 'unknown', 'symbolic-link', null],
+      ['docs/guide.md', 'unknown', 'symbolic-link', null],
+      ['deps/', 'resolves', null, { entry: 'directory', path: 'deps' }],
+      ['libfoo/', 'unknown', 'submodule', null],
+      ['libfoo/x.c', 'unknown', 'submodule', null],
+      ['vault/notes.md', 'document-only', null, null],
+    ]);
+    expect([m.documents.valuesLeftOut, m.documents.files[0]!.valuesLeftOut]).toEqual([1, 1]);
+    expect(JSON.stringify(m)).not.toContain(SECRET_NAME);
+  });
+
+  it('resolves a name only a comment or a string of a lexed file holds, saying so, and prefers the code text (R-DOCS-AND-CODE-1 F2)', async () => {
+    const tree: Tree = {
+      'README.md': '`DATABASE_URL`, `max_retries` and `run_it`.\n',
+      'a/env.py': 'import os\nurl = os.environ["DATABASE_URL"]\n# run_it is below\n',
+      'b/cfg.ts': '// max_retries\nexport const run_it = 1;\n',
+    };
+    const m = derived(await derive(fixture(tree, Object.keys(tree))));
+    expect(m.rows.map((r) => [r.value, r.outcome, r.resolution])).toEqual([
+      ['DATABASE_URL', 'resolves', { entry: 'identifier', path: 'a/env.py', line: 2, blob: idOf('a/env.py'), searched: 'comment-or-string' }],
+      ['max_retries', 'resolves', { entry: 'identifier', path: 'b/cfg.ts', line: 1, blob: idOf('b/cfg.ts'), searched: 'comment-or-string' }],
+      ['run_it', 'resolves', { entry: 'identifier', path: 'b/cfg.ts', line: 2, blob: idOf('b/cfg.ts'), searched: 'code-text' }],
     ]);
   });
 

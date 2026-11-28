@@ -12,7 +12,7 @@
 ## Added
 
 - Three paragraphs immediately after the rough-edges page paragraph: recognizer `doc-reference` version 1, the documents it reads, the two places it reads in them, every expression it runs (published as a regular expression), the path and identifier forms, how each resolves and when a row is Unknown; the render's `docsAndCode` member, its dispositions, value checks, quote excerpts, listing limits and labels; and the reference page `reference/docs-and-code.html`, its tables, its three row sections, its `Not established.` statements, and the machine view's `docsAndCode` member.
-- Seven scenarios immediately after the last scenario: documented paths and identifiers resolved; an identifier absent while a code file is unread stays Unknown; tails, directories, submodules and climbs; documents left out, set apart, Unknown or withheld; long lines quoted by an exact excerpt; the page rendered; and no page without the member, or an Unknown member. The proposed requirement has 312 scenarios; the 305 predecessor scenarios are byte-identical.
+- Eight scenarios immediately after the last scenario: documented paths and identifiers resolved; an identifier absent while a code file is unread stays Unknown; tails, directories, submodules and climbs; symbolic links, submodule ancestors, secret-only directories and names in comments or strings; documents left out, set apart, Unknown or withheld; long lines quoted by an exact excerpt; the page rendered; and no page without the member, or an Unknown member. The proposed requirement has 313 scenarios; the 305 predecessor scenarios are byte-identical.
 
 ## Carried and reversed
 

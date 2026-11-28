@@ -85,6 +85,16 @@ describe('the docs-and-code reference page (version 2.48)', () => {
     expect(() => site({ ...MEMBER, rows: [{ ...MEMBER.rows[3]!, unknownReason: 'guessed' }] })).toThrow('docs and code: a row reason this version does not name');
   });
 
+  it('words a symbolic-link Unknown and a name found only in a comment or a string (R-DOCS-AND-CODE-1 F1, F2)', () => {
+    if (MEMBER.state !== 'derived') throw new Error('fixture');
+    const page = site({ ...MEMBER, rows: [
+      { ...MEMBER.rows[3]!, value: 'docs/guide.md', unknownReason: 'symbolic-link' },
+      { ...MEMBER.rows[2]!, resolution: { entry: 'identifier', path: 'src/app.py', line: 9, blob: BLOB, searched: 'comment-or-string' } },
+    ] }).get(PAGE)!;
+    expect(page).toContain('data-unknown-reason="source-uncaptured-or-unreachable">Path docs/guide.md, a code span in README.md at line 4: <q>Use `Node.js` &lt;here&gt;</q> <span class="not-established">Not established.</span> Whether the tree holds what it names is Unknown: it lies at or under a symbolic link, which the rule does not follow.</li>');
+    expect(page).toContain(`Evidence: label Observed; the identifier token occurs in a comment or a string, not the code text, of src/app.py at line 9, blob ${BLOB};`);
+  });
+
   it('states the member Unknown in words when the tree could not be listed', () => {
     const page = site({ format: 'polaris-dossier-docs-and-code/1', state: 'unknown', why: 'the pinned tree could not be listed (corrupt-object)' }).get(PAGE)!;
     expect(page).toContain(`<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="source-uncaptured-or-unreachable"><span class="not-established">Not established.</span> Which paths and identifiers the documents at revision ${REV} name, and what the tree holds of them, is Unknown at this render: the pinned tree could not be listed.</p>`);

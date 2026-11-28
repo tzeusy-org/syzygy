@@ -20,6 +20,23 @@
 
 [Inferred] A path's absence is read from the whole tree listing, so `document-only` for a path is Observed. An identifier's absence is read from the code files read, which a read limit, the screen and the class gate can cut short, so absence is stated only where nothing was left unread; otherwise it is Unknown `code-not-fully-read` (VIS-2). Comments and strings are blanked for the five languages the test-name lexer reads, so a name only in a comment does not resolve there; other languages are searched in their whole text, and the row says which.
 
+## Why a symbolic link, a submodule or a secret-only directory never yields document-only
+
+[Observed] Review R-DOCS-AND-CODE-1 (F1) found `docs/`, `docs/guide.md` and a link into a symbolically linked `docs` reported document-only, a directory holding only a submodule (`deps/`) and the submodule's own name (`libfoo/`) document-only, and a directory holding only a secret-matching path document-only. [Inferred] Each is a false Observed absence: the tree lists an entry there that the rule does not follow, list or name (VIS-2). A path at or under a symbolic link is now Unknown `symbolic-link`; a submodule's ancestors are directories, and a span whose tail reaches a submodule is Unknown `submodule`; a row naming a directory that only secret-matching paths hold is left out and counted, so the directory is named nowhere (SEC-5 is untouched: nothing new is read or rendered).
+
+## Why a name only in a comment or a string resolves, and says so
+
+[Observed] F2 of the review: `DATABASE_URL` and `max_retries`, read by the code only as string literals, were document-only. [Inferred] Environment variables and configuration keys are among the most common code spans in documentation, and they live in strings; the code does hold them. Where no code text holds a name, the whole text of each lexed file is searched, and a hit resolves with `searched` `comment-or-string`, worded on the page as found in a comment or a string, not the code text. The code text is still preferred, so the evidence names real code where it exists. A name only in a comment also resolves this way; the evidence says which kind of text held it.
+
+## What is read as prose, and what is not counted
+
+[Inferred] The PWB-REQ-006 recognizer treats neither HTML comments nor indented code blocks as code contexts (review F4), so a span inside either is read; the requirement and the page note say so rather than adding a second fence rule (AGENTS.md: read fences by the recognizer, never another). A link around an image (`[![alt](img.png)](page.md)`) is read as the image, and the outer destination is now counted in `linksNotChecked` (F5).
+
+## Recorded, not repaired
+
+- [Inferred] An identifier resolves by its last name alone (F6): `Foo.render()` resolves on any `render` token. The requirement publishes it and each row names the file and line it matched; requiring the qualifier is a later version's choice.
+- [Inferred] The 390-pixel fit is inferred from the markup (`overflow-wrap:anywhere` on every list, tables in `table-scroll`), which follows the rough-edges page; no browser sweep renders this page (F7).
+
 ## Why long lines are excerpted
 
 [Observed] With the whole line as the quote, the value checks left out 6277 rows on Syzygy's own tree, almost all for lines past 256 characters (Markdown paragraphs are often one line). [Inferred] An exact 256-code-unit excerpt holding the reading keeps the row checkable and the value checks unchanged; `quoteExcerpt` and the page say it is an excerpt. With it, 57 rows are left out.

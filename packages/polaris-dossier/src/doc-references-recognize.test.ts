@@ -92,6 +92,13 @@ describe('doc-reference v1: links', () => {
     ]);
     expect(r.linksNotChecked).toBe(5);
   });
+
+  it('counts the outer link around a linked image as not read (R-DOCS-AND-CODE-1 F5)', () => {
+    const r = read('[![logo](img/logo.png)](outer.md) and [plain](p.md)](not-nested).\n', 'README.md');
+    expect(r.candidates.map((c) => c.value)).toEqual(['img/logo.png', 'p.md']);
+    expect(r.linksNotChecked).toBe(2);
+    expect(read('[a](b.md) then ](c.md)\n', 'README.md').linksNotChecked).toBe(0);
+  });
 });
 
 describe('normalise', () => {

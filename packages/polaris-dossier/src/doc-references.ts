@@ -36,7 +36,7 @@ export type DocsUnknownReason =
   | 'path-not-citable' | 'symbolic-link' | 'denied-path' | 'unknown-extraction-class' | 'class-not-consented' | 'over-read-limit'
   | 'object-read-refused' | 'not-utf8-text' | 'too-large' | 'secret-detector-match' | 'active-content' | 'redacted-body' | 'unparsed';
 /** Why a row is Unknown. */
-export type RowUnknownReason = 'ambiguous-form' | 'outside-tree' | 'submodule' | 'build-output-path' | 'code-not-fully-read';
+export type RowUnknownReason = 'ambiguous-form' | 'outside-tree' | 'submodule' | 'symbolic-link' | 'build-output-path' | 'code-not-fully-read';
 
 export interface DocsFileEntry {
   readonly path: string;
@@ -58,9 +58,12 @@ export interface DocsPopulation {
   readonly files: readonly DocsFileEntry[];
   readonly filesNotListed: number;
 }
+/** Where an identifier's token was found: the lexer's code text, a comment or string interior of a lexed file (its code text holds it
+ * nowhere), or the whole text of a file no lexer reads. */
+export type IdentifierSearched = 'code-text' | 'comment-or-string' | 'file-text';
 export type DocRowResolution =
   | { readonly entry: 'file' | 'directory'; readonly path: string }
-  | { readonly entry: 'identifier'; readonly path: string; readonly line: number; readonly blob: string; readonly searched: 'code-text' | 'file-text' };
+  | { readonly entry: 'identifier'; readonly path: string; readonly line: number; readonly blob: string; readonly searched: IdentifierSearched };
 export interface DocRow {
   readonly id: string;
   readonly document: string;
@@ -169,7 +172,7 @@ async function readBody({ path, id }: Entry, inputs: ManifestInputs): Promise<Re
 }
 
 interface Pending { readonly document: string; readonly candidate: DocCandidate }
-interface Found { readonly path: string; readonly line: number; readonly blob: string; readonly searched: 'code-text' | 'file-text' }
+interface Found { readonly path: string; readonly line: number; readonly blob: string; readonly searched: IdentifierSearched }
 
 export async function deriveDocsAndCode(inputs: ManifestInputs): Promise<DocsAndCode> {
   const { screen } = inputs;
@@ -181,8 +184,20 @@ export async function deriveDocsAndCode(inputs: ManifestInputs): Promise<DocsAnd
 
   // The tree the rows resolve against: every blob no secret detector matches, and every directory holding one; and, by each of its
   // tails (the whole path, and the text after each `/`), the first such file and directory in the order of the sorted file paths.
+  // A symbolic link is listed as a file, and a path at or under it whose own entry is not listed is Unknown: the link is not followed.
+  // A submodule's ancestors are directories; the submodule and what lies under it are Unknown. A directory that holds only paths a secret
+  // detector matches is in no listing: a row naming it is left out and counted, never document-only.
   const files = new Set<string>(), directories = new Set<string>(['']);
   const fileByTail = new Map<string, string>(), directoryByTail = new Map<string, string>();
+  const symlinks = new Set<string>(), symlinkByTail = new Map<string, string>();
+  const submoduleSet = new Set<string>(), submoduleByTail = new Map<string, string>();
+  const secretDirectories = new Set<string>(), secretDirectoryByTail = new Map<string, string>();
+  const addDirectories = (segments: readonly string[]): void => {
+    for (let i = 1; i < segments.length; i++) {
+      const directory = segments.slice(0, i).join('/');
+      if (!directories.has(directory)) { directories.add(directory); tails(directory, directoryByTail); }
+    }
+  };
   const tails = (path: string, into: Map<string, string>): void => {
     for (let at = 0; ;) {
       const tail = path.slice(at);
@@ -192,16 +207,37 @@ export async function deriveDocsAndCode(inputs: ManifestInputs): Promise<DocsAnd
       at = slash + 1;
     }
   };
-  for (const { path } of blobs) {
+  for (const { path, mode } of blobs) {
     const segments = path.split('/');
-    if (secretOrUnder(segments, isSecretPath)) continue;
+    if (secretOrUnder(segments, isSecretPath)) {
+      for (let i = 1; i < segments.length && !isSecretPath(segments.slice(0, i).join('/')); i++) {
+        const directory = segments.slice(0, i).join('/');
+        if (!secretDirectories.has(directory)) { secretDirectories.add(directory); tails(directory, secretDirectoryByTail); }
+      }
+      continue;
+    }
     files.add(path);
     tails(path, fileByTail);
-    for (let i = 1; i < segments.length; i++) {
-      const directory = segments.slice(0, i).join('/');
-      if (!directories.has(directory)) { directories.add(directory); tails(directory, directoryByTail); }
-    }
+    if (mode === '120000') { symlinks.add(path); tails(path, symlinkByTail); }
+    addDirectories(segments);
   }
+  for (const path of submodules) {
+    const segments = path.split('/');
+    if (secretOrUnder(segments, isSecretPath)) continue;
+    submoduleSet.add(path);
+    tails(path, submoduleByTail);
+    addDirectories(segments);
+  }
+  /** Whether `path`, or a path it lies under, is in `set`. */
+  const atOrUnder = (path: string, has: (p: string) => boolean): boolean => {
+    for (let at = path.indexOf('/'); ; at = path.indexOf('/', at + 1)) {
+      if (has(at < 0 ? path : path.slice(0, at))) return true;
+      if (at < 0) return false;
+    }
+  };
+  const secretOnlyDirectory = (c: Extract<DocCandidate, { form: 'path' }>): boolean =>
+    c.tryPaths.some((p) => secretDirectories.has(p) && !directories.has(p))
+    || (c.tail !== null && secretDirectoryByTail.has(c.tail) && !directoryByTail.has(c.tail) && !fileByTail.has(c.tail));
 
   // The documents.
   const docCandidates = blobs.filter((entry) => isDocument(entry.path));
@@ -220,7 +256,8 @@ export async function deriveDocsAndCode(inputs: ManifestInputs): Promise<DocsAnd
     let leftOut = 0;
     for (const candidate of recognized.candidates) {
       const secretForm = candidate.form === 'path'
-        && [candidate.value, ...candidate.tryPaths, ...(candidate.tail === null ? [] : [candidate.tail])].some((p) => p !== '' && secretOrUnder(p.split('/'), isSecretPath));
+        && ([candidate.value, ...candidate.tryPaths, ...(candidate.tail === null ? [] : [candidate.tail])].some((p) => p !== '' && secretOrUnder(p.split('/'), isSecretPath))
+          || secretOnlyDirectory(candidate));
       if (secretForm || refusedValue(candidate.value) || refusedValue(candidate.quote)) leftOut++;
       else pending.push({ document: entry.path, candidate });
     }
@@ -233,7 +270,7 @@ export async function deriveDocsAndCode(inputs: ManifestInputs): Promise<DocsAnd
   const codeCandidates = blobs.filter((entry) => isSearchedCode(entry.path));
   const code = dispose(codeCandidates, inputs, isSecretPath, CODE_READ_LIMIT);
   const codeUnknown = [...code.unknown];
-  const found = new Map<string, Found>();
+  const found = new Map<string, Found>(), foundInText = new Map<string, Found>();
   let searched = 0;
   if (wanted.size > 0) {
     for (const entry of code.toRead) {
@@ -247,15 +284,20 @@ export async function deriveDocsAndCode(inputs: ManifestInputs): Promise<DocsAnd
         text = scanned.code;
       }
       searched++;
-      let line = 1, at = 0;
-      for (const m of text.matchAll(TOKEN)) {
-        if (!wanted.has(m[0]) || found.has(m[0])) continue;
-        for (; at < m.index; at++) {
-          const c = text.charCodeAt(at);
-          if (c === 0x0d && text.charCodeAt(at + 1) === 0x0a) { at++; line++; } else if (c === 0x0d || c === 0x0a) line++;
+      const where = (into: Map<string, Found>, body_: string, searchedAs: IdentifierSearched, skip: Map<string, Found>): void => {
+        let line = 1, at = 0;
+        for (const m of body_.matchAll(TOKEN)) {
+          if (!wanted.has(m[0]) || into.has(m[0]) || skip.has(m[0])) continue;
+          for (; at < m.index; at++) {
+            const c = body_.charCodeAt(at);
+            if (c === 0x0d && body_.charCodeAt(at + 1) === 0x0a) { at++; line++; } else if (c === 0x0d || c === 0x0a) line++;
+          }
+          into.set(m[0], { path: entry.path, line, blob: body.blob, searched: searchedAs });
         }
-        found.set(m[0], { path: entry.path, line, blob: body.blob, searched: language === undefined ? 'file-text' : 'code-text' });
-      }
+      };
+      where(found, text, language === undefined ? 'file-text' : 'code-text', new Map());
+      // The lexer blanks comments and string interiors in place, so the whole text keeps every line and offset.
+      if (language !== undefined) where(foundInText, body.text, 'comment-or-string', found);
     }
   }
   const codeComplete = wanted.size > 0 && code.secretPathsLeftOut === 0 && codeUnknown.length === 0;
@@ -266,13 +308,13 @@ export async function deriveDocsAndCode(inputs: ManifestInputs): Promise<DocsAnd
   function resolve(c: DocCandidate): Pick<DocRow, 'outcome' | 'unknownReason' | 'resolution'> {
     const unknown = (reason: RowUnknownReason) => ({ outcome: 'unknown' as const, unknownReason: reason, resolution: null });
     if (c.form === 'identifier') {
-      const hit = found.get(c.name);
+      const hit = found.get(c.name) ?? foundInText.get(c.name);
       if (hit !== undefined) return { outcome: 'resolves', unknownReason: null, resolution: { entry: 'identifier', ...hit } };
       return codeComplete ? { outcome: 'document-only', unknownReason: null, resolution: null } : unknown('code-not-fully-read');
     }
     if (c.outside) return unknown('outside-tree');
     const tries = c.tryPaths;
-    if (tries.some((p) => submodules.some((s) => p === s || p.startsWith(`${s}/`)))) return unknown('submodule');
+    if (tries.some((p) => atOrUnder(p, (q) => submoduleSet.has(q)))) return unknown('submodule');
     for (const p of tries) {
       if (directories.has(p)) return { outcome: 'resolves', unknownReason: null, resolution: { entry: 'directory', path: p } };
       if (!c.directory && files.has(p)) return { outcome: 'resolves', unknownReason: null, resolution: { entry: 'file', path: p } };
@@ -283,6 +325,8 @@ export async function deriveDocsAndCode(inputs: ManifestInputs): Promise<DocsAnd
       const directory = directoryByTail.get(c.tail);
       if (directory !== undefined) return { outcome: 'resolves', unknownReason: null, resolution: { entry: 'directory', path: directory } };
     }
+    if (tries.some((p) => atOrUnder(p, (q) => symlinks.has(q))) || (c.tail !== null && atOrUnder(c.tail, (q) => symlinkByTail.has(q)))) return unknown('symbolic-link');
+    if (c.tail !== null && atOrUnder(c.tail, (q) => submoduleByTail.has(q))) return unknown('submodule');
     if (c.ambiguous) return unknown('ambiguous-form');
     if ([...tries, ...(c.tail === null ? [] : [c.tail])].some((p) => vendoredOrGeneratedPath(p))) return unknown('build-output-path');
     return { outcome: 'document-only', unknownReason: null, resolution: null };

@@ -393,7 +393,7 @@ export interface LocalDocRow {
   readonly unknownReason: string | null;
   readonly resolution:
     | { readonly entry: 'file' | 'directory'; readonly path: string }
-    | { readonly entry: 'identifier'; readonly path: string; readonly line: number; readonly blob: string; readonly searched: 'code-text' | 'file-text' }
+    | { readonly entry: 'identifier'; readonly path: string; readonly line: number; readonly blob: string; readonly searched: 'code-text' | 'comment-or-string' | 'file-text' }
     | null;
 }
 export type LocalDocsAndCode =
