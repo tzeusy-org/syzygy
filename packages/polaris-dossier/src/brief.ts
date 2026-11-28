@@ -41,7 +41,9 @@ import { issuedBriefStatement } from './launch-statements.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-/** v25 (REQ-polaris-generation-034 version 2.50, syzygy-3efd.39): brief v24 with draft schema v17 and the one level paragraph
+/** v26 (REQ-polaris-generation-034 version 2.54, syzygy-3efd.33): brief v25 with draft schema v18 and the one excerpt paragraph
+ * (`EXCERPT_PARAGRAPH`) immediately after the level paragraph, and this line changed.
+ * v25 (REQ-polaris-generation-034 version 2.50, syzygy-3efd.39): brief v24 with draft schema v17 and the one level paragraph
  * (`LEVEL_PARAGRAPH`) immediately after the walk paragraph, and this line changed.
  * v24 (REQ-polaris-generation-034 version 2.40, syzygy-3efd.88): brief v23 with draft schema v16 and the one walk paragraph
  * (`WALK_PARAGRAPH`) immediately after the derived-base paragraph, and this line changed.
@@ -62,7 +64,7 @@ import { issuedBriefStatement } from './launch-statements.js';
  * (`SUBSECTIONS_PARAGRAPH`) immediately after the figure-kinds paragraph, and this line changed. v13 (the index-and-task-routes change): brief v12 with the task-routes section (`TASK_ROUTES_RULE`) added after the Poles and this line
  * changed, and nothing else. v12 (REQ-polaris-generation-034 version 2.5): brief v11 with draft schema v7 and the one figure-kinds paragraph
  * (`FIGURE_KINDS_PARAGRAPH`) immediately after the thesis-basis paragraph. v11 (version 2.4) added schema v6 and `THESIS_BASIS_PARAGRAPH`. */
-export const BRIEF_VERSION = 'polaris-dossier-brief-v25';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v26';
 const HERO_PARAGRAPH = 'Name the dossier\'s hero in `hero`: `{"figure": "<diagram id>"}` for one diagram whose `home` is `{"kind": "overview"}` and whose `kind` is `flow`, `lifecycle`, `state-machine`, `boundary`, `dependency` or `placement`, showing the project\'s main parts and what surrounds them. Syzygy draws it first on the overview, after the introduction and any open questions. Where no such figure would be true, write `{"omitted": <block>}` instead, one inferred or unknown block saying why; the overview shows that reason where the figure would stand. A draft that does neither is refused.';
 
 /** The containment paragraph brief v17 places immediately after the hero paragraph (REQ-polaris-generation-034 version 2.23). Brief v17
@@ -85,6 +87,9 @@ export const WALK_PARAGRAPH = 'Where a section or deep dive explains a graph fig
 
 /** The paragraph brief v25 adds immediately after the walk paragraph, in the requirement's words (version 2.50). */
 export const LEVEL_PARAGRAPH = 'A graph or containment `view` may say which level it shows and what it is about: a `level`, `context`, `container` or `component`, with a `scope`, the id of one element. A context view is about a `system` and shows it with the people and other systems around it (types system, external and person); a container view is about a `system` and shows its parts (directory, package, service, job and store), with the systems, people and externals they deal with; a component view is about one of those parts and shows the modules inside it, with parts, people and externals but no system. Every part a container view shows, and every module a component view shows, has the view\'s scope among its parents. Every other figure that draws a container view\'s system, or a component view\'s part, as a box then links that box, and its list item, to the first such view, so a reader can zoom in; a context view is never the view a box zooms to. Show a container or component view\'s scope only as the outer box of a containment or with `contains` arrows to what it holds, or leave it out. A scope is an element of the model, never a base element, so a context view over a base map also selects the system it is about.';
+
+/** The paragraph brief v26 adds immediately after the level paragraph, in the requirement's words (version 2.54). */
+export const EXCERPT_PARAGRAPH = 'Where a section or deep dive explains how a mechanism works, show the code that does the work in a code excerpt beside the paragraph that explains it: a `code` element whose `citation` names the 1 to 60 lines, which Syzygy reads and numbers itself. To point the reader at the lines that matter, give it `highlights`, 1 to 12 `{"startLine", "endLine"}` ranges inside the cited lines, in the file\'s own line numbers, in order and not overlapping. To tie a line to the paragraph that explains it, give it `notes`, 1 to 12 `{"line", "block"}` in order of `line`, one note to a line, each naming a cited paragraph of the same section or deep dive, never a block inside an element; Syzygy marks the line and links the paragraph. An excerpt carries no words of yours: say what the lines do in the paragraphs.';
 
 /** The paragraph brief v21 adds immediately after the worth-knowing paragraph, in the requirement's words (version 2.32). It carries no
  * project content and none of the comprehension key's questions. */
@@ -240,6 +245,8 @@ export function renderBrief(input: BriefInput): string {
     WALK_PARAGRAPH,
     '',
     LEVEL_PARAGRAPH,
+    '',
+    EXCERPT_PARAGRAPH,
     '',
     '## Poles',
     '',

@@ -6,6 +6,7 @@ import { hasFigurePlanForm, PRESENTATION_ELEMENT_KINDS, CONTAINMENT_BOUNDS, CONT
 import { isEntryPoint } from './derive.js';
 import { admitOf, baseFieldVersionFindings, baseSchemaReading } from './derived-base.js';
 import { levelFieldVersionFindings, levelFieldVersionPaths, withoutLevels } from './view-level.js';
+import { codeMarkFieldVersionFindings, codeMarkFieldVersionPaths } from './code-marks.js';
 import { walkFieldVersionFindings, walkFieldVersionPaths, withoutWalks } from './walk.js';
 import { expandModel, modelFieldVersionFindings, modelFieldVersionPaths, modelIndex } from './system-model.js';
 import { containmentName, containmentDiagrams, containmentFieldVersionFindings, containmentFieldVersionPaths, containmentStructuralFindings, groupName, groupsOf } from './containment.js';
@@ -19,8 +20,9 @@ import { type CheckFinding, type CitedBlob, type ExcludedQuotation, type Verifie
 
 /** What one derivation found. `admitted` holds the text of every cited blob this step read, re-hashed and screening admitted, by path:
  * the only bytes a render may quote or put on a source page. */
-/** The most lines a code excerpt may name (REQ-polaris-generation-034, v1.3). */
-export const CODE_EXCERPT_MAX_LINES = 60;
+/** The most lines a code excerpt may name (REQ-polaris-generation-034, v1.3), defined beside the check model so code-marks.ts reads it too. */
+export { CODE_EXCERPT_MAX_LINES } from './check-model.js';
+import { CODE_EXCERPT_MAX_LINES } from './check-model.js';
 
 /** Markup a short label may not carry (v1.3 "Short label carries no claim"): an angle bracket, an ampersand, a backtick, a Markdown link
  * or image, or an emphasis mark at a word edge. A label renders as plain text, so any of these would show as written or mislead. */
@@ -132,6 +134,8 @@ type BlobState =
 export async function deriveFindings(given: unknown, inputs: DeriveInputs, rules: SubjectRules): Promise<Derived> {
   // A v16 draft's walks (version 2.40) and a v17 draft's view levels (version 2.50) are presentation, read by their own findings alone: no
   // other check reads them.
+  // A v18 draft's code excerpts' highlights and notes (version 2.54) are stripped by both callers that can hand it one (check.ts and
+  // render.ts), whose own readers of the draft need them stripped too; this subject does not strip them again.
   const subject = withoutLevels(withoutWalks(given));
   const findings: CheckFinding[] = [];
   const add = (finding: CheckFinding): void => { findings.push(finding); };
@@ -851,6 +855,8 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
       for (const at of walkFieldVersionPaths(doc)) subsectionPaths.add(at);
       // A view's `level` or `scope` in a v12, v14, v15 or v16 draft: likewise (version 2.50).
       for (const at of levelFieldVersionPaths(doc)) subsectionPaths.add(at);
+      // A code excerpt's `highlights` or `notes` in a v3 to v17 draft: likewise (version 2.54).
+      for (const at of codeMarkFieldVersionPaths(doc)) subsectionPaths.add(at);
       // A containment kind or `groups` in a v10 or earlier draft: likewise (version 2.23).
       for (const at of containmentFieldVersionPaths(doc)) subsectionPaths.add(at);
       // `model` or a diagram's `view` in a v11 or earlier draft: likewise (version 2.24).
@@ -904,7 +910,9 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
       // Version 2.40: a v15 or earlier draft's `walk`, `field-version`.
       for (const finding of walkFieldVersionFindings(doc)) add(finding);
       // Version 2.50: a v12, v14, v15 or v16 draft's view `level` and `scope`, `field-version`.
-      for (const finding of levelFieldVersionFindings(doc)) add(finding); },
+      for (const finding of levelFieldVersionFindings(doc)) add(finding);
+      // Version 2.54: a v3 to v17 draft's code excerpts' `highlights` and `notes`, `field-version`.
+      for (const finding of codeMarkFieldVersionFindings(doc)) add(finding); },
     blocks: collectBlocks,
     account: { key: 'discovery', parts: ['selected', 'excluded', 'unresolved', 'deferred'] },
   };
