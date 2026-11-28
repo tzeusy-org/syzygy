@@ -41,11 +41,10 @@ export const DOSSIER_USAGE = `syzygy dossier — operator-agent dossier runs
 Usage: syzygy dossier <command> [--json] [arguments]
 
 Commands:
-  preflight <url>     report whether the observation consent, the source-acquisition
-                      registry entry and the classification and screening policy are
-                      in force for the repository, the revisions the consent names,
-                      any per-project statement, and whether D9 and the RFC7-20
-                      reading are in force; the URL is parsed, never fetched
+  preflight <url>     report whether a run can start for the repository: the locator
+                      is admitted and the committed screening policy is readable; no
+                      consent, registry, statement or act record is read; the URL is
+                      parsed, never fetched
   init <clone> [--url <url>] --config <run.json> [--state-root <dir>] [--revision <rev>] [--identity <id>] [--upstream <url>] [--visibility public|private]
                       record a declared local source and full pinned HEAD under the
                       committed dossier screening policy. --visibility public|private
@@ -297,7 +296,7 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     synopsis: 'preflight <url>',
     args: { kind: 'one', noun: 'the repository URL' },
     run: async ({ positional: [url] }, ctx) => {
-      const result = await preflight(url!, ctx.sources(), ctx.now());
+      const result = await preflight(url!, ctx.sources());
       if (!result.ok) return ctx.refused(result.refusal);
       return ctx.report(result.report, result.report.outcome === 'ready' ? EXIT.clean : EXIT.refused);
     },
