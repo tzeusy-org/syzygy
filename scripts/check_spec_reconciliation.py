@@ -3692,6 +3692,23 @@ DOCCODE_SUBJECTS = {
 }
 DOCCODE_BOUND_PARTS = len(DOCCODE_SUBJECTS)
 
+# The v2.49 cliffs (syzygy-5dhm.116): one MODIFIED REQ-polaris-generation-034 after
+# the v2.48 docs and code, adopted by an agent row and its version tag.
+CLIFFS_CHANGE = "dossier-cliffs"
+CLIFFS_HOME = f"{CHANGES}/{CLIFFS_CHANGE}"
+CLIFFS_SPEC = f"{CLIFFS_HOME}/proposed/polaris-generation/spec.md"
+CLIFFS_UNION = f"{CLIFFS_HOME}/GOVERNING-DEPENDENCIES.json"
+CLIFFS_TAG = "polaris-dossier-cliffs-v2.49"
+CLIFFS_STATUS_PREFIX = f"[Cliffs amendment 2.49]({CLIFFS_HOME})"
+CLIFFS_INDEX_PREFIX = f"| [`{CLIFFS_CHANGE}`]("
+CLIFFS_REPLACES = (POLARIS_ID + "034",)
+CLIFFS_COUNT_SCOPE = "With the cliffs"
+CLIFFS_COUNT_PREFIX = "With the cliffs version effective, Polaris has "
+CLIFFS_SUBJECTS = {
+    CLIFFS_SPEC: "b61f619bd25b87fb93bfeac1c8ead4de95643cfd4a2a7a67a5a96723319a517e",
+}
+CLIFFS_BOUND_PARTS = len(CLIFFS_SUBJECTS)
+
 # The v2.46 URL lean run (syzygy-k54o.3.2): MODIFIED REQ-polaris-generation-025 and 047 over the
 # effective v2.1 URL declared-source run, adopted by an agent row and its version tag.
 LEANRUN_CHANGE = "dossier-url-lean-run"
@@ -4318,6 +4335,23 @@ def doccode_disposition(root, rows):
     return None
 
 
+def is_cliffs_row(line):
+    return _is_reviewed_version_row(line, CLIFFS_TAG, CLIFFS_SUBJECTS)
+
+
+def cliffs_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_cliffs_row(line)]
+
+
+def cliffs_disposition(root, rows):
+    if CLIFFS_TAG is not None and len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), CLIFFS_TAG,
+                                    CLIFFS_SUBJECTS, plain_revert=True)
+    return None
+
+
 def migbound_binding(root):
     """Apply the migration bounds only over the effective v2.42 test-name recognizers REQ-034."""
     return _reviewed_version_binding(
@@ -4371,6 +4405,25 @@ def doccode_delta(root, findings):
     added = p5_advice_member_delta(read_text(root, ROUGH_SPEC) or "", read_text(root, DOCCODE_SPEC) or "")
     if added is None:
         findings.append("POLARIS docs and code: cannot count predecessor and successor for 034")
+        return 0
+    return added
+
+
+def cliffs_binding(root):
+    """Apply the cliffs only over the effective v2.48 docs and code REQ-034."""
+    return _reviewed_version_binding(
+        root, cliffs_rows(root), cliffs_disposition,
+        version_tag=CLIFFS_TAG, subjects_map=CLIFFS_SUBJECTS, spec=CLIFFS_SPEC,
+        predecessor=doccode_binding, predecessor_label="v2.48 docs and code", version="v2.49",
+        label="cliffs",
+    )
+
+
+def cliffs_delta(root, findings):
+    """Scenarios the cliffs add to REQ-034 over the docs and code, counted from both texts."""
+    added = p5_advice_member_delta(read_text(root, DOCCODE_SPEC) or "", read_text(root, CLIFFS_SPEC) or "")
+    if added is None:
+        findings.append("POLARIS cliffs: cannot count predecessor and successor for 034")
         return 0
     return added
 
@@ -5346,6 +5399,15 @@ def check_outcomes(root, report):
         subjects_seen += DOCCODE_BOUND_PARTS
     r1 += doccode_records
     r2 += doccode_subjects
+    cliffs_retired_by = cliffs_disposition(root, cliffs_rows(root))
+    cliffs_amendment, cliffs_records, cliffs_subjects = cliffs_binding(root)
+    if cliffs_retired_by:
+        records += 2
+    elif cliffs_amendment is not None or cliffs_records or cliffs_subjects:
+        records += 1
+        subjects_seen += CLIFFS_BOUND_PARTS
+    r1 += cliffs_records
+    r2 += cliffs_subjects
     leanrun_retired_by = leanrun_disposition(root, leanrun_rows(root))
     leanrun_amendment, leanrun_records, leanrun_subjects = leanrun_binding(root)
     if leanrun_retired_by:
@@ -5426,6 +5488,8 @@ def check_outcomes(root, report):
         retirement += f"; v2.44 inactive by {rough_retired_by}"
     if doccode_retired_by:
         retirement += f"; v2.48 inactive by {doccode_retired_by}"
+    if cliffs_retired_by:
+        retirement += f"; v2.49 inactive by {cliffs_retired_by}"
     if leanrun_retired_by:
         retirement += f"; v2.46 inactive by {leanrun_retired_by}"
     if vbase_retired_by:
@@ -6858,6 +6922,16 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, doccode_amendment, DOCCODE_REPLACES)
                 pa += extra_a
                 pb += extra_b
+        cliffs_amendment, cliffs_records, cliffs_subjects = cliffs_binding(root)
+        findings += cliffs_records + cliffs_subjects
+        if cliffs_amendment is not None:
+            if doccode_amendment is None:
+                findings.append("POLARIS: cliffs require effective docs and code v2.48")
+            else:
+                a, extra_a = compose_figure_by_id(a, cliffs_amendment, CLIFFS_REPLACES)
+                b, extra_b = compose_figure_by_name(b, cliffs_amendment, CLIFFS_REPLACES)
+                pa += extra_a
+                pb += extra_b
         leanrun_amendment, leanrun_records, leanrun_subjects = leanrun_binding(root)
         findings += leanrun_records + leanrun_subjects
         if leanrun_amendment is not None:
@@ -6998,6 +7072,13 @@ def vbase_screening_projects(root, pop, findings):
                                         if errors_a or errors_b or by_id != by_name:
                                             findings.append("POLARIS docs and code: selected census projections disagree")
                                         selected_population = by_id
+                                        cliffs_amendment, _records, _subjects = cliffs_binding(root)
+                                        if cliffs_amendment is not None:
+                                            by_id, errors_a = compose_figure_by_id(selected_population, cliffs_amendment, CLIFFS_REPLACES)
+                                            by_name, errors_b = compose_figure_by_name(selected_population, cliffs_amendment, CLIFFS_REPLACES)
+                                            if errors_a or errors_b or by_id != by_name:
+                                                findings.append("POLARIS cliffs: selected census projections disagree")
+                                            selected_population = by_id
     if leanrun_amendment is not None:
         by_id, errors_a = compose_figure_by_id(selected_population, leanrun_amendment, LEANRUN_REPLACES)
         by_name, errors_b = compose_figure_by_name(selected_population, leanrun_amendment, LEANRUN_REPLACES)
@@ -7409,6 +7490,8 @@ def polaris_expected(root, findings):
         n_scen += rough_delta(root, findings)
     if doccode_binding(root)[0] is not None:
         n_scen += doccode_delta(root, findings)
+    if cliffs_binding(root)[0] is not None:
+        n_scen += cliffs_delta(root, findings)
     if leanrun_binding(root)[0] is not None:
         n_scen += leanrun_delta(root, findings)
     return n_req, n_scen, ids
@@ -7687,6 +7770,9 @@ def check_generated(root, pop, report):
     doccode_amendment, _records, _subjects = doccode_binding(root)
     if doccode_amendment is not None:
         files += tracked(root, DOCCODE_HOME)
+    cliffs_amendment, _records, _subjects = cliffs_binding(root)
+    if cliffs_amendment is not None:
+        files += tracked(root, CLIFFS_HOME)
     leanrun_amendment, _records, _subjects = leanrun_binding(root)
     if leanrun_amendment is not None:
         files += tracked(root, LEANRUN_HOME)
@@ -7768,6 +7854,7 @@ def check_generated(root, pop, report):
                         (migbound_amendment, MIGBOUND_UNION),
                         (rough_amendment, ROUGH_UNION),
                         (doccode_amendment, DOCCODE_UNION),
+                        (cliffs_amendment, CLIFFS_UNION),
                         (leanrun_amendment, LEANRUN_UNION)):
         if delta is None:
             continue
@@ -8506,6 +8593,24 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls docs and code v2.48 adopted while it is not in force")
         if any("Agent adoption" in line for line in rows.get(DOCCODE_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls docs and code v2.48 adopted while it is not in force")
+    cliffs_amendment, _records, _subjects = cliffs_binding(root)
+    cliffs_fields = [line.strip() for line in visible_route_lines(status)
+                       if line.strip().startswith(CLIFFS_STATUS_PREFIX)]
+    if cliffs_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and CLIFFS_TAG in line
+                   for line in rows.get(CLIFFS_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route cliffs v2.49 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = cliffs_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or cliffs_fields != [f"{CLIFFS_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route cliffs v2.49 and its adoption {identity}")
+    elif CLIFFS_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in cliffs_fields):
+            findings.append(f"`{STATUS}` calls cliffs v2.49 adopted while it is not in force")
+        if any("Agent adoption" in line for line in rows.get(CLIFFS_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls cliffs v2.49 adopted while it is not in force")
     leanrun_amendment, _records, _subjects = leanrun_binding(root)
     leanrun_fields = [line.strip() for line in visible_route_lines(status)
                       if line.strip().startswith(LEANRUN_STATUS_PREFIX)]
@@ -8721,6 +8826,14 @@ def check_routes(root, pop, report):
             declarations.append(match.groups() if match else None)
         selected = 1 if screening_state == "effective" else 0
         advice_state, _advice, _records, _subjects = p5_advice_binding(root)
+        if cliffs_binding(root)[0] is not None:
+            # The cliffs' own sentence states the current total; the earlier sentences state theirs.
+            if scoped_route_lines(status, (CLIFFS_COUNT_SCOPE,)) != [
+                    f"{CLIFFS_COUNT_PREFIX}{want[0]} requirements and {want[1]} scenarios."]:
+                findings.append(f"`{STATUS}` does not declare the exact cliffs census")
+            want = (want[0], str(int(want[1]) - cliffs_delta(root, findings)))
+        elif scoped_route_lines(status, (CLIFFS_COUNT_SCOPE,)):
+            findings.append(f"`{STATUS}` declares a cliffs census while it is not in force")
         if doccode_binding(root)[0] is not None:
             # The docs and code' own sentence states the current total; the earlier sentences state theirs.
             if scoped_route_lines(status, (DOCCODE_COUNT_SCOPE,)) != [
@@ -9102,6 +9215,7 @@ def inputs(root):
     paths |= {MIGBOUND_UNION, *MIGBOUND_SUBJECTS}
     paths |= {ROUGH_UNION, *ROUGH_SUBJECTS}
     paths |= {DOCCODE_UNION, *DOCCODE_SUBJECTS}
+    paths |= {CLIFFS_UNION, *CLIFFS_SUBJECTS}
     paths |= {LEANRUN_UNION, *LEANRUN_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
@@ -9535,6 +9649,10 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     doccode_retired = doccode_disposition(tree, doccode_rows_now)
     doccode_records = 2 if doccode_retired else int(bool(doccode_rows_now))
     doccode_subjects = DOCCODE_BOUND_PARTS if doccode_rows_now and not doccode_retired else 0
+    cliffs_rows_now = cliffs_rows(tree)
+    cliffs_retired = cliffs_disposition(tree, cliffs_rows_now)
+    cliffs_records = 2 if cliffs_retired else int(bool(cliffs_rows_now))
+    cliffs_subjects = CLIFFS_BOUND_PARTS if cliffs_rows_now and not cliffs_retired else 0
     leanrun_rows_now = leanrun_rows(tree)
     leanrun_retired = leanrun_disposition(tree, leanrun_rows_now)
     leanrun_records = 2 if leanrun_retired else int(bool(leanrun_rows_now))
@@ -9555,7 +9673,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                             and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_readmit_row(line) and not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line)
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line)
                       and not is_infra_row(line)
                       and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line) and not is_worth_row(line)
                       and not is_edit_account_row(line))
@@ -9571,8 +9689,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records - step_records - qkind_records - figplan_records - vbase_records - choice_records - migpar_records - impfacts_records - walk_records - tnames_records - migbound_records - rough_records - doccode_records - leanrun_records
-            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects - step_subjects - qkind_subjects - figplan_subjects - vbase_subjects - choice_subjects - migpar_subjects - impfacts_subjects - walk_subjects - tnames_subjects - migbound_subjects - rough_subjects - doccode_subjects - leanrun_subjects
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records - step_records - qkind_records - figplan_records - vbase_records - choice_records - migpar_records - impfacts_records - walk_records - tnames_records - migbound_records - rough_records - doccode_records - cliffs_records - leanrun_records
+            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects - step_subjects - qkind_subjects - figplan_subjects - vbase_subjects - choice_subjects - migpar_subjects - impfacts_subjects - walk_subjects - tnames_subjects - migbound_subjects - rough_subjects - doccode_subjects - cliffs_subjects - leanrun_subjects
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
             - (DERIVED_BOUND_PARTS if had_derived else 0)
@@ -9730,7 +9848,7 @@ def url_source_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_url_source_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -12711,7 +12829,7 @@ def reach_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_reach_row(line) and not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -12831,7 +12949,7 @@ def raw_read_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "01234567"
@@ -12903,7 +13021,7 @@ def treeread_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "89abcdef"
@@ -13438,7 +13556,7 @@ def qkind_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line))
+                      if not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -13531,7 +13649,7 @@ def figplan_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line))
+                      if not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -13630,7 +13748,7 @@ def walk_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line))
+                      if not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -13716,7 +13834,7 @@ def migbound_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line))
+                      if not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -13802,7 +13920,7 @@ def rough_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_rough_row(line) and not is_doccode_row(line))
+                      if not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -13888,7 +14006,7 @@ def doccode_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_doccode_row(line))
+                      if not is_doccode_row(line) and not is_cliffs_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -13948,6 +14066,92 @@ def doccode_cases(tmp, base, witnesses, failures):
     retired, found = census(tree)
     held = (doccode_disposition(tree, doccode_rows(tree)) == "A-1000"
             and doccode_binding(tree) == (None, [], []) and not found and retired["POLARIS"] == prior)
+    record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 034", found, held, baseline=True)
+
+
+def cliffs_cases(tmp, base, witnesses, failures):
+    """Guard the cliffs' row, its predecessor, its checked spec bytes and its retirement.
+
+    The selftest base is projected onto the history before the v2.36 source-example advice, so the
+    v2.48 docs and code this version stands on is not effective there either, and the cliffs
+    can only be pending or refused here; `--check` on the delivered tree witnesses it effective.
+    """
+    original = read_text(base, CLIFFS_SPEC)
+    if original is None or CLIFFS_TAG is None:
+        return
+
+    def record(name, rel, old, new, expected, found, held, baseline=False):
+        mutant = f"cliffs-{name}"
+        witnesses.append({"mutant": mutant, "path": rel, "old": old, "new": new,
+                          "expected": expected, "failed": found,
+                          "outcome": ("held" if baseline else "killed") if held else "SURVIVED"})
+        if not held:
+            failures.append(mutant)
+
+    tree = Path(tmp) / "dossier-cliffs"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_cliffs_row(line))
+    ledger.write_text(pending)
+    before, before_findings = census(tree)
+    prior = before["POLARIS"]
+    held = cliffs_binding(tree) == (None, [], []) and not before_findings
+    record("pending", AGENT_ADOPTIONS, "<no row>", "<unchanged>", "no cliffs binding and a clean census",
+           before_findings, held, baseline=True)
+
+    oid = "0123456789abcdef0123456789abcdef01234567"
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{CLIFFS_SPEC}"
+    row = (f"| A-999 | 2026-11-28 | `{oid}` | [spec]({snapshot}) | Selftest | "
+           f"`git revert -m 1 {oid}` | `{CLIFFS_TAG}` |\n")
+    later = "f" * 40
+    unrelated = f"| A-1001 | 2026-11-28 | `{later}` | "
+    for name, citation in (
+        ("prior-snapshot", unrelated + f"[prior spec]({snapshot}) | Other work | `git revert {later}` | — |\n"),
+        ("tag-in-reason", unrelated + f"Other work | `{CLIFFS_TAG}` | `git revert {later}` | — |\n"),
+    ):
+        ledger.write_text(pending + citation)
+        text, r1, r2 = cliffs_binding(tree)
+        record(f"pending-{name}", AGENT_ADOPTIONS, "<no citation>", citation,
+               "an unrelated row does not claim this adoption", r1 + r2,
+               text is None and not r1 and not r2, baseline=True)
+
+    # The row without an effective v2.48 predecessor is refused, and the census keeps the predecessor.
+    ledger.write_text(pending + row)
+    text, r1, r2 = cliffs_binding(tree)
+    after, after_findings = census(tree)
+    record("prior-unavailable", AGENT_ADOPTIONS, "<no row>", row, "R1 requires effective v2.48", r1 + r2,
+           text is None and not r2 and any("prior v2.48 docs and code" in finding for finding in r1)
+           and after["POLARIS"] == prior)
+
+    for name, old, new, detail in (
+        ("malformed-tagged", "| Selftest | ", "| ", "seven-column"),
+        ("wrong-tag", CLIFFS_TAG, CLIFFS_TAG + "-wrong", "malformed"),
+        ("wrong-snapshot", snapshot, snapshot.replace("/blob/", "/tree/"), "does not name"),
+        ("wrong-revert", f"git revert -m 1 {oid}", f"git revert {'0' * 40}", "revert"),
+    ):
+        assert row.count(old) == 1 and old != new
+        ledger.write_text(pending + row.replace(old, new, 1))
+        text, r1, r2 = cliffs_binding(tree)
+        record(name, AGENT_ADOPTIONS, old, new, f"R1 refusal mentioning {detail}", r1 + r2,
+               text is None and not r2 and any(detail in finding for finding in r1))
+
+    ledger.write_text(pending + row)
+    spec = tree / CLIFFS_SPEC
+    current_bound = "past the read limit of 1000 source files or 250 configuration files"
+    changed = "past the read limit of 1001 source files or 250 configuration files"
+    assert original.count(current_bound) == 1
+    spec.write_text(original.replace(current_bound, changed, 1))
+    text, r1, r2 = cliffs_binding(tree)
+    record("modified-model-total", CLIFFS_SPEC, current_bound, changed, "R2 bound-subject refusal",
+           r1 + r2, text is None and len(r2) == 1 and CLIFFS_SPEC in r2[0])
+    spec.write_text(original)
+
+    veto = "| A-1000 | 2026-11-28 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n"
+    ledger.write_text(pending + row + veto)
+    retired, found = census(tree)
+    held = (cliffs_disposition(tree, cliffs_rows(tree)) == "A-1000"
+            and cliffs_binding(tree) == (None, [], []) and not found and retired["POLARIS"] == prior)
     record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 034", found, held, baseline=True)
 
 
@@ -14071,7 +14275,7 @@ def tnames_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line))
+                      if not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -14157,7 +14361,7 @@ def impfacts_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line))
+                      if not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -14243,7 +14447,7 @@ def migpar_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line))
+                      if not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -14329,7 +14533,7 @@ def choice_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line))
+                      if not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -14410,7 +14614,7 @@ def vbase_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line))
+                      if not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -14629,7 +14833,7 @@ def term_brief_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line))
+                      if not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     before_pop, before_findings = census(tree)
     before = before_pop["POLARIS"]
@@ -14833,7 +15037,7 @@ def readmit_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -15474,26 +15678,27 @@ def project_source_example_history(root):
                               and not is_choice_row(line.rstrip("\n"))
                               and not is_migpar_row(line.rstrip("\n"))
                               and not is_impfacts_row(line.rstrip("\n"))
-                              and not is_walk_row(line.rstrip("\n")) and not is_tnames_row(line.rstrip("\n")) and not is_migbound_row(line.rstrip("\n")) and not is_rough_row(line.rstrip("\n")) and not is_doccode_row(line.rstrip("\n")) and not is_leanrun_row(line.rstrip("\n"))), encoding="utf-8")
+                              and not is_walk_row(line.rstrip("\n")) and not is_tnames_row(line.rstrip("\n")) and not is_migbound_row(line.rstrip("\n")) and not is_rough_row(line.rstrip("\n")) and not is_doccode_row(line.rstrip("\n")) and not is_cliffs_row(line.rstrip("\n")) and not is_leanrun_row(line.rstrip("\n"))), encoding="utf-8")
     for path in P5_ADVICE_SUBJECTS:
         (root / path).unlink(missing_ok=True)
     status = root / STATUS
     # The v2.37 choice floor stands on v2.36, the v2.38 migration parity on v2.37, the v2.39 import facts
     # on v2.38, the v2.40 figure walks on v2.39, the v2.42 test-name recognizers on v2.40, the v2.43
-    # migration bounds on v2.42, the v2.44 rough-edge markers on v2.43 and the v2.48 docs and code on v2.44,
+    # migration bounds on v2.42, the v2.44 rough-edge markers on v2.43, the v2.48 docs and code on v2.44 and the
+    # v2.49 cliffs on v2.48,
     # so their routes leave with it. The v2.46 URL lean run stands on v2.1,
     # but its count sentence follows the rough-edge markers' sentence, so its row and routes leave too.
     prefixes = (P5_ADVICE_STATUS_PREFIX, P5_ADVICE_COUNT_SCOPE, CHOICE_STATUS_PREFIX, CHOICE_COUNT_SCOPE,
                 MIGPAR_STATUS_PREFIX, MIGPAR_COUNT_SCOPE, IMPFACTS_STATUS_PREFIX, IMPFACTS_COUNT_SCOPE,
                 WALK_STATUS_PREFIX, WALK_COUNT_SCOPE, TNAMES_STATUS_PREFIX, TNAMES_COUNT_SCOPE,
-                MIGBOUND_STATUS_PREFIX, MIGBOUND_COUNT_SCOPE, ROUGH_STATUS_PREFIX, ROUGH_COUNT_SCOPE, DOCCODE_STATUS_PREFIX, DOCCODE_COUNT_SCOPE, LEANRUN_STATUS_PREFIX, LEANRUN_COUNT_SCOPE)
+                MIGBOUND_STATUS_PREFIX, MIGBOUND_COUNT_SCOPE, ROUGH_STATUS_PREFIX, ROUGH_COUNT_SCOPE, DOCCODE_STATUS_PREFIX, DOCCODE_COUNT_SCOPE, CLIFFS_STATUS_PREFIX, CLIFFS_COUNT_SCOPE, LEANRUN_STATUS_PREFIX, LEANRUN_COUNT_SCOPE)
     status.write_text("".join(line for line in status.read_text(encoding="utf-8").splitlines(keepends=True)
                               if not line.strip().startswith(prefixes)), encoding="utf-8")
     index = root / OPENSPEC_README
     lines = index.read_text(encoding="utf-8").splitlines(keepends=True)
     index.write_text("".join(
         P5_ADVICE_CANDIDATE_INDEX + "\n" if line.strip().startswith(P5_ADVICE_INDEX_PREFIX)
-        else _candidate_index_row(line) if line.strip().startswith((CHOICE_INDEX_PREFIX, MIGPAR_INDEX_PREFIX, IMPFACTS_INDEX_PREFIX, WALK_INDEX_PREFIX, TNAMES_INDEX_PREFIX, MIGBOUND_INDEX_PREFIX, ROUGH_INDEX_PREFIX, DOCCODE_INDEX_PREFIX, LEANRUN_INDEX_PREFIX)) else line
+        else _candidate_index_row(line) if line.strip().startswith((CHOICE_INDEX_PREFIX, MIGPAR_INDEX_PREFIX, IMPFACTS_INDEX_PREFIX, WALK_INDEX_PREFIX, TNAMES_INDEX_PREFIX, MIGBOUND_INDEX_PREFIX, ROUGH_INDEX_PREFIX, DOCCODE_INDEX_PREFIX, CLIFFS_INDEX_PREFIX, LEANRUN_INDEX_PREFIX)) else line
         for line in lines
     ), encoding="utf-8")
 
@@ -16043,7 +16248,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         ledger = figure_base / AGENT_ADOPTIONS
         rows = ledger.read_text().splitlines(keepends=True)
         ledger.write_text("".join(line for line in rows
-                                  if not is_edit_account_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_leanrun_row(line)))
+                                  if not is_edit_account_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line) and not is_choice_row(line) and not is_migpar_row(line) and not is_impfacts_row(line) and not is_walk_row(line) and not is_tnames_row(line) and not is_migbound_row(line) and not is_rough_row(line) and not is_doccode_row(line) and not is_cliffs_row(line) and not is_leanrun_row(line)))
     # The families below run side by side, each in its own fresh fork, and
     # their witnesses, failures and printed lines are merged in this order
     # (syzygy-7rkx). A family added here must keep three rules, or a
@@ -16089,6 +16294,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         lambda w, f: migbound_cases(tmp, base, w, f),
         lambda w, f: rough_cases(tmp, base, w, f),
         lambda w, f: doccode_cases(tmp, base, w, f),
+        lambda w, f: cliffs_cases(tmp, base, w, f),
         lambda w, f: leanrun_cases(tmp, base, w, f),
         lambda w, f: vbase_cases(tmp, base, w, f),
     ]
