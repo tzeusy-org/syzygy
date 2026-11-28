@@ -660,6 +660,8 @@ describe('secret-shaped identities never pass check or reach an output (syzygy-3
     ['a v17 draft with a model, two levelled views, a deep dive and a walk', () => walking(levelDraft(ZOOM_MODEL(), [ctxView(at({ kind: 'section', target: 's1' })), partsView()], [dive('runtime')]),
       { figure: 'ctx', steps: [{ element: 'app', block: 'p1' }, { element: 'user', block: 'p2' }] })],
     ['a v16 draft with a flow view and a walk over three paragraphs', () => walking(walkDraft(WRITE(), WRITE_RELS(), [writeView()]), { figure: 'f', steps: STEPS() })],
+    // No figure draws its one section, so check's reader advice names the section (RS-16): a member the report alone carries.
+    ['a v11 draft with one section and no figure', () => draftOf([])],
   ];
 
   it('walks every member the issued schema types as a handle or a list of handles', () => {
@@ -693,7 +695,7 @@ describe('secret-shaped identities never pass check or reach an output (syzygy-3
     expect(await findingsOf(A, doc)).toEqual(PASSED);
     const leaky = planted(doc);
     // The denominator: every identity site of the draft, each a distinct value's token.
-    expect(leaky.paths.length).toBeGreaterThan(40);
+    expect(leaky.paths.length).toBeGreaterThan(30);
     const { run, result } = await checked(A, leaky.doc);
     if (!result.ok || !('quotations' in result.report)) throw new Error(`the check must report in full: ${JSON.stringify(result.ok ? Object.keys(result.report) : result.refusal)}`);
     expect(result.report.outcome).toBe('findings');

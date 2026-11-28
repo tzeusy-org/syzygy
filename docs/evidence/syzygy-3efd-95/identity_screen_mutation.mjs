@@ -5,6 +5,8 @@
 // Each mutant replaces one fragment that occurs exactly once in its file, runs the test files of its group, and restores the source in
 // `finally`. `--dry` only asserts that every fragment occurs exactly once. Never edit or commit while it runs. Adapted from
 // docs/evidence/syzygy-3efd-93/finding_names_mutation.mjs.
+// Run 1 (identity-screen-mutation-run1-2026-11-29.json) killed 16 of 17: no draft drew a member the report alone carries, so the report's own
+// scrub survived (report-not-scrubbed). Repair: a draft with a section no figure draws, whose reader advice names the section. Run 2 records it.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
