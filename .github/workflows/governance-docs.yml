@@ -46,7 +46,9 @@ jobs:
   governance:
     name: checks (governance)
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # 15 minutes was outgrown on 2026-11-28: passing runs took 11-14 min and
+    # three runs were cancelled at the limit mid-step (syzygy bead on CI timeout).
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
