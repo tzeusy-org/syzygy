@@ -41,6 +41,7 @@ describe('the words of a text (version 2.51)', () => {
     expect(adviceWords('\u00c9COLE \u00e9cole 12\u00bd')).toEqual(['\u00c9cole', '\u00e9cole', '12\u00bd']);
     expect(adviceWords('caf\u00e9 cafe\u0301')).toEqual(['caf\u00e9', 'cafe']);
     expect(adviceWords('a\ud835\udc00b x\ud800y')).toEqual(['a\ud835\udc00b', 'x', 'y']);
+    expect(adviceWords('Zone ZIP AZ')).toEqual(['zone', 'zip', 'az']);
     expect(adviceWords('  \t\n ')).toEqual([]);
   });
 
@@ -108,6 +109,7 @@ describe('walk advice over a draft (version 2.51)', () => {
     expect(walkAdvice(ROUTING(), [{ kind: 'schema', at: '$.title', detail: 'x' }], {}, NO_SCREEN)).toBeUndefined();
     expect(walkAdvice(ROUTING(), [{ kind: 'walk', at: '$.sections[0].walk.steps[1].block', detail: 'x' }], {}, NO_SCREEN)).toEqual({ rules: RULES, examined: 0, advisories: [] });
     expect(walkAdvice(ROUTING(), [{ kind: 'walk', at: '$.sections[0].walk', detail: 'x' }], {}, NO_SCREEN)).toEqual({ rules: RULES, examined: 0, advisories: [] });
+    expect(walkAdvice(ROUTING(), [{ kind: 'walk', at: '$.sections[0].walk[0]', detail: 'x' }], {}, NO_SCREEN)).toEqual({ rules: RULES, examined: 0, advisories: [] });
     // A finding elsewhere, and one at a path that only shares the walk's prefix, leave the walk read.
     expect(walkAdvice(ROUTING(), [{ kind: 'walk', at: '$.sections[0].walker', detail: 'x' }, { kind: 'view-shape', at: '$.diagrams[0]', detail: 'x' }], {}, NO_SCREEN)?.examined).toBe(3);
     const none = ROUTING();
