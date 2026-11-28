@@ -171,6 +171,10 @@ describe('limit-default v1: configuration forms', () => {
       ['entry', 'core.filemode', 'true', 'boolean', 3, 'filemode = true'],
       ['entry', 'user.name', 'x', 'text', 5, 'name = x'],
     ]);
+    expect(rows(recognizeConfig('[a]\nk = 1\n[b]\n  j = 2\n', 'ini'))).toEqual([
+      ['entry', 'a.k', '1', 'integer', 2, 'k = 1'],
+      ['entry', 'b.j', '2', 'integer', 4, 'j = 2'],
+    ]);
   });
 
   it('reads yaml mappings by their key paths, skipping sequences and block scalars', () => {
