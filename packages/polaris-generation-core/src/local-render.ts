@@ -308,6 +308,107 @@ export type LocalTestNames =
     readonly namesNotListed: number;
   }
   | { readonly format: string; readonly state: 'unknown'; readonly why: string };
+/** The rough-edge markers this render derived itself (REQ-polaris-generation-034 version 2.43): recognizer `rough-edge-marker` v1's
+ * TODO, FIXME, HACK, deprecation and issue-reference markers in the admitted source files of the pinned tree, each Observed with its quoted
+ * line, mapped to its unit by rule `top-level-unit`. */
+export interface LocalRoughEdgesFile {
+  readonly path: string;
+  readonly epistemic: 'observed' | 'unknown';
+  readonly unknownReason: string | null;
+  readonly parseFault: string | null;
+  readonly markers: number | null;
+  readonly valuesLeftOut: number | null;
+}
+export interface LocalRoughEdgesRecognizer {
+  readonly rule: string;
+  readonly ruleVersion: number;
+  readonly label: 'observed';
+  readonly candidates: number;
+  readonly secretPathsLeftOut: number;
+  readonly setApart: number;
+  readonly observed: number;
+  readonly unknown: number;
+  readonly valuesLeftOut: number;
+  readonly markers: number;
+  readonly files: readonly LocalRoughEdgesFile[];
+  readonly filesNotListed: number;
+}
+export interface LocalRoughEdgeMarker {
+  readonly id: string;
+  readonly kind: 'todo' | 'fixme' | 'hack' | 'deprecation' | 'issue-reference';
+  readonly marker: string;
+  readonly path: string;
+  readonly line: number;
+  readonly unit: string | null;
+  readonly blob: string;
+  readonly quote: string;
+  readonly epistemic: 'observed';
+  readonly referenceContent: 'unknown' | null;
+}
+export type LocalRoughEdges =
+  | {
+    readonly format: string;
+    readonly state: 'derived';
+    readonly screeningPolicy: { readonly policyId: string; readonly policyVersion: string; readonly sha256: string };
+    readonly unitRule: { readonly rule: string; readonly ruleVersion: number };
+    readonly recognizer: LocalRoughEdgesRecognizer;
+    readonly units: readonly { readonly unit: string | null; readonly files: number; readonly markers: number; readonly byKind: Readonly<Record<string, number>> }[];
+    readonly unitsNotListed: number;
+    readonly markers: readonly LocalRoughEdgeMarker[];
+    readonly markersNotListed: number;
+  }
+  | { readonly format: string; readonly state: 'unknown'; readonly why: string };
+/** The documents' paths and identifiers this render resolved itself (REQ-polaris-generation-034 version 2.48): recognizer `doc-reference`
+ * v1's rows, each `resolves`, `document-only` or `unknown`, from the admitted Markdown documents of the pinned tree. */
+export interface LocalDocsFile {
+  readonly path: string;
+  readonly epistemic: 'observed' | 'unknown';
+  readonly unknownReason: string | null;
+  readonly parseFault: string | null;
+  readonly resolves: number | null;
+  readonly documentOnly: number | null;
+  readonly unknown: number | null;
+  readonly valuesLeftOut: number | null;
+}
+export interface LocalDocsPopulation {
+  readonly candidates: number;
+  readonly secretPathsLeftOut: number;
+  readonly setApart: number;
+  readonly observed: number;
+  readonly unknown: number;
+  readonly files: readonly LocalDocsFile[];
+  readonly filesNotListed: number;
+}
+export interface LocalDocRow {
+  readonly id: string;
+  readonly document: string;
+  readonly line: number;
+  readonly quote: string;
+  readonly quoteExcerpt: boolean;
+  readonly written: 'code-span' | 'link';
+  readonly value: string;
+  readonly form: 'path' | 'identifier';
+  readonly outcome: 'resolves' | 'document-only' | 'unknown';
+  readonly epistemic: 'observed' | 'unknown';
+  readonly unknownReason: string | null;
+  readonly resolution:
+    | { readonly entry: 'file' | 'directory'; readonly path: string }
+    | { readonly entry: 'identifier'; readonly path: string; readonly line: number; readonly blob: string; readonly searched: 'code-text' | 'comment-or-string' | 'file-text' }
+    | null;
+}
+export type LocalDocsAndCode =
+  | {
+    readonly format: string;
+    readonly state: 'derived';
+    readonly screeningPolicy: { readonly policyId: string; readonly policyVersion: string; readonly sha256: string };
+    readonly rule: { readonly rule: string; readonly ruleVersion: number };
+    readonly documents: LocalDocsPopulation & { readonly spansNotChecked: number; readonly linksNotChecked: number; readonly valuesLeftOut: number };
+    readonly code: LocalDocsPopulation & { readonly read: boolean };
+    readonly counts: { readonly resolves: number; readonly documentOnly: number; readonly unknown: number };
+    readonly rows: readonly LocalDocRow[];
+    readonly rowsNotListed: number;
+  }
+  | { readonly format: string; readonly state: 'unknown'; readonly why: string };
 /** A schema-v12 draft's model (version 2.24): identities, types, parents, bases and the views (diagram ids, in diagram order) selecting
  * each. Labels, marks and citations stay in the expanded figures' claims. */
 export interface LocalModel {
@@ -422,6 +523,12 @@ export interface LocalRenderInput {
   /** The declared test names this render derived itself (version 2.42), from which the test-names reference page is drawn. The page
    * renders only where this and `derivedStructure` are both present, so an input without it keeps its pages and machine view. */
   readonly testNames?: LocalTestNames;
+  /** The rough-edge markers this render derived itself (version 2.43), from which the rough-edges reference page is drawn. The page renders
+   * only where this and `derivedStructure` are both present, so an input without it keeps its pages and machine view. */
+  readonly roughEdges?: LocalRoughEdges;
+  /** The documents' paths and identifiers this render resolved itself (version 2.48), from which the docs-and-code reference page is drawn.
+   * The page renders only where this and `derivedStructure` are both present, so an input without it keeps its pages and machine view. */
+  readonly docsAndCode?: LocalDocsAndCode;
   /** A schema-v9 draft's graph edges (REQ-polaris-generation-034 version 2.19), by edge id: each edge's relation and the witness state rule
    * `relation-witness` gives it at this render. Absent for every earlier draft, so its pages and machine view keep their bytes. */
   readonly edgeRelations?: ReadonlyMap<string, LocalEdgeRelation>;
