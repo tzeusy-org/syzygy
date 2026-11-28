@@ -72,7 +72,7 @@ describe('local-agent draft schema', () => {
     ['a non-normative block carries a citation', (d) => { d.sections[0].paragraphs[0].children[1].citations = [cite('x')]; }, { path: '$.sections[0].paragraphs[0].children[1].citations', detail: 'is not a field of this form' }],
     ['an execution-based claim names no execution', (d) => { d.sections[0].paragraphs[0].children[2].executionIds = []; }, { path: '$.sections[0].paragraphs[0].children[2].executionIds', detail: 'must hold 1 to 20 items; holds 0' }],
     ['the draft names another revision', (d) => { d.pinnedRevision = 'a'.repeat(40); }, { path: '$.pinnedRevision', detail: `must be one of ${REV}` }],
-    ['the draft names another schema version', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v0'; }, { path: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13, polaris-dossier-local-draft-v14, polaris-dossier-local-draft-v15, polaris-dossier-local-draft-v16' }],
+    ['the draft names another schema version', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v0'; }, { path: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13, polaris-dossier-local-draft-v14, polaris-dossier-local-draft-v15, polaris-dossier-local-draft-v16, polaris-dossier-local-draft-v17' }],
     ['the understanding record omits an item', (d) => { delete d.understanding.tradeOffs; }, { path: '$.understanding.tradeOffs', detail: 'is required' }],
     ['an understanding item is left empty rather than Unknown', (d) => { d.understanding.limits = []; }, { path: '$.understanding.limits', detail: 'must hold 1 to 100 items; holds 0' }],
     ['the draft has no understanding record', (d) => { delete d.understanding; }, { path: '$.understanding', detail: 'is required' }],
@@ -178,7 +178,16 @@ describe('draft.schema.json', () => {
 
   it('is a JSON Schema 2020-12 document carrying the version, the revision and closed objects', () => {
     expect(document['$schema']).toBe('https://json-schema.org/draft/2020-12/schema');
-    expect(document['$id']).toBe('urn:syzygy:polaris-dossier:polaris-dossier-local-draft-v16');
+    expect(document['$id']).toBe('urn:syzygy:polaris-dossier:polaris-dossier-local-draft-v17');
+    // Version 2.50: every graph and containment view arm, with or without `base`, admits `level` and `scope`.
+    const arms = (document as any).properties.diagrams.items.oneOf.flatMap((arm: any) => arm.properties?.view?.oneOf ?? []); // eslint-disable-line @typescript-eslint/no-explicit-any
+    expect(arms.length).toBeGreaterThan(0);
+    for (const view of arms) {
+      expect(view.properties.level.enum).toEqual(['context', 'container', 'component']);
+      expect(view.properties.scope.type).toBe('string');
+      expect(view.required).not.toContain('level');
+      expect(view.required).not.toContain('scope');
+    }
     expect(document['additionalProperties']).toBe(false);
     expect((document['properties'] as Record<string, unknown>)['pinnedRevision']).toMatchObject({ enum: [REV] });
     expect(JSON.parse(JSON.stringify(document))).toEqual(document);
@@ -252,11 +261,11 @@ describe('local-agent draft schema: the worth-knowing mark (v13)', () => {
     ]);
   });
 
-  it('names neither v11 nor v12, which no brief issues, so neither reads as v13; it names v14, v15 and v16, the issued schema (versions 2.33, 2.35 and 2.40)', () => {
+  it('names neither v11 nor v12, which no brief issues, so neither reads as v13; it names v14, v15, v16 and v17, the issued schema (versions 2.33, 2.35, 2.40 and 2.50)', () => {
     for (const version of ['polaris-dossier-local-draft-v11', 'polaris-dossier-local-draft-v12']) {
       const errors = checkDraftShape(SCHEMA, mutate((d) => { d.schemaVersion = version; }));
       expect(errors.map(({ path }) => path), version).toEqual(['$.schemaVersion']);
-      expect(errors[0]!.detail).toBe('must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13, polaris-dossier-local-draft-v14, polaris-dossier-local-draft-v15, polaris-dossier-local-draft-v16');
+      expect(errors[0]!.detail).toBe('must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13, polaris-dossier-local-draft-v14, polaris-dossier-local-draft-v15, polaris-dossier-local-draft-v16, polaris-dossier-local-draft-v17');
     }
   });
 

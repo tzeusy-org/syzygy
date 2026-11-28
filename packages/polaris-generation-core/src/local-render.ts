@@ -493,6 +493,9 @@ export type LocalBase =
 /** One step of a walk (version 2.40): the node it numbers, by its identity in the drawn figure, and the block its `Read step` link names. */
 export interface LocalWalkStep { readonly node: string; readonly block: string }
 
+/** A view's level of abstraction and the element it is about (version 2.50). */
+export interface LocalViewLevel { readonly level: 'context' | 'container' | 'component'; readonly scope: string }
+
 export interface LocalRenderInput {
   /** The checked draft in the renderer's shape. `sourceIds` name only sources Syzygy read and screening admitted, and may be empty. No
    * part of it renders while the draft layer is Unknown. */
@@ -554,6 +557,10 @@ export interface LocalRenderInput {
    * the identity of the node the figure draws (a base element's fact identity) and the block whose paragraph explains it. A walk the render
    * cannot resolve is absent. Absent for every other draft, so its pages and machine view keep their bytes. */
   readonly walks?: ReadonlyMap<string, readonly LocalWalkStep[]>;
+  /** A schema-v17 draft's view levels (REQ-polaris-generation-034 version 2.50), by diagram identity: each view carrying `level` and
+   * `scope`, which gives its figure two attributes and its scope's zoom links. Absent for every other draft, so its pages and machine view
+   * keep their bytes. */
+  readonly viewLevels?: ReadonlyMap<string, LocalViewLevel>;
   /** A schema-v6 draft's `thesisBasis` (REQ-polaris-generation-034 version 2.4): what the authoring session says its introduction rests
    * on, and whether the code-reading line renders before it. Absent for every earlier draft, so its pages and machine view keep their
    * bytes. */

@@ -539,7 +539,7 @@ describe('schema v16: a walk through a figure (version 2.40)', () => {
         .toEqual([{ kind: 'walk', at: '$.sections[0].walk', detail: 'a walk is {"figure", "steps"}, its steps a list of 2 to 12 {"element", "block"}' }]);
     }
     // An unknown schema version keeps its own findings: a schema finding at the walk, never a field-version one.
-    const unknown = walking({ ...plain, schemaVersion: 'polaris-dossier-local-draft-v17' }, { figure: 'f', steps: STEPS() });
+    const unknown = walking({ ...plain, schemaVersion: 'polaris-dossier-local-draft-v18' }, { figure: 'f', steps: STEPS() });
     expect((await findingsOf(A, unknown)).findings.filter((finding) => finding.at.startsWith('$.sections[0].walk')))
       .toEqual([{ kind: 'schema', at: '$.sections[0].walk', detail: 'is not a field of this form' }]);
   });

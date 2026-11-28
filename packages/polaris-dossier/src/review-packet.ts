@@ -8,6 +8,7 @@ import { collectCitations, declaredSessionId, nextRevision } from './check.js';
 import { NotARegularFileError, isCheckRecordOf, readBoundedFile, readCheckRecord } from './check-record-read.js';
 import { DRAFT_MAX_BYTES } from './check-model.js';
 import { withoutFigurePlan } from './figure-plan.js';
+import { withoutLevels } from './view-level.js';
 import { withoutWalks } from './walk.js';
 import { DEFICIENT_SUBJECTS, GROUPS_FIELD, UNIT_FIELD, VERDICT_QUOTATION_FORM, hasHeroForm, hasModelForm, hasRelationForm, hasWithheldHeroIdentity, membersOfKind, verdictSchemaDocument } from './draft-schema.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
@@ -102,7 +103,7 @@ function withheldDiagramUnits(draft: Readonly<Record<string, unknown>>, screen: 
  * exchange; nor a v14 draft's figure plan, which check alone reads (version 2.33); nor a v16 draft's walks, which enter no fidelity entry
  * (version 2.40). */
 export function packetDraftView(draftDoc: Readonly<Record<string, unknown>>): Readonly<Record<string, unknown>> {
-  const { discovery: _readAccount, ...draftView } = withoutWalks(withoutFigurePlan(draftDoc));
+  const { discovery: _readAccount, ...draftView } = withoutLevels(withoutWalks(withoutFigurePlan(draftDoc)));
   return draftView;
 }
 
