@@ -176,6 +176,8 @@ TREE_A['src/pool.ts'] = POOL_LINES.join('\n') + '\n';
 const UNCERTAIN: Record<string, string> = { vt: '\u000B', ff: '\u000C', nel: '\u0085', ls: '\u2028', ps: '\u2029' };
 for (const [name, char] of Object.entries(UNCERTAIN)) TREE_A[`src/${name}.ts`] = `export const a = 1;${char}export const b = 2;\nexport const c = 3;\n`;
 TREE_A['src/crlf.ts'] = 'export const a = 1;\r\nexport const b = 2;\r\nexport const c = 3;\r\n';
+/** A body screening reads and then excludes: a credential assignment, built in pieces as the screening fixtures build one. */
+TREE_A['src/held.ts'] = `export const a = 1;\nconst ${['to', 'ken'].join('')} = "${'z'.repeat(12)}";\nexport const c = 3;\n`;
 
 const at = (file: string, startLine: number, endLine: number, id: string) => ({ id, path: file, startLine, endLine });
 const para = (id: string, over: Doc = {}): Doc => ({ id, label: 'inferred', basis: 'source', text: `The pool hands out slots (${id}).`, citations: [cite(`c-${id}`, 2, 2)], quotations: [], children: [], ...over });
@@ -296,6 +298,41 @@ describe('code excerpt marks: check (version 2.54)', () => {
     expect(out.slice(-4)).toEqual(ours(out));
   });
 
+  it('skips an excerpt of an absent path whose range is reversed, over 60 lines or not from 1, though no range finding is drawn (R33-code finding 1)', async () => {
+    const outside = { highlights: [{ startLine: 80, endLine: 80 }] };
+    for (const [startLine, endLine] of [[1, 70], [20, 10], [0, 5]] as const) {
+      const out = (await findingsOf(A, excerptDraft([code('x', startLine, endLine, outside, 'src/nope.ts')]))).findings;
+      expect(out.filter((f) => f.kind === 'code-highlight' || f.kind === 'code-note'), `${startLine}-${endLine}`).toEqual([]);
+    }
+    // The same absent path with a range of 1 to 60 lines: the highlight is read against the cited lines.
+    expect(ours((await findingsOf(A, excerptDraft([code('x', 1, 5, outside, 'src/nope.ts')]))).findings)).toEqual([
+      { kind: 'code-highlight', at: '$.sections[0].paragraphs[2].highlights[0]', detail: "`highlights[0]` lies outside the excerpt's lines 1 to 5" },
+    ]);
+  });
+
+  it('reads no code object where the draft admits no element: a callout\'s child takes 2.53\'s finding alone (R33-code finding 3)', async () => {
+    const misplaced = (version: string): Doc => excerptDraft([{ kind: 'callout', id: 'k1', tone: 'tip', title: 'Tip', children: [code('x', 10, 20, { highlights: [{ startLine: 30, endLine: 30 }] })] }], version);
+    for (const version of [V17, V18]) {
+      const out = (await findingsOf(A, misplaced(version))).findings;
+      expect(out.some((f) => f.kind === 'schema'), version).toBe(true);
+      expect(out.filter((f) => ['code-highlight', 'code-note', 'field-version'].includes(f.kind) || f.at.includes('.highlights')), version).toEqual([]);
+    }
+  });
+
+  it('orders excerpts as the draft writes its members: deep dives written first come first', async () => {
+    const plain = excerptDraft([code('x', 10, 20, { highlights: [{ startLine: 21, endLine: 21 }] })]);
+    const dive = { id: 'dd', title: 'Deeper', sectionId: 's1', paragraphs: [code('y', 1, 5, { highlights: [{ startLine: 6, endLine: 6 }] })], disposition: { kind: 'produced', assetIds: ['dd'] } };
+    const { sections, ...rest }: Doc = { ...plain, figurePlan: [...PLAN, { home: { kind: 'deep-dive', target: 'dd' }, omitted: 'No picture answers better here.' }] };
+    const doc = { ...rest, deepDives: [dive], sections };
+    expect(Object.keys(doc).indexOf('deepDives')).toBeLessThan(Object.keys(doc).indexOf('sections'));
+    expect(ours((await findingsOf(A, doc)).findings).map((f) => f.at)).toEqual(['$.deepDives[0].paragraphs[0].highlights[0]', '$.sections[0].paragraphs[2].highlights[0]']);
+  });
+
+  it('takes no finding of this version in a draft of an unknown schema', async () => {
+    const out = (await findingsOf(A, excerptDraft([code('x', 10, 20, { highlights: [{ startLine: 30, endLine: 30 }] })], 'polaris-dossier-local-draft-v19'))).findings;
+    expect(out.filter((f) => ['code-highlight', 'code-note'].includes(f.kind) || (f.kind === 'field-version' && f.at.includes('.paragraphs')))).toEqual([]);
+  });
+
   it('a v2 draft carrying a code element with highlights keeps its element-version finding and takes none of this version', async () => {
     const doc = excerptDraft([code('x', 10, 20, { highlights: [{ startLine: 30, endLine: 31 }] })], 'polaris-dossier-local-draft-v2');
     const out = (await findingsOf(A, doc)).findings;
@@ -396,6 +433,12 @@ describe('code excerpt marks: render (version 2.54)', () => {
   });
 
   it('A withheld excerpt renders no numbers, highlights or notes, and its page carries no frame style', async () => {
+    // A blob screening excludes after reading its body: the same 2.53 branch as a path-excluded one (R33-code finding 8).
+    const held = excerptDraft([code('x', 1, 3, { highlights: [{ startLine: 2, endLine: 2 }], notes: [{ line: 2, block: 'p-pool' }] }, 'src/held.ts')]);
+    expect(ours((await findingsOf(A, held)).findings)).toEqual([]);
+    const heldFigure = excerptOf((await rendered(A, held)).files.get('index.html')!, 'x');
+    expect(heldFigure).toContain('data-unknown-reason="excluded-content"');
+    for (const absent of ['code-frame', 'code-gutter', 'code-bands', 'code-highlights', 'code-notes']) expect(heldFigure, absent).not.toContain(absent);
     const doc = excerptDraft([code('x', 1, 1, { highlights: [{ startLine: 1, endLine: 1 }], notes: [{ line: 1, block: 'p-pool' }] }, '.env')]);
     expect(ours((await findingsOf(A, doc)).findings)).toEqual([]);
     const index = (await rendered(A, doc)).files.get('index.html')!;

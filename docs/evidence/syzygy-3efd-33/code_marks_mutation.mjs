@@ -10,6 +10,10 @@
 // deriveFindings no longer strips the marks itself, so check's and render's strips are each the one that keeps them from the schema read
 // (check-not-stripped, render-not-stripped; the strip in deriveFindings made both redundant); lines-wrap moved to EQUIVALENT.
 // Run 2 (at 1c803bddb, code-marks-mutation-run2-2026-11-28.json) killed 52 of 52.
+// Review R33-code finding 1: too-long-guard-dropped was listed as equivalent on a false premise (a citation of an absent path draws
+// neither range finding), so it runs again here, with reversed-guard-dropped and the new tests of an absent path. Finding 3: excerpts are
+// read only where the draft admits a code element (misplaced-code-read, details-not-read, subsections-not-read); the three mutants whose
+// fragments that rewrite moved keep their ids. Run 3 records it.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -70,16 +74,21 @@ const MUTANTS = [
   ['note-order-strict', MARKS, "line <= (notes[k - 1]!['line'] as number)", "line < (notes[k - 1]!['line'] as number)"],
   ['note-uncited-unchecked', MARKS, "else if (list(paragraph['citations']).length === 0)", 'else if (false)'],
   ['note-resolves-anything', MARKS, 'const paragraph = paragraphs.get(block);', "const paragraph = paragraphs.get(block) ?? { citations: [1] };"],
-  ['place-not-tracked', MARKS, 'isRecord(entry) ? entry : undefined, key));', 'undefined, key));'],
+  ['place-not-tracked', MARKS, "entries(value, `${placeAt}.paragraphs`, place, key);", "entries(value, `${placeAt}.paragraphs`, {}, key);"],
   // --- the skips
   ['bad-citation-not-skipped', MARKS, "if (s === undefined || t === undefined || s > t || t - s + 1 > CODE_EXCERPT_MAX_LINES) return undefined;\n  const refused = prior.some((finding) => (finding.kind === 'range-invalid' || finding.kind === 'code-excerpt-too-long') && finding.at === `${at}.citation`);\n  return refused ? undefined : { s, t };",
     'if (s === undefined || t === undefined) return undefined;\n  return { s, t };'],
   ['schema-fault-not-skipping', MARKS, 'sound.set(member, faults.length === 0);', 'sound.set(member, true);'],
   ['schema-path-unmapped', MARKS, '${fault.path.slice(1)}', ''],
   // --- the order
-  ['excerpts-reversed', MARKS, "visit(doc, '$', undefined, undefined);\n  return out;", "visit(doc, '$', undefined, undefined);\n  return out.reverse();"],
+  ['excerpts-reversed', MARKS, "    });\n  }\n  return out;\n}", "    });\n  }\n  return out.reverse();\n}"],
   // --- versions and readers
-  ['strip-nothing', MARKS, "const code = value['kind'] === 'code';", 'const code = false;'],
+  ['strip-nothing', MARKS, 'const code = marked.has(value);', 'const code = false;'],
+  ['misplaced-code-read', MARKS, "else if (entry['kind'] === 'details') entries(entry['elements'],", "else entries(entry['elements'] ?? entry['children'],"],
+  ['details-not-read', MARKS, "else if (entry['kind'] === 'details') entries(entry['elements'],", "else if (false) entries(entry['elements'],"],
+  ['subsections-not-read', MARKS, "else if (field === SUBSECTIONS_FIELD && key === 'sections') {", "else if (false) {"],
+  ['too-long-guard-dropped', MARKS, '|| s > t || t - s + 1 > CODE_EXCERPT_MAX_LINES) return undefined;', '|| s > t) return undefined;'],
+  ['reversed-guard-dropped', MARKS, '|| s > t || t - s + 1 > CODE_EXCERPT_MAX_LINES) return undefined;', '|| t - s + 1 > CODE_EXCERPT_MAX_LINES) return undefined;'],
   ['v2-takes-field-version', MARKS, '|| version === LOCAL_DRAFT_SCHEMA_VERSION_V2 ||', '||'],
   ['findings-in-every-version', MARKS, "  if (!hasExcerptMarkForm(doc['schemaVersion'])) return [];\n  const out: CheckFinding[] = [];", '  const out: CheckFinding[] = [];'],
   ['numbered-in-every-version', MARKS, "  if (!hasExcerptMarkForm(doc['schemaVersion'])) return out;", ''],
@@ -121,8 +130,6 @@ const MUTANTS = [
 const EQUIVALENT = [
   { id: 'lines-wrap', file: STYLE, old: 'white-space:pre;position:relative}', new: 'white-space:pre-wrap;position:relative}',
     reason: 'Run 1 (at df0a36131) ran it and it survived: the frame\'s second column is `minmax(max-content, 1fr)`, at least as wide as the excerpt\'s longest line, so a line of the excerpt never meets the edge it would wrap at, whatever `white-space` says; the rule stays as the requirement\'s "no wrapping". The browser test measures 11 lines at 390 px, where line 15 is wider than the viewport.' },
-  { id: 'too-long-guard-dropped', file: MARKS, old: '|| s > t || t - s + 1 > CODE_EXCERPT_MAX_LINES) return undefined;', new: '|| s > t) return undefined;',
-    reason: 'An excerpt of more than 60 lines always draws code-excerpt-too-long at its citation, which the next line reads, so the length guard and that reading each skip it alone; bad-citation-not-skipped removes both and is killed.' },
   { id: 'refused-dropped', file: MARKS, old: 'return refused ? undefined : { s, t };', new: 'return { s, t };',
     reason: 'range-invalid is drawn exactly where a line is not an integer from 1 or startLine is after endLine (check-derive.ts), and code-excerpt-too-long where the range holds more than 60 lines: the guard above the reading refuses each first. The reading binds the requirement\'s own words; bad-citation-not-skipped removes both and is killed.' },
   { id: 'field-version-in-v18', file: MARKS, old: 'if (hasExcerptMarkForm(version) || version', new: 'if (version',

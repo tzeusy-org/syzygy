@@ -331,14 +331,18 @@ export function zoomContainmentInput(): { readonly local: LocalRenderInput; read
 export const POOL_LINES: readonly string[] = Array.from({ length: 25 }, (_, k) => (k + 1 === 15
   ? 'export const slot15 = \'a slot of the pool whose name runs long enough to scroll the frame at a phone width, and then some more\';'
   : `export const slot${k + 1} = ${k + 1};`));
-export function codeExcerptInput(split = false): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {
+/** How the excerpt's lines are written (review R33-code finding 7): with line feeds, with CRLF, each between tabs, or with line 20 empty. */
+export type ExcerptVariant = 'lf' | 'crlf' | 'tabs' | 'empty-last';
+export function codeExcerptInput(split = false, variant: ExcerptVariant = 'lf'): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {
   const { local, sources } = readingInput();
-  const body = `${POOL_LINES.join('\n')}\n`;
+  const ending = variant === 'crlf' ? '\r\n' : '\n';
+  const lines = POOL_LINES.map((text, k) => (variant === 'tabs' ? `\t${text}\t` : variant === 'empty-last' && k + 1 === 20 ? '' : text));
+  const body = lines.map((text) => `${text}${ending}`).join('');
   const base = { repositoryId: 'synthetic:reading', revision: REVISION, path: 'src/pool.ts', objectId: gitBlobObjectId(body) };
   const size = Buffer.byteLength(body);
   const pool: GenerationSource = { ...base, sourceId: 'src-00000000000000000000pool', evaluationId: 'synthetic-evaluation:pool', classificationBasis: 'body',
     exclusion: { excluded: false }, body, spans: [{ anchorId: generationAnchorId(base, 0, size), start: 0, end: size, text: body }] };
-  const offset = (line: number): number => Buffer.byteLength(POOL_LINES.slice(0, line - 1).map((text) => `${text}\n`).join(''));
+  const offset = (line: number): number => Buffer.byteLength(lines.slice(0, line - 1).map((text) => `${text}${ending}`).join(''));
   const start = offset(10), end = offset(21), cut = offset(15) + 30;
   const part = (from: number, to: number) => ({ kind: 'quotation' as const, sourceId: pool.sourceId, start: from, end: to,
     text: Buffer.from(body).subarray(from, to).toString('utf8'), anchor: { ...anchor(pool), fragment: `${from}-${to}` } });

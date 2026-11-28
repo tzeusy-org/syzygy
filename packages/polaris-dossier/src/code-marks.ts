@@ -3,7 +3,7 @@ import { isRecord } from '@syzygy/support';
 import { CODE_EXCERPT_MAX_LINES, type CheckFinding, list } from './check-model.js';
 import {
   HIGHLIGHTS_FIELD, HIGHLIGHTS_SCHEMA, LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V18, NOTES_FIELD, NOTES_SCHEMA,
-  hasExcerptMarkForm,
+  SUBSECTIONS_FIELD, hasExcerptMarkForm,
 } from './draft-schema.js';
 import { paragraphsOf } from './walk.js';
 
@@ -32,23 +32,36 @@ export const CODE_MARK_DETAIL = Object.freeze({
   fieldVersion: `\`${HIGHLIGHTS_FIELD}\` and \`${NOTES_FIELD}\` need draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V18}`,
 });
 
-interface Excerpt { readonly element: Doc; readonly at: string; readonly place: Doc | undefined; readonly part: Part | undefined }
+interface Excerpt { readonly element: Doc; readonly at: string; readonly place: Doc; readonly part: Part }
 
-/** Every code element of a draft, in the order a depth-first reading of the draft as submitted meets its path (list entries in index order,
- * an object's members in the order the draft writes them), with the section or deep dive that holds it, if any. */
+/** Every code element of a draft at a position where the draft admits one: an entry of a section's, a subsection's or a deep dive's
+ * `paragraphs`, or of a `details` element's `elements` there. They come in the order a depth-first reading of the draft as submitted meets
+ * them (list entries in index order, an object's members in the order the draft writes them), each with the section or deep dive that holds
+ * it. A `code` object anywhere else (a callout's `children`, say) is no excerpt: 2.53's schema finding at its parent stands for it, and this
+ * version neither reads nor strips its members (review R33-code finding 3). */
 function excerptsOf(doc: Doc): Excerpt[] {
   const out: Excerpt[] = [];
-  const visit = (value: unknown, at: string, place: Doc | undefined, part: Part | undefined): void => {
-    if (Array.isArray(value)) { value.forEach((entry, i) => visit(entry, `${at}[${i}]`, place, part)); return; }
-    if (!isRecord(value)) return;
-    if (value['kind'] === 'code') out.push({ element: value, at, place, part });
-    for (const [key, member] of Object.entries(value)) {
-      if (at === '$' && (key === 'sections' || key === 'deepDives')) {
-        list(member).forEach((entry, i) => visit(entry, `$.${key}[${i}]`, isRecord(entry) ? entry : undefined, key));
-      } else visit(member, `${at}.${key}`, place, part);
-    }
+  const entries = (value: unknown, at: string, place: Doc, part: Part): void => {
+    list(value).forEach((entry, k) => {
+      if (!isRecord(entry)) return;
+      const entryAt = `${at}[${k}]`;
+      if (entry['kind'] === 'code') out.push({ element: entry, at: entryAt, place, part });
+      else if (entry['kind'] === 'details') entries(entry['elements'], `${entryAt}.elements`, place, part);
+    });
   };
-  visit(doc, '$', undefined, undefined);
+  for (const [key, member] of Object.entries(doc)) {
+    if (key !== 'sections' && key !== 'deepDives') continue;
+    list(member).forEach((place, i) => {
+      if (!isRecord(place)) return;
+      const placeAt = `$.${key}[${i}]`;
+      for (const [field, value] of Object.entries(place)) {
+        if (field === 'paragraphs') entries(value, `${placeAt}.paragraphs`, place, key);
+        else if (field === SUBSECTIONS_FIELD && key === 'sections') {
+          list(value).forEach((subsection, n) => { if (isRecord(subsection)) entries(subsection['paragraphs'], `${placeAt}.${SUBSECTIONS_FIELD}[${n}].paragraphs`, place, key); });
+        }
+      }
+    });
+  }
   return out;
 }
 
@@ -57,11 +70,13 @@ const carries = (element: Doc): boolean => MEMBERS.some((member) => Object.hasOw
 /** A v18 draft without its excerpts' `highlights` and `notes`, which every reader but this module's findings and the render's excerpts is
  * handed; any other draft unchanged, so either member in it stays one the schema check reads (and reports as field-version). */
 export function withoutCodeMarks<T>(doc: T): T {
-  if (!isRecord(doc) || !hasExcerptMarkForm(doc['schemaVersion']) || !excerptsOf(doc).some((excerpt) => carries(excerpt.element))) return doc;
+  if (!isRecord(doc) || !hasExcerptMarkForm(doc['schemaVersion'])) return doc;
+  const marked = new Set(excerptsOf(doc).filter((excerpt) => carries(excerpt.element)).map((excerpt) => excerpt.element));
+  if (marked.size === 0) return doc;
   const strip = (value: unknown): unknown => {
     if (Array.isArray(value)) return value.map(strip);
     if (!isRecord(value)) return value;
-    const code = value['kind'] === 'code';
+    const code = marked.has(value);
     return Object.fromEntries(Object.entries(value).flatMap(([key, member]) => (code && (key === HIGHLIGHTS_FIELD || key === NOTES_FIELD) ? [] : [[key, strip(member)]])));
   };
   return strip(doc) as T;
@@ -123,7 +138,7 @@ export function codeMarkFindings(doc: Doc, prior: readonly CheckFinding[]): Chec
     }
     if (sound.get(NOTES_FIELD) === true) {
       const notes = element[NOTES_FIELD] as readonly Doc[];
-      const paragraphs = place === undefined || part === undefined ? new Map<string, Doc>() : paragraphsOf(place, part);
+      const paragraphs = paragraphsOf(place, part);
       notes.forEach((note, k) => {
         const line = note['line'] as number, block = note['block'] as string;
         const entryAt = `${at}.${NOTES_FIELD}[${k}]`;
