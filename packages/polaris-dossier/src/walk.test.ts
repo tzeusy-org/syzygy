@@ -3,7 +3,13 @@ import { execFileSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
+// The walk advice (version 2.51) fails on demand, so a test can show that a failure to compute it leaves check unchanged.
+const walkAdviceFails = vi.hoisted(() => ({ on: false }));
+vi.mock('./walk-advice.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('./walk-advice.js')>();
+  return { ...actual, walkAdvice: (...args: Parameters<typeof actual.walkAdvice>) => { if (walkAdviceFails.on) throw new Error('walk advice failed'); return actual.walkAdvice(...args); } };
+});
 import { issueBrief } from './brief.js';
 import { checkDraft, type CheckDeps, type CheckResult } from './check.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
@@ -583,6 +589,181 @@ describe('a step\'s base end against a unit map of one manifest declaring two pa
 
   it('at the render: a section whose disposition is not produced renders no walk', () => {
     expect(walks([base({ map: 'units', path: 'two/Cargo.toml#1' }), svc], { kind: 'omitted', reason: 'Not here.', citations: [] })).toEqual([]);
+  });
+});
+
+describe('walk advice on check\'s report (version 2.51, syzygy-3efd.35)', () => {
+  const RULES = [{ id: 'walk-step-restates-label', version: 1 }];
+  const DETAIL = (figure: string, n: number, block: string): string =>
+    `${figure} step ${n}: paragraph ${block} adds no word to its element's label; say what a reader learns about that element at this step`;
+  /** The write path walked through client, log and replica, with the paragraphs given. */
+  const advised = (texts: [string, string, string], version = V16): Doc => walking(walkDraft(WRITE(), WRITE_RELS(), [writeView()],
+    [section('s1', [para('p1', 1, { text: texts[0] }), para('p2', 1, { text: texts[1] }), para('p3', 2, { text: texts[2] })])], version), { figure: 'f', steps: STEPS() });
+  const EXPLAINS: [string, string, string] = ['Each client opens one connection per request.', 'The log keeps every write in order.', 'A replica serves reads.'];
+  const reportOf = async (tree: Pinned, doc: Doc, over: Partial<CheckDeps> = {}): Promise<Doc> => {
+    const { result } = await checked(tree, doc, over);
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return result.report as unknown as Doc;
+  };
+
+  it('advises on the step whose paragraph restates its element\'s label, on the report alone, gating nothing', async () => {
+    const { run, result } = await checked(A, advised(['Each client opens one connection per request.', 'The log.', 'A replica serves reads.']));
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const report = result.report as unknown as Doc;
+    expect([report['outcome'], report['findings']]).toEqual(['passed', []]);
+    expect(report['walkAdvice']).toEqual({ rules: RULES, examined: 3, advisories: [{ rule: 'walk-step-restates-label', at: '$.sections[0].walk.steps[1]', detail: DETAIL('f', 2, 'p2') }] });
+    const stored = fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8');
+    expect([stored.includes('walkAdvice'), stored.includes('walk-step-restates-label')]).toEqual([false, false]);
+    expect(fs.readFileSync(path.join(run, 'run-advice.json'), 'utf8').includes('walk-step-restates-label')).toBe(false);
+    expect(Object.keys(report).slice(-2)).toEqual(['figureAdvice', 'walkAdvice']);
+  });
+
+  it('gives an explaining walk the member with no advisory, and a walk with a finding below it no step read', async () => {
+    expect((await reportOf(A, advised(EXPLAINS)))['walkAdvice']).toEqual({ rules: RULES, examined: 3, advisories: [] });
+    const broken = walking(walkDraft(WRITE(), WRITE_RELS(), [writeView()]), { figure: 'f', steps: [{ element: 'client', block: 'p1' }, { element: 'log', block: 'nowhere' }] });
+    const report = await reportOf(A, broken);
+    expect(report['findings'].map((finding: Doc) => finding['at'])).toEqual(['$.sections[0].walk.steps[1].block']);
+    expect(report['walkAdvice']).toEqual({ rules: RULES, examined: 0, advisories: [] });
+    expect((await reportOf(A, walkDraft(WRITE(), WRITE_RELS(), [writeView()])))['walkAdvice']).toEqual({ rules: RULES, examined: 0, advisories: [] });
+  });
+
+  it('carries no member for a v15 draft or a draft with a schema finding', async () => {
+    const v15 = walkDraft(WRITE(), WRITE_RELS(), [writeView()], S1(), V15);
+    expect(Object.hasOwn(await reportOf(A, v15), 'walkAdvice')).toBe(false);
+    const schema = { ...advised(['The client.', 'The log.', 'The replica.']), title: 7 };
+    const report = await reportOf(A, schema);
+    expect([report['findings'].some((finding: Doc) => finding['kind'] === 'schema'), Object.hasOwn(report, 'walkAdvice')]).toEqual([true, false]);
+  });
+
+  it('leaves check unchanged where computing the advice fails: the same findings and outcome, and no member', async () => {
+    const doc = advised(['The client.', 'The log.', 'The replica.']);
+    const before = await reportOf(A, doc);
+    expect(before['walkAdvice']['advisories'].length).toBe(3);
+    walkAdviceFails.on = true;
+    try {
+      const after = await reportOf(A, doc);
+      expect([after['outcome'], after['findings'], Object.hasOwn(after, 'walkAdvice')]).toEqual(['passed', [], false]);
+      const { walkAdvice: _gone, ...rest } = before;
+      expect(Object.keys(after)).toEqual(Object.keys(rest));
+    } finally { walkAdviceFails.on = false; }
+  });
+
+  it('reads a walk whatever the disposition of its figure or its place (review R35, note 6)', async () => {
+    const OMITTED = { kind: 'omitted', reason: 'Not drawn here.', citations: [] };
+    const figureOmitted = walking(walkDraft(WRITE(), WRITE_RELS(), [writeView('f', { disposition: OMITTED })],
+      [section('s1', [para('p1', 1, { text: 'The client.' }), para('p2', 1, { text: 'The log.' }), para('p3', 2, { text: 'A replica serves reads.' })])]),
+    { figure: 'f', steps: STEPS() });
+    expect((await reportOf(A, figureOmitted))['walkAdvice']).toEqual({ rules: RULES, examined: 3, advisories: [
+      { rule: 'walk-step-restates-label', at: '$.sections[0].walk.steps[0]', detail: DETAIL('f', 1, 'p1') },
+      { rule: 'walk-step-restates-label', at: '$.sections[0].walk.steps[1]', detail: DETAIL('f', 2, 'p2') }] });
+    const dive = { id: 'dd', title: 'Deeper', sectionId: 's1', paragraphs: [para('d1', 1, { text: 'The client.' }), para('d2', 1, { text: 'Every write lands here first.' })],
+      disposition: OMITTED };
+    const view = writeView('f', { home: { kind: 'deep-dive', target: 'dd' } });
+    const plan = [...planOf(S1(), []), { home: { kind: 'deep-dive', target: 'dd' }, question: 'How does a write travel?', kind: 'flow', figure: 'f' }];
+    const placeOmitted = walking({ ...walkDraft(WRITE(), WRITE_RELS(), [view]), deepDives: [dive], figurePlan: plan },
+      { figure: 'f', steps: [{ element: 'client', block: 'd1' }, { element: 'log', block: 'd2' }] }, 0, 'deepDives');
+    expect((await reportOf(A, placeOmitted))['walkAdvice']).toEqual({ rules: RULES, examined: 2, advisories: [
+      { rule: 'walk-step-restates-label', at: '$.deepDives[0].walk.steps[0]', detail: DETAIL('f', 1, 'd1') }] });
+  });
+
+  it('writes the same bytes into the run and the site with the advice computed as with it forced off (review R35, note 7)', async () => {
+    // Forced off: the mocked module throws, so check leaves the member out. The exit status reads the outcome alone (cli.ts, `check`), and
+    // readiness reads the run's files, so equal outcomes and equal run bytes leave both unchanged.
+    const doc = advised(['The client.', 'The log.', 'The replica.']);
+    const filesUnder = (root: string): Map<string, string> => {
+      const out = new Map<string, string>();
+      const walk = (dir: string): void => {
+        for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+          const full = path.join(dir, entry.name);
+          if (entry.isDirectory()) walk(full); else out.set(path.relative(root, full), fs.readFileSync(full, 'utf8'));
+        }
+      };
+      walk(root);
+      return out;
+    };
+    const once = async (): Promise<{ report: Doc; run: Map<string, string>; site: Map<string, string> }> => {
+      const { run, result } = await checked(A, doc);
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const runFiles = filesUnder(run);
+      const out = await renderRun(run, { sources: sources(A.commit), now: () => LATER, probe: neverProbe, loadScreen: async () => SCREEN, renderer: renderLocalDossier });
+      if (!out.ok) throw new Error(out.refusal.reason);
+      return { report: result.report as unknown as Doc, run: runFiles, site: filesUnder(out.report.site) };
+    };
+    const on = await once();
+    walkAdviceFails.on = true;
+    let off: Awaited<ReturnType<typeof once>>;
+    try { off = await once(); } finally { walkAdviceFails.on = false; }
+    expect([on.report['walkAdvice']['advisories'].length, Object.hasOwn(off.report, 'walkAdvice')]).toEqual([3, false]);
+    expect([on.report['outcome'], off.report['outcome']]).toEqual(['passed', 'passed']);
+    expect(on.run.size).toBeGreaterThan(3);
+    expect(on.site.size).toBeGreaterThan(3);
+    expect([...on.run.keys()]).toEqual([...off.run.keys()]);
+    // `run.json`, `brief.json` and `brief.md` are written when the run is set up, before check, and name each run's own temporary clone (or
+    // its digest); every file check writes is compared.
+    const setUp = ['brief.json', 'brief.md', 'run.json'];
+    expect([...on.run.keys()].filter((file) => !setUp.includes(file))).toEqual(['checks/rev-0.json', 'derived/rev-0.json', 'draft.schema.json',
+      'drafts/next.json', 'drafts/rev-0.json', 'run-advice.json', 'steps.jsonl']);
+    expect(setUp.every((file) => on.run.has(file))).toBe(true);
+    for (const [file, bytes] of on.run) if (!setUp.includes(file)) expect(bytes, file).toBe(off.run.get(file));
+    expect([...on.site.keys()]).toEqual([...off.site.keys()]);
+    for (const [file, bytes] of on.site) expect(bytes, file).toBe(off.site.get(file));
+  });
+
+  describe('a base element\'s step reads Syzygy\'s label', () => {
+    let D: Pinned;
+    beforeAll(() => {
+      D = pinnedTree({ 'README.md': TREE_A['README.md']!, 'src/a.ts': 'export const a = 1;\n', 'src/b.ts': 'export const b = 2;\n', 'docs/guide.md': 'A guide.\n' });
+    });
+    const dirs = (srcText: string): Doc => walking(walkDraft([], [], [dirsGraph('d', { select: ['src', 'docs'], restReason: 'Rest',
+      names: [nameOf('src', 'Sources')] }, [], [])], [section('s1', [para('p1', 1, { text: srcText }), para('p2', 1, { text: 'Guides for readers.' })])]),
+    { figure: 'd', steps: [{ element: { map: 'directories', path: 'src' }, block: 'p1' }, { element: { map: 'directories', path: 'docs' }, block: 'p2' }] });
+
+    it('advises where the paragraph adds nothing to `src/ (2 files)`, never to the display name, with no path or label in the detail', async () => {
+      const report = await reportOf(D, dirs('src: 2 files.'));
+      expect([report['outcome'], report['walkAdvice']]).toEqual(['passed', { rules: RULES, examined: 2, advisories: [{ rule: 'walk-step-restates-label', at: '$.sections[0].walk.steps[0]', detail: DETAIL('d', 1, 'p1') }] }]);
+      expect((await reportOf(D, dirs('The src directory holds the sources.')))['walkAdvice']).toEqual({ rules: RULES, examined: 2, advisories: [] });
+      expect((await reportOf(D, dirs('The sources.')))['walkAdvice']).toEqual({ rules: RULES, examined: 2, advisories: [] });
+    });
+
+    it('reads and counts no base step where the tree cannot be listed at check, so the map is not established', async () => {
+      // The third listing, the structure derivation's, fails: the directory map is not established, so neither base step is read.
+      const report = await reportOf(D, dirs('src: 2 files.'), { openReader: unlistedAfter(2) });
+      expect([report['outcome'], report['structureRecord']['state'], report['walkAdvice']]).toEqual(['passed', 'unknown', { rules: RULES, examined: 0, advisories: [] }]);
+    });
+  });
+
+  describe('under the committed dossier policy, a directory withheld at check is not read (review R35, notes 1 and 2)', () => {
+    // The real policy denies `kubeconfig` as a path (a denied basename) and every path below `.ssh` and `.kube` (denied directory names).
+    // None is a secret path, so the directory map still names all three; the walk advice reads none of their steps and counts none.
+    const REAL_SCREEN = buildDossierScreen(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json')),
+      true, null, 'public');
+    if (!SCREEN.ok) throw new Error(SCREEN.why);
+    const SCREEN_OF = SCREEN.screen;
+    let K: Pinned;
+    beforeAll(() => {
+      K = pinnedTree({ 'README.md': TREE_A['README.md']!, 'src/a.ts': 'export const a = 1;\n', 'kubeconfig/a.ts': 'export const k = 1;\n',
+        '.ssh/a.ts': 'export const s = 1;\n', '.kube/notes': 'Cluster notes.\n' });
+    });
+    const walked = (texts: [string, string, string, string]): Doc => walking(walkDraft([], [], [dirsGraph('d', { select: ['src', 'kubeconfig', '.ssh', '.kube'],
+      restReason: 'Rest', names: [nameOf('src', 'Sources')] }, [], [])], [section('s1', [para('p1', 1, { text: texts[0] }), para('p2', 1, { text: texts[1] }),
+      para('p3', 1, { text: texts[2] }), para('p4', 1, { text: texts[3] })])]),
+    { figure: 'd', steps: [{ element: { map: 'directories', path: 'src' }, block: 'p1' }, { element: { map: 'directories', path: 'kubeconfig' }, block: 'p2' },
+      { element: { map: 'directories', path: '.ssh' }, block: 'p3' }, { element: { map: 'directories', path: '.kube' }, block: 'p4' }] });
+
+    it('reads only the `src` step, whichever rule withholds the others', async () => {
+      if (!REAL_SCREEN.ok) throw new Error(REAL_SCREEN.why);
+      // The committed policy's rules under the fixture's binding: the run binds the fixture policy's bytes, so the screen carries their identity.
+      const bound = { ok: true as const, screen: { ...REAL_SCREEN.screen, policyId: SCREEN_OF.policyId, policyVersion: SCREEN_OF.policyVersion, policySha256: SCREEN_OF.policySha256 } };
+      const report = await reportOf(K, walked(['src: 1 file.', 'kubeconfig: 1 file.', '.ssh: 1 file.', '.kube: 1 file.']), { loadScreen: async () => bound });
+      expect([report['outcome'], report['walkAdvice']]).toEqual(['passed', { rules: RULES, examined: 1,
+        advisories: [{ rule: 'walk-step-restates-label', at: '$.sections[0].walk.steps[0]', detail: DETAIL('d', 1, 'p1') }] }]);
+    });
+
+    it('reads all four steps under the fixture policy, which denies none of them', async () => {
+      const report = await reportOf(K, walked(['src: 1 file.', 'kubeconfig: 1 file.', '.ssh: 1 file.', '.kube: 1 file.']));
+      expect([report['outcome'], report['walkAdvice']['examined'], report['walkAdvice']['advisories'].map((entry: Doc) => entry['at'])])
+        .toEqual(['passed', 4, ['$.sections[0].walk.steps[0]', '$.sections[0].walk.steps[1]', '$.sections[0].walk.steps[2]', '$.sections[0].walk.steps[3]']]);
+    });
   });
 });
 

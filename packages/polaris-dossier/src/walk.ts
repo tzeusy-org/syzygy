@@ -17,7 +17,7 @@ const list = (value: unknown): readonly unknown[] => (Array.isArray(value) ? val
 const text = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
 
 /** The six graph kinds a walk's figure may be. */
-const GRAPH_KINDS: ReadonlySet<unknown> = new Set(DIAGRAM_KINDS);
+export const GRAPH_KINDS: ReadonlySet<unknown> = new Set(DIAGRAM_KINDS);
 /** The presentation elements of a place's `paragraphs` (draft-schema.ts, the set check reads): a block inside one is never a step's paragraph. */
 const PRESENTATION_KINDS = PRESENTATION_ELEMENT_KINDS;
 /** A walk's bounds: two to twelve steps. */
@@ -42,7 +42,7 @@ const exactly = (value: unknown, members: readonly string[]): value is Doc =>
   isRecord(value) && Object.keys(value).length === members.length && members.every((member) => Object.hasOwn(value, member));
 
 /** A step's element as written: an identity, or a base end `{"map", "path"}`. */
-type StepElement = { readonly kind: 'identity'; readonly id: string } | { readonly kind: 'base'; readonly map: string; readonly path: string };
+export type StepElement = { readonly kind: 'identity'; readonly id: string } | { readonly kind: 'base'; readonly map: string; readonly path: string };
 interface WellFormedWalk { readonly figure: string; readonly steps: readonly { readonly element: StepElement; readonly block: string }[] }
 
 /** A walk read in its one well-formed shape, or undefined. */
@@ -63,7 +63,7 @@ export function wellFormed(walk: unknown): WellFormedWalk | undefined {
 }
 
 /** Every walk a draft carries, in draft order (sections' before deep dives'), with its place and path. */
-function walksOf(doc: Doc): { readonly place: Doc; readonly part: typeof PLACES[number]; readonly at: string; readonly walk: unknown }[] {
+export function walksOf(doc: Doc): { readonly place: Doc; readonly part: typeof PLACES[number]; readonly at: string; readonly walk: unknown }[] {
   return PLACES.flatMap((part) => list(doc[part]).flatMap((place, i) => (isRecord(place) && Object.hasOwn(place, WALK_FIELD)
     ? [{ place, part, at: `$.${part}[${i}].${WALK_FIELD}`, walk: place[WALK_FIELD] }] : [])));
 }
@@ -124,8 +124,8 @@ function drawnIdentities(doc: Doc, diagram: Doc): ReadonlySet<string> {
 /** How a step's base end resolves in its figure: the fact identity of the one base element it names among those the figure shows; `absent`
  * where it names none of them (or the figure carries no base, or one of another map); `unestablished` where the figure's base map is not
  * established, so check reports nothing for the step's element. */
-type BaseStep = { readonly state: 'shown'; readonly factId: string } | { readonly state: 'absent' } | { readonly state: 'unestablished' };
-function baseStep(doc: Doc, diagram: Doc, element: Extract<StepElement, { kind: 'base' }>, maps: BaseMaps): BaseStep {
+export type BaseStep = { readonly state: 'shown'; readonly factId: string } | { readonly state: 'absent' } | { readonly state: 'unestablished' };
+export function baseStep(doc: Doc, diagram: Doc, element: Extract<StepElement, { kind: 'base' }>, maps: BaseMaps): BaseStep {
   const base = baseOf(doc, diagram);
   if (base === undefined || base.map !== element.map) return { state: 'absent' };
   const map = maps[base.map];

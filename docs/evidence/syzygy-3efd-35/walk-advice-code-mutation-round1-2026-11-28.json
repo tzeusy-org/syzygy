@@ -1,0 +1,967 @@
+{
+  "format": "mutation-run/1",
+  "bead": "syzygy-3efd.35",
+  "date": "2026-11-28",
+  "ranAt": "3ceedaa35c9e927fc5dbff59b5bfbcf910e40533",
+  "subject": {
+    "packages/polaris-dossier/src/check.ts": "2473df07ffb01d412dedeef2cb72ba30607779abca3121b5943ca02742fdb0d7",
+    "packages/polaris-dossier/src/walk-advice.test.ts": "6eb581ccb95497724a11f57f8a5976e411909f295f5f9ed5547828c7b0507bb4",
+    "packages/polaris-dossier/src/walk-advice.ts": "316ca36a71d28d037040ff7393cf9b1eea9173ec8ccf7203408ee718ac71fb9e",
+    "packages/polaris-dossier/src/walk.test.ts": "30f0ca364408aa1ca06bda295c0cef402f76a33b0a518ff51654b77223342143"
+  },
+  "command": "SYZYGY_POC_BROWSER=<chromium-1223> npx vitest run packages/polaris-dossier/src/walk-advice.test.ts packages/polaris-dossier/src/walk.test.ts --reporter=json",
+  "method": "each mutant replaces old with new exactly once in file, runs the command, restores the file; killed means a non-zero exit, and failedTests records each failing test and the first line of its message, so a kill by an assertion is told apart from a kill by a throw; the baseline run at ranAt passed before any mutant",
+  "mutants": [
+    {
+      "id": "words-no-lowercase",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "out += String.fromCodePoint(c + 0x20);",
+      "new": "out += ch;",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "advises on the step whose paragraph restates its element's label, on the report alone, gating nothing",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "leaves check unchanged where computing the advice fails: the same findings and outcome, and no member",
+          "message": "AssertionError: expected +0 to be 3 // Object.is equality"
+        },
+        {
+          "test": "\"The request router.\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"The Request-Router, shown here!\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"This is the step shown here.\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"The request router. It is the router.\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"Router: the requests\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"The.\" restating \"—\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "lowercases A to Z alone, keeps every other letter and number, and splits at every other code point",
+          "message": "AssertionError: expected [ 'The', 'Request', 'Router', …(2) ] to deeply equal [ 'the', 'request', 'router', …(2) ]"
+        },
+        {
+          "test": "advises on the one step whose paragraph restates its element's label",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "case, punctuation, plurals, filler and a restating child draw it; one new word, a number or another label stops it",
+          "message": "AssertionError: The Request-Router, shown here!: expected [] to deeply equal [ { …(3) } ]"
+        },
+        {
+          "test": "puts a deep dive's walk after the sections', and reads two steps naming one block each",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "labels a node of a diagram that carries no view by its own label",
+          "message": "AssertionError: expected [] to deeply equal [ { …(3) } ]"
+        },
+        {
+          "test": "reads Syzygy's label, never the display name, and names no path or label in the detail",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "does not read or count the step where the map is not established, or the element is hidden, withheld or Unknown in screening",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "words-z-excluded",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "c <= 0x5a",
+      "new": "c <= 0x59",
+      "killed": false,
+      "failedTests": []
+    },
+    {
+      "id": "words-numbers-split",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "/^[\\p{L}\\p{N}]$/u",
+      "new": "/^[\\p{L}]$/u",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "\"The request router, 2.\" restating \"Request router\" is false",
+          "message": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "lowercases A to Z alone, keeps every other letter and number, and splits at every other code point",
+          "message": "AssertionError: expected [ 'École', 'école' ] to deeply equal [ 'École', 'école', '12½' ]"
+        },
+        {
+          "test": "case, punctuation, plurals, filler and a restating child draw it; one new word, a number or another label stops it",
+          "message": "AssertionError: The request router, 2.: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "words-empties-kept",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "return out.split(' ').filter((word) => word !== '');",
+      "new": "return out.split(' ');",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "advises on the step whose paragraph restates its element's label, on the report alone, gating nothing",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "leaves check unchanged where computing the advice fails: the same findings and outcome, and no member",
+          "message": "AssertionError: expected +0 to be 3 // Object.is equality"
+        },
+        {
+          "test": "\"The request router.\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"The Request-Router, shown here!\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"Request routers.\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"This is the step shown here.\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"The request router. It is the router.\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"Router: the requests\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"\" restating \"Router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "lowercases A to Z alone, keeps every other letter and number, and splits at every other code point",
+          "message": "AssertionError: expected [ Array(7) ] to deeply equal [ 'the', 'request', 'router', …(2) ]"
+        },
+        {
+          "test": "advises on the one step whose paragraph restates its element's label",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "case, punctuation, plurals, filler and a restating child draw it; one new word, a number or another label stops it",
+          "message": "AssertionError: The Request-Router, shown here!: expected [] to deeply equal [ { …(3) } ]"
+        },
+        {
+          "test": "puts a deep dive's walk after the sections', and reads two steps naming one block each",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "labels a node of a diagram that carries no view by its own label",
+          "message": "AssertionError: expected [] to deeply equal [ { …(3) } ]"
+        },
+        {
+          "test": "reads Syzygy's label, never the display name, and names no path or label in the detail",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "does not read or count the step where the map is not established, or the element is hidden, withheld or Unknown in screening",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "words-runs-kept-whole",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "out += WORD_CODE_POINT.test(ch) ? ch : ' ';",
+      "new": "out += WORD_CODE_POINT.test(ch) ? ch : '';",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "advises on the step whose paragraph restates its element's label, on the report alone, gating nothing",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "leaves check unchanged where computing the advice fails: the same findings and outcome, and no member",
+          "message": "AssertionError: expected +0 to be 3 // Object.is equality"
+        },
+        {
+          "test": "\"The request router.\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"The Request-Router, shown here!\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"This is the step shown here.\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"The request router. It is the router.\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"Router: the requests\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "lowercases A to Z alone, keeps every other letter and number, and splits at every other code point",
+          "message": "AssertionError: expected [ 'therequestroutershownhere' ] to deeply equal [ 'the', 'request', 'router', …(2) ]"
+        },
+        {
+          "test": "treats each of the 30 filler words as no word, and no other",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "advises on the one step whose paragraph restates its element's label",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "case, punctuation, plurals, filler and a restating child draw it; one new word, a number or another label stops it",
+          "message": "AssertionError: The Request-Router, shown here!: expected [] to deeply equal [ { …(3) } ]"
+        },
+        {
+          "test": "puts a deep dive's walk after the sections', and reads two steps naming one block each",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "labels a node of a diagram that carries no view by its own label",
+          "message": "AssertionError: expected [] to deeply equal [ { …(3) } ]"
+        },
+        {
+          "test": "reads Syzygy's label, never the display name, and names no path or label in the detail",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "does not read or count the step where the map is not established, or the element is hidden, withheld or Unknown in screening",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "filler-shown-dropped",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "'see', 'shown', 'shows'",
+      "new": "'see', 'shows'",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "\"The Request-Router, shown here!\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"This is the step shown here.\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "treats each of the 30 filler words as no word, and no other",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "case, punctuation, plurals, filler and a restating child draw it; one new word, a number or another label stops it",
+          "message": "AssertionError: The Request-Router, shown here!: expected [] to deeply equal [ { …(3) } ]"
+        }
+      ]
+    },
+    {
+      "id": "filler-the-dropped",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "'that', 'the', 'then'",
+      "new": "'that', 'then'",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "advises on the step whose paragraph restates its element's label, on the report alone, gating nothing",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "leaves check unchanged where computing the advice fails: the same findings and outcome, and no member",
+          "message": "AssertionError: expected +0 to be 3 // Object.is equality"
+        },
+        {
+          "test": "\"The request router.\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"The Request-Router, shown here!\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"This is the step shown here.\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"The request router. It is the router.\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"Router: the requests\" restating \"Request router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"The.\" restating \"—\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "treats each of the 30 filler words as no word, and no other",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "advises on the one step whose paragraph restates its element's label",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "case, punctuation, plurals, filler and a restating child draw it; one new word, a number or another label stops it",
+          "message": "AssertionError: The Request-Router, shown here!: expected [] to deeply equal [ { …(3) } ]"
+        },
+        {
+          "test": "puts a deep dive's walk after the sections', and reads two steps naming one block each",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "labels a node of a diagram that carries no view by its own label",
+          "message": "AssertionError: expected [] to deeply equal [ { …(3) } ]"
+        },
+        {
+          "test": "reads Syzygy's label, never the display name, and names no path or label in the detail",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "does not read or count the step where the map is not established, or the element is hidden, withheld or Unknown in screening",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "match-es-dropped",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "word === `${label}s` || word === `${label}es` ||",
+      "new": "word === `${label}s` ||",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "matches a plural in s or es either way, and nothing nearer",
+          "message": "AssertionError: expected [ false, true, true, true ] to deeply equal [ true, true, true, true ]"
+        }
+      ]
+    },
+    {
+      "id": "match-one-way",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": " || label === `${word}s` || label === `${word}es`;",
+      "new": ";",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "matches a plural in s or es either way, and nothing nearer",
+          "message": "AssertionError: expected [ true, false, true, false ] to deeply equal [ true, true, true, true ]"
+        }
+      ]
+    },
+    {
+      "id": "restates-any-word",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "adviceWords(paragraph).every(",
+      "new": "adviceWords(paragraph).some(",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "advises on the step whose paragraph restates its element's label, on the report alone, gating nothing",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "gives an explaining walk the member with no advisory, and a walk with a finding below it no step read",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "advises where the paragraph adds nothing to `src/ (2 files)`, never to the display name, with no path or label in the detail",
+          "message": "AssertionError: expected [ 'passed', …(1) ] to deeply equal [ 'passed', …(1) ]"
+        },
+        {
+          "test": "\"Each client opens one connection per request.\" restating \"Client\" is false",
+          "message": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "\"The handler maps a path prefix to one controller.\" restating \"Handler\" is false",
+          "message": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "\"Request routes.\" restating \"Request router\" is false",
+          "message": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "\"The request router retries.\" restating \"Request router\" is false",
+          "message": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "\"The request router, 2 of them.\" restating \"Request router\" is false",
+          "message": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "\"The request router calls the handler.\" restating \"Request router\" is false",
+          "message": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "\"The request router, 2.\" restating \"Request router\" is false",
+          "message": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "\"The request router and the handler.\" restating \"Request router\" is false",
+          "message": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "\"\" restating \"Router\" is true",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "\"The src directory holds the sources.\" restating \"src/ (12 files)\" is false",
+          "message": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "treats each of the 30 filler words as no word, and no other",
+          "message": "AssertionError: was: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "advises on the one step whose paragraph restates its element's label",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "case, punctuation, plurals, filler and a restating child draw it; one new word, a number or another label stops it",
+          "message": "AssertionError: The Request-Router, shown here!: expected [ { …(3) }, { …(3) }, { …(3) } ] to deeply equal [ { …(3) } ]"
+        },
+        {
+          "test": "puts a deep dive's walk after the sections', and reads two steps naming one block each",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "labels a node of a diagram that carries no view by its own label",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "reads Syzygy's label, never the display name, and names no path or label in the detail",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "paragraph-join-empty",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "].join(' ');",
+      "new": "].join('');",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "case, punctuation, plurals, filler and a restating child draw it; one new word, a number or another label stops it",
+          "message": "AssertionError: expected [] to deeply equal [ { …(3) } ]"
+        }
+      ]
+    },
+    {
+      "id": "paragraph-children-ignored",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "[text(block['text']) ?? '', ...list(block['children'])",
+      "new": "[text(block['text']) ?? '', ...list([])",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "case, punctuation, plurals, filler and a restating child draw it; one new word, a number or another label stops it",
+          "message": "AssertionError: expected [ { …(3) } ] to deeply equal []"
+        }
+      ]
+    },
+    {
+      "id": "under-bracket-dropped",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": " || at.startsWith(`${walkAt}[`)",
+      "new": "",
+      "killed": false,
+      "failedTests": []
+    },
+    {
+      "id": "under-dot-dropped",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": " || at.startsWith(`${walkAt}.`)",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "gives an explaining walk the member with no advisory, and a walk with a finding below it no step read",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "is absent for a v15 draft and under a schema finding; reads no walk with a finding at or below its path",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "under-bare-prefix",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "at === walkAt || at.startsWith(`${walkAt}.`)",
+      "new": "at.startsWith(walkAt) || at.startsWith(`${walkAt}.`)",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "is absent for a v15 draft and under a schema finding; reads no walk with a finding at or below its path",
+          "message": "AssertionError: expected +0 to be 3 // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "schema-finding-ignored",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": " || findings.some((finding) => finding.kind === 'schema')",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "carries no member for a v15 draft or a draft with a schema finding",
+          "message": "AssertionError: expected [ true, true ] to deeply equal [ true, false ]"
+        },
+        {
+          "test": "is absent for a v15 draft and under a schema finding; reads no walk with a finding at or below its path",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to be undefined"
+        }
+      ]
+    },
+    {
+      "id": "walk-form-ignored",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "!hasWalkForm(doc['schemaVersion']) || ",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "carries no member for a v15 draft or a draft with a schema finding",
+          "message": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "is absent for a v15 draft and under a schema finding; reads no walk with a finding at or below its path",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to be undefined"
+        }
+      ]
+    },
+    {
+      "id": "walk-finding-ignored",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "    if (findings.some((finding) => under(finding.at, at))) continue;\n",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "gives an explaining walk the member with no advisory, and a walk with a finding below it no step read",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "is absent for a v15 draft and under a schema finding; reads no walk with a finding at or below its path",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "graph-kind-ignored",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": " || !GRAPH_KINDS.has(diagram['kind'])",
+      "new": "",
+      "killed": false,
+      "failedTests": [],
+      "equivalent": "a walk whose figure is not of a graph kind always carries a walk finding at its figure (REQ-034 2.40), and a walk with a finding at or below its path is skipped first, so the kind test is reached only by a walk the finding test already removed"
+    },
+    {
+      "id": "examined-not-counted",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "      examined++;\n",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "advises on the step whose paragraph restates its element's label, on the report alone, gating nothing",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "gives an explaining walk the member with no advisory, and a walk with a finding below it no step read",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "advises where the paragraph adds nothing to `src/ (2 files)`, never to the display name, with no path or label in the detail",
+          "message": "AssertionError: expected [ 'passed', …(1) ] to deeply equal [ 'passed', …(1) ]"
+        },
+        {
+          "test": "advises on the one step whose paragraph restates its element's label",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "case, punctuation, plurals, filler and a restating child draw it; one new word, a number or another label stops it",
+          "message": "AssertionError: Request routes.: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "puts a deep dive's walk after the sections', and reads two steps naming one block each",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "is absent for a v15 draft and under a schema finding; reads no walk with a finding at or below its path",
+          "message": "AssertionError: expected +0 to be 3 // Object.is equality"
+        },
+        {
+          "test": "labels a node of a diagram that carries no view by its own label",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "reads Syzygy's label, never the display name, and names no path or label in the detail",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "does not read or count the step where the map is not established, or the element is hidden, withheld or Unknown in screening",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "examined-unread-counted",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "      if (label === undefined || block === undefined) return;\n      examined++;",
+      "new": "      examined++;\n      if (label === undefined || block === undefined) return;",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "reads and counts no base step where the tree cannot be listed at check, so the map is not established",
+          "message": "AssertionError: expected [ 'passed', 'unknown', { …(3) } ] to deeply equal [ 'passed', 'unknown', { …(3) } ]"
+        },
+        {
+          "test": "does not read or count the step where the map is not established, or the element is hidden, withheld or Unknown in screening",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "step-number-zero-based",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "walkAdviceDetail(read.figure, k + 1, step.block)",
+      "new": "walkAdviceDetail(read.figure, k, step.block)",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "advises on the step whose paragraph restates its element's label, on the report alone, gating nothing",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "advises where the paragraph adds nothing to `src/ (2 files)`, never to the display name, with no path or label in the detail",
+          "message": "AssertionError: expected [ 'passed', …(1) ] to deeply equal [ 'passed', …(1) ]"
+        },
+        {
+          "test": "advises on the one step whose paragraph restates its element's label",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "case, punctuation, plurals, filler and a restating child draw it; one new word, a number or another label stops it",
+          "message": "AssertionError: The Request-Router, shown here!: expected [ { …(3) } ] to deeply equal [ { …(3) } ]"
+        },
+        {
+          "test": "puts a deep dive's walk after the sections', and reads two steps naming one block each",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "labels a node of a diagram that carries no view by its own label",
+          "message": "AssertionError: expected [ { …(3) } ] to deeply equal [ { …(3) } ]"
+        },
+        {
+          "test": "reads Syzygy's label, never the display name, and names no path or label in the detail",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "does not read or count the step where the map is not established, or the element is hidden, withheld or Unknown in screening",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "step-at-off-by-one",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "at: `${at}.steps[${k}]`",
+      "new": "at: `${at}.steps[${k + 1}]`",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "advises on the step whose paragraph restates its element's label, on the report alone, gating nothing",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "advises where the paragraph adds nothing to `src/ (2 files)`, never to the display name, with no path or label in the detail",
+          "message": "AssertionError: expected [ 'passed', …(1) ] to deeply equal [ 'passed', …(1) ]"
+        },
+        {
+          "test": "advises on the one step whose paragraph restates its element's label",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "case, punctuation, plurals, filler and a restating child draw it; one new word, a number or another label stops it",
+          "message": "AssertionError: The Request-Router, shown here!: expected [ { …(3) } ] to deeply equal [ { …(3) } ]"
+        },
+        {
+          "test": "puts a deep dive's walk after the sections', and reads two steps naming one block each",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "labels a node of a diagram that carries no view by its own label",
+          "message": "AssertionError: expected [ { …(3) } ] to deeply equal [ { …(3) } ]"
+        },
+        {
+          "test": "reads Syzygy's label, never the display name, and names no path or label in the detail",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "does not read or count the step where the map is not established, or the element is hidden, withheld or Unknown in screening",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "node-label-for-views",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "if (isViewKind(diagram) && isRecord(diagram['view'])) return",
+      "new": "if (false) return",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "advises on the step whose paragraph restates its element's label, on the report alone, gating nothing",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "gives an explaining walk the member with no advisory, and a walk with a finding below it no step read",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "leaves check unchanged where computing the advice fails: the same findings and outcome, and no member",
+          "message": "AssertionError: expected +0 to be 3 // Object.is equality"
+        },
+        {
+          "test": "advises on the one step whose paragraph restates its element's label",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "case, punctuation, plurals, filler and a restating child draw it; one new word, a number or another label stops it",
+          "message": "AssertionError: The Request-Router, shown here!: expected [] to deeply equal [ { …(3) } ]"
+        },
+        {
+          "test": "puts a deep dive's walk after the sections', and reads two steps naming one block each",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "is absent for a v15 draft and under a schema finding; reads no walk with a finding at or below its path",
+          "message": "AssertionError: expected +0 to be 3 // Object.is equality"
+        },
+        {
+          "test": "reads Syzygy's label, never the display name, and names no path or label in the detail",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "does not read or count the step where the map is not established, or the element is hidden, withheld or Unknown in screening",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "view-label-for-nodes",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "if (isViewKind(diagram) && isRecord(diagram['view'])) return",
+      "new": "return",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "labels a node of a diagram that carries no view by its own label",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "base-not-shown-read",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "  if (found.state !== 'shown') return undefined;\n",
+      "new": "  if (found.state !== 'shown' && found.state !== 'hidden') return undefined;\n",
+      "killed": false,
+      "failedTests": []
+    },
+    {
+      "id": "base-hidden-read",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "screen.hidden(repositoryPath) || ",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "does not read or count the step where the map is not established, or the element is hidden, withheld or Unknown in screening",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "base-path-unscreened",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "screen.admit(repositoryPath) !== 'admitted' || ",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "does not read or count the step where the map is not established, or the element is hidden, withheld or Unknown in screening",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "base-label-unscreened",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": " || screen.admit(base.label) !== 'admitted'",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "does not read or count the step where the map is not established, or the element is hidden, withheld or Unknown in screening",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "base-unavailable-admitted",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "screen.admit(base.label) !== 'admitted'",
+      "new": "screen.admit(base.label) === 'withheld'",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "does not read or count the step where the map is not established, or the element is hidden, withheld or Unknown in screening",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "base-screen-unit-path",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "const repositoryPath = base.manifest ?? base.path;",
+      "new": "const repositoryPath = base.path;",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "does not read or count the step where the map is not established, or the element is hidden, withheld or Unknown in screening",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        }
+      ]
+    },
+    {
+      "id": "base-map-fixed",
+      "file": "packages/polaris-dossier/src/walk-advice.ts",
+      "old": "maps[element.map === 'units' ? 'units' : 'directories']",
+      "new": "maps['units']",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "advises where the paragraph adds nothing to `src/ (2 files)`, never to the display name, with no path or label in the detail",
+          "message": "AssertionError: expected [ 'passed', …(1) ] to deeply equal [ 'passed', …(1) ]"
+        }
+      ]
+    },
+    {
+      "id": "check-member-dropped",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "    ...(walks === undefined ? {} : { walkAdvice: walks }),\n",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "advises on the step whose paragraph restates its element's label, on the report alone, gating nothing",
+          "message": "AssertionError: expected undefined to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "gives an explaining walk the member with no advisory, and a walk with a finding below it no step read",
+          "message": "AssertionError: expected undefined to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "leaves check unchanged where computing the advice fails: the same findings and outcome, and no member",
+          "message": "TypeError: Cannot read properties of undefined (reading 'advisories')"
+        },
+        {
+          "test": "advises where the paragraph adds nothing to `src/ (2 files)`, never to the display name, with no path or label in the detail",
+          "message": "AssertionError: expected [ 'passed', undefined ] to deeply equal [ 'passed', …(1) ]"
+        },
+        {
+          "test": "reads and counts no base step where the tree cannot be listed at check, so the map is not established",
+          "message": "AssertionError: expected [ 'passed', 'unknown', undefined ] to deeply equal [ 'passed', 'unknown', { …(3) } ]"
+        }
+      ]
+    },
+    {
+      "id": "check-failure-propagates",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "    } catch { walks = undefined; }",
+      "new": "    } catch (error) { throw error; }",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "leaves check unchanged where computing the advice fails: the same findings and outcome, and no member",
+          "message": "Error: walk advice failed"
+        }
+      ]
+    },
+    {
+      "id": "check-findings-unpassed",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "computeWalkAdvice(walked, findings,",
+      "new": "computeWalkAdvice(walked, [],",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "gives an explaining walk the member with no advisory, and a walk with a finding below it no step read",
+          "message": "AssertionError: expected { rules: [ { …(2) } ], …(2) } to deeply equal { rules: [ { …(2) } ], …(2) }"
+        },
+        {
+          "test": "carries no member for a v15 draft or a draft with a schema finding",
+          "message": "AssertionError: expected [ true, true ] to deeply equal [ true, false ]"
+        }
+      ]
+    },
+    {
+      "id": "check-maps-unpassed",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "computeWalkAdvice(walked, findings, checkBaseMaps(treeFacts, manifestFacts),",
+      "new": "computeWalkAdvice(walked, findings, {},",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "advises where the paragraph adds nothing to `src/ (2 files)`, never to the display name, with no path or label in the detail",
+          "message": "AssertionError: expected [ 'passed', …(1) ] to deeply equal [ 'passed', …(1) ]"
+        }
+      ]
+    },
+    {
+      "id": "check-hidden-unscreened",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "        hidden: (repositoryPath) => secretOrUnder(repositoryPath.split('/'), isSecretPath) || screen.screenPath(repositoryPath) === 'denied-path' });",
+      "new": "        hidden: () => false });",
+      "killed": false,
+      "failedTests": [],
+      "equivalent": "a base element at a secret or denied path is not on a base map: the maps check derives leave such paths out (secretPathsLeftOut), so a step naming one is not shown and baseStep never returns it; the walk-advice hidden test is defence in depth, killed at the unit tier by base-hidden-read"
+    }
+  ],
+  "killed": 32,
+  "killedByAssertion": 31,
+  "total": 37,
+  "equivalent": 2,
+  "survivedNotEquivalent": [
+    "words-z-excluded",
+    "under-bracket-dropped",
+    "base-not-shown-read"
+  ]
+}
