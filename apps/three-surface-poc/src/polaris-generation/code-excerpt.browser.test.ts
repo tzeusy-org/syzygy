@@ -16,12 +16,12 @@ const executable = findBrowserExecutable();
 
 interface Line { readonly top: number; readonly height: number }
 interface Measure {
-  readonly lineHeight: number; readonly overflow: boolean; readonly lines: number;
+  readonly lineHeight: number; readonly overflow: boolean; readonly lines: number; readonly gutterTop: number;
   readonly numbers: Line[]; readonly bands: (Line & { readonly left: number; readonly right: number; readonly banded: boolean })[];
   readonly text: (Line | null)[]; readonly pre: { readonly left: number; readonly right: number };
 }
 /** Every line's number, band and text, read from the page's own layout. A line's text box is the rect of a range over its first character,
- * none for an empty line. */
+ * none for an empty line; `gutterTop` is the top of the gutter's content box, where its first line box begins. */
 const MEASURE = (n: number) => `(() => {
   const frame = document.querySelector("#element-x .code-frame");
   const [gutter, pre, bands] = frame.querySelectorAll(":scope > pre");
@@ -40,8 +40,10 @@ const MEASURE = (n: number) => `(() => {
   const text = starts.map((at) => { if (at === null) return null; const r = document.createRange(); r.setStart(at[0], at[1]); r.setEnd(at[0], at[1] + 1); const b = r.getBoundingClientRect(); return { top: b.top, height: b.height }; });
   const box = (e) => e.getBoundingClientRect();
   const p = box(pre);
+  const g = getComputedStyle(gutter);
+  const gutterTop = box(gutter).top + parseFloat(g.paddingTop) + parseFloat(g.borderTopWidth);
   return {
-    lineHeight, overflow: frame.scrollWidth > frame.clientWidth, lines: Math.round((p.height - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom)) / lineHeight),
+    lineHeight, gutterTop, overflow: frame.scrollWidth > frame.clientWidth, lines: Math.round((p.height - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom)) / lineHeight),
     numbers: [...gutter.querySelectorAll(".code-number")].map((e) => ({ top: box(e).top, height: box(e).height })),
     bands: [...bands.children].map((e) => ({ top: box(e).top, height: box(e).height, left: box(e).left, right: box(e).right, banded: e.className === "code-band" })),
     text, pre: { left: p.left, right: p.right },
@@ -62,12 +64,17 @@ async function aligned(page: BrowserPage, label: string, variant: ExcerptVariant
     // A number is set in the excerpt's font, size and line height: its box is its line's text box (an empty line has none to measure).
     const text = m.text[k];
     if (text !== null && text !== undefined) expect([near(m.numbers[k]!.top, text.top), near(m.numbers[k]!.height, text.height)], `${label}: number of shown line ${k + 1}`).toEqual([true, true]);
-    // A band is its line's whole line box, across the excerpt's whole width: one line height tall, centred on its line's number, which
-    // sits on its line's text (measured, never a pitch multiplied out, so no drift accumulates); an unbanded line's empty element draws nothing.
+    // A band is its line's whole line box, across the excerpt's whole width: one line height tall, its top where its line's box begins. A
+    // glyph sits in its line box at an offset the engine rounds per font (half-leading need not split evenly), the same on every line, so it
+    // is read once, on the gutter's first line, whose box begins at the gutter's content top; each line's box is then its own number's
+    // measured top less that offset, never a pitch multiplied out, so no drift accumulates. An unbanded line's empty element draws nothing.
     if (!m.bands[k]!.banded) { expect(m.bands[k]!.left === m.bands[k]!.right, `${label}: unbanded shown line ${k + 1}`).toBe(true); continue; }
-    const centre = (box: Line): number => box.top + box.height / 2;
-    expect([near(centre(m.bands[k]!), centre(m.numbers[k]!)), near(m.bands[k]!.height, m.lineHeight)], `${label}: band of shown line ${k + 1}`).toEqual([true, true]);
-    if (text !== null && text !== undefined) expect(near(centre(m.bands[k]!), centre(text)), `${label}: band on the text of shown line ${k + 1}`).toBe(true);
+    const lineTop = m.numbers[k]!.top - (m.numbers[0]!.top - m.gutterTop);
+    expect([near(m.bands[k]!.top, lineTop), near(m.bands[k]!.height, m.lineHeight)], `${label}: band of shown line ${k + 1}: ${JSON.stringify([m.bands[k], lineTop])}`).toEqual([true, true]);
+    // The line's text lies inside its band.
+    if (text !== null && text !== undefined) {
+      expect(text.top >= m.bands[k]!.top - 0.5 && text.top + text.height <= m.bands[k]!.top + m.bands[k]!.height + 0.5, `${label}: text of shown line ${k + 1} in its band`).toBe(true);
+    }
     expect([near(m.bands[k]!.left, m.pre.left), near(m.bands[k]!.right, m.pre.right)], `${label}: band width of shown line ${k + 1}`).toEqual([true, true]);
   }
   return m;
@@ -108,13 +115,19 @@ it.skipIf(executable === undefined)('sets each number and band on its line at 39
     browser = await launchBrowser(executable);
     const cases: [boolean, ExcerptVariant][] = [[false, 'lf'], [true, 'lf'], [false, 'crlf'], [false, 'tabs'], [false, 'empty-first'], [false, 'empty-last'],
       [false, 'no-final-newline'], [false, 'long-line'], [false, 'sixty']];
-    for (const [split, variant] of cases) {
+    // The hosted runner's fonts set the frame at a size whose half-leading the engine rounds unevenly (CI run 46164381249): the same
+    // excerpt again with the frame's font size set, by the test alone, to sizes that do so with the fonts here.
+    const sizes: (string | undefined)[] = [undefined, '11px', '15.5px', '17.1px'];
+    for (const [split, variant, size] of [...cases.map(([a, b]) => [a, b, undefined] as const), ...sizes.slice(1).map((px) => [false, 'lf', px] as const)]) {
       for (const width of [390, 1440]) {
         const directory = await mkdtemp(join(tmpdir(), 'polaris-code-excerpt-browser-'));
         directories.push(directory);
         const page = await open(browser, directory, split, width, variant);
         try {
-          const label = `${split ? 'two parts' : 'one part'}, ${variant}, at ${width}`;
+          const label = `${split ? 'two parts' : 'one part'}, ${variant}${size === undefined ? '' : `, set at ${size}`}, at ${width}`;
+          if (size !== undefined) {
+            await page.evaluate(`document.querySelectorAll("#element-x .code-frame > pre, #element-x .code-frame > pre code").forEach((e) => { e.style.fontSize = ${JSON.stringify(size)}; })`);
+          }
           const { startLine, endLine } = excerptShape(variant);
           const n = endLine - startLine + 1;
           expect(await page.evaluate('document.scripts.length'), label).toBe(0);
