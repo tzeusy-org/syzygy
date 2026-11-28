@@ -9,6 +9,7 @@ import {
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
+import { figurePlanFindings, withoutFigurePlan } from './figure-plan.js';
 import { applyHeroFindings, relationDecisions } from './check-derive.js';
 import { applyContainmentFindings, groupsOf } from './containment.js';
 import { expandModel, localModelOf, modelFindings } from './system-model.js';
@@ -175,6 +176,9 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   } catch {
     return refuse('draft', `draft revision ${draftRev.revision} is not one bounded JSON object`);
   }
+  // A v14 draft renders exactly as the same draft without its figure plan (version 2.33); the plan's findings join the re-derivation.
+  const planFindings = figurePlanFindings(doc);
+  doc = withoutFigurePlan(doc);
 
   const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, now)(placementSubjectOf(subject));
   if (!screenLoad.ok) return refuse('screen', screenLoad.why);
@@ -193,6 +197,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   applyContainmentFindings(doc, findings);
   // A v12 draft's model and view findings (version 2.24), as check reports them without the tree.
   if (hasModelForm(doc['schemaVersion'])) findings.push(...modelFindings(doc, new Set(findings.filter((finding) => finding.kind === 'schema').map((finding) => finding.at)), undefined));
+  findings.push(...planFindings);
   if (findings.length > 0) {
     return refuse('rederive', `draft revision ${draftRev.revision} passed its check, but checking it again at this render from the objects read now finds ${findings.length} finding(s); the stored result is not trusted, so nothing is rendered`,
       { reasons: findings.map((finding) => `${finding.kind} at ${finding.at}`) });
