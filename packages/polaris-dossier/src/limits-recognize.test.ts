@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { kindOf, limitCandidateOf, recognizeConfig, recognizeConstants, type RecognizedLimits } from './limits-recognize.js';
 
-// syzygy-5dhm.116 (REQ-polaris-generation-034 version 2.51): recognizer limit-default v1, one fixture per file form. Every expected row is a
+// syzygy-5dhm.116 (REQ-polaris-generation-034 version 2.52): recognizer limit-default v1, one fixture per file form. Every expected row is a
 // literal written from the fixture text before the recognizer ran.
 
 const rows = (r: RecognizedLimits) => {

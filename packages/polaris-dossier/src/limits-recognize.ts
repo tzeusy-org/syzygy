@@ -2,7 +2,7 @@ import { LIMIT_DEFAULT } from './derive-rules.js';
 import { lineStarts } from './rough-edges-recognize.js';
 import { scanCLike, scanPython, type Scanned, type StringToken } from './test-names-lexer.js';
 
-/** The limits-and-defaults recognizer (REQ-polaris-generation-034 version 2.51, syzygy-5dhm.116), version 1: a path rule saying which blobs
+/** The limits-and-defaults recognizer (REQ-polaris-generation-034 version 2.52, syzygy-5dhm.116), version 1: a path rule saying which blobs
  * are candidates and in which form, and a lexical reading of one body that returns every limit constant it defines and every configuration
  * entry it sets, each with its line, that line's text, its value exactly as written and the value's type. Pure.
  *

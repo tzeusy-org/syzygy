@@ -2,17 +2,17 @@
 
 ## Predecessor
 
-[Observed] REQ-polaris-generation-034 v2.50, the view levels (syzygy-3efd.39, A-274), at `46c7d02c92336dfa715e1f8dcfb90ab0c94ba9cf` (tag `polaris-dossier-view-levels-v2.50`), `openspec/changes/dossier-view-levels/proposed/polaris-generation/spec.md`, SHA-256 `4e291b8d20940d7f939b2443731e56c586eaf40dcde2d3765ef6fb18b29f3d9d`, 329 scenario headings. It is the effective REQ-034 on `origin/main` when this was rebuilt. This change was first built over the v2.48 docs and code as 2.49 and reviewed there; the imports corroboration took 2.49 and the view levels 2.50 on main first, so the script rebuilt it over each in turn, last over 2.50 as 2.51, its additions unchanged. Versions 2.45 and 2.47 are held by other open changes (syzygy-5dhm.26, syzygy-5dhm.47).
+[Observed] REQ-polaris-generation-034 v2.51, the walk advice (syzygy-3efd.35, A-275), at `9e169283f192a3a59114b9dece904c0babe4a705` (tag `polaris-dossier-walk-advice-v2.51`), `openspec/changes/dossier-walk-advice/proposed/polaris-generation/spec.md`, SHA-256 `84ed7449a67e00da17c03ec921e5b419d06f17c1f04df55c0d548abdaa8d62ca`, 336 scenario headings. It is the effective REQ-034 on `origin/main` when this was rebuilt. This change was first built over the v2.48 docs and code as 2.49 and reviewed there; the imports corroboration took 2.49, the view levels 2.50 and the walk advice 2.51 on main first, so the script rebuilt it over each in turn, last over 2.51 as 2.52, its additions unchanged. Versions 2.45 and 2.47 are held by other open changes (syzygy-5dhm.26, syzygy-5dhm.47).
 
 ## Amended in place
 
-- The title and the banner paragraph name version 2.51, its predecessor and its tag.
+- The title and the banner paragraph name version 2.52, its predecessor and its tag.
 - The event-response form's Observable, Oracle and Falsifier lines each gain one sentence for the cliffs; their predecessor bytes are kept as each line's prefix.
 
 ## Added
 
 - Three paragraphs immediately after the docs-and-code page paragraph: recognizer `limit-default` version 1, its source and configuration candidates, every definition form, name pattern and value form it runs (each published as a regular expression), the ini and yaml line grammars and when a file is Unknown; the render's `limitsAndDefaults` member, its dispositions, read limits, batched reads, value checks, listing limits and labels; and the reference page `reference/cliffs.html`, its table, its rows, its `Not established.` statements, and the machine view's `limitsAndDefaults` member.
-- Eight scenarios immediately after the last scenario: limits and defaults listed per unit; each source form read in code only; configuration entries in both forms; values the rule cannot read whole; files left out, set apart, Unknown or withheld; read limits, batches and listing limits; the page rendered; and no page without the member, or an Unknown member. The proposed requirement has 337 scenarios; the 329 predecessor scenarios are byte-identical.
+- Eight scenarios immediately after the last scenario: limits and defaults listed per unit; each source form read in code only; configuration entries in both forms; values the rule cannot read whole; files left out, set apart, Unknown or withheld; read limits, batches and listing limits; the page rendered; and no page without the member, or an Unknown member. The proposed requirement has 344 scenarios; the 336 predecessor scenarios are byte-identical.
 
 ## Carried and reversed
 

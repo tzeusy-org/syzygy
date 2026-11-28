@@ -158,7 +158,7 @@ export const DOC_REFERENCE = {
   outcomes: ['resolves', 'document-only', 'unknown'],
 } as const;
 
-/** The limits-and-defaults recognizer (REQ-polaris-generation-034 version 2.51, syzygy-5dhm.116), version 1: the named limit constants one
+/** The limits-and-defaults recognizer (REQ-polaris-generation-034 version 2.52, syzygy-5dhm.116), version 1: the named limit constants one
  * admitted source file defines with a literal value, read lexically through the test-name lexer's code text (so a definition in a comment or
  * a string is never one), and the entries one admitted configuration file sets (`limits-*.ts`). It reads bodies, so it is outside
  * `DERIVE_RULES`. A change to a candidate, a name pattern, a definition form or a value form is a new version. */

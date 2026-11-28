@@ -409,7 +409,7 @@ export type LocalDocsAndCode =
     readonly rowsNotListed: number;
   }
   | { readonly format: string; readonly state: 'unknown'; readonly why: string };
-/** The limits and defaults this render derived itself (REQ-polaris-generation-034 version 2.51): recognizer `limit-default` v1's rows,
+/** The limits and defaults this render derived itself (REQ-polaris-generation-034 version 2.52): recognizer `limit-default` v1's rows,
  * the named limit constants of the admitted source files and the entries of the admitted configuration files of the pinned tree. */
 export interface LocalLimitsFile {
   readonly path: string;
@@ -523,7 +523,7 @@ export interface LocalRenderInput {
   /** The documents' paths and identifiers this render resolved itself (version 2.48), from which the docs-and-code reference page is drawn.
    * The page renders only where this and `derivedStructure` are both present, so an input without it keeps its pages and machine view. */
   readonly docsAndCode?: LocalDocsAndCode;
-  /** The limits and defaults this render derived itself (version 2.51), from which the cliffs reference page is drawn. The page renders
+  /** The limits and defaults this render derived itself (version 2.52), from which the cliffs reference page is drawn. The page renders
    * only where this and `derivedStructure` are both present, so an input without it keeps its pages and machine view. */
   readonly limitsAndDefaults?: LocalLimitsAndDefaults;
   /** A schema-v9 draft's graph edges (REQ-polaris-generation-034 version 2.19), by edge id: each edge's relation and the witness state rule
