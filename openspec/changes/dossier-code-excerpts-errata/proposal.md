@@ -11,7 +11,7 @@
   - a band read as "the topmost element" where the excerpt's text lies above it;
   - no stated line bound;
   - and an absent path, where the range findings are never drawn, so the range alone decides.
-- [Observed] The .93 code lane (row A-347, PR #1061) changed check's finding details: a detail names a draft identity only where it is a handle, and every detail is screened. Its review (`docs/reviews/syzygy-3efd-93/R93-CODE-REVIEW-RAW.md`, finding 3 and notes 4, 5 and 11) found that no spec version states it; the lead asked that this version carry it.
+- [Observed] The .93 code lane (row A-347, PR #1061) changed check's finding details: a detail names a draft identity only where it is a handle, and every detail is screened. Its review (`R93-CODE-REVIEW-RAW.md` under `docs/reviews/syzygy-3efd-93/` on `agent/syzygy-3efd.93` until #1061 lands; finding 3 and notes 4, 5 and 11) found that no spec version states it; the lead asked that this version carry it.
 - [Observed] The CI repair of PR #1060 (a band misaligned at 390 px under the hosted font) showed the scenario's "the same top and height as the line" is ambiguous between the line box and the glyph box. The engine splits the half-leading unevenly, so a number's glyph box is offset from its line box. The code and test measure the line box (design D5).
 
 ## What changes
