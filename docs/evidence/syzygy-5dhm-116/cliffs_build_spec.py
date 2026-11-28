@@ -12,7 +12,7 @@ code builder's (docs/evidence/syzygy-5dhm-119/docs_and_code_build_spec.py), unch
 import pathlib
 import sys
 
-VERSION = '2.50'
+VERSION = '2.51'
 TAG = f'polaris-dossier-cliffs-v{VERSION}'
 
 NEW_TITLE = '# Dossier cliffs'

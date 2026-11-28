@@ -53,7 +53,7 @@ const listedNone = await derive([], true);
 const single = await derive(null, false);
 console.log(JSON.stringify({
   subject: { tree: 'syzygy (this repository)', commit, policy: `${screen.policyId} ${screen.policyVersion}`, policySha256: screen.policySha256 },
-  before: { rows: 0, pagesListingRows: 0, basis: 'no rule before REQ-polaris-generation-034 version 2.50 read a limit constant or a configuration entry' },
+  before: { rows: 0, pagesListingRows: 0, basis: 'no rule before REQ-polaris-generation-034 version 2.51 read a limit constant or a configuration entry' },
   afterNoStatement: { ...summary(none.m), deriveElapsedMs: none.elapsedMs, readerCalls: none.calls },
   afterStatementListingNoClass: { ...summary(listedNone.m), deriveElapsedMs: listedNone.elapsedMs, readerCalls: listedNone.calls },
   noStatementOnePathPerCall: { deriveElapsedMs: single.elapsedMs, readerCalls: single.calls, memberIdentical: JSON.stringify(single.m) === JSON.stringify(none.m) },

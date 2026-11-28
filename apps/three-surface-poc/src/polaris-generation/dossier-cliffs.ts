@@ -1,7 +1,7 @@
 import type { LocalLimitRow, LocalLimitsAndDefaults, LocalLimitsFile } from '@syzygy/polaris-generation-core/live';
 import { escapeHtml as escape } from './draft-preview.js';
 
-/** The cliffs reference page (REQ-polaris-generation-034 version 2.50, syzygy-5dhm.116, pursuit move R23 slice 1): every named limit
+/** The cliffs reference page (REQ-polaris-generation-034 version 2.51, syzygy-5dhm.116, pursuit move R23 slice 1): every named limit
  * constant and every configuration entry recognizer `limit-default` v1 read in the admitted files of the pinned tree, a table of them per
  * unit, and each listed row with its value as written, its type and its quoted line. A row says what a file sets, never that a limit is
  * reached, enforced or right; nothing is evaluated. A row whose value no form takes is Unknown, and so is a file not read. Every row

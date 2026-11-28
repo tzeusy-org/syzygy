@@ -7,7 +7,7 @@ import { GitObjectReadRefusal, type VerifiedBlob } from './git-object-reader.js'
 import { deriveLimits, limitsUnknown, type LimitsAndDefaults } from './limits.js';
 import { buildDossierScreen, type DossierScreen } from './screen.js';
 
-// syzygy-5dhm.116 (REQ-polaris-generation-034 version 2.50): the limitsAndDefaults member from a tree listing, the bound policy's screen and
+// syzygy-5dhm.116 (REQ-polaris-generation-034 version 2.51): the limitsAndDefaults member from a tree listing, the bound policy's screen and
 // a reader double that fails the test on any path the stated dispositions do not read. Expected members, counts and rows are literals
 // written from the fixture before the driver ran. Planted secret values are fake and assembled from pieces.
 

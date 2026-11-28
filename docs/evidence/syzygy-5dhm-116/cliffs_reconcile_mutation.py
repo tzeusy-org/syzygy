@@ -4,7 +4,7 @@
 Usage: cliffs_reconcile_mutation.py <worktree> <out.json>. The tree must be clean. Each mutant replaces one
 fragment (found exactly once) in one file, runs `scripts/check_spec_reconciliation.py --check` (or the counter),
 records whether the expected finding appears, and restores the file with `git checkout`. The selftest base is
-projected before the v2.36 advice, so v2.50 is effective only here, on the delivered tree.
+projected before the v2.36 advice, so v2.51 is effective only here, on the delivered tree.
 """
 import json
 import pathlib
@@ -22,18 +22,18 @@ CHECK_RUN = ['python3', CHECK, '--check']
 COUNT_RUN = ['python3', COUNT]
 
 MUTANTS = [
-    ('status-count-off', STATUS, 'Polaris has 39 requirements and 646 scenarios.', 'Polaris has 39 requirements and 645 scenarios.',
+    ('status-count-off', STATUS, 'Polaris has 39 requirements and 658 scenarios.', 'Polaris has 39 requirements and 657 scenarios.',
      CHECK_RUN, 'does not declare the exact cliffs census'),
-    ('status-count-off-counter', STATUS, 'Polaris has 39 requirements and 646 scenarios.', 'Polaris has 39 requirements and 645 scenarios.',
+    ('status-count-off-counter', STATUS, 'Polaris has 39 requirements and 658 scenarios.', 'Polaris has 39 requirements and 657 scenarios.',
      COUNT_RUN, 'cliffs count differs'),
     ('status-route-old-id', STATUS, 'is agent-adopted in A-343.', 'is agent-adopted in A-338.',
-     CHECK_RUN, 'does not route cliffs v2.50'),
-    ('index-old-tag', README, '`polaris-dossier-cliffs-v2.50`', '`polaris-dossier-cliffs-v2.40`',
-     CHECK_RUN, 'does not route cliffs v2.50'),
+     CHECK_RUN, 'does not route cliffs v2.51'),
+    ('index-old-tag', README, '`polaris-dossier-cliffs-v2.51`', '`polaris-dossier-cliffs-v2.40`',
+     CHECK_RUN, 'does not route cliffs v2.51'),
     ('spec-one-byte', SPEC, '# Dossier cliffs', '# Dossier cliffz',
-     CHECK_RUN, 'differs from the reviewed v2.50 subject'),
-    ('row-old-tag', LEDGER, '| `polaris-dossier-cliffs-v2.50` |', '| `polaris-dossier-cliffs-v2.40` |',
-     CHECK_RUN, 'calls cliffs v2.50 adopted while it is not in force'),
+     CHECK_RUN, 'differs from the reviewed v2.51 subject'),
+    ('row-old-tag', LEDGER, '| `polaris-dossier-cliffs-v2.51` |', '| `polaris-dossier-cliffs-v2.40` |',
+     CHECK_RUN, 'calls cliffs v2.51 adopted while it is not in force'),
     ('row-test-is-choice', CHECK, 'for line in adoption_table_rows(root) if is_cliffs_row(line)]',
      'for line in adoption_table_rows(root) if is_choice_row(line)]', CHECK_RUN, 'cliffs: malformed adoption identity'),
     ('census-skips-cliffs', CHECK, '                a, extra_a = compose_figure_by_id(a, cliffs_amendment, CLIFFS_REPLACES)\n'

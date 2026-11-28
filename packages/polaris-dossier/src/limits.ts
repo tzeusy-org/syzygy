@@ -7,7 +7,7 @@ import { limitCandidateOf, recognizeConfig, recognizeConstants, type LimitCandid
 import { MANIFEST_BLOB_LIMIT, MANIFEST_PATH_LIMIT, MANIFEST_VALUE_LIMIT, type ManifestInputs } from './manifest-facts.js';
 import { secretPathOf } from './screen.js';
 
-/** Limits and defaults (REQ-polaris-generation-034 version 2.50, syzygy-5dhm.116): every named limit constant that recognizer
+/** Limits and defaults (REQ-polaris-generation-034 version 2.51, syzygy-5dhm.116): every named limit constant that recognizer
  * `limit-default` v1 reads defined in the admitted source files of the pinned tree, and every entry it reads set in the admitted
  * configuration files, each a row whose line is quoted from the blob read, with its value as written and that value's type, and per-unit
  * counts by rule `top-level-unit`. A row with a value is Observed: the blob at that path sets that name to that text on that line. A row

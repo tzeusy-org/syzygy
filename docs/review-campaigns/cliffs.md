@@ -1,4 +1,4 @@
-# Dossier cliffs 2.50
+# Dossier cliffs 2.51
 
 ## Patterns
 
@@ -6,7 +6,7 @@
 
 ## What was under review
 
-[Observed] The MODIFIED REQ-polaris-generation-034 version 2.49 over the v2.48 docs and code (rebuilt by its script as 2.50 over the v2.49 imports corroboration after the review), in `openspec/changes/dossier-cliffs/` (recognizer `limit-default` v1, the render's `limitsAndDefaults` member and `reference/cliffs.html`; bead syzygy-5dhm.116, pursuit move R23 slice 1), its implementation, evidence scripts and reconciler wiring before its adoption row, bound by the commit in the raw's head. The review establishes no adoption.
+[Observed] The MODIFIED REQ-polaris-generation-034 version 2.49 over the v2.48 docs and code (rebuilt by its script after the review as 2.50 over the v2.49 imports corroboration, then as 2.51 over the v2.50 view levels), in `openspec/changes/dossier-cliffs/` (recognizer `limit-default` v1, the render's `limitsAndDefaults` member and `reference/cliffs.html`; bead syzygy-5dhm.116, pursuit move R23 slice 1), its implementation, evidence scripts and reconciler wiring before its adoption row, bound by the commit in the raw's head. The review establishes no adoption.
 
 ## Last verdict of record, and where the findings landed
 
@@ -20,4 +20,4 @@
 - F6 (no retained mutation, before/after or revert-trial record; 390 px not measured): the records are retained under `docs/evidence/syzygy-5dhm-116/`: mutation run 1 killed 61 of 77, run 2, after fixtures for its survivors and the review repairs' mutants, killed 83 of 85 with two equivalent survivors named in design.md, as did run 3 after the merge of main; the before/after, the reconciler wiring mutants and the revert trial sit beside them. The 390 px fit is recorded in design.md as inferred from the markup.
 - F7 (the page words the `default` pattern too narrowly): the note says "after any leading underscores", pinned by the page test.
 
-[Observed] The spec was rebuilt by its script for F2, F3, F4 and F7, and again as 2.50 over the imports corroboration, so the adopted digest differs from the reviewed one; no review has read the repaired or rebuilt bytes.
+[Observed] The spec was rebuilt by its script for F2, F3, F4 and F7, and again as 2.50 over the imports corroboration and 2.51 over the view levels, so the adopted digest differs from the reviewed one; no review has read the repaired or rebuilt bytes.

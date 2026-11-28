@@ -977,7 +977,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const roughEdges = local?.derivedStructure !== undefined && local.roughEdges !== undefined ? { derived: local.derivedStructure, member: local.roughEdges } : undefined;
   // Version 2.48: the docs-and-code reference page, after the rough-edges page, under the same condition on its own member.
   const docsAndCode = local?.derivedStructure !== undefined && local.docsAndCode !== undefined ? { derived: local.derivedStructure, member: local.docsAndCode } : undefined;
-  // Version 2.50: the cliffs reference page, after the docs-and-code page, under the same condition on its own member.
+  // Version 2.51: the cliffs reference page, after the docs-and-code page, under the same condition on its own member.
   const cliffs = local?.derivedStructure !== undefined && local.limitsAndDefaults !== undefined ? { derived: local.derivedStructure, member: local.limitsAndDefaults } : undefined;
   const referenceLinks = [...(testNames === undefined ? [] : [TEST_NAMES_PAGE]), ...(roughEdges === undefined ? [] : [ROUGH_EDGES_PAGE]), ...(docsAndCode === undefined ? [] : [DOCS_AND_CODE_PAGE]), ...(cliffs === undefined ? [] : [CLIFFS_PAGE])];
   const findingLinks = local === undefined ? [] : [{ path: FIND_BY_TASK_PAGE, title: 'Find by task' }, { path: NAME_INDEX_PAGE, title: 'Index' }];
@@ -1376,7 +1376,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   if (roughEdges !== undefined) add(ROUGH_EDGES_PAGE.path, 1, ROUGH_EDGES_PAGE.title, roughEdgesPage(roughEdges.member, roughEdges.derived.revision));
   // --- the docs-and-code reference page (version 2.48), after the rough-edges page.
   if (docsAndCode !== undefined) add(DOCS_AND_CODE_PAGE.path, 1, DOCS_AND_CODE_PAGE.title, docsAndCodePage(docsAndCode.member, docsAndCode.derived.revision));
-  // --- the cliffs reference page (version 2.50), after the docs-and-code page.
+  // --- the cliffs reference page (version 2.51), after the docs-and-code page.
   if (cliffs !== undefined) add(CLIFFS_PAGE.path, 1, CLIFFS_PAGE.title, cliffsPage(cliffs.member, cliffs.derived.revision));
 
   // --- the operator-agent run's own pages: understanding, discovery, clarifications, executions, review
