@@ -2,7 +2,7 @@
 
 Review: `R35-CODE-REVIEW-RAW.md` in this directory, verdict `CONFIRM WITH EXCEPTIONS` (line 2), over `790bda394`. No blocking finding, seven notes. One round; no confirmation review follows (D10).
 
-The code and test repairs are in `0fbcadcc4`, then a merge of `origin/main` (`59377a61f`), then `a82ae1ec0` and `0fb0fd9b3`. The mutation record is `docs/evidence/syzygy-3efd-35/walk-advice-code-mutation-r3-2026-11-29.json`, run at `0fb0fd9b3` by `walk_advice_code_mutation_r3.py`, with every subject file's digest at that commit:
+The code and test repairs are in `0fbcadcc4`, then a merge of `origin/main` (`59377a61f`), then `a82ae1ec0` and `0fb0fd9b3`. The branch then merged `origin/main` again (`3760f645d`), which changed `check.ts`, `view-level.test.ts` and `walk.test.ts`. The mutation record is `docs/evidence/syzygy-3efd-35/walk-advice-code-mutation-r3-2026-11-29.json`, run at `3760f645d` by `walk_advice_code_mutation_r3.py`, with every subject file's digest at that commit (the same scores at `a82ae1ec0` and `0fb0fd9b3` before that merge):
 
 - 55 mutants;
 - 50 killed, 46 of them by an assertion and four by a thrown error;
@@ -51,7 +51,7 @@ Repaired, fail-closed, as the lead preferred.
 
 Repaired.
 
-- The round 3 record ran at `0fb0fd9b3`, the code head after the repair and the merge of `origin/main`.
+- The round 3 record ran at `3760f645d`, the code head after the repair and both merges of `origin/main`; no product or test file changes after it.
 - Its `subject` holds the digest of each of the seven files it mutates or runs at that commit.
 - The tests run are `walk-advice.test.ts`, `walk.test.ts`, `view-level.test.ts` (with the `levelFindings` merge) and `inventory.test.ts`.
 
