@@ -1,5 +1,5 @@
 {
-  "commit": "ff400b6527a0348192bf3c263e904f8b383b4936",
+  "commit": "7cfc93a95866b5404fade84a759ed8f4e8312c32",
   "script": "docs/evidence/syzygy-5dhm.116/cliffs_reconcile_mutation.py",
   "baseline": {
     "python3 scripts/check_spec_reconciliation.py --check": {
@@ -13,8 +13,8 @@
     {
       "mutant": "status-count-off",
       "path": "PROJECT-STATUS.md",
-      "old": "Polaris has 39 requirements and 642 scenarios.",
-      "new": "Polaris has 39 requirements and 641 scenarios.",
+      "old": "Polaris has 39 requirements and 646 scenarios.",
+      "new": "Polaris has 39 requirements and 645 scenarios.",
       "command": "python3 scripts/check_spec_reconciliation.py --check",
       "expected": "does not declare the exact cliffs census",
       "exit": 1,
@@ -23,8 +23,8 @@
     {
       "mutant": "status-count-off-counter",
       "path": "PROJECT-STATUS.md",
-      "old": "Polaris has 39 requirements and 642 scenarios.",
-      "new": "Polaris has 39 requirements and 641 scenarios.",
+      "old": "Polaris has 39 requirements and 646 scenarios.",
+      "new": "Polaris has 39 requirements and 645 scenarios.",
       "command": "python3 scripts/count_polaris_effective_scenarios.py",
       "expected": "cliffs count differs",
       "exit": 1,
@@ -36,17 +36,17 @@
       "old": "is agent-adopted in A-343.",
       "new": "is agent-adopted in A-338.",
       "command": "python3 scripts/check_spec_reconciliation.py --check",
-      "expected": "does not route cliffs v2.49",
+      "expected": "does not route cliffs v2.50",
       "exit": 1,
       "outcome": "killed"
     },
     {
       "mutant": "index-old-tag",
       "path": "openspec/README.md",
-      "old": "`polaris-dossier-cliffs-v2.49`",
+      "old": "`polaris-dossier-cliffs-v2.50`",
       "new": "`polaris-dossier-cliffs-v2.40`",
       "command": "python3 scripts/check_spec_reconciliation.py --check",
-      "expected": "does not route cliffs v2.49",
+      "expected": "does not route cliffs v2.50",
       "exit": 1,
       "outcome": "killed"
     },
@@ -56,17 +56,17 @@
       "old": "# Dossier cliffs",
       "new": "# Dossier cliffz",
       "command": "python3 scripts/check_spec_reconciliation.py --check",
-      "expected": "differs from the reviewed v2.49 subject",
+      "expected": "differs from the reviewed v2.50 subject",
       "exit": 1,
       "outcome": "killed"
     },
     {
       "mutant": "row-old-tag",
       "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
-      "old": "| `polaris-dossier-cliffs-v2.49` |",
+      "old": "| `polaris-dossier-cliffs-v2.50` |",
       "new": "| `polaris-dossier-cliffs-v2.40` |",
       "command": "python3 scripts/check_spec_reconciliation.py --check",
-      "expected": "calls cliffs v2.49 adopted while it is not in force",
+      "expected": "calls cliffs v2.50 adopted while it is not in force",
       "exit": 1,
       "outcome": "killed"
     },
@@ -103,8 +103,8 @@
     {
       "mutant": "projection-skips-cliffs",
       "path": "scripts/check_spec_reconciliation.py",
-      "old": "                                                findings.append(\"POLARIS cliffs: selected census projections disagree\")\n                                            selected_population = by_id\n",
-      "new": "                                                findings.append(\"POLARIS cliffs: selected census projections disagree\")\n",
+      "old": "                                                    findings.append(\"POLARIS cliffs: selected census projections disagree\")\n                                                selected_population = by_id\n",
+      "new": "                                                    findings.append(\"POLARIS cliffs: selected census projections disagree\")\n",
       "command": "python3 scripts/check_spec_reconciliation.py --check",
       "expected": "selected census differs",
       "exit": 1,
