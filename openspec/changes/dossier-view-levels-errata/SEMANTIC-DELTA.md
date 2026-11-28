@@ -8,7 +8,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-code-excerpts/proposed/polaris-generation/spec.md` (dossier code excerpts version 2.54, row A-345, tag `polaris-dossier-code-excerpts-v2.54`; sha256 `24132cde379082c2667057c3a2e326f22fe0cf89426b256436dc84d8a92facd3`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-view-levels-errata/proposed/polaris-generation/spec.md`, sha256 `dee4a4dca906319d970e5a6398492d191d8b7707fbf1ffbb5598ad57a28c24c3`) replaces that text, composed after version 2.54. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.54's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-code-excerpts/proposed/polaris-generation/spec.md` (dossier code excerpts version 2.54, row A-345, tag `polaris-dossier-code-excerpts-v2.54`; sha256 `24132cde379082c2667057c3a2e326f22fe0cf89426b256436dc84d8a92facd3`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-view-levels-errata/proposed/polaris-generation/spec.md`, sha256 `530a79f837497883430ba9ca98f8965e005abb50b64cb6f4a35e9b302c5776fb`) replaces that text, composed after version 2.54. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.54's, byte for byte.
 
 ## Carried unchanged
 
@@ -19,7 +19,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 [Observed] The title and preamble (file head, not requirement text) name version 2.55. In the requirement, each changed line, with the displaced words and the words that replace them:
 
 - After "…no `scope` names, never has one.": inserted "From version 2.55: no figure renders inside a collapsible section, so that clause passes no view over; the views passed over for a notice are those whose figure is not produced, is not on a page the render draws, or has a base not drawn at the render, and where the draft layer is withheld no element has a zoom target. Where the figure so chosen then fails the inertness check of version 2.40 and a notice stands in its place, Syzygy SHALL refuse the render and write no page, rather than pass that view over, since the zoom links already chosen would name a fragment no page carries.".
-- After "…admit for output under version 2.35.": inserted "From version 2.55, a base element counts as withheld at check for this rule where a denied-path rule of the bound screening policy names its own path, a top-level directory's path or a unit's manifest path, though its map names it; a `deniedDirectoryNames` entry names the paths below a directory and not the directory's own path, so it withholds no step.".
+- After "…admit for output under version 2.35.": inserted "From version 2.55, a base element counts as withheld at check for this rule, though its map names it, where a denied-path rule of the bound screening policy names its own path (a top-level directory's path or a unit's manifest path), and a top-level directory counts as withheld at check also where a `deniedDirectoryNames` entry names it, so that every path below it is denied. Whether a directory is withheld is decided from the policy and the directory's path alone, never from the files the tree holds below it.".
 - After "…- **WHEN** the": displaced "overview"; now "same draft homes `ctx` at section `s1` in place".
 - After "…- **WHEN** the overview of the": displaced "same draft also"; now "overview, and that section".
 - After "…over `ctx` whose first step names": displaced "`app`, and in"; now "`app` (no version admits".
@@ -42,7 +42,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 > - **WHEN** a public repository's pinned tree holds `src/a.ts`, `kubeconfig/notes`, `.kube/config` and `.kube/notes`, `kubeconfig` being one of the bound screening policy's `deniedPathBasenames` and `.kube` one of its `deniedDirectoryNames`, and no secret detector matching any of these paths
 > - **THEN** the derived facts hold a `top-level-unit` fact for `kubeconfig` counting 1 file and one for `.kube` counting 2 files, neither counted in `secretPathsLeftOut`, and the directory map draws them as `kubeconfig/ (1 file)` and `.kube/ (2 files)`
 > - **AND** no body of `.kube/config` or `.kube/notes` is read, each being a denied path
-> - **AND** in the walk advice of version 2.51, a step naming the directory `kubeconfig`, whose own path is a denied path, is neither read nor counted, while a step naming `.kube`, whose own path no denied-path rule names, is read
+> - **AND** in the walk advice of version 2.51, a step naming the directory `kubeconfig`, whose own path is a denied path, and a step naming `.kube`, which a `deniedDirectoryNames` entry names, are each withheld at check, neither read nor counted, while a step naming `src` is read
 
 The two new sentences of the zoom target paragraph and of the walk advice paragraph are appended to existing lines and appear above as insertions.
 

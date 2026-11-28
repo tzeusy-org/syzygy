@@ -7,7 +7,7 @@
 - a scenario's view "inside a collapsible section", which no render draws, is an omitted view, and the paragraph says no figure renders inside one;
 - a 1048 px clause no render can reach is dropped;
 - a zoom target whose figure fails the inertness check refuses the render, as the code does, where 2.50's text passed it over;
-- a top-level directory a denied-path rule names is still a fact on the directory map, and a walk step on one whose own path is denied is not read by the walk advice.
+- a top-level directory a denied-path rule names is still a fact on the directory map, and a walk step on one whose own path is denied, or that a `deniedDirectoryNames` entry names, is withheld at check and not read by the walk advice.
 
 No finding, record, page byte, brief byte, draft schema or brief version moves. REQ-034 gains one scenario.
 

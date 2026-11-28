@@ -59,8 +59,13 @@
   - the directory map elements `kubeconfig/ (1 file)` and `.kube/ (2 files)`, with `secretPathsLeftOut` 0;
   - `screenPath('kubeconfig')` = `denied-path`, `screenPath('.kube')` = `unknown-extraction-class`, and `screenPath('.kube/config')` = `denied-path`;
   - so check's `hidden` predicate (a secret path, or `screenPath` = `denied-path`) holds for `kubeconfig` and not for `.kube`.
-- [Inferred] The walk advice of syzygy-3efd.35 skips a base step where that predicate holds, treating a denied own path as "withheld at check" in 2.51's words. That is fail-closed: fewer steps read, nothing more named. The sentence states it, with the `deniedDirectoryNames` case, so the code and the text agree once that code lands.
-- [Observed] The scenario's map statements are observed at `3f04944bb`. Its walk advice line states code not yet on main (syzygy-3efd.35, branch `agent/syzygy-3efd.35-code`); `tasks.md` lists the literal test as a follow-up.
+- [Observed] The R35 code review (`docs/reviews/syzygy-3efd-35/R35-CODE-REVIEW-RAW.md`, note 2) found that inconsistent: of two directories the policy denies by name, `kubeconfig` was withheld from the walk advice and `.ssh` was read, and 2.51 does not say what "withheld at check" means for a directory.
+- [Inferred] This version defines it, fail-closed, as one of the two readings the lead offered: a top-level directory is withheld at check where a denied-path rule names its own path, or where a `deniedDirectoryNames` entry names it, so that every path below it is denied. The other reading, a directory every file of which is denied, is not taken:
+  - it is decided by the files the tree holds, so the same directory would be read in one revision and withheld in the next as files come and go;
+  - wherever a `deniedDirectoryNames` entry names a directory, every file below it is denied, so the two readings agree on every directory the policy denies by name;
+  - they differ only for a directory that happens to hold nothing but denied basenames (`.env` files, say); its name says nothing the policy screens, and the walk advice names no label or path in a detail in any case.
+- [Observed] The code of syzygy-3efd.35 follows it on branch `agent/syzygy-3efd.35-code` (the screen's `deniesBelow`, after the R35 repair): fewer steps read, nothing more named. Its check-level test, under the committed policy, reads `src` and neither `kubeconfig` nor `.ssh`.
+- [Observed] The scenario's map statements are observed at `3f04944bb`. Its walk advice line states code not yet on main (syzygy-3efd.35); `tasks.md` lists the literal test of this scenario's tree as a follow-up.
 - [Inferred] Hiding such a directory instead would be stricter than the text, not looser, and is not taken: the text names it on purpose. Nothing here weakens what the policy hides (SEC-5).
 
 ## D8. Composition, bytes and code

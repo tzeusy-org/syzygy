@@ -11,7 +11,7 @@ Usage: view_levels_errata_build_spec.py <worktree> <out>.
 4. The 1048 px clause of "Zoom links and a walk share one layer" is dropped (design.md D5).
 5. A zoom target whose figure fails the inertness check refuses the render, as the code does (design.md D6).
 6. A directory a denied-path rule names is still a fact on the directory map, and a walk step on one whose own path is
-   denied is not read by the walk advice (design.md D7).
+   denied, or that a `deniedDirectoryNames` entry names, is withheld at check and not read by the walk advice (design.md D7).
 """
 import pathlib
 import sys
@@ -61,12 +61,14 @@ replace(ZOOM, ZOOM + (f' From version {V}: no figure renders inside a collapsibl
                       'notice stands in its place, Syzygy SHALL refuse the render and write no page, rather than pass that '
                       'view over, since the zoom links already chosen would name a fragment no page carries.'))
 
-# 6. Walk advice: a base element whose own path a denied-path rule names counts as withheld.
+# 6. Walk advice: what "withheld at check" means for a base element, a directory included (R35 code review, note 2).
 WA = 'whose screening is Unknown there, or whose label check cannot admit for output under version 2.35.'
-replace(WA, WA + (f' From version {V}, a base element counts as withheld at check for this rule where a denied-path rule of '
-                  'the bound screening policy names its own path, a top-level directory\'s path or a unit\'s manifest path, '
-                  'though its map names it; a `deniedDirectoryNames` entry names the paths below a directory and not the '
-                  'directory\'s own path, so it withholds no step.'))
+replace(WA, WA + (f' From version {V}, a base element counts as withheld at check for this rule, though its map names it, '
+                  'where a denied-path rule of the bound screening policy names its own path (a top-level directory\'s path '
+                  'or a unit\'s manifest path), and a top-level directory counts as withheld at check also where a '
+                  '`deniedDirectoryNames` entry names it, so that every path below it is denied. Whether a directory is '
+                  'withheld is decided from the policy and the directory\'s path alone, never from the files the tree holds '
+                  'below it.'))
 
 # 1. The href between deep dives.
 replace("and `more`'s outer box for `app` `<a class=\"zoom-link\" href=\"runtime.html#figure-parts\">`",
@@ -103,7 +105,8 @@ replace(DASHED, (
     '`.kube/ (2 files)`\n'
     '- **AND** no body of `.kube/config` or `.kube/notes` is read, each being a denied path\n'
     '- **AND** in the walk advice of version 2.51, a step naming the directory `kubeconfig`, whose own path is a denied path, '
-    'is neither read nor counted, while a step naming `.kube`, whose own path no denied-path rule names, is read\n\n' + DASHED))
+    'and a step naming `.kube`, which a `deniedDirectoryNames` entry names, are each withheld at check, neither read nor '
+    'counted, while a step naming `src` is read\n\n' + DASHED))
 
 assert '2.NN' not in text
 out.parent.mkdir(parents=True, exist_ok=True)

@@ -12,7 +12,7 @@
 [Observed] One MODIFIED requirement, REQ-polaris-generation-034 ("Agent brief and mechanically checked draft"), with its complete text in `proposed/polaris-generation/spec.md`:
 
 - the zoom target paragraph gains two sentences: no figure renders inside a collapsible section, so that clause passes nothing over; which notices are passed over; and that a target whose figure fails the inertness check refuses the render (design D4, D6);
-- the walk advice paragraph gains one sentence: a base element whose own path a denied-path rule names counts as withheld at check, and a `deniedDirectoryNames` entry withholds no step (design D7);
+- the walk advice paragraph gains one sentence: a base element whose own path a denied-path rule names counts as withheld at check, and so does a top-level directory a `deniedDirectoryNames` entry names, decided from the policy and the path alone (design D7);
 - three scenarios are corrected: the address between deep dives (D2), the walk on section `s1` instead of the overview in two scenarios (D3), the omitted view in place of one inside a collapsible section (D4), and the 1048 px clause dropped (D5);
 - one scenario is added: "A directory a denied-path rule names is still named" (D7).
 
