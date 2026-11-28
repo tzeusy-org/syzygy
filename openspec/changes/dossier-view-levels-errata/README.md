@@ -25,8 +25,9 @@ No finding, record, page byte, brief byte, draft schema or brief version moves. 
 ## Rollback after a veto
 
 1. Keep the adoption row as history.
-2. Run the row's revert column in its order, newest commit first. It names every commit that changed this package, the spec or the checker's constants after the first install, so each revert applies cleanly to the one before it.
-3. One step of that column reverts the wiring commit `d7c42eb6b` without its adoption-log line, since the row stays: `git revert --no-commit d7c42eb6b`, which stops on a conflict in the adoption log only, then `git checkout HEAD -- .syzygy/governance/decisions/AGENT-ADOPTIONS.md`, which resolves it, then `git commit`. That commit holds the census, status and index lines and the checker's count constants (`VLERR_COUNT_SCOPE`, `VLERR_COUNT_PREFIX`). It comes before the revert of the first install `4ae2baf18`, which added those constants' wiring.
-4. Append a new row recording the veto. A vetoed change is not adopted again without the owner.
+2. Run the row's revert column in its order, newest commit first. It names every commit that changed this package, the spec or the checker's constants after the first install, so no revert conflicts with a later edit of this package; step 4 resolves conflicts with other changes' later edits.
+3. One step of that column reverts the wiring commit `d7c42eb6b` without its adoption-log line, since the row stays: `git revert --no-commit d7c42eb6b`, then `git checkout HEAD -- .syzygy/governance/decisions/AGENT-ADOPTIONS.md`, which resolves its conflict in the adoption log, then `git commit`. That commit holds the census, status and index lines and the checker's count constants (`VLERR_COUNT_SCOPE`, `VLERR_COUNT_PREFIX`). It comes before the revert of the first install `4ae2baf18`, which added those constants' wiring.
+4. Where a revert stops on a conflict because a later commit edited the same lines (after the merge of main that brought in session usage 2.45, the wiring revert conflicts in `PROJECT-STATUS.md` and the first install's revert in both checker scripts' shared lists), keep the later side and delete only this version's own lines and names: the view levels errata paragraph and its census line, and every `VLERR_*` or `vlerr_*` name. The tree then differs from the default branch only by the kept row and the review files.
+5. Append a new row recording the veto. A vetoed change is not adopted again without the owner.
 
 With the veto row in place, the checker reads the version 2.54 text as effective again.
