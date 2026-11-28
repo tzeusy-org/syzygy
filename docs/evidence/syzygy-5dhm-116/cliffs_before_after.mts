@@ -1,8 +1,8 @@
 // Before/after for syzygy-5dhm.116: what recognizer limit-default v1 derives from Syzygy's own tree at a pinned commit, under the committed
-// declared-source policy 2.0.0, twice: for a run relying on no per-project statement (the class gate withholds what no statement lists) and
-// for a run whose statement lists code-content. Before this change no derivation read a limit constant or a configuration entry. Reads
+// declared-source policy 2.0.0, twice: for a run relying on no per-project statement (the class gate then admits code-content alone) and
+// for a run whose statement lists no class (the class gate withholds every candidate). Before this change no derivation read a limit constant or a configuration entry. Reads
 // blobs through the pinned object reader only; runs nothing, fetches nothing. Quoted lines are not printed: only counts, kinds, types,
-// reasons and a sample of names and values. The listed run is derived twice, 64 paths to a reader call (as the render reads) and one path
+// reasons and a sample of names and values. The unstated run is derived twice, 64 paths to a reader call (as the render reads) and one path
 // to a call (as the sibling recognizers read), and the two members are compared, so the batching's cost and its sameness are measured.
 // Usage: npx tsx --conditions=source docs/evidence/syzygy-5dhm-116/cliffs_before_after.mts <git-dir> <commit>
 import { readFileSync } from 'node:fs';
@@ -49,12 +49,12 @@ function summary(m: Awaited<ReturnType<typeof derive>>['m']) {
 }
 
 const none = await derive(null, true);
-const batched = await derive(['code-content'], true);
-const single = await derive(['code-content'], false);
+const listedNone = await derive([], true);
+const single = await derive(null, false);
 console.log(JSON.stringify({
   subject: { tree: 'syzygy (this repository)', commit, policy: `${screen.policyId} ${screen.policyVersion}`, policySha256: screen.policySha256 },
   before: { rows: 0, pagesListingRows: 0, basis: 'no rule before REQ-polaris-generation-034 version 2.49 read a limit constant or a configuration entry' },
   afterNoStatement: { ...summary(none.m), deriveElapsedMs: none.elapsedMs, readerCalls: none.calls },
-  afterCodeContentListed: { ...summary(batched.m), deriveElapsedMs: batched.elapsedMs, readerCalls: batched.calls },
-  sameRunOnePathPerCall: { deriveElapsedMs: single.elapsedMs, readerCalls: single.calls, memberIdentical: JSON.stringify(single.m) === JSON.stringify(batched.m) },
+  afterStatementListingNoClass: { ...summary(listedNone.m), deriveElapsedMs: listedNone.elapsedMs, readerCalls: listedNone.calls },
+  noStatementOnePathPerCall: { deriveElapsedMs: single.elapsedMs, readerCalls: single.calls, memberIdentical: JSON.stringify(single.m) === JSON.stringify(none.m) },
 }, null, 2));

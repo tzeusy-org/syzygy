@@ -57,6 +57,7 @@ describe('the cliffs reference page (version 2.49)', () => {
       + 'MAX_NAME, a maximum constant, in setup.py at line 1: set to &quot;&lt;a&gt;&quot; (string). <q>MAX_NAME = &quot;&lt;a&gt;&quot;</q> <span class="derived-mark">Derived by Syzygy</span>'
       + `<span class="visually-hidden ev"> Evidence: label Observed; line 1 of setup.py, blob ${BLOB}, quoted exactly but for its leading and trailing spaces and tabs; the value as written, not evaluated; read by Syzygy by rule limit-default version 1 at revision ${REV}.</span></li>`);
     expect(page).not.toContain('<a>');
+    expect(page).toContain('JSON, TOML and environment-file configuration, command-line flag defaults and values computed at run time are not read by this version, so a limit set only there is not on this page.');
     expect(page).toContain('service.port, a configuration entry, in chart/values.yaml at line 3: set to 8080 (integer). <q>port: 8080</q>');
     expect(page).toContain('<li data-limit-id="_limit-3" data-epistemic="unknown" data-limit-kind="timeout" data-limit-path="setup.py" data-limit-line="2" data-unknown-reason="mapping-coverage-absent">'
       + 'READ_TIMEOUT, a timeout constant, in setup.py at line 2: <q>READ_TIMEOUT = compute()</q> <span class="not-established">Not established.</span> What READ_TIMEOUT is set to is Unknown: no value form of rule limit-default version 1 reads what this line writes, and Syzygy evaluates nothing.</li>');
