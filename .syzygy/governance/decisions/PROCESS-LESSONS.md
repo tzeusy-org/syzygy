@@ -73,6 +73,42 @@ and carries every phase-specific and machine-specific detail.
   tracked files after a resume, check the bootstrap checkpoint tail and
   review-file mtimes for a live parallel lead.
 
+## D10 F-3 — a subtraction that grew to 898 commits (2026-11-18 → 11-28)
+
+F-3 asked, in 125 words, for the record gates to come off
+`syzygy polaris <url>` and for the clone shape to be fixed; it was done when an
+agent session ran that command on a public URL with no record. [Observed] The
+lane wrote and adopted its own URL dossier 2.1 package (A-14; 163,987 words
+across the package, the spec alone 28,356), then built a native multi-process
+runtime to meet it: one checkpoint commit added 28,906 lines, and draft PR #839
+reached 898 commits, 1,871 files and about 425,000 added lines (359k of them
+evidence, 74 MB including 110 `.gz` archives) before it was closed as
+superseded on 2026-11-28. The gates F-3 names were still on its tip, and no
+public-URL run ever happened. The lean replacement (`syzygy-k54o.3.1`, PR #1043) is a few
+hundred changed lines. Analysis: bead `syzygy-k54o.3` comments.
+These are lessons for a lane to apply, not adopted rules; a gate built on one would need its own adoption row.
+
+- **A subtractive item stays subtractive.** An item phrased "remove X" may not
+  add a module, a runtime profile or a time limit inside its own bead; new
+  machinery is a new bead the owner can see, with its own reason.
+- **A self-adopted specification is budgeted by the item it serves.** A
+  specification an agent writes and adopts for its own work item stays within
+  about ten times that item's words; past that, stop and ask whether the item
+  was misread. The 2.1 package was 1,300 times F-3.
+- **Size stop-loss.** A branch past 50 commits or 5,000 changed lines
+  (generated files and evidence excluded) stops and re-plans against the item's
+  done-when before its next commit.
+- **Timing stop-loss.** After three consecutive limit changes that fail to bring
+  the target run under its budget, stop and re-plan. [Observed] 95 of the
+  lane's 183 adoption rows set or raised a numeric time limit; the recovery run
+  still ended 484 s against a 420 s budget.
+- **Evidence lives outside git.** Traces, archives and mutant logs go to
+  artifact storage; the repository keeps a small record naming the subject and
+  its digest (rule 11). Keep a PR's evidence under about 1 MB.
+- **Adoption identifiers are numbered at merge.** A branch that holds a row
+  renumbers it on every merge from main: 76 merges moved 108 identifiers.
+  Write the row last, at landing, after re-reading the ledger tail.
+
 ## Phase history (superseded states, kept for orientation)
 
 - The bootstrap pack (2026-07-26) was generated against pinned `th-projects`

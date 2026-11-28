@@ -863,13 +863,23 @@ def rough_amendment(root: Path) -> str | None:
     return text
 
 
-def impwit_amendment(root: Path) -> str | None:
+def doccode_amendment(root: Path) -> str | None:
     """Verified text, a pending or retired amendment, or a counting refusal."""
     import check_spec_reconciliation as adoption
 
-    text, records, subjects = adoption.impwit_binding(root)
+    text, records, subjects = adoption.doccode_binding(root)
     if records or subjects:
-        raise ScenarioCountError("imports corroboration adoption findings:\n" + "\n".join(records + subjects))
+        raise ScenarioCountError("docs and code adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
+def leanrun_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.leanrun_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("URL lean run adoption findings:\n" + "\n".join(records + subjects))
     return text
 
 
@@ -958,7 +968,8 @@ def build_composition(root: Path, *, screening_authority: Path | None = None) ->
                         (adoption.TNAMES_SPEC, tnames_amendment(root)),
                         (adoption.MIGBOUND_SPEC, migbound_amendment(root)),
                         (adoption.ROUGH_SPEC, rough_amendment(root)),
-                        (adoption.IMPWIT_SPEC, impwit_amendment(root))):
+                        (adoption.DOCCODE_SPEC, doccode_amendment(root)),
+                        (adoption.LEANRUN_SPEC, leanrun_amendment(root))):
         if text is not None:
             sources.append((label, text))
 
@@ -1036,7 +1047,8 @@ def composition_inputs(root: Path) -> list[Path]:
     tnames_amendment(root)
     migbound_amendment(root)
     rough_amendment(root)
-    impwit_amendment(root)
+    doccode_amendment(root)
+    leanrun_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
         adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
         *adoption.URL_SOURCE_RFC_PATHS, *adoption.FIGURE_SUBJECTS, *adoption.DERIVED_SUBJECTS,
@@ -1045,7 +1057,7 @@ def composition_inputs(root: Path) -> list[Path]:
         *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.FINDPAGES_SUBJECTS, *adoption.SUBSEC_SUBJECTS, *adoption.RELTYPE_SUBJECTS, *adoption.HERO_SUBJECTS, *adoption.READERS_SUBJECTS, *adoption.CONT_SUBJECTS, *adoption.MODEL_SUBJECTS, *adoption.WORTH_SUBJECTS,
         *adoption.REACH_SUBJECTS, *adoption.READMIT_SUBJECTS, *adoption.RAW_READ_SUBJECTS, *adoption.TREEREAD_SUBJECTS,
         *adoption.VERIFY_SUBJECTS, *adoption.QFILE_SUBJECTS, *adoption.SCRIPTED_GRADE_SUBJECTS, *adoption.STEP_MEASURES_SUBJECTS, *adoption.COVHOLD_SUBJECTS, *adoption.EDIT_ACCOUNT_SUBJECTS,
-        *adoption.TERM_BRIEF_SUBJECTS, *adoption.QKIND_SUBJECTS, *adoption.FIGPLAN_SUBJECTS, *screening_inputs(), *adoption.CHOICE_SUBJECTS, *adoption.MIGPAR_SUBJECTS, *adoption.IMPFACTS_SUBJECTS, *adoption.WALK_SUBJECTS, *adoption.TNAMES_SUBJECTS, *adoption.MIGBOUND_SUBJECTS, *adoption.ROUGH_SUBJECTS, *adoption.IMPWIT_SUBJECTS,
+        *adoption.TERM_BRIEF_SUBJECTS, *adoption.QKIND_SUBJECTS, *adoption.FIGPLAN_SUBJECTS, *screening_inputs(), *adoption.CHOICE_SUBJECTS, *adoption.MIGPAR_SUBJECTS, *adoption.IMPFACTS_SUBJECTS, *adoption.WALK_SUBJECTS, *adoption.TNAMES_SUBJECTS, *adoption.MIGBOUND_SUBJECTS, *adoption.ROUGH_SUBJECTS, *adoption.DOCCODE_SUBJECTS, *adoption.LEANRUN_SUBJECTS,
     }
     files = discover_composition_files(root)
     files += [root / rel for rel in sorted(paths) if (root / rel).is_file()]
@@ -1092,7 +1104,7 @@ def read_status_assertion(root: Path, *, screening_state: str,
             raise ScenarioCountError(f"{path} source-example advice count differs from its two source members")
         if source_example_state != "effective" or choice_amendment(root) is None:
             if any(line.startswith((adoption.CHOICE_COUNT_SCOPE, adoption.MIGPAR_COUNT_SCOPE, adoption.IMPFACTS_COUNT_SCOPE,
-                                    adoption.WALK_COUNT_SCOPE, adoption.TNAMES_COUNT_SCOPE, adoption.MIGBOUND_COUNT_SCOPE, adoption.ROUGH_COUNT_SCOPE, adoption.IMPWIT_COUNT_SCOPE))
+                                    adoption.WALK_COUNT_SCOPE, adoption.TNAMES_COUNT_SCOPE, adoption.MIGBOUND_COUNT_SCOPE, adoption.ROUGH_COUNT_SCOPE, adoption.LEANRUN_COUNT_SCOPE, adoption.DOCCODE_COUNT_SCOPE))
                    for line in lines):
                 raise ScenarioCountError(f"{path} declares a choice floor, migration parity, import facts or figure walks count "
                                          "while it is not in force")
@@ -1107,7 +1119,7 @@ def read_status_assertion(root: Path, *, screening_state: str,
             raise ScenarioCountError(f"{path} choice floor count differs from its two source members")
         choice_figure = int(choice[1]), int(choice[2])
         if migpar_amendment(root) is None:
-            if any(line.startswith((adoption.MIGPAR_COUNT_SCOPE, adoption.IMPFACTS_COUNT_SCOPE, adoption.WALK_COUNT_SCOPE, adoption.TNAMES_COUNT_SCOPE, adoption.MIGBOUND_COUNT_SCOPE, adoption.ROUGH_COUNT_SCOPE, adoption.IMPWIT_COUNT_SCOPE))
+            if any(line.startswith((adoption.MIGPAR_COUNT_SCOPE, adoption.IMPFACTS_COUNT_SCOPE, adoption.WALK_COUNT_SCOPE, adoption.TNAMES_COUNT_SCOPE, adoption.MIGBOUND_COUNT_SCOPE, adoption.ROUGH_COUNT_SCOPE, adoption.LEANRUN_COUNT_SCOPE, adoption.DOCCODE_COUNT_SCOPE))
                    for line in lines):
                 raise ScenarioCountError(f"{path} declares a migration parity, import facts or figure walks count while it is not in force")
             return choice_figure
@@ -1120,7 +1132,7 @@ def read_status_assertion(root: Path, *, screening_state: str,
             raise ScenarioCountError(f"{path} migration parity count differs from its two source members")
         migpar_figure = int(migpar[1]), int(migpar[2])
         if impfacts_amendment(root) is None:
-            if any(line.startswith((adoption.IMPFACTS_COUNT_SCOPE, adoption.WALK_COUNT_SCOPE, adoption.TNAMES_COUNT_SCOPE, adoption.MIGBOUND_COUNT_SCOPE, adoption.ROUGH_COUNT_SCOPE, adoption.IMPWIT_COUNT_SCOPE)) for line in lines):
+            if any(line.startswith((adoption.IMPFACTS_COUNT_SCOPE, adoption.WALK_COUNT_SCOPE, adoption.TNAMES_COUNT_SCOPE, adoption.MIGBOUND_COUNT_SCOPE, adoption.ROUGH_COUNT_SCOPE, adoption.LEANRUN_COUNT_SCOPE, adoption.DOCCODE_COUNT_SCOPE)) for line in lines):
                 raise ScenarioCountError(f"{path} declares an import facts or figure walks count while it is not in force")
             return migpar_figure
         impfacts_lines = [line for line in lines if line.startswith(adoption.IMPFACTS_COUNT_SCOPE)]
@@ -1132,7 +1144,7 @@ def read_status_assertion(root: Path, *, screening_state: str,
             raise ScenarioCountError(f"{path} import facts count differs from its two source members")
         impfacts_figure = int(impfacts[1]), int(impfacts[2])
         if walk_amendment(root) is None:
-            if any(line.startswith((adoption.WALK_COUNT_SCOPE, adoption.TNAMES_COUNT_SCOPE, adoption.MIGBOUND_COUNT_SCOPE, adoption.ROUGH_COUNT_SCOPE, adoption.IMPWIT_COUNT_SCOPE)) for line in lines):
+            if any(line.startswith((adoption.WALK_COUNT_SCOPE, adoption.TNAMES_COUNT_SCOPE, adoption.MIGBOUND_COUNT_SCOPE, adoption.ROUGH_COUNT_SCOPE, adoption.LEANRUN_COUNT_SCOPE, adoption.DOCCODE_COUNT_SCOPE)) for line in lines):
                 raise ScenarioCountError(f"{path} declares a figure walks count while it is not in force")
             return impfacts_figure
         walk_lines = [line for line in lines if line.startswith(adoption.WALK_COUNT_SCOPE)]
@@ -1144,7 +1156,7 @@ def read_status_assertion(root: Path, *, screening_state: str,
             raise ScenarioCountError(f"{path} figure walks count differs from its two source members")
         walk_figure = int(walk[1]), int(walk[2])
         if tnames_amendment(root) is None:
-            if any(line.startswith((adoption.TNAMES_COUNT_SCOPE, adoption.MIGBOUND_COUNT_SCOPE, adoption.ROUGH_COUNT_SCOPE, adoption.IMPWIT_COUNT_SCOPE)) for line in lines):
+            if any(line.startswith((adoption.TNAMES_COUNT_SCOPE, adoption.MIGBOUND_COUNT_SCOPE, adoption.ROUGH_COUNT_SCOPE, adoption.LEANRUN_COUNT_SCOPE, adoption.DOCCODE_COUNT_SCOPE)) for line in lines):
                 raise ScenarioCountError(f"{path} declares a test-name recognizers or migration bounds count while it is not in force")
             return walk_figure
         tnames = [line for line in lines if line.startswith(adoption.TNAMES_COUNT_SCOPE)]
@@ -1156,7 +1168,7 @@ def read_status_assertion(root: Path, *, screening_state: str,
             raise ScenarioCountError(f"{path} test-name recognizers count differs from its two source members")
         tnames_figure = int(tname[1]), int(tname[2])
         if migbound_amendment(root) is None:
-            if any(line.startswith((adoption.MIGBOUND_COUNT_SCOPE, adoption.ROUGH_COUNT_SCOPE, adoption.IMPWIT_COUNT_SCOPE)) for line in lines):
+            if any(line.startswith((adoption.MIGBOUND_COUNT_SCOPE, adoption.ROUGH_COUNT_SCOPE, adoption.LEANRUN_COUNT_SCOPE, adoption.DOCCODE_COUNT_SCOPE)) for line in lines):
                 raise ScenarioCountError(f"{path} declares a migration bounds count while it is not in force")
             return tnames_figure
         migbound_lines = [line for line in lines if line.startswith(adoption.MIGBOUND_COUNT_SCOPE)]
@@ -1169,8 +1181,8 @@ def read_status_assertion(root: Path, *, screening_state: str,
             raise ScenarioCountError(f"{path} migration bounds count differs from its two source members")
         migbound_figure = int(migbound[1]), int(migbound[2])
         if rough_amendment(root) is None:
-            if any(line.startswith((adoption.ROUGH_COUNT_SCOPE, adoption.IMPWIT_COUNT_SCOPE)) for line in lines):
-                raise ScenarioCountError(f"{path} declares a rough-edge markers count while it is not in force")
+            if any(line.startswith((adoption.ROUGH_COUNT_SCOPE, adoption.LEANRUN_COUNT_SCOPE, adoption.DOCCODE_COUNT_SCOPE)) for line in lines):
+                raise ScenarioCountError(f"{path} declares a rough-edge markers or URL lean run count while it is not in force")
             return migbound_figure
         roughs = [line for line in lines if line.startswith(adoption.ROUGH_COUNT_SCOPE)]
         rough = CHOICE_COUNT.fullmatch(roughs[0].removeprefix(adoption.ROUGH_COUNT_PREFIX)) if len(roughs) == 1 else None
@@ -1179,20 +1191,33 @@ def read_status_assertion(root: Path, *, screening_state: str,
         added = adoption.rough_delta(root, findings)
         if findings or (int(rough[1]), int(rough[2])) != (migbound_figure[0], migbound_figure[1] + added):
             raise ScenarioCountError(f"{path} rough-edge markers count differs from its two source members")
-        impwit_pred_figure = int(rough[1]), int(rough[2])
-        if impwit_amendment(root) is None:
-            if any(line.startswith(adoption.IMPWIT_COUNT_SCOPE) for line in lines):
-                raise ScenarioCountError(f"{path} declares a imports corroboration count while it is not in force")
-            return impwit_pred_figure
-        impwit_lines = [line for line in lines if line.startswith(adoption.IMPWIT_COUNT_SCOPE)]
-        impwit = (CHOICE_COUNT.fullmatch(impwit_lines[0].removeprefix(adoption.IMPWIT_COUNT_PREFIX))
-               if len(impwit_lines) == 1 else None)
-        if impwit is None:
-            raise ScenarioCountError(f"{path} needs one complete imports corroboration count")
-        added = adoption.impwit_delta(root, findings)
-        if findings or (int(impwit[1]), int(impwit[2])) != (impwit_pred_figure[0], impwit_pred_figure[1] + added):
-            raise ScenarioCountError(f"{path} imports corroboration count differs from its two source members")
-        return int(impwit[1]), int(impwit[2])
+        rough_figure = int(rough[1]), int(rough[2])
+        if leanrun_amendment(root) is None:
+            if any(line.startswith(adoption.LEANRUN_COUNT_SCOPE) for line in lines):
+                raise ScenarioCountError(f"{path} declares a URL lean run count while it is not in force")
+            base_figure = rough_figure
+        else:
+            leanrun_lines = [line for line in lines if line.startswith(adoption.LEANRUN_COUNT_SCOPE)]
+            leanrun = (CHOICE_COUNT.fullmatch(leanrun_lines[0].removeprefix(adoption.LEANRUN_COUNT_PREFIX))
+                       if len(leanrun_lines) == 1 else None)
+            if leanrun is None:
+                raise ScenarioCountError(f"{path} needs one complete URL lean run count")
+            added = adoption.leanrun_delta(root, findings)
+            if findings or (int(leanrun[1]), int(leanrun[2])) != (rough_figure[0], rough_figure[1] + added):
+                raise ScenarioCountError(f"{path} URL lean run count differs from its two source members")
+            base_figure = int(leanrun[1]), int(leanrun[2])
+        if doccode_amendment(root) is None:
+            if any(line.startswith(adoption.DOCCODE_COUNT_SCOPE) for line in lines):
+                raise ScenarioCountError(f"{path} declares a docs and code count while it is not in force")
+            return base_figure
+        doccodes = [line for line in lines if line.startswith(adoption.DOCCODE_COUNT_SCOPE)]
+        doccode = CHOICE_COUNT.fullmatch(doccodes[0].removeprefix(adoption.DOCCODE_COUNT_PREFIX)) if len(doccodes) == 1 else None
+        if doccode is None:
+            raise ScenarioCountError(f"{path} needs one complete docs and code count")
+        added = adoption.doccode_delta(root, findings)
+        if findings or (int(doccode[1]), int(doccode[2])) != (base_figure[0], base_figure[1] + added):
+            raise ScenarioCountError(f"{path} docs and code count differs from its two source members")
+        return int(doccode[1]), int(doccode[2])
 
     if len(legacy) != 1:
         raise ScenarioCountError(f"{path} needs exactly one historical effective composition count")
