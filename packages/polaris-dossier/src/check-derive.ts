@@ -648,7 +648,7 @@ export interface RelationDecisions {
   readonly nestings: readonly { readonly at: string; readonly id: string; readonly parentId: string; readonly diagram: number; readonly diagramName: string; readonly decision: WitnessDecision }[];
 }
 
-/** Rule `relation-witness` version 1 over a v9 draft (version 2.19): `asserted` says whether the draft asserts an edge (labelled Inferred and
+/** Rule `relation-witness` version 2 (version 1 plus the `imports` row, version 2.49) over a v9 draft (version 2.19): `asserted` says whether the draft asserts an edge (labelled Inferred and
  * not a withheld item), `tree` is the blob test's view of the pinned tree (undefined where it could not be listed), and `facts` the facts
  * the caller derived. A unit is tested only where it is one of the six forms; an edge is decided only in a produced graph diagram. Empty for
  * any other draft. */

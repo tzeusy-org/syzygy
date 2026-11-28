@@ -264,6 +264,11 @@ describe('relation types: a fact of another relation type never witnesses', () =
     expect(index).toMatch(/<li data-relation="declares-dependency" data-claim-id="e3" data-epistemic="inferred">Web package → Left pad: needs /u);
     expect(machine['edges'].find((entry: Doc) => entry['id'] === 'e3')).toEqual({ diagram: 'f2', page: 'index.html', id: 'e3', from: 'pkg', to: 'lp', epistemic: 'inferred', text: 'needs', relation: 'declares-dependency', witness: witness('unknown', 'recognizer-not-eligible') });
   });
+
+  it('decides e1 carrying imports unknown with endpoint-kind-mismatch, as version 2.49 amends the scenario', async () => {
+    const { machine } = await rendered(A, draftOf(kinded('imports')));
+    expect(statesOf(machine)['e1']).toEqual(witness('unknown', 'endpoint-kind-mismatch'));
+  });
 });
 
 describe('relation types: complete coverage with no witnessing fact', () => {

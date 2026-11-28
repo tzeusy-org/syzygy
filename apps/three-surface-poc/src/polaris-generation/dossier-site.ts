@@ -840,8 +840,15 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   };
   const relationOf = (id: string): LocalEdgeRelation | undefined => local?.edgeRelations?.get(id);
   type WitnessedRelation = Extract<LocalEdgeRelation, { readonly evidence: object }>;
-  const witnessAttrs = (relation: LocalEdgeRelation): string => ` data-relation="${escape(relation.relation)}"${relation.evidence === undefined ? ''
-    : ` data-witness-fact="${escape(relation.witness.fact)}" data-witness-rule="${escape(relation.witness.rule)}" data-witness-rule-version="${relation.witness.ruleVersion}"`}`;
+  type CorroboratedRelation = Extract<LocalEdgeRelation, { readonly corroboration: object }>;
+  const corroborated = (relation: LocalEdgeRelation | undefined): relation is CorroboratedRelation => relation?.witness.state === 'corroborated';
+  // A corroborated `imports` edge (version 2.49) also carries `data-witness-state`, since it keeps the draft's marking: its import fact is
+  // named in its attributes and evidence text and changes no word, mark, count or legend of the draft's.
+  const witnessAttrs = (relation: LocalEdgeRelation): string => ` data-relation="${escape(relation.relation)}"${relation.evidence !== undefined
+    ? ` data-witness-fact="${escape(relation.witness.fact)}" data-witness-rule="${escape(relation.witness.rule)}" data-witness-rule-version="${relation.witness.ruleVersion}"`
+    : corroborated(relation) ? ` data-witness-state="corroborated" data-witness-fact="${escape(relation.witness.fact)}" data-witness-rule="${escape(relation.witness.rule)}" data-witness-rule-version="${relation.witness.ruleVersion}"` : ''}`;
+  const corroborationText = (relation: CorroboratedRelation): string =>
+    `<span class="visually-hidden ev"> ${escape(`Evidence: label Inferred, as the draft marks it; corroborated by import fact ${relation.witness.fact}, a lexical ${relation.corroboration.form} statement found by Syzygy by rule ${relation.witness.rule} version ${relation.witness.ruleVersion} at revision ${relation.corroboration.revision}; import facts sha256:${relation.corroboration.importFactsSha256}.`)}</span>`;
   // A schema-v12 draft's model (version 2.24): its figures arrive as their views' expansions. An element or cited relationship more than one
   // view selects carries `data-element` or `data-relationship` in every figure drawing it, and its claim renders once, in its first figure:
   // the first, in draft diagram order, whose view selects it and that renders as a `<figure>`; each later figure lists it `as shown in` that
@@ -954,8 +961,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
         return `<li data-relation="${escape(relation?.relation ?? '')}" data-unknown-reason="${escape(reason)}">${ends}: Syzygy could not derive this relation (${escape(reason)})</li>`;
       }
       const shown = asShown(from, e.id, index);
-      if (shown !== undefined) return `<li>${ends}: ${escape(e.label)}${shown}</li>`;
-      return claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)}${heldText(e.id)} ${mark(from, e.epistemic)} ${refs(from, e.sourceIds, e.id)}`, `${heldAttrs(e.id)}${relation === undefined ? '' : witnessAttrs(relation)}`, held(e.id) === undefined ? null : 'excluded-content', held(e.id) === undefined ? undefined : { withheldSources: held(e.id)!.sources });
+      if (shown !== undefined) return `<li${corroborated(relation) ? witnessAttrs(relation) : ''}>${ends}: ${escape(e.label)}${shown}</li>`;
+      return claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)}${heldText(e.id)} ${mark(from, e.epistemic)} ${refs(from, e.sourceIds, e.id)}${corroborated(relation) ? corroborationText(relation) : ''}`, `${heldAttrs(e.id)}${relation === undefined ? '' : witnessAttrs(relation)}`, held(e.id) === undefined ? null : 'excluded-content', held(e.id) === undefined ? undefined : { withheldSources: held(e.id)!.sources });
     }).join('');
     // A witnessed arrow's group also carries `data-epistemic="observed"`; its line style is the `observed` class every arrow's marking gives.
     // Keyed by edge id: `renderDiagramSvg` asks the hook for nodes too, which get nothing here because check's `duplicate-id` keeps every
