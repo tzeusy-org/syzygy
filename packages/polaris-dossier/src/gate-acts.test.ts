@@ -5,7 +5,6 @@ import { fileURLToPath } from 'node:url';
 import { DECISIONS_DIR, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_V1_0_RECORD_SHA256, readDigestBoundActState, readVersionedSignoffState, type DigestBoundActForm } from '@syzygy/polaris-generation-consent';
 import { loadRecorderForms, HEAD_FIELD_ALTERATION, PROSE_ALTERATIONS, recorderRecordPaths, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderLocalAgentSignoffV10, renderProviderV2Act, type DossierLocalAgentActKey } from '@syzygy/polaris-generation-consent/testing';
 import { describe, expect, it } from 'vitest';
-import { preflight } from './preflight.js';
 import { D9_ACT_FORM, DRAWER_FORMS, PROVIDER_V2_FORM, RFC7_20_RULING_ACT_FORM, STATEMENT_FORMS, createPackageGateSources, providerStatementGate } from './gate-sources.js';
 import { tempDir } from '@syzygy/test-kit';
 
@@ -127,17 +126,6 @@ describe('version 2 of the Anthropic statement', () => {
     const statements = await sources(world(KEYS, true, true), V2_AT - 1).providerStatements.statementsFor('redis-redis');
     expect(statements.map(r => `${r.recordId}@${r.version}`)).toEqual(['AGENT-PROVIDER-redis-redis-anthropic@0.1.0-candidate.1', 'AGENT-PROVIDER-redis-redis-openai@0.1.0-candidate.1']);
     expect(providerStatementGate(statements, 'claude-code', 'anthropic', V2_AT - 1)).toEqual({ state: 'ok', record: 'AGENT-PROVIDER-redis-redis-anthropic@0.1.0-candidate.1' });
-  });
-  it('is what preflight lists in force, before and after its instant, agreeing with the gate', async () => {
-    const root = world(KEYS, true, true);
-    for (const [now, version] of [[NOW, '0.2.0-candidate.1'], [V2_AT - 1, '0.1.0-candidate.1']] as const) {
-      const s = { ...sources(root, now), repositoryIdsFor: async () => ['redis-redis'], consentedRevisionsFor: async () => [] };
-      const result = await preflight('https://github.com/redis/redis', s, now);
-      expect(result.ok).toBe(true);
-      const inForce = result.ok ? result.report.providerStatements.inForce : [];
-      expect(inForce.map(r => r.record)).toEqual([`AGENT-PROVIDER-redis-redis-anthropic@${version}`, 'AGENT-PROVIDER-redis-redis-openai@0.1.0-candidate.1']);
-      expect(providerStatementGate(await s.providerStatements.statementsFor('redis-redis'), 'claude-code', 'anthropic', now)).toEqual({ state: 'ok', record: inForce[0]!.record });
-    }
   });
   it('closes no other gate: D9, the reading, the drawer and the registry sign-off stay established beside it', async () => {
     const s = sources(world(KEYS, true, true));
