@@ -17,7 +17,8 @@
 // an excerpt in a subsection (subsections-not-read) repairs it.
 // Run 4 (at 689fa3be7, code-marks-mutation-run4-2026-11-28.json) killed 57 of 57.
 // Team-lead's disposition of the review: field-version-in-v18 now runs against a test of the module alone, and the render-side identity
-// and entry filters and the gutter's and bands' user-select rules each get a mutant. Run 5 records them.
+// and entry filters and the gutter's and bands' user-select rules each get a mutant. Run 5 (at dfab4ccef, code-marks-mutation-run5-2026-11-29.json)
+// killed 64 of 64. Run 6 re-runs every mutant after the band test reads line boxes (CI run 46164381249).
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
