@@ -11,7 +11,7 @@
 | `GOVERNING-DEPENDENCIES.json` | The union of its warrants (checked by `scripts/check_spec_reconciliation.py` R4); version 2.44's, unchanged |
 | `tasks.md` | Delivery |
 
-[Observed] `scripts/check_spec_reconciliation.py` composes this version after 2.44 only once two conditions hold. First, one seven-column ledger row carries its tag, names the installing commit, links the spec at that commit and gives a revert. Second, the spec still hashes to the reviewed bytes. Until then the version is pending and the effective REQ-034 is version 2.44's.
+[Observed] `scripts/check_spec_reconciliation.py` composes this version after 2.44 only once two conditions hold. First, one seven-column ledger row carries its tag, names the installing commit, links the spec at that commit and gives a revert. Second, the spec still hashes to the bytes the row binds. Until then the version is pending and the effective REQ-034 is version 2.44's.
 
 ## Rollback after a veto
 
