@@ -11,6 +11,7 @@
   - a band read as "the topmost element" where the excerpt's text lies above it;
   - no stated line bound;
   - and an absent path, where the range findings are never drawn, so the range alone decides.
+- [Observed] The .93 code lane (row A-347, PR #1061) changed check's finding details: a detail names a draft identity only where it is a handle, and every detail is screened. Its review (`docs/reviews/syzygy-3efd-93/R93-CODE-REVIEW-RAW.md`, finding 3 and notes 4, 5 and 11) found that no spec version states it; the lead asked that this version carry it.
 - [Observed] The CI repair of PR #1060 (a band misaligned at 390 px under the hosted font) showed the scenario's "the same top and height as the line" is ambiguous between the line box and the glyph box. The engine splits the half-leading unevenly, so a number's glyph box is offset from its line box. The code and test measure the line box (design D5).
 
 ## What changes
@@ -22,10 +23,13 @@
 - the browser scenario measures bands and numbers against their lines' line boxes and reads "topmost" as the topmost element painting a background (D5);
 - the malformed-lists scenario gains the absent-path case (D2).
 
-REQ-034 keeps 349 scenarios.
+- a paragraph after the derived-base screening paragraph of 2.35 states the finding-detail rule of syzygy-3efd.93, and one scenario is added for it (D9).
+
+REQ-034 goes from 349 to 350 scenarios.
 
 ## Non-goals
 
 [Inferred] Left out:
-- any brief, draft schema, page byte or code: each statement is what the code already does;
+- any brief, draft schema, page byte or code: each statement is what the code already does, or, for the detail rule, what A-347's code does;
+- screening a finding's `at`, `blockId`, `citationId` or the report's advisory members (syzygy-3efd.95);
 - the R33 code-review findings that the dispositions settled with a code change (the misplaced `kind: "code"` object, test coverage), except where the text was also silent (D3).

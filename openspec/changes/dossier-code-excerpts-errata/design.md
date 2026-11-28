@@ -4,10 +4,11 @@
 
 - It is drafted on `agent/syzygy-3efd.94` over view levels errata 2.55 (`dossier-view-levels-errata`, row A-346, tag `polaris-dossier-view-levels-errata-v2.55`), which is unlanded on `agent/syzygy-3efd.91` at `02234e39b`. This branch merges that one.
 - It corrects six statements of the code excerpts of version 2.54. 2.55 carries all six unchanged.
+- It also states the finding-detail rule of syzygy-3efd.93 (row A-347, PR #1061), with one scenario (D9).
 
 ## D1. The version label, the predecessor and the numbers
 
-- [Observed] REQ-034 versions on `origin/main` at `edb073890` run up to 2.54 (A-345). Above main, 2.55 is on `agent/syzygy-3efd.91` (A-346), and A-347 is on `agent/syzygy-3efd.93`, a code adoption with no version.
+- [Observed] REQ-034 versions on `origin/main` at `edb073890` run up to 2.54 (A-345). Above main, 2.55 is on `agent/syzygy-3efd.91` (A-346), and A-347 is on `agent/syzygy-3efd.93` (PR #1061), a code adoption with no version of its own. Its spec delta is this version's D9, so #1061 lands with or after this version, and both after 2.55.
   - The sweep covered all 429 origin branches for a spec preamble "Candidate version 2.56" to "2.59". It found none.
   - It also covered every branch for rows A-348 and A-349. It found none.
   - So this change takes 2.56, row A-348 and tag `polaris-dossier-code-excerpts-errata-v2.56`.
@@ -19,7 +20,7 @@
   - the prose that names "over 2.55";
   - then the row is rebound and the three checks are re-run in a fresh clone.
 - [Observed] The predecessor hashes to `530a79f837497883430ba9ca98f8965e005abb50b64cb6f4a35e9b302c5776fb`. The build script edits it only at anchors it asserts occur exactly once.
-- [Observed] REQ-034 keeps 349 scenarios, and Polaris keeps 670. No draft schema or brief version is taken.
+- [Observed] REQ-034 goes from 349 scenarios to 350, and Polaris from 670 to 671. No draft schema or brief version is taken.
 
 ## D2. The range condition read on its own, and the absent path (bead points 1 and 6)
 
@@ -70,7 +71,21 @@
 
 - [Inferred] 2.54 (code excerpts): six statements corrected; every other sentence stands.
 - [Inferred] 2.55 (view levels errata): untouched.
-- [Observed] Bytes: none move. Each correction is what the code on main at `edb073890` already does, and its tests pin it. So `tasks.md` lists no code item, and the provider golden is untouched.
+- [Inferred] 2.35 (derived-base screening): its paragraph stands; D9's paragraph follows it, and its qualified details are screened as any detail is.
+- [Observed] Bytes: this version moves none of its own. Each correction is what the code on main at `edb073890` already does, and its tests pin it. The detail rule of D9 moves finding details against main, and A-347 records that move with its code. So `tasks.md` lists no code item.
+
+## D9. The finding-detail rule (syzygy-3efd.93; R93 code review finding 3, notes 4, 5 and 11)
+
+- [Observed] Row A-347 (PR #1061, held until 2.55 lands) changed check's details across 40 builder lines in six modules (`check-derive.ts`, `system-model.ts`, `containment.ts`, `figure-plan.ts`, `walk.ts`, `derived-base.ts`), and added a central screen in `check.ts` before the outcome. Its review found no spec version states that (finding 3). The lead asked that 2.56 carry it rather than a later version.
+- [Inferred] One paragraph after the derived-base screening paragraph of 2.35, the paragraph that already screens draft values in details. It states:
+  - a detail names a draft identity only where it is a handle (the `handle` pattern and length bound);
+  - otherwise one fallback per detail family, as built (note 11): the member's path for a detail that opens with its identity (`<id>: …`), `named here` for a quoted reference, `the identity named here` for an asset part, `a value` for `whySection`;
+  - every detail screened whole and by word, the word break being whitespace and `"`, `` ` ``, `'`, `(`, `)`, `,`, `;`, against the detectors, and each word against the denied-path rules (note 4); a match or an undecidable case gives `Finding detail withheld under source screening.`, kind, `at` and order kept;
+  - the false positive of note 5, a handle that matches as part of a detail, stated as failing toward withholding;
+  - that `at`, `blockId`, `citationId` and the advisory members are outside it (syzygy-3efd.95).
+- [Inferred] Why the denied-path rule is stricter than 2.35's paragraph, which admits a denied path in a derived-base detail: a denied path is one the policy keeps out of every output. The 2.35 qualified details are now screened by this rule too, so the two agree in effect.
+- [Observed] The scenario's literals are those `finding-names.test.ts` pins on `agent/syzygy-3efd.93` (the deep-dive `sectionId` case and the `id_rsa` duplicate). It names the token value only as "a value a secret detector matches", so the spec carries no secret-shaped literal.
+- [Inferred] Not stated: the per-call cache, an implementation choice that moves no output.
 
 ## Review
 

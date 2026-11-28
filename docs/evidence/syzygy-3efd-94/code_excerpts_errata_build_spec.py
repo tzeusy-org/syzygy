@@ -14,6 +14,9 @@ Usage: code_excerpts_errata_build_spec.py <worktree> <out>.
 5. The line bound of a highlight and a note, 10,000,000, is stated (R33 finding 9; design.md D6).
 6. A scenario sentence: an excerpt of an absent path whose range is reversed or over 60 lines is skipped (R33 finding 1;
    design.md D2); and which positions hold an excerpt (R33-code finding 3; design.md D3).
+7. The finding-detail rule of syzygy-3efd.93 (row A-347, PR #1061; R93 code review notes 3, 4, 5 and 11): a detail names a
+   draft identity only where it is a handle, with one fallback per detail family, and every detail is screened before it is
+   reported or recorded (design.md D9). One paragraph, after the derived-base screening paragraph of version 2.35.
 """
 import pathlib
 import sys
@@ -49,8 +52,10 @@ lines[2] = (f"Candidate version {V}; binds nothing until its agent adoption row 
             "gloss on the range findings; an excerpt's `schema` findings at its lists come first in its group; a "
             "`range-beyond-blob` finding does not skip the checks; a highlight's and a note's lines are bounded at 10,000,000 "
             "as a citation's are; and the browser scenario reads a band as its line's line box, the topmost element painting a "
-            "background there, and a number as lying on its line as the line's text does. No draft schema, brief version or "
-            "byte, finding, record or page byte moves, and no scenario is added. Every other sentence and scenario of the "
+            "background there, and a number as lying on its line as the line's text does. It also states the finding-detail "
+            "rule Syzygy ships since syzygy-3efd.93: a detail names a draft identity only where it is a handle, and every "
+            "detail is screened, whole and word by word, before it is reported or recorded. No draft schema, brief version or "
+            "byte moves; one scenario is added. Every other sentence and scenario of the "
             "predecessor is carried unchanged; the exact changes are in SEMANTIC-DELTA.md. Unmentioned effective requirements "
             "are unchanged.")
 text = '\n'.join(lines)
@@ -107,6 +112,40 @@ replace("- **AND** the same `highlights` `[{\"startLine\": 30, \"endLine\": 31}]
         "path that names no blob, whose citation draws `path-absent` alone, with lines 20 to 10 or 1 to 70; with lines 1 to "
         "5 on that path they draw `code-highlight` at `$.sections[0].paragraphs[2].highlights[0]` with the detail "
         "`` `highlights[0]` lies outside the excerpt's lines 1 to 5 ``")
+
+# 7. The finding-detail rule.
+replace('Read no additional source and disclose no unadmitted value or population count.',
+        'Read no additional source and disclose no unadmitted value or population count.\n\n'
+        f'From version {V} a finding\'s `detail`, of every kind and in every draft schema, SHALL name a draft-supplied identity '
+        'or reference only where the value is a handle (a string of the draft schema\'s `handle` form, its pattern and its '
+        'length bound). Where a detail would name a value of another form, it names in its place, by the family the detail '
+        'belongs to: for a detail that opens with the identity it is about (`<id>: …`), the path of the member that holds the '
+        'value, such as `$.diagrams[0].id`, a walk\'s `figure` or a step\'s `element` or `block`; for a detail that quotes an '
+        'identity it refers to, the words `named here`, or `the identity named here` for an asset part a disposition names; '
+        'and for `whySection`, the words `a value`. A detail that names a handle names it as before. Then, before writing the '
+        'check record or preparing any form of the check report, after the qualified details of the preceding paragraph, '
+        'Syzygy SHALL screen every finding\'s detail: whole and each of its words, a word being a run of the detail between '
+        'whitespace and the characters `"`, `` ` ``, `\'`, `(`, `)`, `,` and `;`, against the secret detectors, and each word '
+        'against the bound policy\'s denied-path rules as a path. A detail that any of them matches, or for which screening '
+        'cannot decide, is replaced by `Finding detail withheld under source screening.`; the finding keeps its kind, its `at`, '
+        'its other members and its place in the order, and the draft passes or fails exactly as it would with the detail '
+        'intact. A handle can itself match a detector as part of a detail (an identity `token` followed by a word of 8 or more '
+        'characters, say); that detail is withheld, failing toward withholding. This rule screens details only: a finding\'s '
+        '`at`, `blockId` and `citationId` and the advisory members of the report are not screened by it.')
+
+# 7. Its scenario, last in the requirement.
+assert text.endswith('\n'), 'the predecessor ends with a newline'
+text = text + ('\n#### Scenario: A finding detail names a handle only, and a detail screening matches is withheld\n\n'
+    '- **WHEN** a draft\'s three deep dives name, as `sectionId`, `src/app.ts`, a value a secret detector matches and `s9`, '
+    'none of them a section of the draft, and two paragraphs of its first section share the identity `id_rsa`, a basename '
+    'the bound policy denies as a path\n'
+    '- **THEN** check reports `unresolved-reference` at `$.deepDives[0].sectionId` with the detail `no section has the '
+    'identity named here`, at `$.deepDives[1].sectionId` with the detail `Finding detail withheld under source screening.` '
+    'and at `$.deepDives[2].sectionId` with the detail `no section has the identity "s9"`, and `duplicate-id` at '
+    '`$.sections[0].paragraphs[1]` with the detail `Finding detail withheld under source screening.`, each beside whatever '
+    'the schema check reports at those members\n'
+    '- **AND** neither `src/app.ts` nor the matched value appears in the check report or the check record, every finding '
+    'keeps its kind and `at`, and the draft fails check as it would with every detail intact\n')
 
 assert '2.NN' not in text
 out.parent.mkdir(parents=True, exist_ok=True)

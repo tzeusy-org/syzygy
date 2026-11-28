@@ -57,7 +57,7 @@ out = f'''# Version {V} semantic delta
 
 ## Change class
 
-Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (the specification). An erratum of the code excerpts of version 2.54, in four of its paragraphs and two of its scenarios: the range condition of its checks read on its own, the order of an excerpt's `schema` findings at its lists and which positions hold an excerpt, a `range-beyond-blob` finding that skips nothing, the 10,000,000 line bound, and the browser scenario's band and number geometry. Two statements change what the text requires where code and text disagreed or the text was silent: an excerpt citing an absent path is skipped by its range alone, and a band is measured against its line's line box. No scenario is added or removed. No draft schema, brief version or byte, finding, check record, `machine.json` member, page byte or migration moves. Classified before review so a reviewer can contradict it.
+Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (the specification). An erratum of the code excerpts of version 2.54, in four of its paragraphs and two of its scenarios, and one paragraph and one scenario added: the range condition of its checks read on its own, the order of an excerpt's `schema` findings at its lists and which positions hold an excerpt, a `range-beyond-blob` finding that skips nothing, the 10,000,000 line bound, and the browser scenario's band and number geometry; and the finding-detail rule syzygy-3efd.93 ships (row A-347, PR #1061). Three statements change what the text requires where code and text disagreed or the text was silent: an excerpt citing an absent path is skipped by its range alone, a band is measured against its line's line box, and a finding detail names a draft identity only where it is a handle and is screened before it is reported. One scenario is added and none removed. No draft schema, brief version or byte, finding, check record, `machine.json` member, page byte or migration moves. Classified before review so a reviewer can contradict it.
 
 ## Composition
 
@@ -75,7 +75,11 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Added
 
-[Observed] {len(added_paras)} paragraphs, {len(scen)} scenarios and {len(inserted)} lines are inserted. Every new sentence is appended to or set inside an existing line and appears above as an amendment.
+[Observed] {len(added_paras)} paragraphs and {len(scen)} scenarios are inserted: {', '.join(f'"{x}"' for x in scen)}. Its lines, as inserted:
+
+{chr(10).join('> ' + nb[j] if nb[j] else '>' for j in inserted)}
+
+Every other new sentence is appended to or set inside an existing line and appears above as an amendment.
 
 ## Removed
 
@@ -83,8 +87,8 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Effect on bytes
 
-[Inferred] As `design.md` D8 states: none. Each corrected statement is the behaviour `code-marks.ts` and the code excerpt renderer already ship (syzygy-3efd.33, PR #1060) and their tests pin (`code-marks.test.ts`, `code-excerpt.browser.test.ts`). So no finding, check record, `machine.json`, `dossier.json`, page, brief, record or provider-mode byte moves.
+[Inferred] As `design.md` D8 states: none. Each corrected statement is the behaviour `code-marks.ts` and the code excerpt renderer already ship (syzygy-3efd.33, PR #1060) and their tests pin (`code-marks.test.ts`, `code-excerpt.browser.test.ts`). The finding-detail rule is the code of syzygy-3efd.93 (`finding-names.ts`, PR #1061, row A-347), which lands with or after this version, and its tests (`finding-names.test.ts`) pin the added scenario's literals. Against the code on main, that rule moves finding details, which A-347 records; beyond it, no finding, check record, `machine.json`, `dossier.json`, page, brief, record or provider-mode byte moves.
 '''
 (W / 'openspec/changes/dossier-code-excerpts-errata/SEMANTIC-DELTA.md').write_text(out, encoding='utf-8')
-assert not removed and not inserted, (removed, inserted)
+assert not removed, removed
 print('changed', len(changed), 'kept', kept, 'scenarios', len(scen))

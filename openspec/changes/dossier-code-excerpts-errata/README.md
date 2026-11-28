@@ -8,7 +8,12 @@
 - a highlight's and a note's lines are bounded at 10,000,000, the bound every citation line has;
 - the browser scenario measures a band against its line's line box, as the topmost element painting a background there with the text above it, and a gutter number at its line's own text offset.
 
-No finding, record, page byte, brief byte, draft schema or brief version moves. No scenario is added or removed.
+It also states the finding-detail rule of syzygy-3efd.93 (row A-347, PR #1061), with one added scenario:
+
+- a finding's detail names a draft identity only where it is a handle, and otherwise the member's path or fixed words, one fallback per detail family;
+- every detail is screened, whole and word by word, against the secret detectors and the denied-path rules, and one that matches is replaced by `Finding detail withheld under source screening.`.
+
+This version moves no byte of its own: the 2.54 corrections are what main ships, and the detail rule is A-347's code, which lands with or after this version. No draft schema or brief version moves. REQ-034 gains one scenario.
 
 | File | What it holds |
 |---|---|
