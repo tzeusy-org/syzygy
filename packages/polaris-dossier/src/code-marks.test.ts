@@ -298,6 +298,14 @@ describe('code excerpt marks: check (version 2.54)', () => {
     expect(out.slice(-4)).toEqual(ours(out));
   });
 
+  it('reads an excerpt in a subsection\'s paragraphs, at its own path', async () => {
+    const doc = excerptDraft([]);
+    doc.sections[0].subsections = [{ id: 'sub', title: 'Sub', answer: para('sub-answer'), paragraphs: [code('x', 10, 20, { highlights: [{ startLine: 21, endLine: 21 }] })] }];
+    expect(ours((await findingsOf(A, doc)).findings)).toEqual([
+      { kind: 'code-highlight', at: '$.sections[0].subsections[0].paragraphs[0].highlights[0]', detail: "`highlights[0]` lies outside the excerpt's lines 10 to 20" },
+    ]);
+  });
+
   it('skips an excerpt of an absent path whose range is reversed, over 60 lines or not from 1, though no range finding is drawn (R33-code finding 1)', async () => {
     const outside = { highlights: [{ startLine: 80, endLine: 80 }] };
     for (const [startLine, endLine] of [[1, 70], [20, 10], [0, 5]] as const) {

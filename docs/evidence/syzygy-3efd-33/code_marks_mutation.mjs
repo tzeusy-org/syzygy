@@ -13,7 +13,8 @@
 // Review R33-code finding 1: too-long-guard-dropped was listed as equivalent on a false premise (a citation of an absent path draws
 // neither range finding), so it runs again here, with reversed-guard-dropped and the new tests of an absent path. Finding 3: excerpts are
 // read only where the draft admits a code element (misplaced-code-read, details-not-read, subsections-not-read); the three mutants whose
-// fragments that rewrite moved keep their ids. Run 3 records it.
+// fragments that rewrite moved keep their ids. Run 3 (at 10c68e629, code-marks-mutation-run3-2026-11-28.json) killed 56 of 57: a test of
+// an excerpt in a subsection (subsections-not-read) repairs it.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
