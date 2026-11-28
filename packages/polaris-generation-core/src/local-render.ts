@@ -496,6 +496,13 @@ export interface LocalWalkStep { readonly node: string; readonly block: string }
 /** A view's level of abstraction and the element it is about (version 2.50). */
 export interface LocalViewLevel { readonly level: 'context' | 'container' | 'component'; readonly scope: string }
 
+/** A schema-v18 code excerpt's highlights and margin notes (version 2.54): line ranges in the file's own numbers, and each note's line and the
+ * block whose paragraph explains it. Either list may be empty: a verified v18 excerpt renders numbered with or without them. */
+export interface LocalCodeMarks {
+  readonly highlights: readonly { readonly startLine: number; readonly endLine: number }[];
+  readonly notes: readonly { readonly line: number; readonly block: string }[];
+}
+
 export interface LocalRenderInput {
   /** The checked draft in the renderer's shape. `sourceIds` name only sources Syzygy read and screening admitted, and may be empty. No
    * part of it renders while the draft layer is Unknown. */
@@ -561,6 +568,10 @@ export interface LocalRenderInput {
    * `scope`, which gives its figure two attributes and its scope's zoom links. Absent for every other draft, so its pages and machine view
    * keep their bytes. */
   readonly viewLevels?: ReadonlyMap<string, LocalViewLevel>;
+  /** A schema-v18 draft's code excerpts (REQ-polaris-generation-034 version 2.54), by the excerpt's element identity: every code element of
+   * such a draft, with its highlights and notes, so a verified one renders with numbered lines. Absent for every other draft, so its pages
+   * and machine view keep their bytes. */
+  readonly codeMarks?: ReadonlyMap<string, LocalCodeMarks>;
   /** A schema-v6 draft's `thesisBasis` (REQ-polaris-generation-034 version 2.4): what the authoring session says its introduction rests
    * on, and whether the code-reading line renders before it. Absent for every earlier draft, so its pages and machine view keep their
    * bytes. */
