@@ -21,7 +21,7 @@ Repaired. `derived-base.ts` now names the relationship by `handleOr(relationship
 
 Repaired, with a follow-up:
 
-- Row A-347 in `decisions/AGENT-ADOPTIONS.md` records the behaviour change and its revert command. It strengthens screening only. Every detail it changes was untested before, so no existing literal moved.
+- Row A-347 in `decisions/AGENT-ADOPTIONS.md` records the behaviour change and its revert command. It strengthens screening only. Every identity detail it changes was untested before, so no existing literal moved. The one literal that moved is a `path-absent` detail naming a denied path, now withheld (note 4).
 - The spec delta is a follow-up bead for team-lead. It should state:
   - (a) a finding detail names a draft identity only where it is a handle, and otherwise names the member's path or the words "named here", with the fallback fixed per detail family (finding 11);
   - (b) every detail is screened whole and word by word against the detectors, and each word against the denied-path rules. A match, or a case screening cannot decide, is replaced by `Finding detail withheld under source screening.`, keeping kind and `at`;
@@ -36,6 +36,7 @@ Changed: the screen now withholds them. `screenFindingDetails` takes a `deniedWo
 - A throw in either predicate withholds the detail.
 - Tests cover all three denied ids through check, and the unit block covers the rule and its throw.
 - This is stricter than the derived-base screening adopted in 2.35, which still admits denied paths in its own details. The spec delta should state both.
+- One pinned literal moves with it, and only tighter. In `render.test.ts`'s two-stage table, a `path-absent` finding on a denied path that is absent (`denied/gone`) quoted the path, and now its detail is withheld. The table's own no-looser comparison against the predecessor still passes.
 
 ## 5. Note: false positives
 

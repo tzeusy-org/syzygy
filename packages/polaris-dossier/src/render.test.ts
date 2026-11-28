@@ -1116,6 +1116,8 @@ describe('a cited path by kind and body under the two-stage policy: the secret-p
   const HEAD_FINDINGS: Record<string, [string, boolean][]> = {
     ...MAIN_FINDINGS, 'stage-2-text-matched/kept': [], 'stage-2-text-matched/held': [],
     'stage-2-text-matched/gone': [['path-absent', false]], 'denied-and-secret/gone': [['path-absent', false]],
+    // A path the policy denies is no longer named in a finding's detail (syzygy-3efd.93, review R93 finding 4): the detail is withheld.
+    'denied/gone': [['path-absent', false]],
   };
   /** Whether `now` shows, names or sends nothing `before` did not. An admitted source can become secret-withheld. */
   const noLooser = (before: Row, now: Row): boolean => {
