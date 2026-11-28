@@ -70,7 +70,6 @@ export const LIMIT_PATTERNS = {
   /** The value forms. A number may carry a sign; an expression is numbers joined by these operators, with parentheses. */
   number: new RegExp(`^[-+]?${NUM}$`),
   decimal: /^[-+]?(?:[0-9][0-9_]*\.|\.[0-9]|[0-9][0-9_]*[eE])/,
-  hexadecimal: /^[-+]?0[xX]/,
   boolean: /^(?:true|false|True|False)$/,
   /** A string literal with a formatting prefix (Python's `f`), whose value is not its text. */
   formatted: /^[A-Za-z]*[fF]/,
@@ -110,8 +109,8 @@ export function kindOf(name: string): LimitKind | undefined {
   return LIMIT_DEFAULT.kinds.find((kind) => LIMIT_PATTERNS[kind].test(name));
 }
 
-/** A number's type: integer, or decimal where it has a fraction or an exponent and is not hexadecimal. */
-const numberType = (text: string): ValueType => (!LIMIT_PATTERNS.hexadecimal.test(text) && LIMIT_PATTERNS.decimal.test(text) ? 'decimal' : 'integer');
+/** A number's type: decimal where it has a fraction or an exponent, integer otherwise (a hexadecimal, binary or octal number among them). */
+const numberType = (text: string): ValueType => (LIMIT_PATTERNS.decimal.test(text) ? 'decimal' : 'integer');
 
 /** The text inside every pair of parentheses that encloses all of it. */
 function withoutEnclosingParentheses(text: string): string {

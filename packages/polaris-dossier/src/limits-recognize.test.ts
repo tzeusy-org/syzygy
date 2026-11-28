@@ -97,10 +97,12 @@ describe('limit-default v1: source forms', () => {
       ['max', 'MAX_DEPTH', '32', 'integer', 2, 'public static final int MAX_DEPTH = 32;'],
       ['timeout', 'IDLE_TIMEOUT', '60L * 1000L', 'expression', 3, 'private static final long IDLE_TIMEOUT = 60L * 1000L;'],
     ]);
-    const c = '#define CONFIG_DEFAULT_HZ 10 /* Hz */\n#define MAX(a, b) ((a) > (b))\n# define PROTO_MAX_SIZE (512*1024*1024)\nstatic const size_t LOOKUP_LIMIT = 0x100;\n/* #define MAX_OFF 3 */\n#define HAVE_MAX_FLAG\n';
+    const c = '#define CONFIG_DEFAULT_HZ 10 /* Hz */\n#define DEFAULT_PORT (6379)\n#define MAX_SUM (1) + (2)\n#define MAX(a, b) ((a) > (b))\n# define PROTO_MAX_SIZE (512*1024*1024)\nstatic const size_t LOOKUP_LIMIT = 0x100;\n/* #define MAX_OFF 3 */\n#define HAVE_MAX_FLAG\n';
     expect(rows(recognizeConstants(c, 'c'))).toEqual([
-      ['max', 'PROTO_MAX_SIZE', '(512*1024*1024)', 'expression', 3, '# define PROTO_MAX_SIZE (512*1024*1024)'],
-      ['limit', 'LOOKUP_LIMIT', '0x100', 'integer', 4, 'static const size_t LOOKUP_LIMIT = 0x100;'],
+      ['default', 'DEFAULT_PORT', '(6379)', 'integer', 2, '#define DEFAULT_PORT (6379)'],
+      ['max', 'MAX_SUM', '(1) + (2)', 'expression', 3, '#define MAX_SUM (1) + (2)'],
+      ['max', 'PROTO_MAX_SIZE', '(512*1024*1024)', 'expression', 5, '# define PROTO_MAX_SIZE (512*1024*1024)'],
+      ['limit', 'LOOKUP_LIMIT', '0x100', 'integer', 6, 'static const size_t LOOKUP_LIMIT = 0x100;'],
     ]);
   });
 
@@ -115,7 +117,7 @@ describe('limit-default v1: source forms', () => {
   });
 
   it('types no value it cannot read whole', () => {
-    const values = ['1 2', '(1', '1 +', '* 2', 'MAX_B', '"a" "b"', '1.5.2', 'null'];
+    const values = ['1 2', '(1 + 2', '1 +', '* 2', '- (5)', 'MAX_B', '"a" "b"', '1.5.2', 'null', '1) + (2'];
     const text = values.map((v, k) => `MAX_${k} = ${v}`).join('\n');
     expect(rows(recognizeConstants(text, 'python')).map((r) => [r[2], r[3]])).toEqual(values.map(() => [null, null]));
   });
@@ -123,7 +125,7 @@ describe('limit-default v1: source forms', () => {
 
 describe('limit-default v1: configuration forms', () => {
   it('reads ini entries under their section, typed, with comments, sections and bare keys left out', () => {
-    const text = '# redis-like\nmaxmemory 2gb\ntimeout 0\n; note\n[server]\nport = 6379\nverbose: yes\nname = "svc"\nratio=0.75\nskip-networking\nempty =\n';
+    const text = '# redis-like\nmaxmemory 2gb\ntimeout 0\n; note\n[server]\nport = 6379\nverbose: yes\nname = "svc"\nratio=0.75\nskip-networking\nempty =\ndebug = On\n';
     expect(rows(recognizeConfig(text, 'ini'))).toEqual([
       ['entry', 'maxmemory', '2gb', 'text', 2, 'maxmemory 2gb'],
       ['entry', 'timeout', '0', 'integer', 3, 'timeout 0'],
@@ -131,6 +133,7 @@ describe('limit-default v1: configuration forms', () => {
       ['entry', 'server.verbose', 'yes', 'boolean', 7, 'verbose: yes'],
       ['entry', 'server.name', '"svc"', 'string', 8, 'name = "svc"'],
       ['entry', 'server.ratio', '0.75', 'decimal', 9, 'ratio=0.75'],
+      ['entry', 'server.debug', 'On', 'boolean', 12, 'debug = On'],
     ]);
   });
 
@@ -162,7 +165,7 @@ describe('limit-default v1: configuration forms', () => {
   });
 
   it('makes a yaml file with an anchor, a tag, an open flow, an open quote, a tab or a plain continuation Unknown', () => {
-    for (const text of ['a: &x 1\n', 'a: !!int 1\n', 'a: *x\n', 'a: [1,\n  2]\n', 'a: "open\n', 'a:\n\tb: 1\n', 'a: one\n  two\n', '"q": 1\n', '<<: *x\n']) {
+    for (const text of ['a: &x 1\n', 'a: !!int 1\n', 'a: *x\n', 'a: [1,\n  2]\n', 'a: "open\n', 'a:\n\tb: 1\n', 'a: one\n  two\n', '"q": 1\n', '<<: *x\n', 'args:\n  - a\n  \tb\n']) {
       expect(recognizeConfig(text, 'yaml'), JSON.stringify(text)).toEqual({ ok: false, parseFault: 'outside-grammar' });
     }
   });
