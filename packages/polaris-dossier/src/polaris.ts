@@ -353,9 +353,21 @@ export interface CloneDeps {
   readonly mkdir: (dir: string) => void;
   readonly event: (line: string) => void;
 }
+/** Git with no credential of the operator's in reach (R-K54O3-NO-RECORD-1 finding 3): no global or system configuration (so no
+ * `insteadOf` rewrite, credential helper or extra header), a home with no `.netrc`, no SSH and no prompt. What it reads, anyone can. */
+export function anonymousGit(args: readonly string[]): { readonly status: number | null; readonly stdout: string; readonly stderr: string } {
+  const env: Record<string, string> = {
+    PATH: process.env['PATH'] ?? '/usr/bin:/bin', HOME: '/nonexistent', GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_NOSYSTEM: '1',
+    GIT_TERMINAL_PROMPT: '0', GIT_ASKPASS: '', SSH_ASKPASS: '', GIT_SSH_COMMAND: 'false', LANG: 'C',
+  };
+  for (const key of ['HTTPS_PROXY', 'https_proxy', 'HTTP_PROXY', 'http_proxy', 'NO_PROXY', 'no_proxy']) {
+    const value = process.env[key];
+    if (value !== undefined) env[key] = value;
+  }
+  return spawnSync('git', ['-c', 'credential.helper=', ...args], { encoding: 'utf8', env });
+}
 const PROCESS_CLONE_DEPS: Omit<CloneDeps, 'event'> = {
-  // Never prompt for, or send, a credential: the supervisor reads only what anyone can read.
-  git: args => spawnSync('git', [...args], { encoding: 'utf8', env: { ...process.env, GIT_TERMINAL_PROMPT: '0' } }),
+  git: anonymousGit,
   exists: file => fs.existsSync(file),
   mkdir: dir => { fs.mkdirSync(dir, { recursive: true }); },
 };
@@ -389,28 +401,38 @@ const FULL_COMMIT = /^[0-9a-f]{40}$/u;
 const REF_NAME = /^(?!-)(?!.*\.\.)(?!.*\/\/)(?!.*@\{)[A-Za-z0-9._/-]{1,200}(?<![./])$/u;
 
 /** The commit a run pins, read with no credential (D10, VIS-4: reading a repository needs no record). With no `--revision` it is trunk,
- * the commit the remote's HEAD names (syzygy-pdja.36); a branch or tag name is resolved the same way, a tag to the commit it peels to;
- * a full commit is taken as given and fetched by its identifier. A URL that does not answer an anonymous `git ls-remote` is refused,
- * naming --clone. */
+ * the commit the remote's HEAD names (syzygy-pdja.36); a branch or tag name is resolved the same way, an annotated tag to the commit it
+ * peels to; a full commit is taken as given and fetched by its identifier. A URL that does not answer an anonymous `git ls-remote` is
+ * refused, naming --clone. */
 export function resolveRevision(url: string, revision: string | undefined, deps: Pick<CloneDeps, 'git'>): { readonly label: string; readonly commit: string } | string {
-  const wanted = revision ?? 'HEAD';
+  const given = revision !== undefined && /^[0-9a-fA-F]{40}$/u.test(revision) ? revision.toLowerCase() : revision;
   // A name git could read as an option, or that no ref can carry, never reaches git (git check-ref-format's rules, conservatively).
-  if (revision !== undefined && !FULL_COMMIT.test(revision) && !REF_NAME.test(revision)) return `--revision ${JSON.stringify(revision.slice(0, 80))} is not a branch, tag or full commit name`;
-  const r = deps.git(['-c', 'credential.helper=', 'ls-remote', url, ...(FULL_COMMIT.test(wanted) ? ['HEAD'] : [wanted])]);
+  if (given !== undefined && !FULL_COMMIT.test(given) && !REF_NAME.test(given)) return `--revision ${JSON.stringify(given.slice(0, 80))} is not a branch, tag or full commit name`;
+  // ls-remote prints a tag's peeled line only when asked for it by name (R-K54O3-NO-RECORD-1 finding 1).
+  const patterns = given === undefined || FULL_COMMIT.test(given) ? ['HEAD'] : [given, `${given}^{}`];
+  const r = deps.git(['ls-remote', url, ...patterns]);
   if (r.status !== 0) return `${url} cannot be read without a credential (${r.stderr.trim() || 'git ls-remote failed'}); for a private repository make a one-commit clone yourself and pass --clone <dir>`;
-  if (FULL_COMMIT.test(wanted)) return { label: `commit-${wanted.slice(0, 12)}`, commit: wanted };
-  const refs = [...r.stdout.matchAll(/^([0-9a-f]{40})\t(\S+)$/gmu)].map(m => ({ commit: m[1]!, ref: m[2]! }));
-  const peeled = refs.find(x => x.ref.endsWith('^{}'));
-  const exact = refs.filter(x => !x.ref.endsWith('^{}'));
-  if (revision === undefined) {
-    const head = exact.find(x => x.ref === 'HEAD');
+  const lines = [...r.stdout.matchAll(/^([0-9a-f]{40})\t(\S+)$/gmu)].map(m => ({ commit: m[1]!, ref: m[2]! }));
+  if (given === undefined) {
+    const head = lines.find(x => x.ref === 'HEAD');
     return head === undefined ? `${url} names no HEAD commit` : { label: `trunk-${head.commit.slice(0, 12)}`, commit: head.commit };
   }
-  const commits = new Set((peeled === undefined ? exact : [peeled]).map(x => x.commit));
-  if (commits.size === 0) return `${url} has no branch or tag named ${revision}`;
-  if (commits.size > 1) return `${revision} names more than one ref at ${url} (${exact.map(x => x.ref).join(', ')}); give the full ref or a full commit`;
+  if (FULL_COMMIT.test(given)) return { label: `commit-${given.slice(0, 12)}`, commit: given };
+  // Each ref resolves to its peeled commit when it has one, else its own; refs naming different commits are refused (finding 2).
+  const peeled = new Map(lines.filter(x => x.ref.endsWith('^{}')).map(x => [x.ref.slice(0, -3), x.commit]));
+  const refs = lines.filter(x => !x.ref.endsWith('^{}')).map(x => ({ ref: x.ref, commit: peeled.get(x.ref) ?? x.commit }));
+  const commits = new Set(refs.map(x => x.commit));
+  if (commits.size === 0) return `${url} has no branch or tag named ${given}${/^[0-9a-f]{4,39}$/iu.test(given) ? ' (an abbreviated commit is not resolved: give all 40 characters)' : ''}`;
+  if (commits.size > 1) return `${given} names more than one ref at ${url} (${refs.map(x => x.ref).join(', ')}); give the full ref or a full commit`;
   const commit = [...commits][0]!;
-  return { label: `${revision.replace(/[^A-Za-z0-9._-]/gu, '_')}-${commit.slice(0, 12)}`, commit };
+  return { label: `${given.replace(/[^A-Za-z0-9._-]/gu, '_')}-${commit.slice(0, 12)}`, commit };
+}
+
+/** Whether the operator's clone is declared public to init: only when anyone can read its very commit as the remote's trunk; otherwise
+ * init keeps its private default (R-K54O3-NO-RECORD-1 finding 4). */
+export function operatorCloneIsPublic(url: string, commit: string, deps: Pick<CloneDeps, 'git'>): boolean {
+  const trunk = resolveRevision(url, undefined, deps);
+  return typeof trunk !== 'string' && trunk.commit === commit;
 }
 
 /** Preflight, clone, init, marker, brief and the waiting sessions; returns the supervisor state or the refusal. */
@@ -427,12 +449,13 @@ async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise
     if (head.status !== 0) return `${options.clone} is not a git clone: ${head.stderr.trim()}`;
     const commit = head.stdout.trim();
     if (options.revision !== undefined) {
-      const named = resolveRevision(url, options.revision, PROCESS_CLONE_DEPS);
-      if (typeof named === 'string') return named;
+      // A full commit is compared here, with no network; a name is resolved at the remote (finding 5).
+      const named = /^[0-9a-fA-F]{40}$/u.test(options.revision) ? { commit: options.revision.toLowerCase() } : resolveRevision(url, options.revision, PROCESS_CLONE_DEPS);
+      if (typeof named === 'string') return `--revision ${options.revision} cannot be resolved: ${named}; give the full commit instead`;
       if (named.commit !== commit) return `${options.clone} holds ${commit}, not ${named.commit} that --revision ${options.revision} names; make a clone of that commit or drop --revision`;
     }
     chosen = { label: `clone-${commit.slice(0, 12)}`, commit };
-    publicByProbe = typeof resolveRevision(url, undefined, PROCESS_CLONE_DEPS) !== 'string';
+    publicByProbe = operatorCloneIsPublic(url, commit, PROCESS_CLONE_DEPS);
   } else {
     const resolved = resolveRevision(url, options.revision, PROCESS_CLONE_DEPS);
     if (typeof resolved === 'string') return resolved;

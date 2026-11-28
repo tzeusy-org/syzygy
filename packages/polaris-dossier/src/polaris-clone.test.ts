@@ -62,12 +62,12 @@ describe('resolveRevision: the commit a run pins', () => {
   it('pins trunk, the remote HEAD, with no --revision, reading with no credential helper (syzygy-pdja.36)', () => {
     const { ran, deps: d } = git({ status: 0, stdout: `${COMMIT}\tHEAD\n` });
     expect(resolveRevision(URL, undefined, d)).toEqual({ label: `trunk-${COMMIT.slice(0, 12)}`, commit: COMMIT });
-    expect(ran).toEqual([['-c', 'credential.helper=', 'ls-remote', URL, 'HEAD']]);
+    expect(ran).toEqual([['ls-remote', URL, 'HEAD']]);
   });
   it('resolves a branch name to its commit', () => {
     const { ran, deps: d } = git({ status: 0, stdout: `${OTHER}\trefs/heads/unstable\n` });
     expect(resolveRevision(URL, 'unstable', d)).toEqual({ label: `unstable-${OTHER.slice(0, 12)}`, commit: OTHER });
-    expect(ran).toEqual([['-c', 'credential.helper=', 'ls-remote', URL, 'unstable']]);
+    expect(ran).toEqual([['ls-remote', URL, 'unstable', 'unstable^{}']]);
   });
   it('resolves an annotated tag to the commit it peels to, never the tag object', () => {
     const out = resolveRevision(URL, '8.0.0', git({ status: 0, stdout: `${OTHER}\trefs/tags/8.0.0\n${COMMIT}\trefs/tags/8.0.0^{}\n` }).deps);
@@ -76,12 +76,17 @@ describe('resolveRevision: the commit a run pins', () => {
   it('takes a full commit as given, still proving the URL answers anonymously', () => {
     const { ran, deps: d } = git({ status: 0, stdout: `${OTHER}\tHEAD\n` });
     expect(resolveRevision(URL, COMMIT, d)).toEqual({ label: `commit-${COMMIT.slice(0, 12)}`, commit: COMMIT });
-    expect(ran).toEqual([['-c', 'credential.helper=', 'ls-remote', URL, 'HEAD']]);
+    expect(ran).toEqual([['ls-remote', URL, 'HEAD']]);
+    expect(resolveRevision(URL, COMMIT.toUpperCase(), d)).toEqual({ label: `commit-${COMMIT.slice(0, 12)}`, commit: COMMIT });
   });
   it('refuses a name that matches no ref, and one that matches two different commits', () => {
     expect(resolveRevision(URL, 'nope', git({ status: 0, stdout: '' }).deps)).toBe(`${URL} has no branch or tag named nope`);
     const both = resolveRevision(URL, 'x', git({ status: 0, stdout: `${COMMIT}\trefs/heads/x\n${OTHER}\trefs/tags/x\n` }).deps);
     expect(both).toBe(`x names more than one ref at ${URL} (refs/heads/x, refs/tags/x); give the full ref or a full commit`);
+    // A branch and an annotated tag of one name, the tag peeling elsewhere: refused, never silently the tag (R-K54O3-NO-RECORD-1 finding 2).
+    const shadow = resolveRevision(URL, 'x', git({ status: 0, stdout: `${COMMIT}\trefs/heads/x\n${OTHER}\trefs/tags/x\n${'c'.repeat(40)}\trefs/tags/x^{}\n` }).deps);
+    expect(shadow).toBe(`x names more than one ref at ${URL} (refs/heads/x, refs/tags/x); give the full ref or a full commit`);
+    expect(resolveRevision(URL, 'abc1234', git({ status: 0, stdout: '' }).deps)).toBe(`${URL} has no branch or tag named abc1234 (an abbreviated commit is not resolved: give all 40 characters)`);
   });
   it.each(['--upload-pack=touch /tmp/x', '-x', 'a..b', 'a b', 'refs/heads/x/', 'x@{1}', ''])('refuses %j before running git', (name) => {
     const { ran, deps: d } = git({ status: 0, stdout: `${COMMIT}\tHEAD\n` });

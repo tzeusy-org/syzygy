@@ -91,5 +91,44 @@
       "summary": "Tests  2 failed | 72 passed (74)"
     }
   ],
-  "mutantCommit": "77f206d94cd9c6e084470e8d514e2611e27cc3e2"
+  "mutantCommit": "77f206d94cd9c6e084470e8d514e2611e27cc3e2",
+  "repairMutants": {
+    "for": "R-K54O3-NO-RECORD-1 findings 1-4",
+    "commit": "cf7816b1d751f0cf6f5db2f2c41d7b7e4ebdf627",
+    "note": "run against the uncommitted repair tree on top of this commit",
+    "mutants": [
+      {
+        "id": "tag-pattern-not-peeled",
+        "file": "packages/polaris-dossier/src/polaris.ts",
+        "old": "[given, `${given}^{}`]",
+        "new": "[given]",
+        "outcome": "KILLED",
+        "tests": "Tests  2 failed | 27 passed (29)"
+      },
+      {
+        "id": "git-reads-operator-config",
+        "file": "packages/polaris-dossier/src/polaris.ts",
+        "old": "PATH: process.env['PATH'] ?? '/usr/bin:/bin', HOME: '/nonexistent', GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_NOSYSTEM: '1',",
+        "new": "...process.env as Record<string, string>,",
+        "outcome": "KILLED",
+        "tests": "Tests  1 failed | 28 passed (29)"
+      },
+      {
+        "id": "peeled-wins-over-branch",
+        "file": "packages/polaris-dossier/src/polaris.ts",
+        "old": "const commits = new Set(refs.map(x => x.commit));",
+        "new": "const commits = new Set((peeled.size ? [...peeled.values()] : refs.map(x => x.commit)));",
+        "outcome": "KILLED",
+        "tests": "Tests  2 failed | 27 passed (29)"
+      },
+      {
+        "id": "clone-public-without-match",
+        "file": "packages/polaris-dossier/src/polaris.ts",
+        "old": "return typeof trunk !== 'string' && trunk.commit === commit;",
+        "new": "return typeof trunk !== 'string';",
+        "outcome": "KILLED",
+        "tests": "Tests  1 failed | 28 passed (29)"
+      }
+    ]
+  }
 }
