@@ -63,6 +63,8 @@ export type CheckFindingKind =
   | 'base-reference' | 'base-conflict' | 'base-root' | 'base-group' | 'base-size' | 'base-label'
   // Version 2.40 (schema v16): a section's or deep dive's figure walk.
   | 'walk'
+  // Version 2.50 (schema v17): a view's level and scope.
+  | 'view-scope' | 'view-level' | 'view-scope-outside'
   // Version 2.10: the check record would be past the read bound, so its bounded form is written.
   | 'check-record-bound';
 

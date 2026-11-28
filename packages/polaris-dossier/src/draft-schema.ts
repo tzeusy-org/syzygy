@@ -81,11 +81,16 @@ export const LOCAL_DRAFT_SCHEMA_VERSION_V15 = 'polaris-dossier-local-draft-v15';
  * carry `walk`, one reading path through one graph figure drawn there, in numbered steps (walk.ts). Brief v24 issues it. A v15 or earlier
  * draft still checks and renders as before, and `walk` in one is field-version. */
 export const LOCAL_DRAFT_SCHEMA_VERSION_V16 = 'polaris-dossier-local-draft-v16';
-/** The schema the brief issues: v16. */
-export const LOCAL_DRAFT_SCHEMA_VERSION = LOCAL_DRAFT_SCHEMA_VERSION_V16;
+/** v17 (REQ-polaris-generation-034 version 2.50, syzygy-3efd.39): a schema-v16 draft in every respect but one. A graph or containment
+ * `view` may carry `level` and `scope`, the two together or neither: its level of abstraction and the element it is about (view-level.ts).
+ * Brief v25 issues it. A v16 or earlier draft still checks and renders as before, and in a v12, v14, v15 or v16 draft either member is
+ * field-version. */
+export const LOCAL_DRAFT_SCHEMA_VERSION_V17 = 'polaris-dossier-local-draft-v17';
+/** The schema the brief issues: v17. */
+export const LOCAL_DRAFT_SCHEMA_VERSION = LOCAL_DRAFT_SCHEMA_VERSION_V17;
 export { CONTAINMENT_KIND };
 /** Every draft schema version `check` reads. */
-export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION_V11, LOCAL_DRAFT_SCHEMA_VERSION_V12, LOCAL_DRAFT_SCHEMA_VERSION_V13, LOCAL_DRAFT_SCHEMA_VERSION_V14, LOCAL_DRAFT_SCHEMA_VERSION_V15, LOCAL_DRAFT_SCHEMA_VERSION_V16] as const);
+export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION_V11, LOCAL_DRAFT_SCHEMA_VERSION_V12, LOCAL_DRAFT_SCHEMA_VERSION_V13, LOCAL_DRAFT_SCHEMA_VERSION_V14, LOCAL_DRAFT_SCHEMA_VERSION_V15, LOCAL_DRAFT_SCHEMA_VERSION_V16, LOCAL_DRAFT_SCHEMA_VERSION_V17] as const);
 /** The versions the schemas before v11 and v13's name in `schemaVersion`: all but v11 and v12, which no brief issues (see their
  * constants). The v11, v12 and v14 schemas name every version; only v14's is published. */
 const NAMED_SCHEMA_VERSIONS: readonly string[] = Object.freeze(LOCAL_DRAFT_SCHEMA_VERSIONS.filter((version) => version !== LOCAL_DRAFT_SCHEMA_VERSION_V11
@@ -114,9 +119,12 @@ export const hasModelForm = (version: unknown): boolean => version === LOCAL_DRA
 /** Whether a draft's views may carry `base` and its cited relationships base ends: v15 (version 2.35), and v16 (version 2.40, which reads
  * every rule naming schema v15 as naming v16 too). */
 export const hasBaseForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V15 || hasWalkForm(version);
-/** Whether a section or deep dive may carry `walk`: v16 (version 2.40). */
-export const hasWalkForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V16;
-/** Whether a draft carries `figurePlan`, read by check alone: v14 (version 2.33), v15 (version 2.35) and v16 (version 2.40). */
+/** Whether a section or deep dive may carry `walk`: v16 (version 2.40), and v17 (version 2.50, which reads every rule naming schema v16 as
+ * naming v17 too). */
+export const hasWalkForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V16 || hasLevelForm(version);
+/** Whether a graph or containment view may carry `level` and `scope`: v17 (version 2.50). */
+export const hasLevelForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V17;
+/** Whether a draft carries `figurePlan`, read by check alone: v14 (version 2.33), v15 (version 2.35), v16 (version 2.40) and v17 (version 2.50). */
 export const hasFigurePlanForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V14 || hasBaseForm(version);
 /** Whether a draft is of a known version that has no system model and is not v13, so `model` or a diagram's `view` in it is field-version
  * (version 2.24, "a draft of schema v11 or earlier"). v13 is not one: it reports either as v13 did before. */
@@ -566,11 +574,37 @@ export function draftSchemaDocument(parameters: DraftSchemaParameters): Record<s
   const { root, defs } = issuedDraftSchema(parameters);
   const object = root as ObjectSchema;
   const planned = { ...object, properties: { ...object.properties, [FIGURE_PLAN_FIELD]: { description: FIGURE_PLAN_DESCRIPTION },
-    diagrams: withBaseViews(object.properties['diagrams'] as ArraySchema), [MODEL_FIELD]: withBaseEnds(object.properties[MODEL_FIELD] as ObjectSchema),
+    diagrams: withLevels(withBaseViews(object.properties['diagrams'] as ArraySchema)), [MODEL_FIELD]: withBaseEnds(object.properties[MODEL_FIELD] as ObjectSchema),
     sections: withWalk(object.properties['sections'] as ArraySchema), deepDives: withWalk(object.properties['deepDives'] as ArraySchema) } } as unknown as DraftSchema;
   return schemaDocument(LOCAL_DRAFT_SCHEMA_VERSION, 'Polaris dossier local-agent draft', { root: planned, defs });
 }
 
+/** A v17 view's level and scope (version 2.50, view-level.ts). */
+export const LEVEL_FIELD = 'level';
+export const SCOPE_FIELD = 'scope';
+/** The three levels, in the order the requirement names them. */
+export const VIEW_LEVELS = Object.freeze(['context', 'container', 'component'] as const);
+export type ViewLevel = typeof VIEW_LEVELS[number];
+/** The schema a `level` is read against: one of the three. A `scope` is read as any string. */
+export const LEVEL_SCHEMA = Object.freeze({ type: 'string' as const, minLength: 1, maxLength: 9, enum: VIEW_LEVELS });
+export const SCOPE_SCHEMA = Object.freeze({ type: 'string' as const, minLength: 0, maxLength: Number.MAX_SAFE_INTEGER });
+export const LEVEL_DESCRIPTION = 'Optional, with `scope`. The view\'s level of abstraction: `context` (a system with the people and other systems it deals with), '
+  + '`container` (the parts a system is built of) or `component` (the modules inside one part).';
+export const SCOPE_DESCRIPTION = 'Optional, with `level`. The id of the one element of the model the view is about: a `system` for a context or container view, a '
+  + 'directory, package, service, job or store for a component view; never a base element.';
+
+/** The v17 document's views (version 2.50): each graph or containment `view`, with or without `base`, may carry `level` and `scope`. */
+function withLevels(diagrams: ArraySchema): ArraySchema {
+  const arms = (diagrams.items as { readonly oneOf: readonly DraftSchema[] }).oneOf.map((arm) => {
+    const form = arm as ObjectSchema;
+    const views = form.properties[VIEW_FIELD] as { readonly oneOf: readonly ObjectSchema[] } | undefined;
+    if (views === undefined) return arm;
+    const levelled = views.oneOf.map((view) => ({ ...view, properties: { ...view.properties, [LEVEL_FIELD]: { ...LEVEL_SCHEMA, description: LEVEL_DESCRIPTION },
+      [SCOPE_FIELD]: { ...SCOPE_SCHEMA, description: SCOPE_DESCRIPTION } } }));
+    return { ...form, properties: { ...form.properties, [VIEW_FIELD]: { oneOf: levelled } } } as DraftSchema;
+  });
+  return { ...diagrams, items: { oneOf: arms } };
+}
 type ObjectSchema = Extract<DraftSchema, { readonly type: 'object' }>;
 /** The v16 document's sections and deep dives (version 2.40): each may carry `walk`, any value, optional. */
 function withWalk(places: ArraySchema): ArraySchema {

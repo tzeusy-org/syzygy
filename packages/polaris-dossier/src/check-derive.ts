@@ -5,6 +5,7 @@ import { isRecord } from '@syzygy/support';
 import { hasFigurePlanForm, PRESENTATION_ELEMENT_KINDS, CONTAINMENT_BOUNDS, CONTAINMENT_KIND, figureMembersOf, hasContainmentForm, hasModelForm, LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V13, LOCAL_DRAFT_SCHEMA_VERSION_V14, FIGURE_PLAN_FIELD, issuedDraftSchema, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, RELATION_FIELD, UNIT_FIELD, hasRelationForm, hasHeroForm, heroOf, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, QUESTION_KINDS_FIELD, hasWorthKnowingForm, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
 import { isEntryPoint } from './derive.js';
 import { admitOf, baseFieldVersionFindings, baseSchemaReading } from './derived-base.js';
+import { levelFieldVersionFindings, levelFieldVersionPaths, withoutLevels } from './view-level.js';
 import { walkFieldVersionFindings, walkFieldVersionPaths, withoutWalks } from './walk.js';
 import { expandModel, modelFieldVersionFindings, modelFieldVersionPaths, modelIndex } from './system-model.js';
 import { containmentName, containmentDiagrams, containmentFieldVersionFindings, containmentFieldVersionPaths, containmentStructuralFindings, groupName, groupsOf } from './containment.js';
@@ -129,8 +130,9 @@ type BlobState =
  * carries, not only its schema faults. It freezes and writes nothing: `checkSubject` freezes, and `render` derives again from a frozen
  * revision with it. */
 export async function deriveFindings(given: unknown, inputs: DeriveInputs, rules: SubjectRules): Promise<Derived> {
-  // A v16 draft's walks (version 2.40) are presentation, read by their own findings alone: no other check reads them.
-  const subject = withoutWalks(given);
+  // A v16 draft's walks (version 2.40) and a v17 draft's view levels (version 2.50) are presentation, read by their own findings alone: no
+  // other check reads them.
+  const subject = withoutLevels(withoutWalks(given));
   const findings: CheckFinding[] = [];
   const add = (finding: CheckFinding): void => { findings.push(finding); };
   const { noun } = rules;
@@ -847,6 +849,8 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
       for (const at of figurePlanFieldVersionPaths(doc)) subsectionPaths.add(at);
       // A section's or deep dive's `walk` in a v15 or earlier draft: likewise (version 2.40).
       for (const at of walkFieldVersionPaths(doc)) subsectionPaths.add(at);
+      // A view's `level` or `scope` in a v12, v14, v15 or v16 draft: likewise (version 2.50).
+      for (const at of levelFieldVersionPaths(doc)) subsectionPaths.add(at);
       // A containment kind or `groups` in a v10 or earlier draft: likewise (version 2.23).
       for (const at of containmentFieldVersionPaths(doc)) subsectionPaths.add(at);
       // `model` or a diagram's `view` in a v11 or earlier draft: likewise (version 2.24).
@@ -898,7 +902,9 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
       // Version 2.35: a v12 or v14 draft's `base` and base ends, each `field-version`, its detail screened.
       for (const finding of baseFieldVersionFindings(doc, inputs === undefined ? () => 'unavailable' : admitOf(inputs.screen))) add(finding);
       // Version 2.40: a v15 or earlier draft's `walk`, `field-version`.
-      for (const finding of walkFieldVersionFindings(doc)) add(finding); },
+      for (const finding of walkFieldVersionFindings(doc)) add(finding);
+      // Version 2.50: a v12, v14, v15 or v16 draft's view `level` and `scope`, `field-version`.
+      for (const finding of levelFieldVersionFindings(doc)) add(finding); },
     blocks: collectBlocks,
     account: { key: 'discovery', parts: ['selected', 'excluded', 'unresolved', 'deferred'] },
   };
