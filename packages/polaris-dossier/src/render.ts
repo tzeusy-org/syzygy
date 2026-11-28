@@ -303,10 +303,11 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   return { ok: true, report };
 }
 
-/** A v9 draft's graph edges at a render (REQ-polaris-generation-034 version 2.19), by edge id: rule `relation-witness` version 1 decided again
- * from the derived structure the region states at this render (its facts, and the counts this render re-derives from the tree) and the
- * render's own manifest member, a unit tested for a blob against the tree this render lists. An edge is witnessed only where its joining fact
- * renders Observed here; otherwise `fact-not-current`. An edge the draft labels Unknown or that renders as a withheld item is never asserted. */
+/** A v9 draft's graph edges at a render (REQ-polaris-generation-034 version 2.19), by edge id: rule `relation-witness` version 2 (version 1
+ * plus the `imports` row, version 2.49) decided again from the derived structure the region states at this render (its facts, and the counts
+ * this render re-derives from the tree), the render's own manifest member, and the `importFacts` member of the rendered revision's check
+ * record, a unit tested for a blob against the tree this render lists. An edge is witnessed only where its joining fact renders Observed
+ * here; otherwise `fact-not-current`. An edge the draft labels Unknown or that renders as a withheld item is never asserted. */
 export async function edgeRelationsAt(inputs: {
   readonly doc: Readonly<Record<string, unknown>>;
   readonly derivedStructure: LocalDerivedStructure;
@@ -374,11 +375,30 @@ export function importFactsOfRecord(run: string, revision: number): RecordImport
   if (!isCheckRecordOf(record, revision) || !isRecord(record) || !isRecord(record['importFacts'])) return { state: 'unknown' };
   const member = record['importFacts'];
   if (member['state'] !== 'derived' || !Array.isArray(member['facts'])) return { state: 'unknown' };
-  const facts = (member['facts'] as unknown[]).filter(isRecord).map((fact) => ({
-    id: String(fact['id']), rule: String(fact['rule']), ruleVersion: Number(fact['ruleVersion']), form: String(fact['form']), outcome: String(fact['outcome']),
-    from: typeof fact['from'] === 'string' ? fact['from'] : null, to: typeof fact['to'] === 'string' ? fact['to'] : null,
-  }));
+  // The record lies within the agent sessions' write reach (version 2.10), and a fact's identity and form reach the page, the drawing and
+  // machine.json: every fact must hold its closed forms, or the whole member is Unknown, never read in part.
+  const facts: ImportFactOfRecord[] = [];
+  for (const fact of member['facts'] as unknown[]) {
+    const checked = importFactOf(fact);
+    if (checked === undefined) return { state: 'unknown' };
+    facts.push(checked);
+  }
   return { state: 'derived', facts, sha256: importFactsDigest(member) };
+}
+
+type ImportFactOfRecord = Extract<ImportFactsInput, { readonly state: 'derived' }>['facts'][number];
+const IMPORT_FACT_ID = /^_import-[1-9][0-9]*$/u;
+const IMPORT_FORMS: ReadonlySet<unknown> = new Set(['import', 'import-type', 'side-effect', 're-export', 're-export-type']);
+const STATEMENT_OUTCOMES: ReadonlySet<unknown> = new Set(['edge', 'same-unit', 'external', 'no-unit', 'unknown']);
+const IMPORT_RULES: ReadonlySet<unknown> = new Set(['typescript-relative-import', 'typescript-package-import']);
+const endOf = (value: unknown): value is string | null => value === null || typeof value === 'string';
+/** A stored import fact in the members the `imports` row reads, each in its closed form, or undefined where any is not. */
+function importFactOf(fact: unknown): ImportFactOfRecord | undefined {
+  if (!isRecord(fact)) return undefined;
+  const { id, rule, ruleVersion, form, outcome, from, to } = fact;
+  if (typeof id !== 'string' || !IMPORT_FACT_ID.test(id) || !IMPORT_RULES.has(rule) || ruleVersion !== 1 || !IMPORT_FORMS.has(form)
+    || !STATEMENT_OUTCOMES.has(outcome) || !endOf(from) || !endOf(to)) return undefined;
+  return { id, rule: rule as string, ruleVersion, form: form as string, outcome: outcome as string, from, to };
 }
 
 /** The SHA-256 of an `importFacts` member's bytes as a check record holds it: its two-space JSON, every line after the first indented two

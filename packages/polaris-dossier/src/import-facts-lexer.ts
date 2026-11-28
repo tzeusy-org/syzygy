@@ -29,6 +29,8 @@ interface Token {
   readonly depth: number;
   /** For a string: whether its raw text holds a backslash or a line terminator. */
   readonly plain?: boolean;
+  /** For a template token: whether it ends at `${`, opening a substitution (a head or a middle), not at its closing backtick. */
+  readonly opens?: boolean;
   /** For a `)`: whether it closes the parenthesised head of `if`, `while`, `for` or `with`. */
   readonly headClose?: boolean;
 }
@@ -78,7 +80,8 @@ export function tokenize(text: string): { readonly tokens: readonly Token[]; rea
     return 'unterminated';
   };
 
-  if (text.startsWith('#!')) {
+  // A hashbang line, after a leading byte-order mark where there is one.
+  if (text.startsWith('#!') || text.startsWith('\ufeff#!')) {
     while (i < text.length && !isLineTerminator(text.charCodeAt(i))) i++;
   }
   while (i < text.length) {
@@ -145,7 +148,7 @@ export function tokenize(text: string): { readonly tokens: readonly Token[]; rea
     if (c === 0x60) {
       const end = templatePart(i + 1);
       if (end === 'unterminated') return stopAt(start);
-      push('template', start, end);
+      push('template', start, end, { opens: text.charCodeAt(end - 1) !== 0x60 });
       i = end;
       continue;
     }
@@ -194,7 +197,7 @@ export function tokenize(text: string): { readonly tokens: readonly Token[]; rea
       stack.pop();
       const end = templatePart(i + 1);
       if (end === 'unterminated') return stopAt(start);
-      push('template', start, end);
+      push('template', start, end, { opens: text.charCodeAt(end - 1) !== 0x60 });
       i = end;
       continue;
     }
@@ -230,8 +233,12 @@ export function tokenize(text: string): { readonly tokens: readonly Token[]; rea
 function regexContext(before: Token | undefined, beforeThat: Token | undefined): boolean | 'undecidable' {
   if (before === undefined) return true;
   switch (before.kind) {
-    case 'number': case 'string': case 'template': case 'regex': case 'private': return false;
+    case 'number': case 'string': case 'regex': case 'private': return false;
+    // A template head or middle ends at `${`, so the `/` begins the substitution's code: punctuation, never the end of a literal.
+    case 'template': return before.opens === true;
     case 'word':
+      // A word after `.` or `?.` is a property name, never a keyword: `o.return / 1` divides.
+      if (beforeThat !== undefined && beforeThat.kind === 'punct' && (beforeThat.value === '.' || beforeThat.value === '?.')) return false;
       if (UNDECIDABLE_WORDS.has(before.value)) return 'undecidable';
       if (beforeThat?.kind === 'word' && (beforeThat.value === 'break' || beforeThat.value === 'continue')) return 'undecidable';
       return REGEX_WORDS.has(before.value);
@@ -255,15 +262,17 @@ function specifiers(tokens: readonly Token[], j: number): number | undefined {
     const t = tokens[j];
     if (t === undefined) return undefined;
     if (isPunct(t, '}')) return j + 1;
-    if (!isName(t)) return -1;
-    // TypeScript's `type` before a specifier's name.
-    if (isWord(t, 'type') && isName(tokens[j + 1]) && !isWord(tokens[j + 1], 'as')) j++;
-    j++;
-    if (isWord(tokens[j], 'as')) {
-      if (tokens[j + 1] === undefined) return undefined;
-      if (!isName(tokens[j + 1])) return -1;
-      j += 2;
+    // A specifier is the names up to `,` or `}`, any identifier (`type`, `as` and `from` among them) or a string: `a`, `type a`, `a as b`
+    // or `type a as b`. So `type as` is a type-only `as`, `type as as as` that renamed `as`, and `type as b` the name `type` renamed `b`.
+    const names: Token[] = [];
+    while (tokens[j] !== undefined && !isPunct(tokens[j], ',') && !isPunct(tokens[j], '}')) {
+      if (!isName(tokens[j]) || names.length === 4) return -1;
+      names.push(tokens[j]!);
+      j++;
     }
+    const n = names.length;
+    const shaped = n === 1 || (n === 2 && isWord(names[0], 'type')) || (n === 3 && isWord(names[1], 'as')) || (n === 4 && isWord(names[0], 'type') && isWord(names[2], 'as'));
+    if (tokens[j] !== undefined && !shaped) return -1;
     if (tokens[j] === undefined) return undefined;
     if (isPunct(tokens[j], ',')) { j++; continue; }
     if (isPunct(tokens[j], '}')) return j + 1;
@@ -357,7 +366,10 @@ export function scanImports(text: string): ImportScan {
       continue;
     }
     if (t.value === 'import') {
-      if (next === undefined) continue;
+      // Tokens that run out after a top-level `import` leave a form uncounted only where the scan stopped; where it read the whole text,
+      // the `import` begins no form and is counted (2.39: `outsideGrammar` never leaves one uncounted).
+      const endedWhole = stop === null && t.depth === 0;
+      if (next === undefined) { if (endedWhole) outsideGrammar++; continue; }
       if (isPunct(next, '.')) continue;
       if (isPunct(next, '(')) { outsideGrammar++; continue; }
       // An import-equals declaration: a module (`require(`) is outside the grammar; a namespace alias is nothing.
@@ -371,7 +383,7 @@ export function scanImports(text: string): ImportScan {
         continue;
       }
       const match = importForm(tokens, i);
-      if (match.kind === 'short') continue;
+      if (match.kind === 'short') { if (endedWhole) outsideGrammar++; continue; }
       if (t.depth > 0) {
         if (match.kind === 'form' || next.kind === 'word' || next.kind === 'string' || isPunct(next, '{') || isPunct(next, '*')) outsideGrammar++;
         continue;

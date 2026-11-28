@@ -133,3 +133,102 @@ describe('scanImports: a byte-order mark and CRLF lines (scenario 2.39)', () => 
     expect(scanImports(crlf).complete).toBe(true);
   });
 });
+
+describe('scanImports: review repairs (syzygy-3efd.89 review 1, notes 2 to 5)', () => {
+  const ops = (text: string) => scanImports(text).statements.map((s) => s.operand);
+
+  it('reads a word after . or ?. as a property name, so its / divides and no string text becomes a statement (note 2)', () => {
+    expect(scanImports("const q = o.return / 1, s = '/ import x from \"@w/b\"';\n")).toEqual({ complete: true, outsideGrammar: 0, statements: [] });
+    for (const word of ['default', 'in', 'delete', 'typeof', 'of', 'yield', 'await']) {
+      expect(scanImports(`const q = x.${word} / 2; const s = '/ import x from "./y"';\nimport a from './a';\n`), word).toMatchObject({ complete: true, outsideGrammar: 0, statements: [{ form: 'import', operand: './a' }] });
+      expect(ops(`const q = x.${word} / 2; const s = '/ import x from "./y"';\nimport a from './a';\n`), word).toEqual(['./a']);
+      expect(scanImports(`const q = x?.${word} / 2; import a from './a';\n`).complete, word).toBe(true);
+    }
+  });
+
+  it('reads a / directly inside a template substitution as a regular expression, and after a template\'s end as a division (note 3)', () => {
+    expect(ops("const t = `${/'/.source}`;\nimport a from './a';\n")).toEqual(['./a']);
+    expect(scanImports("const t = `${/'/.source}`;\nimport a from './a';\n").complete).toBe(true);
+    expect(scanImports("const t = `${/\"/.test(s) + \"import x from 'fab'\"}`;\n")).toEqual({ complete: true, outsideGrammar: 0, statements: [] });
+    expect(scanImports("const t = `a ${b} c ${/'/.source}`;\n").complete).toBe(true);
+    expect(ops("const n = `a` / 2; import b from './b';\n")).toEqual(['./b']);
+  });
+
+  it('counts a top-level import the whole text ends in, and leaves one the scan stopped before uncounted (note 4)', () => {
+    expect(scanImports("import a from './a';\nimport\n")).toEqual({ complete: true, outsideGrammar: 1, statements: [{ form: 'import', operand: './a', start: 0, end: 19 }] });
+    expect(scanImports("import a from './a';\nimport x from\n").outsideGrammar).toBe(1);
+    expect(scanImports("import a from './a';\nimport { b\n").outsideGrammar).toBe(1);
+    expect(scanImports('import x from /* open\n')).toEqual({ complete: false, outsideGrammar: 0, statements: [] });
+  });
+
+  it('reads type and as as TypeScript does inside specifiers (note 5)', () => {
+    for (const list of ['{ type as }', '{ type as as as }', '{ type as as b }', '{ type as b }', '{ as }', '{ as as b, from, type }', "{ 'x' as y }"]) {
+      expect(scanImports(`import ${list} from './a';\n`), list).toEqual({ complete: true, outsideGrammar: 0, statements: [{ form: 'import', operand: './a', start: 0, end: 18 + list.length }] });
+    }
+    for (const list of ['{ a b c }', '{ , }', '{ type a as b c }', '{ a as }']) {
+      expect(scanImports(`import ${list} from './a';\n`), list).toEqual({ complete: true, outsideGrammar: 1, statements: [] });
+    }
+  });
+});
+
+describe('scanImports: the token rule, branch by branch (syzygy-3efd.89 review 1, note 7)', () => {
+  const ops = (text: string) => scanImports(text).statements.map((s) => s.operand);
+  const AFTER = "\nimport z from './z';\n";
+
+  it('begins a regular expression after each of the fifteen keywords', () => {
+    for (const word of ['return', 'typeof', 'case', 'default', 'do', 'else', 'in', 'instanceof', 'new', 'delete', 'void', 'throw', 'extends', 'break', 'continue']) {
+      expect(scanImports(`x; ${word} /import a from 'b'/;${AFTER}`), word).toEqual({ complete: true, outsideGrammar: 0, statements: [{ form: 'import', operand: './z', start: 25 + word.length, end: 44 + word.length }] });
+    }
+  });
+
+  it('begins a regular expression after the head of while, for, with and for await, and divides after ] and any other )', () => {
+    for (const head of ['while (c)', 'for (;;)', 'with (o)', 'for await (const x of y)']) {
+      expect(scanImports(`${head} /import x from 'y'/.test(s);${AFTER}`).statements.map((s) => s.operand), head).toEqual(['./z']);
+    }
+    expect(ops(`const a = b[0] / 2; import c from './c';${AFTER}`)).toEqual(['./c', './z']);
+    expect(ops(`const a = f(b) / 2; import c from './c';${AFTER}`)).toEqual(['./c', './z']);
+  });
+
+  it('stops after continue and a label, as after break', () => {
+    expect(scanImports('l: for (;;) { continue l / 2 / 3; }\n').complete).toBe(false);
+  });
+
+  it('reads a regular expression\'s class, escapes and flags, and stops at an escape before the line end', () => {
+    expect(ops(`const r = /[/]import a from 'b'/;${AFTER}`)).toEqual(['./z']);
+    expect(ops(`const r = /\\/import a from 'b'/;${AFTER}`)).toEqual(['./z']);
+    expect(ops(`const r = /x/gimsuy;${AFTER}`)).toEqual(['./z']);
+    expect(scanImports(`const r = /a\\\nb/;${AFTER}`)).toEqual({ complete: false, outsideGrammar: 0, statements: [] });
+  });
+
+  it('reads escapes in templates and strings, a backslash line continuation, and a line separator that makes an operand not plain', () => {
+    expect(ops(`const t = \`\\\`import a from './a'\`;${AFTER}`)).toEqual(['./z']);
+    expect(ops(`const s = 'a\\'import b from "./b"';${AFTER}`)).toEqual(['./z']);
+    expect(ops(`const s = 'a\\\r\nimport b from "./b"';${AFTER}`)).toEqual(['./z']);
+    expect(scanImports("import a from './a\u2028';\n")).toEqual({ complete: true, outsideGrammar: 1, statements: [] });
+    expect(scanImports("const s = 'a\nimport b from './b';\n")).toEqual({ complete: false, outsideGrammar: 0, statements: [] });
+  });
+
+  it('skips a hashbang, after a byte-order mark too, and reads a comment to its end', () => {
+    for (const head of ['#!/usr/bin/env node\n', '\ufeff#!/usr/bin/env node\n', '/* a\nb */', '// x\n']) {
+      expect(scanImports(`${head}import a from './a';\n`), JSON.stringify(head)).toMatchObject({ complete: true, statements: [{ operand: './a' }] });
+    }
+  });
+
+  it('reads a unicode-escaped identifier as a word that is not the keyword, a private name as an operand, and ?. apart from ?.5', () => {
+    expect(scanImports("\\u0069mport a from './a';\n")).toEqual({ complete: true, outsideGrammar: 0, statements: [] });
+    expect(ops(`class A { #x = 1; m() { return this.#x / 2 / 3; } }${AFTER}`)).toEqual(['./z']);
+    expect(ops(`const a = b?.5:1; import c from './c';${AFTER}`)).toEqual(['./c', './z']);
+    expect(ops(`const a = b?.c / 2; import c from './c';${AFTER}`)).toEqual(['./c', './z']);
+  });
+
+  it('keeps the bracket depth: a closer that matches no opener pops nothing, and an import inside any bracket is no statement', () => {
+    expect(scanImports("f( ];\nimport c from './c';\n")).toEqual({ complete: true, outsideGrammar: 1, statements: [] });
+    expect(scanImports("{ ( [ ] ) }\nimport c from './c';\n").statements.map((s) => s.operand)).toEqual(['./c']);
+    expect(scanImports("const t = `${ (import c from './c') }`;\n")).toEqual({ complete: true, outsideGrammar: 1, statements: [] });
+  });
+
+  it('reads export * as a string name, and counts an import-equals or namespace alias inside a block', () => {
+    expect(scanImports("export * as 'x y' from './x';\n").statements.map((s) => [s.form, s.operand])).toEqual([['re-export', './x']]);
+    expect(scanImports("namespace N { import o = M.o; }\nnamespace P { import r = require('./r'); }\n")).toEqual({ complete: true, outsideGrammar: 2, statements: [] });
+  });
+});

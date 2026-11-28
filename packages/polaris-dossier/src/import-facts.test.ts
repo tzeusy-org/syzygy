@@ -30,21 +30,23 @@ beforeAll(() => {
 });
 
 const idOf = (p: string): string => createHash('sha1').update(p).digest('hex');
-type Tree = Record<string, string | Uint8Array | { readonly mode: string }>;
+type Tree = Record<string, string | Uint8Array | { readonly mode: string } | GitObjectReadRefusal>;
 const bytesOf = (v: string | Uint8Array): Uint8Array => (typeof v === 'string' ? new TextEncoder().encode(v) : v);
 
 /** The member over `tree` (mode 100644 unless given), with the manifest facts the same listing gives, and the TypeScript paths read. */
-async function importsOf(tree: Tree, screen: DossierScreen = V2) {
+async function importsOf(tree: Tree, screen: DossierScreen = V2, consented: readonly string[] | null = null) {
   const asked: string[] = [];
-  const entries = Object.entries(tree).map(([p, v]) => ({ path: p, mode: typeof v === 'object' && 'mode' in v ? v.mode : '100644', id: idOf(p) }));
+  const isMode = (v: Tree[string] | undefined): v is { readonly mode: string } => typeof v === 'object' && !(v instanceof Uint8Array) && !(v instanceof GitObjectReadRefusal) && 'mode' in v;
+  const entries = Object.entries(tree).map(([p, v]) => ({ path: p, mode: isMode(v) ? v.mode : '100644', id: idOf(p) }));
   const blob = (p: string): VerifiedBlob => {
     const v = tree[p];
-    if (v === undefined || (typeof v === 'object' && 'mode' in v)) throw new Error(`the reader double was asked for ${JSON.stringify(p)}, no blob of the listing`);
+    if (v === undefined || isMode(v)) throw new Error(`the reader double was asked for ${JSON.stringify(p)}, no blob of the listing`);
+    if (v instanceof GitObjectReadRefusal) throw v;
     return { path: p, mode: '100644', id: idOf(p), bytes: bytesOf(v) };
   };
-  const manifestFacts = await deriveManifestFacts({ entries, screen, consented: null, read: async (p) => blob(p) });
+  const manifestFacts = await deriveManifestFacts({ entries, screen, consented, read: async (p) => blob(p) });
   const member = await deriveImportFacts({
-    entries, screen, consented: null, manifestFacts,
+    entries, screen, consented, manifestFacts,
     read: async (p) => {
       asked.push(p);
       const read = blob(p);
@@ -295,5 +297,64 @@ describe('importFacts: a byte-order mark and CRLF lines (scenario "A byte-order 
     expect(withCrlf.facts.map((f) => [f.form, f.lines])).toEqual([['import', [2, 2]], ['re-export', [4, 6]]]);
     for (const fact of withCrlf.facts) expect(fact.lines[1]).toBeLessThanOrEqual(lineCountOf(crlf));
     expect((await importsOf(tree(lf))).member.facts).toEqual(withCrlf.facts);
+  });
+});
+
+describe('importFacts: every file disposition and statement outcome (syzygy-3efd.89 review 1, note 7)', () => {
+  /** The bound screen, except the path and body outcomes named here. */
+  const screenWith = (paths: Record<string, string>, bodies: Record<string, 'active-content' | 'redacted'>): DossierScreen => ({
+    ...V2,
+    screenPath: (p: string) => (paths[p] ?? V2.screenPath(p)) as ReturnType<DossierScreen['screenPath']>,
+    screenTargetBody: (body: string, p: string) => bodies[p] === 'active-content' ? { kind: 'excluded', outcome: 'active-content' }
+      : bodies[p] === 'redacted' ? { kind: 'redacted', retained: '', retainedLines: [], lineByteOffsets: [], originalBytes: body.length, contentSha256: '0'.repeat(64), withheld: [1], detectorIds: ['d'] }
+        : V2.screenTargetBody(body, p),
+  });
+
+  it('names each Unknown file with its reason and null counts, reads none of them past its reason, and is partial', async () => {
+    const tree: Tree = {
+      'a.ts': '', 'b\u0001.ts': '', 'c.ts': { mode: '120000' }, 'd.ts': '', 'e.ts': new GitObjectReadRefusal('object-missing', 'fixture: missing', '1'.repeat(40), 'e.ts'),
+      'f.ts': new Uint8Array([0x69, 0xff]), 'g.ts': '', 'h.ts': '', 'i.ts': '',
+    };
+    const { member, asked } = await importsOf(tree, screenWith({ 'd.ts': 'denied-path', 'i.ts': 'unknown-extraction-class' }, { 'g.ts': 'active-content', 'h.ts': 'redacted' }));
+    expect(member.files).toEqual([
+      scannedFile('a.ts', 0),
+      unknownFile('"b\\u0001.ts"', 'path-not-citable'), unknownFile('c.ts', 'symbolic-link'), unknownFile('d.ts', 'denied-path'), unknownFile('e.ts', 'object-read-refused'),
+      unknownFile('f.ts', 'not-utf8-text'), unknownFile('g.ts', 'active-content'), unknownFile('h.ts', 'redacted-body'), unknownFile('i.ts', 'unknown-extraction-class'),
+    ]);
+    expect(asked).toEqual(['a.ts', 'e.ts', 'f.ts', 'g.ts', 'h.ts']);
+    expect([member.candidates, member.scanned, member.unknown, member.coverage]).toEqual([9, 1, 8, 'partial']);
+  });
+
+  it('names a path longer than 512 code units by its shown form', async () => {
+    const long = `${'x'.repeat(520)}.ts`;
+    const { member } = await importsOf({ [long]: '' });
+    expect(member.files).toEqual([unknownFile(`"${'x'.repeat(512)}" (11 more code units)`, 'path-not-citable')]);
+  });
+
+  it('names every file class-not-consented where the run consents to no class, reading none, and is unknown', async () => {
+    const { member, asked } = await importsOf({ 'a.ts': "import './b';\n", 'b.ts': '' }, V2, []);
+    expect(member.files).toEqual([unknownFile('a.ts', 'class-not-consented'), unknownFile('b.ts', 'class-not-consented')]);
+    expect([asked, member.coverage]).toEqual([[], 'unknown']);
+  });
+
+  it('gives target-absent, target-unit-undecidable, and an operand that leaves the root outside the grammar', async () => {
+    const { member } = await importsOf({
+      'a/package.json': '{ "name": "a" }\n', 'b/package.json': { mode: '120000' },
+      'a/f.ts': "import './nope';\nimport { g } from '../b/g';\nimport x from '../../x';\n", 'b/g.ts': '',
+    });
+    expect(outcomes(member)).toEqual([
+      ['a/f.ts', [1, 1], 'side-effect', 'unknown', null, null, 'target-absent'],
+      ['a/f.ts', [2, 2], 'import', 'unknown', null, null, 'target-unit-undecidable'],
+    ]);
+    expect(member.files.find((f) => f.path === 'a/f.ts')).toEqual(scannedFile('a/f.ts', 2, 1));
+    expect([member.statements.unknown, member.coverage]).toEqual([2, 'partial']);
+  });
+});
+
+describe('importFacts: a fabricated statement from string text (syzygy-3efd.89 review 1, note 2)', () => {
+  it('states no fact for an import inside a string after a property named return', async () => {
+    const { member } = await importsOf({ ...WORKSPACE, 'units/a/src/index.ts': "const q = o.return / 1, s = '/ import x from \"@w/b\"';\n" });
+    expect(member.facts).toEqual([]);
+    expect([member.edges, member.coverage]).toEqual([[], 'complete']);
   });
 });

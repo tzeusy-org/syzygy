@@ -8,7 +8,8 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { issueBrief } from './brief.js';
 import { checkDraft, type CheckDeps, type CheckResult } from './check.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
-import { renderRun, type DossierRenderer, type RenderDeps } from './render.js';
+import { importFactsOfRecord, renderRun, type DossierRenderer, type RenderDeps } from './render.js';
+import { latestPassedDraft } from './review.js';
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
@@ -60,7 +61,7 @@ function pinnedTree(files: Record<string, string>, gitlinks: readonly string[] =
   return { origin, commit: git('rev-parse', 'HEAD') };
 }
 
-let WEB_CORE: Pinned, TYPE_ONLY: Pinned, BY_PACKAGE: Pinned, REVERSED: Pinned, NONE: Pinned, PARTIAL: Pinned;
+let WEB_CORE: Pinned, TYPE_ONLY: Pinned, BY_PACKAGE: Pinned, REVERSED: Pinned, NONE: Pinned, PARTIAL: Pinned, MANY: Pinned, CRLF: Pinned;
 let renderLocalDossier: DossierRenderer;
 beforeAll(async () => {
   renderLocalDossier = ((await import(RENDERER_MODULE)) as { renderLocalDossier: DossierRenderer }).renderLocalDossier;
@@ -72,6 +73,10 @@ beforeAll(async () => {
   // No statement joins the units: complete coverage, and partial coverage (one form outside the grammar).
   NONE = pinnedTree({ ...IMPORTS("import './z.js';"), 'web/src/z.ts': '' });
   PARTIAL = pinnedTree({ ...IMPORTS("import './z.js';"), 'web/src/z.ts': "export const z = import('./x.js');\n" });
+  // No statement joins the units, and the facts pass the listing budget: 8,000 same-unit statements leave some facts unlisted.
+  MANY = pinnedTree({ ...IMPORTS("import './z.js';"), 'web/src/z.ts': '', 'web/src/many.ts': "import './x.js';\n".repeat(8_000) });
+  // A byte-order mark and CRLF lines: statements on line 2 and on lines 4 to 6.
+  CRLF = pinnedTree({ ...IMPORTS(), 'web/src/c.ts': "\ufeff// head\r\nimport { a } from '../x/a';\r\n\r\nexport {\r\n  b,\r\n} from './b';\r\n", 'web/x/a.ts': '', 'web/src/b.ts': '' });
 });
 
 const OK: GateState = { state: 'ok', record: 'FIXTURE-ACT' };
@@ -337,3 +342,89 @@ describe('imports corroboration: a corroborated relationship shown in two views 
       [{ id: 'd1', from: 'web', to: 'core', relation: 'imports', basis: 'derived' }], [graphView('deps', ['web', 'core'], ['d1'])]))).findings.map((f) => f.kind)).toEqual(['relationship-not-derivable']);
   });
 });
+
+const TOKEN = ['gh', 'p_', '0123456789abcdefghijklmnopqrstuvwxyzAB'].join('');
+
+describe('imports corroboration: a tampered record never reaches the page (syzygy-3efd.89 review 1, finding 1)', () => {
+  /** The record with `_import-3`, the edge fact, changed by `change`. */
+  const tamper = (change: (fact: Doc) => unknown) => (record: Doc): Doc => ({ ...record, importFacts: { ...record['importFacts'],
+    facts: (record['importFacts']['facts'] as Doc[]).map((fact) => (fact['id'] === '_import-3' ? change(fact) : fact)) } });
+  const cases: [string, (record: Doc) => Doc][] = [
+    ['a token for an id', tamper((f) => ({ ...f, id: TOKEN }))],
+    ['words for an id', tamper((f) => ({ ...f, id: 'PLANTED FREE TEXT id' }))],
+    ['words for a form', tamper((f) => ({ ...f, form: 'PLANTED FREE TEXT form' }))],
+    ['a token for a form', tamper((f) => ({ ...f, form: TOKEN }))],
+    ['another outcome', tamper((f) => ({ ...f, outcome: 'edges' }))],
+    ['another rule', tamper((f) => ({ ...f, rule: 'PLANTED-rule' }))],
+    ['another version', tamper((f) => ({ ...f, ruleVersion: 2 }))],
+    ['an end that is no string', tamper((f) => ({ ...f, from: 7 }))],
+    ['a fact that is no object', tamper(() => 'PLANTED FREE TEXT')],
+    ['facts that are no list', (r) => ({ ...r, importFacts: { ...r['importFacts'], facts: 'PLANTED FREE TEXT' } })],
+    ['a member that is no object', (r) => ({ ...r, importFacts: 'PLANTED FREE TEXT' })],
+  ];
+
+  it.each(cases)('is facts-unknown, with no planted text anywhere, for %s', async (_name, edit) => {
+    const { files, machine } = await rendered(WEB_CORE, draftOf([FIG()]), {}, edit);
+    expect(statesOf(machine)).toEqual({ i1: unknown('facts-unknown') });
+    const site = [...files.values()].join('\n');
+    for (const planted of [TOKEN, 'PLANTED', 'data-witness-state']) expect(site).not.toContain(planted);
+  });
+
+  it('reads the member as Unknown from a record it cannot read or that names another revision, and reads a well-formed one', () => {
+    const run = tempDir('dossier-imports-record-');
+    const write = (text: string): void => { fs.mkdirSync(path.join(run, 'checks'), { recursive: true }); fs.writeFileSync(path.join(run, 'checks', 'rev-0.json'), text); };
+    const fact = { id: '_import-3', rule: 'typescript-relative-import', ruleVersion: 1, path: 'web/src/a.ts', lines: [3, 3], form: 'import', outcome: 'edge', from: 'web/package.json', to: 'core/package.json', unknownReason: null, epistemic: 'inferred' };
+    const member = { format: 'polaris-dossier-import-facts/1', state: 'derived', facts: [fact] };
+    expect(importFactsOfRecord(run, 0)).toEqual({ state: 'unknown' });
+    write('{ not json');
+    expect(importFactsOfRecord(run, 0)).toEqual({ state: 'unknown' });
+    write(JSON.stringify({ format: 'polaris-dossier-check/1', revision: 1, importFacts: member }));
+    expect(importFactsOfRecord(run, 0)).toEqual({ state: 'unknown' });
+    write(JSON.stringify({ format: 'polaris-dossier-check/1', revision: 0, importFacts: member }, null, 2));
+    const memberText = JSON.stringify(member, null, 2).split('\n').join('\n  ');
+    expect(importFactsOfRecord(run, 0)).toEqual({ state: 'derived', sha256: sha(memberText),
+      facts: [{ id: '_import-3', rule: 'typescript-relative-import', ruleVersion: 1, form: 'import', outcome: 'edge', from: 'web/package.json', to: 'core/package.json' }] });
+  });
+});
+
+describe('imports corroboration: the scenario clauses review 1 found untested (syzygy-3efd.89 review 1, note 8)', () => {
+  it('leaves i1 unknown with coverage-partial where facts are left unlisted', async () => {
+    const { machine, record } = await rendered(MANY, draftOf([FIG()]));
+    const member = JSON.parse(record)['importFacts'];
+    expect([member['coverage'], member['factsNotListed'] > 0, member['statements']['sameUnit']]).toEqual(['complete', true, 8_003]);
+    expect(statesOf(machine)).toEqual({ i1: unknown('coverage-partial') });
+  });
+
+  it('states line pairs the path-and-range check accepts as citations of their path, with a BOM and CRLF lines', async () => {
+    const { run, result } = await checked(CRLF, draftOf([FIG()]));
+    expect(result.ok && result.report.outcome).toBe('passed');
+    const record = JSON.parse(fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8')) as Doc;
+    expect((record['importFacts']['facts'] as Doc[]).filter((f) => f['path'] === 'web/src/c.ts').map((f) => f['lines'])).toEqual([[2, 2], [4, 6]]);
+    const citing = (ranges: [number, number][]): Doc => {
+      const doc = draftOf([FIG()]);
+      doc['sections'][0]['paragraphs'][0]['citations'] = ranges.map(([startLine, endLine], k) => ({ id: `c-ts-${k}`, path: 'web/src/c.ts', startLine, endLine }));
+      return doc;
+    };
+    expect(await findingsOf(CRLF, citing([[2, 2], [4, 6]]))).toEqual(PASSED);
+    expect((await findingsOf(CRLF, citing([[4, 7]]))).outcome).toBe('findings');
+  });
+
+  it('lets review and close read a record that holds no importFacts, as one written before version 2.39', async () => {
+    const { run, result } = await checked(WEB_CORE, draftOf([FIG()]));
+    expect(result.ok && result.report.outcome).toBe('passed');
+    const file = path.join(run, 'checks', 'rev-0.json');
+    const { importFacts: _gone, ...earlier } = JSON.parse(fs.readFileSync(file, 'utf8')) as Doc;
+    fs.writeFileSync(file, `${JSON.stringify(earlier, null, 2)}\n`);
+    expect(latestPassedDraft(run)).toMatchObject({ ok: true, revision: 0 });
+  });
+
+  it('writes the record\'s members in the order of version 2.38, with importFacts alone added before manifestFacts', async () => {
+    const { run } = await checked(WEB_CORE, draftOf([FIG()]));
+    const keys = Object.keys(JSON.parse(fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8')) as Doc);
+    expect(keys).toEqual(KEYS_2_38.flatMap((key) => (key === 'manifestFacts' ? ['importFacts', key] : [key])));
+  });
+});
+/** A passed check record's members under version 2.38, in order (the record `check.ts` wrote at e2aa8b853, whose `stored` spread this change
+ * extends by the one `importFacts` member). */
+const KEYS_2_38 = ['format', 'runId', 'revision', 'supersedes', 'pinnedRevision', 'checkedAt', 'outcome', 'draft', 'session', 'findings', 'executionFlags',
+  'quotations', 'excludedContent', 'citedBlobs', 'screeningPolicy', 'credential', 'limits', 'label', 'figureFit', 'readingLedger', 'manifestFacts'];

@@ -38,6 +38,15 @@ const TOKEN = /<(\/?)([A-Za-z][A-Za-z0-9:-]*)((?:\s+[^\s=/>"']+="[^"]*")*)\s*(\/
 const ATTRIBUTE = /\s+([^\s=/>"']+)="([^"]*)"/gu;
 const TEXT_ENTITY = /&(?!(?:amp|lt|gt|quot|#39);)/u;
 
+/** The one form each witness attribute's value takes: a fact identity Syzygy wrote (`_tree-contains-1`, `_manifest-2`, `_import-3`), a rule
+ * identity, a version, and the one state `corroborated` (version 2.49). */
+const WITNESS_VALUES: Readonly<Record<string, RegExp>> = {
+  'data-witness-fact': /^_[a-z]+(?:-[a-z]+)*(?:-[1-9][0-9]*)?$/u,
+  'data-witness-rule': /^[a-z]+(?:-[a-z]+)*$/u,
+  'data-witness-rule-version': /^[1-9][0-9]*$/u,
+  'data-witness-state': /^corroborated$/u,
+};
+
 function unsafe(): never {
   throw new Error('unsafe-svg');
 }
@@ -52,6 +61,9 @@ function assertAttribute(element: string, name: string, value: string, isRoot: b
   }
   if (/javascript:|vbscript:|data:|https?:/iu.test(value) || value.includes('&')) unsafe();
   if (!VALUE.test(value)) unsafe();
+  // A witness attribute holds one closed form whatever else `VALUE` admits: words in it would be text no screen read (syzygy-3efd.89).
+  const closed = WITNESS_VALUES[name];
+  if (closed !== undefined && !closed.test(value)) unsafe();
   const withoutLocal = value.replace(LOCAL_URL, '');
   if (/url\(/iu.test(withoutLocal)) unsafe();
 }

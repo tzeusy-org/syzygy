@@ -3,8 +3,9 @@ import { CARGO_MANIFEST, COMPOSE_FILE, GITHUB_ACTIONS_WORKFLOW, GO_MODULE_MANIFE
 import { isComposePath } from './manifest-compose.js';
 import { isWorkflowPath } from './manifest-workflow.js';
 
-/** Rule `relation-witness` version 1 (REQ-polaris-generation-034 version 2.19, syzygy-3efd.28): for each edge of a produced graph diagram of
- * a schema-v9 draft, one witness state, `witnessed`, `challenged` or `unknown`, from the edge's relation, the units of its two end nodes and
+/** Rule `relation-witness` version 2 (REQ-polaris-generation-034 version 2.49, syzygy-3efd.89): version 1 (version 2.19, syzygy-3efd.28)
+ * plus the `imports` row, which corroborates an edge from the `importFacts` member and never witnesses or challenges one. For each edge of a
+ * produced graph diagram of a schema-v9 draft, one state, `witnessed`, `challenged`, `corroborated` or `unknown`, from the edge's relation, the units of its two end nodes and
  * the facts Syzygy derives for the revision, and from nothing else the draft carries: never a label or a model. A relation is witnessed only
  * by facts of the one kind its row names, between units of the two kinds its row names; equality is of exact code units, nothing case-folded
  * or normalised. The rule reads no file body, size or object identifier beyond what the witnessing fact's own rule reads. Pure: `check`
