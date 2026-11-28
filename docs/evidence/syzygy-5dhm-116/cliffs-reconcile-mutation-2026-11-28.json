@@ -1,0 +1,124 @@
+{
+  "commit": "ff400b6527a0348192bf3c263e904f8b383b4936",
+  "script": "docs/evidence/syzygy-5dhm.116/cliffs_reconcile_mutation.py",
+  "baseline": {
+    "python3 scripts/check_spec_reconciliation.py --check": {
+      "exit": 0
+    },
+    "python3 scripts/count_polaris_effective_scenarios.py": {
+      "exit": 0
+    }
+  },
+  "mutants": [
+    {
+      "mutant": "status-count-off",
+      "path": "PROJECT-STATUS.md",
+      "old": "Polaris has 39 requirements and 642 scenarios.",
+      "new": "Polaris has 39 requirements and 641 scenarios.",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "does not declare the exact cliffs census",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "status-count-off-counter",
+      "path": "PROJECT-STATUS.md",
+      "old": "Polaris has 39 requirements and 642 scenarios.",
+      "new": "Polaris has 39 requirements and 641 scenarios.",
+      "command": "python3 scripts/count_polaris_effective_scenarios.py",
+      "expected": "cliffs count differs",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "status-route-old-id",
+      "path": "PROJECT-STATUS.md",
+      "old": "is agent-adopted in A-343.",
+      "new": "is agent-adopted in A-338.",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "does not route cliffs v2.49",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "index-old-tag",
+      "path": "openspec/README.md",
+      "old": "`polaris-dossier-cliffs-v2.49`",
+      "new": "`polaris-dossier-cliffs-v2.40`",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "does not route cliffs v2.49",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "spec-one-byte",
+      "path": "openspec/changes/dossier-cliffs/proposed/polaris-generation/spec.md",
+      "old": "# Dossier cliffs",
+      "new": "# Dossier cliffz",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "differs from the reviewed v2.49 subject",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "row-old-tag",
+      "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+      "old": "| `polaris-dossier-cliffs-v2.49` |",
+      "new": "| `polaris-dossier-cliffs-v2.40` |",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "calls cliffs v2.49 adopted while it is not in force",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "row-test-is-choice",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "for line in adoption_table_rows(root) if is_cliffs_row(line)]",
+      "new": "for line in adoption_table_rows(root) if is_choice_row(line)]",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "cliffs: malformed adoption identity",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "census-skips-cliffs",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "                a, extra_a = compose_figure_by_id(a, cliffs_amendment, CLIFFS_REPLACES)\n                b, extra_b = compose_figure_by_name(b, cliffs_amendment, CLIFFS_REPLACES)\n",
+      "new": "                extra_a = extra_b = []\n",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "FAIL  R3",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "expected-skips-cliffs",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "        n_scen += cliffs_delta(root, findings)\n",
+      "new": "        pass\n",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "FAIL  R3",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "projection-skips-cliffs",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "                                                findings.append(\"POLARIS cliffs: selected census projections disagree\")\n                                            selected_population = by_id\n",
+      "new": "                                                findings.append(\"POLARIS cliffs: selected census projections disagree\")\n",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "selected census differs",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "status-want-unadjusted",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "            want = (want[0], str(int(want[1]) - cliffs_delta(root, findings)))\n",
+      "new": "",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "FAIL  R5",
+      "exit": 1,
+      "outcome": "killed"
+    }
+  ]
+}
