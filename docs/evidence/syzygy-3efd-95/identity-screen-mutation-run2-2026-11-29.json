@@ -1,0 +1,335 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-28T19:03:40.379Z",
+  "commit": "eb1f79245e3e41ba4946ea91cb52856dc278a705",
+  "subject": {
+    "packages/polaris-dossier/src/check.ts": "dc63561538679aa344b17b8758d83186a604b81fc0dacde96ebde3a0716f0e0f",
+    "packages/polaris-dossier/src/finding-names.ts": "19a556a4f1e582d45af6a392d9806cb76b4cf4261ac11dbc42d020506737d81e",
+    "packages/polaris-dossier/src/identity-screen.ts": "556218831ada37b844d77df8d0b0dd777ef060a158e451bac8b2fa47aac6c098"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 600 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/identity-screen.ts": [
+      "packages/polaris-dossier/src/finding-names.test.ts",
+      "packages/polaris-dossier/src/view-level.test.ts"
+    ],
+    "packages/polaris-dossier/src/finding-names.ts": [
+      "packages/polaris-dossier/src/finding-names.test.ts",
+      "packages/polaris-dossier/src/view-level.test.ts"
+    ],
+    "packages/polaris-dossier/src/check.ts": [
+      "packages/polaris-dossier/src/finding-names.test.ts",
+      "packages/polaris-dossier/src/view-level.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "packages/polaris-dossier/src/check.ts",
+      "exitCode": 0,
+      "tests": 80,
+      "perFile": {
+        "packages/polaris-dossier/src/finding-names.test.ts": {
+          "passed": 53,
+          "skipped": 0
+        },
+        "packages/polaris-dossier/src/view-level.test.ts": {
+          "passed": 27,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "exitCode": 0,
+      "tests": 80,
+      "perFile": {
+        "packages/polaris-dossier/src/finding-names.test.ts": {
+          "passed": 53,
+          "skipped": 0
+        },
+        "packages/polaris-dossier/src/view-level.test.ts": {
+          "passed": 27,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/identity-screen.ts",
+      "exitCode": 0,
+      "tests": 80,
+      "perFile": {
+        "packages/polaris-dossier/src/finding-names.test.ts": {
+          "passed": 53,
+          "skipped": 0
+        },
+        "packages/polaris-dossier/src/view-level.test.ts": {
+          "passed": 27,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "sweep-off",
+      "file": "packages/polaris-dossier/src/identity-screen.ts",
+      "old": "if (member && isHandle(value) && !clear(value))",
+      "new": "if (false && member && isHandle(value) && !clear(value))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) finds every handle-shaped string the screen withholds, at any member, in document order, and names no value",
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) screens each distinct value once, fails closed where the screen throws, and reads a deep document on its own stack",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v17 draft with a model, two levelled views, a deep dive and a walk: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v16 draft with a flow view and a walk over three paragraphs: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v11 draft with one section and no figure: passes as written, and with every identity token-shaped fails at each and writes none of them"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "throw-admitted",
+      "file": "packages/polaris-dossier/src/identity-screen.ts",
+      "old": "try { ok = admit(value) === 'admitted'; } catch { ok = false; }",
+      "new": "try { ok = admit(value) === 'admitted'; } catch { ok = true; }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) screens each distinct value once, fails closed where the screen throws, and reads a deep document on its own stack"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "undecided-admitted",
+      "file": "packages/polaris-dossier/src/identity-screen.ts",
+      "old": "try { ok = admit(value) === 'admitted'; }",
+      "new": "try { ok = admit(value) !== 'withheld'; }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) finds every handle-shaped string the screen withholds, at any member, in document order, and names no value"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "list-items-not-members",
+      "file": "packages/polaris-dossier/src/identity-screen.ts",
+      "old": "at: `${at}[${i}]`, member });",
+      "new": "at: `${at}[${i}]`, member: false });",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) finds every handle-shaped string the screen withholds, at any member, in document order, and names no value",
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) screens each distinct value once, fails closed where the screen throws, and reads a deep document on its own stack",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v17 draft with a model, two levelled views, a deep dive and a walk: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v16 draft with a flow view and a walk over three paragraphs: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v11 draft with one section and no figure: passes as written, and with every identity token-shaped fails at each and writes none of them"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "members-not-read",
+      "file": "packages/polaris-dossier/src/identity-screen.ts",
+      "old": "member: IDENTITY_MEMBERS.has(keys[k]!) });",
+      "new": "member: false });",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) finds every handle-shaped string the screen withholds, at any member, in document order, and names no value",
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) screens each distinct value once, fails closed where the screen throws, and reads a deep document on its own stack",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v17 draft with a model, two levelled views, a deep dive and a walk: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v16 draft with a flow view and a walk over three paragraphs: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v11 draft with one section and no figure: passes as written, and with every identity token-shaped fails at each and writes none of them"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "member-id-dropped",
+      "file": "packages/polaris-dossier/src/identity-screen.ts",
+      "old": "'from', 'id', 'lane',",
+      "new": "'from', 'lane',",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) finds every handle-shaped string the screen withholds, at any member, in document order, and names no value",
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) screens each distinct value once, fails closed where the screen throws, and reads a deep document on its own stack",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) walks every member the issued schema types as a handle or a list of handles",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v17 draft with a model, two levelled views, a deep dive and a walk: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v16 draft with a flow view and a walk over three paragraphs: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v11 draft with one section and no figure: passes as written, and with every identity token-shaped fails at each and writes none of them"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "value-not-kept",
+      "file": "packages/polaris-dossier/src/identity-screen.ts",
+      "old": "values.add(value); }",
+      "new": "}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) finds every handle-shaped string the screen withholds, at any member, in document order, and names no value",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v17 draft with a model, two levelled views, a deep dive and a walk: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v16 draft with a flow view and a walk over three paragraphs: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v11 draft with one section and no figure: passes as written, and with every identity token-shaped fails at each and writes none of them"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "scrub-keys-kept",
+      "file": "packages/polaris-dossier/src/identity-screen.ts",
+      "old": "out[words(key)] = copy(entry);",
+      "new": "out[key] = copy(entry);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) replaces a withheld identity in every string and member name of an output, and returns an output untouched where none is withheld"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "scrub-strings-kept",
+      "file": "packages/polaris-dossier/src/identity-screen.ts",
+      "old": "if (typeof item === 'string') return words(item);",
+      "new": "if (typeof item === 'string') return item;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) replaces a withheld identity in every string and member name of an output, and returns an output untouched where none is withheld",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v17 draft with a model, two levelled views, a deep dive and a walk: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v16 draft with a flow view and a walk over three paragraphs: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v11 draft with one section and no figure: passes as written, and with every identity token-shaped fails at each and writes none of them"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "check-findings-dropped",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "  for (const finding of identities.findings) findings.push(finding);\n",
+      "new": "\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v17 draft with a model, two levelled views, a deep dive and a walk: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v16 draft with a flow view and a walk over three paragraphs: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v11 draft with one section and no figure: passes as written, and with every identity token-shaped fails at each and writes none of them"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "record-not-scrubbed",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "  }, identities.values);\n",
+      "new": "  }, new Set<string>());\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v17 draft with a model, two levelled views, a deep dive and a walk: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v16 draft with a flow view and a walk over three paragraphs: passes as written, and with every identity token-shaped fails at each and writes none of them",
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v11 draft with one section and no figure: passes as written, and with every identity token-shaped fails at each and writes none of them"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "report-not-scrubbed",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "  }, identities.values) };\n",
+      "new": "  }, new Set<string>()) };\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/view-level.test.ts > secret-shaped identities never pass check or reach an output (syzygy-3efd.95) a v11 draft with one section and no figure: passes as written, and with every identity token-shaped fails at each and writes none of them"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "at-member-kept",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "(/^[0-9]+$/u.test(word) || clear(word, true) ? word : AT_MEMBER_WITHHELD)",
+      "new": "(word)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the detail screen alone (review R93 finding 8) screens each distinct value once per call, and handles more findings than one call could spread",
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) replaces a withheld member name in a finding's location, and drops a withheld block or citation identity"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "at-whole-kept",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "? named : '$';",
+      "new": "? named : named;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) replaces a withheld member name in a finding's location, and drops a withheld block or citation identity"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "block-id-kept",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "const keepBlock = finding.blockId === undefined || clear(finding.blockId, true);",
+      "new": "const keepBlock = true;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) replaces a withheld member name in a finding's location, and drops a withheld block or citation identity"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "citation-id-kept",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "const keepCitation = finding.citationId === undefined || clear(finding.citationId, true);",
+      "new": "const keepCitation = true;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) replaces a withheld member name in a finding's location, and drops a withheld block or citation identity"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "member-order-moved",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "for (const [key, value] of Object.entries(finding)) {",
+      "new": "for (const [key, value] of Object.entries(finding).reverse()) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 80,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > the identity and location screens alone (syzygy-3efd.95) replaces a withheld member name in a finding's location, and drops a withheld block or citation identity"
+      ],
+      "seconds": 7
+    }
+  ],
+  "equivalent": [],
+  "summary": {
+    "mutants": 17,
+    "killed": 17,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 0
+  }
+}
