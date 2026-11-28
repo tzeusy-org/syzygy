@@ -1,0 +1,124 @@
+{
+  "commit": "63ee91b2c5adc5be7bd465d928dd41b6a9eb816e",
+  "script": "docs/evidence/syzygy-5dhm-46/rough_edges_reconcile_mutation.py",
+  "baseline": {
+    "python3 scripts/check_spec_reconciliation.py --check": {
+      "exit": 0
+    },
+    "python3 scripts/count_polaris_effective_scenarios.py": {
+      "exit": 0
+    }
+  },
+  "mutants": [
+    {
+      "mutant": "status-count-off",
+      "path": "PROJECT-STATUS.md",
+      "old": "Polaris has 39 requirements and 652 scenarios.",
+      "new": "Polaris has 39 requirements and 651 scenarios.",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "does not declare the exact rough-edge markers census",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "status-count-off-counter",
+      "path": "PROJECT-STATUS.md",
+      "old": "Polaris has 39 requirements and 652 scenarios.",
+      "new": "Polaris has 39 requirements and 651 scenarios.",
+      "command": "python3 scripts/count_polaris_effective_scenarios.py",
+      "expected": "rough-edge markers count differs",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "status-route-old-id",
+      "path": "PROJECT-STATUS.md",
+      "old": "is agent-adopted in A-338.",
+      "new": "is agent-adopted in A-337.",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "does not route rough-edge markers v2.44",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "index-old-tag",
+      "path": "openspec/README.md",
+      "old": "`polaris-dossier-rough-edges-v2.44`",
+      "new": "`polaris-dossier-rough-edges-v2.40`",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "does not route rough-edge markers v2.44",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "spec-one-byte",
+      "path": "openspec/changes/dossier-rough-edges/proposed/polaris-generation/spec.md",
+      "old": "# Dossier rough-edge markers",
+      "new": "# Dossier rough-edge markerz",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "differs from the reviewed v2.44 subject",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "row-old-tag",
+      "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+      "old": "| `polaris-dossier-rough-edges-v2.44` |",
+      "new": "| `polaris-dossier-rough-edges-v2.40` |",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "calls rough-edge markers v2.44 adopted while it is not in force",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "row-test-is-choice",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "for line in adoption_table_rows(root) if is_rough_row(line)]",
+      "new": "for line in adoption_table_rows(root) if is_choice_row(line)]",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "rough-edge markers: malformed adoption identity",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "census-skips-rough",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "                a, extra_a = compose_figure_by_id(a, rough_amendment, ROUGH_REPLACES)\n                b, extra_b = compose_figure_by_name(b, rough_amendment, ROUGH_REPLACES)\n",
+      "new": "                extra_a = extra_b = []\n",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "FAIL  R3",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "expected-skips-rough",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "        n_scen += rough_delta(root, findings)\n",
+      "new": "        pass\n",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "FAIL  R3",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "projection-skips-rough",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "                                        findings.append(\"POLARIS rough-edge markers: selected census projections disagree\")\n                                    selected_population = by_id\n",
+      "new": "                                        findings.append(\"POLARIS rough-edge markers: selected census projections disagree\")\n",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "selected census differs",
+      "exit": 1,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "status-want-unadjusted",
+      "path": "scripts/check_spec_reconciliation.py",
+      "old": "            want = (want[0], str(int(want[1]) - rough_delta(root, findings)))\n",
+      "new": "",
+      "command": "python3 scripts/check_spec_reconciliation.py --check",
+      "expected": "FAIL  R5",
+      "exit": 1,
+      "outcome": "killed"
+    }
+  ]
+}

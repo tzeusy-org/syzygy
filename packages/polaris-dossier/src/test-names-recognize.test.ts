@@ -68,6 +68,13 @@ describe('identifiers beyond ASCII (R-TEST-NAMES-1 F4)', () => {
   });
 });
 
+describe('a template nested in a substitution (R-ROUGH-EDGES-1 F1, version 2.43)', () => {
+  it('js-test-call reads no call inside a nested template and reads the call after it', () => {
+    const text = "const a = `${b ? `x\n// it('in a nested template')` : ''}`;\nit('after', () => {});\n";
+    expect(names(recognizeJsTests(text))).toEqual(['3:test:after']);
+  });
+});
+
 describe('rule pytest-test-name v1', () => {
   it('takes candidates by basename', () => {
     expect(['tests/test_a.py', 'a_test.py', 'test_.py', 'pkg/test_b.pyi', 'contest_a.py', 'tests/helpers.py'].map(isPytestPath)).toEqual([true, true, true, false, false, false]);
