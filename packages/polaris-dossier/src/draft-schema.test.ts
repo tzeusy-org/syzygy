@@ -179,6 +179,15 @@ describe('draft.schema.json', () => {
   it('is a JSON Schema 2020-12 document carrying the version, the revision and closed objects', () => {
     expect(document['$schema']).toBe('https://json-schema.org/draft/2020-12/schema');
     expect(document['$id']).toBe('urn:syzygy:polaris-dossier:polaris-dossier-local-draft-v17');
+    // Version 2.50: every graph and containment view arm, with or without `base`, admits `level` and `scope`.
+    const arms = (document as any).properties.diagrams.items.oneOf.flatMap((arm: any) => arm.properties?.view?.oneOf ?? []); // eslint-disable-line @typescript-eslint/no-explicit-any
+    expect(arms.length).toBeGreaterThan(0);
+    for (const view of arms) {
+      expect(view.properties.level.enum).toEqual(['context', 'container', 'component']);
+      expect(view.properties.scope.type).toBe('string');
+      expect(view.required).not.toContain('level');
+      expect(view.required).not.toContain('scope');
+    }
     expect(document['additionalProperties']).toBe(false);
     expect((document['properties'] as Record<string, unknown>)['pinnedRevision']).toMatchObject({ enum: [REV] });
     expect(JSON.parse(JSON.stringify(document))).toEqual(document);

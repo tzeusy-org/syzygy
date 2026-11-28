@@ -123,4 +123,12 @@ describe('zoom links (version 2.50)', () => {
       }
     }
   });
+
+  it('gives no zoom link, and renders, where the draft layer is withheld and no figure is drawn', () => {
+    const input = zoomInput();
+    const withheld = { sources: input.sources, local: { ...input.local, draftLayer: { state: 'unknown', reason: 'missing-declaration', why: ['fixture'] } } } as Input;
+    const files = site(withheld), plain = site(withoutLevels(withheld));
+    for (const [file, text] of files) expect(text, file).toBe(plain.get(file));
+    for (const [file, text] of files) if (file.endsWith('.html')) expect(text, file).not.toContain('zoom-');
+  });
 });
