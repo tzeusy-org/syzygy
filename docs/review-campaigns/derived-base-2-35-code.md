@@ -3,6 +3,7 @@
 ## Patterns
 
 - `syzygy-3efd-38/R38-CODE-REVIEW-RAW\.md`
+- `syzygy-3efd-38/R38-CODE-REVIEW-DISPOSITIONS\.md`
 
 ## What was under review
 
