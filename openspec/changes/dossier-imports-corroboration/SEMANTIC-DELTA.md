@@ -1,4 +1,4 @@
-# Version 2.45 semantic delta
+# Version 2.49 semantic delta
 
 [Inferred] Candidate agent-decided amendment under VIS-4. No adoption is claimed; this file states exactly what changes so the change is reviewable as one delta (`NORMATIVE-CHANGE-WORKFLOW.md`). Every quoted text and count below was extracted from the bytes by script (a line diff of the requirement block and a word diff of each changed line), not transcribed: `docs/evidence/syzygy-3efd-86/imports_witness_delta.py` writes this file.
 
@@ -8,32 +8,32 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-rough-edges/proposed/polaris-generation/spec.md` (dossier rough-edge markers version 2.44, row A-338, tag `polaris-dossier-rough-edges-v2.44`; sha256 `3c03ebff0f05c791fed0ddcd3a6cec5d259db64a8fcb7eb47b3b661c4e5661c1`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-imports-corroboration/proposed/polaris-generation/spec.md`, sha256 `a7b05a9615c3350b2d861ef0f68e33b752f4dc7ed6ab03b895eab8c758dc537b`) replaces that text, composed after version 2.43. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.43's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-docs-and-code/proposed/polaris-generation/spec.md` (dossier docs and code version 2.48, row A-342, tag `polaris-dossier-docs-and-code-v2.48`; sha256 `19a2fe88ec003d0a114051eccff33d1b92969fe5e7d80fb58370dc7a9cb162bf`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-imports-corroboration/proposed/polaris-generation/spec.md`, sha256 `d17fe4b412dc0885b3e71bac54dc358156317dffafef546fb0535c3cc0a7d2db`) replaces that text, composed after version 2.43. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.43's, byte for byte.
 
 ## Carried unchanged
 
-[Observed] Of the predecessor requirement's 2100 lines, 2094 appear byte for byte and in order in the new text; 6 lines are amended in place and none is removed. Below, each edit is one item, so a line edited in several places gives several items (10 items over 6 lines). All 305 predecessor scenarios are carried with their blocks byte for byte. The new text was built from the predecessor bytes by a script that replaces or inserts only at anchors it asserts occur exactly once (`docs/evidence/syzygy-3efd-86/imports_witness_build_spec.py`, which reproduces the spec byte for byte).
+[Observed] Of the predecessor requirement's 2151 lines, 2145 appear byte for byte and in order in the new text; 6 lines are amended in place and none is removed. Below, each edit is one item, so a line edited in several places gives several items (10 items over 6 lines). All 313 predecessor scenarios are carried with their blocks byte for byte. The new text was built from the predecessor bytes by a script that replaces or inserts only at anchors it asserts occur exactly once (`docs/evidence/syzygy-3efd-86/imports_witness_build_spec.py`, which reproduces the spec byte for byte).
 
 ## Amended in place
 
-[Observed] The title and preamble (file head, not requirement text) name version 2.45. In the requirement, each changed line, with the displaced words and the words that replace them:
+[Observed] The title and preamble (file head, not requirement text) name version 2.49. In the requirement, each changed line, with the displaced words and the words that replace them:
 
 - After "…rest of the check record. At": displaced "this"; now "".
 - After "…the check record. At this version": inserted "2.39".
-- After "…the witness state that version gives": inserted "it. From version 2.45 rule `relation-witness` version 2 reads it, and a page and `machine.json` carry a corroborating import fact's identity and rule, as that version states; still no draft element is upgraded to Observed by".
+- After "…the witness state that version gives": inserted "it. From version 2.49 rule `relation-witness` version 2 reads it, and a page and `machine.json` carry a corroborating import fact's identity and rule, as that version states; still no draft element is upgraded to Observed by".
 - After "…finding for any of them; `e1`": inserted "carrying `relates-to` or `calls`,".
 - After "…for any of them; `e1` and": displaced "`e2`"; now "`e2`,".
-- After "…and `e2` are `unknown` with `no-witness-rule`,": inserted "`e1` carrying `imports` is `unknown` with `endpoint-kind-mismatch` (version 2.45),".
-- After "…over several diagrams, migrated to schema": displaced "v12."; now "v12; and, for version 2.45, graph figures holding `imports` edges between `package-manifest` units, over `importFacts` members with and without a joining `edge` fact, with `complete`, `partial` and `unknown` coverage, with facts not listed, and check records without the member.".
-- After "…relationship counts and check's findings on": displaced "it."; now "it; for version 2.45, each `imports` edge's witness state and reason at check and at render, its attributes and evidence text, and its `machine.json` `witness` member.".
-- After "…expected `schema` finding written before check": inserted "runs; for version 2.45, each `imports` edge's expected state, reason and fact written as literals from the fixture's import facts before the rule".
-- After "…the migration yields no draft for": displaced "it."; now "it; for version 2.45, an `imports` edge renders Observed or solid, is `challenged` or draws a `relation-challenged` finding, is corroborated by a fact whose outcome is not `edge` or that joins other units, or a page or `machine.json` names an import fact's path or operand.".
+- After "…and `e2` are `unknown` with `no-witness-rule`,": inserted "`e1` carrying `imports` is `unknown` with `endpoint-kind-mismatch` (version 2.49),".
+- After "…over several diagrams, migrated to schema": displaced "v12."; now "v12; and, for version 2.49, graph figures holding `imports` edges between `package-manifest` units, over `importFacts` members with and without a joining `edge` fact, with `complete`, `partial` and `unknown` coverage, with facts not listed, and check records without the member.".
+- After "…relationship counts and check's findings on": displaced "it."; now "it; for version 2.49, each `imports` edge's witness state and reason at check and at render, its attributes and evidence text, and its `machine.json` `witness` member.".
+- After "…expected `schema` finding written before check": inserted "runs; for version 2.49, each `imports` edge's expected state, reason and fact written as literals from the fixture's import facts before the rule".
+- After "…the migration yields no draft for": displaced "it."; now "it; for version 2.49, an `imports` edge renders Observed or solid, is `challenged` or draws a `relation-challenged` finding, is corroborated by a fact whose outcome is not `edge` or that joins other units, or a page or `machine.json` names an import fact's path or operand.".
 
 ## Added
 
 [Observed] 2 paragraphs, placed immediately after the paragraph ending "…keeps the draft's marking on the page and is carried in `machine.json` as it is.":
 
-- "Version 2.45 makes rule `relation-witness` version 2: version 1 with one row more, for `imports`, and …"
+- "Version 2.49 makes rule `relation-witness` version 2: version 1 with one row more, for `imports`, and …"
 - "A `corroborated` edge is the draft's claim and renders as version 2.16 renders an edge, with …"
 
 [Observed] 4 scenarios, after the predecessor's last scenario that precedes the Form line, and before that line: "An import statement corroborates an imports arrow", "A missing import fact is never read as no import", "Import facts that cannot be read leave the arrow Unknown", "A corroborated relationship shown in two views".

@@ -480,7 +480,7 @@ describe('render', () => {
       const files = readSite(result.report.site);
       for (const [file, page] of html(files)) {
         // Version 2.9: each computed map page carries its own legend with the same switch and target; version 2.42: so does the
-        // test-names reference page, and version 2.43 the rough-edges reference page.
+        // test-names reference page, version 2.43 the rough-edges reference page and version 2.48 the docs-and-code page.
         const legended = file === 'index.html' || file.startsWith('deep-dives/') || file.startsWith('maps/') || file.startsWith('reference/');
         expect(page.split('class="reading-legend"').length - 1, file).toBe(legended ? 1 : 0);
         expect(page.split('id="evidence-view"').length - 1, file).toBe(legended ? 1 : 0);
@@ -488,6 +488,7 @@ describe('render', () => {
       // The render derives the test-names member itself, so its page is always published.
       expect(files.has('reference/test-names.html')).toBe(true);
       expect(files.has('reference/rough-edges.html')).toBe(true);
+      expect(files.has('reference/docs-and-code.html')).toBe(true);
       const legend = files.get('index.html')!;
       expect(legend).toContain('<a href="#evidence-view">Show the evidence view</a>');
       expect(legend).toContain('text with such a mark is the agent\'s reading of that source.');
