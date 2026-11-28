@@ -18,6 +18,7 @@ import type { ReadingDifference, ReadingLedger } from './reading-ledger.js';
 import type { ManifestFacts } from './manifest-facts.js';
 import type { InventoryCoverageAdvice, InventoryOfRecordReader } from './inventory-coverage.js';
 import type { QuestionKindAdvice } from './question-kinds.js';
+import type { FigureAdvice } from './figure-plan.js';
 
 /** The check's record formats, finding and result types, and the small shared readers; split out of `check.ts` unchanged. */
 
@@ -55,6 +56,8 @@ export type CheckFindingKind =
   | 'relation-challenged'
   // Version 2.26 (schema v13): a worth-knowing mark off a section's own paragraph, on an uncited block or on a judgement.
   | 'worth-knowing'
+  // Version 2.33 (schema v14): the figure plan's form, its places and the figures it names.
+  | 'figure-plan'
   // Version 2.10: the check record would be past the read bound, so its bounded form is written.
   | 'check-record-bound';
 
@@ -245,6 +248,9 @@ export interface CheckReportMembers {
   readonly questionKindAdvice?: QuestionKindAdvice;
   /** The advice for a supported draft with an available structure and no selected code example. */
   readonly sourceExampleAdvice?: SourceExampleAdvice;
+  /** A v14 draft's figure advice (`figure-plan.ts`, version 2.33): on the report alone, never a record, and never a finding; absent for any
+   * other draft, for a v14 draft with a schema finding, and where computing it failed. */
+  readonly figureAdvice?: FigureAdvice;
 }
 
 /** `file` is null where the run file could not be written, `inRun` then the count this check computed for it. */

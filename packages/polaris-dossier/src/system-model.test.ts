@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { MODEL_PARAGRAPH, issueBrief } from './brief.js';
 import { checkDraft, type CheckDeps, type CheckResult } from './check.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
@@ -14,6 +14,13 @@ import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-rec
 import { buildDossierScreen } from './screen.js';
 import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 import { expandModel, migrateDraft } from './system-model.js';
+
+// A seam for one case alone (R84 finding 7): the figure advice throws only while `adviceFails.on` is set.
+const adviceFails = vi.hoisted(() => ({ on: false }));
+vi.mock('./figure-plan.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('./figure-plan.js')>();
+  return { ...actual, figureAdvice: (doc: unknown) => { if (adviceFails.on) throw new Error('advice failed'); return actual.figureAdvice(doc); } };
+});
 
 // The system model (REQ-polaris-generation-034 version 2.24, schema v12, syzygy-3efd.37): each scenario over a pinned tree built here with
 // the git CLI. Every expected finding, state, reason, attribute and text is a literal written from the requirement's text and the fixture
@@ -437,15 +444,60 @@ describe('system model: migration', () => {
     ], { elements: ['repo', 'src', 'api'], relationships: ['repo-src', 'src-api'] }]);
     await keepsParity(v10);
   });
+
+  // Version 2.41 (syzygy-3efd.87, design D5): parity holds for a v10 or v11 draft whose nodes and groups number at most 200 and whose edges
+  // number at most 400; past either bound the migrated draft gets check's schema finding at that list.
+  /** Graph figures of these node and edge counts, every identity distinct, each edge a distinct ordered pair of its figure's nodes. */
+  const sized = (counts: readonly (readonly [number, number])[]): Doc => draftOf(counts.map(([nodes, edges], d) => {
+    const pairs: [number, number][] = [];
+    for (let step = 1; pairs.length < edges; step++) for (let k = 0; k < nodes && pairs.length < edges; k++) pairs.push([k, (k + step) % nodes]);
+    return figure(`f${d}`, Array.from({ length: nodes }, (_, k) => node(`n${d}-${k}`, `Node ${d}.${k}`)),
+      pairs.map(([from, to], j) => edge(`e${d}-${j}`, `n${d}-${from}`, `n${d}-${to}`, 'calls', 'calls')));
+  }), V11);
+
+  it('keeps parity for a v11 draft of exactly 200 nodes and 400 edges (version 2.41)', async () => {
+    const v11 = sized([[40, 80], [40, 80], [40, 80], [40, 80], [40, 80]]);
+    const model = migrateDraft(v11)!['model'] as Doc;
+    expect([model['elements'].length, model['relationships'].length]).toEqual([200, 400]);
+    await keepsParity(v11);
+  }, 120_000);
+
+  /** `sized` with one containment more, first: five top-level groups, each holding seven, so 40 groups and 35 nestings. */
+  const contained = (counts: readonly (readonly [number, number])[]): Doc => {
+    const doc = sized(counts);
+    const tops = Array.from({ length: 5 }, (_, t) => group(`g${t}`, `Group ${t}`, Array.from({ length: 7 }, (_, c) => group(`g${t}-${c}`, `Group ${t}.${c}`))));
+    return { ...doc, diagrams: [containment('nest', tops), ...doc.diagrams] };
+  };
+
+  it('counts a group as an element and a nesting as no relationship: nodes and groups of 200 keep parity, of 201 get the finding (version 2.41)', async () => {
+    const at200 = contained([[40, 80], [40, 80], [40, 80], [40, 80]]);
+    const model = migrateDraft(at200)!['model'] as Doc;
+    expect([model['elements'].length, model['relationships'].length]).toEqual([200, 320]);
+    await keepsParity(at200);
+    const at201 = contained([[40, 80], [40, 80], [40, 80], [39, 78], [2, 1]]);
+    expect(await findingsOf(A, at201)).toEqual(PASSED);
+    expect((await findingsOf(A, migrateDraft(at201)!)).findings.filter((finding) => finding.kind === 'schema')).toEqual([
+      { kind: 'schema', at: '$.model.elements', detail: 'must hold 0 to 200 items; holds 201' }]);
+  }, 120_000);
+
+  it('gives the migrated draft check\'s schema finding at 201 nodes, and at 401 edges, though each v11 draft passes (version 2.41)', async () => {
+    const nodes = sized([[40, 80], [40, 80], [40, 80], [40, 80], [39, 79], [2, 1]]);
+    const edges = sized([[40, 80], [40, 80], [40, 80], [40, 80], [38, 80], [2, 1]]);
+    for (const v11 of [nodes, edges]) expect(await findingsOf(A, v11)).toEqual(PASSED);
+    expect((await findingsOf(A, migrateDraft(nodes)!)).findings.filter((finding) => finding.kind === 'schema')).toEqual([
+      { kind: 'schema', at: '$.model.elements', detail: 'must hold 0 to 200 items; holds 201' }]);
+    expect((await findingsOf(A, migrateDraft(edges)!)).findings.filter((finding) => finding.kind === 'schema')).toEqual([
+      { kind: 'schema', at: '$.model.relationships', detail: 'must hold 0 to 400 items; holds 401' }]);
+  }, 120_000);
 });
 
 describe('system model: the brief paragraph', () => {
-  it('is kept verbatim for the brief that will issue it, and is in no issued brief', async () => {
+  it('is kept verbatim, and brief v22 (version 2.33) issues it once', async () => {
     expect(MODEL_PARAGRAPH).toBe('Describe the system once, in `model`: its `elements`, each with `id`, `label`, `type`, `epistemic` and `citations` as a node has, at most one `parent` (the element it is part of, at most two above it) and, where it stands for a part of the repository, a `unit`; and its `relationships`, each either cited, with `from`, `to`, `relation`, `label`, `epistemic` and `citations` as an arrow has, or derived, with `from`, `to`, `relation` and `basis` `derived` alone, which asks Syzygy to state the relation from what it derives (today only a top-level directory inside the repository root). The types are system, directory, package, module, service, job, store, external and person. Then draw each graph or containment figure as a `view` that lists the identities of the elements and relationships it shows: show an element in every figure that needs it, under the same identity, rather than redrawing it, and show every element and relationship in at least one view. A view shows a relationship only with both its ends; a containment view nests an element inside its parent when it shows both. Sequence and swimlane figures keep their own members.');
     const { run } = await checked(A, SYSTEM());
     const brief = fs.readFileSync(path.join(run, 'brief.md'), 'utf8');
-    expect(brief).toContain('polaris-dossier-brief-v21');
-    expect(brief).not.toContain('Describe the system once');
+    expect(brief).toContain('polaris-dossier-brief-v22');
+    expect(brief.split('\n').filter((line) => line === MODEL_PARAGRAPH)).toHaveLength(1);
   });
 });
 
@@ -672,11 +724,11 @@ describe('system model: scenarios and bounds the first tests left out (R37 findi
   });
 });
 
-describe('system model: the migration parity\'s bound exception (a spec defect, spec bead syzygy-3efd.87)', () => {
-  // R37 finding 2: v11 allows up to 20 diagrams of 40 nodes (800 nodes), while 2.24 line 134 bounds the model to 200 elements, so line 142's
-  // claim that check passes every migrated draft d that check passes fails for a large d. The code follows line 134; bead syzygy-3efd.87
-  // repairs the spec. Pinned here so it is never silent.
-  it('refuses a migrated v11 draft of 222 nodes at the model bound, though the v11 draft passes', async () => {
+describe('system model: the migration parity\'s bound (version 2.41)', () => {
+  // R37 finding 2: v11 allows up to 20 diagrams of 40 nodes (800 nodes), while the model holds at most 200 elements. Version 2.41
+  // (syzygy-3efd.87) narrows parity to drafts of at most 200 nodes and groups and 400 edges; past either bound the migrated draft gets
+  // check's schema finding. The boundary cases are in 'system model: migration'.
+  it('gives a migrated v11 draft of 222 nodes check\'s schema finding at the model\'s elements, though the v11 draft passes', async () => {
     const diagrams = Array.from({ length: 6 }, (_, d) => figure(`f${d}`, Array.from({ length: 37 }, (_, k) => node(`n${d}-${k}`, `Node ${d}.${k}`)),
       [edge(`e${d}`, `n${d}-0`, `n${d}-1`, 'calls', 'calls')]));
     const v11 = draftOf(diagrams, V11);
@@ -684,5 +736,136 @@ describe('system model: the migration parity\'s bound exception (a spec defect, 
     expect((await findingsOf(A, migrateDraft(v11)!)).findings.filter((finding) => finding.kind === 'schema')).toEqual([
       { kind: 'schema', at: '$.model.elements', detail: 'must hold 0 to 200 items; holds 222' },
     ]);
+  });
+});
+
+// Schema v14 (REQ-polaris-generation-034 version 2.33, syzygy-3efd.84): the system model joined to the worth-knowing mark, the figure
+// plan read by check alone, and the figure advice on the report alone. The plan's own findings and the advice's rules are figure-plan.test.ts's;
+// these are check's and render's wiring. Every expected value is a literal written from the requirement's text and its scenarios.
+const V13 = 'polaris-dossier-local-draft-v13', V14 = 'polaris-dossier-local-draft-v14';
+const PLAN = [{ home: { kind: 'overview' }, omitted: 'The overview reads better as prose here.' },
+  { home: { kind: 'section', target: 's1' }, question: 'What does the server hold, and what calls what?', kind: 'boundary', figure: 'runtime' }];
+const PLAN_B = [{ home: { kind: 'overview' }, omitted: 'Another reason, never rendered.' },
+  { home: { kind: 'section', target: 's1' }, question: 'A different question, never rendered?', kind: 'boundary', figure: 'runtime' }];
+/** SYSTEM() as `version`, with the worth-knowing mark on `p1`, a question-kind row naming it and a plan. */
+const joined = (version: string, plan: unknown = PLAN): Doc => {
+  const doc = SYSTEM();
+  doc.sections[0].paragraphs[0].worthKnowing = true;
+  return { ...doc, schemaVersion: version, questionKinds: [{ blockId: 'p1', kinds: ['mechanism'] }], figurePlan: plan };
+};
+const reportOf = async (doc: Doc) => {
+  const { run, result } = await checked(A, doc);
+  if (!result.ok) throw new Error(`refused at ${result.refusal.stage}: ${result.refusal.reason}`);
+  if (!('quotations' in result.report)) throw new Error('the bounded form was written');
+  return { run, report: result.report };
+};
+
+describe('schema v14: the model joined to the worth-knowing mark (version 2.33)', () => {
+  it('checks a v14 draft carrying a model, two views, the mark, a question-kind row and a plan with no schema, field-version or worth-knowing finding', async () => {
+    const { report } = await reportOf(joined(V14));
+    expect(report.outcome).toBe('passed');
+    expect(report.findings).toEqual([]);
+    expect(report.figureAdvice).toEqual({
+      rules: [{ id: 'figure-information-floor', version: 1 }, { id: 'figure-duplicate', version: 1 }, { id: 'figure-mixed-levels', version: 1 }],
+      examined: 2,
+      advisories: [
+        { rule: 'figure-information-floor', diagram: 'runtime', at: '$.diagrams[0]', detail: 'runtime: a chain of three or fewer is a sentence; say it in the prose, or draw what a sentence cannot hold' },
+        { rule: 'figure-information-floor', diagram: 'layout', at: '$.diagrams[1]', detail: 'layout: a chain of three or fewer is a sentence; say it in the prose, or draw what a sentence cannot hold' },
+      ],
+    });
+    expect(report.readerAdvice).toHaveProperty('worthKnowing');
+    expect(report.readerAdvice?.choiceFloor?.map(({ at, onRecord }) => ({ at, onRecord }))).toEqual([{ at: '$.sections', onRecord: 2 }]);
+    expect(report.questionKindAdvice).toBeDefined();
+    expect(report.sourceExampleAdvice).toEqual({ code: 'no-source-example', label: 'Inferred', detail: 'Consider a cited source example that shows what the project does.' });
+  });
+
+  it('gives the same members schema findings at the model and the views in a v13 draft, and field-version findings at the mark, the rows and the plan in a v12 draft', async () => {
+    const v13 = (await findingsOf(A, joined(V13))).findings;
+    expect(v13.filter((finding) => finding.at === '$.model' || /^\$\.diagrams\[\d\]\.view$/u.test(finding.at)).map(at).sort()).toEqual(['schema $.diagrams[0].view', 'schema $.diagrams[1].view', 'schema $.model']);
+    expect(v13.filter((finding) => finding.kind === 'field-version')).toEqual([
+      { kind: 'field-version', at: '$.figurePlan', detail: '`figurePlan` needs draft schema polaris-dossier-local-draft-v14' }]);
+    expect(v13.some((finding) => finding.at === '$.figurePlan' && finding.kind === 'schema')).toBe(false);
+    expect((await findingsOf(A, joined(V12))).findings.filter((finding) => finding.kind === 'field-version' || finding.kind === 'schema')).toEqual([
+      { kind: 'field-version', at: '$.sections[0].paragraphs[0].worthKnowing', detail: '`worthKnowing` needs draft schema polaris-dossier-local-draft-v13' },
+      { kind: 'field-version', at: '$.questionKinds', detail: '`questionKinds` needs draft schema polaris-dossier-local-draft-v13' },
+      { kind: 'field-version', at: '$.figurePlan', detail: '`figurePlan` needs draft schema polaris-dossier-local-draft-v14' },
+    ]);
+  });
+
+  it('refuses a v14 draft with no plan, its plan finding after every other finding and no schema finding at the plan', async () => {
+    const doc = joined(V14);
+    delete doc.figurePlan;
+    doc.sections[0].paragraphs[0].judgement = true;
+    expect((await findingsOf(A, doc)).findings.map(at)).toEqual(['worth-knowing $.sections[0].paragraphs[0].worthKnowing', 'figure-plan $.figurePlan']);
+    expect((await findingsOf(A, joined(V14, { overview: 'x' }))).findings).toEqual([{ kind: 'figure-plan', at: '$.figurePlan', detail: '`figurePlan` is a list of plan entries' }]);
+  });
+
+  it('reports no schema finding at or below a plan of any form', async () => {
+    const findings = (await findingsOf(A, joined(V14, [7, { home: { kind: 'pole' }, deep: { a: [1, 2] } }, ...PLAN]))).findings;
+    expect(findings.filter((finding) => finding.kind === 'schema')).toEqual([]);
+    expect(findings.map(at)).toEqual(['figure-plan $.figurePlan[0]', 'figure-plan $.figurePlan[1]']);
+  });
+
+  it('gates nothing with its advice: the check record carries none of it', async () => {
+    const { run, report } = await reportOf(joined(V14));
+    expect(report.outcome).toBe('passed');
+    const record = fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8');
+    for (const word of ['figureAdvice', 'figure-information-floor', 'What does the server hold', 'reads better as prose here']) expect(record).not.toContain(word);
+  });
+
+  it('carries no figure advice for a v14 draft with a schema finding or for a v13 draft', async () => {
+    const faulty = joined(V14);
+    faulty.diagrams[1].view.elements = ['repo'];
+    const withFault = await reportOf(faulty);
+    expect(withFault.report.findings.some((finding) => finding.kind === 'schema')).toBe(true);
+    expect(withFault.report).not.toHaveProperty('figureAdvice');
+    expect((await reportOf(joined(V13))).report).not.toHaveProperty('figureAdvice');
+  });
+
+  it('refuses at a render a v14 draft whose check record was altered to passed, from its plan finding found again (R84 finding 1)', async () => {
+    const { run, result } = await checked(A, joined(V14, PLAN.slice(1)));
+    if (!result.ok || result.report.outcome !== 'findings') throw new Error('the fixture draft must have findings');
+    const file = path.join(run, 'checks', 'rev-0.json');
+    fs.writeFileSync(file, JSON.stringify({ ...JSON.parse(fs.readFileSync(file, 'utf8')), outcome: 'passed', findings: [] }));
+    const out = await renderRun(run, { sources: sources(A.commit), now: () => LATER, probe: neverProbe, loadScreen: async () => SCREEN, renderer: renderLocalDossier });
+    expect(out.ok ? null : { stage: out.refusal.stage, reasons: out.refusal.reasons }).toEqual({ stage: 'rederive', reasons: ['figure-plan at $.figurePlan'] });
+  });
+
+  it('advises on the marked paragraph and its question kinds as the same draft at v13 does (R84 finding 4; the callout is render.test.ts\'s)', async () => {
+    const v13 = draftOf([figure('runtime', [node('repo', 'Repository', ROOT), node('src', 'Source', tld('src')), node('api', 'API')],
+      [edge('repo-src', 'repo', 'src', 'contains', 'holds'), edge('src-api', 'src', 'api', 'calls', 'calls')])], V13);
+    v13.sections[0].paragraphs[0].worthKnowing = true;
+    const [at13, at14] = [(await reportOf({ ...v13, questionKinds: [{ blockId: 'p1', kinds: ['mechanism'] }] })).report, (await reportOf(joined(V14))).report];
+    expect(at13.outcome).toBe('passed');
+    expect(at14.readerAdvice?.worthKnowing).toEqual(at13.readerAdvice?.worthKnowing);
+    expect(at14.questionKindAdvice).toEqual(at13.questionKindAdvice);
+  });
+
+  it('leaves the advice out, and changes nothing else, when computing it fails (R84 finding 7)', async () => {
+    const plain = (await reportOf(joined(V14))).report;
+    adviceFails.on = true;
+    try {
+      const failed = (await reportOf(joined(V14))).report;
+      expect(failed).not.toHaveProperty('figureAdvice');
+      // The run directory is each run's own; every other member is compared.
+      const { figureAdvice: _advice, run: _run, checkFile: _file, ...rest } = plain;
+      const { run: _run2, checkFile: _file2, ...others } = failed;
+      expect(others).toEqual(rest);
+    } finally { adviceFails.on = false; }
+  });
+
+  it('keeps the schema finding at the plan of a draft of an unknown version: field-version is for v13 or earlier alone (R84 finding 5)', async () => {
+    const findings = (await findingsOf(A, joined('polaris-dossier-local-draft-v15'))).findings.filter((finding) => finding.at === '$.figurePlan');
+    expect(findings.map(at)).toEqual(['schema $.figurePlan']);
+  });
+
+  it('renders the same bytes whatever the plan says, and no page or record carries its text', async () => {
+    const one = await rendered(A, joined(V14, PLAN));
+    const two = await rendered(A, joined(V14, PLAN_B));
+    expect([...one.files.keys()].sort()).toEqual([...two.files.keys()].sort());
+    for (const [file, text] of one.files) {
+      for (const words of ['What does the server hold', 'reads better as prose here', 'A different question', 'Another reason', 'figurePlan']) expect(text, file).not.toContain(words);
+      expect(text, file).toBe(two.files.get(file));
+    }
   });
 });
