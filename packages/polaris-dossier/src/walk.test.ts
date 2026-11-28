@@ -671,3 +671,51 @@ describe('walk advice on check\'s report (version 2.51, syzygy-3efd.35)', () => 
     });
   });
 });
+
+describe('rule `relation-witness` version 2\'s `imports` row over base views (version 2.35) and walks (version 2.40), syzygy-3efd.89', () => {
+  // TREE_U and one statement from the web package into the api package.
+  let I: Pinned;
+  beforeAll(() => {
+    I = pinnedTree({ ...TREE_U, 'web/src/a.ts': "import { x } from '../../api/x';\n", 'api/x.ts': 'export const x = 1;\n' });
+  });
+  const manifestUnit = (p: string): Doc => ({ kind: 'package-manifest', path: p });
+  const witnessOf = (machine: Doc, id: string): unknown => (machine['edges'] as Doc[]).find((entry) => entry['id'] === id)?.['witness'];
+  const CORROBORATED = { state: 'corroborated', reason: null, fact: '_import-1', rule: 'typescript-relative-import', ruleVersion: 1 };
+  const SELECT = { select: ['web/package.json', 'api/package.json'], restReason: 'Rest' };
+
+  it('corroborates an imports arrow between two base unit elements, whose units are their manifests', async () => {
+    const doc = baseDraft([], [rel('r1', { map: 'units', path: 'web/package.json' } as never, { map: 'units', path: 'api/package.json' } as never, 'imports', 'imports')],
+      [unitsGraph('pkgs', SELECT, [], ['r1'])]);
+    expect(await findingsOf(I, doc)).toEqual(PASSED);
+    const { files, machine } = await rendered(I, doc);
+    expect(witnessOf(machine, 'r1')).toEqual(CORROBORATED);
+    expect(figureOf(files.get('index.html')!, 'pkgs')).toContain('data-witness-state="corroborated" data-witness-fact="_import-1"');
+  });
+
+  it('corroborates an imports arrow from a draft element with a package-manifest unit to a base unit element', async () => {
+    const doc = baseDraft([el('w', 'Web app', 'package', { unit: manifestUnit('web/package.json') })],
+      [rel('r1', 'w', { map: 'units', path: 'api/package.json' } as never, 'imports', 'imports')],
+      [unitsGraph('pkgs', { select: ['api/package.json'], restReason: 'Rest' }, ['w'], ['r1'])]);
+    expect(await findingsOf(I, doc)).toEqual(PASSED);
+    expect(witnessOf((await rendered(I, doc)).machine, 'r1')).toEqual(CORROBORATED);
+  });
+
+  it('leaves an imports arrow between two base directory elements unknown with endpoint-kind-mismatch', async () => {
+    const doc = baseDraft([], [rel('r1', { map: 'directories', path: 'web' } as never, { map: 'directories', path: 'api' } as never, 'imports', 'imports')],
+      [dirsGraph('dirs', { select: ['web', 'api'], restReason: 'Rest' }, [], ['r1'])]);
+    expect(await findingsOf(I, doc)).toEqual(PASSED);
+    expect(witnessOf((await rendered(I, doc)).machine, 'r1')).toEqual({ state: 'unknown', reason: 'endpoint-kind-mismatch', fact: null, rule: null, ruleVersion: null });
+  });
+
+  it('keeps a walked figure\'s corroborated imports arrow, and every machine member, as the same figure without its walk', async () => {
+    const elements = [el('w', 'Web app', 'package', { unit: manifestUnit('web/package.json') }), el('a', 'Api', 'package', { unit: manifestUnit('api/package.json') })];
+    const plain = walkDraft(elements, [rel('r1', 'w', 'a', 'imports', 'imports')], [graphView('f', ['w', 'a'], ['r1'], { kind: 'flow' })]);
+    const doc = walking(plain, { figure: 'f', steps: [{ element: 'w', block: 'p1' }, { element: 'a', block: 'p2' }] });
+    expect(await findingsOf(I, doc)).toEqual(PASSED);
+    const [withWalk, without] = [await rendered(I, doc), await rendered(I, plain)];
+    expect(witnessOf(withWalk.machine, 'r1')).toEqual(CORROBORATED);
+    expect(withWalk.files.get('machine.json')).toBe(without.files.get('machine.json'));
+    const fig = figureOf(withWalk.files.get('index.html')!, 'f');
+    expect([fig.includes('<ol class="figure-walk"'), fig.includes('data-witness-state="corroborated" data-witness-fact="_import-1"')]).toEqual([true, true]);
+  });
+});

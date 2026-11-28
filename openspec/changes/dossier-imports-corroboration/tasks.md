@@ -6,4 +6,4 @@
 - [x] Append the agent-adoption row naming the installing commit, with its revert command (A-273).
 - [ ] Create the version tag `polaris-dossier-imports-corroboration-v2.49` at the installing commit once it is on the default branch.
 - [x] One independent fresh-context review (CC-REV-4), arranged by the lead; raw retained (`docs/reviews/syzygy-3efd-86/`), findings dispositioned in `design.md` and repaired.
-- [ ] The code change (`design.md` D6), after the 2.39 `importFacts` derivation lands (syzygy-3efd.60 code): `relation-witness.ts`, the renderer and `machine.json`, literal conformance tests and a rule-6 mutation record.
+- [x] The code change (`design.md` D6), after the 2.39 `importFacts` derivation lands (syzygy-3efd.60 code): `relation-witness.ts`, the renderer and `machine.json`, literal conformance tests and a rule-6 mutation record. Delivered by syzygy-3efd.89 (`docs/evidence/syzygy-3efd-89/`).

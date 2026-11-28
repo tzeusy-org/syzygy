@@ -24,6 +24,8 @@ const ATTRIBUTES = new Set([
   // A schema-v9 graph edge's relation type, and a witnessed edge's witnessing fact, rule and version and its Observed marking (version 2.19):
   // inert data Syzygy wrote from closed lists and its own identities, never a draft's free text.
   'data-relation', 'data-witness-fact', 'data-witness-rule', 'data-witness-rule-version', 'data-epistemic',
+  // A corroborated `imports` edge's state (version 2.49): the one literal `corroborated`, beside its import fact's identity, rule and version.
+  'data-witness-state',
   // A schema-v12 element or relationship more than one view selects (version 2.24): its identity, which the draft schema's identity
   // pattern bounds and the value pattern below checks again, never a draft's free text.
   'data-element', 'data-relationship',
@@ -42,6 +44,15 @@ const TOKEN = /<(\/?)([A-Za-z][A-Za-z0-9:-]*)((?:\s+[^\s=/>"']+="[^"]*")*)\s*(\/
 const ATTRIBUTE = /\s+([^\s=/>"']+)="([^"]*)"/gu;
 const TEXT_ENTITY = /&(?!(?:amp|lt|gt|quot|#39);)/u;
 
+/** The one form each witness attribute's value takes: a fact identity Syzygy wrote (`_tree-contains-1`, `_manifest-2`, `_import-3`), a rule
+ * identity, a version, and the one state `corroborated` (version 2.49). */
+const WITNESS_VALUES: Readonly<Record<string, RegExp>> = {
+  'data-witness-fact': /^_[a-z]+(?:-[a-z]+)*(?:-[1-9][0-9]*)?$/u,
+  'data-witness-rule': /^[a-z]+(?:-[a-z]+)*$/u,
+  'data-witness-rule-version': /^[1-9][0-9]*$/u,
+  'data-witness-state': /^corroborated$/u,
+};
+
 function unsafe(): never {
   throw new Error('unsafe-svg');
 }
@@ -56,6 +67,9 @@ function assertAttribute(element: string, name: string, value: string, isRoot: b
   }
   if (/javascript:|vbscript:|data:|https?:/iu.test(value) || value.includes('&')) unsafe();
   if (!(name === 'data-name' ? NAME_VALUE : VALUE).test(value)) unsafe();
+  // A witness attribute holds one closed form whatever else `VALUE` admits: words in it would be text no screen read (syzygy-3efd.89).
+  const closed = WITNESS_VALUES[name];
+  if (closed !== undefined && !closed.test(value)) unsafe();
   const withoutLocal = value.replace(LOCAL_URL, '');
   if (/url\(/iu.test(withoutLocal)) unsafe();
 }

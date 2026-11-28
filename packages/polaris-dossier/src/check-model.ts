@@ -15,6 +15,7 @@ import type { ReviewReachAdvice } from './review-reach.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 import type { FigureFit, FigureLayout } from './figure-fit.js';
 import type { ReadingDifference, ReadingLedger } from './reading-ledger.js';
+import type { ImportFacts } from './import-facts.js';
 import type { ManifestFacts } from './manifest-facts.js';
 import type { InventoryCoverageAdvice, InventoryOfRecordReader } from './inventory-coverage.js';
 import type { QuestionKindAdvice } from './question-kinds.js';
@@ -230,6 +231,9 @@ export interface CheckReportMembers {
   readonly readingLedger?: ReadingLedger;
   /** Declared manifest facts (`manifest-facts.ts`, version 2.7): the draft check record's last member, from the pinned tree and the blobs
    * the screen admits, never from the draft; every fact Inferred. Carried once, as part of the check record. */
+  /** Lexical import facts (`import-facts.ts`, version 2.39): immediately before `manifestFacts`, from the pinned tree, the blobs the screen
+   * admits and the same check's manifest facts, never from the draft; every statement Inferred or Unknown. */
+  readonly importFacts?: ImportFacts;
   readonly manifestFacts?: ManifestFacts;
   /** The ledger's difference from the previous run of the same repository in the state root, computed at this check and written to no
    * file; Unknown, never zero, where there is none. */
@@ -289,7 +293,7 @@ export interface CheckDeps {
 export interface RecordMeasure { readonly bytes: number; readonly values: number; readonly depth: number }
 
 /** The members a bounded check record leaves out (version 2.10): those whose size grows with the subject. */
-export type BoundedRecordOmits = 'executionFlags' | 'quotations' | 'excludedContent' | 'citedBlobs' | 'figureFit' | 'readingLedger' | 'manifestFacts';
+export type BoundedRecordOmits = 'executionFlags' | 'quotations' | 'excludedContent' | 'citedBlobs' | 'figureFit' | 'readingLedger' | 'importFacts' | 'manifestFacts';
 /** A check record's bounded form: the full record's other members in its order, `outcome` `findings`, and one `check-record-bound` finding. */
 export type BoundedCheckRecord<R> = Omit<R, BoundedRecordOmits | 'outcome'> & { readonly outcome: 'findings' };
 
