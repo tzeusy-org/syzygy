@@ -59,7 +59,7 @@
   - the directory map elements `kubeconfig/ (1 file)` and `.kube/ (2 files)`, with `secretPathsLeftOut` 0;
   - `screenPath('kubeconfig')` = `denied-path`, `screenPath('.kube')` = `unknown-extraction-class`, and `screenPath('.kube/config')` = `denied-path`;
   - so check's `hidden` predicate (a secret path, or `screenPath` = `denied-path`) holds for `kubeconfig` and not for `.kube`.
-- [Observed] The R35 code review (`docs/reviews/syzygy-3efd-35/R35-CODE-REVIEW-RAW.md`, note 2) found that inconsistent: of two directories the policy denies by name, `kubeconfig` was withheld from the walk advice and `.ssh` was read, and 2.51 does not say what "withheld at check" means for a directory.
+- [Observed] The R35 code review of syzygy-3efd.35 (note 2; its raw is retained beside that code, on branch `agent/syzygy-3efd.35-code`, under the bead's review directory) found that inconsistent: of two directories the policy denies by name, `kubeconfig` was withheld from the walk advice and `.ssh` was read, and 2.51 does not say what "withheld at check" means for a directory.
 - [Inferred] This version defines it, fail-closed, as one of the two readings the lead offered: a top-level directory is withheld at check where a denied-path rule names its own path, or where a `deniedDirectoryNames` entry names it, so that every path below it is denied. The other reading, a directory every file of which is denied, is not taken:
   - it is decided by the files the tree holds, so the same directory would be read in one revision and withheld in the next as files come and go;
   - wherever a `deniedDirectoryNames` entry names a directory, every file below it is denied, so the two readings agree on every directory the policy denies by name;
