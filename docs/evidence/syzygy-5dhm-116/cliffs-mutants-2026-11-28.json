@@ -1,7 +1,7 @@
 {
-  "subject": "REQ-polaris-generation-034 version 2.51 the cliffs (syzygy-5dhm.116)",
+  "subject": "REQ-polaris-generation-034 version 2.52 the cliffs (syzygy-5dhm.116)",
   "rule": "AGENTS.md verification rule 6",
-  "commit": "c28ee8cd5c35ceeb6f5daa2ef6dcfe36e2f6727c",
+  "commit": "f5fb85a8d6ca805b276eb2ce0497061a8467ed2a",
   "files": [
     "packages/polaris-dossier/src/limits-recognize.ts",
     "packages/polaris-dossier/src/limits.ts",
