@@ -65,10 +65,10 @@ Repaired. Each listed branch now has a test case and a mutant, all killed.
 | Branch | Test (`walk.test.ts`) | Mutant |
 |---|---|---|
 | `walk.ts` `!Array.isArray(walk['steps'])` | "More malformed walks…": `steps` an object with `length` 3 | `steps-not-list-admitted` |
-| `walk.ts` `typeof element['map'] === 'string'` | the same test: `{"map": 7, "path": "api/package.json"}` | `base-map-not-string-admitted` |
+| `walk.ts` `typeof element['map'] === 'string'` | the same test: a base end whose `map` is the number 7 | `base-map-not-string-admitted` |
 | `walk.ts` the known-version clause | the same test: a v17 draft keeps the `schema` finding at the walk, with no `field-version` | `field-version-unknown-version` |
 | `walk.ts` `named.length === 1` at check | "at check: a bare path naming both packages…" | `base-several-admitted` |
-| `walk.ts` a base end the view hides, at check | the same test, `api/package.json` hidden | `base-unshown-admitted` (run 1's name) |
+| `walk.ts` a base end the view hides, at check | the same test, the fixture's hidden API manifest | `base-unshown-admitted` (run 1's name) |
 | `walk.ts` `resolved.spec.map === step.element.map` at render | "at the render: …another map…" | `render-base-map-unmatched` |
 | `walk.ts` `resolved.shown.includes` at render | the same test, the hidden path | `render-base-unshown-admitted` |
 | `walk.ts` `named.length === 1` at render | the same test, the bare two-package path | `render-base-several-admitted` |
