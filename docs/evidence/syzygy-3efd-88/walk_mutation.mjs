@@ -4,6 +4,8 @@
 // source in `finally`. `--dry` only asserts that every fragment occurs exactly once. Never edit or commit while it runs.
 // Adapted from docs/evidence/syzygy-3efd-38/derived_base_mutation.mjs: the same method, these files and mutants. The browser test runs
 // in the render groups, so SYZYGY_POC_BROWSER must name a Chrome; a run without one skips it and is recorded as such by its test count.
+// Run 1 (at 747d8024a) killed 52 of 58; the four test repairs that followed it kill four of the six survivors, and the other two are listed
+// in EQUIVALENT with their reasons.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -84,7 +86,6 @@ const MUTANTS = [
   // --- check and its version rules
   ['check-walk-findings-dropped', CHECK, "findings.push(...walkFindings(walked, checkBaseMaps(treeFacts, manifestFacts)));", ""],
   ['check-maps-unread', CHECK, "walkFindings(walked, checkBaseMaps(treeFacts, manifestFacts))", "walkFindings(walked, {})"],
-  ['check-walks-not-stripped', CHECK, "  doc = withoutWalks(doc);\n", "\n"],
   ['source-example-not-v16', CHECK, " && version !== 'polaris-dossier-local-draft-v16') return;", ") return;"],
   ['field-version-not-emitted', DERIVE, "for (const finding of walkFieldVersionFindings(doc)) add(finding);", ""],
   ['field-version-schema-too', DERIVE, "for (const at of walkFieldVersionPaths(doc)) subsectionPaths.add(at);", ""],
@@ -97,7 +98,6 @@ const MUTANTS = [
   ['box-ignores-called', LAYOUT, "const layout = layoutDiagram(diagram.nodes.map(node => ({ ...node, below: decorate(node.id)?.called === undefined ? 0 : CALLED_HEIGHT })), diagram.edges, spacing);\n  return { width: layout.width, boxes:", "const layout = layoutDiagram(diagram.nodes.map(node => ({ ...node, below: 0 })), diagram.edges, spacing);\n  return { width: layout.width, boxes:"],
   ['box-x-y-swapped', LAYOUT, "`left:${box.x}px;top:${box.y}px;", "`left:${box.y}px;top:${box.x}px;"],
   ['stray-node-renders', SITE, "if (steps.some(step => !nodes.has(step.node))) return undefined;", "if (steps.every(step => !nodes.has(step.node))) return undefined;"],
-  ['base-box-linked', SITE, "if (isBase(n.id) || held(n.id) !== undefined", "if (held(n.id) !== undefined"],
   ['withheld-box-linked', SITE, "if (isBase(n.id) || held(n.id) !== undefined || first", "if (isBase(n.id) || first"],
   ['box-link-no-lines', SITE, "lineFragment(first, local?.citationLines?.get(n.id)?.get(first))", "lineFragment(first, undefined)"],
   ['box-id-off-by-one', SITE, "` id=\"walk-${escape(d.id)}-${number}\"`", "` id=\"walk-${escape(d.id)}-${number - 1}\"`"],
@@ -115,7 +115,12 @@ const MUTANTS = [
 ].filter(([id]) => only === null || only.has(id));
 
 // A mutant no test can kill, with the reason; recorded, never run and never counted as killed.
-const EQUIVALENT = [];
+const EQUIVALENT = [
+  { id: 'check-walks-not-stripped', file: CHECK, old: "  doc = withoutWalks(doc);\n", new: "\n",
+    reason: '[Inferred] Every reader of the draft after this line in check either strips the walks itself (deriveFindings, check-derive.ts) or reads named members other than `walk` (the schema document admits any `walk` value on a v16 section or deep dive). The strip is kept so that a reader added later cannot see a walk. Run 1 of this record (52 of 58 killed) recorded it as surviving.' },
+  { id: 'base-box-linked', file: SITE, old: "if (isBase(n.id) || held(n.id) !== undefined", new: "if (held(n.id) !== undefined",
+    reason: 'A base element\'s node carries no citation (derived-base.ts writes `citations: []` for every base element, so its `sourceIds` is empty), so the `first === undefined` arm already gives its box no link. The `isBase` arm states the rule directly. Run 1 of this record recorded it as surviving.' },
+];
 
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const files = [...new Set(MUTANTS.map(([, file]) => file))].sort();

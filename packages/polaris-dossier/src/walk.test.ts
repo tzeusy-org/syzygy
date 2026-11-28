@@ -373,7 +373,8 @@ describe('schema v16: a walk through a figure (version 2.40)', () => {
     expect(await third({ map: 'units', path: 'libs/gone/package.json' })).toEqual([{ kind: 'walk', at: '$.sections[0].walk.steps[2].element', detail: '`walk.steps[2].element` names no element drawn in d' }]);
     expect(await third({ map: 'units', path: 'api/package.json' })).toEqual([{ kind: 'walk', at: '$.sections[0].walk.steps[2].element', detail: '`walk.steps[2].element`: a second step for this element' }]);
     expect(await third({ map: 'units', path: 'web/package.json' })).toEqual([{ kind: 'walk', at: '$.sections[0].walk.steps[2].element', detail: '`walk.steps[2].element` names no element drawn in d' }]);
-    expect(await third({ map: 'directories', path: '.' })).toEqual([{ kind: 'walk', at: '$.sections[0].walk.steps[2].element', detail: '`walk.steps[2].element` names no element drawn in d' }]);
+    // A path the figure's units map shows, written over another map, names nothing drawn (never a second step for `api`).
+    expect(await third({ map: 'directories', path: 'api/package.json' })).toEqual([{ kind: 'walk', at: '$.sections[0].walk.steps[2].element', detail: '`walk.steps[2].element` names no element drawn in d' }]);
     // A base end in a figure whose view carries no base.
     expect(await walkFindingsOf(A, walking(walkDraft(WRITE(), WRITE_RELS(), [writeView()]), { figure: 'f', steps: [{ element: 'client', block: 'p1' }, { element: { map: 'units', path: 'web/package.json' }, block: 'p2' }] })))
       .toEqual([{ kind: 'walk', at: '$.sections[0].walk.steps[1].element', detail: '`walk.steps[1].element` names no element drawn in f' }]);
@@ -397,7 +398,7 @@ describe('schema v16: a walk through a figure (version 2.40)', () => {
     const step = { element: 'client', block: 'p1' };
     const cases: unknown[] = [[], { figure: 'f', steps: STEPS(), also: 1 }, { figure: 7, steps: STEPS() }, { figure: 'f', steps: [step] },
       { figure: 'f', steps: Array.from({ length: 13 }, () => step) }, { figure: 'f', steps: [step, { ...step, also: 1 }] }, { figure: 'f', steps: [step, { element: 7, block: 'p2' }] },
-      { figure: 'f', steps: [step, { element: { map: 'units' }, block: 'p2' }] }, { figure: 'f', steps: [step, { element: 'log', block: 7 }] }, { steps: STEPS() }, 'f'];
+      { figure: 'f', steps: [step, { element: { map: 'units' }, block: 'p2' }] }, { figure: 'f', steps: [step, { element: { map: 'units', path: 7 }, block: 'p2' }] }, { figure: 'f', steps: [step, { element: 'log', block: 7 }] }, { steps: STEPS() }, 'f'];
     for (const walk of cases) {
       const result = await findingsOf(A, walking(plain, walk));
       expect(result.outcome, JSON.stringify(walk)).toBe('findings');
@@ -474,6 +475,15 @@ describe('schema v16: a walk through a figure (version 2.40)', () => {
     const stored = walkDraft(WRITE(), WRITE_RELS(), [writeView()], S1(), V15);
     const dived = walking({ ...stored, deepDives: [{ id: 'dd', title: 'Deeper', sectionId: 's1', paragraphs: [para('d1')], disposition: { kind: 'produced', assetIds: ['dd'] } }] }, 'anything', 0, 'deepDives');
     expect((await findingsOf(A, dived)).findings.filter((finding) => finding.at.includes('walk'))).toEqual([{ kind: 'field-version', at: '$.deepDives[0].walk', detail: '`walk` needs draft schema polaris-dossier-local-draft-v16' }]);
+  });
+
+  it('A v16 draft with no source example and no Pole choices gets the 2.36 source-example advice and a choice-floor member, as a v15 draft does', async () => {
+    for (const version of [V15, V16]) {
+      const { result } = await checked(A, walkDraft(WRITE(), WRITE_RELS(), [writeView()], S1(), version));
+      if (!result.ok || !('quotations' in result.report)) throw new Error('refused');
+      expect(result.report.sourceExampleAdvice, version).toEqual({ code: 'no-source-example', label: 'Inferred', detail: 'Consider a cited source example that shows what the project does.' });
+      expect(result.report.readerAdvice?.choiceFloor, version).toBeDefined();
+    }
   });
 
   it('A walk on a deep dive renders on the deep dive\'s page', async () => {

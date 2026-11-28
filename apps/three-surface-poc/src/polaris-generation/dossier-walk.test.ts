@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { LocalRenderInput } from '@syzygy/polaris-generation-core';
-import { walkableWidth } from './diagram-layout.js';
+import { READABLE_SPACING, diagramNodeBoxes, walkableWidth } from './diagram-layout.js';
 import { readingInput, walkInput } from './dossier-reading.testkit.js';
 import { renderLocalDossier } from './dossier-site.js';
 
@@ -109,6 +109,14 @@ describe('a figure walk (version 2.40)', () => {
     expect(site(omitted)).toEqual(site(omittedPlain));
     const stray = { sources, local: { ...local, walks: new Map([['flow', [{ node: 'b', block: 'forms' }, { node: 'nowhere', block: 'forms' }]]]) } };
     expect(site(stray)).toEqual(plain);
+  });
+
+  it('places a box below a base element\'s `called` line where the drawing does: 18 px further down in a connected pair', () => {
+    const nodes = [{ id: 'a', label: 'api', epistemic: 'inferred' as const, sourceIds: [] }, { id: 'b', label: 'Service', epistemic: 'inferred' as const, sourceIds: [] }];
+    const edges = [{ id: 'e', from: 'a', to: 'b', label: 'calls', epistemic: 'inferred' as const, sourceIds: [] }];
+    const ys = (decorate?: (id: string) => { readonly called: string } | undefined) => diagramNodeBoxes({ nodes, edges }, READABLE_SPACING, decorate as never).boxes.map((box) => box.y);
+    expect(ys()).toEqual(['24', '146']);
+    expect(ys((id) => (id === 'a' ? { called: 'Core' } : undefined))).toEqual(['24', '164']);
   });
 
   it('lays a walk over every drawing width but 1048 px, the one width that shrinks to its column', () => {
