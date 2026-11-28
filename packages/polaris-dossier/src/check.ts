@@ -388,7 +388,9 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   }
   // Every finding's detail screened as it is reported and recorded (syzygy-3efd.93): a detail a secret detector matches, or a word of which
   // names a secret path, is withheld, whatever builder made it and whatever draft value it names. The finding keeps its kind and location.
-  findings.splice(0, findings.length, ...screenFindingDetails(findings, admitOf(screen)));
+  // One element at a time: a spread of every finding into one call is bounded by the stack (AGENTS.md), and a draft may draw many.
+  const screenedFindings = screenFindingDetails(findings, admitOf(screen), (word) => screen.screenPath(word) === 'denied-path');
+  for (let k = 0; k < screenedFindings.length; k++) findings[k] = screenedFindings[k]!;
   const outcome = findings.length === 0 ? 'passed' : 'findings';
   const record = plan.record({
     runId,

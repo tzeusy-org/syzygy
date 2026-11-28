@@ -4,6 +4,7 @@ import type { CheckFinding } from './check-model.js';
 import { type BaseMaps, type ResolvedBase, baseOf, resolveBasePath, shownOf } from './derived-base.js';
 import { LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V16, PRESENTATION_ELEMENT_KINDS, SUBSECTIONS_FIELD, WALK_FIELD, hasWalkForm } from './draft-schema.js';
 import { isViewKind, modelIndex, viewLists } from './system-model.js';
+import { handleOr } from './finding-names.js';
 
 /** The figure walk of a schema-v16 draft (REQ-polaris-generation-034 version 2.40, syzygy-3efd.88).
  *
@@ -147,8 +148,8 @@ export function walkFindings(doc: Doc, maps: BaseMaps): CheckFinding[] {
     const diagram = diagrams.find((entry): entry is Doc => isRecord(entry) && entry['id'] === read.figure);
     if (diagram === undefined) out.push({ kind: 'unresolved-reference', at: `${at}.figure`, detail: WALK_DETAIL.unresolved });
     else {
-      if (!homedAt(diagram, place, part)) out.push({ kind: 'walk', at: `${at}.figure`, detail: WALK_DETAIL.home(read.figure) });
-      if (!GRAPH_KINDS.has(diagram['kind'])) out.push({ kind: 'walk', at: `${at}.figure`, detail: WALK_DETAIL.kind(read.figure) });
+      if (!homedAt(diagram, place, part)) out.push({ kind: 'walk', at: `${at}.figure`, detail: WALK_DETAIL.home(handleOr(read.figure, `${at}.figure`)) });
+      if (!GRAPH_KINDS.has(diagram['kind'])) out.push({ kind: 'walk', at: `${at}.figure`, detail: WALK_DETAIL.kind(handleOr(read.figure, `${at}.figure`)) });
     }
     const graph = diagram !== undefined && GRAPH_KINDS.has(diagram['kind']) ? diagram : undefined;
     const drawn = graph === undefined ? new Set<string>() : drawnIdentities(doc, graph);
@@ -159,10 +160,10 @@ export function walkFindings(doc: Doc, maps: BaseMaps): CheckFinding[] {
       if (graph !== undefined) {
         const element = step.element;
         const resolved: { readonly key: string; readonly name: string } | 'absent' | 'skip' = element.kind === 'identity'
-          ? (drawn.has(element.id) ? { key: `element:${element.id}`, name: element.id } : 'absent')
+          ? (drawn.has(element.id) ? { key: `element:${element.id}`, name: handleOr(element.id, `${stepAt}.element`) } : 'absent')
           : (() => { const found = baseStep(doc, graph, element, maps); return found.state === 'unestablished' ? 'skip' as const : found.state === 'absent' ? 'absent' as const
             : { key: `base:${found.factId}`, name: `\`walk.steps[${k}].element\`` }; })();
-        if (resolved === 'absent') out.push({ kind: 'walk', at: `${stepAt}.element`, detail: WALK_DETAIL.element(k, read.figure) });
+        if (resolved === 'absent') out.push({ kind: 'walk', at: `${stepAt}.element`, detail: WALK_DETAIL.element(k, handleOr(read.figure, `${at}.figure`)) });
         else if (resolved !== 'skip') {
           if (named.has(resolved.key)) out.push({ kind: 'walk', at: `${stepAt}.element`, detail: WALK_DETAIL.repeated(resolved.name) });
           named.add(resolved.key);
@@ -170,7 +171,7 @@ export function walkFindings(doc: Doc, maps: BaseMaps): CheckFinding[] {
       }
       const block = paragraphs.get(step.block);
       if (block === undefined) out.push({ kind: 'walk', at: `${stepAt}.block`, detail: WALK_DETAIL.block(k) });
-      else if (list(block['citations']).length === 0) out.push({ kind: 'walk', at: `${stepAt}.block`, detail: WALK_DETAIL.uncited(step.block) });
+      else if (list(block['citations']).length === 0) out.push({ kind: 'walk', at: `${stepAt}.block`, detail: WALK_DETAIL.uncited(handleOr(step.block, `${stepAt}.block`)) });
     });
   }
   return out;

@@ -18,10 +18,28 @@ export const handleOr = (value: unknown, fallback: string): string => (isHandle(
 /** The fixed detail of a finding whose own detail a secret detector matches or names a secret path. */
 export const FINDING_DETAIL_WITHHELD = 'Finding detail withheld under source screening.';
 
-/** Every finding as check reports and records it, its detail screened: where a secret detector matches the detail, or any of its words names
- * a secret path, or screening cannot decide, the fixed detail `FINDING_DETAIL_WITHHELD` replaces it. Fail-closed: the backstop behind every
- * builder, whatever value a builder interpolates; the finding keeps its kind and location, so the repair loop still reaches it. */
-export function screenFindingDetails(findings: readonly CheckFinding[], admit: (value: string) => 'admitted' | 'withheld' | 'unavailable'): CheckFinding[] {
-  const admitted = (detail: string): boolean => [detail, ...detail.split(/[\s"`'(),;]+/u).filter((word) => word.length > 0)].every((value) => admit(value) === 'admitted');
-  return findings.map((finding) => (admitted(finding.detail) ? finding : { ...finding, detail: FINDING_DETAIL_WITHHELD }));
+/** The characters a detail's words are split at: whitespace, quotes, backticks, parentheses, commas and semicolons. */
+export const DETAIL_WORD_BREAK = /[\s"`'(),;]+/u;
+
+/** Every finding as check reports and records it, its detail screened (syzygy-3efd.93): the fixed detail `FINDING_DETAIL_WITHHELD`
+ * replaces a detail where a secret detector matches it, read whole or word by word (`admit`), where any of its words names a denied path
+ * (`deniedWord`: a basename, suffix or directory the screening policy denies, which `admit` alone admits), or where screening cannot decide.
+ * Fail-closed: the backstop behind every builder, whatever value a builder interpolates; the finding keeps its kind and location, so the
+ * repair loop still reaches it. Each distinct value is screened once per call. */
+export function screenFindingDetails(findings: readonly CheckFinding[], admit: (value: string) => 'admitted' | 'withheld' | 'unavailable',
+  deniedWord: (word: string) => boolean = () => false): CheckFinding[] {
+  const seen = new Map<string, boolean>();
+  const clear = (value: string, word: boolean): boolean => {
+    const key = `${word ? 'w' : 'd'}${value}`;
+    let ok = seen.get(key);
+    if (ok === undefined) {
+      try { ok = admit(value) === 'admitted' && !(word && deniedWord(value)); } catch { ok = false; }
+      seen.set(key, ok);
+    }
+    return ok;
+  };
+  const admitted = (detail: string): boolean => clear(detail, false) && detail.split(DETAIL_WORD_BREAK).every((word) => word.length === 0 || clear(word, true));
+  const out: CheckFinding[] = [];
+  for (const finding of findings) out.push(admitted(finding.detail) ? finding : { ...finding, detail: FINDING_DETAIL_WITHHELD });
+  return out;
 }
