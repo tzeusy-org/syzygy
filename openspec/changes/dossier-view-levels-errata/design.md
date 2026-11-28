@@ -17,7 +17,7 @@
   - prose naming "over 2.54": this file, the README, `proposal.md`, `tasks.md`, the row, the `openspec/README.md` index row and the `PROJECT-STATUS.md` census line;
   - then rebind the row to the new install commit and re-run the three checks in a fresh clone.
 - [Observed] The build script edits the predecessor's bytes at anchors it asserts occur exactly once. The predecessor hashes to `24132cde379082c2667057c3a2e326f22fe0cf89426b256436dc84d8a92facd3`.
-- [Observed] REQ-034 goes from 348 scenarios to 349; Polaris from 669 to 670. No draft schema or brief version is taken.
+- [Observed] REQ-034 goes from 348 scenarios to 349; Polaris from 669 to 670 as first drafted, and from 672 to 673 since session usage 2.45 (A-339) added three REQ-033 scenarios on main (merged 2026-11-29). No draft schema or brief version is taken.
 
 ## D2. The address between deep dives: the scenario corrected
 
