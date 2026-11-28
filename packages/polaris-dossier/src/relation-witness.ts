@@ -9,7 +9,7 @@ import { isWorkflowPath } from './manifest-workflow.js';
  * by facts of the one kind its row names, between units of the two kinds its row names; equality is of exact code units, nothing case-folded
  * or normalised. The rule reads no file body, size or object identifier beyond what the witnessing fact's own rule reads. Pure: `check`
  * and each render call it with the facts each derives itself. */
-export const RELATION_WITNESS = Object.freeze({ id: 'relation-witness', version: 1 } as const);
+export const RELATION_WITNESS = Object.freeze({ id: 'relation-witness', version: 2 } as const);
 
 /** The closed list of relation types a v9 graph edge carries, in the requirement's order. */
 export const RELATION_TYPES = Object.freeze(['contains', 'declares-dependency', 'needs-job', 'depends-on-service', 'calls', 'imports', 'reads', 'writes', 'sends-to', 'starts', 'relates-to'] as const);
@@ -128,6 +128,9 @@ export type WitnessReason = 'edge-not-inferred' | 'no-witness-rule' | 'endpoint-
 export type WitnessDecision =
   | { readonly state: 'witnessed'; readonly reason: null; readonly fact: string; readonly factKind: string; readonly rule: string; readonly ruleVersion: number }
   | { readonly state: 'challenged'; readonly reason: null; readonly factKind: string; readonly rule: string; readonly ruleVersion: number }
+  /** Version 2 (REQ-polaris-generation-034 version 2.49): an `imports` edge an `edge` import fact joins. Corroboration is not witnessing:
+   * the edge keeps the draft's marking and is never Observed. */
+  | { readonly state: 'corroborated'; readonly reason: null; readonly fact: string; readonly form: string; readonly rule: string; readonly ruleVersion: number }
   | { readonly state: 'unknown'; readonly reason: WitnessReason };
 
 /** An end of an edge: its node's unit, and whether that unit drew a `unit-reference` finding; undefined where the node carries no unit. */
@@ -157,9 +160,19 @@ export type ManifestFactsInput =
   }
   | { readonly state: 'unknown' };
 
+/** The `importFacts` member (version 2.39) as the `imports` row reads it: its facts in their order, or Unknown where the member is absent,
+ * Unknown, or the record holding it cannot be read. */
+export type ImportFactsInput =
+  | { readonly state: 'derived'; readonly facts: readonly { readonly id: string; readonly rule: string; readonly ruleVersion: number; readonly form: string; readonly outcome: string; readonly from: string | null; readonly to: string | null }[] }
+  | { readonly state: 'unknown' };
+
+/** The two rules whose `edge` facts corroborate an `imports` edge, version 1 each. */
+const IMPORT_RULES: readonly RuleId[] = Object.freeze([{ id: 'typescript-relative-import', version: 1 }, { id: 'typescript-package-import', version: 1 }]);
+
 export interface WitnessInputs {
   readonly structure: StructureFacts;
   readonly manifest: ManifestFactsInput;
+  readonly imports: ImportFactsInput;
   /** Whether a unit's path is one a secret detector matches or the screen denies: such an end of a recognizer's relation makes coverage
    * partial. Coverage for `contains` never reads it: its three counts decide it alone. */
   readonly hidden: (repositoryPath: string) => boolean;
@@ -200,10 +213,14 @@ function coverageComplete(relation: Witnessable, from: Unit, to: Unit, inputs: W
     && entry.files.some((file) => file.path === source && file.epistemic === 'inferred' && file.valuesLeftOut === 0));
 }
 
-/** Rule `relation-witness` version 1, in its order: the first case that applies gives the state and, for `unknown`, the reason. */
+/** Rule `relation-witness` version 2, in its order: the first case that applies gives the state and, for `unknown`, the reason. Version 2 is
+ * version 1 with a corroborating row for `imports`, which reads the `importFacts` member: `no-witness-rule` and `recognizer-not-eligible`
+ * never apply to it, an edge one `edge` fact joins is `corroborated`, and every other is `unknown` (`coverage-partial`), never `challenged`,
+ * whatever the member's coverage, since the absence of an import fact is never the absence of an import. */
 export function decideWitness(edge: WitnessEdge, inputs: WitnessInputs, table: readonly EligibilityRow[] = ELIGIBILITY_TABLE): WitnessDecision {
   const unknown = (reason: WitnessReason): WitnessDecision => ({ state: 'unknown', reason });
   if (!edge.asserted) return unknown('edge-not-inferred');
+  if (edge.relation === 'imports') return decideImports(edge, inputs);
   const row = rowOf(edge.relation);
   if (row === undefined) return unknown('no-witness-rule');
   if (edge.from === undefined || edge.to === undefined) return unknown('endpoint-without-unit');
@@ -218,6 +235,20 @@ export function decideWitness(edge: WitnessEdge, inputs: WitnessInputs, table: r
   if (fact !== undefined) return { state: 'witnessed', reason: null, fact, factKind: row.fact, rule: rule.id, ruleVersion: rule.version };
   if (!coverageComplete(relation, from, to, inputs, rule)) return unknown('coverage-partial');
   return { state: 'challenged', reason: null, factKind: row.fact, rule: rule.id, ruleVersion: rule.version };
+}
+
+/** The `imports` row (version 2.49): both ends `package-manifest` units; the first `edge` fact of either import rule, in the member's order,
+ * whose `from` and `to` equal the two units' paths in exact code units, corroborates. */
+function decideImports(edge: WitnessEdge, inputs: WitnessInputs): WitnessDecision {
+  if (edge.from === undefined || edge.to === undefined) return { state: 'unknown', reason: 'endpoint-without-unit' };
+  if (edge.from.invalid || edge.to.invalid) return { state: 'unknown', reason: 'endpoint-unit-invalid' };
+  const from = edge.from.unit, to = edge.to.unit;
+  if (from.kind !== 'package-manifest' || to.kind !== 'package-manifest') return { state: 'unknown', reason: 'endpoint-kind-mismatch' };
+  if (inputs.imports.state !== 'derived') return { state: 'unknown', reason: 'facts-unknown' };
+  const fact = inputs.imports.facts.find((f) => f.outcome === 'edge' && f.from === from.path && f.to === to.path
+    && IMPORT_RULES.some((rule) => rule.id === f.rule && rule.version === f.ruleVersion));
+  if (fact === undefined) return { state: 'unknown', reason: 'coverage-partial' };
+  return { state: 'corroborated', reason: null, fact: fact.id, form: fact.form, rule: fact.rule, ruleVersion: fact.ruleVersion };
 }
 
 /** Whether a row of rule `relation-witness` at the eligibility table given joins the relation and the two unit kinds (version 2.24): the

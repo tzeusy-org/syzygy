@@ -24,6 +24,8 @@ const ATTRIBUTES = new Set([
   // A schema-v9 graph edge's relation type, and a witnessed edge's witnessing fact, rule and version and its Observed marking (version 2.19):
   // inert data Syzygy wrote from closed lists and its own identities, never a draft's free text.
   'data-relation', 'data-witness-fact', 'data-witness-rule', 'data-witness-rule-version', 'data-epistemic',
+  // A corroborated `imports` edge's state (version 2.49): the one literal `corroborated`, beside its import fact's identity, rule and version.
+  'data-witness-state',
   // A schema-v12 element or relationship more than one view selects (version 2.24): its identity, which the draft schema's identity
   // pattern bounds and the value pattern below checks again, never a draft's free text.
   'data-element', 'data-relationship',

@@ -429,6 +429,14 @@ export type LocalEdgeRelation =
   }
   | {
     readonly relation: string;
+    /** Version 2.49: an `imports` edge an `edge` import fact corroborates. It keeps the draft's marking; `corroboration` names the fact's
+     * form, the pinned revision and the digest of the `importFacts` member as its check record holds it. */
+    readonly witness: { readonly state: 'corroborated'; readonly reason: null; readonly fact: string; readonly rule: string; readonly ruleVersion: number };
+    readonly corroboration: { readonly form: string; readonly revision: string; readonly importFactsSha256: string };
+    readonly evidence?: undefined;
+  }
+  | {
+    readonly relation: string;
     readonly witness: { readonly state: 'challenged' | 'unknown'; readonly reason: string | null; readonly fact: null; readonly rule: null; readonly ruleVersion: null };
     readonly evidence?: undefined;
   };

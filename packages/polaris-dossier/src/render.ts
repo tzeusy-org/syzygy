@@ -15,7 +15,8 @@ import { applyContainmentFindings, groupsOf } from './containment.js';
 import { expandModel, localModelOf, modelFindings } from './system-model.js';
 import { secretOrUnder } from './derive.js';
 import { BLOB_MODES } from './git-object-reader.js';
-import { witnessAtRender, witnessWords, type RelationType } from './relation-witness.js';
+import { witnessAtRender, witnessWords, type ImportFactsInput, type RelationType } from './relation-witness.js';
+import { isCheckRecordOf, readCheckRecord } from './check-record-read.js';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialFindings, credentialStepCheck, storedBriefArm, type CredentialBreachFinding, type CredentialStepResult } from './credential-probe.js';
 import { CONTAINMENT_KIND, UNDERSTANDING_ITEMS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, hasContainmentForm, hasFigureKindForm, hasModelForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm, hasWithheldHeroIdentity, hasWorthKnowingForm, heroOf } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
@@ -223,7 +224,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const manifestFacts = await renderManifestFacts(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
   // Version 2.19 (syzygy-3efd.28): a v9 draft's edges, each decided again by rule `relation-witness` from the facts this render derives itself.
   const edgeRelations = hasRelationForm(doc['schemaVersion'])
-    ? edgeRelationsAt({ doc: figureDoc, derivedStructure, manifestFacts, screen, withheld: input.local.withheldElements ?? new Map(), listTree: () => reader.listTree() }) : undefined;
+    ? edgeRelationsAt({ doc: figureDoc, derivedStructure, manifestFacts, imports: importFactsOfRecord(run, draftRev.revision), revision: pinned, screen, withheld: input.local.withheldElements ?? new Map(), listTree: () => reader.listTree() }) : undefined;
   const model = hasModelForm(doc['schemaVersion']) ? localModelOf(doc) : undefined;
   // Version 2.38 (syzygy-5dhm.45): the declared test names, derived here the same way, for the test-names reference page.
   const testNames = await renderTestNames(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
@@ -310,6 +311,10 @@ export async function edgeRelationsAt(inputs: {
   readonly doc: Readonly<Record<string, unknown>>;
   readonly derivedStructure: LocalDerivedStructure;
   readonly manifestFacts: ManifestFacts;
+  /** The `importFacts` member of the rendered draft revision's check record (version 2.49), with its digest, or Unknown. */
+  readonly imports?: RecordImportFacts;
+  /** The pinned revision the evidence text names. */
+  readonly revision?: string;
   readonly screen: Pick<DossierScreen, 'screenPath' | 'screenBody'>;
   readonly withheld: ReadonlyMap<string, unknown>;
   readonly listTree: () => Promise<readonly Pick<TreeEntry, 'path' | 'mode'>[]>;
@@ -333,6 +338,7 @@ export async function edgeRelationsAt(inputs: {
       structure: derived.state !== 'derived' ? { state: 'unknown' }
         : { state: 'derived', facts: derived.facts, secretPathsLeftOut: derived.tree.secretPathsLeftOut, submodules: derived.tree.submodules, unitsNotListed: derived.tree.unitsNotListed },
       manifest: manifestFacts.state === 'derived' ? manifestFacts : { state: 'unknown' },
+      imports: inputs.imports?.state === 'derived' ? inputs.imports : { state: 'unknown' },
       hidden,
     }, (element) => withheld.has(text(element['id']) ?? ''));
   const facts = derived.state === 'derived' ? new Map(derived.facts.map((fact) => [fact.id, fact])) : new Map<string, LocalDerivedFact>();
@@ -347,10 +353,37 @@ export async function edgeRelationsAt(inputs: {
       return [id, { relation, witness: { state: 'witnessed', reason: null, fact: decision.fact, rule: decision.rule, ruleVersion: decision.ruleVersion },
         evidence: { words: witnessWords(relation as RelationType)!, factKind: decision.factKind, revision: derived.recordRevision, recordSha256: derived.sha256 } }];
     }
+    if (decision.state === 'corroborated') {
+      // A corroboration is decided only from a derived member, which `imports` then holds with its digest.
+      const imports = inputs.imports as Extract<RecordImportFacts, { state: 'derived' }>;
+      return [id, { relation, witness: { state: 'corroborated', reason: null, fact: decision.fact, rule: decision.rule, ruleVersion: decision.ruleVersion },
+        corroboration: { form: decision.form, revision: inputs.revision ?? '', importFactsSha256: imports.sha256 } }];
+    }
     const reason = decision.state === 'witnessed' ? 'fact-not-current' : decision.reason;
     return [id, { relation, witness: { state: decision.state === 'witnessed' ? 'unknown' : decision.state, reason, fact: null, rule: null, ruleVersion: null } }];
   }));
 }
+
+/** The `importFacts` member as the rendered revision's check record holds it (version 2.49): its facts, and the SHA-256 of the member's
+ * bytes in that record (two-space JSON indented one level, as `check` writes it). Unknown where the record cannot be read under the read
+ * bound, holds no member (written before version 2.39, or bounded), or holds one in state `unknown`. No file body is read. */
+export type RecordImportFacts = (ImportFactsInput & { readonly state: 'derived'; readonly sha256: string }) | { readonly state: 'unknown' };
+export function importFactsOfRecord(run: string, revision: number): RecordImportFacts {
+  let record: unknown;
+  try { record = readCheckRecord(path.join(run, RUN_LAYOUT.checks, `rev-${revision}.json`)); } catch { return { state: 'unknown' }; }
+  if (!isCheckRecordOf(record, revision) || !isRecord(record) || !isRecord(record['importFacts'])) return { state: 'unknown' };
+  const member = record['importFacts'];
+  if (member['state'] !== 'derived' || !Array.isArray(member['facts'])) return { state: 'unknown' };
+  const facts = (member['facts'] as unknown[]).filter(isRecord).map((fact) => ({
+    id: String(fact['id']), rule: String(fact['rule']), ruleVersion: Number(fact['ruleVersion']), form: String(fact['form']), outcome: String(fact['outcome']),
+    from: typeof fact['from'] === 'string' ? fact['from'] : null, to: typeof fact['to'] === 'string' ? fact['to'] : null,
+  }));
+  return { state: 'derived', facts, sha256: importFactsDigest(member) };
+}
+
+/** The SHA-256 of an `importFacts` member's bytes as a check record holds it: its two-space JSON, every line after the first indented two
+ * more spaces, since the member lies one level under the record's root. */
+export const importFactsDigest = (member: unknown): string => sha256(new TextEncoder().encode(JSON.stringify(member, null, 2).replace(/\n/gu, '\n  ')));
 
 /** The render's own manifest-facts member (version 2.9): the tree listed by `reader`, each manifest read alone through a second pinned
  * reader on the same clone whose object bound is `MANIFEST_BLOB_LIMIT`; `unknown` where the tree cannot be listed. */
