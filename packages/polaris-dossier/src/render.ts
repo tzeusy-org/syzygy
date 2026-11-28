@@ -4,7 +4,7 @@ import * as path from 'node:path';
 import {
   backtickSpans, excludedSourceId, spanTouchesWithheld, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
   type EpistemicMarking, type EvidenceAnchor, type GenerationExclusionReason, type GenerationSource, type LocalBlock,
-  type LocalDerivedFact, type LocalDerivedStructure, type LocalDisclosureItem, type LocalDraftLayer, type LocalEdgeRelation, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment, type WithheldNote,
+  type LocalBase, type LocalDerivedFact, type LocalDerivedStructure, type LocalDisclosureItem, type LocalDraftLayer, type LocalEdgeRelation, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment, type WithheldNote,
   type DossierDraft, type DraftBlock, type DraftDiagramHome, type DraftContainmentGroup, type DraftFigure, type DraftFigureElement, type DraftParagraph,
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
@@ -12,12 +12,13 @@ import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Der
 import { figurePlanFindings, withoutFigurePlan } from './figure-plan.js';
 import { applyHeroFindings, relationDecisions } from './check-derive.js';
 import { applyContainmentFindings, groupsOf } from './containment.js';
-import { expandModel, localModelOf, modelFindings } from './system-model.js';
+import { expandModel, localModelOf, modelFindings, modelIndex, viewLists } from './system-model.js';
+import { BASE_BASIS, admitOf, baseEndElement, renderBaseMaps, renderBases, type Admission, type PendingBase } from './derived-base.js';
 import { secretOrUnder } from './derive.js';
 import { BLOB_MODES } from './git-object-reader.js';
 import { witnessAtRender, witnessWords, type RelationType } from './relation-witness.js';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialFindings, credentialStepCheck, storedBriefArm, type CredentialBreachFinding, type CredentialStepResult } from './credential-probe.js';
-import { CONTAINMENT_KIND, UNDERSTANDING_ITEMS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, hasContainmentForm, hasFigureKindForm, hasModelForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm, hasWithheldHeroIdentity, hasWorthKnowingForm, heroOf } from './draft-schema.js';
+import { CONTAINMENT_KIND, UNDERSTANDING_ITEMS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, hasContainmentForm, hasFigureKindForm, hasModelForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm, hasBaseForm, hasWithheldHeroIdentity, hasWorthKnowingForm, heroOf } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
@@ -205,10 +206,6 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
 
   const review = await reviewOfRecord(opened, deps);
 
-  // A v12 draft's figures are drawn from its views' expansion (version 2.24): each view as the schema-v11 diagram it stands for.
-  const figureDoc = hasModelForm(doc['schemaVersion']) ? { ...expandModel(doc).doc, schemaVersion: doc['schemaVersion'] } : doc;
-  const input = buildLocalInput({ opened, doc: figureDoc, derived, review, screen, credential, algorithm: reader.algorithm });
-  if (!input.ok) return refuse(input.stage, input.reason);
   // The derived structure (REQ-polaris-generation-034 version 2.3): the record check kept for this draft revision, compared with the facts
   // re-derived now from the tree this reader lists, under the currency policy committed at the Syzygy checkout. No draft member reaches it.
   const derivedStructure = await derivedStructureAt({
@@ -219,10 +216,25 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   // blobs a pinned reader whose object bound is 1 MiB reads one call per file, the bound screen and the run's content classes, as check
   // derives its member. Never read from a stored check record, which lies within the agent sessions' write reach.
   const manifestFacts = await renderManifestFacts(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
+  // A v15 draft's bases (version 2.35), drawn from the maps as this render derives them, never from a stored check record.
+  const bases = baseViewsAt(doc, derivedStructure, manifestFacts, screen);
+
+  // A v12 draft's figures are drawn from its views' expansion (version 2.24): each view as the schema-v11 diagram it stands for.
+  const figureDoc = hasModelForm(doc['schemaVersion']) ? { ...withRefused(expandModel(doc, bases.resolved).doc, bases.refused), schemaVersion: doc['schemaVersion'] } : doc;
+  const input = buildLocalInput({ opened, doc: figureDoc, derived, review, screen, credential, algorithm: reader.algorithm, ...(bases.pending.size === 0 ? {} : { bases: bases.pending }) });
+  if (!input.ok) return refuse(input.stage, input.reason);
   // Version 2.19 (syzygy-3efd.28): a v9 draft's edges, each decided again by rule `relation-witness` from the facts this render derives itself.
   const edgeRelations = hasRelationForm(doc['schemaVersion'])
     ? edgeRelationsAt({ doc: figureDoc, derivedStructure, manifestFacts, screen, withheld: input.local.withheldElements ?? new Map(), listTree: () => reader.listTree() }) : undefined;
-  const model = hasModelForm(doc['schemaVersion']) ? localModelOf(doc) : undefined;
+  // A base end names the fact identity it resolves to in a drawn view of its map (version 2.35); the empty string where none draws it.
+  const drawnEnd = (end: Readonly<Record<string, unknown>>): string => {
+    for (const base of bases.resolved.values()) {
+      const k = baseEndElement(end, base.spec, base.map, new Set(base.shown));
+      if (k !== undefined) return base.map.elements[k]!.factId;
+    }
+    return '';
+  };
+  const model = hasModelForm(doc['schemaVersion']) ? localModelOf(doc, drawnEnd) : undefined;
   // Version 2.38 (syzygy-5dhm.45): the declared test names, derived here the same way, for the test-names reference page.
   const testNames = await renderTestNames(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
   const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }), ...(model === undefined ? {} : { model }) } };
@@ -322,7 +334,9 @@ export async function edgeRelationsAt(inputs: {
   // the same frozen revision: one notion of a withheld edge in both.
   // A v12 view's relationship either of whose elements renders as a withheld item is unasserted too (version 2.24), as check reads it.
   const endHeld = (id: unknown): boolean => hasModelForm(doc['schemaVersion']) && withheld.has(text(id) ?? '');
-  const decisions = relationDecisions(doc, (edge) => edge['epistemic'] === 'inferred' && !withheld.has(text(edge['id']) ?? '') && !endHeld(edge['from']) && !endHeld(edge['to']),
+  // A base element and a base `contains` arrow (version 2.35) are Syzygy's: only a base element's nesting inside an element is asserted.
+  const decisions = relationDecisions(doc, (edge) => (edge['basis'] === BASE_BASIS ? edge['grouped'] === true
+    : edge['epistemic'] === 'inferred' && !withheld.has(text(edge['id']) ?? '') && !endHeld(edge['from']) && !endHeld(edge['to'])),
     blobs === undefined ? undefined : { hidden, isBlob: (repositoryPath) => blobs.has(repositoryPath) }, {
       structure: derived.state !== 'derived' ? { state: 'unknown' }
         : { state: 'derived', facts: derived.facts, secretPathsLeftOut: derived.tree.secretPathsLeftOut, submodules: derived.tree.submodules, unitsNotListed: derived.tree.unitsNotListed },
@@ -332,7 +346,8 @@ export async function edgeRelationsAt(inputs: {
   const facts = derived.state === 'derived' ? new Map(derived.facts.map((fact) => [fact.id, fact])) : new Map<string, LocalDerivedFact>();
   // A v11 containment's nestings (version 2.23) are keyed by the child group's id, read as `contains` edges; a render follows a passing
   // check, so no containment here has a finding that leaves its nestings undecided.
-  const decided = [...decisions.edges, ...decisions.nestings.map(({ id, decision }) => ({ id, relation: 'contains' as RelationType, decision }))];
+  // Every identity a base element or fact takes starts with `_`, which no draft identity may (version 2.35): none is a drawn edge's relation.
+  const decided = [...decisions.edges, ...decisions.nestings.map(({ id, decision }) => ({ id, relation: 'contains' as RelationType, decision }))].filter(({ id }) => !id.startsWith('_'));
   return new Map(decided.map(({ id, relation, decision: checked }): [string, LocalEdgeRelation] => {
     // At version 1 every eligible fact is a structure fact, so `facts` (the structure record's, as this render derives them) holds every
     // fact a decision can name, and the evidence names that record; a fact found in no rendered record is not current.
@@ -344,6 +359,41 @@ export async function edgeRelationsAt(inputs: {
     const reason = decision.state === 'witnessed' ? 'fact-not-current' : decision.reason;
     return [id, { relation, witness: { state: decision.state === 'witnessed' ? 'unknown' : decision.state, reason, fact: null, rule: null, ruleVersion: null } }];
   }));
+}
+
+/** A v15 draft's bases at a render (REQ-polaris-generation-034 version 2.35): the maps as this render derives them, the views any finding of
+ * version 2.35 would name at this render (each such view's notice says its base does not resolve), and the reasons screened. Empty for any
+ * other draft. */
+export function baseViewsAt(doc: Readonly<Record<string, unknown>>, derivedStructure: LocalDerivedStructure, manifestFacts: ManifestFacts, screen: DossierScreen): ReturnType<typeof renderBases> {
+  if (!hasBaseForm(doc['schemaVersion'])) return { resolved: new Map(), pending: new Map(), refused: new Map() };
+  const maps = renderBaseMaps(derivedStructure, manifestFacts);
+  const isSecretPath = secretPathOf(screen);
+  const hidden = (repositoryPath: string): boolean => secretOrUnder(repositoryPath.split('/'), isSecretPath) || screen.screenPath(repositoryPath) === 'denied-path';
+  // The draft passed check and its re-derivation without the maps, so every finding here is one version 2.35 computes against them.
+  const found = modelFindings(doc, new Set(), undefined, { maps, admit: admitOf(screen), hidden });
+  const relationships = modelIndex(doc).relationships;
+  const late = new Set<number>();
+  for (const { at } of found) {
+    const view = /^\$\.diagrams\[(\d+)\]/u.exec(at)?.[1];
+    if (view !== undefined) { late.add(Number(view)); continue; }
+    const k = /^\$\.model\.relationships\[(\d+)\]/u.exec(at)?.[1];
+    const id = k === undefined ? undefined : text(relationships.find((entry) => entry.j === Number(k))?.relationship['id']);
+    if (id === undefined) continue;
+    list(doc['diagrams']).forEach((diagram, i) => { if (isRecord(diagram) && viewLists(diagram).relationships.includes(id)) late.add(i); });
+  }
+  const screenReason = (reason: string): Admission => {
+    try { return screen.screenBody(reason) === 'secret-detector-match' ? 'withheld' : 'admitted'; } catch { return 'unavailable'; }
+  };
+  return renderBases(doc, maps, late, screenReason);
+}
+
+/** The expansion with each refused base figure (version 2.35) unresolved for the fixed reason, citing nothing, so neither form draws it. */
+function withRefused(expanded: Record<string, unknown>, refused: ReadonlyMap<number, string>): Record<string, unknown> {
+  if (refused.size === 0) return expanded;
+  return { ...expanded, diagrams: list(expanded['diagrams']).map((diagram, i) => {
+    const reason = refused.get(i);
+    return reason === undefined || !isRecord(diagram) ? diagram : { ...diagram, disposition: { kind: 'unresolved', reason, references: [] } };
+  }) };
 }
 
 /** The render's own manifest-facts member (version 2.9): the tree listed by `reader`, each manifest read alone through a second pinned
@@ -411,6 +461,8 @@ interface BuildInputs {
   readonly screen: DossierScreen;
   readonly credential: CredentialStepResult;
   readonly algorithm: 'sha1' | 'sha256';
+  /** A v15 draft's bases as the render read them (version 2.35), by diagram identity; their display names' citations are read here. */
+  readonly bases?: ReadonlyMap<string, PendingBase>;
 }
 
 type Built = { readonly ok: true; readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } | { readonly ok: false; readonly stage: RenderStage; readonly reason: string };
@@ -732,6 +784,11 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     return { kind: record['kind'] === 'omitted' ? 'omitted' : 'unresolved', reason: clean(text(record['reason']) ?? ''), references: citedSources(record) };
   };
   const title = (value: unknown): string => clean(text(value) ?? '');
+  // A figure element's mark: Inferred where the draft says so and it is no withheld item, else Unknown; a base element or base `contains`
+  // arrow (version 2.35) keeps its fact's own mark, Observed included.
+  const markOf = (value: Readonly<Record<string, unknown>>, gone: WithheldNote | undefined): 'observed' | 'inferred' | 'unknown' =>
+    (value['basis'] === BASE_BASIS && (value['epistemic'] === 'observed' || value['epistemic'] === 'inferred') ? value['epistemic']
+      : gone === undefined && value['epistemic'] === 'inferred' ? 'inferred' : 'unknown');
   // Diagram nodes and edges, and understanding items, that are withheld items, by claim id (v1.5).
   const withheldElements = new Map<string, WithheldNote>();
   const element = (prefix: string, value: Readonly<Record<string, unknown>>): { readonly held: WithheldNote | undefined } => {
@@ -786,7 +843,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
       if (kind !== undefined) {
         const claimOf = (value: Readonly<Record<string, unknown>>): DraftFigureElement => {
           const { held: gone } = element('', value);
-          return { id: text(value['id'])!, label: gone === undefined ? title(value['label']) : WITHHELD_LABEL, sourceIds: cites(text(value['id'])!, value), epistemic: gone === undefined && value['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const };
+          return { id: text(value['id'])!, label: gone === undefined ? title(value['label']) : WITHHELD_LABEL, sourceIds: cites(text(value['id'])!, value), epistemic: markOf(value, gone) };
         };
         const records = (key: string): Readonly<Record<string, unknown>>[] => list(diagram[key]).filter(isRecord);
         const groupOf = (value: Readonly<Record<string, unknown>>): DraftContainmentGroup => ({ ...claimOf(value), children: list(value['children']).filter(isRecord).map(groupOf) });
@@ -802,11 +859,11 @@ export function buildLocalInput(inputs: BuildInputs): Built {
         id: text(diagram['id'])!, title: held ? WITHHELD_LABEL : title(diagram['title']), ...placement(diagram), kind: diagram['kind'] as DossierDraft['diagrams'][number]['kind'], relationship: held ? WITHHELD_LABEL : title(diagram['relationship']),
         nodes: list(diagram['nodes']).filter(isRecord).map((node) => {
           const { held: gone } = element('', node);
-          return { id: text(node['id'])!, label: gone === undefined ? title(node['label']) : WITHHELD_LABEL, sourceIds: cites(text(node['id'])!, node), epistemic: gone === undefined && node['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const };
+          return { id: text(node['id'])!, label: gone === undefined ? title(node['label']) : WITHHELD_LABEL, sourceIds: cites(text(node['id'])!, node), epistemic: markOf(node, gone) };
         }),
         edges: list(diagram['edges']).filter(isRecord).map((edge) => {
           const { held: gone } = element('', edge);
-          return { id: text(edge['id'])!, from: text(edge['from'])!, to: text(edge['to'])!, label: gone === undefined ? title(edge['label']) : WITHHELD_LABEL, sourceIds: cites(text(edge['id'])!, edge), epistemic: gone === undefined && edge['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const };
+          return { id: text(edge['id'])!, from: text(edge['from'])!, to: text(edge['to'])!, label: gone === undefined ? title(edge['label']) : WITHHELD_LABEL, sourceIds: cites(text(edge['id'])!, edge), epistemic: markOf(edge, gone) };
         }),
         disposition: disposition(diagram['disposition']),
       };
@@ -941,6 +998,15 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   const hero: LocalRenderInput['hero'] = declaredHero?.form === 'figure' && typeof declaredHero.value === 'string'
     ? { form: 'figure', diagram: declaredHero.value }
     : declaredHero?.form === 'omitted' ? { form: 'omitted', reason: paragraph(declaredHero.value) } : undefined;
+  // A v15 view's display names (version 2.35): each a claim of the draft, its citations read as a node's are, withheld as a node is.
+  const localBases = inputs.bases === undefined ? undefined : new Map([...inputs.bases].map(([diagramId, base]): [string, LocalBase] => [diagramId, base.state !== 'drawn' ? base : {
+    ...base, names: base.names.map((name) => {
+      const record: Readonly<Record<string, unknown>> = { ...name.record, id: name.id };
+      const { held: gone } = element('', record);
+      return { id: name.id, factId: name.factId, path: name.path, label: gone === undefined ? title(record['label']) : WITHHELD_LABEL, sourceIds: cites(name.id, record),
+        epistemic: gone === undefined && record['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const };
+    }),
+  }]));
   const editorial = draftLayer.state === 'editorial-draft';
   const pages = editorial ? [understandingPage, discoveryPage, clarificationsPage, executionsPage, reviewPage] : [discoveryPage, executionsPage, reviewPage];
   return {
@@ -950,6 +1016,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
       draft, withheldTitle: `Dossier of ${subject.repository.url} at ${pinned.slice(0, 12)}`, draftLayer, blocks, glossary, disclosure,
       sourceAnchors, pages, reviewStatus, withheldElements, citationLines,
       authoring: { tool: declared.agentTool, model: declared.model },
+      ...(localBases === undefined ? {} : { bases: localBases }),
       selectionReasons,
       // A v6 draft's thesis basis (version 2.4): the code-reading line renders only while the draft layer and the introduction both show.
       ...(hasThesisBasisForm(doc['schemaVersion']) && (doc['thesisBasis'] === 'stated' || doc['thesisBasis'] === 'code-reading' || doc['thesisBasis'] === 'none') ? { thesisBasis: {

@@ -332,6 +332,53 @@ export type LocalEdgeRelation =
     readonly evidence?: undefined;
   };
 
+/** One base element a view shows (version 2.35), in Syzygy's words: its fact identity, the path the render resolves it to, its box label,
+ * its name, and its fact's mark. */
+export interface LocalBaseElement {
+  readonly factId: string;
+  readonly path: string;
+  readonly label: string;
+  readonly name: string;
+  readonly epistemic: 'observed' | 'inferred' | 'unknown';
+  readonly unknownReason: string | null;
+  /** For a top-level directory: the record's `contains` fact joining the root to it, its identity and mark; null otherwise. */
+  readonly contains: { readonly factId: string; readonly epistemic: 'observed' | 'inferred' | 'unknown' } | null;
+}
+/** A display name the draft gives a shown base element (version 2.35): a claim of the draft, its identity `<diagram>:name:<k>`. */
+export interface LocalBaseName {
+  readonly id: string;
+  readonly factId: string;
+  readonly path: string;
+  readonly label: string;
+  readonly epistemic: 'inferred' | 'unknown';
+  readonly sourceIds: readonly string[];
+}
+/** What one `hide` entry, or `select`'s `restReason`, leaves out: the count, the names in Syzygy's words in the map's order, whether the
+ * repository root is among them, the resolved paths and the screened reason. */
+export interface LocalBaseLeftOut { readonly count: number; readonly names: readonly string[]; readonly root: boolean; readonly paths: readonly string[]; readonly reason: string }
+/** A view's base at a render (version 2.35): drawn from an established map; Unknown where the map is not established; or not resolving
+ * against the map at this render where check could not read it. */
+export type LocalBase =
+  | {
+    readonly state: 'drawn';
+    readonly map: 'directories' | 'units';
+    /** The shown base elements, in the map's order. */
+    readonly elements: readonly LocalBaseElement[];
+    readonly shown: number;
+    readonly total: number;
+    readonly root: 'shown' | 'hidden' | null;
+    readonly notListed: { readonly directories: number; readonly secretPathsLeftOut: number; readonly submodules: number }
+      | { readonly facts: number; readonly unknownFiles: number; readonly secretPathsLeftOut: number };
+    /** The shown elements' paths where the view selects, else null. */
+    readonly select: readonly string[] | null;
+    readonly restReason: LocalBaseLeftOut | null;
+    readonly hides: readonly LocalBaseLeftOut[];
+    readonly names: readonly LocalBaseName[];
+  }
+  /** The map is not established at this render: the figure is the map's own Unknown, read from `derivedStructure` or `manifestFacts`. */
+  | { readonly state: 'unknown'; readonly map: 'directories' | 'units' }
+  | { readonly state: 'unresolved'; readonly map: 'directories' | 'units' };
+
 export interface LocalRenderInput {
   /** The checked draft in the renderer's shape. `sourceIds` name only sources Syzygy read and screening admitted, and may be empty. No
    * part of it renders while the draft layer is Unknown. */
@@ -380,6 +427,9 @@ export interface LocalRenderInput {
    * select it, whose figures the draft's `diagrams` carry already expanded. Absent for every earlier draft, so its pages and machine view
    * keep their bytes. */
   readonly model?: LocalModel;
+  /** A schema-v15 draft's views with a `base` (REQ-polaris-generation-034 version 2.35), by diagram identity: what the render drew each
+   * from. Absent for every other draft, so its pages and machine view keep their bytes. */
+  readonly bases?: ReadonlyMap<string, LocalBase>;
   /** A schema-v6 draft's `thesisBasis` (REQ-polaris-generation-034 version 2.4): what the authoring session says its introduction rests
    * on, and whether the code-reading line renders before it. Absent for every earlier draft, so its pages and machine view keep their
    * bytes. */
