@@ -10,6 +10,7 @@ import {
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
 import { figurePlanFindings, withoutFigurePlan } from './figure-plan.js';
+import { walkFindings, walksAt, withoutWalks } from './walk.js';
 import { applyHeroFindings, relationDecisions } from './check-derive.js';
 import { applyContainmentFindings, groupsOf } from './containment.js';
 import { expandModel, localModelOf, modelFindings, modelIndex, viewLists } from './system-model.js';
@@ -184,6 +185,11 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   // A v14 draft renders exactly as the same draft without its figure plan (version 2.33); the plan's findings join the re-derivation.
   const planFindings = figurePlanFindings(doc);
   doc = withoutFigurePlan(doc);
+  // A v16 draft's walks (version 2.40): checked again here without the maps, as check reports them; drawn from `walked` below, and every
+  // other reader is handed the draft without them.
+  const walked = doc;
+  const walkFindingsNow = walkFindings(walked, {});
+  doc = withoutWalks(doc);
 
   const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, now)(placementSubjectOf(subject));
   if (!screenLoad.ok) return refuse('screen', screenLoad.why);
@@ -203,6 +209,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   // A v12 draft's model and view findings (version 2.24), as check reports them without the tree.
   if (hasModelForm(doc['schemaVersion'])) findings.push(...modelFindings(doc, new Set(findings.filter((finding) => finding.kind === 'schema').map((finding) => finding.at)), undefined));
   findings.push(...planFindings);
+  findings.push(...walkFindingsNow);
   if (findings.length > 0) {
     return refuse('rederive', `draft revision ${draftRev.revision} passed its check, but checking it again at this render from the objects read now finds ${findings.length} finding(s); the stored result is not trusted, so nothing is rendered`,
       { reasons: findings.map((finding) => `${finding.kind} at ${finding.at}`) });
@@ -254,7 +261,9 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const roughEdges = await renderRoughEdges(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
   // Version 2.48 (syzygy-5dhm.119): the documents' paths and identifiers, resolved here the same way, for the docs-and-code page.
   const docsAndCode = await renderDocsAndCode(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
-  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, roughEdges, docsAndCode, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }), ...(model === undefined ? {} : { model }) } };
+  // Version 2.40: a v16 draft's walks, each step's node as this render draws it; a walk the render cannot resolve is left out.
+  const walks = walksAt(walked, bases.resolved);
+  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, roughEdges, docsAndCode, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }), ...(model === undefined ? {} : { model }), ...(walks.size === 0 ? {} : { walks }) } };
 
   const renderer = deps.renderer;
   const draw = (local: LocalRenderInput): ReadonlyMap<string, string> | string => {

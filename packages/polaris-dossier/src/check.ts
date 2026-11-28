@@ -31,6 +31,7 @@ import { applyContainmentFindings, containmentStructuralFindings, undecidedConta
 import { BASE_BASIS, type BaseContext, type ResolvedBase, admitOf, baseNestingFindings, checkBaseMaps, readBases } from './derived-base.js';
 import { expandModel, modelDecisions, modelFindings, modelIndex, modelRelationFindings, modelUndecided, undecidedViews } from './system-model.js';
 import { hasModelForm, hasRelationForm, hasWithheldHeroIdentity } from './draft-schema.js';
+import { walkFindings, withoutWalks } from './walk.js';
 import { figureAdvice as computeFigureAdvice, figurePlanFindings, plansFigures, withoutFigurePlan, type FigureAdvice } from './figure-plan.js';
 import { BLOB_MODES } from './git-object-reader.js';
 import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
@@ -210,6 +211,9 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // draft without it. The frozen bytes keep it.
   const planned = plan.command === 'check' && parseFault === null && plansFigures(doc) ? doc : undefined;
   if (planned !== undefined) doc = withoutFigurePlan(planned);
+  // A v16 draft's walks (version 2.40) are read by their own findings alone; every other reader is handed the draft without them.
+  const walked = doc;
+  doc = withoutWalks(doc);
 
   const gate = plan.gate(run, parseFault === null ? doc : undefined);
   if (!gate.ok) return refuse(gate.stage, gate.reason);
@@ -351,6 +355,8 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
 
   // Version 2.33: after every finding version 2.32 reports, a v14 draft's figure-plan findings.
   if (planned !== undefined) findings.push(...figurePlanFindings(planned));
+  // Version 2.40: after every other finding, a v16 draft's walk findings, its base ends read against the maps this check derived.
+  if (plan.command === 'check' && parseFault === null && isRecord(walked)) findings.push(...walkFindings(walked, checkBaseMaps(treeFacts, manifestFacts)));
 
   const frozen = path.join(frozenDir, `rev-${revision}.json`), checkFile = path.join(checksDir, `rev-${revision}.json`);
   // A derived record already in place for this revision (planted, or left by a crash) is never overwritten or adopted: refused here,
@@ -481,7 +487,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
 /** The existing shape check has established the eligible lists before we look for a selection. */
 function sourceExampleAdvice(doc: Readonly<Record<string, unknown>>): SourceExampleAdvice | undefined {
   const version = doc['schemaVersion'];
-  if (version !== 'polaris-dossier-local-draft-v13' && version !== 'polaris-dossier-local-draft-v14' && version !== 'polaris-dossier-local-draft-v15') return;
+  if (version !== 'polaris-dossier-local-draft-v13' && version !== 'polaris-dossier-local-draft-v14' && version !== 'polaris-dossier-local-draft-v15' && version !== 'polaris-dossier-local-draft-v16') return;
   const isCode = (item: unknown): boolean => isRecord(item) && item['kind'] === 'code';
   const selectsCode = (part: unknown): boolean => isRecord(part) && list(part['paragraphs']).some(item =>
     isCode(item) || (isRecord(item) && item['kind'] === 'details' && list(item['elements']).some(isCode)));

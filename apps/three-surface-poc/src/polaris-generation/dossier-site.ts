@@ -8,7 +8,8 @@ import {
   type LocalBase, type LocalBlock, type LocalDerivedFact, type LocalDerivedStructure, type LocalManifestFact, type LocalManifestFacts, type LocalManifestFileEntry, type LocalManifestRecognizerEntry, type LocalEdgeRelation, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
-import { CALLED_HEIGHT, READABLE_SPACING, layoutContainment, layoutDiagram, layoutSequence, layoutSwimlane, renderContainmentSvg, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg, type BoxDecoration, type ContainmentClaim, type ContainmentGroupInput } from './diagram-layout.js';
+import { CALLED_HEIGHT, READABLE_SPACING, diagramNodeBoxes, walkBoxStyle, walkableWidth, layoutContainment, layoutDiagram, layoutSequence, layoutSwimlane, renderContainmentSvg, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg, type BoxDecoration, type ContainmentClaim, type ContainmentGroupInput } from './diagram-layout.js';
+import { WALK_FIGURE_CSS } from './dossier-walk.js';
 import { BASE_FIGURE_CSS, baseChip, baseHiddenItems, baseLegendEntry, baseMachine, baseNotice, baseTallyClause } from './dossier-base.js';
 import { TEST_NAMES_LEGEND, TEST_NAMES_PAGE, testNamesMachine, testNamesPage } from './dossier-test-names.js';
 import { ROUGH_EDGES_LEGEND, ROUGH_EDGES_PAGE, roughEdgesMachine, roughEdgesPage } from './dossier-rough-edges.js';
@@ -795,6 +796,39 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const called = name === undefined ? '' : ` ${claim('span', name.id, name.epistemic, `Called ${escape(name.label)} by this dossier. ${mark(from, name.epistemic)} ${refs(from, name.sourceIds, name.id)}`)}`;
     return `<li${baseIdAttrs(base.map, factId, unknownReason)} data-epistemic="${epistemic}">${escape(label)}${words} ${mark(from, epistemic)} <span class="derived-mark">Derived by Syzygy</span>${called}</li>`;
   };
+  // A v16 figure walk (version 2.40): the pages holding one carry its style rules.
+  const walkPages = new Set<string>();
+  // A walk over a figure drawn on `from`, where the draft walks it and its drawing is not 1048 px wide: the layer laid over the drawing,
+  // one box per node in the drawing's node order, and the walk's list. A box takes its step's id and badge, and a link to the cited lines
+  // its node's first citation's link lands on, where the node is not withheld, not a base element and that citation has a source page:
+  // the same address the citation link carries, which depends on the page alone, so a later figure's box lands where the first figure's
+  // link does. Undefined where no walk renders, so the page's bytes are those without it.
+  const walkOf = (from: string, d: DraftDiagram, isBase: (id: string) => boolean, decorate: ((id: string) => BoxDecoration | undefined) | undefined,
+    held: (id: string) => WithheldNote | undefined): { readonly layer: string; readonly list: string } | undefined => {
+    const steps = local?.walks?.get(d.id);
+    if (steps === undefined) return undefined;
+    const geometry = diagramNodeBoxes(d, READABLE_SPACING, decorate);
+    if (!walkableWidth(geometry.width)) return undefined;
+    const nodes = new Map(d.nodes.map(n => [n.id, n]));
+    if (steps.some(step => !nodes.has(step.node))) return undefined;
+    const numberOf = new Map(steps.map((step, k) => [step.node, k + 1]));
+    const sourceLink = (n: DraftDiagram['nodes'][number]): string => {
+      const first = n.sourceIds[0];
+      const target = first === undefined ? undefined : sourcePaths.get(first);
+      if (isBase(n.id) || held(n.id) !== undefined || first === undefined || target === undefined) return '';
+      const at = href(from, target, lineFragment(first, local?.citationLines?.get(n.id)?.get(first)));
+      return `<a class="walk-source" href="${escape(at)}"><span class="visually-hidden">${escape(n.label)}: cited lines</span></a>`;
+    };
+    const boxes = geometry.boxes.map(box => {
+      const n = nodes.get(box.id)!, number = numberOf.get(box.id);
+      const identity = number === undefined ? '' : ` id="walk-${escape(d.id)}-${number}"`;
+      const badge = number === undefined ? '' : `<span class="walk-badge" aria-hidden="true">${number}</span>`;
+      return `<span class="walk-node" style="${walkBoxStyle(box)}"${identity}>${badge}${sourceLink(n)}</span>`;
+    }).join('');
+    const items = steps.map((step, k) => `<li><a href="#walk-${escape(d.id)}-${k + 1}">${escape(nodes.get(step.node)!.label)}</a> <a class="walk-text" href="#block-${escape(step.block)}">Read step ${k + 1}</a></li>`).join('');
+    walkPages.add(from);
+    return { layer: `<div class="walk-layer">${boxes}</div>`, list: `<ol class="figure-walk" aria-label="Walk through this figure">${items}</ol>` };
+  };
   const relationOf = (id: string): LocalEdgeRelation | undefined => local?.edgeRelations?.get(id);
   type WitnessedRelation = Extract<LocalEdgeRelation, { readonly evidence: object }>;
   const witnessAttrs = (relation: LocalEdgeRelation): string => ` data-relation="${escape(relation.relation)}"${relation.evidence === undefined ? ''
@@ -921,7 +955,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const ids = figureIds(index);
     const baseMap = drawnBase === undefined ? '' : ` data-base-map="${drawnBase.map}"`, chip = drawnBase === undefined ? '' : baseChip(drawnBase, from);
     const hidden = drawnBase === undefined ? '' : baseHiddenItems(drawnBase);
-    return `<figure${asHero ? heroFigureAttribute : ''}${curated}${baseMap}${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption>${chip}<p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${nodeList}${hidden}</ul><ol>${edgeList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
+    // A v16 walk (version 2.40): the drawing, byte for byte, wrapped with the layer over it, and the walk's list after it.
+    const walked = local === undefined ? undefined : walkOf(from, d, isBase, drawnBase === undefined ? undefined : id => baseDecoration(drawnBase, id), held);
+    const drawing = walked === undefined ? svg : `<div class="walk-figure">${svg}${walked.layer}</div>`;
+    return `<figure${asHero ? heroFigureAttribute : ''}${curated}${baseMap}${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption>${chip}<p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${drawing}</div>${walked?.list ?? ''}${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${nodeList}${hidden}</ul><ol>${edgeList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
   };
   // A v7 sequence or swimlane (REQ-polaris-generation-034 version 2.5): the figure a graph figure with its home takes, holding its drawing and
   // its phone form, of which the stylesheet displays one by the width of the `figure-forms` box. Each participant, lane and step is a claim
@@ -1144,7 +1181,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const add = (path: string, depth: number, pageTitle: string, main: string | (() => { markup: string; styles: string }), mapCss = ''): void => {
     pageTitles.set(path, pageTitle);
     const draw = (markup: string, styles: string): string =>
-      page(`${pageTitle} — ${title}`, path, nav(path), legended(path, markup), chrome, `${figureKindsCss(figurePages.has(path), containmentPages.has(path))}${basePages.has(path) ? BASE_FIGURE_CSS : ''}`, styles, subsectionPages.has(path));
+      page(`${pageTitle} — ${title}`, path, nav(path), legended(path, markup), chrome, `${figureKindsCss(figurePages.has(path), containmentPages.has(path))}${basePages.has(path) ? BASE_FIGURE_CSS : ''}${walkPages.has(path) ? WALK_FIGURE_CSS : ''}`, styles, subsectionPages.has(path));
     if (typeof main === 'string') files.set(path, draw(main, mapCss));
     else {
       files.set(path, '');

@@ -563,6 +563,25 @@ export function renderDiagramSvg(
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${layout.width} ${height}" width="${layout.width}" height="${height}" role="img" aria-labelledby="diagram-title-${index}" aria-describedby="diagram-text-${index}"><defs><marker id="${markerId}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z"/></marker></defs>${lines}${nodes}${labels}</svg>`;
 }
 
+/** The box each node of a graph figure is drawn in, in the drawing's node order and its own coordinates, and the drawing's width
+ * (REQ-polaris-generation-034 version 2.40): from the same layout `renderDiagramSvg` draws with the same inputs, each box the node's `rect`
+ * (a base element's outer border, never its `called` line). Each number is written as the drawing writes it. */
+export function diagramNodeBoxes(
+  diagram: { readonly nodes: readonly RenderableNode[]; readonly edges: readonly RenderableEdge[] },
+  spacing: DiagramSpacing = DEFAULT_SPACING,
+  decorate: (id: string) => BoxDecoration | undefined = () => undefined,
+): { readonly width: number; readonly boxes: readonly { readonly id: string; readonly x: string; readonly y: string; readonly width: string; readonly height: string }[] } {
+  const layout = layoutDiagram(diagram.nodes.map(node => ({ ...node, below: decorate(node.id)?.called === undefined ? 0 : CALLED_HEIGHT })), diagram.edges, spacing);
+  return { width: layout.width, boxes: diagram.nodes.map((node, i) => ({ id: node.id, x: num(layout.nodes[i]!.x), y: num(layout.nodes[i]!.y), width: num(layout.nodeWidth), height: num(NODE_HEIGHT) })) };
+}
+/** Whether a walk renders over a drawing this wide (version 2.40): every width but 1048 px, the one width version 2.2 lets shrink to its
+ * column, where the layer's CSS pixels would no longer be the drawing's. */
+export const walkableWidth = (width: number): boolean => width !== 1048;
+/** A walk box's position and size as the `style` its layer gives it (version 2.40): the layout's own coordinates, which the readable layout
+ * draws at CSS pixels (it never scales a drawing but one 1048 px wide, which no walk is laid over). Layout data, not a design value. */
+export const walkBoxStyle = (box: { readonly x: string; readonly y: string; readonly width: string; readonly height: string }): string =>
+  `left:${box.x}px;top:${box.y}px;width:${box.width}px;height:${box.height}px`;
+
 /**
  * The figure kinds' fixed-pitch layouts (REQ-polaris-generation-034 version 2.5, syzygy-3efd.30). Each reads identities, references and
  * counts, never a label's width, so the same record always gives the same coordinates. With n participants or lanes in draft order,

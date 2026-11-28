@@ -482,6 +482,9 @@ export type LocalBase =
   | { readonly state: 'unknown'; readonly map: 'directories' | 'units' }
   | { readonly state: 'unresolved'; readonly map: 'directories' | 'units' };
 
+/** One step of a walk (version 2.40): the node it numbers, by its identity in the drawn figure, and the block its `Read step` link names. */
+export interface LocalWalkStep { readonly node: string; readonly block: string }
+
 export interface LocalRenderInput {
   /** The checked draft in the renderer's shape. `sourceIds` name only sources Syzygy read and screening admitted, and may be empty. No
    * part of it renders while the draft layer is Unknown. */
@@ -539,6 +542,10 @@ export interface LocalRenderInput {
   /** A schema-v15 draft's views with a `base` (REQ-polaris-generation-034 version 2.35), by diagram identity: what the render drew each
    * from. Absent for every other draft, so its pages and machine view keep their bytes. */
   readonly bases?: ReadonlyMap<string, LocalBase>;
+  /** A schema-v16 draft's walks (REQ-polaris-generation-034 version 2.40), by the identity of the figure each walks: its steps in order, each
+   * the identity of the node the figure draws (a base element's fact identity) and the block whose paragraph explains it. A walk the render
+   * cannot resolve is absent. Absent for every other draft, so its pages and machine view keep their bytes. */
+  readonly walks?: ReadonlyMap<string, readonly LocalWalkStep[]>;
   /** A schema-v6 draft's `thesisBasis` (REQ-polaris-generation-034 version 2.4): what the authoring session says its introduction rests
    * on, and whether the code-reading line renders before it. Absent for every earlier draft, so its pages and machine view keep their
    * bytes. */
