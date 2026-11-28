@@ -1,19 +1,20 @@
-# Design — view levels, scope and zoom links (version 2.47)
+# Design — view levels, scope and zoom links (version 2.50)
 
-[Inferred] Version 2.47 of REQ-polaris-generation-034, for syzygy-3efd.39. It is drafted on `agent/syzygy-3efd.39` over imports corroboration 2.45 (`dossier-imports-corroboration`, row A-273, tag `polaris-dossier-imports-corroboration-v2.45` once merged), which stands on rough-edge markers 2.44, the newest REQ-034 on main.
+[Inferred] Version 2.50 of REQ-polaris-generation-034, for syzygy-3efd.39. It is drafted on `agent/syzygy-3efd.39` over imports corroboration 2.49 (`dossier-imports-corroboration`, row A-273, tag `polaris-dossier-imports-corroboration-v2.49` once merged), which stands on docs and code 2.48, the newest REQ-034 on main.
 
 ## D1. The version label, the predecessor and the numbers
 
-- [Observed] This change first claimed 2.45 over imports corroboration 2.44, and moved to 2.47 when rough-edge markers took 2.44 on main (A-338, PR #1047), pushing imports corroboration to 2.45, while 2.46 is claimed by open PR #1045 (URL lean run, A-340); its tag is `polaris-dossier-view-levels-v2.47`.
-- [Observed] Numbers. The newest draft schema in the 2.45 text is `polaris-dossier-local-draft-v16` (2.40, walks) and the newest brief `polaris-dossier-brief-v24`; 2.42 to 2.45 took none. So this change takes **draft schema v17** and **brief v25**.
+- [Observed] This change first claimed 2.45 over imports corroboration 2.44, and moved to 2.47 when rough-edge markers took 2.44 on main (A-338, PR #1047), pushing imports corroboration to 2.45, while 2.46 was claimed by PR #1045 (URL lean run, A-340); then docs and code took 2.48 on main (A-342, PR #1048), moving imports corroboration to 2.49, so this change moved again, to 2.50, and its tag is `polaris-dossier-view-levels-v2.50`.
+- [Observed] Numbers. The newest draft schema in the 2.49 text is `polaris-dossier-local-draft-v16` (2.40, walks) and the newest brief `polaris-dossier-brief-v24`; 2.42 to 2.49 took none. So this change takes **draft schema v17** and **brief v25**.
 - [Observed] The build script (`docs/evidence/syzygy-3efd-39/view_levels_build_spec.py`) edits the predecessor's bytes at anchors it asserts occur exactly once:
   - 2.24's sentence that a view names no level or zoom target;
   - 2.40's sentence that a page holding no walk carries none of the walk's style rules, which gains the zoom-layer exception (review 1, finding 2);
   - the end of 2.40's earlier-schema paragraph ("No migration yields a v16 draft."), after which the six new paragraphs go;
-  - the four Form lines, each extended after its 2.45 sentence.
+  - the four Form lines, each extended after its 2.49 sentence.
   The scenarios precede the one Form line. If another REQ-034 version lands first, the script is re-run over it with the predecessor path changed.
 - [Observed] First built over the 2.44 text that review 1 of 2.44 read (sha256 `5b13a399…3955`; this spec then `056638df…f8e5`). Rebuilt by the same script, unchanged, over 2.44 as repaired after that review (sha256 `d60afad88bc72dde63ad597d2b9a5fa646143e4b68f89202ffcaff8742068c4d`): every anchor still occurs once. That build hashed to `208252fd2094fd5ad725c6d03b0c51884d2017a7fdb5f8217ffeb53720ab45f4` (311 scenarios), the bytes review 1 read. Repaired after review 1 by edits to the same script over the same 2.44 bytes, this spec hashes to `50eefcc8e96886bd39c66b9fcc09300b4c308b90d4b8a760e1f0f9ad37e58afa`; REQ-034 goes from 302 to 314 scenarios.
-- [Observed] Rebuilt by the same script, with only the version labels changed, over imports corroboration 2.45 (sha256 `a7b05a96…537b`), which is 2.44 rebuilt over rough-edge markers: every anchor still occurs once. This spec now hashes to `ccf8e2d4cdcb389faaafff9ff1abd526b947e1efd4bdd34a5e767dbfa38fc41c`; REQ-034 goes from 309 to 321 scenarios. No review has read this rebuild.
+- [Observed] Rebuilt by the same script, with only the version labels changed, over imports corroboration 2.45 (sha256 `a7b05a96…537b`), which is 2.44 rebuilt over rough-edge markers: every anchor still occurs once. This spec now hashes to `ccf8e2d4cdcb389faaafff9ff1abd526b947e1efd4bdd34a5e767dbfa38fc41c`; REQ-034 goes from 309 to 321 scenarios. No review read that rebuild.
+- [Observed] Rebuilt again by the same script, with only the version labels changed, over imports corroboration 2.49 (sha256 `d17fe4b4…d2db`), which stands on docs and code 2.48: every anchor still occurs once. This spec now hashes to `4e291b8d20940d7f939b2443731e56c586eaf40dcde2d3765ef6fb18b29f3d9d`; REQ-034 goes from 317 to 329 scenarios. No review has read this rebuild.
 
 ## D2. The level is a type table
 
@@ -65,7 +66,7 @@
 - [Inferred] 2.33: the figure plan names diagrams alone and is never compared with `level`; a planned figure's `kind` is no level. The figure advice is unchanged (D4).
 - [Inferred] 2.35: base elements are typed (D2); `view-level` at `base` is computed only where the base map is established and the view has no `base-reference` or `base-conflict` finding, as 2.35 computes its own. Base elements are never zoom targets and never "below" a scope, even when a `group` draws them inside an element; nor are they ever a scope, so a context view over a base map selects the model's `system` element as well, drawn beside the root's box (review 1, note 9). [Inferred] The scope's `unresolved-reference` detail repeats the scope only where it is a well-formed identity and gives the path otherwise, as 2.24 does for an entry, so a scope written as a base path enters no detail (note 6).
 - [Inferred] 2.40: a walked figure with zoom links has one wrapper and one layer; each box holds badge, `walk-source`, then `zoom-link`. The 1048 px exclusion is the same, for the same reason: only an unscaled drawing lets the layer's boxes match.
-- [Inferred] 2.36 to 2.39 and 2.42 to 2.45 read no view level and are untouched. 2.45's corroboration decides arrows, not boxes, and 2.44's rough-edge page draws no figure.
+- [Inferred] 2.36 to 2.39, 2.42 to 2.44, 2.48 and 2.49 read no view level and are untouched. 2.49's corroboration decides arrows, not boxes, and the rough-edge (2.44) and docs-and-code (2.48) pages draw no figure; 2.46 changes REQ-025 and 047 alone.
 
 ## D8. What the code change must do
 
