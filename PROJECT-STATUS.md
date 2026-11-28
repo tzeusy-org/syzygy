@@ -329,6 +329,12 @@ It replaces REQ-polaris-generation-034 from version 2.42, the test-name recogniz
 and v11 migration keeps its parity only where the migrated model fits the v12 bounds of 200 elements and 400 relationships.
 
 With the migration bounds version effective, Polaris has 39 requirements and 645 scenarios.
+
+[URL lean run amendment 2.46](openspec/changes/dossier-url-lean-run) is agent-adopted in A-340.
+It replaces REQ-polaris-generation-025 and 047 from URL dossier 2.1 (14 to 6 and 24 to 6 scenarios): a URL run pins
+one commit by anonymous `git ls-remote`, fetches it with no credential and reads no record.
+
+With the URL lean run version effective, Polaris has 39 requirements and 619 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
