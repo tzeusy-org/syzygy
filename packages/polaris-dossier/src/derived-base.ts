@@ -11,6 +11,7 @@ import {
   BASE_BOUNDS, BASE_END_SCHEMA, BASE_FIELD, BASE_MAPS, BASE_SCHEMA, CONTAINMENT_KIND, LOCAL_DRAFT_SCHEMA_VERSION_V15, MODEL_FIELD, VIEW_FIELD,
   hasBaseForm, hasModelForm, type BaseMapName,
 } from './draft-schema.js';
+import { handleOr } from './finding-names.js';
 
 /** The derived base of a v15 view (REQ-polaris-generation-034 version 2.35, syzygy-3efd.38): the shape of `base` and of a cited
  * relationship's base ends, the map a base starts from as check or render derives it, what a base path names there, the six base findings
@@ -199,7 +200,7 @@ export function baseFieldVersionFindings(doc: Doc, admit: Admit): CheckFinding[]
     if (!isRecord(relationship)) return;
     for (const end of ['from', 'to'] as const) {
       if (!isBaseEnd(relationship[end])) continue;
-      const id = text(relationship['id']) ?? `$.${MODEL_FIELD}.relationships[${k}]`;
+      const id = handleOr(relationship['id'], `$.${MODEL_FIELD}.relationships[${k}]`);
       out.push({ kind: 'field-version', at: `$.${MODEL_FIELD}.relationships[${k}].${end}`,
         detail: screened(admit, [id], `${id}: a base end needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V15}`, BASE_DETAIL_UNAVAILABLE) });
     }

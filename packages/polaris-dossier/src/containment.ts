@@ -2,6 +2,7 @@ import { checkShape, handle } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
 import { CONTAINMENT_BOUNDS, CONTAINMENT_KIND, GROUPS_FIELD, LOCAL_DRAFT_SCHEMA_VERSION_V11, hasContainmentForm, precedesContainment } from './draft-schema.js';
 import { type CheckFinding, list } from './check-model.js';
+import { isHandle } from './finding-names.js';
 
 /** The containment figure (REQ-polaris-generation-034 version 2.23, schema v11): its groups' walk, its names in findings, its field-version
  * paths in an earlier draft, and the three structural findings check and render both derive. Pure; reads the draft alone. */
@@ -43,7 +44,7 @@ export function containmentName(diagram: Readonly<Record<string, unknown>>, i: n
 
 /** A group as a `unit-reference` finding names it: by its identity, or by its path where it has none. */
 export const groupName = (group: Readonly<Record<string, unknown>>, at: string): string =>
-  (typeof group['id'] === 'string' ? `the group ${JSON.stringify(group['id'])}` : `the group at ${at}`);
+  (isHandle(group['id']) ? `the group ${JSON.stringify(group['id'])}` : `the group at ${at}`);
 
 /** The `field-version` findings of a draft of schema v10 or earlier (version 2.23): at a diagram's `kind` where it is `containment`, and
  * at its `groups` where it carries one, each in place of the schema finding at that path. None in a v11 or v13 draft. */

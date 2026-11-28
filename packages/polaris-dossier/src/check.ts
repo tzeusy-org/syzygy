@@ -38,6 +38,7 @@ import { walkFindings, withoutWalks } from './walk.js';
 import { figureAdvice as computeFigureAdvice, figurePlanFindings, plansFigures, withoutFigurePlan, type FigureAdvice } from './figure-plan.js';
 import { BLOB_MODES } from './git-object-reader.js';
 import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
+import { screenFindingDetails } from './finding-names.js';
 export { CHECK_RECORD_FORMAT, STEP_LOG_FORMAT, DEFAULT_DRAFT, DRAFT_MAX_BYTES, reviewVisibility, lineRanges, blobRedaction } from './check-model.js';
 export type { BoundedCheckRecord, BoundedRecordOmits, RecordMeasure, MechanismAdvice, CheckFindingKind, CheckFinding, VerifiedQuotation, ExcludedQuotation, ReviewVisibility, CitedBlob, BlobRedaction, CheckStage, CheckCommand, CheckRefusal, CheckRecord, CheckReport, CheckResult, CheckRequest, CheckDeps } from './check-model.js';
 export { deriveFindings, draftRules, collectBlocks, collectCitations } from './check-derive.js';
@@ -389,6 +390,11 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   } catch (cause) {
     return refuse('freeze', `the ${noun} could not be frozen as ${path.relative(run, frozen)} (${errno(cause)})`);
   }
+  // Every finding's detail screened as it is reported and recorded (syzygy-3efd.93): a detail a secret detector matches, or a word of which
+  // names a secret path, is withheld, whatever builder made it and whatever draft value it names. The finding keeps its kind and location.
+  // One element at a time: a spread of every finding into one call is bounded by the stack (AGENTS.md), and a draft may draw many.
+  const screenedFindings = screenFindingDetails(findings, admitOf(screen), (word) => screen.screenPath(word) === 'denied-path');
+  for (let k = 0; k < screenedFindings.length; k++) findings[k] = screenedFindings[k]!;
   const outcome = findings.length === 0 ? 'passed' : 'findings';
   const record = plan.record({
     runId,
