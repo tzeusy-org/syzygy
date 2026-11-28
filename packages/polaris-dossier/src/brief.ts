@@ -41,7 +41,10 @@ import { issuedBriefStatement } from './launch-statements.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-/** v21 (REQ-polaris-generation-034 version 2.32, syzygy-5dhm.135): brief v20 with the one question-kinds paragraph
+/** v22 (REQ-polaris-generation-034 version 2.33, syzygy-3efd.84): brief v21 with draft schema v14 and three paragraphs immediately after
+ * the hero paragraph, in this order: brief v17's containment paragraph (`CONTAINMENT_PARAGRAPH`), brief v18's system-model paragraph
+ * (`MODEL_PARAGRAPH`), each word for word, and the one figure-plan paragraph (`FIGURE_PLAN_PARAGRAPH`); and this line changed.
+ * v21 (REQ-polaris-generation-034 version 2.32, syzygy-5dhm.135): brief v20 with the one question-kinds paragraph
  * (`QUESTION_KINDS_PARAGRAPH`) immediately after the worth-knowing paragraph, and this line changed. The draft schema stays v13.
  * v20 (syzygy-fnry.18 AC4): brief v19 with terminology ID instructions in the understanding record.
  * v19 (REQ-polaris-generation-034 version 2.26, syzygy-5dhm.41): brief v16 with draft schema v13 and the one worth-knowing paragraph
@@ -53,18 +56,20 @@ import { issuedBriefStatement } from './launch-statements.js';
  * (`SUBSECTIONS_PARAGRAPH`) immediately after the figure-kinds paragraph, and this line changed. v13 (the index-and-task-routes change): brief v12 with the task-routes section (`TASK_ROUTES_RULE`) added after the Poles and this line
  * changed, and nothing else. v12 (REQ-polaris-generation-034 version 2.5): brief v11 with draft schema v7 and the one figure-kinds paragraph
  * (`FIGURE_KINDS_PARAGRAPH`) immediately after the thesis-basis paragraph. v11 (version 2.4) added schema v6 and `THESIS_BASIS_PARAGRAPH`. */
-export const BRIEF_VERSION = 'polaris-dossier-brief-v21';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v22';
 const HERO_PARAGRAPH = 'Name the dossier\'s hero in `hero`: `{"figure": "<diagram id>"}` for one diagram whose `home` is `{"kind": "overview"}` and whose `kind` is `flow`, `lifecycle`, `state-machine`, `boundary`, `dependency` or `placement`, showing the project\'s main parts and what surrounds them. Syzygy draws it first on the overview, after the introduction and any open questions. Where no such figure would be true, write `{"omitted": <block>}` instead, one inferred or unknown block saying why; the overview shows that reason where the figure would stand. A draft that does neither is refused.';
 
-/** The containment paragraph brief v17 places immediately after the hero paragraph (REQ-polaris-generation-034 version 2.23). No brief
- * issues it yet: brief v17 would issue schema v11 and drop the paragraphs briefs v19 to v21 added (version 2.26 and later descend from
- * brief v16), so the issued brief stays v21, and brief v22 (version 2.33, schema v14) carries this paragraph when it lands. */
+/** The containment paragraph brief v17 places immediately after the hero paragraph (REQ-polaris-generation-034 version 2.23). Brief v17
+ * was never issued (it would issue schema v11 and drop the paragraphs briefs v19 to v21 added); brief v22 (version 2.33, schema v14)
+ * carries it, word for word, in the same place. */
 export const CONTAINMENT_PARAGRAPH = 'A diagram\'s `kind` may also be `containment`, which takes `groups` in place of `nodes` and `edges`. Use it to show parts inside parts, such as packages inside a workspace or modules inside a service: list one to five top-level groups in `groups`, left to right, each with `id`, `label`, `epistemic` and `citations` as a node has and `children`, the zero to eight groups drawn inside it, top to bottom, in the same form. Nest at most three levels, at most 40 groups in all, and at least one group in another. Syzygy draws no line between groups: put a group inside another only where the second contains the first, and use a graph for any other relation. A group may carry `unit` as a node may; where both a group and the group it is in carry units, Syzygy checks the nesting as a `contains` arrow, and today only a top-level directory inside the repository root can be witnessed. On a narrow screen Syzygy shows a containment as a nested list.';
 
-/** The system-model paragraph brief v18 places immediately after the containment paragraph (REQ-polaris-generation-034 version 2.24). No
- * brief issues it yet: brief v18 would issue schema v12 and, like brief v17, drop the paragraphs briefs v19 to v21 added, so the issued brief
- * stays v21. */
+/** The system-model paragraph brief v18 places immediately after the containment paragraph (REQ-polaris-generation-034 version 2.24).
+ * Brief v18 was never issued, for brief v17's reason; brief v22 carries it, word for word, immediately after the containment paragraph. */
 export const MODEL_PARAGRAPH = 'Describe the system once, in `model`: its `elements`, each with `id`, `label`, `type`, `epistemic` and `citations` as a node has, at most one `parent` (the element it is part of, at most two above it) and, where it stands for a part of the repository, a `unit`; and its `relationships`, each either cited, with `from`, `to`, `relation`, `label`, `epistemic` and `citations` as an arrow has, or derived, with `from`, `to`, `relation` and `basis` `derived` alone, which asks Syzygy to state the relation from what it derives (today only a top-level directory inside the repository root). The types are system, directory, package, module, service, job, store, external and person. Then draw each graph or containment figure as a `view` that lists the identities of the elements and relationships it shows: show an element in every figure that needs it, under the same identity, rather than redrawing it, and show every element and relationship in at least one view. A view shows a relationship only with both its ends; a containment view nests an element inside its parent when it shows both. Sequence and swimlane figures keep their own members.';
+
+/** The paragraph brief v22 adds immediately after the system-model paragraph, in the requirement's words (version 2.33). */
+export const FIGURE_PLAN_PARAGRAPH = 'Plan the figures before you write the prose, in `figurePlan`: one entry for the overview, each section and each deep dive, its `home` written as a diagram\'s `home` is. For each place, write the one question a picture there answers better than text in `question`, the figure kind it needs in `kind`, and the diagram that answers it in `figure`, homed there and of that kind; for a graph or containment, that is the diagram whose `view` draws it. Where no picture would answer better than text, or the planned figure cannot be drawn, write `{"home": <place>, "omitted": "<why>"}` instead. The plan is not published. A draft whose plan misses a place, names one twice or names a figure that is not the one drawn there is refused; check only advises where a figure is a chain of three or fewer, draws nothing another figure does not, or draws a part beside a part of it, by `unit` or `parent`, without showing that one holds the other.';
 
 /** The paragraph brief v21 adds immediately after the worth-knowing paragraph, in the requirement's words (version 2.32). It carries no
  * project content and none of the comprehension key's questions. */
@@ -208,6 +213,12 @@ export function renderBrief(input: BriefInput): string {
     RELATION_TYPES_PARAGRAPH,
     '',
     HERO_PARAGRAPH,
+    '',
+    CONTAINMENT_PARAGRAPH,
+    '',
+    MODEL_PARAGRAPH,
+    '',
+    FIGURE_PLAN_PARAGRAPH,
     '',
     '## Poles',
     '',

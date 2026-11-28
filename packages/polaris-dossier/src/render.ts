@@ -9,6 +9,7 @@ import {
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
+import { figurePlanFindings, withoutFigurePlan } from './figure-plan.js';
 import { applyHeroFindings, relationDecisions } from './check-derive.js';
 import { applyContainmentFindings, groupsOf } from './containment.js';
 import { expandModel, localModelOf, modelFindings } from './system-model.js';
@@ -23,6 +24,7 @@ import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
 import { deriveTestNames, testNamesUnknown, type TestNames } from './test-names.js';
+import { deriveRoughEdges, roughEdgesUnknown, type RoughEdges } from './rough-edges.js';
 import { errno, latestInventorySession, logStep, openRun, promptRecordName, readRecord, type OpenedRun } from './inventory.js';
 import { briefStandardsOf, buildDesignPacket, standardsInput } from './design-review.js';
 import { derivedStructureAt, readCurrencyPolicy, secretPathOf, type CurrencyPolicy } from './derived-record.js';
@@ -176,6 +178,9 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   } catch {
     return refuse('draft', `draft revision ${draftRev.revision} is not one bounded JSON object`);
   }
+  // A v14 draft renders exactly as the same draft without its figure plan (version 2.33); the plan's findings join the re-derivation.
+  const planFindings = figurePlanFindings(doc);
+  doc = withoutFigurePlan(doc);
 
   const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, now)(placementSubjectOf(subject));
   if (!screenLoad.ok) return refuse('screen', screenLoad.why);
@@ -194,6 +199,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   applyContainmentFindings(doc, findings);
   // A v12 draft's model and view findings (version 2.24), as check reports them without the tree.
   if (hasModelForm(doc['schemaVersion'])) findings.push(...modelFindings(doc, new Set(findings.filter((finding) => finding.kind === 'schema').map((finding) => finding.at)), undefined));
+  findings.push(...planFindings);
   if (findings.length > 0) {
     return refuse('rederive', `draft revision ${draftRev.revision} passed its check, but checking it again at this render from the objects read now finds ${findings.length} finding(s); the stored result is not trusted, so nothing is rendered`,
       { reasons: findings.map((finding) => `${finding.kind} at ${finding.at}`) });
@@ -221,7 +227,9 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const model = hasModelForm(doc['schemaVersion']) ? localModelOf(doc) : undefined;
   // Version 2.38 (syzygy-5dhm.45): the declared test names, derived here the same way, for the test-names reference page.
   const testNames = await renderTestNames(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
-  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }), ...(model === undefined ? {} : { model }) } };
+  // Version 2.43 (syzygy-5dhm.46): the rough-edge markers, derived here the same way, for the rough-edges reference page.
+  const roughEdges = await renderRoughEdges(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
+  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, roughEdges, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }), ...(model === undefined ? {} : { model }) } };
 
   const renderer = deps.renderer;
   const draw = (local: LocalRenderInput): ReadonlyMap<string, string> | string => {
@@ -370,6 +378,21 @@ export async function renderTestNames(clonePath: string, pinned: string, deps: P
   }
   const testReader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(clonePath, '.git'), revision: pinned, maxObjectBytes: MANIFEST_BLOB_LIMIT });
   return deriveTestNames({ entries, screen, consented, read: async (testPath) => (await testReader.readBlobs([testPath]))[0]! });
+}
+
+/** The render's own rough-edges member (version 2.43): as `renderTestNames`, each source file read alone through its own pinned reader
+ * whose object bound is `MANIFEST_BLOB_LIMIT`; `unknown` where the tree cannot be listed. */
+export async function renderRoughEdges(clonePath: string, pinned: string, deps: Pick<RenderDeps, 'openReader'>, screen: DossierScreen,
+  consented: readonly string[] | null, reader: { readonly listTree: () => Promise<readonly TreeEntry[]> }): Promise<RoughEdges> {
+  let entries: readonly TreeEntry[];
+  try {
+    entries = await reader.listTree();
+  } catch (cause) {
+    if (!(cause instanceof GitObjectReadRefusal)) throw cause;
+    return roughEdgesUnknown(cause.reason);
+  }
+  const markerReader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(clonePath, '.git'), revision: pinned, maxObjectBytes: MANIFEST_BLOB_LIMIT });
+  return deriveRoughEdges({ entries, screen, consented, read: async (sourcePath) => (await markerReader.readBlobs([sourcePath]))[0]! });
 }
 
 /** Write the site into a new numbered directory under `site/`, through a staging directory renamed into place only when every file is

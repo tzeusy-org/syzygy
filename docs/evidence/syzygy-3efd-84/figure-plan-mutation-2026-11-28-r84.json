@@ -1,0 +1,1084 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-27T18:56:12.236Z",
+  "commit": "c4dceaa11e1b38eb7d2347e78b365b02f65040d5",
+  "subject": {
+    "packages/polaris-dossier/src/brief.ts": "3f2f438c829e0809b65b6e13584ca31083f430fd04c8983e68ab2a0adab79d03",
+    "packages/polaris-dossier/src/check-derive.ts": "23fa724e12a252787c805f1452962ca6ff36b9745f25ab365577722c21dd4c2a",
+    "packages/polaris-dossier/src/check.ts": "7253654058d74518d79c1ad6772a7ca7572dc98e3b817464e6a5e8aa0bba8aaa",
+    "packages/polaris-dossier/src/draft-schema.ts": "d2765b712ee64a89cbb9eb6d7f379092d243b7a5d3228074674186e08393a63a",
+    "packages/polaris-dossier/src/figure-plan.ts": "5d59eba74f081318b132c7cf120b04bdbc882735325ca0e1b118e625da1937bb",
+    "packages/polaris-dossier/src/render.ts": "3a2687a2e21c083fcfc228fb1e6c0c2daa805133cac41f919f64b9336b6af6a0",
+    "packages/polaris-dossier/src/rerender-measure.ts": "9e342036fcf4569a35154340e5fb0b4afcfa96cff0f3fef679747284e7ce9bcd",
+    "packages/polaris-dossier/src/review-packet.ts": "94b68a77c854195978ae9508895621f3d2b4475c145ef5232341631c4118cd7c"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 600 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/figure-plan.ts": [
+      "packages/polaris-dossier/src/figure-plan.test.ts"
+    ],
+    "packages/polaris-dossier/src/check.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts"
+    ],
+    "packages/polaris-dossier/src/draft-schema.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts",
+      "packages/polaris-dossier/src/draft-schema.test.ts"
+    ],
+    "packages/polaris-dossier/src/render.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts",
+      "packages/polaris-dossier/src/render.test.ts"
+    ],
+    "packages/polaris-dossier/src/review-packet.ts": [
+      "packages/polaris-dossier/src/review.test.ts"
+    ],
+    "packages/polaris-dossier/src/brief.ts": [
+      "packages/polaris-dossier/src/brief.test.ts"
+    ],
+    "packages/polaris-dossier/src/rerender-measure.ts": [
+      "packages/polaris-dossier/src/rerender-measure.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "exitCode": 0,
+      "tests": 42,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "exitCode": 0,
+      "tests": 54,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.ts",
+      "exitCode": 0,
+      "tests": 54,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "exitCode": 0,
+      "tests": 117,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "exitCode": 0,
+      "tests": 39,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.ts",
+      "exitCode": 0,
+      "tests": 199,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "exitCode": 0,
+      "tests": 16,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "exitCode": 0,
+      "tests": 85,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "plan-absent-silent",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (!Object.hasOwn(doc, FIGURE_PLAN_FIELD)) return [{ kind: 'figure-plan', at: `$.${FIGURE_PLAN_FIELD}`, detail: FIGURE_PLAN_DETAIL.absent }];",
+      "new": "if (!Object.hasOwn(doc, FIGURE_PLAN_FIELD)) return [];",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places refuses a draft with no plan, and a plan that is not a list, with one finding each"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "plan-not-list-silent",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (!Array.isArray(plan)) return [{ kind: 'figure-plan', at: `$.${FIGURE_PLAN_FIELD}`, detail: FIGURE_PLAN_DETAIL.notList }];",
+      "new": "if (!Array.isArray(plan)) return [];",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places refuses a draft with no plan, and a plan that is not a list, with one finding each"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "overview-extra-member",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "return exactKeys(home, ['kind']) ? { kind: 'overview' } : undefined;",
+      "new": "return { kind: 'overview' };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses an overview home naming a target at the entry alone, and reports its place unplanned"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "target-any-type",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "exactKeys(home, ['kind', 'target']) && typeof home['target'] === 'string'",
+      "new": "exactKeys(home, ['kind', 'target'])",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses a target that is not a string at the entry alone, and reports its place unplanned"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "text-length-unbounded",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "points.length <= QUESTION_LIMIT",
+      "new": "true",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses a question of 301 code points at the entry alone, and reports its place unplanned"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "text-whitespace-admitted",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "points.some((ch) => !isSpace(ch))",
+      "new": "true",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses a question of white space alone at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses an omission of white space alone at the entry alone, and reports its place unplanned"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "whitespace-set-narrowed",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "(ch >= '\\t' && ch <= '\\r')",
+      "new": "(ch >= '\\t' && ch <= '\\n')",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses a question of white space alone at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: duplicates keys a label by trimming the six white-space characters, folding their runs and lowercasing A to Z alone"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "omitted-extra-members",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (exactKeys(value, ['home', 'omitted'])) return",
+      "new": "if (Object.hasOwn(value, 'omitted')) return",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses both figure and omitted at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses a further member at the entry alone, and reports its place unplanned"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "planned-extra-members",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (!exactKeys(value, ['home', 'question', 'kind', 'figure'])) return undefined;",
+      "new": "if (!Object.hasOwn(value, 'kind')) return undefined;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses both figure and omitted at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses neither at the entry alone, and reports its place unplanned"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "kind-any",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": " || !PLAN_FIGURE_KINDS.includes(value['kind'])",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses a kind of pie at the entry alone, and reports its place unplanned"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "containment-kind-dropped",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "[...DIAGRAM_KINDS, ...FIGURE_KINDS, CONTAINMENT_KIND]",
+      "new": "[...DIAGRAM_KINDS, ...FIGURE_KINDS]",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry admits a question of 300 code points holding one that is not white space, a no-break space being one, and the containment kind",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry admits each of the nine figure kinds"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "target-unresolved-ignored",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "const resolved = place.kind === 'overview' || (place.kind === 'section' ? sections : dives).includes(place.target!);",
+      "new": "const resolved = true;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places reports an unresolved target once per entry, never as a second entry, and still reports the place it was meant for",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places compares no home for a planned figure in an entry whose target is unresolved, and still compares its kind",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places resolves a deep dive's target among the deep dives alone, and a section's among the sections"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "dive-target-among-sections",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "(place.kind === 'section' ? sections : dives).includes(place.target!)",
+      "new": "[...sections, ...dives].includes(place.target!)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places resolves a deep dive's target among the deep dives alone, and a section's among the sections"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "second-entry-ignored",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "} else if (named.has(placeKey(place))) {",
+      "new": "} else if (false) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places names a second entry for a place and a place no entry names, entries first"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "place-key-without-kind",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "JSON.stringify([place.kind, place.target ?? null])",
+      "new": "JSON.stringify([place.target ?? null])",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places reads two places as one only where kind and target are the same code units"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "unplanned-silent",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (named.has(key) || unplanned.has(key)) continue;",
+      "new": "continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places names a second entry for a place and a place no entry names, entries first",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places reports an unresolved target once per entry, never as a second entry, and still reports the place it was meant for",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places resolves a deep dive's target among the deep dives alone, and a section's among the sections",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places names an unplanned overview first, then the sections and then the deep dives, each in draft order",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places reads two places as one only where kind and target are the same code units",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses both figure and omitted at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses neither at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses a further member at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses a kind of pie at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses an empty question at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses a question of 301 code points at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses a question of white space alone at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses an omission of white space alone at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses a home of kind pole at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses a target that is not a string at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses an overview home naming a target at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses a section home naming no target at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses a string at the entry alone, and reports its place unplanned",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: a malformed entry refuses an array at the entry alone, and reports its place unplanned"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "unplanned-dives-first",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "...sections.map((target): Place => ({ kind: 'section', target })), ...dives.map((target): Place => ({ kind: 'deep-dive', target }))",
+      "new": "...dives.map((target): Place => ({ kind: 'deep-dive', target })), ...sections.map((target): Place => ({ kind: 'section', target }))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places names an unplanned overview first, then the sections and then the deep dives, each in draft order"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "plans-any-version",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "isRecord(doc) && doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION_V14",
+      "new": "isRecord(doc) && typeof doc['schemaVersion'] === 'string'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: other schemas, and the draft every other reader sees reads no plan in a draft of schema v13 or earlier",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: other schemas, and the draft every other reader sees hands every other reader a v14 draft without its plan, and any other draft unchanged",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: other drafts is computed for a v14 draft alone"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "figure-unresolved-silent",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "findings.push({ kind: 'unresolved-reference', at: `${at}.figure`",
+      "new": "if (false) findings.push({ kind: 'unresolved-reference', at: `${at}.figure`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the planned figure names a figure no diagram is, a figure homed elsewhere, one of another kind, and both, the home first",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the planned figure names a figure that is not a string as no diagram"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "home-compare-dropped",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (resolved && !homed)",
+      "new": "if (false)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the planned figure names a figure no diagram is, a figure homed elsewhere, one of another kind, and both, the home first"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "home-compared-unresolved",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (resolved && !homed)",
+      "new": "if (!homed)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places compares no home for a planned figure in an entry whose target is unresolved, and still compares its kind"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "home-target-ignored",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "home['kind'] === place.kind && home['target'] === place.target",
+      "new": "home['kind'] === place.kind",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the planned figure names a figure no diagram is, a figure homed elsewhere, one of another kind, and both, the home first"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "kind-compare-dropped",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (diagram['kind'] !== kind) findings.push",
+      "new": "if (false) findings.push",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the places compares no home for a planned figure in an entry whose target is unresolved, and still compares its kind",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure plan: the planned figure names a figure no diagram is, a figure homed elsewhere, one of another kind, and both, the home first"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "floor-graph-edges",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "records(diagram['edges']).length <= nodes - 1",
+      "new": "records(diagram['edges']).length <= nodes",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: the information floor advises on the scenario's first, second, fifth, seventh and ninth figures, and examines no omitted figure"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "floor-graph-nodes",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "return nodes <= 3 &&",
+      "new": "return nodes <= 4 &&",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: the information floor advises on the scenario's first, second, fifth, seventh and ninth figures, and examines no omitted figure"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "floor-swimlane",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "records(diagram['steps']).length <= 3",
+      "new": "records(diagram['steps']).length <= 4",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: the information floor advises on the scenario's first, second, fifth, seventh and ninth figures, and examines no omitted figure"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "floor-sequence",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "records(diagram['messages']).length <= 2",
+      "new": "records(diagram['messages']).length <= 3",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: the information floor advises on the scenario's first, second, fifth, seventh and ninth figures, and examines no omitted figure"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "floor-containment-top-only",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "return groupsInOrder(diagram).length <= 3;",
+      "new": "return records(diagram['groups']).length <= 3;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: the information floor advises on the scenario's first, second, fifth, seventh and ninth figures, and examines no omitted figure"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "examined-every-disposition",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (!isRecord(disposition) || disposition['kind'] !== 'produced') return;",
+      "new": "if (!isRecord(disposition)) return;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: the information floor advises on the scenario's first, second, fifth, seventh and ninth figures, and examines no omitted figure"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "duplicate-any-family",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "candidate.figure.family === figure.family && ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: duplicates advises on a, b, c, k2, q2 and g, each naming the scenario's other figure, and on none of d, e, the sequence, k1 or q1"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "duplicate-boxes-alone",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (self.drawn) {",
+      "new": "if (true) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: duplicates never advises on a figure that draws boxes alone"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "duplicate-equal-either-order",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": " && m < n)",
+      "new": ")",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: duplicates advises on a, b, c, k2, q2 and g, each naming the scenario's other figure, and on none of d, e, the sequence, k1 or q1",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: duplicates compares swimlanes by their lanes and steps",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: order orders advisories by the figure's index and, for one figure, by the rule order"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "duplicate-overlap",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "[...self.keys].every((key) => candidate.keys.has(key))",
+      "new": "[...self.keys].some((key) => candidate.keys.has(key))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: duplicates advises on a, b, c, k2, q2 and g, each naming the scenario's other figure, and on none of d, e, the sequence, k1 or q1"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "key-carries-edge-label",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (to !== undefined) add(['arrow', labelKey(from['label']), labelKey(to['label'])]);",
+      "new": "if (to !== undefined) add(['arrow', labelKey(from['label']), labelKey(to['label']), labelKey(link['label'])]);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: duplicates advises on a, b, c, k2, q2 and g, each naming the scenario's other figure, and on none of d, e, the sequence, k1 or q1"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "key-nesting-dropped",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (parent !== undefined) add(['in',",
+      "new": "if (false) add(['in',",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: duplicates advises on a, b, c, k2, q2 and g, each naming the scenario's other figure, and on none of d, e, the sequence, k1 or q1"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "key-step-as-box",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "add(['step', labelKey(from['label']), labelKey(link['label'])]);",
+      "new": "add(['box', labelKey(link['label'])]);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: duplicates compares swimlanes by their lanes and steps"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "label-key-any-letter",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "ch >= 'A' && ch <= 'Z' ? ch.toLowerCase() : ch",
+      "new": "ch.toLowerCase()",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: duplicates keys a label by trimming the six white-space characters, folding their runs and lowercasing A to Z alone"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "label-key-runs-dropped",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (run) { out += ' '; run = false; }",
+      "new": "if (run) { run = false; }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: duplicates keys a label by trimming the six white-space characters, folding their runs and lowercasing A to Z alone"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "mixed-any-relation",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (edge['relation'] !== 'contains' || typeof edge['from']",
+      "new": "if (typeof edge['from']",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: mixed levels advises on f1, f3, f7 and f9, and on none of f2, f4, f5, f6, f8, f10 or f11"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "mixed-root-encloses-dependency",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": " && y['kind'] !== 'dependency-name';",
+      "new": ";",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: mixed levels reads no repository root as enclosing another root or a dependency name, and a directory only its own path's manifests, jobs and services"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "mixed-directory-prefix-loose",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "y['path'].startsWith(`${x['path']}/`)",
+      "new": "y['path'].startsWith(x['path'])",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: mixed levels advises on f1, f3, f7 and f9, and on none of f2, f4, f5, f6, f8, f10 or f11",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: mixed levels reads no repository root as enclosing another root or a dependency name, and a directory only its own path's manifests, jobs and services"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "mixed-directory-manifest-dropped",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "new Set(['package-manifest', 'workflow-job', 'compose-service'])",
+      "new": "new Set(['workflow-job', 'compose-service'])",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: mixed levels advises on f1, f3, f7 and f9, and on none of f2, f4, f5, f6, f8, f10 or f11"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "mixed-ancestor-dropped",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (at === x) return true;",
+      "new": "if (false) return true;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: mixed levels advises on f1, f3, f7 and f9, and on none of f2, f4, f5, f6, f8, f10 or f11",
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: mixed levels ends a parent walk at an element already reached and at a parent naming no element"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "mixed-containment-never-holds",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "holds = (x, y) => inside.get(y)?.has(x) === true;",
+      "new": "holds = () => false;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: mixed levels advises on f1, f3, f7 and f9, and on none of f2, f4, f5, f6, f8, f10 or f11"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "mixed-chain-direct-only",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "if (!seen.has(next)) { seen.add(next); queue.push(next); }",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: mixed levels advises on f1, f3, f7 and f9, and on none of f2, f4, f5, f6, f8, f10 or f11"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "check-plan-findings-dropped",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "if (planned !== undefined) findings.push(...figurePlanFindings(planned));",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 54,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) refuses a v14 draft with no plan, its plan finding after every other finding and no schema finding at the plan",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) reports no schema finding at or below a plan of any form",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) refuses at a render a v14 draft whose check record was altered to passed, from its plan finding found again (R84 finding 1)"
+      ],
+      "seconds": 21
+    },
+    {
+      "id": "check-plan-not-stripped",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "if (planned !== undefined) doc = withoutFigurePlan(planned);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 54,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) checks a v14 draft carrying a model, two views, the mark, a question-kind row and a plan with no schema, field-version or worth-knowing finding",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) refuses a v14 draft with no plan, its plan finding after every other finding and no schema finding at the plan",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) reports no schema finding at or below a plan of any form",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) gates nothing with its advice: the check record carries none of it",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) renders the same bytes whatever the plan says, and no page or record carries its text"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "check-advice-despite-schema",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "if (planned !== undefined && !findings.some((finding) => finding.kind === 'schema')) {",
+      "new": "if (planned !== undefined) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 54,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) carries no figure advice for a v14 draft with a schema finding or for a v13 draft"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "check-expansion-v11",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "planned !== undefined && isRecord(doc) ? { ...viewed.doc, schemaVersion: doc['schemaVersion'] } : viewed.doc",
+      "new": "viewed.doc",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 54,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) checks a v14 draft carrying a model, two views, the mark, a question-kind row and a plan with no schema, field-version or worth-knowing finding",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) advises on the marked paragraph and its question kinds as the same draft at v13 does (R84 finding 4; the callout is render.test.ts's)"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "render-plan-not-stripped",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "  doc = withoutFigurePlan(doc);\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 199,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) draws a v14 draft's marked block in the same callout as the same draft at v13 (version 2.33, R84 finding 4)",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) refuses at a render a v14 draft whose check record was altered to passed, from its plan finding found again (R84 finding 1)",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) renders the same bytes whatever the plan says, and no page or record carries its text"
+      ],
+      "seconds": 27
+    },
+    {
+      "id": "packet-plan-kept",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "old": "...draftView } = withoutFigurePlan(draftDoc);",
+      "new": "...draftView } = draftDoc;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 85,
+      "failedTests": [
+        "packages/polaris-dossier/src/review.test.ts > carries no v14 draft's figure plan, which check alone reads (version 2.33)"
+      ],
+      "seconds": 11
+    },
+    {
+      "id": "field-version-plan-dropped",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "for (const at of figurePlanFieldVersionPaths(doc)) add({",
+      "new": "for (const at of [] as string[]) add({",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 54,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) gives the same members schema findings at the model and the views in a v13 draft, and field-version findings at the mark, the rows and the plan in a v12 draft"
+      ],
+      "seconds": 21
+    },
+    {
+      "id": "field-version-plan-schema-kept",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "for (const at of figurePlanFieldVersionPaths(doc)) subsectionPaths.add(at);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 54,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) gives the same members schema findings at the model and the views in a v13 draft, and field-version findings at the mark, the rows and the plan in a v12 draft"
+      ],
+      "seconds": 21
+    },
+    {
+      "id": "field-version-rows-name-v14",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "`\\`${QUESTION_KINDS_FIELD}\\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V13}`",
+      "new": "`\\`${QUESTION_KINDS_FIELD}\\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V14}`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 54,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) gives the same members schema findings at the model and the views in a v13 draft, and field-version findings at the mark, the rows and the plan in a v12 draft"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "v14-read-as-v13",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "version === LOCAL_DRAFT_SCHEMA_VERSION_V14 ? current : ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 54,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) checks a v14 draft carrying a model, two views, the mark, a question-kind row and a plan with no schema, field-version or worth-knowing finding",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) refuses a v14 draft with no plan, its plan finding after every other finding and no schema finding at the plan",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) reports no schema finding at or below a plan of any form",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) gates nothing with its advice: the check record carries none of it",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) refuses at a render a v14 draft whose check record was altered to passed, from its plan finding found again (R84 finding 1)",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) renders the same bytes whatever the plan says, and no page or record carries its text"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "model-form-without-v14",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "version === LOCAL_DRAFT_SCHEMA_VERSION_V12 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14;",
+      "new": "version === LOCAL_DRAFT_SCHEMA_VERSION_V12;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 117,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) checks a v14 draft carrying a model, two views, the mark, a question-kind row and a plan with no schema, field-version or worth-knowing finding",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) refuses a v14 draft with no plan, its plan finding after every other finding and no schema finding at the plan",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) reports no schema finding at or below a plan of any form",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) gates nothing with its advice: the check record carries none of it",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) refuses at a render a v14 draft whose check record was altered to passed, from its plan finding found again (R84 finding 1)",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) renders the same bytes whatever the plan says, and no page or record carries its text"
+      ],
+      "seconds": 21
+    },
+    {
+      "id": "worth-knowing-form-without-v14",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "version === LOCAL_DRAFT_SCHEMA_VERSION_V13 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14;",
+      "new": "version === LOCAL_DRAFT_SCHEMA_VERSION_V13;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 117,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) checks a v14 draft carrying a model, two views, the mark, a question-kind row and a plan with no schema, field-version or worth-knowing finding",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) refuses a v14 draft with no plan, its plan finding after every other finding and no schema finding at the plan",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) reports no schema finding at or below a plan of any form",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) gates nothing with its advice: the check record carries none of it",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) refuses at a render a v14 draft whose check record was altered to passed, from its plan finding found again (R84 finding 1)",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) advises on the marked paragraph and its question kinds as the same draft at v13 does (R84 finding 4; the callout is render.test.ts's)",
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) renders the same bytes whatever the plan says, and no page or record carries its text"
+      ],
+      "seconds": 21
+    },
+    {
+      "id": "document-plan-dropped",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": ", [FIGURE_PLAN_FIELD]: { description: FIGURE_PLAN_DESCRIPTION } }",
+      "new": " }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 117,
+      "failedTests": [
+        "packages/polaris-dossier/src/draft-schema.test.ts > draft.schema.json admits any value at an optional `figurePlan` and describes the plan to the authoring session (version 2.33)"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "advice-rule-order",
+      "file": "packages/polaris-dossier/src/figure-plan.ts",
+      "old": "    if (informationFloor(figure)) advise('figure-information-floor', `${figure.id}: a chain of three or fewer is a sentence; say it in the prose, or draw what a sentence cannot hold`);\n    const self = keyed[n]!;\n    if (self.drawn) {\n      const other = keyed.find((candidate, m) => m !== n && candidate.figure.family === figure.family && [...self.keys].every((key) => candidate.keys.has(key))\n        && ([...candidate.keys].some((key) => !self.keys.has(key)) || (candidate.keys.size === self.keys.size && m < n)));\n      if (other !== undefined) advise('figure-duplicate', `${figure.id}: everything it draws is drawn by ${other.figure.id}; keep one figure, or draw what the other does not`);\n    }\n    const pair = mixedLevels(figure, parentOf);\n    if (pair !== undefined) advise('figure-mixed-levels', `${figure.id}: ${pair[0]} and ${pair[1]} stand for a part and a part within it, and the figure does not show that one holds the other; draw one level, or show the containment`);\n",
+      "new": "    const self = keyed[n]!;\n    if (self.drawn) {\n      const other = keyed.find((candidate, m) => m !== n && candidate.figure.family === figure.family && [...self.keys].every((key) => candidate.keys.has(key))\n        && ([...candidate.keys].some((key) => !self.keys.has(key)) || (candidate.keys.size === self.keys.size && m < n)));\n      if (other !== undefined) advise('figure-duplicate', `${figure.id}: everything it draws is drawn by ${other.figure.id}; keep one figure, or draw what the other does not`);\n    }\n    const pair = mixedLevels(figure, parentOf);\n    if (pair !== undefined) advise('figure-mixed-levels', `${figure.id}: ${pair[0]} and ${pair[1]} stand for a part and a part within it, and the figure does not show that one holds the other; draw one level, or show the containment`);\n    if (informationFloor(figure)) advise('figure-information-floor', `${figure.id}: a chain of three or fewer is a sentence; say it in the prose, or draw what a sentence cannot hold`);\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 39,
+      "failedTests": [
+        "packages/polaris-dossier/src/figure-plan.test.ts > figure advice: order orders advisories by the figure's index and, for one figure, by the rule order"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "render-plan-findings-dropped",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "  findings.push(...planFindings);\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 199,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) refuses at a render a v14 draft whose check record was altered to passed, from its plan finding found again (R84 finding 1)"
+      ],
+      "seconds": 27
+    },
+    {
+      "id": "render-worth-knowing-v13-only",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "...(hasWorthKnowingForm(doc['schemaVersion']) ? { worthKnowing: {",
+      "new": "...(doc['schemaVersion'] === 'polaris-dossier-local-draft-v13' ? { worthKnowing: {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 199,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) draws a v14 draft's marked block in the same callout as the same draft at v13 (version 2.33, R84 finding 4)"
+      ],
+      "seconds": 27
+    },
+    {
+      "id": "measure-plan-not-stripped",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "  doc = withoutFigurePlan(doc);\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 16,
+      "failedTests": [
+        "packages/polaris-dossier/src/rerender-measure.test.ts > measureDraft measures a v14 draft without its figure plan, which no ledger counts (version 2.33)"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "field-version-any-version",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "doc['schemaVersion'] !== LOCAL_DRAFT_SCHEMA_VERSION_V14 && LOCAL_DRAFT_SCHEMA_VERSIONS.some((known) => known === doc['schemaVersion'])",
+      "new": "doc['schemaVersion'] !== LOCAL_DRAFT_SCHEMA_VERSION_V14",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 54,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) keeps the schema finding at the plan of a draft of an unknown version: field-version is for v13 or earlier alone (R84 finding 5)"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "check-advice-failure-thrown",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "try { figures = computeFigureAdvice(planned); } catch { figures = undefined; }",
+      "new": "figures = computeFigureAdvice(planned);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 54,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > schema v14: the model joined to the worth-knowing mark (version 2.33) leaves the advice out, and changes nothing else, when computing it fails (R84 finding 7)"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "model-elements-199",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "elements: [0, 200] as const, relationships: [0, 400] as const",
+      "new": "elements: [0, 199] as const, relationships: [0, 400] as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 117,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration keeps parity for a v11 draft of exactly 200 nodes and 400 edges (version 2.41)",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration counts a group as an element and a nesting as no relationship: nodes and groups of 200 keep parity, of 201 get the finding (version 2.41)",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration gives the migrated draft check's schema finding at 201 nodes, and at 401 edges, though each v11 draft passes (version 2.41)",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: scenarios and bounds the first tests left out (R37 finding 4) bounds the model to 0 to 200 elements and 0 to 400 relationships, at and past each bound",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: the migration parity's bound (version 2.41) gives a migrated v11 draft of 222 nodes check's schema finding at the model's elements, though the v11 draft passes"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "model-elements-201",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "elements: [0, 200] as const, relationships: [0, 400] as const",
+      "new": "elements: [0, 201] as const, relationships: [0, 400] as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 117,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration counts a group as an element and a nesting as no relationship: nodes and groups of 200 keep parity, of 201 get the finding (version 2.41)",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration gives the migrated draft check's schema finding at 201 nodes, and at 401 edges, though each v11 draft passes (version 2.41)",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: scenarios and bounds the first tests left out (R37 finding 4) bounds the model to 0 to 200 elements and 0 to 400 relationships, at and past each bound",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: the migration parity's bound (version 2.41) gives a migrated v11 draft of 222 nodes check's schema finding at the model's elements, though the v11 draft passes"
+      ],
+      "seconds": 21
+    },
+    {
+      "id": "model-relationships-399",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "elements: [0, 200] as const, relationships: [0, 400] as const",
+      "new": "elements: [0, 200] as const, relationships: [0, 399] as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 117,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration keeps parity for a v11 draft of exactly 200 nodes and 400 edges (version 2.41)",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration gives the migrated draft check's schema finding at 201 nodes, and at 401 edges, though each v11 draft passes (version 2.41)",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: scenarios and bounds the first tests left out (R37 finding 4) bounds the model to 0 to 200 elements and 0 to 400 relationships, at and past each bound"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "model-relationships-401",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "elements: [0, 200] as const, relationships: [0, 400] as const",
+      "new": "elements: [0, 200] as const, relationships: [0, 401] as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 117,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration gives the migrated draft check's schema finding at 201 nodes, and at 401 edges, though each v11 draft passes (version 2.41)",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: scenarios and bounds the first tests left out (R37 finding 4) bounds the model to 0 to 200 elements and 0 to 400 relationships, at and past each bound"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "brief-plan-paragraph-dropped",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    FIGURE_PLAN_PARAGRAPH,\n    '',\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 42,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, containment, system-model and figure-plan paragraphs, task-routes section, worth-knowing paragraph and question-kinds paragraph"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "brief-containment-after-model",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    CONTAINMENT_PARAGRAPH,\n    '',\n    MODEL_PARAGRAPH,\n",
+      "new": "    MODEL_PARAGRAPH,\n    '',\n    CONTAINMENT_PARAGRAPH,\n",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 42,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, containment, system-model and figure-plan paragraphs, task-routes section, worth-knowing paragraph and question-kinds paragraph"
+      ],
+      "seconds": 3
+    }
+  ],
+  "equivalent": [],
+  "corrects": "figure-plan-mutation-2026-11-28.json listed render-plan-findings-dropped under `equivalent`, which was false: review R84 finding 1 killed it with a check record altered to passed. It runs here as a mutant.",
+  "summary": {
+    "mutants": 70,
+    "killed": 70,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 0
+  }
+}

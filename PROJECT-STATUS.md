@@ -332,7 +332,21 @@ render reads declared test names lexically and publishes them per unit on `refer
 With the test-name recognizers version effective, Polaris has 39 requirements and 647 scenarios.
 *(2026-11-28: the predecessor figure of 644 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
-[Session usage amendment 2.45](openspec/changes/dossier-session-usage) is agent-adopted in A-338.
+[Migration bounds amendment 2.43](openspec/changes/dossier-migration-bounds) is agent-adopted in A-272.
+It replaces REQ-polaris-generation-034 from version 2.42, the test-name recognizers (297 to 298 scenarios): the v10
+and v11 migration keeps its parity only where the migrated model fits the v12 bounds of 200 elements and 400 relationships.
+
+With the migration bounds version effective, Polaris has 39 requirements and 648 scenarios.
+*(2026-11-28: the predecessor figure of 645 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
+
+[Rough-edge markers amendment 2.44](openspec/changes/dossier-rough-edges) is agent-adopted in A-338.
+It replaces REQ-polaris-generation-034 from version 2.43, the migration bounds (298 to 305 scenarios): each operator-agent
+render reads TODO, FIXME, HACK, deprecation markers and issue references lexically and publishes them per unit on `reference/rough-edges.html`.
+
+With the rough-edge markers version effective, Polaris has 39 requirements and 655 scenarios.
+*(2026-11-28: the predecessor figure of 652 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
+
+[Session usage amendment 2.45](openspec/changes/dossier-session-usage) is agent-adopted in A-339.
 It replaces REQ-polaris-generation-033 from version 2.31, the close measures (25 to 28 scenarios): close records a launched run's
 per-session token counts, read by Syzygy from each session's own transcripts, with a run total; close, status and the review
 page give one cost line, money Unknown. Every composition state above contains REQ-033, so each figure above counts its three

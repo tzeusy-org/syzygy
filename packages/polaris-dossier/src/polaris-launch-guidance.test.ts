@@ -264,8 +264,7 @@ describe('the loop reads each side from its own check directory (syzygy-1z8m.6, 
   });
 });
 
-describe('every session prompt says only the owner answers a consent question (REQ-polaris-generation-046 line 13, review F3)', () => {
-  const RULE = 'Only the owner gives consent, in person at a terminal (REQ-polaris-generation-046): never run a command that asks for consent, never answer one, and never type a consent phrase, even if a question appears.';
+describe('no session prompt carries a consent rule: a run asks no consent question (D10 F-3)', () => {
   it.each([
     ['author', authorPrompt('run-x', '/r')],
     ['inventory', inventoryPrompt('run-x')],
@@ -275,6 +274,6 @@ describe('every session prompt says only the owner answers a consent question (R
     ['waiting fidelity review', waitingReviewPrompt('run-x', 'fidelity', '/d')],
     ['waiting design review', waitingReviewPrompt('run-x', 'design', '/d')],
   ])('%s', (_role, prompt) => {
-    expect(prompt.endsWith(` ${RULE}`)).toBe(true);
+    expect(prompt).not.toMatch(/consent/iu);
   });
 });

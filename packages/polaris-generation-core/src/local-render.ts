@@ -310,6 +310,56 @@ export type LocalTestNames =
     readonly namesNotListed: number;
   }
   | { readonly format: string; readonly state: 'unknown'; readonly why: string };
+/** The rough-edge markers this render derived itself (REQ-polaris-generation-034 version 2.43): recognizer `rough-edge-marker` v1's
+ * TODO, FIXME, HACK, deprecation and issue-reference markers in the admitted source files of the pinned tree, each Observed with its quoted
+ * line, mapped to its unit by rule `top-level-unit`. */
+export interface LocalRoughEdgesFile {
+  readonly path: string;
+  readonly epistemic: 'observed' | 'unknown';
+  readonly unknownReason: string | null;
+  readonly parseFault: string | null;
+  readonly markers: number | null;
+  readonly valuesLeftOut: number | null;
+}
+export interface LocalRoughEdgesRecognizer {
+  readonly rule: string;
+  readonly ruleVersion: number;
+  readonly label: 'observed';
+  readonly candidates: number;
+  readonly secretPathsLeftOut: number;
+  readonly setApart: number;
+  readonly observed: number;
+  readonly unknown: number;
+  readonly valuesLeftOut: number;
+  readonly markers: number;
+  readonly files: readonly LocalRoughEdgesFile[];
+  readonly filesNotListed: number;
+}
+export interface LocalRoughEdgeMarker {
+  readonly id: string;
+  readonly kind: 'todo' | 'fixme' | 'hack' | 'deprecation' | 'issue-reference';
+  readonly marker: string;
+  readonly path: string;
+  readonly line: number;
+  readonly unit: string | null;
+  readonly blob: string;
+  readonly quote: string;
+  readonly epistemic: 'observed';
+  readonly referenceContent: 'unknown' | null;
+}
+export type LocalRoughEdges =
+  | {
+    readonly format: string;
+    readonly state: 'derived';
+    readonly screeningPolicy: { readonly policyId: string; readonly policyVersion: string; readonly sha256: string };
+    readonly unitRule: { readonly rule: string; readonly ruleVersion: number };
+    readonly recognizer: LocalRoughEdgesRecognizer;
+    readonly units: readonly { readonly unit: string | null; readonly files: number; readonly markers: number; readonly byKind: Readonly<Record<string, number>> }[];
+    readonly unitsNotListed: number;
+    readonly markers: readonly LocalRoughEdgeMarker[];
+    readonly markersNotListed: number;
+  }
+  | { readonly format: string; readonly state: 'unknown'; readonly why: string };
 /** A schema-v12 draft's model (version 2.24): identities, types, parents, bases and the views (diagram ids, in diagram order) selecting
  * each. Labels, marks and citations stay in the expanded figures' claims. */
 export interface LocalModel {
@@ -375,6 +425,9 @@ export interface LocalRenderInput {
   /** The declared test names this render derived itself (version 2.42), from which the test-names reference page is drawn. The page
    * renders only where this and `derivedStructure` are both present, so an input without it keeps its pages and machine view. */
   readonly testNames?: LocalTestNames;
+  /** The rough-edge markers this render derived itself (version 2.43), from which the rough-edges reference page is drawn. The page renders
+   * only where this and `derivedStructure` are both present, so an input without it keeps its pages and machine view. */
+  readonly roughEdges?: LocalRoughEdges;
   /** A schema-v9 draft's graph edges (REQ-polaris-generation-034 version 2.19), by edge id: each edge's relation and the witness state rule
    * `relation-witness` gives it at this render. Absent for every earlier draft, so its pages and machine view keep their bytes. */
   readonly edgeRelations?: ReadonlyMap<string, LocalEdgeRelation>;
