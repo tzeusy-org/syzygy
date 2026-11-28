@@ -3075,6 +3075,26 @@ describe('render: the worth-knowing callout (schema v13)', () => {
     expect(marked(index, 'p9')).toEqual({ epistemic: 'inferred', reason: null });
   });
 
+  it('draws a v14 draft\'s marked block in the same callout as the same draft at v13 (version 2.33, R84 finding 4)', async () => {
+    const v13 = versioned(V13, true, false);
+    const { nodes, edges, ...figure } = HERO_FIGURE;
+    const v14: Doc = {
+      ...v13, schemaVersion: 'polaris-dossier-local-draft-v14',
+      model: { elements: (nodes as Doc[]).map((node) => ({ ...node, type: 'module' })), relationships: edges },
+      // A system model's figure is homed in a section here, so the hero is omitted (the v13 form keeps its overview hero).
+      hero: { omitted: { id: 'hero-why', label: 'inferred', basis: 'source', text: 'No one figure leads.', citations: [cite('c-hero-why', 'src/kestrel.c', 1, 1)], quotations: [] } },
+      diagrams: [{ ...figure, home: { kind: 'section', target: 'core-ideas' }, view: { elements: ['hero-a', 'hero-b'], relationships: ['hero-ab'] } }],
+      figurePlan: [{ home: { kind: 'overview' }, omitted: 'The overview reads as prose.' },
+        { home: { kind: 'section', target: 'core-ideas' }, question: 'Which parts talk to which?', kind: 'boundary', figure: 'system-hero' }],
+    };
+    const callout = (index: string): string => index.slice(index.indexOf(OPEN), index.indexOf('</aside>', index.indexOf(OPEN)) + '</aside>'.length);
+    const at13 = callout((await rendered(v13)).get('index.html')!);
+    const at14 = callout((await rendered(v14, [{ blockId: 'hero-why', verdict: 'supported', spanIds: [], reason: 'The span says it.', quotations: [] }])).get('index.html')!);
+    expect(at14.startsWith(OPEN)).toBe(true);
+    expect(at14).toContain('id="block-p2"');
+    expect(at14).toBe(at13);
+  });
+
   it('renders a v13 draft without marks as the same v10 draft, page for page', async () => {
     for (const poles of [true, false]) {
       // Unreviewed, so no record digest of the draft's bytes differs between the two.

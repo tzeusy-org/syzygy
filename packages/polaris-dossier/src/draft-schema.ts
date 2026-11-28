@@ -53,25 +53,32 @@ export const LOCAL_DRAFT_SCHEMA_VERSION_V10 = 'polaris-dossier-local-draft-v10';
 /** v11 (REQ-polaris-generation-034 version 2.23, syzygy-3efd.31): a diagram's `kind` may also be `containment`, whose `groups` (groups
  * nested in groups) take the place of `nodes` and `edges`. Everything else is v10; a v10 or earlier draft still checks and renders as
  * before, and the kind and `groups` in one are field-version. No brief issues v11: the brief issues v13 (version 2.26 descends from v10),
- * and the brief that issues a schema with containment is brief v22 (version 2.33, schema v14), so `CONTAINMENT_PARAGRAPH` (brief.ts) is
- * kept for it and issued by no brief yet. */
+ * and the brief that issues a schema with containment is brief v22 (version 2.33, schema v14), which carries `CONTAINMENT_PARAGRAPH`
+ * (brief.ts). */
 export const LOCAL_DRAFT_SCHEMA_VERSION_V11 = 'polaris-dossier-local-draft-v11';
 /** v12 (REQ-polaris-generation-034 version 2.24, syzygy-3efd.37): a schema-v11 draft that carries one system `model` (elements and
  * relationships), each graph and containment diagram carrying a `view` that selects from it in place of `nodes` and `edges` or `groups`.
  * Everything else is v11; a v11 or earlier draft still checks and renders as before, and `model` or `view` in one is field-version. No brief
- * issues v12, for the reason v11 has none: brief v18, which version 2.24 states, descends from brief v17, so `MODEL_PARAGRAPH` (brief.ts) is
- * kept for the brief that issues a schema with the model, and issued by no brief yet. */
+ * issues v12, for the reason v11 has none: brief v18, which version 2.24 states, descends from brief v17; brief v22 (version 2.33, schema v14) is
+ * the brief that issues a schema with the model, and carries `MODEL_PARAGRAPH` (brief.ts). */
 export const LOCAL_DRAFT_SCHEMA_VERSION_V12 = 'polaris-dossier-local-draft-v12';
 /** v13 (REQ-polaris-generation-034 version 2.26, syzygy-5dhm.41): an Inferred block may carry `worthKnowing: true`, the worth-knowing mark,
  * and a Pole may say in `worthKnowingNone` why it holds no block so marked. Everything else is v10; a v10 or earlier draft still checks and
  * renders as before, and either member in one is field-version. v13 descends from v10, not from v11: a v13 draft has no containment and a
  * v11 draft no worth-knowing mark, and a v13 draft has no system model either (v12 descends from v11). */
-export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v13';
+export const LOCAL_DRAFT_SCHEMA_VERSION_V13 = 'polaris-dossier-local-draft-v13';
+/** v14 (REQ-polaris-generation-034 version 2.33, syzygy-3efd.84): joins the two schemas that descend from v10. A schema-v12 draft (the
+ * containment kind, the system model and its views) that may also carry every member a v13 draft may (the worth-knowing mark,
+ * `worthKnowingNone` and `questionKinds`), and that carries one member more, the required `figurePlan`, read by check alone. Brief v22
+ * issues it. A v13 or earlier draft still checks and renders as before, and `figurePlan` in one is field-version. */
+export const LOCAL_DRAFT_SCHEMA_VERSION_V14 = 'polaris-dossier-local-draft-v14';
+/** The schema the brief issues: v14. */
+export const LOCAL_DRAFT_SCHEMA_VERSION = LOCAL_DRAFT_SCHEMA_VERSION_V14;
 export { CONTAINMENT_KIND };
 /** Every draft schema version `check` reads. */
-export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION_V11, LOCAL_DRAFT_SCHEMA_VERSION_V12, LOCAL_DRAFT_SCHEMA_VERSION] as const);
-/** The versions every schema but v11's and v12's names in `schemaVersion`: all but those two, which no brief issues (see their constants),
- * so the document the brief publishes, and every record that carries it, keeps the bytes it had before either was implemented. */
+export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION_V11, LOCAL_DRAFT_SCHEMA_VERSION_V12, LOCAL_DRAFT_SCHEMA_VERSION_V13, LOCAL_DRAFT_SCHEMA_VERSION_V14] as const);
+/** The versions the schemas before v11 and v13's name in `schemaVersion`: all but v11 and v12, which no brief issues (see their
+ * constants). The v11, v12 and v14 schemas name every version; only v14's is published. */
 const NAMED_SCHEMA_VERSIONS: readonly string[] = Object.freeze(LOCAL_DRAFT_SCHEMA_VERSIONS.filter((version) => version !== LOCAL_DRAFT_SCHEMA_VERSION_V11
   && version !== LOCAL_DRAFT_SCHEMA_VERSION_V12));
 /** Whether a draft's version has the v4 forms: v4 and every later version. */
@@ -88,10 +95,12 @@ export const hasSubsectionForm = (version: unknown): boolean => version === LOCA
 export const hasRelationForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V9 || hasHeroForm(version);
 /** Whether a draft carries the overview `hero`: v10 (version 2.20) and every later version. */
 export const hasHeroForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V10 || hasContainmentForm(version) || hasWorthKnowingForm(version);
-/** Whether a draft's version has the containment figure kind: v11 (version 2.23) and v12, whose containment is a view. v13 has none. */
+/** Whether a draft's version has the containment figure kind: v11 (version 2.23), and v12 and v14, whose containment is a view. v13 has
+ * none. */
 export const hasContainmentForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V11 || hasModelForm(version);
-/** Whether a draft carries the system model and draws its graph and containment figures as views of it: v12 (version 2.24). */
-export const hasModelForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V12;
+/** Whether a draft carries the system model and draws its graph and containment figures as views of it: v12 (version 2.24) and v14
+ * (version 2.33). */
+export const hasModelForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V12 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14;
 /** Whether a draft is of a known version that has no system model and is not v13, so `model` or a diagram's `view` in it is field-version
  * (version 2.24, "a draft of schema v11 or earlier"). v13 is not one: it reports either as v13 did before. */
 export const precedesModel = (version: unknown): boolean => !hasModelForm(version) && !hasWorthKnowingForm(version)
@@ -100,8 +109,12 @@ export const precedesModel = (version: unknown): boolean => !hasModelForm(versio
  * (version 2.23). v13 is not one: it reports either as v13 did before. */
 export const precedesContainment = (version: unknown): boolean => !hasContainmentForm(version) && !hasWorthKnowingForm(version)
   && LOCAL_DRAFT_SCHEMA_VERSIONS.some((known) => known === version);
-/** Whether a draft's version has the worth-knowing mark and a Pole's `worthKnowingNone`: v13 (version 2.26). */
-export const hasWorthKnowingForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION;
+/** Whether a draft's version has the worth-knowing mark, a Pole's `worthKnowingNone` and `questionKinds`: v13 (version 2.26) and v14
+ * (version 2.33, which reads every rule naming schema v13 alone as naming v13 or v14). */
+export const hasWorthKnowingForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V13 || version === LOCAL_DRAFT_SCHEMA_VERSION_V14;
+/** The v14 draft's figure plan (version 2.33): the authoring session's working record, read by check alone (figure-plan.ts). */
+export const FIGURE_PLAN_FIELD = 'figurePlan';
+export const FIGURE_PLAN_DESCRIPTION = 'Required. Your figure plan, written before the prose: one entry for the overview, each section and each deep dive, its `home` written as a diagram\'s `home` is. An entry is {"home", "question", "kind", "figure"}, the one question a picture there answers better than text, the figure kind it needs and the diagram, homed there and of that kind, that answers it; or {"home", "omitted"}, why the place has no planned figure. The plan is never rendered or published; `syzygy dossier check` reads it.';
 /** The worth-knowing mark (v13) on a claim block, and the member in which a v13 Pole says why it holds no block so marked. */
 export const WORTH_KNOWING_FIELD = 'worthKnowing';
 export const WORTH_KNOWING_NONE_FIELD = 'worthKnowingNone';
@@ -383,7 +396,8 @@ export interface DraftSchemaParameters {
 export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm: 'home' | 'sectionId' = 'home', thesisBasis: 'required' | 'absent' = 'required',
   figureKinds: 'taken' | 'absent' | 'unnamed' = 'taken', subsections: 'taken' | 'absent' = 'taken', relations: 'taken' | 'absent' = 'taken',
   worthKnowing: 'taken' | 'absent' = 'taken', containment: 'taken' | 'absent' = 'absent', model: 'taken' | 'absent' = 'absent'): DraftSchemaWithDefs {
-  if (containment === 'taken' && worthKnowing === 'taken') throw new Error('draft-schema: no schema has both containment and the worth-knowing mark');
+  // Only v14 has both, and its containment is a view of the model (version 2.33).
+  if (containment === 'taken' && worthKnowing === 'taken' && model !== 'taken') throw new Error('draft-schema: no schema has containment groups and the worth-knowing mark');
   if (model === 'taken' && containment !== 'taken') throw new Error('draft-schema: the system model is a schema-v11 draft\'s');
   requirePinnedRevision(parameters.pinnedRevision);
   if (!Number.isSafeInteger(parameters.maxQuestions) || parameters.maxQuestions < 0) throw new Error('draft-schema: the question limit is not a nonnegative integer');
@@ -492,9 +506,18 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
   }, ['poles', 'whySection', 'inventoryOmissions', TASK_ROUTE_FIELD, QUESTION_KINDS_FIELD]) };
 }
 
-/** The schema as the JSON Schema document written to `draft.schema.json`. The internal form already uses JSON Schema's keywords. */
+/** The schema check reads a v14 draft against: v12's members with v13's (version 2.33). It has no `figurePlan`: check reads the draft
+ * without it (figure-plan.ts), so the generic check reports nothing at or below that path. */
+export const issuedDraftSchema = (parameters: DraftSchemaParameters): DraftSchemaWithDefs => localDraftSchema({ ...parameters, hero: 'required' }, 'home', 'required',
+  'taken', 'taken', 'taken', 'taken', 'taken', 'taken');
+
+/** The schema as the JSON Schema document written to `draft.schema.json`. The internal form already uses JSON Schema's keywords. The v14
+ * document admits any value at `figurePlan`, every failure of the plan's form being a figure-plan finding (version 2.33). */
 export function draftSchemaDocument(parameters: DraftSchemaParameters): Record<string, unknown> {
-  return schemaDocument(LOCAL_DRAFT_SCHEMA_VERSION, 'Polaris dossier local-agent draft', localDraftSchema({ ...parameters, hero: 'required' }));
+  const { root, defs } = issuedDraftSchema(parameters);
+  const object = root as Extract<DraftSchema, { readonly type: 'object' }>;
+  const planned = { ...object, properties: { ...object.properties, [FIGURE_PLAN_FIELD]: { description: FIGURE_PLAN_DESCRIPTION } } } as unknown as DraftSchema;
+  return schemaDocument(LOCAL_DRAFT_SCHEMA_VERSION, 'Polaris dossier local-agent draft', { root: planned, defs });
 }
 
 /** The local-agent inventory schema (REQ-polaris-generation-035, 006). The inventory session prepares it from the clone without the
