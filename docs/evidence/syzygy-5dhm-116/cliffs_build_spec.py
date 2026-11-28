@@ -40,7 +40,8 @@ P = {
     'iniComment': r'''^[ \t]*(?:[#;]|$)''',
     'iniSection': r'''^[ \t]*\[(?<section>[^\]\r\n]+)\][ \t]*$''',
     'iniEntry': r'''^[ \t]*(?<name>[A-Za-z_][A-Za-z0-9_.-]*)(?:[ \t]*[=:][ \t]*|[ \t]+)(?<value>[^ \t].*?)[ \t]*$''',
-    'iniKeyOnly': r'''^[ \t]*[A-Za-z_][A-Za-z0-9_.-]*[ \t]*(?:[=:][ \t]*)?$''',
+    'iniKeyOnly': r'''^[ \t]*(?<name>[A-Za-z_][A-Za-z0-9_.-]*)[ \t]*(?:[=:][ \t]*)?$''',
+    'iniIndent': r'''^[ \t]*''',
     'iniBoolean': r'''^(?:true|false|yes|no|on|off)$''',
     'iniString': r'''^(?:"(?:[^"\\]|\\.)*"|'[^']*')$''',
     'yamlSkip': r'''^(?:[ \t]*(?:#.*)?|---[ \t]*|\.\.\.[ \t]*)$''',
@@ -50,6 +51,7 @@ P = {
     'yamlTab': r'''^ *\t''',
     'yamlNode': r'''^[&*!]''',
     'yamlBlock': r'''^[|>][-+0-9]*$''',
+    'yamlPlainMapping': r''':(?:[ \t]|$)''',
     'yamlDouble': r'''^(?<quoted>"(?:[^"\\]|\\.)*")(?:[ \t]+#.*)?$''',
     'yamlSingle': r'''^(?<quoted>'(?:[^']|'')*')(?:[ \t]+#.*)?$''',
     'yamlBoolean': r'''^(?:true|false|True|False|TRUE|FALSE)$''',
@@ -84,8 +86,14 @@ PARAGRAPHS = [
     f'is a run of tokens matched by {c("expressionToken")} that alternates operands and operators, each operand a number with any number of '
     'leading signs and opening parentheses before it and closing parentheses after it, with the parentheses balanced and at least one '
     'operator. Any other value, an empty one among them, is no literal: the row is Unknown `value-not-literal`, with no value and no type. '
-    'Nothing is evaluated: a value is the text written. An ini-form body is read line by line: a line matching '
-    f'{c("iniComment")} (a comment or a blank line) or {c("iniKeyOnly")} (a key with no value) is no entry; a line matching '
+    'Nothing is evaluated: a value is the text written. Each definition is read from its one line, wherever it stands in the code text: a '
+    'keyword argument written in a call in a definition form\'s shape and a macro a preprocessor condition disables are read too, and a '
+    'definition continued on the next line is Unknown, or not read where its form needs the line\'s end. An ini-form body is read line by '
+    f'line: a line matching {c("iniComment")} (a comment or a blank line) is skipped; a line whose indentation, the match of '
+    f'{c("iniIndent")}, is longer than that of the last entry or key with no value since the last section continues that key\'s value, as '
+    'Python\'s configparser reads it, so the entry\'s value is Unknown `value-not-literal`, a key with no value so continued is an entry '
+    'Unknown `value-not-literal` at its own line, and the continuing lines are no entries; otherwise a line matching '
+    f'{c("iniKeyOnly")} (a key with no value) is no entry; a line matching '
     f'{c("iniSection")} opens a section; a line matching {c("iniEntry")} whose value does not end with `{{` is an entry, its name its key, '
     'after the section\'s trimmed name and `.` where a section is open; any other line makes the file Unknown `unparsed` with the fault '
     f'`outside-grammar`. An ini value is `boolean` by {c("iniBoolean")} compared without case, `integer` or `decimal` as a source value '
@@ -98,8 +106,9 @@ PARAGRAPHS = [
     f'{c("yamlSingle")} and is `string`, its quoted text the value; any other value has {c("yamlComment")} removed and is Unknown '
     f'`value-not-literal` where it matches {c("yamlBlock")} (a block scalar, whose more deeply indented lines are skipped) or opens a flow '
     'collection, opened by `[` or `{` and ending with the matching `]` or `}` (one not ending so is outside the grammar), and is '
-    f'otherwise `boolean` by {c("yamlBoolean")}, `null` by {c("yamlNull")}, `integer` or `decimal` as a source value is, and `text`. Any '
-    'other yaml line is outside the grammar. A commented-out entry is read in neither form, and a file outside its grammar is never read '
+    f'otherwise outside the grammar where it matches {c("yamlPlainMapping")}, and `boolean` by {c("yamlBoolean")}, `null` by '
+    f'{c("yamlNull")}, `integer` or `decimal` as a source value is, and `text`. A line a block scalar or a sequence item does not skip and '
+    'that is indented more deeply than the entry with a value before it is outside the grammar, and so is any other yaml line. A commented-out entry is read in neither form, and a file outside its grammar is never read '
     'past its fault. Each row\'s `quote` is its line, lines ending at CRLF, CR or LF, without its terminator and its leading and trailing '
     'spaces and tabs (on line 1 without a byte-order mark). A row states what a file sets, never that a limit is reached, enforced or right.',
     # The member.
@@ -134,7 +143,8 @@ PARAGRAPHS = [
     'the test-names page, the rough-edges page and the docs-and-code page where those are published, and opening with a legend of its own: '
     'the view switch a map page\'s legend carries, and what `Derived by Syzygy` and `Not established.` mean there. Its section `<section '
     'id="cliffs" data-reading-level="1" data-topics="">` holds: a note naming the revision, the bound screening policy, the rule and its '
-    'version, the languages and configuration forms read, the name patterns in words, that a definition is read in code only and never in a '
+    'version, the languages and configuration forms read, the name patterns in words, that a definition is read from its one line in code '
+    'only, wherever it stands, and never in a comment or a string, that an ini value continued on an indented line is Unknown, '
     'comment or a string, that commented-out entries and sequence items are not read, that a value is shown as written and never evaluated, '
     'that a row says what a file sets and never that a limit is reached, enforced or right, that JSON, TOML and environment-file '
     'configuration, command-line flag defaults and values computed at run time are not read by this version, and the unit rule; a coverage line giving each '
@@ -178,11 +188,12 @@ SCENARIOS = '''
 
 - **WHEN** an ini-form body writes `maxmemory 2gb`, `timeout 0`, a section `[server]` and under it `port = 6379`, `verbose: yes`, `name = "svc"`, `ratio=0.75`, `skip-networking` and `empty =`; and a yaml-form body sets `replicaCount: 1`, `image.repository` and a quoted `image.tag`, `resources.limits.memory: 512Mi` and `cpu: 0.5`, a sequence of two items under `args:` and one under `extra:`, `debug: false`, a block scalar `notes: |`, `nothing: ~`, a flow mapping `labels: {app: web}` and `service.port: 80` with a comment
 - **THEN** the ini entries are `maxmemory` `2gb` text, `timeout` 0 integer, `server.port` integer, `server.verbose` boolean, `server.name` string and `server.ratio` decimal, and neither key with no value is an entry; the yaml entries are named by their key paths, `notes` and `labels` Unknown `value-not-literal`, `nothing` `null`, and 3 sequence items are counted and not read
-- **AND** an ini body with a `{` block, and a yaml body with an anchor, a tag, an alias, an unclosed flow or quote, a tab in its indentation or a plain scalar continued on the next line, is Unknown `unparsed` with the fault `outside-grammar`, and none of its entries is a row
+- **AND** in a tox-style ini body `deps =` followed by indented requirement lines, and `setenv = PYTHONHASHSEED=0` followed by an indented `LANG=C`, are entries Unknown `value-not-literal`, and no indented line is an entry, while keys indented alike under a section are entries
+- **AND** an ini body with a `{` block, and a yaml body with an anchor, a tag, an alias, an unclosed flow or quote, a tab in its indentation, a plain scalar continued on the next line, a plain value holding `: ` or an entry indented under an entry with a value, is Unknown `unparsed` with the fault `outside-grammar`, and none of its entries is a row
 
 #### Scenario: Values the rule cannot read whole stay Unknown
 
-- **WHEN** Python constants are set to `1 2`, `(1`, `1 +`, `* 2`, another name, two adjacent strings, `1.5.2` and `null`
+- **WHEN** Python constants are set to `1 2`, `(1 + 2`, `1 +`, `* 2`, `* 2 + 1`, `- (5)`, `1) + (2`, another name, two adjacent strings, `1.5.2` and `null`
 - **THEN** each is a row Unknown `value-not-literal` with no value and no type, never a guessed number
 
 #### Scenario: Files left out, set apart, Unknown or withheld

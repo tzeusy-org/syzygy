@@ -184,6 +184,30 @@ describe('limitsAndDefaults: limit-default v1 under declared-source policy 2.0.0
     expect([m.units.length, m.unitsNotListed, m.units.at(-1)!.unit, m.recognizer.rows]).toEqual([250, 1, 'd249', 251]);
   });
 
+  it('counts sequence items not read, and keeps a unit whose files read hold no row', async () => {
+    const tree: Tree = { 'deploy/values.yaml': 'args:\n  - a\n  - b\n', 'lib/empty.py': 'x = 1\n' };
+    const m = derived(await derive(fixture(tree, ['deploy/values.yaml', 'lib/empty.py'])));
+    expect([m.recognizer.observed, m.recognizer.sequenceItemsNotRead, m.recognizer.rows, m.rows]).toEqual([2, 2, 0, []]);
+    expect(m.units).toEqual([
+      { unit: 'deploy', files: 1, constants: 0, entries: 0, valuesUnknown: 0 },
+      { unit: 'lib', files: 1, constants: 0, entries: 0, valuesUnknown: 0 },
+    ]);
+  });
+
+  it('passes on a reader error that is no refusal, never reading the batch again path by path', async () => {
+    const f = fixture({ 'a.py': 'MAX_A = 1\n', 'b.py': 'MAX_B = 2\n' }, ['a.py', 'b.py']);
+    const readMany = (paths: readonly string[]) => (paths.length > 1 ? Promise.reject(new Error('the store closed')) : f.readMany(paths));
+    await expect(deriveLimits({ entries: f.entries, screen: V2, consented: null, readMany })).rejects.toThrow('the store closed');
+  });
+
+  it('leaves out a row whose quoted line the secret detectors match, though its body was admitted', async () => {
+    const f = fixture({ 'a.py': 'MAX_A = 1\nMAX_B = 2\n' }, ['a.py']);
+    const screen: DossierScreen = { ...V2, screenBody: (text: string) => (text.includes('MAX_B') ? 'secret-detector-match' : V2.screenBody(text)) };
+    const m = derived(await deriveLimits({ entries: f.entries, screen, consented: null, readMany: f.readMany }));
+    expect(m.rows.map((k) => k.name)).toEqual(['MAX_A']);
+    expect([m.recognizer.valuesLeftOut, m.recognizer.files[0]!.valuesLeftOut]).toEqual([1, 1]);
+  });
+
   it('states the member Unknown when the tree cannot be listed', () => {
     expect(limitsUnknown('tree-refused')).toEqual({ format: 'polaris-dossier-limits-and-defaults/1', state: 'unknown', why: 'the pinned tree could not be listed (tree-refused)' });
   });

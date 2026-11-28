@@ -31,6 +31,11 @@ describe('limit-default v1: names', () => {
       .map(kindOf)).toEqual(['timeout', 'timeout', 'threshold', 'limit', 'limit', 'max', 'max', 'max', 'default', 'default']);
     for (const name of ['PORT', 'MINIMUM', 'XMAX', 'FOO_DEFAULT', 'CONFIG_DEFAULT_HZ', 'Max_SIZE']) expect(kindOf(name), name).toBeUndefined();
   });
+
+  it('defines no constant by a name that is not upper case, though a kind pattern would match its tail', () => {
+    expect(rows(recognizeConstants('read_TIMEOUT = 5\nMaxRetries_LIMIT = 3\n', 'python'))).toEqual([]);
+    expect(rows(recognizeConstants('const idle_TIMEOUT = 5;\n', 'javascript'))).toEqual([]);
+  });
 });
 
 describe('limit-default v1: source forms', () => {
@@ -75,6 +80,7 @@ describe('limit-default v1: source forms', () => {
       'const s = "const MAX_IN_STRING = 1";',
       'const MAX_FN = () => 3;',
       'const MAX_NEG = -1n;',
+      'const MAX_F: (a: number) => number = (a) => a;',
     ].join('\n');
     expect(rows(recognizeConstants(text, 'javascript'))).toEqual([
       ['limit', 'MANIFEST_BLOB_LIMIT', '1_048_576', 'integer', 1, 'export const MANIFEST_BLOB_LIMIT = 1_048_576;'],
@@ -97,6 +103,8 @@ describe('limit-default v1: source forms', () => {
       ['max', 'MAX_DEPTH', '32', 'integer', 2, 'public static final int MAX_DEPTH = 32;'],
       ['timeout', 'IDLE_TIMEOUT', '60L * 1000L', 'expression', 3, 'private static final long IDLE_TIMEOUT = 60L * 1000L;'],
     ]);
+    // A Java definition is one line ending in `;`: one continued on the next line is not read.
+    expect(rows(recognizeConstants('class B {\n  private static final int MAX_SIZE = 1024 *\n      1024;\n}\n', 'java'))).toEqual([]);
     const c = '#define CONFIG_DEFAULT_HZ 10 /* Hz */\n#define DEFAULT_PORT (6379)\n#define MAX_SUM (1) + (2)\n#define MAX(a, b) ((a) > (b))\n# define PROTO_MAX_SIZE (512*1024*1024)\nstatic const size_t LOOKUP_LIMIT = 0x100;\n/* #define MAX_OFF 3 */\n#define HAVE_MAX_FLAG\n';
     expect(rows(recognizeConstants(c, 'c'))).toEqual([
       ['default', 'DEFAULT_PORT', '(6379)', 'integer', 2, '#define DEFAULT_PORT (6379)'],
@@ -117,7 +125,7 @@ describe('limit-default v1: source forms', () => {
   });
 
   it('types no value it cannot read whole', () => {
-    const values = ['1 2', '(1 + 2', '1 +', '* 2', '- (5)', 'MAX_B', '"a" "b"', '1.5.2', 'null', '1) + (2'];
+    const values = ['1 2', '(1 + 2', '1 +', '* 2', '* 2 + 1', '- (5)', 'MAX_B', '"a" "b"', '1.5.2', 'null', '1) + (2'];
     const text = values.map((v, k) => `MAX_${k} = ${v}`).join('\n');
     expect(rows(recognizeConstants(text, 'python')).map((r) => [r[2], r[3]])).toEqual(values.map(() => [null, null]));
   });
@@ -140,6 +148,29 @@ describe('limit-default v1: configuration forms', () => {
   it('makes an ini file with a block or an unread line Unknown rather than read past it', () => {
     expect(recognizeConfig('server {\n  listen 80;\n}\n', 'ini')).toEqual({ ok: false, parseFault: 'outside-grammar' });
     expect(recognizeConfig('a = 1\n= 2\n', 'ini')).toEqual({ ok: false, parseFault: 'outside-grammar' });
+    expect(recognizeConfig('events {\n  worker_connections 1024;\n', 'ini')).toEqual({ ok: false, parseFault: 'outside-grammar' });
+    expect(recognizeConfig('  = 1\n', 'ini')).toEqual({ ok: false, parseFault: 'outside-grammar' });
+  });
+
+  it('reads an ini line indented under an entry or a key as that key\'s value continued, so the key\'s value is Unknown', () => {
+    const tox = '[testenv]\ndeps =\n    pytest-cov >= 2\n    click\ncommands =\n    pytest --timeout 30 {posargs}\nsetenv = PYTHONHASHSEED=0\n\n    LANG=C\npassenv = HOME\n';
+    expect(rows(recognizeConfig(tox, 'ini'))).toEqual([
+      ['entry', 'testenv.deps', null, null, 2, 'deps ='],
+      ['entry', 'testenv.commands', null, null, 5, 'commands ='],
+      ['entry', 'testenv.setenv', null, null, 7, 'setenv = PYTHONHASHSEED=0'],
+      ['entry', 'testenv.passenv', 'HOME', 'text', 10, 'passenv = HOME'],
+    ]);
+    const cfg = '[options]\ninstall_requires =\n    requests >= 2.0\nzip_safe = False\n';
+    expect(rows(recognizeConfig(cfg, 'ini'))).toEqual([
+      ['entry', 'options.install_requires', null, null, 2, 'install_requires ='],
+      ['entry', 'options.zip_safe', 'False', 'boolean', 4, 'zip_safe = False'],
+    ]);
+    // Keys indented alike under a section are entries, not continuations; a section ends the entry before it.
+    expect(rows(recognizeConfig('[core]\n\tbare = false\n\tfilemode = true\n[user]\n\tname = x\n', 'ini'))).toEqual([
+      ['entry', 'core.bare', 'false', 'boolean', 2, 'bare = false'],
+      ['entry', 'core.filemode', 'true', 'boolean', 3, 'filemode = true'],
+      ['entry', 'user.name', 'x', 'text', 5, 'name = x'],
+    ]);
   });
 
   it('reads yaml mappings by their key paths, skipping sequences and block scalars', () => {
@@ -165,7 +196,7 @@ describe('limit-default v1: configuration forms', () => {
   });
 
   it('makes a yaml file with an anchor, a tag, an open flow, an open quote, a tab or a plain continuation Unknown', () => {
-    for (const text of ['a: &x 1\n', 'a: !!int 1\n', 'a: *x\n', 'a: [1,\n  2]\n', 'a: "open\n', 'a:\n\tb: 1\n', 'a: one\n  two\n', '"q": 1\n', '<<: *x\n', 'args:\n  - a\n  \tb\n']) {
+    for (const text of ['a: &x 1\n', 'a: !!int 1\n', 'a: *x\n', 'a: [1,\n  2]\n', 'a: "open\n', 'a:\n\tb: 1\n', 'a: one\n  two\n', '"q": 1\n', '<<: *x\n', 'args:\n  - a\n  \tb\n', 'list:\n  - a\n    \tb\n', 'k: [a, b\n', 'a: 1\n  max_b: 2\n', 'a: b: c\n', 'a: 1\n  - x\n', 'a: b:\n']) {
       expect(recognizeConfig(text, 'yaml'), JSON.stringify(text)).toEqual({ ok: false, parseFault: 'outside-grammar' });
     }
   });

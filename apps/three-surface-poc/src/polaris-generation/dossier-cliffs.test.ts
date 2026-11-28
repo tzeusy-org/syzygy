@@ -57,6 +57,7 @@ describe('the cliffs reference page (version 2.49)', () => {
       + 'MAX_NAME, a maximum constant, in setup.py at line 1: set to &quot;&lt;a&gt;&quot; (string). <q>MAX_NAME = &quot;&lt;a&gt;&quot;</q> <span class="derived-mark">Derived by Syzygy</span>'
       + `<span class="visually-hidden ev"> Evidence: label Observed; line 1 of setup.py, blob ${BLOB}, quoted exactly but for its leading and trailing spaces and tabs; the value as written, not evaluated; read by Syzygy by rule limit-default version 1 at revision ${REV}.</span></li>`);
     expect(page).not.toContain('<a>');
+    expect(page).toContain('or that starts DEFAULT_ after any leading underscores, read from its one line in code only, wherever it stands (a keyword argument in a call and a macro a preprocessor condition disables among them)');
     expect(page).toContain('JSON, TOML and environment-file configuration, command-line flag defaults and values computed at run time are not read by this version, so a limit set only there is not on this page.');
     expect(page).toContain('service.port, a configuration entry, in chart/values.yaml at line 3: set to 8080 (integer). <q>port: 8080</q>');
     expect(page).toContain('<li data-limit-id="_limit-3" data-epistemic="unknown" data-limit-kind="timeout" data-limit-path="setup.py" data-limit-line="2" data-unknown-reason="mapping-coverage-absent">'
@@ -93,6 +94,20 @@ describe('the cliffs reference page (version 2.49)', () => {
     const page = site({ ...MEMBER, recognizer: { ...MEMBER.recognizer, unknown: 0, secretPathsLeftOut: 1, files: MEMBER.recognizer.files.filter(f => f.epistemic !== 'unknown') } }).get(PAGE)!;
     expect(page).toContain('What 1 candidate file that was not read sets is counted in no row');
     expect(page).toContain('<li>Every candidate file not left out or set apart was read.</li>');
+  });
+
+  it('renders a row the member marks Unknown as Not established, whatever value it carries', () => {
+    const page = site({ ...MEMBER, rows: [{ ...MEMBER.rows[2]!, value: '5', valueType: 'integer' }] }).get(PAGE)!;
+    expect(page).toContain('What READ_TIMEOUT is set to is Unknown');
+    expect(page).not.toContain('set to 5 (integer)');
+  });
+
+  it('gives a withheld class its own reason, and counts the Unknown files it does not list', () => {
+    if (MEMBER.state !== 'derived') throw new Error('fixture');
+    const withheld = { path: 'deploy/values.yaml', source: 'config', epistemic: 'unknown', unknownReason: 'class-not-consented', parseFault: null, rows: null, valuesLeftOut: null } as const;
+    const page = site({ ...MEMBER, recognizer: { ...MEMBER.recognizer, unknown: 5, files: [...MEMBER.recognizer.files, withheld], filesNotListed: 2 } }).get(PAGE)!;
+    expect(page).toContain('<li data-epistemic="unknown" data-unknown-reason="unconsented-source-or-provider" data-cliffs-path="deploy/values.yaml" data-cliffs-file-reason="class-not-consented">');
+    expect(page).toContain('<li>2 more files whose limits are Unknown are counted and not listed.</li>');
   });
 
   it('refuses a file reason or a kind this version does not name', () => {

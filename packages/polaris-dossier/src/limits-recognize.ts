@@ -78,7 +78,9 @@ export const LIMIT_PATTERNS = {
   iniComment: /^[ \t]*(?:[#;]|$)/,
   iniSection: /^[ \t]*\[(?<section>[^\]\r\n]+)\][ \t]*$/,
   iniEntry: /^[ \t]*(?<name>[A-Za-z_][A-Za-z0-9_.-]*)(?:[ \t]*[=:][ \t]*|[ \t]+)(?<value>[^ \t].*?)[ \t]*$/,
-  iniKeyOnly: /^[ \t]*[A-Za-z_][A-Za-z0-9_.-]*[ \t]*(?:[=:][ \t]*)?$/,
+  iniKeyOnly: /^[ \t]*(?<name>[A-Za-z_][A-Za-z0-9_.-]*)[ \t]*(?:[=:][ \t]*)?$/,
+  /** A line's indentation; a line indented more deeply than the entry or key before it continues that entry's value. */
+  iniIndent: /^[ \t]*/,
   iniBoolean: /^(?:true|false|yes|no|on|off)$/i,
   iniString: /^(?:"(?:[^"\\]|\\.)*"|'[^']*')$/,
   /** The `yaml` form's lines: a comment or a document marker, a sequence item, an entry. */
@@ -90,6 +92,8 @@ export const LIMIT_PATTERNS = {
   yamlTab: /^ *\t/,
   yamlNode: /^[&*!]/,
   yamlBlock: /^[|>][-+0-9]*$/,
+  /** A plain value holding a mapping indicator, which no plain scalar may hold. */
+  yamlPlainMapping: /:(?:[ \t]|$)/,
   yamlDouble: /^(?<quoted>"(?:[^"\\]|\\.)*")(?:[ \t]+#.*)?$/,
   yamlSingle: /^(?<quoted>'(?:[^']|'')*')(?:[ \t]+#.*)?$/,
   yamlBoolean: /^(?:true|false|True|False|TRUE|FALSE)$/,
@@ -200,22 +204,37 @@ const iniValueType = (value: string): ValueType => {
   return LIMIT_PATTERNS.iniString.test(value) ? 'string' : 'text';
 };
 
-/** Every entry an `ini`-form body sets: a key and a value after `=`, `:` or white space, under the last section. A line that is neither a
- * comment, a section, a key alone nor an entry, or an entry whose value opens a block (`{`) or a line that closes one, is outside the
- * grammar. */
+/** Every entry an `ini`-form body sets: a key and a value after `=`, `:` or white space, under the last section. A line indented more
+ * deeply than the entry or the key before it continues that key's value, as Python's configparser reads it: the entry is then Unknown, its
+ * value not read whole, and the continuation lines are no entries. A line that is neither a comment, a section, a continuation, a key alone
+ * nor an entry, or an entry whose value opens a block (`{`) or a line that closes one, is outside the grammar. */
 function recognizeIni(text: string): RecognizedLimits {
   const lines: Lines = { starts: lineStarts(text), text };
   const limits: RawLimit[] = [];
   let section: string | null = null;
+  // The last entry or key since the last section: its indentation, and the entry's place in `limits` or the key's line.
+  let last: { readonly indent: number; readonly at: number } | { readonly indent: number; readonly key: string; readonly index: number } | null = null;
+  const named = (key: string): string => (section === null ? key : `${section}.${key}`);
   for (let index = 0; index < lines.starts.length; index++) {
     const line = lineText(lines, index);
-    if (LIMIT_PATTERNS.iniComment.test(line) || LIMIT_PATTERNS.iniKeyOnly.test(line)) continue;
+    if (LIMIT_PATTERNS.iniComment.test(line)) continue;
+    const indent = LIMIT_PATTERNS.iniIndent.exec(line)![0].length;
+    if (last !== null && indent > last.indent) {
+      if ('key' in last) {
+        limits.push({ source: 'config', kind: 'entry', name: named(last.key), value: null, valueType: null, line: last.index + 1, quote: quoteOf(lines, last.index) });
+        last = { indent: last.indent, at: limits.length - 1 };
+      } else limits[last.at] = { ...limits[last.at]!, value: null, valueType: null };
+      continue;
+    }
+    const k = LIMIT_PATTERNS.iniKeyOnly.exec(line);
+    if (k !== null) { last = { indent, key: k.groups!['name']!, index }; continue; }
     const s = LIMIT_PATTERNS.iniSection.exec(line);
-    if (s !== null) { section = s.groups!['section']!.trim(); continue; }
+    if (s !== null) { section = s.groups!['section']!.trim(); last = null; continue; }
     const e = LIMIT_PATTERNS.iniEntry.exec(line);
     if (e === null || e.groups!['value']!.endsWith('{')) return { ok: false, parseFault: 'outside-grammar' };
-    const key = e.groups!['name']!, value = e.groups!['value']!;
-    limits.push({ source: 'config', kind: 'entry', name: section === null ? key : `${section}.${key}`, value, valueType: iniValueType(value), line: index + 1, quote: quoteOf(lines, index) });
+    const value = e.groups!['value']!;
+    limits.push({ source: 'config', kind: 'entry', name: named(e.groups!['name']!), value, valueType: iniValueType(value), line: index + 1, quote: quoteOf(lines, index) });
+    last = { indent, at: limits.length - 1 };
   }
   return { ok: true, limits, sequenceItems: 0 };
 }
@@ -223,14 +242,17 @@ function recognizeIni(text: string): RecognizedLimits {
 /** Every entry a `yaml`-form body sets, in the subset this version reads: block mappings of plain keys whose values are scalars on their
  * own line. A key with no value opens a mapping; a sequence item and every line indented under it is skipped and counted; a block scalar
  * (`|`, `>`) is an entry whose value is Unknown, and the lines under it are skipped; a flow collection closed on its line is an entry
- * whose value is Unknown. An anchor, an alias, a tag, a flow collection or a quoted scalar not closed on its line, a tab in indentation and
- * any other line are outside the grammar. */
+ * whose value is Unknown. An anchor, an alias, a tag, a flow collection or a quoted scalar not closed on its line, a plain value holding
+ * a mapping indicator, an entry indented more deeply than the entry with a value before it, a tab in indentation and any other line are
+ * outside the grammar. */
 function recognizeYaml(text: string): RecognizedLimits {
   const lines: Lines = { starts: lineStarts(text), text };
   const limits: RawLimit[] = [];
   const parents: { readonly indent: number; readonly name: string }[] = [];
   let sequenceItems = 0;
   let skipUnder: { readonly indent: number; readonly items: boolean } | null = null;
+  // The indentation of the last entry with a value: no line may sit more deeply under it.
+  let valuedAt: number | null = null;
   for (let index = 0; index < lines.starts.length; index++) {
     const line = lineText(lines, index);
     if (LIMIT_PATTERNS.yamlSkip.test(line)) continue;
@@ -244,6 +266,8 @@ function recognizeYaml(text: string): RecognizedLimits {
       }
       skipUnder = null;
     }
+    if (valuedAt !== null && indent > valuedAt) return { ok: false, parseFault: 'outside-grammar' };
+    valuedAt = null;
     if (item !== null) { sequenceItems++; skipUnder = { indent, items: true }; continue; }
     const e = LIMIT_PATTERNS.yamlEntry.exec(line);
     if (e === null) return { ok: false, parseFault: 'outside-grammar' };
@@ -254,6 +278,7 @@ function recognizeYaml(text: string): RecognizedLimits {
     if (raw === '' || raw.startsWith('#')) { parents.push({ indent, name: key }); continue; }
     const entry = (value: string | null, valueType: ValueType | null): void => {
       limits.push({ source: 'config', kind: 'entry', name, value, valueType, line: index + 1, quote: quoteOf(lines, index) });
+      valuedAt = indent;
     };
     if (LIMIT_PATTERNS.yamlNode.test(raw)) return { ok: false, parseFault: 'outside-grammar' };
     if (raw.startsWith('"') || raw.startsWith('\'')) {
@@ -269,6 +294,7 @@ function recognizeYaml(text: string): RecognizedLimits {
       entry(null, null);
       continue;
     }
+    if (LIMIT_PATTERNS.yamlPlainMapping.test(plain)) return { ok: false, parseFault: 'outside-grammar' };
     entry(plain, LIMIT_PATTERNS.yamlBoolean.test(plain) ? 'boolean' : LIMIT_PATTERNS.yamlNull.test(plain) ? 'null'
       : LIMIT_PATTERNS.number.test(plain) ? numberType(plain) : 'text');
   }
