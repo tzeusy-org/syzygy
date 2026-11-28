@@ -5,13 +5,13 @@
     "spec": "openspec/changes/dossier-url-lean-run/proposed/polaris-generation/spec.md",
     "sha256": "a867d5d743d22b22072519eae52b532d6e6afdc131f4132f3377927f5bae66d6"
   },
-  "ranAt": "cd7b31ec0b48cc2799eca6ee9b7b41c809e20344",
+  "ranAt": "ff0c09bb97096a3e8dc34b6a4a1a34e64221d6df",
   "method": "each mutant applied alone to the clean tree at ranAt (whose unmutated --check and counter --check pass), then scripts/check_spec_reconciliation.py --check and scripts/count_polaris_effective_scenarios.py --check, then restored; the unmutated checks pass again after the last",
   "checksAtRanAt": {
     "reconciliation": "7 of 7 predicates without FAIL; PASS",
-    "counter": "CHECK PASS: recomputed total 619 matches expected 619."
+    "counter": "CHECK PASS: recomputed total 626 matches expected 626."
   },
-  "selftest": "SELFTEST PASS: 738 of 738 mutants killed, 201 of 201 controls held, run at the pre-repair head cd04a3927 (rerun at this branch's head is recorded in PR #1045)",
+  "selftest": "SELFTEST PASS: clean scratch copy and its signed- and adopted-addition variants pass; 744 of 744 mutants killed by their expected predicate; 205 of 205 controls held (commit ff0c09bb9709)",
   "mutants": [
     {
       "id": "rename-047-scenario",
@@ -55,7 +55,7 @@
     {
       "id": "count-sentence-645",
       "file": "PROJECT-STATUS.md",
-      "old": "Polaris has 39 requirements and 619 scenarios.",
+      "old": "Polaris has 39 requirements and 626 scenarios.",
       "new": "Polaris has 39 requirements and 645 scenarios.",
       "outcome": "KILLED",
       "reconciliationFails": [
