@@ -15,6 +15,7 @@
 // read only where the draft admits a code element (misplaced-code-read, details-not-read, subsections-not-read); the three mutants whose
 // fragments that rewrite moved keep their ids. Run 3 (at 10c68e629, code-marks-mutation-run3-2026-11-28.json) killed 56 of 57: a test of
 // an excerpt in a subsection (subsections-not-read) repairs it.
+// Run 4 (at 689fa3be7, code-marks-mutation-run4-2026-11-28.json) killed 57 of 57.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
