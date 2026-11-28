@@ -56,6 +56,24 @@ describe('measureDraft', () => {
     expect(none.outcome === 'measured' && none.measured.draft.figureFit).toEqual({ notFittingAt1440: 0, notFittingAt390: 0, unknown: 1 });
   });
 
+  it('measures a v14 draft without its figure plan, which no ledger counts (version 2.33)', () => {
+    const { diagrams: _diagrams, ...rest } = draft();
+    const v14 = {
+      ...rest, schemaVersion: 'polaris-dossier-local-draft-v14', thesisBasis: 'stated',
+      hero: { omitted: { id: 'hero-why', label: 'inferred', basis: 'source', text: 'No one figure leads.', citations: [cite('c-hero')], quotations: [] } },
+      model: {
+        elements: [{ id: 'n1', label: 'Client', type: 'module', epistemic: 'inferred', citations: [cite('c-n1')] }, { id: 'n2', label: 'Server', type: 'service', epistemic: 'inferred', citations: [cite('c-n2')] }],
+        relationships: [{ id: 'e1', from: 'n1', to: 'n2', relation: 'calls', label: 'sends', epistemic: 'inferred', citations: [cite('c-e1')] }],
+      },
+      diagrams: [{ id: 'd1', title: 'Command flow', home: { kind: 'section', target: 'core-ideas' }, kind: 'flow', relationship: 'A command passes from the client to the server.',
+        view: { elements: ['n1', 'n2'], relationships: ['e1'] }, disposition: { kind: 'produced', assetIds: ['d1'] } }],
+    };
+    const plain = measureDraft(bytes(v14), () => 2000);
+    expect(plain.outcome).toBe('measured');
+    const planned = measureDraft(bytes({ ...v14, figurePlan: [{ home: { kind: 'overview' }, omitted: 'A reason no ledger counts.' }] }), () => 2000);
+    expect(planned).toEqual(plain);
+  });
+
   it('refuses, and names why, a draft the current schema refuses', () => {
     expect(measureDraft(bytes(untitled), () => 500)).toEqual({ outcome: 'refused', schemaVersion: 'polaris-dossier-local-draft-v2', why: 'schema', schemaFindings: 1 });
     expect(measureDraft(new TextEncoder().encode('{"schemaVersion":'), () => 500)).toEqual({ outcome: 'refused', schemaVersion: null, why: 'not-json', schemaFindings: 0 });

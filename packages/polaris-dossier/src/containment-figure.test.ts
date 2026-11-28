@@ -465,15 +465,15 @@ describe('containment: a v11 draft\'s other figures keep their v10 bytes', () =>
 });
 
 describe('containment: the brief paragraph', () => {
-  it('is kept verbatim for the brief that will issue it', () => {
+  it('is kept verbatim', () => {
     expect(CONTAINMENT_PARAGRAPH).toBe('A diagram\'s `kind` may also be `containment`, which takes `groups` in place of `nodes` and `edges`. Use it to show parts inside parts, such as packages inside a workspace or modules inside a service: list one to five top-level groups in `groups`, left to right, each with `id`, `label`, `epistemic` and `citations` as a node has and `children`, the zero to eight groups drawn inside it, top to bottom, in the same form. Nest at most three levels, at most 40 groups in all, and at least one group in another. Syzygy draws no line between groups: put a group inside another only where the second contains the first, and use a graph for any other relation. A group may carry `unit` as a node may; where both a group and the group it is in carry units, Syzygy checks the nesting as a `contains` arrow, and today only a top-level directory inside the repository root can be witnessed. On a narrow screen Syzygy shows a containment as a nested list.');
   });
 
-  it('is in no issued brief: the issued brief stays v21, issuing schema v13', async () => {
+  it('is issued by brief v22 (version 2.33), which issues schema v14', async () => {
     const { run } = await checked(A, draftOf([PARTS()]));
     const brief = fs.readFileSync(path.join(run, 'brief.md'), 'utf8');
-    expect(brief).toContain('polaris-dossier-brief-v21');
-    expect(brief).toContain('`polaris-dossier-local-draft-v13`');
-    expect(brief).not.toContain('`containment`');
+    expect(brief).toContain('polaris-dossier-brief-v22');
+    expect(brief).toContain('`polaris-dossier-local-draft-v14`');
+    expect(brief.split('\n').filter((line) => line === CONTAINMENT_PARAGRAPH)).toHaveLength(1);
   });
 });

@@ -960,6 +960,24 @@ it('screens a v12 model\'s element units as a graph node\'s', async () => {
   expect(packet.draft.document.model.elements.map((e: Doc) => e.unit)).toEqual([{ kind: 'top-level-directory', path: 'src' }, undefined, undefined]);
 });
 
+it('carries no v14 draft\'s figure plan, which check alone reads (version 2.33)', async () => {
+  const run = await prepared(undefined, (d) => {
+    d.schemaVersion = 'polaris-dossier-local-draft-v14';
+    d.thesisBasis = 'stated';
+    d.hero = { omitted: { id: 'hero-why', label: 'inferred', basis: 'source', text: 'No one figure leads.', citations: [cite('c-hero')], quotations: [] } };
+    d.model = { elements: [], relationships: [] };
+    d.diagrams = [];
+    d.figurePlan = [{ home: { kind: 'overview' }, omitted: 'A plan reason only check reads.' },
+      ...d.sections.map((section: Doc) => ({ home: { kind: 'section', target: section.id }, omitted: 'No picture here.' })),
+      ...d.deepDives.map((dive: Doc) => ({ home: { kind: 'deep-dive', target: dive.id }, omitted: 'No picture here.' }))];
+  });
+  const built = await buildFidelityPacket(await opened(run), deps());
+  if (!built.ok) throw new Error(built.reason);
+  expect(built.bytes.includes('figurePlan')).toBe(false);
+  expect(built.bytes.includes('A plan reason only check reads.')).toBe(false);
+  expect(JSON.parse(built.bytes).draft.document.schemaVersion).toBe('polaris-dossier-local-draft-v14');
+});
+
 describe('a cited path both denied and secret-matching in the fidelity packet', () => {
   it('withholds the path in both the span and the copy of the draft, preserving the denied-path outcome', async () => {
     const run = await prepared(undefined, (d) => { d['unresolved'] = [{ id: 'q0', question: 'Why?', reason: 'Not stated.', citations: [cite('c-q0', BOTH_PATH, 1, 1)] }]; });

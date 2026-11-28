@@ -1,0 +1,120 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-27T18:37:53.099Z",
+  "commit": "cd0fb95cbca98dd7c9d8ee1e0c644b8ad4794f66",
+  "subject": {
+    "packages/polaris-dossier/src/draft-schema.ts": "d2765b712ee64a89cbb9eb6d7f379092d243b7a5d3228074674186e08393a63a"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 600 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/figure-plan.ts": [
+      "packages/polaris-dossier/src/figure-plan.test.ts"
+    ],
+    "packages/polaris-dossier/src/check.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts"
+    ],
+    "packages/polaris-dossier/src/draft-schema.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts",
+      "packages/polaris-dossier/src/draft-schema.test.ts"
+    ],
+    "packages/polaris-dossier/src/render.ts": [
+      "packages/polaris-dossier/src/system-model.test.ts"
+    ],
+    "packages/polaris-dossier/src/review-packet.ts": [
+      "packages/polaris-dossier/src/review.test.ts"
+    ],
+    "packages/polaris-dossier/src/brief.ts": [
+      "packages/polaris-dossier/src/brief.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "exitCode": 0,
+      "tests": 112,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "model-elements-199",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "elements: [0, 200] as const, relationships: [0, 400] as const",
+      "new": "elements: [0, 199] as const, relationships: [0, 400] as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 112,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration keeps parity for a v11 draft of exactly 200 nodes and 400 edges (version 2.41)",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration gives the migrated draft check's schema finding at 201 nodes, and at 401 edges, though each v11 draft passes (version 2.41)",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: scenarios and bounds the first tests left out (R37 finding 4) bounds the model to 0 to 200 elements and 0 to 400 relationships, at and past each bound",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: the migration parity's bound (version 2.41) gives a migrated v11 draft of 222 nodes check's schema finding at the model's elements, though the v11 draft passes"
+      ],
+      "seconds": 8
+    },
+    {
+      "id": "model-elements-201",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "elements: [0, 200] as const, relationships: [0, 400] as const",
+      "new": "elements: [0, 201] as const, relationships: [0, 400] as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 112,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration gives the migrated draft check's schema finding at 201 nodes, and at 401 edges, though each v11 draft passes (version 2.41)",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: scenarios and bounds the first tests left out (R37 finding 4) bounds the model to 0 to 200 elements and 0 to 400 relationships, at and past each bound",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: the migration parity's bound (version 2.41) gives a migrated v11 draft of 222 nodes check's schema finding at the model's elements, though the v11 draft passes"
+      ],
+      "seconds": 15
+    },
+    {
+      "id": "model-relationships-399",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "elements: [0, 200] as const, relationships: [0, 400] as const",
+      "new": "elements: [0, 200] as const, relationships: [0, 399] as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 112,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration keeps parity for a v11 draft of exactly 200 nodes and 400 edges (version 2.41)",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration gives the migrated draft check's schema finding at 201 nodes, and at 401 edges, though each v11 draft passes (version 2.41)",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: scenarios and bounds the first tests left out (R37 finding 4) bounds the model to 0 to 200 elements and 0 to 400 relationships, at and past each bound"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "model-relationships-401",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "elements: [0, 200] as const, relationships: [0, 400] as const",
+      "new": "elements: [0, 200] as const, relationships: [0, 401] as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 112,
+      "failedTests": [
+        "packages/polaris-dossier/src/system-model.test.ts > system model: migration gives the migrated draft check's schema finding at 201 nodes, and at 401 edges, though each v11 draft passes (version 2.41)",
+        "packages/polaris-dossier/src/system-model.test.ts > system model: scenarios and bounds the first tests left out (R37 finding 4) bounds the model to 0 to 200 elements and 0 to 400 relationships, at and past each bound"
+      ],
+      "seconds": 18
+    }
+  ],
+  "equivalent": [
+    {
+      "id": "render-plan-findings-dropped",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "  findings.push(...planFindings);\n",
+      "new": "",
+      "reason": "Render reads only the latest passed revision, whose check reported no plan finding, and verifies those bytes against the digest its check recorded; the plan findings are pure over those bytes, so re-deriving them at render finds none for every draft render accepts. The line keeps render's re-derivation the whole of check's."
+    }
+  ],
+  "summary": {
+    "mutants": 4,
+    "killed": 4,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 1
+  }
+}
