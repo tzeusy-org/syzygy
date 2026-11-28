@@ -173,7 +173,8 @@ const UNVIEWED = 'every element and relationship of the model is shown by at lea
 
 /** A v12 draft whose model holds `app` and `db` and the relationship between them, shown by the one view, and the two values as unviewed elements, each citing a fixed citation id. */
 const leaky = (): Doc => modelDraft([el('app', 'App', 'system'), el('db', 'Db', 'store'), el(PATHLIKE, 'Path', 'system', { citations: [cite('c-m2')] }),
-  el(TOKEN, 'Token', 'system', { citations: [cite('c-m3')] })], [rel('r1', 'app', 'db', 'reads', 'Reads')], [graphView('all', ['app', 'db'], ['r1'])]);
+  el(TOKEN, 'Token', 'system', { citations: [cite('c-m3')] })], [rel('r1', 'app', 'db', 'reads', 'Reads'), rel(PATHLIKE, 'db', 'app', 'reads', 'Reads back', { citations: [cite('c-m4')] })],
+  [graphView('all', ['app', 'db'], ['r1'])]);
 
 /** Every file under `dir` but the draft's own bytes (the submitted draft and its frozen copy), by relative path. */
 function writtenFiles(dir: string, draft: string): Map<string, string> {
@@ -205,6 +206,7 @@ describe('finding details name identities and nothing a detector matches (syzygy
     expect(findings.filter((f) => f.kind === 'model-unviewed')).toEqual([
       { kind: 'model-unviewed', at: '$.model.elements[2]', detail: `$.model.elements[2]: ${UNVIEWED}` },
       { kind: 'model-unviewed', at: '$.model.elements[3]', detail: WITHHELD },
+      { kind: 'model-unviewed', at: '$.model.relationships[1]', detail: `$.model.relationships[1]: ${UNVIEWED}` },
     ]);
     // The path-like identity is also a schema finding, as before.
     expect(findings.filter((f) => f.at === '$.model.elements[2].id').map((f) => f.kind)).toEqual(['schema']);
@@ -259,6 +261,18 @@ describe('finding details name identities and nothing a detector matches (syzygy
     const p = doc.sections[0].paragraphs[0];
     doc.sections[0].paragraphs = [{ ...p, id: 'pathonly-secret' }, { ...p, id: 'pathonly-secret', citations: [cite('c-p9', 2, 2)] }];
     expect((await findingsOf(A, doc, { loadScreen: async () => pathOnly })).findings.filter((f) => f.kind === 'duplicate-id')).toEqual([
+      { kind: 'duplicate-id', at: '$.sections[0].paragraphs[1]', detail: WITHHELD },
+    ]);
+  });
+
+  it('withholds a detail a detector matches only across its words', async () => {
+    // A screen whose body rule matches the identity only inside a sentence, never as one word: only the whole-detail reading withholds it.
+    const wholeOnly = withScreen((screen) => ({ ...screen, screenBody: (body: string, path?: string) =>
+      (body.includes('whole-only-id') && body.includes(' ') ? 'secret-detector-match' : screen.screenBody(body, path)) }));
+    const doc = draftOf([]);
+    const p = doc.sections[0].paragraphs[0];
+    doc.sections[0].paragraphs = [{ ...p, id: 'whole-only-id' }, { ...p, id: 'whole-only-id', citations: [cite('c-p9', 2, 2)] }];
+    expect((await findingsOf(A, doc, { loadScreen: async () => wholeOnly })).findings.filter((f) => f.kind === 'duplicate-id')).toEqual([
       { kind: 'duplicate-id', at: '$.sections[0].paragraphs[1]', detail: WITHHELD },
     ]);
   });

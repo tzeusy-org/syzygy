@@ -1,0 +1,256 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-28T15:45:46.918Z",
+  "commit": "23f77f856f0e053f8aeec98559e67134678bebe9",
+  "subject": {
+    "packages/polaris-dossier/src/check-derive.ts": "acc938ef8a36c4a9609ab39ffbba1990ef52aaed769160012c8bf69606fb67ad",
+    "packages/polaris-dossier/src/check.ts": "5303d223434c92b4fc972008df0ccf71f85dc8f0322be0642d67b877ce277f7d",
+    "packages/polaris-dossier/src/finding-names.ts": "eea49bf636c7080b1e653e13df0623c2af6bc74defbc5ba85e97a43b4df1874f",
+    "packages/polaris-dossier/src/system-model.ts": "90d8e7515b1220db0a2e246f94a52d036fcb5e7b41df844a6e8db0b0189e030d"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 600 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/finding-names.ts": [
+      "packages/polaris-dossier/src/finding-names.test.ts"
+    ],
+    "packages/polaris-dossier/src/system-model.ts": [
+      "packages/polaris-dossier/src/finding-names.test.ts",
+      "packages/polaris-dossier/src/system-model.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/finding-names.test.ts"
+    ],
+    "packages/polaris-dossier/src/check.ts": [
+      "packages/polaris-dossier/src/finding-names.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "exitCode": 0,
+      "tests": 7,
+      "perFile": {
+        "packages/polaris-dossier/src/finding-names.test.ts": {
+          "passed": 7,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.ts",
+      "exitCode": 0,
+      "tests": 7,
+      "perFile": {
+        "packages/polaris-dossier/src/finding-names.test.ts": {
+          "passed": 7,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "exitCode": 0,
+      "tests": 7,
+      "perFile": {
+        "packages/polaris-dossier/src/finding-names.test.ts": {
+          "passed": 7,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "exitCode": 0,
+      "tests": 61,
+      "perFile": {
+        "packages/polaris-dossier/src/finding-names.test.ts": {
+          "passed": 7,
+          "skipped": 0
+        },
+        "packages/polaris-dossier/src/system-model.test.ts": {
+          "passed": 54,
+          "skipped": 0
+        }
+      },
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "unviewed-element-unguarded",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "shown.elements.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${handleOr(id, at)}:",
+      "new": "shown.elements.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${id}:",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 61,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an unviewed element of a path-like identity by its path, and withholds the detail naming a token-shaped one"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "unviewed-relationship-unguarded",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "shown.relationships.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${handleOr(id, at)}:",
+      "new": "shown.relationships.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${id}:",
+      "killed": false,
+      "killedBy": null,
+      "tests": 61,
+      "failedTests": [],
+      "seconds": 24
+    },
+    {
+      "id": "unviewed-named-by-path-always",
+      "file": "packages/polaris-dossier/src/system-model.ts",
+      "old": "shown.relationships.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${handleOr(id, at)}:",
+      "new": "shown.relationships.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${at}:",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 61,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names the identity of an unviewed element or relationship that is a handle, as before"
+      ],
+      "seconds": 24
+    },
+    {
+      "id": "any-string-is-a-handle",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "typeof value === 'string' && checkShape({ root: handle, defs: {} }, value).length === 0",
+      "new": "typeof value === 'string'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 7,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an unviewed element of a path-like identity by its path, and withholds the detail naming a token-shaped one",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a non-handle value at an identity reference as \"named here\", and withholds a detail naming a token",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an asset identity that is not a handle as the identity named here",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a repeated identity only where it is a handle"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "no-string-is-a-handle",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "typeof value === 'string' && checkShape({ root: handle, defs: {} }, value).length === 0",
+      "new": "false",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 7,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an unviewed element of a path-like identity by its path, and withholds the detail naming a token-shaped one",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names the identity of an unviewed element or relationship that is a handle, as before",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a non-handle value at an identity reference as \"named here\", and withholds a detail naming a token",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail one of whose words names a secret path, though it is a handle",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail screening cannot decide, failing closed",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a repeated identity only where it is a handle"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "words-not-screened",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "[detail, ...detail.split(/[\\s\"`'(),;]+/u).filter((word) => word.length > 0)]",
+      "new": "[detail]",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 7,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail one of whose words names a secret path, though it is a handle"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "detail-not-screened-whole",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": "[detail, ...detail.split(",
+      "new": "[...detail.split(",
+      "killed": false,
+      "killedBy": null,
+      "tests": 7,
+      "failedTests": [],
+      "seconds": 3
+    },
+    {
+      "id": "undecided-admitted",
+      "file": "packages/polaris-dossier/src/finding-names.ts",
+      "old": ".every((value) => admit(value) === 'admitted')",
+      "new": ".every((value) => admit(value) !== 'withheld')",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 7,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail screening cannot decide, failing closed"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "backstop-dropped",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "  findings.splice(0, findings.length, ...screenFindingDetails(findings, admitOf(screen)));\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 7,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an unviewed element of a path-like identity by its path, and withholds the detail naming a token-shaped one",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a non-handle value at an identity reference as \"named here\", and withholds a detail naming a token",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail one of whose words names a secret path, though it is a handle",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) withholds a detail screening cannot decide, failing closed",
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a repeated identity only where it is a handle"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "duplicate-id-unguarded",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "detail: `the identity ${identityWords(id)} is already used at ${first}`",
+      "new": "detail: `the identity ${JSON.stringify(id)} is already used at ${first}`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 7,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a repeated identity only where it is a handle"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "dive-section-unguarded",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "at: `$.deepDives[${i}].sectionId`, detail: `no section has the identity ${identityWords(sectionId)}`",
+      "new": "at: `$.deepDives[${i}].sectionId`, detail: `no section has the identity ${JSON.stringify(sectionId)}`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 7,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names a non-handle value at an identity reference as \"named here\", and withholds a detail naming a token"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "asset-unguarded",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "${isHandle(assetId) ? JSON.stringify(assetId) : 'the identity named here'} is not this asset",
+      "new": "${JSON.stringify(assetId)} is not this asset",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 7,
+      "failedTests": [
+        "packages/polaris-dossier/src/finding-names.test.ts > finding details name identities and nothing a detector matches (syzygy-3efd.93) names an asset identity that is not a handle as the identity named here"
+      ],
+      "seconds": 3
+    }
+  ],
+  "equivalent": [],
+  "summary": {
+    "mutants": 12,
+    "killed": 10,
+    "survived": 2,
+    "byTimeout": 0,
+    "equivalentNotRun": 0
+  }
+}

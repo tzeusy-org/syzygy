@@ -4,6 +4,8 @@
 // Each mutant replaces one fragment that occurs exactly once in its file, runs the test files of its group, and restores the source in
 // `finally`. `--dry` only asserts that every fragment occurs exactly once. Never edit or commit while it runs. Adapted from
 // docs/evidence/syzygy-3efd-33/code_marks_mutation.mjs, without the browser.
+// Run 1 (at 23f77f856) killed 10 of 12. Repairs: an unviewed relationship of a path-like identity (unviewed-relationship-unguarded), and a
+// screen whose body rule matches only across a detail's words (detail-not-screened-whole).
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
