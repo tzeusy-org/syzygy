@@ -523,8 +523,23 @@ function claudeExecutable(): string {
   return which === '' ? 'claude' : fs.realpathSync(which);
 }
 
-/** The session's private home: a copy of the operator's Claude Code credentials, onboarding marked done and the working directory trusted. */
-function prepareAgentHome(run: string, role: ViewRole, cwd: string): string {
+/** The seed of a session's private Claude Code config: onboarding marked done, and its working directory and every directory it is
+ * given by `--add-dir` trusted. Claude Code asks once per session before adding an untrusted directory, and the question waits for a
+ * person, so an author or inventory session would never start; the owner chose to trust the run's clone instead (syzygy-k54o.3.6,
+ * 2026-11-28). The directories must be spelled exactly as `sessionClaudeArgs` passes them. */
+export function agentHomeSeed(cwd: string, addedDirs: readonly string[]): Record<string, unknown> {
+  const projects: Record<string, Record<string, boolean>> = { [cwd]: { hasTrustDialogAccepted: true, hasCompletedProjectOnboarding: true } };
+  for (const dir of addedDirs) projects[dir] = { ...projects[dir], hasTrustDialogAccepted: true };
+  return { hasCompletedOnboarding: true, lastOnboardingVersion: '2.1.299', theme: 'dark', projects };
+}
+
+/** The directories a session is given by `--add-dir`: the clone, for the two roles that read it. */
+export function sessionAddedDirs(role: ViewRole, clone: string): string[] {
+  return role === 'author' || role === 'inventory' ? [clone] : [];
+}
+
+/** The session's private home: a copy of the operator's Claude Code credentials and the seed config `agentHomeSeed` writes. */
+function prepareAgentHome(run: string, role: ViewRole, cwd: string, clone: string): string {
   // The session-usage reader finds this home by the same rule (agentHome), so the two never name different directories.
   const home = agentHome(run, role);
   const config = path.join(home, '.claude');
@@ -532,7 +547,7 @@ function prepareAgentHome(run: string, role: ViewRole, cwd: string): string {
   const credentials = path.join(os.homedir(), '.claude', '.credentials.json');
   if (fs.existsSync(credentials) && !fs.existsSync(path.join(config, '.credentials.json'))) fs.copyFileSync(credentials, path.join(config, '.credentials.json'));
   if (fs.existsSync(path.join(config, '.credentials.json'))) fs.chmodSync(path.join(config, '.credentials.json'), 0o600);
-  const seed = { hasCompletedOnboarding: true, lastOnboardingVersion: '2.1.299', theme: 'dark', projects: { [cwd]: { hasTrustDialogAccepted: true, hasCompletedProjectOnboarding: true } } };
+  const seed = agentHomeSeed(cwd, sessionAddedDirs(role, clone));
   const seedFile = path.join(config, '.claude.json');
   if (!fs.existsSync(seedFile)) fs.writeFileSync(seedFile, JSON.stringify(seed, null, 2), { mode: 0o600 });
   return home;
@@ -567,13 +582,13 @@ export function sessionClaudeArgs(plan: Pick<SessionPlan, 'role' | 'prompt' | 'a
       '--disallowedTools', ...WAITING_DENIED_TOOLS, '--strict-mcp-config', '--append-system-prompt', LAUNCHED_GUIDANCE[plan.role]];
   // The clone lies outside the session's working directory; name it as an added directory so reading it asks nothing (the view already
   // limits what the session can reach).
-  if (plan.role === 'author' || plan.role === 'inventory') claudeArgs.push('--add-dir', state.clone);
+  for (const dir of sessionAddedDirs(plan.role, state.clone)) claudeArgs.push('--add-dir', dir);
   return claudeArgs;
 }
 
 function launchSession(options: Options, ports: CliPorts, state: SupervisorState, plan: SessionPlan, brokers: Map<ViewRole, Broker>, screen: Screen): string | null {
   const executable = claudeExecutable();
-  const agentHome = prepareAgentHome(state.run, plan.role, plan.directory);
+  const agentHome = prepareAgentHome(state.run, plan.role, plan.directory, state.clone);
   const shimDir = prepareShim(state.run);
   // A Unix socket path is limited to about 108 bytes, so the socket lives in a short per-session runtime directory, bound into that
   // session's view alone.

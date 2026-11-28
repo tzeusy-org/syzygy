@@ -360,6 +360,13 @@ render resolves the paths and identifiers its Markdown documents name against th
 With the docs and code version effective, Polaris has 39 requirements and 637 scenarios.
 *(2026-11-28: the predecessor figure of 634 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
+[Imports corroboration amendment 2.49](openspec/changes/dossier-imports-corroboration) is agent-adopted in A-273.
+It replaces REQ-polaris-generation-034 from version 2.48, the docs and code (313 to 317 scenarios): an `imports`
+arrow that a stored lexical import fact joins is corroborated, never Observed, and every other one stays Unknown.
+
+With the imports corroboration version effective, Polaris has 39 requirements and 641 scenarios.
+*(2026-11-28: the predecessor figure of 638 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
+
 [Session usage amendment 2.45](openspec/changes/dossier-session-usage) is agent-adopted in A-339.
 It replaces REQ-polaris-generation-033 from version 2.31, the close measures (25 to 28 scenarios): close records a launched run's
 per-session token counts, read by Syzygy from each session's own transcripts, with a run total; close, status and the review

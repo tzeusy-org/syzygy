@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   AUTHOR_SELF_CHECK, DEFAULT_REPAIR_CYCLES, LAUNCHED_GUIDANCE, RUN_LIMITS, isoSeconds, limitFault, limitsAnswer, limitsQuestion, OWNER_LINE, POLARIS_USAGE, authorPrompt, cycleBreakdown, endScreen,
   runPolarisCli, fidelityDeliveryDue, fidelityRepairSpent, inventoryRepairMessage, readVerdict, latestChecks, limitStop, refusedAtLimit, repairSides, sessionClaudeArgs,
+  agentHomeSeed, sessionAddedDirs,
 } from './polaris.js';
 import { inventoryPrompt, reviewPrompt, waitingInventoryPrompt, waitingReviewPrompt } from './session-handover.js';
 
@@ -96,6 +97,29 @@ describe('the launched-run guidance of the waiting sessions', () => {
       expect(args[at + 1]).toBe(LAUNCHED_GUIDANCE[role]);
     }
     expect(sessionClaudeArgs({ role: 'author', prompt: 'p', allowedTools: null }, state)).not.toContain('--append-system-prompt');
+  });
+});
+
+describe('the directories a session is trusted with (syzygy-k54o.3.6)', () => {
+  const state = { model: 'm', authorSkipPermissions: false, run: '/r', clone: '/clones/x-trunk-abc' };
+  it('trusts exactly the directories each session is given by --add-dir, so Claude Code asks nothing before it starts', () => {
+    for (const role of ['author', 'inventory', 'fidelity', 'design'] as const) {
+      const args = sessionClaudeArgs({ role, prompt: 'p', allowedTools: null }, state);
+      const added = args.flatMap((arg, i) => (arg === '--add-dir' ? [args[i + 1]] : []));
+      const projects = agentHomeSeed('/sessions/s-1', sessionAddedDirs(role, state.clone))['projects'] as Record<string, Record<string, boolean>>;
+      expect(Object.keys(projects).sort()).toEqual(['/sessions/s-1', ...added].sort());
+      for (const dir of Object.keys(projects)) expect(projects[dir]?.['hasTrustDialogAccepted']).toBe(true);
+    }
+  });
+  it('keeps the working directory\'s onboarding mark if an added directory is the working directory', () => {
+    const projects = agentHomeSeed('/same', ['/same'])['projects'] as Record<string, Record<string, boolean>>;
+    expect(projects['/same']).toEqual({ hasTrustDialogAccepted: true, hasCompletedProjectOnboarding: true });
+  });
+  it('gives the clone to the author and inventory sessions alone', () => {
+    expect(sessionAddedDirs('author', '/clones/x-trunk-abc')).toEqual(['/clones/x-trunk-abc']);
+    expect(sessionAddedDirs('inventory', '/clones/x-trunk-abc')).toEqual(['/clones/x-trunk-abc']);
+    expect(sessionAddedDirs('fidelity', '/clones/x-trunk-abc')).toEqual([]);
+    expect(sessionAddedDirs('design', '/clones/x-trunk-abc')).toEqual([]);
   });
 });
 
