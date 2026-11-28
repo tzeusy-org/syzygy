@@ -7,7 +7,7 @@
 # specification-only revert of the tagged commit on the merged head and reports its conflicts, then aborts it.
 set -u
 repo=$1; head=$2; dir=$3
-SPEC=44bddc50427adab06af55ad5cdc5c4098df9086b
+SPEC=7e464e69448bd78255232ef091871d05c16b2df2
 rm -rf "$dir"
 git clone -q --no-local "$repo" "$dir"
 cd "$dir" || exit 1
@@ -30,7 +30,7 @@ $G revert -m 1 --no-commit "$merge" 2>&1 | tail -3
 git status --porcelain | grep '^UU' | sed 's/^/   conflict: /'
 git checkout -q "$merge" -- "$LEDGER"
 git add -A
-$G commit -q -m "trial: withdraw v2.41 (revert -m 1 of $merge), ledger kept"
+$G commit -q -m "trial: withdraw v2.45 (revert -m 1 of $merge), ledger kept"
 echo "== after revert $(git rev-parse HEAD); ledger as it stood: $(git diff --quiet "$merge" HEAD -- "$LEDGER" && echo yes || echo no); files changed: $(git diff --name-only "$merge" HEAD | wc -l)"
 echo "== tree equals origin/main except the ledger: $(git diff --quiet origin/main HEAD -- . ":(exclude)$LEDGER" && echo yes || echo no)"
 python3 scripts/check_spec_reconciliation.py --check 2>&1 | grep -E '^(OK|FAIL|WARN) |^        |predicates' | grep -v 'pins sha'
