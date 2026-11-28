@@ -366,6 +366,12 @@ It replaces REQ-polaris-generation-034 from version 2.50, the view levels (329 t
 advises on a walk step whose paragraph adds no word to its element's label, and the advice gates nothing.
 
 With the walk advice version effective, Polaris has 39 requirements and 657 scenarios.
+
+[Cliffs amendment 2.52](openspec/changes/dossier-cliffs) is agent-adopted in A-343.
+It replaces REQ-polaris-generation-034 from version 2.51, the walk advice (336 to 344 scenarios): each operator-agent
+render reads the limits and defaults its code and configuration declare and publishes them on `reference/cliffs.html`.
+
+With the cliffs version effective, Polaris has 39 requirements and 665 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
