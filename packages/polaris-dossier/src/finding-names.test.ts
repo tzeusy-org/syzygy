@@ -13,6 +13,7 @@ import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-rec
 import { buildDossierScreen } from './screen.js';
 import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 import { FINDING_DETAIL_WITHHELD, screenFindingDetails } from './finding-names.js';
+import { withheldIdentityFindings, withoutWithheldIdentities } from './identity-screen.js';
 
 // No finding detail names a draft value that is not an identity, or one a secret detector matches (syzygy-3efd.93): a model element of a
 // path-like identity and one shaped like a token, each unviewed, and the same two values at other identity references, checked through the
@@ -481,7 +482,65 @@ describe('the detail screen alone (review R93 finding 8)', () => {
     let calls = 0;
     const many = Array.from({ length: 200_000 }, (_, k) => ({ kind: 'duplicate-id', at: `$.x[${k}]`, detail: 'the identity "same" is already used at $.x' }));
     const out = screenFindingDetails(many as never, (value) => { calls++; return admit(value); });
-    // The detail once whole, then its eight words: the, identity, same, is, already, used, at, $.x.
-    expect([out.length, calls]).toEqual([200_000, 9]);
+    // The detail once whole, then its eight words: the, identity, same, is, already, used, at, $.x; and the location's one member name, x,
+    // and its shape, $.x[] (syzygy-3efd.95).
+    expect([out.length, calls]).toEqual([200_000, 11]);
+  });
+});
+
+// The identity screen and the location screen alone (syzygy-3efd.95). Every expected value is a literal written from the bead.
+describe('the identity and location screens alone (syzygy-3efd.95)', () => {
+  const admit = (value: string): 'admitted' | 'withheld' | 'unavailable' => (value.includes('hush') ? 'withheld' : value === 'undecided' ? 'unavailable' : 'admitted');
+  const DETAIL = 'is withheld under source screening: a secret detector matches it, so it cannot be an identity; choose another';
+
+  it('finds every handle-shaped string the screen withholds, at any member, in document order, and names no value', () => {
+    const doc = { id: 'ok', a: [{ id: 'hush-1' }, 'hush-2', 'no hush here'], b: { c: { deep: 'undecided' }, d: 'hush-1' }, e: 7, f: null, g: 'hush/path' };
+    const { findings, values } = withheldIdentityFindings(doc, admit);
+    // A string with a space or a slash is no handle: the schema check, not this one, answers for it.
+    expect(findings).toEqual([
+      { kind: 'schema', at: '$.a[0].id', detail: DETAIL }, { kind: 'schema', at: '$.a[1]', detail: DETAIL },
+      { kind: 'schema', at: '$.b.c.deep', detail: DETAIL }, { kind: 'schema', at: '$.b.d', detail: DETAIL },
+    ]);
+    expect([...values]).toEqual(['hush-1', 'hush-2', 'undecided']);
+  });
+
+  it('screens each distinct value once, fails closed where the screen throws, and reads a deep document on its own stack', () => {
+    let calls = 0;
+    const counting = (value: string) => { calls++; return admit(value); };
+    withheldIdentityFindings(Array.from({ length: 50_000 }, () => 'same'), counting);
+    expect(calls).toBe(1);
+    expect(withheldIdentityFindings({ id: 'x' }, () => { throw new Error('screen'); }).findings).toEqual([{ kind: 'schema', at: '$.id', detail: DETAIL }]);
+    let deep: unknown = 'hush';
+    for (let k = 0; k < 200_000; k++) deep = [deep];
+    expect(withheldIdentityFindings(deep, admit).findings).toHaveLength(1);
+  });
+
+  it('replaces a withheld identity in every string and member name of an output, and returns an output untouched where none is withheld', () => {
+    const output = { list: ['hush-1', 'a hush-1 b', 'ok'], ['key-hush-1']: { n: 1, s: 'hush-12' } };
+    expect(withoutWithheldIdentities(output, new Set(['hush-1', 'hush-12']))).toEqual({
+      list: ['withheld-identity', 'a withheld-identity b', 'ok'], ['key-withheld-identity']: { n: 1, s: 'withheld-identity' },
+    });
+    expect(withoutWithheldIdentities(output, new Set())).toBe(output);
+  });
+
+  it('replaces a withheld member name in a finding\'s location, and drops a withheld block or citation identity', () => {
+    const findings = [
+      { kind: 'schema', at: '$.sections[0].hush-key.x', detail: 'is not a field of this form' },
+      { kind: 'range-invalid', at: '$.sections[0].paragraphs[1].citations[0]', blockId: 'hush-b', citationId: 'c-1', detail: 'fine' },
+      { kind: 'range-invalid', at: '$.y', blockId: 'p-1', citationId: 'hush-c', detail: 'fine' },
+      { kind: 'schema', at: '$.z', blockId: 'p-2', detail: 'fine' },
+    ];
+    const out = screenFindingDetails(findings as never, admit);
+    expect(out).toEqual([
+      { kind: 'schema', at: '$.sections[0].withheld-member.x', detail: 'is not a field of this form' },
+      { kind: 'range-invalid', at: '$.sections[0].paragraphs[1].citations[0]', citationId: 'c-1', detail: 'fine' },
+      { kind: 'range-invalid', at: '$.y', blockId: 'p-1', detail: 'fine' },
+      findings[3],
+    ]);
+    // The members keep the finding's own order.
+    expect(Object.keys(out[1]!)).toEqual(['kind', 'at', 'citationId', 'detail']);
+    expect(out[3]).toBe(findings[3]);
+    // A location the screen cannot pass whole after its names are replaced falls back to the root.
+    expect(screenFindingDetails([{ kind: 'schema', at: '$.a', detail: 'fine' }] as never, (v) => (v === '$.a' ? 'withheld' : 'admitted'))[0]!.at).toBe('$');
   });
 });

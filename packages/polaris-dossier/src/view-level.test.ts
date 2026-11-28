@@ -15,6 +15,8 @@ import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 import { measureDraft } from './rerender-measure.js';
 import { packetDraftView } from './review-packet.js';
 import { withoutLevels } from './view-level.js';
+import { issuedDraftSchema } from './draft-schema.js';
+import { handle as HANDLE_SCHEMA } from '@syzygy/polaris-generation-core/live';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 
 // View levels, scopes and zoom links (REQ-polaris-generation-034 version 2.50, schema v17, syzygy-3efd.39): each scenario over a pinned tree
@@ -606,4 +608,102 @@ describe('schema v17: zoom links (version 2.50)', () => {
     expect([...without.keys()].sort()).toEqual([...v16.keys()].sort());
     for (const [file, text] of without) expect(plain(text), file).toBe(plain(v16.get(file)!));
   });
+});
+
+// Secret-shaped draft identities (syzygy-3efd.95): every identity of a passing draft replaced, value by value and consistently, by a
+// distinct value shaped like a GitHub token and built in pieces as the screening fixtures build one, so no secret literal is committed.
+// Check must not pass, must report a `schema` finding with the fixed detail at exactly each path that holds one, and nothing check or
+// render writes (report, check record, review packet, pages, machine.json) may carry any of them. The members walked are those whose
+// schema is a handle or a list of handles: the issued schema's own set is pinned below, so a member a later schema adds fails this test
+// until it is walked here too.
+describe('secret-shaped identities never pass check or reach an output (syzygy-3efd.95)', () => {
+  const ID_KEYS = ['assetIds', 'blockId', 'element', 'elements', 'entryId', 'executionIds', 'figure', 'from', 'id', 'lane', 'parent', 'relationships',
+    'repeatsDiagram', 'scope', 'sectionId', 'target', 'to', 'block', 'whySection', 'quotations', 'sections'];
+  const WITHHELD_ID = 'is withheld under source screening: a secret detector matches it, so it cannot be an identity; choose another';
+  const tokenOf = (k: number): string => `${['gh', 'p_'].join('')}${String(k).padStart(4, '0')}${'k'.repeat(32)}`;
+  /** `doc` with every string at an `ID_KEYS` member (or an item of one) replaced by its value's token, and the paths replaced. */
+  const planted = (doc: Doc): { doc: Doc; paths: string[]; tokens: string[] } => {
+    const tokens = new Map<string, string>();
+    const paths: string[] = [];
+    const swap = (value: string, at: string): string => {
+      if (!tokens.has(value)) tokens.set(value, tokenOf(tokens.size));
+      paths.push(at);
+      return tokens.get(value)!;
+    };
+    const walk = (value: unknown, at: string, idKey: boolean): unknown => {
+      // The hero's identity refuses check outright (version 2.17's screen refusal), so this sweep leaves the hero as written.
+      if (at === '$.hero') return value;
+      if (typeof value === 'string') return idKey ? swap(value, at) : value;
+      if (Array.isArray(value)) return value.map((item, i) => walk(item, `${at}[${i}]`, idKey));
+      if (typeof value === 'object' && value !== null) {
+        return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, walk(item, `${at}.${key}`, ID_KEYS.includes(key))]));
+      }
+      return value;
+    };
+    return { doc: walk(doc, '$', false) as Doc, paths, tokens: [...tokens.values()] };
+  };
+  /** Every file under `dir` whose bytes are not the submitted draft's (the draft and its frozen copy). */
+  const written = (dir: string, draft: string): Map<string, string> => {
+    const out = new Map<string, string>();
+    const visit = (at: string): void => {
+      for (const entry of fs.readdirSync(at, { withFileTypes: true })) {
+        const full = path.join(at, entry.name);
+        if (entry.isDirectory()) visit(full);
+        else { const text = fs.readFileSync(full, 'utf8'); if (text !== draft) out.set(path.relative(dir, full), text); }
+      }
+    };
+    visit(dir);
+    return out;
+  };
+  const DRAFTS: [string, () => Doc][] = [
+    ['a v17 draft with a model, two levelled views, a deep dive and a walk', () => walking(levelDraft(ZOOM_MODEL(), [ctxView(at({ kind: 'section', target: 's1' })), partsView()], [dive('runtime')]),
+      { figure: 'ctx', steps: [{ element: 'app', block: 'p1' }, { element: 'user', block: 'p2' }] })],
+    ['a v16 draft with a flow view and a walk over three paragraphs', () => walking(walkDraft(WRITE(), WRITE_RELS(), [writeView()]), { figure: 'f', steps: STEPS() })],
+  ];
+
+  it('walks every member the issued schema types as a handle or a list of handles', () => {
+    const schema = issuedDraftSchema({ pinnedRevision: 'a'.repeat(40), maxQuestions: 1 });
+    const found = new Set<string>();
+    const isHandle = (node: Doc | undefined): boolean => node !== undefined && node.type === 'string' && node.pattern === HANDLE_SCHEMA.pattern;
+    const seen = new Set<unknown>();
+    const visit = (node: Doc | undefined): void => {
+      if (node === undefined || seen.has(node)) return;
+      seen.add(node);
+      if (typeof node.$ref === 'string') { visit((schema.defs as Doc)[node.$ref.slice('#/$defs/'.length)]); return; }
+      for (const arm of node.oneOf ?? []) visit(arm);
+      if (node.items !== undefined) visit(node.items);
+      for (const [key, member] of Object.entries((node.properties ?? {}) as Doc)) {
+        const resolved = (m: Doc): Doc => (typeof m.$ref === 'string' ? (schema.defs as Doc)[m.$ref.slice('#/$defs/'.length)] : m);
+        const m = resolved(member as Doc);
+        if (isHandle(m) || (m.type === 'array' && isHandle(resolved(m.items))) || (m.oneOf ?? []).some((arm: Doc) => isHandle(resolved(arm)))) found.add(key);
+        visit(member as Doc);
+      }
+    };
+    visit(schema.root as Doc);
+    for (const def of Object.values(schema.defs)) visit(def as Doc);
+    expect([...found].filter((key) => !ID_KEYS.includes(key))).toEqual([]);
+    expect(found.size).toBeGreaterThan(10);
+  });
+
+  it.each(DRAFTS)('%s: passes as written, and with every identity token-shaped fails at each and writes none of them', async (_name, make) => {
+    const doc = make();
+    expect(await findingsOf(A, doc)).toEqual(PASSED);
+    const leaky = planted(doc);
+    // The denominator: every identity site of the draft, each a distinct value's token.
+    expect(leaky.paths.length).toBeGreaterThan(40);
+    const { run, result } = await checked(A, leaky.doc);
+    if (!result.ok || !('quotations' in result.report)) throw new Error(`the check must report in full: ${JSON.stringify(result.ok ? Object.keys(result.report) : result.refusal)}`);
+    expect(result.report.outcome).toBe('findings');
+    const withheld = result.report.findings.filter((f) => f.kind === 'schema' && f.detail === WITHHELD_ID).map((f) => f.at);
+    expect(withheld).toEqual(leaky.paths);
+    const draft = fs.readFileSync(path.join(run, 'drafts', 'next.json'), 'utf8');
+    const out = await renderRun(run, { sources: sources(A.commit), now: () => LATER, probe: neverProbe, loadScreen: async () => SCREEN, renderer: renderLocalDossier });
+    expect(out.ok).toBe(false);
+    const files = written(run, draft);
+    for (const token of leaky.tokens) {
+      expect(JSON.stringify(result.report).includes(token), token).toBe(false);
+      expect(JSON.stringify(out).includes(token), token).toBe(false);
+      for (const [file, text] of files) expect(text.includes(token), `${file}: ${token}`).toBe(false);
+    }
+  }, 120_000);
 });

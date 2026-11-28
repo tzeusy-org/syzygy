@@ -39,6 +39,7 @@ import { figureAdvice as computeFigureAdvice, figurePlanFindings, plansFigures, 
 import { BLOB_MODES } from './git-object-reader.js';
 import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
 import { screenFindingDetails } from './finding-names.js';
+import { withheldIdentityFindings, withoutWithheldIdentities } from './identity-screen.js';
 export { CHECK_RECORD_FORMAT, STEP_LOG_FORMAT, DEFAULT_DRAFT, DRAFT_MAX_BYTES, reviewVisibility, lineRanges, blobRedaction } from './check-model.js';
 export type { BoundedCheckRecord, BoundedRecordOmits, RecordMeasure, MechanismAdvice, CheckFindingKind, CheckFinding, VerifiedQuotation, ExcludedQuotation, ReviewVisibility, CitedBlob, BlobRedaction, CheckStage, CheckCommand, CheckRefusal, CheckRecord, CheckReport, CheckResult, CheckRequest, CheckDeps } from './check-model.js';
 export { deriveFindings, draftRules, collectBlocks, collectCitations } from './check-derive.js';
@@ -211,6 +212,8 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   } catch {
     parseFault = `the ${noun} is not one bounded UTF-8 JSON document`;
   }
+  // The document as submitted, every member of it, for the identity screen below (syzygy-3efd.95).
+  const submitted = doc;
   // A v14 draft's figure plan is read by check alone (version 2.33): its findings come last, below, and every other reader is handed the
   // draft without it. The frozen bytes keep it.
   const planned = plan.command === 'check' && parseFault === null && plansFigures(doc) ? doc : undefined;
@@ -377,6 +380,10 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   if (plan.command === 'check' && parseFault === null && isRecord(walked)) findings.push(...levelFindings(walked, findings, checkBaseMaps(treeFacts, manifestFacts)));
   // Version 2.54: after every finding version 2.53 reports, a v18 draft's code excerpts' highlight and note findings, which read no blob.
   if (plan.command === 'check' && parseFault === null && isRecord(walked)) findings.push(...codeMarkFindings(walked, findings));
+  // After every other finding (syzygy-3efd.95): every handle-shaped string of the document as submitted that a secret detector matches, a
+  // `schema` finding at its path naming no value, so a secret-shaped identity never passes check and never renders.
+  const identities = parseFault === null ? withheldIdentityFindings(submitted, admitOf(screen)) : { findings: [], values: new Set<string>() };
+  for (const finding of identities.findings) findings.push(finding);
 
   const frozen = path.join(frozenDir, `rev-${revision}.json`), checkFile = path.join(checksDir, `rev-${revision}.json`);
   // A derived record already in place for this revision (planted, or left by a crash) is never overwritten or adopted: refused here,
@@ -437,10 +444,10 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     // A relationship two views share is advised once, at its one path.
     : { ...expandedReaderAdvice, advisories: [...new Map(expandedReaderAdvice.advisories.map((advisory) => ({ ...advisory, at: viewed.move(advisory.at) }))
       .map((advisory) => [JSON.stringify(advisory), advisory] as const)).values()] };
-  const stored = {
+  const stored = withoutWithheldIdentities({
     ...record, ...(fit === undefined ? {} : { figureFit: fit }), ...(ledger === undefined ? {} : { readingLedger: ledger }),
     ...(importFacts === undefined ? {} : { importFacts }), ...(manifestFacts === undefined ? {} : { manifestFacts }),
-  };
+  }, identities.values);
   // Version 2.10 (syzygy-3efd.73 (a)): every check record written lies within the read bound. The record is measured as a reader measures
   // it before it is written; past any bound, its bounded form is written in its place, with one repair finding, and the full findings go
   // to the report alone. A record within the bound is written exactly as before.
@@ -497,7 +504,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   if (planned !== undefined && !findings.some((finding) => finding.kind === 'schema')) {
     try { figures = computeFigureAdvice(planned); } catch { figures = undefined; }
   }
-  return { ok: true, report: {
+  return { ok: true, report: withoutWithheldIdentities({
     command: plan.command, run, checkFile, ...written, ...reportFit, ...leftOut, ...(mechanismAdvice === undefined ? {} : { mechanismAdvice }), disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
     ...(structureRecord === undefined ? {} : { structureRecord }),
     ...(advice === undefined ? {} : { readerAdvice: advice }), ...(difference === undefined ? {} : { readingDifference: difference }), ...(reach === undefined ? {} : { reviewReach: reach }),
@@ -506,7 +513,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     ...(kinds === undefined ? {} : { questionKindAdvice: kinds }),
     ...(sourceExample === undefined ? {} : { sourceExampleAdvice: sourceExample }),
     ...(figures === undefined ? {} : { figureAdvice: figures }),
-  } };
+  }, identities.values) };
 }
 
 /** The existing shape check has established the eligible lists before we look for a selection. */

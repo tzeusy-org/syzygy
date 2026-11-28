@@ -39,7 +39,36 @@ export function screenFindingDetails(findings: readonly CheckFinding[], admit: (
     return ok;
   };
   const admitted = (detail: string): boolean => clear(detail, false) && detail.split(DETAIL_WORD_BREAK).every((word) => word.length === 0 || clear(word, true));
+  // A location (syzygy-3efd.95): each member name of `at` screened as a word, a matched one replaced by the fixed name, and then the whole
+  // location, which falls back to the root where it still does not pass. A member name is the draft's own where the schema did not know it.
+  // The whole is read with each index written `[]`: an index is Syzygy's own digits, and the shape alone repeats, so a draft of many
+  // findings costs one screen call per distinct member name and per distinct shape.
+  const located = (at: string): string => {
+    const named = at.replace(AT_WORD, (word) => (/^[0-9]+$/u.test(word) || clear(word, true) ? word : AT_MEMBER_WITHHELD));
+    return clear(named.replace(/\[[0-9]+\]/gu, '[]'), false) ? named : '$';
+  };
   const out: CheckFinding[] = [];
-  for (const finding of findings) out.push(admitted(finding.detail) ? finding : { ...finding, detail: FINDING_DETAIL_WITHHELD });
+  for (const finding of findings) {
+    const at = located(finding.at);
+    const detail = admitted(finding.detail) ? finding.detail : FINDING_DETAIL_WITHHELD;
+    // A block or citation identity is the draft's: a finding keeps it only where screening admits it (syzygy-3efd.95).
+    const keepBlock = finding.blockId === undefined || clear(finding.blockId, true);
+    const keepCitation = finding.citationId === undefined || clear(finding.citationId, true);
+    if (at === finding.at && detail === finding.detail && keepBlock && keepCitation) { out.push(finding); continue; }
+    // Rebuilt member by member in the finding's own order, so the record's bytes move only where screening withholds.
+    const rebuilt: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(finding)) {
+      if (key === 'at') rebuilt[key] = at;
+      else if (key === 'detail') rebuilt[key] = detail;
+      else if ((key === 'blockId' && !keepBlock) || (key === 'citationId' && !keepCitation)) continue;
+      else rebuilt[key] = value;
+    }
+    out.push(rebuilt as unknown as CheckFinding);
+  }
   return out;
 }
+
+/** The member names and indices of a location: every run between `.`, `[`, `]` and the root `$`. */
+const AT_WORD = /[^.[\]$]+/gu;
+/** The fixed member name that replaces one screening withholds in a finding's `at`. */
+export const AT_MEMBER_WITHHELD = 'withheld-member';
