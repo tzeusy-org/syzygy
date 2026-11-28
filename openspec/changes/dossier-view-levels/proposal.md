@@ -1,6 +1,6 @@
-# Dossier view levels — version 2.45
+# Dossier view levels — version 2.47
 
-[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10, built over imports corroboration 2.44 (design D1).
+[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10, built over imports corroboration 2.45 (design D1; first claimed 2.45 over 2.44).
 
 ## Why
 
