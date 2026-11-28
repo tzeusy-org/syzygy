@@ -384,6 +384,7 @@ export interface LocalDocRow {
   readonly document: string;
   readonly line: number;
   readonly quote: string;
+  readonly quoteExcerpt: boolean;
   readonly written: 'code-span' | 'link';
   readonly value: string;
   readonly form: 'path' | 'identifier';

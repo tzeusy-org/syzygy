@@ -17,7 +17,7 @@ const derived: LocalDerivedStructure = {
   tree: { files: 1, rootFiles: 1, unitsListed: 0, unitFiles: 0, unitsNotListed: 0, secretPathsLeftOut: 0, submodules: 0 }, countsMatch: true,
 };
 const row = (id: string, line: number, value: string, form: 'path' | 'identifier', outcome: 'resolves' | 'document-only' | 'unknown', unknownReason: string | null, resolution: NonNullable<LocalDocsAndCode & { state: 'derived' }>['rows'][number]['resolution']) => ({
-  id, document: 'README.md', line, quote: `Use \`${value}\` <here>`, written: 'code-span' as const, value, form, outcome, epistemic: outcome === 'unknown' ? 'unknown' as const : 'observed' as const, unknownReason, resolution,
+  id, document: 'README.md', line, quote: `Use \`${value}\` <here>`, quoteExcerpt: line === 3, written: 'code-span' as const, value, form, outcome, epistemic: outcome === 'unknown' ? 'unknown' as const : 'observed' as const, unknownReason, resolution,
 });
 const MEMBER: LocalDocsAndCode = {
   format: 'polaris-dossier-docs-and-code/1', state: 'derived', screeningPolicy: POLICY, rule: { rule: 'doc-reference', ruleVersion: 1 },
@@ -53,7 +53,7 @@ describe('the docs-and-code reference page (version 2.48)', () => {
       + 'Path src/gone.py, a code span in README.md at line 2: <q>Use `src/gone.py` &lt;here&gt;</q> Document only. <span class="derived-mark">Derived by Syzygy</span><span class="visually-hidden ev"> '
       + `Evidence: label Observed; the pinned tree lists no file or directory at the path it names; read by Syzygy by rule doc-reference version 1 at revision ${REV}.</span></li>`);
     expect(page).not.toContain('<here>');
-    expect(page).toContain(`Identifier runApp(), a code span in README.md at line 3: <q>Use \`runApp()\` &lt;here&gt;</q> Resolves. <span class="derived-mark">Derived by Syzygy</span><span class="visually-hidden ev"> Evidence: label Observed; the identifier token occurs in the code text (comments and strings blanked) of src/app.py at line 4, blob ${BLOB}; read by Syzygy by rule doc-reference version 1 at revision ${REV}.</span>`);
+    expect(page).toContain(`Identifier runApp(), a code span in README.md at line 3: <q>Use \`runApp()\` &lt;here&gt;</q> (an exact excerpt of the line) Resolves. <span class="derived-mark">Derived by Syzygy</span><span class="visually-hidden ev"> Evidence: label Observed; the identifier token occurs in the code text (comments and strings blanked) of src/app.py at line 4, blob ${BLOB}; read by Syzygy by rule doc-reference version 1 at revision ${REV}.</span>`);
     expect(page).toContain('Evidence: label Observed; the pinned tree lists a file at src/app.py;');
     expect(page).toContain('<li data-doc-row-id="_docref-4" data-epistemic="unknown" data-doc-outcome="unknown" data-doc-path="README.md" data-doc-line="4" data-unknown-reason="mapping-coverage-absent">Path Node.js, a code span in README.md at line 4: <q>Use `Node.js` &lt;here&gt;</q> <span class="not-established">Not established.</span> Whether the tree holds what it names is Unknown: its form is as often a name in prose as a path, and the tree lists no file or directory it names.</li>');
     const documentOnly = page.slice(page.indexOf('<h2>Document only</h2>'), page.indexOf('<h2>Unknown</h2>'));

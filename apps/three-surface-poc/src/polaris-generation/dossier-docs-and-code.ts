@@ -41,7 +41,7 @@ const formWords = (row: LocalDocRow): string => `${row.form === 'path' ? 'Path' 
 
 function rowEntry(row: LocalDocRow, revision: string): string {
   const open = `<li data-doc-row-id="${escape(row.id)}" data-epistemic="${row.epistemic}" data-doc-outcome="${escape(row.outcome)}" data-doc-path="${escape(row.document)}" data-doc-line="${row.line}"`;
-  const head = `${escape(formWords(row))} <q>${escape(row.quote)}</q>`;
+  const head = `${escape(formWords(row))} <q>${escape(row.quote)}</q>${row.quoteExcerpt ? ` ${escape('(an exact excerpt of the line)')}` : ''}`;
   if (row.outcome === 'unknown') {
     const why = lookup(ROW_REASON, row.unknownReason, 'row reason');
     return `${open} data-unknown-reason="${why.reason}">${head} <span class="not-established">Not established.</span> ${escape(`Whether the tree holds what it names is Unknown: ${why.words}.`)}</li>`;
@@ -82,7 +82,7 @@ export function docsAndCodePage(member: LocalDocsAndCode, revision: string): str
   const d = member.documents, c = member.code;
   const note = `<p class="map-note">${escape(`Computed by Syzygy at this render from the Markdown documents of the tree at revision ${revision} that the bound screening policy ${member.screeningPolicy.policyId} ${member.screeningPolicy.policyVersion} admits, read by rule ${member.rule.rule} version ${member.rule.ruleVersion}. `
     + 'It reads the content of each inline code span and the destination of each inline link outside fenced code, nothing else. A span is a path when it is slash-joined segments, a bare name with a listed extension, or a dotfile; an identifier when it is names joined by a dot or :: carrying an underscore, a capital after a lowercase letter, a separator or (). '
-    + 'A path resolves when the tree lists a file or a directory at it, from the repository root or the document\'s directory (a link from the document\'s directory only), and a bare name when any file carries it; otherwise it is document only. '
+    + 'A path resolves when the tree lists a file or a directory at it, from the repository root or the document\'s directory (a link from the document\'s directory only), or, for a code span not starting ./ or ../, where a listed path ends with it after a slash, so a bare name resolves by a file name; otherwise it is document only. '
     + 'An identifier resolves when its last name occurs as an identifier token in a code file read, in the code text with comments and strings blanked for Python, JavaScript, TypeScript, Go and Java and in the whole text otherwise; it is document only only when every code file the rule searches was read. '
     + 'A row says what the tree holds, never that a document is wrong; no stated value is compared, so no row agrees or disagrees, and code that no document names is not listed at this version.')}</p>`;
   const coverage = `<p class="map-coverage" data-epistemic="observed">${escape([

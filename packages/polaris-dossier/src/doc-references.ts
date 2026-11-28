@@ -66,6 +66,8 @@ export interface DocRow {
   readonly document: string;
   readonly line: number;
   readonly quote: string;
+  /** The quote is an exact excerpt of a line longer than 256 characters, holding the reading's start. */
+  readonly quoteExcerpt: boolean;
   readonly written: ReferenceWritten;
   readonly value: string;
   readonly form: 'path' | 'identifier';
@@ -176,15 +178,28 @@ export async function deriveDocsAndCode(inputs: ManifestInputs): Promise<DocsAnd
   const blobs = sorted.filter((entry) => BLOB_MODES.has(entry.mode));
   const submodules = sorted.filter((entry) => entry.mode === SUBMODULE_MODE).map((entry) => entry.path);
 
-  // The tree the rows resolve against: every blob no secret detector matches, and every directory holding one.
-  const files = new Set<string>(), directories = new Set<string>(['']), byBasename = new Map<string, string>();
+  // The tree the rows resolve against: every blob no secret detector matches, and every directory holding one; and, by each of its
+  // tails (the whole path, and the text after each `/`), the first such file and directory in the order of the sorted file paths.
+  const files = new Set<string>(), directories = new Set<string>(['']);
+  const fileByTail = new Map<string, string>(), directoryByTail = new Map<string, string>();
+  const tails = (path: string, into: Map<string, string>): void => {
+    for (let at = 0; ;) {
+      const tail = path.slice(at);
+      if (!into.has(tail)) into.set(tail, path);
+      const slash = path.indexOf('/', at);
+      if (slash < 0) return;
+      at = slash + 1;
+    }
+  };
   for (const { path } of blobs) {
     const segments = path.split('/');
     if (secretOrUnder(segments, isSecretPath)) continue;
     files.add(path);
-    for (let i = 1; i < segments.length; i++) directories.add(segments.slice(0, i).join('/'));
-    const base = segments[segments.length - 1]!;
-    if (!byBasename.has(base)) byBasename.set(base, path);
+    tails(path, fileByTail);
+    for (let i = 1; i < segments.length; i++) {
+      const directory = segments.slice(0, i).join('/');
+      if (!directories.has(directory)) { directories.add(directory); tails(directory, directoryByTail); }
+    }
   }
 
   // The documents.
@@ -204,7 +219,7 @@ export async function deriveDocsAndCode(inputs: ManifestInputs): Promise<DocsAnd
     let leftOut = 0;
     for (const candidate of recognized.candidates) {
       const secretForm = candidate.form === 'path'
-        && [candidate.value, ...candidate.tryPaths, ...(candidate.basename === null ? [] : [candidate.basename])].some((p) => p !== '' && secretOrUnder(p.split('/'), isSecretPath));
+        && [candidate.value, ...candidate.tryPaths, ...(candidate.tail === null ? [] : [candidate.tail])].some((p) => p !== '' && secretOrUnder(p.split('/'), isSecretPath));
       if (secretForm || refusedValue(candidate.value) || refusedValue(candidate.quote)) leftOut++;
       else pending.push({ document: entry.path, candidate });
     }
@@ -255,18 +270,20 @@ export async function deriveDocsAndCode(inputs: ManifestInputs): Promise<DocsAnd
       return codeComplete ? { outcome: 'document-only', unknownReason: null, resolution: null } : unknown('code-not-fully-read');
     }
     if (c.outside) return unknown('outside-tree');
-    const tries = c.basename === null ? c.tryPaths : [];
+    const tries = c.tryPaths;
     if (tries.some((p) => submodules.some((s) => p === s || p.startsWith(`${s}/`)))) return unknown('submodule');
     for (const p of tries) {
       if (directories.has(p)) return { outcome: 'resolves', unknownReason: null, resolution: { entry: 'directory', path: p } };
       if (!c.directory && files.has(p)) return { outcome: 'resolves', unknownReason: null, resolution: { entry: 'file', path: p } };
     }
-    if (c.basename !== null) {
-      const hit = byBasename.get(c.basename);
-      if (hit !== undefined && !c.directory) return { outcome: 'resolves', unknownReason: null, resolution: { entry: 'file', path: hit } };
+    if (c.tail !== null) {
+      const file = c.directory ? undefined : fileByTail.get(c.tail);
+      if (file !== undefined) return { outcome: 'resolves', unknownReason: null, resolution: { entry: 'file', path: file } };
+      const directory = directoryByTail.get(c.tail);
+      if (directory !== undefined) return { outcome: 'resolves', unknownReason: null, resolution: { entry: 'directory', path: directory } };
     }
     if (c.ambiguous) return unknown('ambiguous-form');
-    if (tries.some((p) => vendoredOrGeneratedPath(p)) || (c.basename !== null && vendoredOrGeneratedPath(c.basename))) return unknown('build-output-path');
+    if ([...tries, ...(c.tail === null ? [] : [c.tail])].some((p) => vendoredOrGeneratedPath(p))) return unknown('build-output-path');
     return { outcome: 'document-only', unknownReason: null, resolution: null };
   }
 
@@ -275,14 +292,18 @@ export async function deriveDocsAndCode(inputs: ManifestInputs): Promise<DocsAnd
     documentOnly: list.filter((r) => r.outcome === 'document-only').length,
     unknown: list.filter((r) => r.outcome === 'unknown').length,
   });
+  const perDocument = new Map<string, { resolves: number; documentOnly: number; unknown: number }>();
+  for (const { path } of read) perDocument.set(path, { resolves: 0, documentOnly: 0, unknown: 0 });
+  for (const r of rows) {
+    const t = perDocument.get(r.document)!;
+    if (r.outcome === 'resolves') t.resolves++; else if (r.outcome === 'document-only') t.documentOnly++; else t.unknown++;
+  }
   const docEntries: DocsFileEntry[] = [
-    ...read.map(({ path, valuesLeftOut: leftOut }) => ({
-      path, epistemic: 'observed' as const, unknownReason: null, parseFault: null, ...tally(rows.filter((r) => r.document === path)), valuesLeftOut: leftOut,
-    })),
+    ...read.map(({ path, valuesLeftOut: leftOut }) => ({ path, epistemic: 'observed' as const, unknownReason: null, parseFault: null, ...perDocument.get(path)!, valuesLeftOut: leftOut })),
     ...docUnknown,
   ];
   const listed: DocRow[] = rows.slice(0, DOC_ROWS_LISTED).map(({ document, candidate, outcome, unknownReason, resolution }, index) => ({
-    id: `_docref-${index + 1}`, document, line: candidate.line, quote: candidate.quote, written: candidate.written, value: candidate.value,
+    id: `_docref-${index + 1}`, document, line: candidate.line, quote: candidate.quote, quoteExcerpt: candidate.quoteExcerpt, written: candidate.written, value: candidate.value,
     form: candidate.form, outcome, epistemic: outcome === 'unknown' ? 'unknown' : 'observed', unknownReason, resolution,
   }));
   return {

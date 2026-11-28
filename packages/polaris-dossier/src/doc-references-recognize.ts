@@ -1,5 +1,6 @@
 import { isFencedAt, recognizeCodeContexts, spanRangesWithin } from '@syzygy/three-surface-poc-core/screening';
 import { DOC_REFERENCE } from './derive-rules.js';
+import { MANIFEST_VALUE_LIMIT } from './manifest-facts.js';
 
 /** The document-reference recognizer (REQ-polaris-generation-034 version 2.48, syzygy-5dhm.119), version 1: which paths and identifiers
  * one Markdown body names, read lexically. Pure.
@@ -19,11 +20,13 @@ export type DocCandidate =
       readonly value: string;
       readonly line: number;
       readonly quote: string;
+      readonly quoteExcerpt: boolean;
       readonly offset: number;
       /** The repository paths to try, in order, each normalised (no `.` or `..` segment, no trailing slash). */
       readonly tryPaths: readonly string[];
-      /** For a bare name (no slash) in a code span: the basename any blob may carry. */
-      readonly basename: string | null;
+      /** For a code span that neither starts `./` or `../` nor climbs: the path text any listed path may end with, after a `/` or whole
+       * (a bare name is then a basename). Null for a link and a relative span, which resolve from the document's directory alone. */
+      readonly tail: string | null;
       /** Written with a trailing slash: only a directory resolves it. */
       readonly directory: boolean;
       /** A form as often a name in prose as a path: it resolves or is Unknown, never document-only. */
@@ -31,7 +34,7 @@ export type DocCandidate =
       /** A relative path that climbs above the repository root. */
       readonly outside: boolean;
     }
-  | { readonly form: 'identifier'; readonly written: 'code-span'; readonly value: string; readonly name: string; readonly line: number; readonly quote: string; readonly offset: number };
+  | { readonly form: 'identifier'; readonly written: 'code-span'; readonly value: string; readonly name: string; readonly line: number; readonly quote: string; readonly quoteExcerpt: boolean; readonly offset: number };
 
 export type RecognizedReferences =
   | { readonly ok: true; readonly candidates: readonly DocCandidate[]; readonly spansNotChecked: number; readonly linksNotChecked: number }
@@ -51,6 +54,9 @@ const CODE_MARK = /[_$]|[a-z0-9][A-Z]|\.|::|\(\)$/;
 /** An inline link or image: its destination has no space, parenthesis or angle bracket, and an optional quoted title follows it. */
 const LINK = /!?\[[^\]\r\n]*\]\(([^()\s<>]+)(?:[ \t]+(?:"[^"\r\n]*"|'[^'\r\n]*'))?\)/g;
 const SCHEME = /^[A-Za-z][A-Za-z0-9+.-]*:/;
+/** The longest quote, the manifest value limit; a longer line is quoted by an excerpt that starts this many code units before the reading. */
+const QUOTE_LIMIT = MANIFEST_VALUE_LIMIT;
+const EXCERPT_BEFORE = 64;
 
 const BARE = new Set<string>(DOC_REFERENCE.bareExtensions);
 const WEAK = new Set<string>(DOC_REFERENCE.weakExtensions);
@@ -67,7 +73,7 @@ export function normalise(base: string, relative: string): { readonly path: stri
 }
 
 /** A code span's value as a path, or undefined where its form is no path. */
-function spanPath(value: string, directoryOf: string): Omit<Extract<DocCandidate, { form: 'path' }>, 'line' | 'quote' | 'offset' | 'written' | 'value'> | undefined {
+function spanPath(value: string, directoryOf: string): Omit<Extract<DocCandidate, { form: 'path' }>, 'line' | 'quote' | 'quoteExcerpt' | 'offset' | 'written' | 'value'> | undefined {
   const bare = value.replace(LINE_SUFFIX, '');
   if (!PATH_FORM.test(bare)) return undefined;
   const directory = bare.endsWith('/');
@@ -84,7 +90,7 @@ function spanPath(value: string, directoryOf: string): Omit<Extract<DocCandidate
     const ext = extension[1]?.toLowerCase();
     // A dotfile (`.gitignore`) has no captured extension and is a path.
     if (ext !== undefined && !BARE.has(ext) && !WEAK.has(ext)) return undefined;
-    return { form: 'path', tryPaths: [], basename: trimmed, directory, ambiguous: ext !== undefined && WEAK.has(ext), outside: false };
+    return { form: 'path', tryPaths: [], tail: trimmed, directory, ambiguous: ext !== undefined && WEAK.has(ext), outside: false };
   }
   const tries: string[] = [];
   let outside = false;
@@ -93,7 +99,7 @@ function spanPath(value: string, directoryOf: string): Omit<Extract<DocCandidate
     if (n.outside) { outside = true; continue; }
     if (!tries.includes(n.path)) tries.push(n.path);
   }
-  return { form: 'path', tryPaths: tries, basename: null, directory, ambiguous: !(directory || relative || extension !== null), outside: tries.length === 0 && outside };
+  return { form: 'path', tryPaths: tries, tail: relative || tries.length === 0 ? null : tries[0]!, directory, ambiguous: !(directory || relative || extension !== null), outside: tries.length === 0 && outside };
 }
 
 /** The offset each line starts at, under the line rule that ends a line at CRLF, CR or LF. */
@@ -112,11 +118,21 @@ export function recognizeDocReferences(text: string, documentPath: string): Reco
   const slash = documentPath.lastIndexOf('/');
   const directoryOf = slash < 0 ? '' : documentPath.slice(0, slash);
   const starts = lineStarts(text);
-  const lineOf = (offset: number): { line: number; quote: string } => {
+  const lineOf = (offset: number): { line: number; quote: string; quoteExcerpt: boolean } => {
     let lo = 0, hi = starts.length - 1;
     while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (starts[mid]! <= offset) lo = mid; else hi = mid - 1; }
-    const raw = text.slice(lo === 0 && text.startsWith('\uFEFF') ? 1 : starts[lo]!, lo + 1 < starts.length ? starts[lo + 1]! : text.length).replace(/(?:\r\n|\r|\n)$/u, '');
-    return { line: lo + 1, quote: raw.replace(/^[ \t]+|[ \t]+$/gu, '') };
+    const from = lo === 0 && text.startsWith('\uFEFF') ? 1 : starts[lo]!;
+    const raw = text.slice(from, lo + 1 < starts.length ? starts[lo + 1]! : text.length).replace(/(?:\r\n|\r|\n)$/u, '');
+    const lead = raw.length - raw.replace(/^[ \t]+/u, '').length;
+    const quote = raw.replace(/^[ \t]+|[ \t]+$/gu, '');
+    if (quote.length <= QUOTE_LIMIT) return { line: lo + 1, quote, quoteExcerpt: false };
+    // A line past the limit is quoted by an exact excerpt of QUOTE_LIMIT code units that holds the reading's start, never a split pair.
+    const column = offset - from - lead;
+    let start = Math.max(0, Math.min(column - EXCERPT_BEFORE, quote.length - QUOTE_LIMIT));
+    let end = start + QUOTE_LIMIT;
+    if (start > 0 && (quote.charCodeAt(start) & 0xfc00) === 0xdc00) start++;
+    if (end < quote.length && (quote.charCodeAt(end - 1) & 0xfc00) === 0xd800) end--;
+    return { line: lo + 1, quote: quote.slice(start, end), quoteExcerpt: true };
   };
 
   const candidates: DocCandidate[] = [];
@@ -150,7 +166,7 @@ export function recognizeDocReferences(text: string, documentPath: string): Reco
     if (SCHEME.test(destination) || destination.startsWith('/') || target === '' || decoded === undefined || /[\u0000-\u001f\u007f]/u.test(decoded)) { linksNotChecked++; continue; }
     const n = normalise(directoryOf, decoded);
     candidates.push({
-      form: 'path', written: 'link', value: destination, offset: destStart, ...at, tryPaths: n.outside ? [] : [n.path], basename: null,
+      form: 'path', written: 'link', value: destination, offset: destStart, ...at, tryPaths: n.outside ? [] : [n.path], tail: null,
       directory: decoded.endsWith('/'), ambiguous: false, outside: n.outside,
     });
   }

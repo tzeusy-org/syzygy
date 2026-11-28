@@ -11,7 +11,7 @@ const read = (text: string, documentPath = 'docs/guide.md') => {
 };
 const brief = (c: DocCandidate) => c.form === 'identifier'
   ? ['identifier', c.value, c.name, c.line]
-  : ['path', c.written, c.value, c.line, c.tryPaths, c.basename, c.directory, c.ambiguous, c.outside];
+  : ['path', c.written, c.value, c.line, c.tryPaths, c.tail, c.directory, c.ambiguous, c.outside];
 
 describe('doc-reference v1: code spans', () => {
   it('classes each span by its written form', () => {
@@ -23,14 +23,14 @@ describe('doc-reference v1: code spans', () => {
     ].join('\n');
     const r = read(text);
     expect(r.candidates.map(brief)).toEqual([
-      ['path', 'code-span', 'src/app.ts', 1, ['src/app.ts', 'docs/src/app.ts'], null, false, false, false],
-      ['path', 'code-span', 'src/app.ts:12-14', 1, ['src/app.ts', 'docs/src/app.ts'], null, false, false, false],
+      ['path', 'code-span', 'src/app.ts', 1, ['src/app.ts', 'docs/src/app.ts'], 'src/app.ts', false, false, false],
+      ['path', 'code-span', 'src/app.ts:12-14', 1, ['src/app.ts', 'docs/src/app.ts'], 'src/app.ts', false, false, false],
       ['path', 'code-span', 'server.c', 1, [], 'server.c', false, false, false],
       ['path', 'code-span', '.gitignore', 1, [], '.gitignore', false, false, false],
       ['path', 'code-span', './notes.md', 2, ['docs/notes.md'], null, false, false, false],
       ['path', 'code-span', '../top.txt', 2, ['top.txt'], null, false, false, false],
-      ['path', 'code-span', 'lib/', 2, ['lib', 'docs/lib'], null, true, false, false],
-      ['path', 'code-span', 'src/core', 2, ['src/core', 'docs/src/core'], null, false, true, false],
+      ['path', 'code-span', 'lib/', 2, ['lib', 'docs/lib'], 'lib', true, false, false],
+      ['path', 'code-span', 'src/core', 2, ['src/core', 'docs/src/core'], 'src/core', false, true, false],
       ['identifier', 'deriveRoughEdges', 'deriveRoughEdges', 3],
       ['identifier', 'os.path', 'path', 3],
       ['identifier', 'Foo::bar()', 'bar', 3],
@@ -51,6 +51,18 @@ describe('doc-reference v1: code spans', () => {
   it('counts lines at CRLF and CR, and drops a leading byte-order mark from line 1', () => {
     const r = read('\uFEFF`a/b.md`\r\nx\r`c/d.md`\n');
     expect(r.candidates.map((c) => [c.value, c.line, c.quote])).toEqual([['a/b.md', 1, '`a/b.md`'], ['c/d.md', 3, '`c/d.md`']]);
+  });
+
+  it('quotes a line past 256 characters by an exact excerpt of 256 that holds the reading, never a split surrogate pair', () => {
+    const late = `${'x'.repeat(200)} \`a/b.md\` ${'y'.repeat(100)}`;
+    const early = `\`c/d.md\` ${'z'.repeat(300)}`;
+    const pair = `${'w'.repeat(54)}\u{1F600}${'v'.repeat(150)} \`e/f.md\` ${'u'.repeat(95)}`;
+    const cut = `\`g/i.md\` ${'z'.repeat(246)}\u{1F600}${'z'.repeat(60)}`;
+    const r = read(`${late}\n${early}\n${pair}\n${cut}\n`);
+    expect(r.candidates.map((c) => [c.value, c.quoteExcerpt, c.quote])).toEqual([
+      ['a/b.md', true, late.slice(54)], ['c/d.md', true, early.slice(0, 256)], ['e/f.md', true, pair.slice(56, 311)], ['g/i.md', true, cut.slice(0, 255)],
+    ]);
+    expect(read('`g/h.md`\n').candidates[0]!.quoteExcerpt).toBe(false);
   });
 
   it('refuses a body whose code contexts are malformed', () => {

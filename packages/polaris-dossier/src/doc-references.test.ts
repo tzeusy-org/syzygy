@@ -110,9 +110,9 @@ describe('docsAndCode: doc-reference v1 under declared-source policy 2.0.0', () 
     expect(f.asked).toEqual(['README.md']);
   });
 
-  it('resolves a bare name by basename, a directory only as a directory, and leaves a submodule and a climb above the root Unknown', async () => {
+  it('resolves a bare name by basename and a code span by a path tail (a link never), a directory only as a directory, and leaves a submodule and a climb above the root Unknown', async () => {
     const tree: Tree = {
-      'docs/a/guide.md': '`server.c`, `missing.c`, `src/`, `src/x.c/`, `sub/lib/y.c`, [up](../../../x.md) and `../b/`.\n',
+      'docs/a/guide.md': '`server.c`, `missing.c`, `src/`, `src/x.c/`, `sub/lib/y.c`, [up](../../../x.md), `../b/`, `b/n.txt`, `a/` and [n](b/n.txt).\n',
       'src/x.c': 'int x;\n', 'docs/b/n.txt': 'n\n', sub: { mode: '160000' },
       'cmd/server.c': 'int s;\n',
     };
@@ -125,6 +125,9 @@ describe('docsAndCode: doc-reference v1 under declared-source policy 2.0.0', () 
       ['sub/lib/y.c', 'unknown', 'submodule', null],
       ['../../../x.md', 'unknown', 'outside-tree', null],
       ['../b/', 'resolves', null, { entry: 'directory', path: 'docs/b' }],
+      ['b/n.txt', 'resolves', null, { entry: 'file', path: 'docs/b/n.txt' }],
+      ['a/', 'resolves', null, { entry: 'directory', path: 'docs/a' }],
+      ['b/n.txt', 'document-only', null, null],
     ]);
   });
 
