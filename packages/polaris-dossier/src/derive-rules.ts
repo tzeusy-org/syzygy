@@ -158,5 +158,27 @@ export const DOC_REFERENCE = {
   outcomes: ['resolves', 'document-only', 'unknown'],
 } as const;
 
-export const DERIVE_RULES: readonly DeriveRuleId[] = [VENDORED_PATH, GENERATED_PATH, LANGUAGE_BY_EXTENSION, DOCS_TREE, TESTS_PATH, MANIFEST_NAMES, TOP_LEVEL_UNIT, SERVER_ENTRY]
+/** The limits-and-defaults recognizer (REQ-polaris-generation-034 version 2.49, syzygy-5dhm.116), version 1: the named limit constants one
+ * admitted source file defines with a literal value, read lexically through the test-name lexer's code text (so a definition in a comment or
+ * a string is never one), and the entries one admitted configuration file sets (`limits-*.ts`). It reads bodies, so it is outside
+ * `DERIVE_RULES`. A change to a candidate, a name pattern, a definition form or a value form is a new version. */
+export const LIMIT_DEFAULT = {
+  id: 'limit-default', version: 1,
+  /** A source candidate: a basename longer than, and ending, one of these extensions. C and C++ are read by the lexer with no option. */
+  languages: {
+    python: ['.py'],
+    javascript: ['.js', '.jsx', '.mjs', '.cjs', '.ts', '.tsx', '.mts', '.cts'],
+    go: ['.go'],
+    java: ['.java'],
+    c: ['.c', '.h', '.cc', '.cpp', '.cxx', '.hpp', '.hh'],
+  },
+  /** A configuration candidate, by basename: an `ini` form ends one of `ini`; a `yaml` form is one of `yamlNames` or starts
+   * `config.example.` and ends one of `yamlExtensions`. */
+  configuration: { ini: ['.conf', '.cfg', '.ini'], yamlNames: ['values.yaml', 'values.yml'], yamlPrefix: 'config.example.', yamlExtensions: ['.yaml', '.yml'] },
+  /** A constant's kind: the first whose name pattern matches, in this order. */
+  kinds: ['timeout', 'threshold', 'limit', 'max', 'default'],
+  valueTypes: ['integer', 'decimal', 'boolean', 'string', 'expression', 'null', 'text'],
+} as const;
+
+export const DERIVE_RULES: readonly DeriveRuleId[] =[VENDORED_PATH, GENERATED_PATH, LANGUAGE_BY_EXTENSION, DOCS_TREE, TESTS_PATH, MANIFEST_NAMES, TOP_LEVEL_UNIT, SERVER_ENTRY]
   .map(({ id, version }) => ({ id, version }));

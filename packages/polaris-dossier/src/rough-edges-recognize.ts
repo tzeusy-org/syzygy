@@ -59,7 +59,7 @@ const scan = (text: string, language: MarkerLanguage): Scanned =>
   language === 'python' ? scanPython(text) : scanCLike(text, language === 'javascript' ? { javascript: true } : language === 'go' ? { go: true } : { java: true });
 
 /** The offset each line starts at, under the line rule that ends a line at CRLF, CR or LF. */
-function lineStarts(text: string): number[] {
+export function lineStarts(text: string): number[] {
   const starts = [0];
   for (let i = 0; i < text.length; i++) {
     const c = text.charCodeAt(i);
