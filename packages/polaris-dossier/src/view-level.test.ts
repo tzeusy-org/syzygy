@@ -607,3 +607,41 @@ describe('schema v17: zoom links (version 2.50)', () => {
     for (const [file, text] of without) expect(plain(text), file).toBe(plain(v16.get(file)!));
   });
 });
+
+describe('walk advice over a levelled view (version 2.51, syzygy-3efd.35)', () => {
+  const RULES = [{ id: 'walk-step-restates-label', version: 1 }];
+  /** The walked context view about `app`, whose box for `app` carries a zoom link to `parts`; `p1` is the first step's paragraph. */
+  const walked = (p1: string): Doc => {
+    const ctx = lv(graphView('ctx', ['app', 'user'], [], { title: 'The system and its users' }), 'context', 'app');
+    const doc = walking(levelDraft(ZOOM_MODEL(), [ctx, partsView()], [dive('runtime')]), { figure: 'ctx', steps: [{ element: 'app', block: 'p1' }, { element: 'user', block: 'p2' }] });
+    doc.sections[0].paragraphs[0].text = p1;
+    return doc;
+  };
+  const reportOf = async (doc: Doc): Promise<Doc> => {
+    const { result } = await checked(A, doc);
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return result.report as unknown as Doc;
+  };
+  const ADVISED = { rules: RULES, examined: 2, advisories: [{ rule: 'walk-step-restates-label', at: '$.sections[0].walk.steps[0]',
+    detail: 'ctx step 1: paragraph p1 adds no word to its element\'s label; say what a reader learns about that element at this step' }] };
+
+  it('advises on a v17 walk, gates nothing, and reads no view level', async () => {
+    const doc = walked('The app.');
+    const [report, explained] = [await reportOf(doc), await reportOf(walked('The app serves every request users send.'))];
+    expect(report['walkAdvice']).toEqual(ADVISED);
+    expect(explained['walkAdvice']).toEqual({ rules: RULES, examined: 2, advisories: [] });
+    expect([report['outcome'], report['findings']]).toEqual([explained['outcome'], explained['findings']]);
+    expect(report['outcome']).toBe('passed');
+    // The zoom link is drawn on the walked box as version 2.50 draws it, and no page, machine view or record carries the advice.
+    const { files } = await rendered(A, doc);
+    expect(figureOf(files.get('index.html')!, 'ctx')).toContain(linkTo('deep-dives/runtime.html#figure-parts', 'App', 'Parts of the app'));
+    for (const [file, text] of files) expect(text.includes('walk-step-restates-label'), file).toBe(false);
+    expect(JSON.stringify(await checkRecordOf(A, doc)).includes('walk-step-restates-label')).toBe(false);
+    // Removing the view's level and scope leaves the advice unchanged.
+    expect((await reportOf(unlevelled(doc)))['walkAdvice']).toEqual(ADVISED);
+  });
+
+  it('carries the member with nothing examined for a v17 draft with no walk', async () => {
+    expect((await reportOf(zoomDraft()))['walkAdvice']).toEqual({ rules: RULES, examined: 0, advisories: [] });
+  });
+});
