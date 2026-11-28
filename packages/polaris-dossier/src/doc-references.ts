@@ -97,7 +97,8 @@ export type DocsAndCode =
 const byCodeUnit = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
 const CONTROL = /[\u0000-\u001f\u007f]/u;
 const STRICT_UTF8 = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
-const TOKEN = /(?<![A-Za-z0-9_$])[A-Za-z_$][A-Za-z0-9_$]*/g;
+/** An identifier token of a code file, published verbatim in the requirement. */
+export const TOKEN = /(?<![A-Za-z0-9_$])[A-Za-z_$][A-Za-z0-9_$]*/g;
 const SUBMODULE_MODE = '160000';
 
 type Entry = Pick<TreeEntry, 'path' | 'mode' | 'id'>;

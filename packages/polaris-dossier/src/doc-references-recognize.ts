@@ -58,6 +58,9 @@ const SCHEME = /^[A-Za-z][A-Za-z0-9+.-]*:/;
 const QUOTE_LIMIT = MANIFEST_VALUE_LIMIT;
 const EXCERPT_BEFORE = 64;
 
+/** Every expression the recognizer runs, published verbatim in the requirement (`docs_and_code_patterns_published.mts` checks it). */
+export const DOC_REFERENCE_PATTERNS = { PATH_FORM, LINE_SUFFIX, EXTENSION, IDENTIFIER_FORM, CODE_MARK, LINK, SCHEME } as const;
+
 const BARE = new Set<string>(DOC_REFERENCE.bareExtensions);
 const WEAK = new Set<string>(DOC_REFERENCE.weakExtensions);
 
