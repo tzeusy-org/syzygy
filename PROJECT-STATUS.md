@@ -335,6 +335,12 @@ It replaces REQ-polaris-generation-034 from version 2.43, the migration bounds (
 render reads TODO, FIXME, HACK, deprecation markers and issue references lexically and publishes them per unit on `reference/rough-edges.html`.
 
 With the rough-edge markers version effective, Polaris has 39 requirements and 652 scenarios.
+
+[Imports corroboration amendment 2.45](openspec/changes/dossier-imports-corroboration) is agent-adopted in A-273.
+It replaces REQ-polaris-generation-034 from version 2.44, the rough-edge markers (305 to 309 scenarios): an `imports`
+arrow that a stored lexical import fact joins is corroborated, never Observed, and every other one stays Unknown.
+
+With the imports corroboration version effective, Polaris has 39 requirements and 656 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
