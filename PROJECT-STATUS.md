@@ -367,6 +367,14 @@ arrow that a stored lexical import fact joins is corroborated, never Observed, a
 With the imports corroboration version effective, Polaris has 39 requirements and 641 scenarios.
 *(2026-11-28: the predecessor figure of 638 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
 
+[View levels amendment 2.50](openspec/changes/dossier-view-levels) is agent-adopted in A-274.
+It replaces REQ-polaris-generation-034 from version 2.49, the imports corroboration (317 to 329 scenarios): a view
+may carry a level and a scope, checked by element type and by parent, and a box whose element has its own view
+links to it with no script (draft schema v17, brief v25).
+
+With the view levels version effective, Polaris has 39 requirements and 653 scenarios.
+*(2026-11-28: the predecessor figure of 650 scenarios is superseded by session usage 2.45's three REQ-033 scenarios.)*
+
 [Session usage amendment 2.45](openspec/changes/dossier-session-usage) is agent-adopted in A-339.
 It replaces REQ-polaris-generation-033 from version 2.31, the close measures (25 to 28 scenarios): close records a launched run's
 per-session token counts, read by Syzygy from each session's own transcripts, with a run total; close, status and the review
