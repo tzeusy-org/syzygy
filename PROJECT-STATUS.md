@@ -342,6 +342,12 @@ may carry a level and a scope, checked by element type and by parent, and a box 
 links to it with no script (draft schema v17, brief v25).
 
 With the view levels version effective, Polaris has 39 requirements and 661 scenarios.
+
+[Walk advice amendment 2.47](openspec/changes/dossier-walk-advice) is agent-adopted in A-275.
+It replaces REQ-polaris-generation-034 from version 2.45, the view levels (314 to 321 scenarios): check's report
+advises on a walk step whose paragraph adds no word to its element's label, and the advice gates nothing.
+
+With the walk advice version effective, Polaris has 39 requirements and 668 scenarios.
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
