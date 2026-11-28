@@ -136,7 +136,9 @@ replace('Read no additional source and disclose no unadmitted value or populatio
 # 7. Its scenario, last in the requirement.
 assert text.endswith('\n'), 'the predecessor ends with a newline'
 text = text + ('\n#### Scenario: A finding detail names a handle only, and a detail screening matches is withheld\n\n'
-    '- **WHEN** a draft\'s three deep dives name, as `sectionId`, `src/app.ts`, a value a secret detector matches and `s9`, '
+    '- **WHEN** a draft\'s three deep dives name, as `sectionId`, the path-like value `src/app.ts`, a token-shaped handle '
+    '(built as the fixtures build one: the four-character prefix of a GitHub personal access token followed by 36 letters, '
+    'which a secret detector matches) and `s9`, '
     'none of them a section of the draft, and two paragraphs of its first section share the identity `id_rsa`, a basename '
     'the bound policy denies as a path\n'
     '- **THEN** check reports `unresolved-reference` at `$.deepDives[0].sectionId` with the detail `no section has the '
@@ -144,7 +146,7 @@ text = text + ('\n#### Scenario: A finding detail names a handle only, and a det
     'and at `$.deepDives[2].sectionId` with the detail `no section has the identity "s9"`, and `duplicate-id` at '
     '`$.sections[0].paragraphs[1]` with the detail `Finding detail withheld under source screening.`, each beside whatever '
     'the schema check reports at those members\n'
-    '- **AND** neither `src/app.ts` nor the matched value appears in the check report or the check record, every finding '
+    '- **AND** neither `src/app.ts` nor the token-shaped value appears in the check report or the check record, every finding '
     'keeps its kind and `at`, and the draft fails check as it would with every detail intact\n')
 
 assert '2.NN' not in text

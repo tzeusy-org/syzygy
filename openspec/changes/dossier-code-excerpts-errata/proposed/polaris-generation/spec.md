@@ -2412,6 +2412,6 @@ warrants:
 
 #### Scenario: A finding detail names a handle only, and a detail screening matches is withheld
 
-- **WHEN** a draft's three deep dives name, as `sectionId`, `src/app.ts`, a value a secret detector matches and `s9`, none of them a section of the draft, and two paragraphs of its first section share the identity `id_rsa`, a basename the bound policy denies as a path
+- **WHEN** a draft's three deep dives name, as `sectionId`, the path-like value `src/app.ts`, a token-shaped handle (built as the fixtures build one: the four-character prefix of a GitHub personal access token followed by 36 letters, which a secret detector matches) and `s9`, none of them a section of the draft, and two paragraphs of its first section share the identity `id_rsa`, a basename the bound policy denies as a path
 - **THEN** check reports `unresolved-reference` at `$.deepDives[0].sectionId` with the detail `no section has the identity named here`, at `$.deepDives[1].sectionId` with the detail `Finding detail withheld under source screening.` and at `$.deepDives[2].sectionId` with the detail `no section has the identity "s9"`, and `duplicate-id` at `$.sections[0].paragraphs[1]` with the detail `Finding detail withheld under source screening.`, each beside whatever the schema check reports at those members
-- **AND** neither `src/app.ts` nor the matched value appears in the check report or the check record, every finding keeps its kind and `at`, and the draft fails check as it would with every detail intact
+- **AND** neither `src/app.ts` nor the token-shaped value appears in the check report or the check record, every finding keeps its kind and `at`, and the draft fails check as it would with every detail intact

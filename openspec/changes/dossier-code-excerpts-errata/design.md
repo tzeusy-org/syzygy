@@ -84,7 +84,7 @@
   - the false positive of note 5, a handle that matches as part of a detail, stated as failing toward withholding;
   - that `at`, `blockId`, `citationId` and the advisory members are outside it (syzygy-3efd.95).
 - [Inferred] Why the denied-path rule is stricter than 2.35's paragraph, which admits a denied path in a derived-base detail: a denied path is one the policy keeps out of every output. The 2.35 qualified details are now screened by this rule too, so the two agree in effect.
-- [Observed] The scenario's literals are those `finding-names.test.ts` pins on `agent/syzygy-3efd.93` (the deep-dive `sectionId` case and the `id_rsa` duplicate). It names the token value only as "a value a secret detector matches", so the spec carries no secret-shaped literal.
+- [Observed] The scenario's literals are those `finding-names.test.ts` pins on `agent/syzygy-3efd.93` (the deep-dive `sectionId` case and the `id_rsa` duplicate). It describes the token-shaped value by how the fixtures build it (a token prefix and 36 letters) and never spells it, so the spec carries no secret-shaped literal.
 - [Inferred] Not stated: the per-call cache, an implementation choice that moves no output.
 
 ## Review

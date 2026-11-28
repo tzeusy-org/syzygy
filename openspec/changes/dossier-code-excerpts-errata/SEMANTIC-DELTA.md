@@ -8,7 +8,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-view-levels-errata/proposed/polaris-generation/spec.md` (dossier view levels errata version 2.55, row A-346, tag `polaris-dossier-view-levels-errata-v2.55`; sha256 `530a79f837497883430ba9ca98f8965e005abb50b64cb6f4a35e9b302c5776fb`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-code-excerpts-errata/proposed/polaris-generation/spec.md`, sha256 `3ca47e10e636ec67af693404bacab773cb3250981bd236419e36ff29fd947aa3`) replaces that text, composed after version 2.55. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.55's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-view-levels-errata/proposed/polaris-generation/spec.md` (dossier view levels errata version 2.55, row A-346, tag `polaris-dossier-view-levels-errata-v2.55`; sha256 `530a79f837497883430ba9ca98f8965e005abb50b64cb6f4a35e9b302c5776fb`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-code-excerpts-errata/proposed/polaris-generation/spec.md`, sha256 `c7b570d04244a2d37a6f45264946cd8d8c830f678feae99eaeb0c42c995af9c5`) replaces that text, composed after version 2.55. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.55's, byte for byte.
 
 ## Carried unchanged
 
@@ -44,9 +44,9 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 >
 > #### Scenario: A finding detail names a handle only, and a detail screening matches is withheld
 >
-> - **WHEN** a draft's three deep dives name, as `sectionId`, `src/app.ts`, a value a secret detector matches and `s9`, none of them a section of the draft, and two paragraphs of its first section share the identity `id_rsa`, a basename the bound policy denies as a path
+> - **WHEN** a draft's three deep dives name, as `sectionId`, the path-like value `src/app.ts`, a token-shaped handle (built as the fixtures build one: the four-character prefix of a GitHub personal access token followed by 36 letters, which a secret detector matches) and `s9`, none of them a section of the draft, and two paragraphs of its first section share the identity `id_rsa`, a basename the bound policy denies as a path
 > - **THEN** check reports `unresolved-reference` at `$.deepDives[0].sectionId` with the detail `no section has the identity named here`, at `$.deepDives[1].sectionId` with the detail `Finding detail withheld under source screening.` and at `$.deepDives[2].sectionId` with the detail `no section has the identity "s9"`, and `duplicate-id` at `$.sections[0].paragraphs[1]` with the detail `Finding detail withheld under source screening.`, each beside whatever the schema check reports at those members
-> - **AND** neither `src/app.ts` nor the matched value appears in the check report or the check record, every finding keeps its kind and `at`, and the draft fails check as it would with every detail intact
+> - **AND** neither `src/app.ts` nor the token-shaped value appears in the check report or the check record, every finding keeps its kind and `at`, and the draft fails check as it would with every detail intact
 >
 
 Every other new sentence is appended to or set inside an existing line and appears above as an amendment.
