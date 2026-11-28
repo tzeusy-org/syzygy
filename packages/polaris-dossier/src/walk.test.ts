@@ -365,6 +365,8 @@ describe('schema v16: a walk through a figure (version 2.40)', () => {
     const fig = figureOf(page, 'd');
     const box = boxesOf(fig).find((entry) => entry.includes('id="walk-d-1"'))!;
     expect(box).toBe(`${rectStyle(fig, 'api')}|id="walk-d-1"|<span class="walk-badge" aria-hidden="true">1</span>`);
+    // Every box lies on its node's rect, the base element's `called` line pushing the rows below it down.
+    expect(boxesOf(fig).map((entry) => entry.split('|')[0]).sort()).toEqual([rectStyle(fig, 'api'), rectStyle(fig, 'Service')].sort());
     expect(fig).toContain('<ol class="figure-walk" aria-label="Walk through this figure"><li><a href="#walk-d-1">api</a> <a class="walk-text" href="#block-p1">Read step 1</a></li>');
     expect(fig).toContain('called Core');
     const third = async (element: unknown) => walkFindingsOf(U, walking(plain, { figure: 'd', steps: [...steps, { element, block: 'p3' }] }));
@@ -433,7 +435,7 @@ describe('schema v16: a walk through a figure (version 2.40)', () => {
       section('s2', [para('q1')])];
     const views = [graphView('f', ['api', 'db', 'queue', 'log'], ['r1', 'r2', 'r3']), graphView('g', ['api', 'cache'], ['r4'], { home: { kind: 'section', target: 's2' } })];
     const doc = walking(walkDraft(elements, rels, views, sections), { figure: 'f', steps: [{ element: 'api', block: 'p1' }, { element: 'cache', block: 'p1' }, { element: 'api', block: 'p2' },
-      { element: 'db', block: 'q1' }, { element: 'queue', block: 't1' }, { element: 'log', block: 'p3' }] });
+      { element: 'db', block: 'q1' }, { element: 'queue', block: 't' }, { element: 'log', block: 'p3' }] });
     expect(await walkFindingsOf(A, doc)).toEqual([
       { kind: 'walk', at: '$.sections[0].walk.steps[1].element', detail: '`walk.steps[1].element` names no element drawn in f' },
       { kind: 'walk', at: '$.sections[0].walk.steps[2].element', detail: 'api: a second step for this element' },
