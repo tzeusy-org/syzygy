@@ -3,7 +3,13 @@ import { execFileSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
+// The walk advice (version 2.51) fails on demand, so a test can show that a failure to compute it leaves check unchanged.
+const walkAdviceFails = vi.hoisted(() => ({ on: false }));
+vi.mock('./walk-advice.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('./walk-advice.js')>();
+  return { ...actual, walkAdvice: (...args: Parameters<typeof actual.walkAdvice>) => { if (walkAdviceFails.on) throw new Error('walk advice failed'); return actual.walkAdvice(...args); } };
+});
 import { issueBrief } from './brief.js';
 import { checkDraft, type CheckDeps, type CheckResult } from './check.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
@@ -583,5 +589,85 @@ describe('a step\'s base end against a unit map of one manifest declaring two pa
 
   it('at the render: a section whose disposition is not produced renders no walk', () => {
     expect(walks([base({ map: 'units', path: 'two/Cargo.toml#1' }), svc], { kind: 'omitted', reason: 'Not here.', citations: [] })).toEqual([]);
+  });
+});
+
+describe('walk advice on check\'s report (version 2.51, syzygy-3efd.35)', () => {
+  const RULES = [{ id: 'walk-step-restates-label', version: 1 }];
+  const DETAIL = (figure: string, n: number, block: string): string =>
+    `${figure} step ${n}: paragraph ${block} adds no word to its element's label; say what a reader learns about that element at this step`;
+  /** The write path walked through client, log and replica, with the paragraphs given. */
+  const advised = (texts: [string, string, string], version = V16): Doc => walking(walkDraft(WRITE(), WRITE_RELS(), [writeView()],
+    [section('s1', [para('p1', 1, { text: texts[0] }), para('p2', 1, { text: texts[1] }), para('p3', 2, { text: texts[2] })])], version), { figure: 'f', steps: STEPS() });
+  const EXPLAINS: [string, string, string] = ['Each client opens one connection per request.', 'The log keeps every write in order.', 'A replica serves reads.'];
+  const reportOf = async (tree: Pinned, doc: Doc, over: Partial<CheckDeps> = {}): Promise<Doc> => {
+    const { result } = await checked(tree, doc, over);
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return result.report as unknown as Doc;
+  };
+
+  it('advises on the step whose paragraph restates its element\'s label, on the report alone, gating nothing', async () => {
+    const { run, result } = await checked(A, advised(['Each client opens one connection per request.', 'The log.', 'A replica serves reads.']));
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const report = result.report as unknown as Doc;
+    expect([report['outcome'], report['findings']]).toEqual(['passed', []]);
+    expect(report['walkAdvice']).toEqual({ rules: RULES, examined: 3, advisories: [{ rule: 'walk-step-restates-label', at: '$.sections[0].walk.steps[1]', detail: DETAIL('f', 2, 'p2') }] });
+    const stored = fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8');
+    expect([stored.includes('walkAdvice'), stored.includes('walk-step-restates-label')]).toEqual([false, false]);
+    expect(fs.readFileSync(path.join(run, 'run-advice.json'), 'utf8').includes('walk-step-restates-label')).toBe(false);
+    expect(Object.keys(report).slice(-2)).toEqual(['figureAdvice', 'walkAdvice']);
+  });
+
+  it('gives an explaining walk the member with no advisory, and a walk with a finding below it no step read', async () => {
+    expect((await reportOf(A, advised(EXPLAINS)))['walkAdvice']).toEqual({ rules: RULES, examined: 3, advisories: [] });
+    const broken = walking(walkDraft(WRITE(), WRITE_RELS(), [writeView()]), { figure: 'f', steps: [{ element: 'client', block: 'p1' }, { element: 'log', block: 'nowhere' }] });
+    const report = await reportOf(A, broken);
+    expect(report['findings'].map((finding: Doc) => finding['at'])).toEqual(['$.sections[0].walk.steps[1].block']);
+    expect(report['walkAdvice']).toEqual({ rules: RULES, examined: 0, advisories: [] });
+    expect((await reportOf(A, walkDraft(WRITE(), WRITE_RELS(), [writeView()])))['walkAdvice']).toEqual({ rules: RULES, examined: 0, advisories: [] });
+  });
+
+  it('carries no member for a v15 draft or a draft with a schema finding', async () => {
+    const v15 = walkDraft(WRITE(), WRITE_RELS(), [writeView()], S1(), V15);
+    expect(Object.hasOwn(await reportOf(A, v15), 'walkAdvice')).toBe(false);
+    const schema = { ...advised(['The client.', 'The log.', 'The replica.']), title: 7 };
+    const report = await reportOf(A, schema);
+    expect([report['findings'].some((finding: Doc) => finding['kind'] === 'schema'), Object.hasOwn(report, 'walkAdvice')]).toEqual([true, false]);
+  });
+
+  it('leaves check unchanged where computing the advice fails: the same findings and outcome, and no member', async () => {
+    const doc = advised(['The client.', 'The log.', 'The replica.']);
+    const before = await reportOf(A, doc);
+    expect(before['walkAdvice']['advisories'].length).toBe(3);
+    walkAdviceFails.on = true;
+    try {
+      const after = await reportOf(A, doc);
+      expect([after['outcome'], after['findings'], Object.hasOwn(after, 'walkAdvice')]).toEqual(['passed', [], false]);
+      const { walkAdvice: _gone, ...rest } = before;
+      expect(Object.keys(after)).toEqual(Object.keys(rest));
+    } finally { walkAdviceFails.on = false; }
+  });
+
+  describe('a base element\'s step reads Syzygy\'s label', () => {
+    let D: Pinned;
+    beforeAll(() => {
+      D = pinnedTree({ 'README.md': TREE_A['README.md']!, 'src/a.ts': 'export const a = 1;\n', 'src/b.ts': 'export const b = 2;\n', 'docs/guide.md': 'A guide.\n' });
+    });
+    const dirs = (srcText: string): Doc => walking(walkDraft([], [], [dirsGraph('d', { select: ['src', 'docs'], restReason: 'Rest',
+      names: [nameOf('src', 'Sources')] }, [], [])], [section('s1', [para('p1', 1, { text: srcText }), para('p2', 1, { text: 'Guides for readers.' })])]),
+    { figure: 'd', steps: [{ element: { map: 'directories', path: 'src' }, block: 'p1' }, { element: { map: 'directories', path: 'docs' }, block: 'p2' }] });
+
+    it('advises where the paragraph adds nothing to `src/ (2 files)`, never to the display name, with no path or label in the detail', async () => {
+      const report = await reportOf(D, dirs('src: 2 files.'));
+      expect([report['outcome'], report['walkAdvice']]).toEqual(['passed', { rules: RULES, examined: 2, advisories: [{ rule: 'walk-step-restates-label', at: '$.sections[0].walk.steps[0]', detail: DETAIL('d', 1, 'p1') }] }]);
+      expect((await reportOf(D, dirs('The src directory holds the sources.')))['walkAdvice']).toEqual({ rules: RULES, examined: 2, advisories: [] });
+      expect((await reportOf(D, dirs('The sources.')))['walkAdvice']).toEqual({ rules: RULES, examined: 2, advisories: [] });
+    });
+
+    it('reads and counts no base step where the tree cannot be listed at check, so the map is not established', async () => {
+      // The third listing, the structure derivation's, fails: the directory map is not established, so neither base step is read.
+      const report = await reportOf(D, dirs('src: 2 files.'), { openReader: unlistedAfter(2) });
+      expect([report['outcome'], report['structureRecord']['state'], report['walkAdvice']]).toEqual(['passed', 'unknown', { rules: RULES, examined: 0, advisories: [] }]);
+    });
   });
 });

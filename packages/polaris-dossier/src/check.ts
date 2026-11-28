@@ -32,6 +32,7 @@ import { BASE_BASIS, type BaseContext, type ResolvedBase, admitOf, baseNestingFi
 import { expandModel, modelDecisions, modelFindings, modelIndex, modelRelationFindings, modelUndecided, undecidedViews } from './system-model.js';
 import { hasModelForm, hasRelationForm, hasWithheldHeroIdentity } from './draft-schema.js';
 import { walkFindings, withoutWalks } from './walk.js';
+import { walkAdvice as computeWalkAdvice, type WalkAdvice } from './walk-advice.js';
 import { figureAdvice as computeFigureAdvice, figurePlanFindings, plansFigures, withoutFigurePlan, type FigureAdvice } from './figure-plan.js';
 import { BLOB_MODES } from './git-object-reader.js';
 import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
@@ -107,7 +108,7 @@ export interface SubjectPlan<R extends object, G> {
 /** `screenCensus` (`census.ts`), `structureRecord` (`derive.ts`), `readerAdvice` (`reader-advice.ts`), `reviewReach` (`review-reach.ts`) and `inventoryCoverageAdvice` (`inventory-coverage.ts`) and `questionKindAdvice` (`question-kinds.ts`) are on `check`'s report only: advice to the author, never written
  * to the check record and never a finding. */
 /** The record part is the record written: the full record, or its bounded form (version 2.10), whose report adds `findingsLeftOut`. */
-export type SubjectReport<R extends object> = (R | BoundedCheckRecord<R>) & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly readingLedger?: ReadingLedger; readonly readingDifference?: ReadingDifference; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility; readonly mechanismAdvice?: MechanismAdvice; readonly findingsLeftOut?: readonly CheckFinding[]; readonly inventoryCoverageAdvice?: InventoryCoverageAdvice; readonly questionKindAdvice?: QuestionKindAdvice; readonly sourceExampleAdvice?: SourceExampleAdvice; readonly figureAdvice?: FigureAdvice };
+export type SubjectReport<R extends object> = (R | BoundedCheckRecord<R>) & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly readingLedger?: ReadingLedger; readonly readingDifference?: ReadingDifference; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility; readonly mechanismAdvice?: MechanismAdvice; readonly findingsLeftOut?: readonly CheckFinding[]; readonly inventoryCoverageAdvice?: InventoryCoverageAdvice; readonly questionKindAdvice?: QuestionKindAdvice; readonly sourceExampleAdvice?: SourceExampleAdvice; readonly figureAdvice?: FigureAdvice; readonly walkAdvice?: WalkAdvice };
 export type SubjectResult<R extends object> = Outcome<SubjectReport<R>, CheckRefusal>;
 
 const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
@@ -472,6 +473,16 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   if (planned !== undefined && !findings.some((finding) => finding.kind === 'schema')) {
     try { figures = computeFigureAdvice(planned); } catch { figures = undefined; }
   }
+  // Version 2.51: a v16 draft with no schema finding has walk advice, its base ends read against the maps this check derived; a failure to
+  // compute it leaves the member out, never fails check.
+  let walks: WalkAdvice | undefined;
+  if (plan.command === 'check' && parseFault === null && isRecord(walked)) {
+    try {
+      const isSecretPath = secretPathOf(screen);
+      walks = computeWalkAdvice(walked, findings, checkBaseMaps(treeFacts, manifestFacts), { admit: admitOf(screen),
+        hidden: (repositoryPath) => secretOrUnder(repositoryPath.split('/'), isSecretPath) || screen.screenPath(repositoryPath) === 'denied-path' });
+    } catch { walks = undefined; }
+  }
   return { ok: true, report: {
     command: plan.command, run, checkFile, ...written, ...reportFit, ...leftOut, ...(mechanismAdvice === undefined ? {} : { mechanismAdvice }), disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
     ...(structureRecord === undefined ? {} : { structureRecord }),
@@ -481,6 +492,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     ...(kinds === undefined ? {} : { questionKindAdvice: kinds }),
     ...(sourceExample === undefined ? {} : { sourceExampleAdvice: sourceExample }),
     ...(figures === undefined ? {} : { figureAdvice: figures }),
+    ...(walks === undefined ? {} : { walkAdvice: walks }),
   } };
 }
 
