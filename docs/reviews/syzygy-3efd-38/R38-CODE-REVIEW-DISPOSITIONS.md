@@ -102,7 +102,7 @@ Repaired.
   - for the directory map, the render's derived structure, which is the record check kept, is `derived`;
   - for the unit map, the check record's `manifestFacts` member is `derived`.
 - A finding at the render for a map that check did establish refuses the render at `rederive` (`base view at $.diagrams[i]`).
-- Test: the render's listing drops `web/package.json`, and the render refuses at `rederive`.
+- Test: the render's listing drops the `web` package's manifest, and the render refuses at `rederive`.
 - The unit-map flag is read from the stored check record, which lies within the agent sessions' write reach.
   - A forged `unknown` there can only turn a refusal into the notice.
   - The notice draws nothing and names no path.
