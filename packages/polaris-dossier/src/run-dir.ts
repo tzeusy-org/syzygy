@@ -21,6 +21,11 @@ export const sessionDirName = (n: number): string => `session-${n}`;
  * of a session's working directory below the state root is the run directory and `..` from it never reaches `drafts/`. */
 export const sessionsRoot = (run: string): string => path.join(path.dirname(run), `${path.basename(run)}.sessions`);
 export const sessionDirectory = (run: string, n: number): string => path.join(sessionsRoot(run), sessionDirName(n));
+/** A launched run's agent homes root, `<state root>/<run id>.agents/`, another sibling of the run directory: `syzygy polaris` gives each
+ * role it starts a private home there, and the agent tool keeps that session's transcripts in it (`session-usage.ts`). */
+export const agentsRoot = (run: string): string => path.join(path.dirname(run), `${path.basename(run)}.agents`);
+/** One role's private home under the agents root: the supervisor creates it and the session-usage reader reads it, both by this rule. */
+export const agentHome = (run: string, role: string): string => path.join(agentsRoot(run), role);
 
 /** Why the run's sessions root may not hold a session, or null when it may. Judged on real paths, as the state root is: the sessions
  * root may lie neither inside the run directory or the clone nor around either, and none may resolve unreadably. */

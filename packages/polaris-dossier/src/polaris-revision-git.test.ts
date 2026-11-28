@@ -73,3 +73,28 @@ describe('resolveRevision with real git', () => {
     } finally { process.env['HOME'] = before; }
   });
 });
+
+describe('the trunk default follows the remote (syzygy-pdja.36)', () => {
+  let other = '';
+  let otherUrl = '';
+  const git = (args: string[]) => run(args, path.join(other, 'src'));
+  const commit = (text: string) => { fs.writeFileSync(path.join(other, 'src', 'f.txt'), text); git(['add', 'f.txt']); git(['commit', '-q', '-m', text]); return git(['rev-parse', 'HEAD']); };
+  beforeAll(() => {
+    other = fs.mkdtempSync(path.join(os.tmpdir(), 'polaris-trunk-'));
+    fs.mkdirSync(path.join(other, 'src'));
+    git(['init', '-q', '-b', 'develop']);
+    otherUrl = `file://${path.join(other, 'src')}`;
+  });
+  afterAll(() => { fs.rmSync(other, { recursive: true, force: true }); });
+
+  it('pins the tip of a default branch that is not named main, and pins the new tip after the remote moves', () => {
+    const first = commit('first');
+    git(['branch', 'main', first]);
+    const second = commit('second');
+    expect(resolveRevision(otherUrl, undefined, { git: anonymousGit })).toEqual({ label: `trunk-${second.slice(0, 12)}`, commit: second });
+    const third = commit('third');
+    expect(resolveRevision(otherUrl, undefined, { git: anonymousGit })).toEqual({ label: `trunk-${third.slice(0, 12)}`, commit: third });
+    // An explicit older revision is kept as given, never replaced by the moved trunk.
+    expect(resolveRevision(otherUrl, 'main', { git: anonymousGit })).toEqual({ label: `main-${first.slice(0, 12)}`, commit: first });
+  });
+});
