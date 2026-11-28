@@ -9,6 +9,7 @@
 // Run 1 (at df0a36131) killed 49 of 53. Repairs: a test of a highlight and a note past the excerpt's last line (note-high-unchecked);
 // deriveFindings no longer strips the marks itself, so check's and render's strips are each the one that keeps them from the schema read
 // (check-not-stripped, render-not-stripped; the strip in deriveFindings made both redundant); lines-wrap moved to EQUIVALENT.
+// Run 2 (at 1c803bddb, code-marks-mutation-run2-2026-11-28.json) killed 52 of 52.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
