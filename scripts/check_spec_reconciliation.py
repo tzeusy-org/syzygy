@@ -14696,8 +14696,8 @@ def walkerr_cases(tmp, base, witnesses, failures):
 
     ledger.write_text(pending + row)
     spec = tree / WALKERR_SPEC
-    current_bound = "Every box of a walk's layer takes the pointer, whether or not it holds a badge or a link"
-    changed = "Every box of a walk's layer that holds a badge takes the pointer"
+    current_bound = "make every box of a walk's layer take the pointer, whether or not it holds a badge or a link"
+    changed = "make every box of a walk's layer that holds a badge take the pointer"
     assert original.count(current_bound) == 1
     spec.write_text(original.replace(current_bound, changed, 1))
     text, r1, r2 = walkerr_binding(tree)
