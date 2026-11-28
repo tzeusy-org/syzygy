@@ -11,6 +11,7 @@ import { expandModel, modelFieldVersionFindings, modelFieldVersionPaths, modelIn
 import { containmentName, containmentDiagrams, containmentFieldVersionFindings, containmentFieldVersionPaths, containmentStructuralFindings, groupName, groupsOf } from './containment.js';
 import { UNIT_FAULT_WORDS, UNIT_TEXT_LIMIT, decideWitness, unitFault, unitOf, type EdgeEnd, type RelationType, type UnitFault, type UnitTree, type WitnessDecision, type WitnessInputs } from './relation-witness.js';
 import { BLOB_MODES, type PinnedObjectReader, type TreeEntry } from './git-object-reader.js';
+import { handleOr, identityWords, isHandle } from './finding-names.js';
 import { secretPathOf, type DossierScreen, type ScreenExclusion } from './screen.js';
 import { DEFAULT_POLE_LIMIT } from './run-config.js';
 import { type CheckFinding, type CitedBlob, type ExcludedQuotation, type VerifiedQuotation, blobRedaction, line, list, text } from './check-model.js';
@@ -156,7 +157,7 @@ export async function deriveFindings(given: unknown, inputs: DeriveInputs, rules
     if (id === undefined) return;
     const first = seen.get(id);
     if (first === undefined) seen.set(id, at);
-    else add({ kind: 'duplicate-id', at, detail: `the identity ${JSON.stringify(id)} is already used at ${first}` });
+    else add({ kind: 'duplicate-id', at, detail: `the identity ${identityWords(id)} is already used at ${first}` });
   });
 
   rules.structural(doc, add, inputs);
@@ -343,7 +344,7 @@ export async function deriveFindings(given: unknown, inputs: DeriveInputs, rules
     const located = locateQuote(source, tracked, inner, state.retainedLines === undefined ? startLine : 1,
       state.retainedLines === undefined ? endLine : endLine - startLine + 1);
     if (!located.found) {
-      add({ kind: located.kind, at: `${block.at}.${block.textKey}`, blockId, citationId, detail: `quotation ${index + 1} ${QUOTE_FAILURE[located.kind]} (citation ${JSON.stringify(citationId)})` });
+      add({ kind: located.kind, at: `${block.at}.${block.textKey}`, blockId, citationId, detail: `quotation ${index + 1} ${QUOTE_FAILURE[located.kind]} (citation ${identityWords(citationId)})` });
       continue;
     }
     const base = state.lineByteOffsets?.[startLine - 1] ?? 0;
@@ -487,7 +488,7 @@ function figureStructure(doc: Readonly<Record<string, unknown>>, add: (finding: 
         const target = text(entry[end]);
         if (target === undefined) continue;
         named.add(target);
-        if (!known.has(target)) add({ kind: 'unresolved-reference', at: `$.diagrams[${i}].${uses}[${j}].${end}`, detail: `${name}: no ${owner} of this diagram has the identity ${JSON.stringify(target)}` });
+        if (!known.has(target)) add({ kind: 'unresolved-reference', at: `$.diagrams[${i}].${uses}[${j}].${end}`, detail: `${name}: no ${owner} of this diagram has the identity ${identityWords(target)}` });
       }
     });
     // An unnamed column needs the other list to name it from: a missing list is the figure-kind finding's.
@@ -496,8 +497,8 @@ function figureStructure(doc: Readonly<Record<string, unknown>>, add: (finding: 
       const id = isRecord(entry) ? text(entry['id']) : undefined;
       if (id === undefined || named.has(id)) return;
       add({ kind: 'figure-unused', at: `$.diagrams[${i}].${owners}[${k}]`, detail: owner === 'participant'
-        ? `${name}: no message names the participant ${JSON.stringify(id)} as its sender or receiver; every participant sends or receives a message`
-        : `${name}: no step names the lane ${JSON.stringify(id)}; every lane holds a step` });
+        ? `${name}: no message names the participant ${identityWords(id)} as its sender or receiver; every participant sends or receives a message`
+        : `${name}: no step names the lane ${identityWords(id)}; every lane holds a step` });
     });
   });
 }
@@ -634,7 +635,7 @@ function relationStructure(doc: Readonly<Record<string, unknown>>, add: (finding
 
 /** A node or edge as a finding names it (version 2.19): by its identity, or by its path where it has none. */
 const elementName = (noun: 'node' | 'edge', element: Readonly<Record<string, unknown>>, at: string): string =>
-  (typeof element['id'] === 'string' ? `the ${noun} ${JSON.stringify(element['id'])}` : `the ${noun} at ${at}`);
+  (isHandle(element['id']) ? `the ${noun} ${JSON.stringify(element['id'])}` : `the ${noun} at ${at}`);
 
 /** What rule `relation-witness` gives each edge of a v9 draft's produced graph diagrams, and which of its nodes' units name no unit of
  * their kind, in draft order. */
@@ -702,7 +703,7 @@ export function containmentRelationFindings(decisions: Pick<RelationDecisions, '
   return [
     ...decisions.groupUnits.map(({ at, name, kind, fault }): CheckFinding => ({ kind: 'unit-reference', at, detail: `${name}: its ${kind} unit names no unit of that kind: ${UNIT_FAULT_WORDS[fault]}` })),
     ...decisions.nestings.flatMap(({ at, id, diagramName, decision }): CheckFinding[] => (decision.state !== 'challenged' ? [] : [{ kind: 'relation-challenged', at,
-      detail: `${diagramName}: no ${decision.factKind} fact joins the units of group ${id} and the group it is drawn in, in what rule ${decision.rule} version ${decision.ruleVersion} derived at the pinned revision; correct the nesting or its groups' units` }])),
+      detail: `${diagramName}: no ${decision.factKind} fact joins the units of group ${handleOr(id, at)} and the group it is drawn in, in what rule ${decision.rule} version ${decision.ruleVersion} derived at the pinned revision; correct the nesting or its groups' units` }])),
   ];
 }
 
@@ -746,10 +747,10 @@ function heroFindings(doc: Readonly<Record<string, unknown>>): CheckFinding[] {
   const home = diagram['home'];
   const findings: CheckFinding[] = [];
   if (!isRecord(home) || home['kind'] !== 'overview' || Object.keys(home).length !== 1) {
-    findings.push({ kind: 'hero', at, detail: `${hero.value}: the hero is a figure homed on the overview` });
+    findings.push({ kind: 'hero', at, detail: `${isHandle(hero.value) ? hero.value : at}: the hero is a figure homed on the overview` });
   }
   if (membersOfKind(diagram['kind'], doc['schemaVersion'])?.[0] !== 'nodes') {
-    findings.push({ kind: 'hero', at, detail: `${hero.value}: the hero is a figure of a graph kind` });
+    findings.push({ kind: 'hero', at, detail: `${isHandle(hero.value) ? hero.value : at}: the hero is a figure of a graph kind` });
   }
   return findings;
 }
@@ -919,19 +920,19 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
   const v5 = hasHomeForm(doc['schemaVersion']);
   const diagramFinding = (diagram: Readonly<Record<string, unknown>>, at: string, detail: string, kind: 'diagram-home' | 'unresolved-reference' | 'field-version' = 'diagram-home'): void => {
     const id = text(diagram['id']);
-    add({ kind, at, detail: id === undefined ? detail : `the diagram ${JSON.stringify(id)}: ${detail}` });
+    add({ kind, at, detail: !isHandle(id) ? detail : `the diagram ${JSON.stringify(id)}: ${detail}` });
   };
   if (!v5) {
     list(doc['diagrams']).forEach((diagram, i) => {
       if (!isRecord(diagram)) return;
       const sectionId = text(diagram['sectionId']);
-      if (sectionId !== undefined && !sectionIds.has(sectionId)) add({ kind: 'unresolved-reference', at: `$.diagrams[${i}].sectionId`, detail: `no section has the identity ${JSON.stringify(sectionId)}` });
+      if (sectionId !== undefined && !sectionIds.has(sectionId)) add({ kind: 'unresolved-reference', at: `$.diagrams[${i}].sectionId`, detail: `no section has the identity ${identityWords(sectionId)}` });
     });
   }
   list(doc['deepDives']).forEach((dive, i) => {
     if (!isRecord(dive)) return;
     const sectionId = text(dive['sectionId']);
-    if (sectionId !== undefined && !sectionIds.has(sectionId)) add({ kind: 'unresolved-reference', at: `$.deepDives[${i}].sectionId`, detail: `no section has the identity ${JSON.stringify(sectionId)}` });
+    if (sectionId !== undefined && !sectionIds.has(sectionId)) add({ kind: 'unresolved-reference', at: `$.deepDives[${i}].sectionId`, detail: `no section has the identity ${identityWords(sectionId)}` });
   });
   list(doc['diagrams']).forEach((diagram, i) => {
     if (!isRecord(diagram)) return;
@@ -953,7 +954,7 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
       if (Object.hasOwn(home, 'target')) diagramFinding(diagram, `${at}.home.target`, 'the overview is one page and takes no `target`');
     } else if (kind === 'section' || kind === 'deep-dive') {
       if (target === undefined) diagramFinding(diagram, `${at}.home`, `a ${kind} home names its ${kind === 'section' ? 'section' : 'deep dive'} in \`target\``);
-      else if (!(kind === 'section' ? sectionIds : diveIds).has(target)) diagramFinding(diagram, `${at}.home.target`, `no ${kind === 'section' ? 'section' : 'deep dive'} has the identity ${JSON.stringify(target)}`, 'unresolved-reference');
+      else if (!(kind === 'section' ? sectionIds : diveIds).has(target)) diagramFinding(diagram, `${at}.home.target`, `no ${kind === 'section' ? 'section' : 'deep dive'} has the identity ${identityWords(target)}`, 'unresolved-reference');
     } else {
       diagramFinding(diagram, `${at}.home.kind`, 'a home\'s `kind` is `section`, `deep-dive` or `overview`');
     }
@@ -965,7 +966,7 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
       if (!isRecord(edge)) return;
       for (const end of ['from', 'to'] as const) {
         const target = text(edge[end]);
-        if (target !== undefined && !nodes.has(target)) add({ kind: 'unresolved-reference', at: `$.diagrams[${i}].edges[${j}].${end}`, detail: `no node of this diagram has the identity ${JSON.stringify(target)}` });
+        if (target !== undefined && !nodes.has(target)) add({ kind: 'unresolved-reference', at: `$.diagrams[${i}].edges[${j}].${end}`, detail: `no node of this diagram has the identity ${identityWords(target)}` });
       }
     });
   });
@@ -978,7 +979,7 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
       const own = new Set<string>();
       walk(asset, '$', (value, at) => { const id = text(value['id']); if (id !== undefined && !/\.(?:citations|evidence)\[|\.citation$/u.test(at)) own.add(id); });
       list(asset['disposition']['assetIds']).forEach((assetId, k) => {
-        if (typeof assetId === 'string' && !own.has(assetId)) add({ kind: 'unresolved-reference', at: `$.${part}[${i}].disposition.assetIds[${k}]`, detail: `${JSON.stringify(assetId)} is not this asset or a part of it` });
+        if (typeof assetId === 'string' && !own.has(assetId)) add({ kind: 'unresolved-reference', at: `$.${part}[${i}].disposition.assetIds[${k}]`, detail: `${isHandle(assetId) ? JSON.stringify(assetId) : 'the identity named here'} is not this asset or a part of it` });
       });
     });
   }
@@ -1000,8 +1001,8 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
         if (!Object.hasOwn(value, 'repeatsDiagram')) return;
         const named = text(value['repeatsDiagram']);
         if (named === undefined) return;
-        if (!diagramSections.has(named)) add({ kind: 'repeats-diagram', at: `${at}.repeatsDiagram`, detail: `no diagram has the identity ${JSON.stringify(named)}` });
-        else if (diagramSections.get(named) !== sectionId) add({ kind: 'repeats-diagram', at: `${at}.repeatsDiagram`, detail: `the diagram ${JSON.stringify(named)} is not in this list's section; a list repeats a diagram of its own section` });
+        if (!diagramSections.has(named)) add({ kind: 'repeats-diagram', at: `${at}.repeatsDiagram`, detail: `no diagram has the identity ${identityWords(named)}` });
+        else if (diagramSections.get(named) !== sectionId) add({ kind: 'repeats-diagram', at: `${at}.repeatsDiagram`, detail: `the diagram ${identityWords(named)} is not in this list's section; a list repeats a diagram of its own section` });
       });
     });
   }
@@ -1021,7 +1022,7 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
       sections.forEach((section, k) => {
         const id = text(section);
         if (id === undefined) return;
-        if (!sectionIds.has(id)) add({ kind: 'unresolved-reference', at: `$.poles[${i}].sections[${k}]`, detail: `no section has the identity ${JSON.stringify(id)}` });
+        if (!sectionIds.has(id)) add({ kind: 'unresolved-reference', at: `$.poles[${i}].sections[${k}]`, detail: `no section has the identity ${identityWords(id)}` });
         else homes.set(id, [...(homes.get(id) ?? []), i]);
       });
     });
@@ -1029,14 +1030,14 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
       const id = isRecord(section) ? text(section['id']) : undefined;
       if (id === undefined) return;
       const home = homes.get(id) ?? [];
-      if (home.length === 0) add({ kind: 'pole', at: `$.sections[${i}]`, detail: `the section ${JSON.stringify(id)} is in no Pole; with Poles, every section is in exactly one` });
-      else if (home.length > 1) add({ kind: 'pole', at: `$.sections[${i}]`, detail: `the section ${JSON.stringify(id)} is in ${home.length} Poles (${home.map((n) => `$.poles[${n}]`).join(', ')}); every section is in exactly one` });
+      if (home.length === 0) add({ kind: 'pole', at: `$.sections[${i}]`, detail: `the section ${identityWords(id)} is in no Pole; with Poles, every section is in exactly one` });
+      else if (home.length > 1) add({ kind: 'pole', at: `$.sections[${i}]`, detail: `the section ${identityWords(id)} is in ${home.length} Poles (${home.map((n) => `$.poles[${n}]`).join(', ')}); every section is in exactly one` });
     });
     const why = text(doc['whySection']);
     if (why === undefined) add({ kind: 'pole', at: '$.whySection', detail: 'a draft with Poles names in `whySection` the section that answers why the project exists' });
-    else if (!sectionIds.has(why)) add({ kind: 'pole', at: '$.whySection', detail: `\`whySection\` names ${JSON.stringify(why)}, which is no section of this draft` });
+    else if (!sectionIds.has(why)) add({ kind: 'pole', at: '$.whySection', detail: `\`whySection\` names ${isHandle(why) ? JSON.stringify(why) : 'a value'}, which is no section of this draft` });
   } else if (v4 && text(doc['whySection']) !== undefined && !sectionIds.has(text(doc['whySection'])!)) {
-    add({ kind: 'unresolved-reference', at: '$.whySection', detail: `no section has the identity ${JSON.stringify(text(doc['whySection']))}` });
+    add({ kind: 'unresolved-reference', at: '$.whySection', detail: `no section has the identity ${identityWords(text(doc['whySection']))}` });
   }
 
   // Task routes (the index-and-task-routes change): a member of a v5 or later draft. Each step is a claim block (`collectBlocks`), so its citations,
@@ -1049,7 +1050,7 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
       if (!isRecord(see)) return;
       const kind = text(see['kind']), target = text(see['target']);
       if (target === undefined || (kind !== 'section' && kind !== 'deep-dive')) return;
-      if (!(kind === 'section' ? sectionIds : diveIds).has(target)) add({ kind: 'unresolved-reference', at: `${at}.see.target`, detail: `no ${kind === 'section' ? 'section' : 'deep dive'} has the identity ${JSON.stringify(target)}` });
+      if (!(kind === 'section' ? sectionIds : diveIds).has(target)) add({ kind: 'unresolved-reference', at: `${at}.see.target`, detail: `no ${kind === 'section' ? 'section' : 'deep dive'} has the identity ${identityWords(target)}` });
     });
   }
 

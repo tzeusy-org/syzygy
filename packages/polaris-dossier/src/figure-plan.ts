@@ -3,6 +3,7 @@ import { isRecord } from '@syzygy/support';
 import type { CheckFinding } from './check-model.js';
 import { FIGURE_PLAN_FIELD, hasFigurePlanForm } from './draft-schema.js';
 import { carriesBase } from './derived-base.js';
+import { handleOr } from './finding-names.js';
 import { expandModel, isViewKind, modelIndex } from './system-model.js';
 
 /** The figure plan of a schema-v14 draft and the figure advice (REQ-polaris-generation-034 version 2.33, syzygy-3efd.84).
@@ -103,8 +104,8 @@ export function figurePlanFindings(doc: unknown): CheckFinding[] {
     }
     const home = diagram['home'];
     const homed = isRecord(home) && home['kind'] === place.kind && home['target'] === place.target;
-    if (resolved && !homed) findings.push({ kind: 'figure-plan', at: `${at}.figure`, detail: `${String(figure)}: a planned figure is homed at its plan entry's place` });
-    if (diagram['kind'] !== kind) findings.push({ kind: 'figure-plan', at: `${at}.figure`, detail: `${String(figure)}: a planned figure is of the kind its plan entry names` });
+    if (resolved && !homed) findings.push({ kind: 'figure-plan', at: `${at}.figure`, detail: `${handleOr(figure, `${at}.figure`)}: a planned figure is homed at its plan entry's place` });
+    if (diagram['kind'] !== kind) findings.push({ kind: 'figure-plan', at: `${at}.figure`, detail: `${handleOr(figure, `${at}.figure`)}: a planned figure is of the kind its plan entry names` });
   });
   const places: Place[] = [{ kind: 'overview' }, ...sections.map((target): Place => ({ kind: 'section', target })), ...dives.map((target): Place => ({ kind: 'deep-dive', target }))];
   const unplanned = new Set<string>();

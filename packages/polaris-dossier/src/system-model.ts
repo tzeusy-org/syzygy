@@ -1,6 +1,7 @@
 import { isRecord } from '@syzygy/support';
 import { type CheckFinding, list } from './check-model.js';
 import { containmentName } from './containment.js';
+import { handleOr, identityWords } from './finding-names.js';
 import {
   CONTAINMENT_BOUNDS, CONTAINMENT_KIND, ELEMENT_TYPES, LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION_V11, LOCAL_DRAFT_SCHEMA_VERSION_V12,
   BASE_FIELD, MODEL_FIELD, UNIT_FIELD, UNIT_KIND_TYPES, VIEW_FIELD, hasModelForm, precedesModel,
@@ -204,7 +205,8 @@ export function modelFindings(doc: Doc, schemaPaths: ReadonlySet<string>, tree: 
   const index = modelIndex(doc);
   const out: CheckFinding[] = [];
   const clean = (at: string): boolean => !touchesSchema(at, schemaPaths);
-  const idOr = (value: Doc, at: string): string => text(value['id']) ?? at;
+  // A detail names an element or relationship by its identity only where that identity is a handle, else by its path (syzygy-3efd.93).
+  const idOr = (value: Doc, at: string): string => handleOr(value['id'], at);
 
   // Elements: an unresolved parent, then the type against the unit, then the unit, then the chain of parents.
   const parentFaults = new Set<number>();
@@ -215,7 +217,7 @@ export function modelFindings(doc: Doc, schemaPaths: ReadonlySet<string>, tree: 
   const anyParentFault = parentFaults.size > 0 || index.elements.some(({ at, element }) => Object.hasOwn(element, 'parent') && !clean(`${at}.parent`));
   for (const { element, j, at } of index.elements) {
     const id = idOr(element, at);
-    if (parentFaults.has(j)) out.push({ kind: 'unresolved-reference', at: `${at}.parent`, detail: `${text(element['parent'])}: no element of the model has this identity` });
+    if (parentFaults.has(j)) out.push({ kind: 'unresolved-reference', at: `${at}.parent`, detail: `${handleOr(element['parent'], `${at}.parent`)}: no element of the model has this identity` });
     const unit = unitOf(element[UNIT_FIELD]);
     const type = text(element['type']);
     if (clean(`${at}.type`) && (!Object.hasOwn(element, UNIT_FIELD) || clean(`${at}.${UNIT_FIELD}`)) && unit !== undefined && type !== undefined
@@ -226,7 +228,7 @@ export function modelFindings(doc: Doc, schemaPaths: ReadonlySet<string>, tree: 
     }
     if (unit !== undefined && clean(`${at}.${UNIT_FIELD}`)) {
       const fault: UnitFault | undefined = unitFault(unit, tree);
-      if (fault !== undefined) out.push({ kind: 'unit-reference', at: `${at}.${UNIT_FIELD}`, detail: `the element ${JSON.stringify(id)}: its ${unit.kind} unit names no unit of that kind: ${UNIT_FAULT_WORDS[fault]}` });
+      if (fault !== undefined) out.push({ kind: 'unit-reference', at: `${at}.${UNIT_FIELD}`, detail: `the element ${identityWords(element['id'])}: its ${unit.kind} unit names no unit of that kind: ${UNIT_FAULT_WORDS[fault]}` });
     }
     if (!anyParentFault && text(element['parent']) !== undefined && elementParentFault(index, element)) {
       out.push({ kind: 'element-parent', at: `${at}.parent`, detail: `${id}: an element is part of at most two elements above it and never of itself` });
@@ -240,7 +242,7 @@ export function modelFindings(doc: Doc, schemaPaths: ReadonlySet<string>, tree: 
     let resolved = true;
     for (const end of ['from', 'to'] as const) {
       const named = text(relationship[end]);
-      if (named !== undefined && !index.elementById.has(named)) { resolved = false; out.push({ kind: 'unresolved-reference', at: `${at}.${end}`, detail: `${named}: no element of the model has this identity` }); }
+      if (named !== undefined && !index.elementById.has(named)) { resolved = false; out.push({ kind: 'unresolved-reference', at: `${at}.${end}`, detail: `${handleOr(named, `${at}.${end}`)}: no element of the model has this identity` }); }
     }
     if (!derived || !resolved) continue;
     const from = unitOf(index.elementById.get(text(relationship['from']) ?? '')?.element[UNIT_FIELD]);
@@ -326,11 +328,11 @@ export function modelFindings(doc: Doc, schemaPaths: ReadonlySet<string>, tree: 
     }
     for (const { element, at } of index.elements) {
       const id = text(element['id']);
-      if (id !== undefined && !shown.elements.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${id}: every element and relationship of the model is shown by at least one view` });
+      if (id !== undefined && !shown.elements.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${handleOr(id, at)}: every element and relationship of the model is shown by at least one view` });
     }
     for (const { relationship, at } of index.relationships) {
       const id = text(relationship['id']);
-      if (id !== undefined && !shown.relationships.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${id}: every element and relationship of the model is shown by at least one view` });
+      if (id !== undefined && !shown.relationships.has(id)) out.push({ kind: 'model-unviewed', at, detail: `${handleOr(id, at)}: every element and relationship of the model is shown by at least one view` });
     }
   }
   return out;
@@ -455,8 +457,8 @@ export function modelDecisions(doc: Doc, edges: readonly (Decided & { readonly r
 export function modelRelationFindings(decided: ReturnType<typeof modelDecisions>): CheckFinding[] {
   return [
     ...decided.relationships.flatMap(({ at, id, relation, decision }): CheckFinding[] => (decision.state !== 'challenged' ? [] : [{ kind: 'relation-challenged', at,
-      detail: `the relationship ${JSON.stringify(id)}, relation ${relation}: no ${decision.factKind} fact joins this edge's two units in what rule ${decision.rule} version ${decision.ruleVersion} derived at the pinned revision; correct the arrow, its relation or its units` }])),
+      detail: `the relationship ${identityWords(id)}, relation ${relation}: no ${decision.factKind} fact joins this edge's two units in what rule ${decision.rule} version ${decision.ruleVersion} derived at the pinned revision; correct the arrow, its relation or its units` }])),
     ...decided.parents.flatMap(({ at, id, decision }): CheckFinding[] => (decision.state !== 'challenged' ? [] : [{ kind: 'relation-challenged', at,
-      detail: `model: no ${decision.factKind} fact joins the units of group ${id} and the group it is drawn in, in what rule ${decision.rule} version ${decision.ruleVersion} derived at the pinned revision; correct the nesting or its groups' units` }])),
+      detail: `model: no ${decision.factKind} fact joins the units of group ${handleOr(id, at)} and the group it is drawn in, in what rule ${decision.rule} version ${decision.ruleVersion} derived at the pinned revision; correct the nesting or its groups' units` }])),
   ];
 }
