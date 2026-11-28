@@ -11,7 +11,8 @@
 // result and the per-call memo; the four screen fragments that rewrite moved keep their ids. Run 3 (at fbaec8e2c,
 // finding-names-mutation-run3-2026-11-29.json) killed 49 of 60. Six of the survivors are killed by site cases added after it (units,
 // witnesses, containments, the why section, a v4 diagram, a route step); five are recorded equivalent, each a line no value but a
-// handle reaches because the schema refuses any other first. Run 4 records the result.
+// handle reaches because the schema refuses any other first. Run 4 (at ce4c6de8e, finding-names-mutation-run4-2026-11-29.json) killed 55 of
+// 55, with those five equivalents.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
