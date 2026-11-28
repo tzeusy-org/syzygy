@@ -130,9 +130,13 @@ describe('walk advice over a draft (version 2.51)', () => {
 describe('walk advice called directly, with no finding to skip a walk by (review R35, note 4)', () => {
   const NONE = { rules: RULES, examined: 0, advisories: [] };
   it('skips a walk whose figure is of no graph kind, missing, or whose walk is malformed, and counts it nowhere', () => {
+    // A figure of no graph kind whose nodes carry the steps' labels: read as a graph, every step would be read and step 2 advised.
     const sequence = ROUTING();
-    sequence['diagrams'][0]['kind'] = 'sequence';
+    sequence['diagrams'][0] = { id: 'routing', kind: 'sequence', home: { kind: 'section', target: 's1' },
+      nodes: [{ id: 'client', label: 'Client' }, { id: 'router', label: 'Request router' }, { id: 'handler', label: 'Handler' }] };
     expect(walkAdvice(sequence, [], {}, NO_SCREEN)).toEqual(NONE);
+    sequence['diagrams'][0]['kind'] = 'flow';
+    expect(walkAdvice(sequence, [], {}, NO_SCREEN)).toEqual({ rules: RULES, examined: 3, advisories: [ROUTER_ADVISORY] });
     const missing = ROUTING();
     missing['sections'][0]['walk']['figure'] = 'elsewhere';
     expect(walkAdvice(missing, [], {}, NO_SCREEN)).toEqual(NONE);
