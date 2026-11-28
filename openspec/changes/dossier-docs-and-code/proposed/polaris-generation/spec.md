@@ -2112,25 +2112,25 @@ warrants:
 
 #### Scenario: Documented paths and identifiers resolved against the tree
 
-- **WHEN** under declared-source policy 2.0.0, for a run whose statement lists project-documentation and code-content, a render's pinned tree holds `README.md` whose first line names the code spans `src/app.py` and `src/gone.py` and links `docs/guide.md`, and whose second line names `runApp()` and `missingThing`; `docs/guide.md` linking `../README.md` and naming `lib/`, `Node.js` and `dist/out.js` and, inside a fence, `src/fenced.py`; `src/app.py` defining `runApp` on its first line; `src/util.ts`, which never writes `missingThing`; and `pyproject.toml`, which does
-- **THEN** the member lists nine rows in order: `src/app.py` resolves to that file, `src/gone.py` is document-only, the link resolves to `docs/guide.md`, `runApp()` resolves to `src/app.py` line 1 searched in the code text, `missingThing` is document-only, `../README.md` resolves to `README.md`, `lib/` is document-only, `Node.js` is Unknown `ambiguous-form` and `dist/out.js` is Unknown `build-output-path`
-- **AND** the counts are 4 resolves, 3 document-only and 2 Unknown, 2 code files were searched, and no row holds `src/fenced.py`
+- **WHEN** under declared-source policy 2.0.0, for a run whose statement lists project-documentation and code-content, a render's pinned tree holds `README.md` whose first line names the code spans src/app.py and src/gone.py and links docs/guide.md, and whose second line names `runApp()` and `missingThing`; docs/guide.md linking ../README.md and naming `lib/`, `Node.js` and `dist/out.js` and, inside a fence, src/fenced.py; src/app.py defining `runApp` on its first line; `src/util.ts`, which never writes `missingThing`; and `pyproject.toml`, which does
+- **THEN** the member lists nine rows in order: src/app.py resolves to that file, src/gone.py is document-only, the link resolves to docs/guide.md, `runApp()` resolves to src/app.py line 1 searched in the code text, `missingThing` is document-only, ../README.md resolves to `README.md`, `lib/` is document-only, `Node.js` is Unknown `ambiguous-form` and `dist/out.js` is Unknown `build-output-path`
+- **AND** the counts are 4 resolves, 3 document-only and 2 Unknown, 2 code files were searched, and no row holds src/fenced.py
 
 #### Scenario: An identifier absent while a code file is unread stays Unknown
 
-- **WHEN** the same tree also holds `src/broken.py`, whose body ends inside a triple-quoted string, and a Go file under a directory a secret detector matches
+- **WHEN** the same tree also holds src/broken.py, whose body ends inside a triple-quoted string, and a Go file under a directory a secret detector matches
 - **THEN** `runApp()` still resolves, `missingThing` is Unknown `code-not-fully-read`, never document-only, and `code` counts 4 candidates, 1 left out for its secret path, 2 read and 1 Unknown, listed as `unparsed` with `unterminated`
 - **AND** the member names no part of the secret-matching path
 
 #### Scenario: Tails, directories, submodules and climbs
 
-- **WHEN** `docs/a/guide.md` names `server.c`, `missing.c`, `src/`, `src/x.c/`, `sub/lib/y.c`, links `../../../x.md`, names `../b/`, `b/n.txt` and `a/`, and links `b/n.txt`, in a tree holding `src/x.c`, `docs/b/n.txt`, `cmd/server.c` and a submodule `sub`
-- **THEN** `server.c` resolves to `cmd/server.c`, `missing.c` is document-only, `src/` resolves to the directory `src`, `src/x.c/` is document-only, `sub/lib/y.c` is Unknown `submodule`, the climbing link is Unknown `outside-tree`, `../b/` resolves to `docs/b`, the span `b/n.txt` resolves to `docs/b/n.txt`, `a/` resolves to `docs/a`, and the link `b/n.txt` is document-only
+- **WHEN** docs/a/guide.md names `server.c`, `missing.c`, `src/`, `src/x.c/`, `sub/lib/y.c`, links ../../../x.md, names `../b/`, b/n.txt and `a/`, and links b/n.txt, in a tree holding `src/x.c`, docs/b/n.txt, `cmd/server.c` and a submodule `sub`
+- **THEN** `server.c` resolves to `cmd/server.c`, `missing.c` is document-only, `src/` resolves to the directory `src`, `src/x.c/` is document-only, `sub/lib/y.c` is Unknown `submodule`, the climbing link is Unknown `outside-tree`, `../b/` resolves to `docs/b`, the span b/n.txt resolves to docs/b/n.txt, `a/` resolves to `docs/a`, and the link b/n.txt is document-only
 
 #### Scenario: Symbolic links, submodule ancestors, secret-only directories and names in comments or strings
 
-- **WHEN** `README.md` names `docs/`, `docs/guide.md`, links `docs/guide.md`, and names `deps/`, `libfoo/`, `libfoo/x.c`, `vault/` and `vault/notes.md`, in a tree where `docs` is a symbolic link, `deps/libfoo` a submodule and `vault` holds only a path a secret detector matches
-- **THEN** the three `docs` rows are Unknown `symbolic-link`, `deps/` resolves to the directory `deps`, `libfoo/` and `libfoo/x.c` are Unknown `submodule`, `vault/notes.md` is document-only, and `vault/` is left out and counted in `valuesLeftOut`, never document-only, with no part of the secret-matching path named
+- **WHEN** `README.md` names `docs/`, docs/guide.md, links docs/guide.md, and names `deps/`, `libfoo/`, `libfoo/x.c`, `vault/` and vault/notes.md, in a tree where `docs` is a symbolic link, `deps/libfoo` a submodule and `vault` holds only a path a secret detector matches
+- **THEN** the three `docs` rows are Unknown `symbolic-link`, `deps/` resolves to the directory `deps`, `libfoo/` and `libfoo/x.c` are Unknown `submodule`, vault/notes.md is document-only, and `vault/` is left out and counted in `valuesLeftOut`, never document-only, with no part of the secret-matching path named
 - **AND** where a lexed code file writes a documented name only in a string or a comment, the row resolves with `searched` `comment-or-string`, and a name its code text holds resolves with `searched` `code-text`
 
 #### Scenario: Documents left out, set apart, Unknown or withheld
@@ -2141,13 +2141,13 @@ warrants:
 
 #### Scenario: Long lines quoted by an exact excerpt
 
-- **WHEN** a code span `a/b.md` opens at column 202 of a 310-character line
+- **WHEN** a code span a/b.md opens at column 202 of a 310-character line
 - **THEN** its quote is the line's last 256 code units, `quoteExcerpt` is true, and the page shows the quote followed by `(an exact excerpt of the line)`
 
 #### Scenario: Docs-and-code page rendered
 
-- **WHEN** a render holds the derived structure and a member with rows `src/app.py` resolving, `src/gone.py` document-only, `runApp()` resolving and `Node.js` Unknown `ambiguous-form`, each quoted `Use <value> <here>`, and one Unknown document docs/open.md (`unparsed`, `unclosed-fence`)
-- **THEN** `reference/docs-and-code.html` holds the `Rows by class` table with 2, 1 and 1, the per-document row for `README.md`, `src/gone.py` under `Document only` with its quote shown with `&lt;here&gt;`, `Document only.`, `Derived by Syzygy` and its evidence, `Node.js` under `Unknown` with `Not established.` and `data-unknown-reason="mapping-coverage-absent"`, and the Unknown document opened by `Not established.`
+- **WHEN** a render holds the derived structure and a member with rows src/app.py resolving, src/gone.py document-only, `runApp()` resolving and `Node.js` Unknown `ambiguous-form`, each quoted `Use <value> <here>`, and one Unknown document docs/open.md (`unparsed`, `unclosed-fence`)
+- **THEN** `reference/docs-and-code.html` holds the `Rows by class` table with 2, 1 and 1, the per-document row for `README.md`, src/gone.py under `Document only` with its quote shown with `&lt;here&gt;`, `Document only.`, `Derived by Syzygy` and its evidence, `Node.js` under `Unknown` with `Not established.` and `data-unknown-reason="mapping-coverage-absent"`, and the Unknown document opened by `Not established.`
 - **AND** `contents.html` links the page after the rough-edges page where that is published, `machine.json`'s `docsAndCode` holds its page and the member's rows, and the page holds no script and no link to a documented path
 
 #### Scenario: No docs-and-code page without the member
