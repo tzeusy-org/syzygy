@@ -2,7 +2,7 @@
 
 ## Predecessor
 
-[Observed] REQ-polaris-generation-034 v2.44, the rough-edge markers (syzygy-5dhm.46, A-338), at `aca3476d7f9fab2eedc7d4a1b0831dd38ff695c0` (tag `polaris-dossier-rough-edges-v2.44`), `openspec/changes/dossier-rough-edges/proposed/polaris-generation/spec.md`, SHA-256 `3c03ebff0f05c791fed0ddcd3a6cec5d259db64a8fcb7eb47b3b661c4e5661c1`, 305 scenario headings. It is the effective REQ-034 on `origin/main` when this was built. Versions 2.45, 2.46 and 2.47 are held by other open changes (syzygy-5dhm.26, syzygy-05 and syzygy-5dhm.47); where one lands first on this chain, this change is rebuilt over it by its script, its additions unchanged.
+[Observed] REQ-polaris-generation-034 v2.44, the rough-edge markers (syzygy-5dhm.46, A-338), at `aca3476d7f9fab2eedc7d4a1b0831dd38ff695c0` (tag `polaris-dossier-rough-edges-v2.44`), `openspec/changes/dossier-rough-edges/proposed/polaris-generation/spec.md`, SHA-256 `3c03ebff0f05c791fed0ddcd3a6cec5d259db64a8fcb7eb47b3b661c4e5661c1`, 305 scenario headings. It is the effective REQ-034 on `origin/main` when this was built. Version 2.46, the URL lean run (A-340), landed first and amends REQ-polaris-generation-025 and 047 only, so REQ-034 v2.44 stays this change's predecessor; versions 2.45 and 2.47 are held by other open changes (syzygy-5dhm.26 and syzygy-5dhm.47), and where one lands first on this chain, this change is rebuilt over it by its script, its additions unchanged.
 
 ## Amended in place
 

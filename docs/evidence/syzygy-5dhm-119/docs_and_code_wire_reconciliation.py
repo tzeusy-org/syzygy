@@ -118,9 +118,11 @@ s = after(s, '    if rough_binding(root)[0] is not None:\n        n_scen += roug
 s = after(s, '    if rough_amendment is not None:\n        files += tracked(root, ROUGH_HOME)\n',
           '    doccode_amendment, _records, _subjects = doccode_binding(root)\n'
           '    if doccode_amendment is not None:\n        files += tracked(root, DOCCODE_HOME)\n')
-s = s.replace('                        (rough_amendment, ROUGH_UNION)):',
-              '                        (rough_amendment, ROUGH_UNION),\n                        (doccode_amendment, DOCCODE_UNION)):', 1)
-assert '(doccode_amendment, DOCCODE_UNION)):' in s
+# A later version may already follow the rough-edge markers in this list (main's 2.46 URL lean run did), so insert directly after them.
+assert s.count('                        (rough_amendment, ROUGH_UNION)') == 1
+s = s.replace('                        (rough_amendment, ROUGH_UNION)',
+              '                        (rough_amendment, ROUGH_UNION),\n                        (doccode_amendment, DOCCODE_UNION)', 1)
+assert '(doccode_amendment, DOCCODE_UNION)' in s
 
 # 8. The status and index routes.
 routes = block(s, '    rough_amendment, _records, _subjects = rough_binding(root)\n    rough_fields = ',
@@ -147,6 +149,15 @@ s = after(s, '    rough_subjects = ROUGH_BOUND_PARTS if rough_rows_now and not r
           '    doccode_subjects = DOCCODE_BOUND_PARTS if doccode_rows_now and not doccode_retired else 0\n')
 s = after(s, ' - migbound_records - rough_records', ' - doccode_records')
 s = after(s, ' - migbound_subjects - rough_subjects', ' - doccode_subjects')
+
+# 9b. Main's 2.46 URL lean run census block sits before the rough-edge markers' too; this version landed after it, so its sentence states
+# the current total and its block must peel first: move it above the lean run's.
+lean_start = s.index("        if leanrun_binding(root)[0] is not None:\n            # The URL lean run's own sentence states the current total")
+doc_start = s.index("        if doccode_binding(root)[0] is not None:\n            # The docs and code' own sentence states the current total")
+doc_end = s.index("        if rough_binding(root)[0] is not None:\n            # The rough-edge markers' own sentence states the current total")
+assert lean_start < doc_start < doc_end
+doc_block = s[doc_start:doc_end]
+s = s[:lean_start] + doc_block + s[lean_start:doc_start] + s[doc_end:]
 
 # 12. The earlier-history projection: this version stands on v2.44, so its routes leave with it.
 s = after(s, 'ROUGH_STATUS_PREFIX, ROUGH_COUNT_SCOPE', ', DOCCODE_STATUS_PREFIX, DOCCODE_COUNT_SCOPE')
@@ -187,33 +198,60 @@ c = after(c, '                        (adoption.ROUGH_SPEC, rough_amendment(root
           '                        (adoption.DOCCODE_SPEC, doccode_amendment(root))')
 c = after(c, '    rough_amendment(root)\n', '    doccode_amendment(root)\n')
 c = after(c, '*adoption.ROUGH_SUBJECTS,', ' *adoption.DOCCODE_SUBJECTS,')
-# Every not-in-force guard that refuses a rough-edge markers count also refuses this version's.
-n = c.count('adoption.ROUGH_COUNT_SCOPE))')
-assert n == 6, n
-c = c.replace('adoption.ROUGH_COUNT_SCOPE))', 'adoption.ROUGH_COUNT_SCOPE, adoption.DOCCODE_COUNT_SCOPE))')
-old = '            if any(line.startswith(adoption.ROUGH_COUNT_SCOPE) for line in lines):\n'
+# Every not-in-force guard that refuses a URL lean run count (main's 2.46, the last stage before this one) also refuses this version's.
+n = c.count('adoption.LEANRUN_COUNT_SCOPE))')
+assert n == 7, n
+c = c.replace('adoption.LEANRUN_COUNT_SCOPE))', 'adoption.LEANRUN_COUNT_SCOPE, adoption.DOCCODE_COUNT_SCOPE))')
+old = '            if any(line.startswith(adoption.LEANRUN_COUNT_SCOPE) for line in lines):\n'
 assert c.count(old) == 1
-c = c.replace(old, '            if any(line.startswith((adoption.ROUGH_COUNT_SCOPE, adoption.DOCCODE_COUNT_SCOPE)) for line in lines):\n', 1)
-old_ret = ('            raise ScenarioCountError(f"{path} rough-edge markers count differs from its two source members")\n'
-           '        return int(rough[1]), int(rough[2])\n')
-assert c.count(old_ret) == 1
-new_ret = ('            raise ScenarioCountError(f"{path} rough-edge markers count differs from its two source members")\n'
-           '        rough_figure = int(rough[1]), int(rough[2])\n'
-           '        if doccode_amendment(root) is None:\n'
-           '            if any(line.startswith(adoption.DOCCODE_COUNT_SCOPE) for line in lines):\n'
-           '                raise ScenarioCountError(f"{path} declares a docs and code count while it is not in force")\n'
-           '            return rough_figure\n'
-           '        doccodes = [line for line in lines if line.startswith(adoption.DOCCODE_COUNT_SCOPE)]\n'
-           '        doccode = CHOICE_COUNT.fullmatch(doccodes[0].removeprefix(adoption.DOCCODE_COUNT_PREFIX)) if len(doccodes) == 1 else None\n'
-           '        if doccode is None:\n'
-           '            raise ScenarioCountError(f"{path} needs one complete docs and code count")\n'
-           '        added = adoption.doccode_delta(root, findings)\n'
-           '        if findings or (int(doccode[1]), int(doccode[2])) != (rough_figure[0], rough_figure[1] + added):\n'
-           '            raise ScenarioCountError(f"{path} docs and code count differs from its two source members")\n'
-           '        return int(doccode[1]), int(doccode[2])\n')
-c = c.replace(old_ret, new_ret, 1)
+c = c.replace(old, '            if any(line.startswith((adoption.LEANRUN_COUNT_SCOPE, adoption.DOCCODE_COUNT_SCOPE)) for line in lines):\n', 1)
+# The URL lean run (REQ-025 and 047) and this version (REQ-034) are independent; this version's count stands on the lean run's where
+# it is in force and on the rough-edge markers' otherwise.
+old_tail = """        if leanrun_amendment(root) is None:
+            if any(line.startswith((adoption.LEANRUN_COUNT_SCOPE, adoption.DOCCODE_COUNT_SCOPE)) for line in lines):
+                raise ScenarioCountError(f"{path} declares a URL lean run count while it is not in force")
+            return rough_figure
+        leanrun_lines = [line for line in lines if line.startswith(adoption.LEANRUN_COUNT_SCOPE)]
+        leanrun = (CHOICE_COUNT.fullmatch(leanrun_lines[0].removeprefix(adoption.LEANRUN_COUNT_PREFIX))
+                   if len(leanrun_lines) == 1 else None)
+        if leanrun is None:
+            raise ScenarioCountError(f"{path} needs one complete URL lean run count")
+        added = adoption.leanrun_delta(root, findings)
+        if findings or (int(leanrun[1]), int(leanrun[2])) != (rough_figure[0], rough_figure[1] + added):
+            raise ScenarioCountError(f"{path} URL lean run count differs from its two source members")
+        return int(leanrun[1]), int(leanrun[2])
+"""
+assert c.count(old_tail) == 1, 'lean run tail'
+new_tail = """        if leanrun_amendment(root) is None:
+            if any(line.startswith(adoption.LEANRUN_COUNT_SCOPE) for line in lines):
+                raise ScenarioCountError(f"{path} declares a URL lean run count while it is not in force")
+            base_figure = rough_figure
+        else:
+            leanrun_lines = [line for line in lines if line.startswith(adoption.LEANRUN_COUNT_SCOPE)]
+            leanrun = (CHOICE_COUNT.fullmatch(leanrun_lines[0].removeprefix(adoption.LEANRUN_COUNT_PREFIX))
+                       if len(leanrun_lines) == 1 else None)
+            if leanrun is None:
+                raise ScenarioCountError(f"{path} needs one complete URL lean run count")
+            added = adoption.leanrun_delta(root, findings)
+            if findings or (int(leanrun[1]), int(leanrun[2])) != (rough_figure[0], rough_figure[1] + added):
+                raise ScenarioCountError(f"{path} URL lean run count differs from its two source members")
+            base_figure = int(leanrun[1]), int(leanrun[2])
+        if doccode_amendment(root) is None:
+            if any(line.startswith(adoption.DOCCODE_COUNT_SCOPE) for line in lines):
+                raise ScenarioCountError(f"{path} declares a docs and code count while it is not in force")
+            return base_figure
+        doccodes = [line for line in lines if line.startswith(adoption.DOCCODE_COUNT_SCOPE)]
+        doccode = CHOICE_COUNT.fullmatch(doccodes[0].removeprefix(adoption.DOCCODE_COUNT_PREFIX)) if len(doccodes) == 1 else None
+        if doccode is None:
+            raise ScenarioCountError(f"{path} needs one complete docs and code count")
+        added = adoption.doccode_delta(root, findings)
+        if findings or (int(doccode[1]), int(doccode[2])) != (base_figure[0], base_figure[1] + added):
+            raise ScenarioCountError(f"{path} docs and code count differs from its two source members")
+        return int(doccode[1]), int(doccode[2])
+"""
+c = c.replace(old_tail, new_tail, 1)
 for needle in ('    doccode_amendment(root)\n', '(adoption.DOCCODE_SPEC, doccode_amendment(root))', '*adoption.DOCCODE_SUBJECTS',
-               '(adoption.ROUGH_COUNT_SCOPE, adoption.DOCCODE_COUNT_SCOPE)) for line in lines', 'return int(doccode[1]), int(doccode[2])'):
+               'adoption.LEANRUN_COUNT_SCOPE, adoption.DOCCODE_COUNT_SCOPE))', 'return int(doccode[1]), int(doccode[2])'):
     assert needle in c, needle
 count.write_text(c, encoding='utf-8')
 print('wired')

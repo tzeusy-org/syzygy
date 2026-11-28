@@ -22,9 +22,9 @@ CHECK_RUN = ['python3', CHECK, '--check']
 COUNT_RUN = ['python3', COUNT]
 
 MUTANTS = [
-    ('status-count-off', STATUS, 'Polaris has 39 requirements and 660 scenarios.', 'Polaris has 39 requirements and 659 scenarios.',
+    ('status-count-off', STATUS, 'Polaris has 39 requirements and 634 scenarios.', 'Polaris has 39 requirements and 633 scenarios.',
      CHECK_RUN, 'does not declare the exact docs and code census'),
-    ('status-count-off-counter', STATUS, 'Polaris has 39 requirements and 660 scenarios.', 'Polaris has 39 requirements and 659 scenarios.',
+    ('status-count-off-counter', STATUS, 'Polaris has 39 requirements and 634 scenarios.', 'Polaris has 39 requirements and 633 scenarios.',
      COUNT_RUN, 'docs and code count differs'),
     ('status-route-old-id', STATUS, 'is agent-adopted in A-342.', 'is agent-adopted in A-338.',
      CHECK_RUN, 'does not route docs and code v2.48'),
