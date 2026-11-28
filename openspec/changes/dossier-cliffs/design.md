@@ -8,7 +8,11 @@ Configuration is read by two line grammars, never a parser: an ini form (`.conf`
 
 ## Reads
 
-[Observed] Every candidate passes the render's screen in the rough-edge markers' disposition order (secret path, vendored or generated path, class gate, read refusal, oversize, secret-detector match, active content), so withheld configuration is Unknown with its reason and its value never reaches the page. Reads are batched 64 paths to a reader call; a refused call is re-read one path at a time, so one refusal touches only its own path. On Syzygy's own tree this read 1,000 candidates in 16 calls rather than 1,000, and the two members were byte-identical (`docs/evidence/syzygy-5dhm-116/`).
+[Observed] Every candidate passes the render's screen in the rough-edge markers' disposition order (secret path, vendored or generated path, class gate, read refusal, oversize, secret-detector match, active content), so withheld configuration is Unknown with its reason and its value never reaches the page. Reads are batched 64 paths to a reader call; a refused call is re-read one path at a time, so one refusal touches only its own path. On Syzygy's own tree at `7cd5d847` this read its 1,000 source files in 16 reader calls rather than 1,000 (16.5 s against 28.7 s on this host), and the two members were byte-identical (`docs/evidence/syzygy-5dhm-116/cliffs-before-after-2026-11-28.json`). The disposition order here, in full: secret path, vendored or generated path, uncitable path, symbolic link, the path screen, the class gate, the read limit, then after the read a refusal, oversize, non-UTF-8 text, the body screen (secret detector, active content, redaction) and the grammar.
+
+## Mutation
+
+[Observed] Rule 6, `docs/evidence/syzygy-5dhm-116/cliffs_mutation.mjs` over the recognizer, the member, the page and the site: run 1 at `627aea0b` killed 61 of 77 (`cliffs-mutants-run1-2026-11-28.json`); fixtures were added for the survivors and nine mutants for the review repairs, and run 2 at `7cd5d847` killed 83 of 85 (`cliffs-mutants-2026-11-28.json`). The two survivors are equivalent: `non-limit-tries-next-form` (no line matches two definition forms of one language: the JavaScript forms open with `const`/`let`/`var` or with field modifiers, the C forms with `#` or an identifier) and `rows-unsorted` (candidates are sorted by path, read in that order and recognized in line order, so the sort finds them sorted).
 
 ## Limitations recorded at this version
 
