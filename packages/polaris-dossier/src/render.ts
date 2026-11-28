@@ -2,7 +2,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {
-  backtickSpans, excludedSourceId, spanTouchesWithheld, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
+  backtickSpans, COST_STATUS_ID, excludedSourceId, spanTouchesWithheld, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
   type EpistemicMarking, type EvidenceAnchor, type GenerationExclusionReason, type GenerationSource, type LocalBlock,
   type LocalBase, type LocalDerivedFact, type LocalDerivedStructure, type LocalDisclosureItem, type LocalDraftLayer, type LocalEdgeRelation, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment, type WithheldNote,
   type DossierDraft, type DraftBlock, type DraftDiagramHome, type DraftContainmentGroup, type DraftFigure, type DraftFigureElement, type DraftParagraph,
@@ -11,6 +11,7 @@ import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
 import { figurePlanFindings, withoutFigurePlan } from './figure-plan.js';
 import { levelFindings, viewLevelsAt, withoutLevels } from './view-level.js';
+import { codeMarkFindings, codeMarksAt, withoutCodeMarks } from './code-marks.js';
 import { walkFindings, walksAt, withoutWalks } from './walk.js';
 import { applyHeroFindings, relationDecisions } from './check-derive.js';
 import { applyContainmentFindings, groupsOf } from './containment.js';
@@ -39,6 +40,7 @@ import { designReviewOfRecord, latestPassedDraft, reviewOfRecord, type DesignRev
 import type { ReverifyRefusal } from './reverify.js';
 import { readRunRecord } from './run-record.js';
 import { NO_WORK_ITEM_REASON } from './run-record.js';
+import { costLine, sessionUsage } from './session-usage.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass, unconsentedText } from './class-gate.js';
 import { placementSubjectOf, screenLoaderOf, type DossierScreen, type ScreenExclusion } from './screen.js';
 import { readBriefRecord } from './run-dir.js';
@@ -191,7 +193,8 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const walked = doc;
   const walkFindingsNow = walkFindings(walked, {});
   // A v17 draft's view levels (version 2.50) likewise: checked again after every other finding, without the maps.
-  doc = withoutLevels(withoutWalks(doc));
+  // A v18 draft's code excerpts' highlights and notes (version 2.54) likewise.
+  doc = withoutCodeMarks(withoutLevels(withoutWalks(doc)));
 
   const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, now)(placementSubjectOf(subject));
   if (!screenLoad.ok) return refuse('screen', screenLoad.why);
@@ -213,6 +216,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   findings.push(...planFindings);
   findings.push(...walkFindingsNow);
   findings.push(...levelFindings(walked, findings, {}));
+  findings.push(...codeMarkFindings(walked, findings));
   if (findings.length > 0) {
     return refuse('rederive', `draft revision ${draftRev.revision} passed its check, but checking it again at this render from the objects read now finds ${findings.length} finding(s); the stored result is not trusted, so nothing is rendered`,
       { reasons: findings.map((finding) => `${finding.kind} at ${finding.at}`) });
@@ -268,7 +272,9 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const walks = walksAt(walked, bases.resolved);
   // Version 2.50: a v17 draft's view levels, for its figures' two attributes and its zoom links.
   const viewLevels = viewLevelsAt(walked);
-  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, roughEdges, docsAndCode, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }), ...(model === undefined ? {} : { model }), ...(walks.size === 0 ? {} : { walks }), ...(viewLevels.size === 0 ? {} : { viewLevels }) } };
+  // Version 2.54: a v18 draft's code excerpts, numbered, with their highlights and notes.
+  const codeMarks = codeMarksAt(walked);
+  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, testNames, roughEdges, docsAndCode, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }), ...(model === undefined ? {} : { model }), ...(walks.size === 0 ? {} : { walks }), ...(viewLevels.size === 0 ? {} : { viewLevels }), ...(codeMarks.size === 0 ? {} : { codeMarks }) } };
 
   const renderer = deps.renderer;
   const draw = (local: LocalRenderInput): ReadonlyMap<string, string> | string => {
@@ -1145,6 +1151,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
       ? { id: 'review-status/fidelity', text: `Fidelity review: one counts, bound to packet ${review.packetSha256} rebuilt at this render; its verdict, ${review.verdict.readiness}, is the review session's.${fidelityContinuation!.continuing ? ' Its reviewer continued across revisions (see the review page).' : ''}`, label: 'Inferred' }
       : { id: 'review-status/fidelity', text: `Fidelity review: none counts (${review.why}).`, label: 'Unknown' },
     designStatusItem(design, run),
+    costStatusItem(run),
   ];
 
   const declaredHero = heroOf(doc);
@@ -1246,7 +1253,15 @@ export function designStatusItem(design: DesignReviewOfRecord | undefined, run: 
   return { id: 'review-status/design', text: `Rendered-design review: one counts, bound to packet ${design.packetSha256}, which Syzygy built at this render from these pages outside this region; its verdict, ${design.verdict.readiness}${design.verdict.blocking ? ' beside a blocking finding' : ''}, is the review session's. ${continuation.text} (Inferred, from ${continuation.basis}.)`, label: 'Inferred' };
 }
 
-const UNDERSTANDING_HEADINGS: Readonly<Record<(typeof UNDERSTANDING_ITEMS)[number], string>> = {
+/** The cost line, read at this render from the launched sessions' own transcripts (version 2.45, `session-usage.ts`). It lives in the
+ * review-status region, the only part of a page a later render may change without retiring the rendered-design review, since every render
+ * reads it anew; the renderer shows it on the review page alone. */
+export function costStatusItem(run: string): LocalDisclosureItem {
+  const line = costLine(sessionUsage(run));
+  return { id: COST_STATUS_ID, text: `${line.text.replace(/\.$/u, '')}, as read at this render.`, label: line.label };
+}
+
+const UNDERSTANDING_HEADINGS:Readonly<Record<(typeof UNDERSTANDING_ITEMS)[number], string>> = {
   purpose: 'Purpose', beneficiary: 'Beneficiary', proposition: 'Proposition', capabilities: 'Capabilities', components: 'Components and relationships',
   choices: 'Choices and alternatives', tradeOffs: 'Trade-offs', limits: 'Limits', terminology: 'Terminology', contradictions: 'Contradictory accounts', openQuestions: 'Open questions',
 };

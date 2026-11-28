@@ -657,7 +657,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 579,
+      "scenarios": 582,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1049,7 +1049,10 @@
             "A close record carries bounded step-derived measures",
             "Both close projections use the same bounded snapshot",
             "Missing or refused observations remain Unknown",
-            "Review rounds pair only within the observed kind and order"
+            "Review rounds pair only within the observed kind and order",
+            "A launched run's session usage is read from its transcripts",
+            "An unreadable session is Unknown, never zero",
+            "One cost line on the review page"
           ]
         },
         "REQ-polaris-generation-034": {

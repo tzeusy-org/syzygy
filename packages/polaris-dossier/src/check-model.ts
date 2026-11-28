@@ -27,6 +27,8 @@ export const CHECK_RECORD_FORMAT = 'polaris-dossier-check/1';
 export const STEP_LOG_FORMAT = 'polaris-dossier-step/1';
 export const DEFAULT_DRAFT = 'next.json';
 export const DRAFT_MAX_BYTES = 4 * 1024 * 1024;
+/** The most lines a code excerpt may name (REQ-polaris-generation-034, v1.3). */
+export const CODE_EXCERPT_MAX_LINES = 60;
 export const DRAFT_JSON_LIMITS = Object.freeze({ maxBytes: DRAFT_MAX_BYTES, maxNodes: 500_000, maxDepth: 16 });
 export const BRIEF_JSON_LIMITS = Object.freeze({ maxBytes: 262_144, maxNodes: 4096, maxDepth: 8 });
 
@@ -65,6 +67,8 @@ export type CheckFindingKind =
   | 'walk'
   // Version 2.50 (schema v17): a view's level and scope.
   | 'view-scope' | 'view-level' | 'view-scope-outside'
+  // Version 2.54 (schema v18): a code excerpt's highlights and notes.
+  | 'code-highlight' | 'code-note'
   // Version 2.10: the check record would be past the read bound, so its bounded form is written.
   | 'check-record-bound';
 

@@ -1,0 +1,499 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-27T16:20:22.691Z",
+  "commit": "710a7df88d01a82640d0cd516465da5081cfc7a9",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts": "d4a012917572a757f5fc9643f6010367ae72ca047d1cc9bb806ad1c31086df85",
+    "packages/polaris-dossier/src/close.ts": "cd1ec038ea31787cb0d235c7bb759e53144ac9e3e4538c11fd15f3362d7962b4",
+    "packages/polaris-dossier/src/render.ts": "8f9051b04fee7d30c1d2dfbd188a27e5a6840ac1296887dcd5c76a0dfcf2a98b",
+    "packages/polaris-dossier/src/session-usage.ts": "7e4c8edda8afdc390b1c15586b690185405f97c3273609dfa0ed439f23cc197c",
+    "packages/polaris-dossier/src/status.ts": "e6fc6a598825bb91022265a30c3ae803a2c710c0dcd282fc4392d445da28aeb9"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --testTimeout=120000 --reporter=json --outputFile=<scratch>/mutation-<id>.json; for a Python or JSON source, python3 <each listed command> (a non-zero exit is a failure)",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 900 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/session-usage.ts": [
+      "packages/polaris-dossier/src/session-usage.test.ts",
+      "packages/polaris-dossier/src/close-session-usage.test.ts"
+    ],
+    "packages/polaris-dossier/src/close.ts": [
+      "packages/polaris-dossier/src/close-session-usage.test.ts"
+    ],
+    "packages/polaris-dossier/src/status.ts": [
+      "packages/polaris-dossier/src/close-session-usage.test.ts",
+      "packages/polaris-dossier/src/status.test.ts"
+    ],
+    "packages/polaris-dossier/src/render.ts": [
+      "packages/polaris-dossier/src/close-session-usage.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts": [
+      "packages/polaris-dossier/src/close-session-usage.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts",
+      "exitCode": 0,
+      "tests": 4,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/close.ts",
+      "exitCode": 0,
+      "tests": 4,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.ts",
+      "exitCode": 0,
+      "tests": 4,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "exitCode": 0,
+      "tests": 12,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/status.ts",
+      "exitCode": 0,
+      "tests": 52,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "operator-started-read",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "if (marker === 'absent') return { ...head, label: 'Unknown', why: 'operator-started' };",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) is Unknown as a whole for a run the operator started, even beside a home that holds transcripts",
+        "packages/polaris-dossier/src/close-session-usage.test.ts > close session usage and the cost line (REQ-polaris-generation-033 v2.39) records Unknown usage for the operator-started fixture run, and status prints its cost line from the record",
+        "packages/polaris-dossier/src/close-session-usage.test.ts > close session usage and the cost line (REQ-polaris-generation-033 v2.39) prints the cost line in the review page's review-status region and on no other page",
+        "packages/polaris-dossier/src/close-session-usage.test.ts > close session usage and the cost line (REQ-polaris-generation-033 v2.39) records a launched run's literal per-session figures and run total at close, and status reads them back"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "marker-unreadable-read",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "if (marker === 'unreadable') return { ...head, label: 'Unknown', why: 'launched-marker-unreadable' };",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) is Unknown as a whole for a run the operator started, even beside a home that holds transcripts"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "link-skipped",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "        return 'link-or-special-entry';\n      }\n    }\n    return null;",
+      "new": "        continue;\n      }\n    }\n    return null;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) gives each unreadable session its own fixed reason"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "depth-unbounded",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "if (depth >= TRANSCRIPT_DEPTH_MAX) return 'too-many-transcripts';",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) gives each unreadable session its own fixed reason"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "files-unbounded",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "if (files.length >= TRANSCRIPT_FILES_MAX) return 'too-many-transcripts';",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) gives each unreadable session its own fixed reason"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "no-transcript-zero",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "if (files.length === 0) return unknown('no-transcript');",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) gives each unreadable session its own fixed reason"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "home-absent-zero",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "try { homeStat = fs.lstatSync(home); } catch { return unknown('no-agent-home'); }",
+      "new": "try { homeStat = fs.lstatSync(home); } catch { return unknown('no-transcript'); }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) makes a session without a home Unknown, and with it every run total, naming the session in the cost line"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "unterminated-strict",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "      if (index === lines.length) continue;\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) reads each launched session's literal figures, a run total and the cost line, copying no text",
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) keeps a token kind the transcript does not give Unknown, and the totals that rest on it"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "malformed-tolerated",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "      if (index === lines.length) continue;\n      return 'transcript-malformed-line';",
+      "new": "      continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) gives each unreadable session its own fixed reason"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "non-object-tolerated",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "    if (!isRecord(entry)) return 'transcript-malformed-line';",
+      "new": "    if (!isRecord(entry)) continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) gives each unreadable session its own fixed reason"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "synthetic-counted",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "    if (message['model'] === SYNTHETIC_MODEL) continue;\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) reads each launched session's literal figures, a run total and the cost line, copying no text",
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) makes a session without a home Unknown, and with it every run total, naming the session in the cost line",
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) gives each unreadable session its own fixed reason",
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) keeps a token kind the transcript does not give Unknown, and the totals that rest on it"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "identity-optional",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "    if (typeof id !== 'string' || id === '') return 'response-without-identity';",
+      "new": "    if (typeof id !== 'string') return 'response-without-identity';",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) gives each unreadable session its own fixed reason"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "usage-optional",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "    if (!isRecord(usage)) return 'response-without-usage';",
+      "new": "    if (!isRecord(usage)) continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) gives each unreadable session its own fixed reason"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "per-line-sum",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "counts[field] = Math.max(counts[field] ?? 0, value);",
+      "new": "counts[field] = (counts[field] ?? 0) + value;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) reads each launched session's literal figures, a run total and the cost line, copying no text",
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) makes a session without a home Unknown, and with it every run total, naming the session in the cost line",
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) gives each unreadable session its own fixed reason",
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) keeps a token kind the transcript does not give Unknown, and the totals that rest on it"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "response-per-line",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "    tally.responses.set(id, counts);",
+      "new": "    tally.responses.set(`${id}/${tally.responses.size}`, counts);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) reads each launched session's literal figures, a run total and the cost line, copying no text",
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) makes a session without a home Unknown, and with it every run total, naming the session in the cost line",
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) gives each unreadable session its own fixed reason",
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) keeps a token kind the transcript does not give Unknown, and the totals that rest on it"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "kind-missing-zero",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "if (!nonnegative(value)) { tally.unreadable.add(field); continue; }",
+      "new": "if (!nonnegative(value)) continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) keeps a token kind the transcript does not give Unknown, and the totals that rest on it"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "session-unknown-ignored",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "    if (!all) return { state: 'unknown', why: 'session-unknown' };\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) makes a session without a home Unknown, and with it every run total, naming the session in the cost line"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "total-kind-unknown-ignored",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "    return counts.find((count) => count.state === 'unknown') ?? sum(counts.map((count) => (count as { value: number }).value));",
+      "new": "    return sum(counts.map((count) => (count.state === 'counted' ? count.value : 0)));",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) keeps a token kind the transcript does not give Unknown, and the totals that rest on it"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "span-summed",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "ms: Math.max(...bounds.map((b) => b!.last)) - Math.min(...bounds.map((b) => b!.first))",
+      "new": "ms: bounds.reduce((n, b) => n + b!.last - b!.first, 0)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) reads each launched session's literal figures, a run total and the cost line, copying no text",
+        "packages/polaris-dossier/src/close-session-usage.test.ts > close session usage and the cost line (REQ-polaris-generation-033 v2.39) records a launched run's literal per-session figures and run total at close, and status reads them back",
+        "packages/polaris-dossier/src/close-session-usage.test.ts > close session usage and the cost line (REQ-polaris-generation-033 v2.39) says a record closed before version 2.39 carries no session usage, and a malformed one is Unknown"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "role-span-zero",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "spanMs: bounds === null ? { state: 'unknown', why: 'no-instant' } : { state: 'measured', ms: bounds.last - bounds.first },",
+      "new": "spanMs: { state: 'measured', ms: 0 },",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) reads each launched session's literal figures, a run total and the cost line, copying no text",
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) makes a session without a home Unknown, and with it every run total, naming the session in the cost line",
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) gives each unreadable session its own fixed reason"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "cost-label-unknown",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "return { label: 'Inferred', text: `Cost: ${parts.join(', ')}; ${COST_LINE_BASIS}.` };",
+      "new": "return { label: 'Unknown', text: `Cost: ${parts.join(', ')}; ${COST_LINE_BASIS}.` };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) reads each launched session's literal figures, a run total and the cost line, copying no text"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "cost-unknown-names-dropped",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "text: `Cost: run total Unknown (${unknown.join('; ')})",
+      "new": "text: `Cost: run total Unknown ()",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) makes a session without a home Unknown, and with it every run total, naming the session in the cost line",
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) keeps a token kind the transcript does not give Unknown, and the totals that rest on it"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "stored-extra-key-admitted",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "(value['label'] === 'Inferred' && Object.keys(value).length === 6 && nonnegative(value['transcripts'])",
+      "new": "(value['label'] === 'Inferred' && nonnegative(value['transcripts'])",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) refuses a stored value in any form close does not write"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "stored-role-order-free",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "SESSION_ROLES.every((role, index) => isRoleUsage(sessions[index], role))",
+      "new": "SESSION_ROLES.every((_role, index) => isRoleUsage(sessions[index], (sessions[index] as { role: SessionRole }).role))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 12,
+      "failedTests": [
+        "packages/polaris-dossier/src/session-usage.test.ts > session usage (REQ-polaris-generation-033 v2.39) refuses a stored value in any form close does not write"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "close-member-dropped",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "    sessionUsage: usageRead,\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 4,
+      "failedTests": [
+        "packages/polaris-dossier/src/close-session-usage.test.ts > close session usage and the cost line (REQ-polaris-generation-033 v2.39) records Unknown usage for the operator-started fixture run, and status prints its cost line from the record",
+        "packages/polaris-dossier/src/close-session-usage.test.ts > close session usage and the cost line (REQ-polaris-generation-033 v2.39) records a launched run's literal per-session figures and run total at close, and status reads them back"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "status-closed-reads-now",
+      "file": "packages/polaris-dossier/src/status.ts",
+      "old": "cost: steps.closed ? closedCost(path.join(run, RUN_LAYOUT.record))",
+      "new": "cost: false ? closedCost(path.join(run, RUN_LAYOUT.record))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 52,
+      "failedTests": [
+        "packages/polaris-dossier/src/close-session-usage.test.ts > close session usage and the cost line (REQ-polaris-generation-033 v2.39) records Unknown usage for the operator-started fixture run, and status prints its cost line from the record",
+        "packages/polaris-dossier/src/close-session-usage.test.ts > close session usage and the cost line (REQ-polaris-generation-033 v2.39) records a launched run's literal per-session figures and run total at close, and status reads them back",
+        "packages/polaris-dossier/src/close-session-usage.test.ts > close session usage and the cost line (REQ-polaris-generation-033 v2.39) says a record closed before version 2.39 carries no session usage, and a malformed one is Unknown"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "status-older-record-unknown",
+      "file": "packages/polaris-dossier/src/status.ts",
+      "old": "  if (!Object.hasOwn(record, 'sessionUsage')) return COST_NOT_IN_RECORD;\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 52,
+      "failedTests": [
+        "packages/polaris-dossier/src/close-session-usage.test.ts > close session usage and the cost line (REQ-polaris-generation-033 v2.39) says a record closed before version 2.39 carries no session usage, and a malformed one is Unknown"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "status-unvalidated",
+      "file": "packages/polaris-dossier/src/status.ts",
+      "old": "  return isSessionUsage(record['sessionUsage']) ? costLine(record['sessionUsage']).text : COST_RECORD_UNREADABLE;",
+      "new": "  return costLine(record['sessionUsage'] as never).text;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 52,
+      "failedTests": [
+        "packages/polaris-dossier/src/close-session-usage.test.ts > close session usage and the cost line (REQ-polaris-generation-033 v2.39) says a record closed before version 2.39 carries no session usage, and a malformed one is Unknown"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "render-item-dropped",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "    costStatusItem(run),\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 4,
+      "failedTests": [
+        "packages/polaris-dossier/src/close-session-usage.test.ts > close session usage and the cost line (REQ-polaris-generation-033 v2.39) prints the cost line in the review page's review-status region and on no other page"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "region-every-page",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts",
+      "old": "items.filter(item => showDigests || item.id !== COST_STATUS_ID)",
+      "new": "items",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 4,
+      "failedTests": [
+        "packages/polaris-dossier/src/close-session-usage.test.ts > close session usage and the cost line (REQ-polaris-generation-033 v2.39) prints the cost line in the review page's review-status region and on no other page"
+      ],
+      "seconds": 3
+    }
+  ],
+  "equivalent": [
+    {
+      "id": "read-follows-link",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "readBoundedFile(file, TRANSCRIPT_BYTES_MAX, { followLink: false })",
+      "why": "the walk refuses a link entry (link-skipped above) before any read, so following a link at the read is reachable only when a file is swapped for a link between the walk and the open, which no hermetic test can time; kept as defence in depth"
+    },
+    {
+      "id": "over-bound",
+      "file": "packages/polaris-dossier/src/session-usage.ts",
+      "old": "cause instanceof PastBoundError ? 'transcript-over-bound' : 'transcript-unreadable'",
+      "why": "a transcript past 268,435,456 bytes is not written in a unit test; both reasons are Unknown, so the role is Unknown either way"
+    }
+  ],
+  "summary": {
+    "mutants": 30,
+    "killed": 30,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 2
+  }
+}

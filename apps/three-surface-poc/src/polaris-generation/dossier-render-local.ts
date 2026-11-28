@@ -1,5 +1,5 @@
 import { DOSSIER_STYLE as tokens } from './dossier-style-tokens.js';
-import { REVIEW_STATUS_REGION, REVIEW_STATUS_REGION_OPEN, type EvidenceAnchor, type LocalDisclosureItem } from '@syzygy/polaris-generation-core/live';
+import { COST_STATUS_ID, REVIEW_STATUS_REGION, REVIEW_STATUS_REGION_OPEN, type EvidenceAnchor, type LocalDisclosureItem } from '@syzygy/polaris-generation-core/live';
 
 /**
  * Markup the multi-page dossier renderer adds for an operator-agent run
@@ -28,10 +28,11 @@ export function disclosureList(items: readonly LocalDisclosureItem[], escape: Es
   return `<ul>${items.map(item => labelled(item, escape)).join('')}</ul>`;
 }
 
-/** The named review-status region. The review page shows packet identities in readable groups. */
+/** The named review-status region. The review page shows packet identities in readable groups, and it alone shows the cost line
+ * (REQ-polaris-generation-033 version 2.45). */
 export function regionMarkup(items: readonly LocalDisclosureItem[], escape: Escape): (path: string) => string {
   const markup = (showDigests: boolean): string => {
-    const lines = items.map(item => {
+    const lines = items.filter(item => showDigests || item.id !== COST_STATUS_ID).map(item => {
       const text = showDigests || item.label === 'Unknown' ? item.text
         : item.text.replace(/bound to packet [0-9a-f]{64}(?![0-9a-f])/gi, 'bound to the packet shown on the review page');
       // Other status text can contain a long identifier, such as a path in a refusal. Keep its visible digits in order.
