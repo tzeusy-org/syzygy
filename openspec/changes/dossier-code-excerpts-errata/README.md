@@ -10,7 +10,7 @@
 
 It also states the finding-detail rule of syzygy-3efd.93 (row A-347, PR #1061), with one added scenario:
 
-- a finding's detail names a draft identity only where it is a handle, and otherwise the member's path or fixed words, one fallback per detail family;
+- a finding's detail names a draft identity only where it is a handle, and otherwise the path of the member or object that holds it, or fixed words, never the value;
 - every detail is screened, whole and word by word, against the secret detectors and the denied-path rules, and one that matches is replaced by `Finding detail withheld under source screening.`.
 
 This version moves no byte of its own: the 2.54 corrections are what main ships, and the detail rule is A-347's code, which lands with or after this version. No draft schema or brief version moves. REQ-034 gains one scenario.

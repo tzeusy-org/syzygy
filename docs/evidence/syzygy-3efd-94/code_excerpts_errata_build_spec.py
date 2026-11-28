@@ -15,7 +15,7 @@ Usage: code_excerpts_errata_build_spec.py <worktree> <out>.
 6. A scenario sentence: an excerpt of an absent path whose range is reversed or over 60 lines is skipped (R33 finding 1;
    design.md D2); and which positions hold an excerpt (R33-code finding 3; design.md D3).
 7. The finding-detail rule of syzygy-3efd.93 (row A-347, PR #1061; R93 code review notes 3, 4, 5 and 11): a detail names a
-   draft identity only where it is a handle, with one fallback per detail family, and every detail is screened before it is
+   draft identity only where it is a handle, and otherwise its path or fixed words, never the value; every detail is screened before it is
    reported or recorded (design.md D9). One paragraph, after the derived-base screening paragraph of version 2.35.
 """
 import pathlib
@@ -86,8 +86,8 @@ replace("each excerpt's highlight findings come before its note findings, and al
         "`schema` findings at its lists are reported whatever its range, and only the findings of kinds `code-highlight`, "
         "`code-note` and `unresolved-reference` at its lists are skipped. An excerpt here is a `code` element at a position "
         "the draft admits one, an entry of a section's, a subsection's or a deep dive's `paragraphs` or of a `details` "
-        "element's `elements` there; a `code` object anywhere else draws version 2.53's `schema` finding at its parent, and "
-        "this version neither reads nor checks its members.")
+        "element's `elements` there; a `code` object anywhere else draws version 2.53's `schema` finding there, at the object's "
+        "own path or within it, and this version neither reads nor checks its members.")
 replace('they are computed and reported alike whatever classification and screening decide for the blob an excerpt cites, '
         'and no detail names a byte, a path or a line count of a blob.',
         'they are computed and reported alike whatever classification and screening decide for the blob an excerpt cites, '
@@ -118,11 +118,17 @@ replace('Read no additional source and disclose no unadmitted value or populatio
         'Read no additional source and disclose no unadmitted value or population count.\n\n'
         f'From version {V} a finding\'s `detail`, of every kind and in every draft schema, SHALL name a draft-supplied identity '
         'or reference only where the value is a handle (a string of the draft schema\'s `handle` form, its pattern and its '
-        'length bound). Where a detail would name a value of another form, it names in its place, by the family the detail '
-        'belongs to: for a detail that opens with the identity it is about (`<id>: …`), the path of the member that holds the '
-        'value, such as `$.diagrams[0].id`, a walk\'s `figure` or a step\'s `element` or `block`; for a detail that quotes an '
-        'identity it refers to, the words `named here`, or `the identity named here` for an asset part a disposition names; '
-        'and for `whySection`, the words `a value`. A detail that names a handle names it as before. Then, before writing the '
+        'length bound). Where a detail would name a value of another form, it names no part of that value: it names in its '
+        'place the path of the member or object that holds the value, or fixed words. The forms the code builds include, '
+        'as examples and not as a closed list: a detail that opens with the identity it is about (`<id>: …`) opens instead '
+        'with the path of the object that holds it, such as `$.model.elements[2]`, a walk\'s `figure` or a step\'s `element` '
+        'or `block`; a phrase that names a node, an edge, a group, a diagram or a subsection by its identity names it by its '
+        'path, such as `the node at $.diagrams[0].nodes[1]`, `the diagram $.diagrams[0]` or `the subsection '
+        '$.sections[0].subsections[1]`; an identity named within the sentence, such as a group\'s, is replaced by its path; '
+        'a detail that would open with `the diagram "<id>": ` opens without that prefix; a quoted reference to an identity '
+        'gives the words `named here`, or `the identity named here` for an asset part a disposition names; and the `pole` '
+        'finding at `whySection` gives the words `a value`, while the `unresolved-reference` finding there gives `named here`. '
+        'A detail that names a handle names it as before. Then, before writing the '
         'check record or preparing any form of the check report, after the qualified details of the preceding paragraph, '
         'Syzygy SHALL screen every finding\'s detail: whole and each of its words, a word being a run of the detail between '
         'whitespace and the characters `"`, `` ` ``, `\'`, `(`, `)`, `,` and `;`, against the secret detectors, and each word '
@@ -131,7 +137,8 @@ replace('Read no additional source and disclose no unadmitted value or populatio
         'its other members and its place in the order, and the draft passes or fails exactly as it would with the detail '
         'intact. A handle can itself match a detector as part of a detail (an identity `token` followed by a word of 8 or more '
         'characters, say); that detail is withheld, failing toward withholding. This rule screens details only: a finding\'s '
-        '`at`, `blockId` and `citationId` and the advisory members of the report are not screened by it.')
+        '`at`, `blockId` and `citationId`, the record\'s `sessionId`, the advisory members of the report and any other member '
+        'of the record or report are not screened by it.')
 
 # 7. Its scenario, last in the requirement.
 assert text.endswith('\n'), 'the predecessor ends with a newline'

@@ -3807,7 +3807,7 @@ CXERR_REPLACES = (POLARIS_ID + "034",)
 CXERR_COUNT_SCOPE = "With the excerpts errata"
 CXERR_COUNT_PREFIX = "With the excerpts errata version effective, Polaris has "
 CXERR_SUBJECTS = {
-    CXERR_SPEC: "c7b570d04244a2d37a6f45264946cd8d8c830f678feae99eaeb0c42c995af9c5",
+    CXERR_SPEC: "735a1ed6045c94c21b2c550e4c021486c2a60b474490cfd50e6196d1402bff80",
 }
 CXERR_BOUND_PARTS = len(CXERR_SUBJECTS)
 

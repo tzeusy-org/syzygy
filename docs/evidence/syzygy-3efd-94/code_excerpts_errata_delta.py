@@ -75,7 +75,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Added
 
-[Observed] {len(added_paras)} paragraphs and {len(scen)} scenarios are inserted: {', '.join(f'"{x}"' for x in scen)}. Its lines, as inserted:
+[Observed] {len(added_paras)} paragraph{'' if len(added_paras) == 1 else 's'} and {len(scen)} scenario{'' if len(scen) == 1 else 's'} {'is' if len(added_paras) + len(scen) == 1 else 'are'} inserted: {', '.join(f'"{x}"' for x in scen)}. Its lines, as inserted:
 
 {chr(10).join('> ' + nb[j] if nb[j] else '>' for j in inserted)}
 
