@@ -24,6 +24,7 @@ import { inventoryCoverageAdvice, type InventoryCoverageAdvice } from './invento
 import { questionKindAdvice, type QuestionKindAdvice } from './question-kinds.js';
 import { derivedRecordFile, encodeDerivedRecord, secretPathOf } from './derived-record.js';
 import { CHECK_RECORD_LIMITS, NotARegularFileError, readBoundedFile } from './check-record-read.js';
+import { IMPORT_BLOB_LIMIT, deriveImportFacts, importFactsUnknown, type ImportFacts } from './import-facts.js';
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type BoundedCheckRecord, type RecordMeasure, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type MechanismAdvice, type ReviewVisibility, type SourceExampleAdvice, STEP_LOG_FORMAT, type VerifiedQuotation, errno, list, reviewVisibility, text } from './check-model.js';
 import { type Derived, type SubjectRules, applyHeroFindings, containmentRelationFindings, deriveFindings, draftRules, relationDecisions, relationFindings, type RelationDecisions } from './check-derive.js';
@@ -251,7 +252,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // manifest through a second reader on the same clone whose object bound is 1 MiB, one call per file. They are kept in the draft's check
   // record (`manifestFacts`), never in an inventory check record, and derived whether or not the draft parses.
   let screenCensus: ScreenCensusReport | undefined, structureRecord: StructureRecord | undefined, derivedRecord: string | undefined;
-  let manifestFacts: ManifestFacts | undefined, treeFacts: TreeFacts | undefined;
+  let manifestFacts: ManifestFacts | undefined, importFacts: ImportFacts | undefined, treeFacts: TreeFacts | undefined;
   let listedEntries: Awaited<ReturnType<typeof reader.listTree>> | undefined;
   if (plan.command === 'check') {
     // `capturedAt` is the instant this check listed the tree: taken once the listing returns, or once it is refused.
@@ -271,6 +272,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
       structureRecord = structureUnknown(`the pinned tree could not be listed (${cause.reason})`);
       derivedRecord = encodeDerivedRecord(source(), { why: `the pinned tree could not be listed (${cause.reason})` });
       manifestFacts = manifestFactsUnknown(cause.reason);
+      importFacts = importFactsUnknown(cause.reason);
     }
     listedEntries = entries;
     if (entries !== undefined) {
@@ -278,6 +280,13 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
       manifestFacts = await deriveManifestFacts({
         entries, screen, consented: checked.contentClasses,
         read: async (manifestPath) => (await manifestReader.readBlobs([manifestPath]))[0]!,
+      });
+      // Lexical import facts (version 2.39, syzygy-3efd.89): each admitted TypeScript file through a third reader on the same clone whose
+      // object bound is 256 KiB, one call per file, collapsed to units from the listing and the manifest facts just derived.
+      const importReader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned, maxObjectBytes: IMPORT_BLOB_LIMIT });
+      importFacts = await deriveImportFacts({
+        entries, screen, consented: checked.contentClasses, manifestFacts,
+        read: async (filePath) => (await importReader.readBlobs([filePath]))[0]!,
       });
     }
   }
@@ -303,6 +312,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
       listedEntries === undefined ? undefined : { hidden, isBlob: (repositoryPath) => blobs.has(repositoryPath) }, {
         structure: treeFacts === undefined ? { state: 'unknown' } : { state: 'derived', ...treeFacts },
         manifest: manifestFacts === undefined || manifestFacts.state !== 'derived' ? { state: 'unknown' } : manifestFacts,
+        imports: importFacts === undefined || importFacts.state !== 'derived' ? { state: 'unknown' } : importFacts,
         hidden,
       }, (element) => isWithheldElement(element, reach),
       // A containment with a figure-kind, depth, size or flat finding has no nesting decided; where the draft has a schema finding no
@@ -346,6 +356,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
         : edge['epistemic'] === 'inferred' && !held(edge) && !endHeld(edge['from']) && !endHeld(edge['to'])), tree, {
         structure: treeFacts === undefined ? { state: 'unknown' } : { state: 'derived', ...treeFacts },
         manifest: manifestFacts === undefined || manifestFacts.state !== 'derived' ? { state: 'unknown' } : manifestFacts,
+        imports: importFacts === undefined || importFacts.state !== 'derived' ? { state: 'unknown' } : importFacts,
         hidden,
       }, held, undecidedViews(findings));
       findings.push(...modelRelationFindings(modelDecisions(doc, decisions.edges, decisions.nestings)));
@@ -414,7 +425,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
       .map((advisory) => [JSON.stringify(advisory), advisory] as const)).values()] };
   const stored = {
     ...record, ...(fit === undefined ? {} : { figureFit: fit }), ...(ledger === undefined ? {} : { readingLedger: ledger }),
-    ...(manifestFacts === undefined ? {} : { manifestFacts }),
+    ...(importFacts === undefined ? {} : { importFacts }), ...(manifestFacts === undefined ? {} : { manifestFacts }),
   };
   // Version 2.10 (syzygy-3efd.73 (a)): every check record written lies within the read bound. The record is measured as a reader measures
   // it before it is written; past any bound, its bounded form is written in its place, with one repair finding, and the full findings go

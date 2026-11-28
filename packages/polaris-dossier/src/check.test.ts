@@ -535,7 +535,8 @@ describe('check: reading ledger', () => {
     const stored = [0, 1].map((n) => JSON.parse(read(run, `checks/rev-${n}.json`)) as Record<string, unknown>);
     expect(stored[0]!['readingLedger']).toEqual(LEDGER);
     expect(JSON.stringify(stored[1]!['readingLedger'])).toBe(JSON.stringify(stored[0]!['readingLedger']));
-    expect(Object.keys(stored[0]!).slice(-3)).toEqual(['figureFit', 'readingLedger', 'manifestFacts']);
+    // Version 2.39 (syzygy-3efd.89): importFacts sits immediately before manifestFacts, which stays last.
+    expect(Object.keys(stored[0]!).slice(-4)).toEqual(['figureFit', 'readingLedger', 'importFacts', 'manifestFacts']);
     expect(stored[0]!).not.toHaveProperty('readingDifference');
     expect(first.readingLedger).toEqual(LEDGER);
     // Advice: no outcome or finding changes; the first run of the repository has no earlier ledger, so its difference is Unknown.
@@ -1980,7 +1981,7 @@ describe('check: the record within its read bound (version 2.10)', () => {
       expect(read(run, 'checks/rev-0.json')).toBe(`${JSON.stringify(record, null, 2)}\n`);
       // The report carries the record written and every finding the full record would have held (none here), and no fit advice.
       expect(result.report).toMatchObject({ outcome: 'findings', findings: record.findings, findingsLeftOut: [] });
-      for (const member of ['figureFit', 'mechanismAdvice', 'readingLedger', 'manifestFacts', 'quotations', 'citedBlobs', 'executionFlags', 'excludedContent']) expect(result.report).not.toHaveProperty(member);
+      for (const member of ['figureFit', 'mechanismAdvice', 'readingLedger', 'importFacts', 'manifestFacts', 'quotations', 'citedBlobs', 'executionFlags', 'excludedContent']) expect(result.report).not.toHaveProperty(member);
       // The advice it computes from the draft itself is unchanged, and the derived record is written as before.
       expect(result.report).toHaveProperty('readerAdvice');
       expect(result.report).toHaveProperty('structureRecord');

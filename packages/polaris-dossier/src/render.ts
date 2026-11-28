@@ -16,10 +16,10 @@ import { applyContainmentFindings, groupsOf } from './containment.js';
 import { expandModel, localModelOf, modelFindings, modelIndex, viewLists } from './system-model.js';
 import { BASE_BASIS, admitOf, renderBaseMaps, renderBases, resolveBasePath, type Admission, type PendingBase } from './derived-base.js';
 import type { BaseMapName } from './draft-schema.js';
-import { readCheckRecord } from './check-record-read.js';
 import { secretOrUnder } from './derive.js';
 import { BLOB_MODES } from './git-object-reader.js';
-import { witnessAtRender, witnessWords, type RelationType } from './relation-witness.js';
+import { witnessAtRender, witnessWords, type ImportFactsInput, type RelationType } from './relation-witness.js';
+import { isCheckRecordOf, readCheckRecord } from './check-record-read.js';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialFindings, credentialStepCheck, storedBriefArm, type CredentialBreachFinding, type CredentialStepResult } from './credential-probe.js';
 import { CONTAINMENT_KIND, UNDERSTANDING_ITEMS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, hasContainmentForm, hasFigureKindForm, hasModelForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm, hasBaseForm, hasWithheldHeroIdentity, hasWorthKnowingForm, heroOf } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
@@ -245,7 +245,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const { derivedStructure, manifestFacts } = early ?? await readMaps();
   // Version 2.19 (syzygy-3efd.28): a v9 draft's edges, each decided again by rule `relation-witness` from the facts this render derives itself.
   const edgeRelations = hasRelationForm(doc['schemaVersion'])
-    ? edgeRelationsAt({ doc: figureDoc, derivedStructure, manifestFacts, screen, withheld: input.local.withheldElements ?? new Map(), listTree: () => reader.listTree() }) : undefined;
+    ? edgeRelationsAt({ doc: figureDoc, derivedStructure, manifestFacts, imports: importFactsOfRecord(run, draftRev.revision), revision: pinned, screen, withheld: input.local.withheldElements ?? new Map(), listTree: () => reader.listTree() }) : undefined;
   // A base end names the fact identity it resolves to in the map this render derives (version 2.35), whether or not a drawn view shows it;
   // null where the map is not established at this render or the path names no one element of it (R38 finding 9).
   const endMaps = early === undefined ? undefined : renderBaseMaps(early.derivedStructure, early.manifestFacts);
@@ -334,14 +334,19 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   return { ok: true, report };
 }
 
-/** A v9 draft's graph edges at a render (REQ-polaris-generation-034 version 2.19), by edge id: rule `relation-witness` version 1 decided again
- * from the derived structure the region states at this render (its facts, and the counts this render re-derives from the tree) and the
- * render's own manifest member, a unit tested for a blob against the tree this render lists. An edge is witnessed only where its joining fact
- * renders Observed here; otherwise `fact-not-current`. An edge the draft labels Unknown or that renders as a withheld item is never asserted. */
+/** A v9 draft's graph edges at a render (REQ-polaris-generation-034 version 2.19), by edge id: rule `relation-witness` version 2 (version 1
+ * plus the `imports` row, version 2.49) decided again from the derived structure the region states at this render (its facts, and the counts
+ * this render re-derives from the tree), the render's own manifest member, and the `importFacts` member of the rendered revision's check
+ * record, a unit tested for a blob against the tree this render lists. An edge is witnessed only where its joining fact renders Observed
+ * here; otherwise `fact-not-current`. An edge the draft labels Unknown or that renders as a withheld item is never asserted. */
 export async function edgeRelationsAt(inputs: {
   readonly doc: Readonly<Record<string, unknown>>;
   readonly derivedStructure: LocalDerivedStructure;
   readonly manifestFacts: ManifestFacts;
+  /** The `importFacts` member of the rendered draft revision's check record (version 2.49), with its digest, or Unknown. */
+  readonly imports?: RecordImportFacts;
+  /** The pinned revision the evidence text names. */
+  readonly revision?: string;
   readonly screen: Pick<DossierScreen, 'screenPath' | 'screenBody'>;
   readonly withheld: ReadonlyMap<string, unknown>;
   readonly listTree: () => Promise<readonly Pick<TreeEntry, 'path' | 'mode'>[]>;
@@ -367,6 +372,7 @@ export async function edgeRelationsAt(inputs: {
       structure: derived.state !== 'derived' ? { state: 'unknown' }
         : { state: 'derived', facts: derived.facts, secretPathsLeftOut: derived.tree.secretPathsLeftOut, submodules: derived.tree.submodules, unitsNotListed: derived.tree.unitsNotListed },
       manifest: manifestFacts.state === 'derived' ? manifestFacts : { state: 'unknown' },
+      imports: inputs.imports?.state === 'derived' ? inputs.imports : { state: 'unknown' },
       hidden,
     }, (element) => withheld.has(text(element['id']) ?? ''));
   const facts = derived.state === 'derived' ? new Map(derived.facts.map((fact) => [fact.id, fact])) : new Map<string, LocalDerivedFact>();
@@ -386,10 +392,56 @@ export async function edgeRelationsAt(inputs: {
       return [id, { relation, witness: { state: 'witnessed', reason: null, fact: decision.fact, rule: decision.rule, ruleVersion: decision.ruleVersion },
         evidence: { words: witnessWords(relation as RelationType)!, factKind: decision.factKind, revision: derived.recordRevision, recordSha256: derived.sha256 } }];
     }
+    if (decision.state === 'corroborated') {
+      // A corroboration is decided only from a derived member, which `imports` then holds with its digest.
+      const imports = inputs.imports as Extract<RecordImportFacts, { state: 'derived' }>;
+      return [id, { relation, witness: { state: 'corroborated', reason: null, fact: decision.fact, rule: decision.rule, ruleVersion: decision.ruleVersion },
+        corroboration: { form: decision.form, revision: inputs.revision ?? '', importFactsSha256: imports.sha256 } }];
+    }
     const reason = decision.state === 'witnessed' ? 'fact-not-current' : decision.reason;
     return [id, { relation, witness: { state: decision.state === 'witnessed' ? 'unknown' : decision.state, reason, fact: null, rule: null, ruleVersion: null } }];
   }));
 }
+
+/** The `importFacts` member as the rendered revision's check record holds it (version 2.49): its facts, and the SHA-256 of the member's
+ * bytes in that record (two-space JSON indented one level, as `check` writes it). Unknown where the record cannot be read under the read
+ * bound, holds no member (written before version 2.39, or bounded), or holds one in state `unknown`. No file body is read. */
+export type RecordImportFacts = (ImportFactsInput & { readonly state: 'derived'; readonly sha256: string }) | { readonly state: 'unknown' };
+export function importFactsOfRecord(run: string, revision: number): RecordImportFacts {
+  let record: unknown;
+  try { record = readCheckRecord(path.join(run, RUN_LAYOUT.checks, `rev-${revision}.json`)); } catch { return { state: 'unknown' }; }
+  if (!isCheckRecordOf(record, revision) || !isRecord(record) || !isRecord(record['importFacts'])) return { state: 'unknown' };
+  const member = record['importFacts'];
+  if (member['state'] !== 'derived' || !Array.isArray(member['facts'])) return { state: 'unknown' };
+  // The record lies within the agent sessions' write reach (version 2.10), and a fact's identity and form reach the page, the drawing and
+  // machine.json: every fact must hold its closed forms, or the whole member is Unknown, never read in part.
+  const facts: ImportFactOfRecord[] = [];
+  for (const fact of member['facts'] as unknown[]) {
+    const checked = importFactOf(fact);
+    if (checked === undefined) return { state: 'unknown' };
+    facts.push(checked);
+  }
+  return { state: 'derived', facts, sha256: importFactsDigest(member) };
+}
+
+type ImportFactOfRecord = Extract<ImportFactsInput, { readonly state: 'derived' }>['facts'][number];
+const IMPORT_FACT_ID = /^_import-[1-9][0-9]*$/u;
+const IMPORT_FORMS: ReadonlySet<unknown> = new Set(['import', 'import-type', 'side-effect', 're-export', 're-export-type']);
+const STATEMENT_OUTCOMES: ReadonlySet<unknown> = new Set(['edge', 'same-unit', 'external', 'no-unit', 'unknown']);
+const IMPORT_RULES: ReadonlySet<unknown> = new Set(['typescript-relative-import', 'typescript-package-import']);
+const endOf = (value: unknown): value is string | null => value === null || typeof value === 'string';
+/** A stored import fact in the members the `imports` row reads, each in its closed form, or undefined where any is not. */
+function importFactOf(fact: unknown): ImportFactOfRecord | undefined {
+  if (!isRecord(fact)) return undefined;
+  const { id, rule, ruleVersion, form, outcome, from, to } = fact;
+  if (typeof id !== 'string' || !IMPORT_FACT_ID.test(id) || !IMPORT_RULES.has(rule) || ruleVersion !== 1 || !IMPORT_FORMS.has(form)
+    || !STATEMENT_OUTCOMES.has(outcome) || !endOf(from) || !endOf(to)) return undefined;
+  return { id, rule: rule as string, ruleVersion, form: form as string, outcome: outcome as string, from, to };
+}
+
+/** The SHA-256 of an `importFacts` member's bytes as a check record holds it: its two-space JSON, every line after the first indented two
+ * more spaces, since the member lies one level under the record's root. */
+export const importFactsDigest = (member: unknown): string => sha256(new TextEncoder().encode(JSON.stringify(member, null, 2).replace(/\n/gu, '\n  ')));
 
 /** The base elements a v15 containment groups inside a draft element (version 2.35), by fact identity. */
 function groupedBaseIds(doc: Readonly<Record<string, unknown>>): ReadonlySet<string> {
