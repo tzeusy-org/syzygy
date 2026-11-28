@@ -48,6 +48,10 @@ describe('scanImports: comments, strings, templates and regular expressions hold
     for (const text of ['const r = x! / 2;\n', 'i++ / 2;\n', 'i-- / 2;\n', '{} / 2;\n', 'a > / 2;\n', 'for (const x of /y/) {}\n', 'function* g() { yield / 2; }\n', 'async function f() { await / 2; }\n', 'l: for (;;) { break l / 2; }\n']) {
       expect(scanImports(text).complete, text).toBe(false);
     }
+    // A second / on the line, so that neither reading runs off the line: a guess either way would read the text to its end.
+    for (const text of ['const r = x! / 2 / 3;\n', 'i++ / 2 / 3;\n', 'i-- / 2 / 3;\n', '{} / 2 / 3;\n', 'a > / 2 / 3;\n', 'for (const x of / 2 / 3) {}\n', 'function* g() { yield / 2 / 3; }\n', 'async function f() { await / 2 / 3; }\n', 'l: for (;;) { break l / 2 / 3; }\n']) {
+      expect(scanImports(text).complete, text).toBe(false);
+    }
   });
 
   it('keeps a statement that closed before the stop and reads nothing after it', () => {
